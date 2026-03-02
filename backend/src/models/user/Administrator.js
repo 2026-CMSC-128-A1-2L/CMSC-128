@@ -1,12 +1,15 @@
 import mongoose from 'mongoose';
+// ─────────────────────────────────────────────
+// ADMINISTRATOR  (platform staff)
+// ─────────────────────────────────────────────
+const administratorSchema = new Schema({
 
-//Creates an object model for Sample
-const sampleSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  type: { type: String, required: true },
-  price: { type: Number, required: true },
-  description: String,
-  quantity: { type: Number, required: true },
-});
+    user_id: { 
+      type: mongoose.Schema.Types.ObjectId, 
+      ref: 'User', 
+      required: true 
+    },
 
-export const Sample = mongoose.model('Sample', sampleSchema);
+}, { timestamps: true });
+
+export const Administrator = mongoose.model('Administrator', administratorSchema);
