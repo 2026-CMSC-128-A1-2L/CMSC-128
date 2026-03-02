@@ -1,12 +1,12 @@
 import mongoose from 'mongoose';
 
 //Creates an object model for Sample
-const sampleSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  type: { type: String, required: true },
-  price: { type: Number, required: true },
-  description: String,
-  quantity: { type: Number, required: true },
+const bookmarkSchema = new mongoose.Schema({
+  Id: { type: mongoose.Schema.Types.ObjectId, unique: true },
+  StudentEmail: { type: String, ref: 'Student' },
+  HousingID: { type: String, ref: 'Housing' },
+  BookmarkedAt: { type: Date, default: Date.now },
+  Notes: { type: String }, 
 });
 
-export const Sample = mongoose.model('Sample', sampleSchema);
+export const Bookmark = mongoose.model('Bookmark', bookmarkSchema);
