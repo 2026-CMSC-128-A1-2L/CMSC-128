@@ -1,7 +1,5 @@
 import mongoose from 'mongoose';
-// ─────────────────────────────────────────────
-// ADMINISTRATOR  (platform staff)
-// ─────────────────────────────────────────────
+
 const administratorSchema = new Schema({
 
     user_id: { 
