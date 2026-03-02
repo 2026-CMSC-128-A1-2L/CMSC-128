@@ -1,12 +1,16 @@
 import mongoose from 'mongoose';
 
-//Creates an object model for Sample
-const sampleSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  type: { type: String, required: true },
-  price: { type: Number, required: true },
-  description: String,
-  quantity: { type: Number, required: true },
+const paymentSchema = new mongoose.Schema({
+  PaymentID: { type: Number, unique: true },
+  LeaseID: { type: Number, ref: 'Rental' },
+  ManagerEmail: { type: String },
+  StudentEmail: { type: String },
+  DueDate: { type: Date },
+  PaymentDate: { type: Date },
+  Amount: { type: Number },
+  ProofOfPayment: { type: String }, // URL or file path to the proof of payment
+  Status: { type: String, enum: ['paid', 'pending', 'overdue'] }, 
+  PaymentType: { type: String }
 });
 
-export const Sample = mongoose.model('Sample', sampleSchema);
+export const Payment = mongoose.model('Payment', paymentSchema);
