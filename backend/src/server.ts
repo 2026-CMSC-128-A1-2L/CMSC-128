@@ -18,6 +18,10 @@ app.get('/', (req, res) => {
   res.send('Backend is running');
 });
 
+if (!process.env.MONGO_URL) {
+  throw new Error('Missing MONGO_URL in environment variables.');
+}
+
 // Connect to MongoDB
 mongoose
   .connect(process.env.MONGO_URL)
