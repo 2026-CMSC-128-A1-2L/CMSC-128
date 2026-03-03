@@ -1,12 +1,37 @@
 import mongoose from 'mongoose';
 
-//Creates an object model for Sample
-const sampleSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  type: { type: String, required: true },
-  price: { type: Number, required: true },
-  description: String,
-  quantity: { type: Number, required: true },
+const HousingFacilitySchema = new Schema({
+    name: {
+        type: String, 
+        required: true 
+    },
+    location: { // format for GeoJSON
+        type: {
+            type: String, 
+            default: 'Point' 
+        },
+        coordinates: {
+            type: [Number], // [lat, long]
+        }
+    },
+    type: {
+        type: String 
+    },
+    documents_url: [
+        { type: String }
+    ],
+    listings: [
+        { 
+            type: Schema.Types.ObjectId, // array of listing
+            ref:'Listing'
+        }
+    ],
+    listing_reports: [
+        { 
+            type: Schema.Types.ObjectId,   // array of lising report
+            ref: 'ListingReport'    // can change depending on name of Report schema
+        }
+    ]
 });
 
-export const Sample = mongoose.model('Sample', sampleSchema);
+export const HousingFacility = mongoose.model('HousingFacility', HousingFacilitySchema);

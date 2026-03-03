@@ -1,12 +1,31 @@
 import mongoose from 'mongoose';
 
-//Creates an object model for Sample
-const sampleSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  type: { type: String, required: true },
-  price: { type: Number, required: true },
-  description: String,
-  quantity: { type: Number, required: true },
+const UnitSchema = new Schema({
+    room_number: { 
+        type: Number, 
+        required: true 
+    },
+    listing_id: { 
+        type: Schema.Types.ObjectId, 
+        ref: 'Listing', 
+        required: true 
+    },
+    availability_status: { 
+        type: String, 
+        enum: ['Available', 'Occupied'] // add other status types
+    },
+    description: { 
+        type: String 
+    },
+    current_occupancy: { 
+        type: Number, 
+        default: 0 
+    },
+    price: { 
+        type: Number, 
+        required: true 
+    }
 });
 
-export const Sample = mongoose.model('Sample', sampleSchema);
+export const Unit = mongoose.model('Unit', UnitSchema);
+
