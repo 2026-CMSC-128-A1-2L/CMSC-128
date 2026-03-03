@@ -4,7 +4,7 @@
  * The model name "Sample" determines the collection name in MongoDB.
  */
 
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 // sampleSchema would be renamed to <entity>Schema
 const sampleSchema = new mongoose.Schema(
@@ -16,9 +16,9 @@ const sampleSchema = new mongoose.Schema(
     description: { type: String },
     quantity: { type: Number, required: true },
   },
-  { timestamps: true } // automatically adds createdAt and updatedAt
+  { timestamps: true }, // automatically adds createdAt and updatedAt
 );
 
 // "Sample" is the model name.
 // "Sample" must be the same name as the collection in mongodb
-module.exports = mongoose.model("Sample", sampleSchema);
+module.exports = mongoose.model('Sample', sampleSchema);
