@@ -5,11 +5,24 @@ import mongoose from 'mongoose';
 const messageSchema = new mongoose.Schema({
     // Assumed that Mongo will create Primary Key
 
-    message_content: { type: String, required: true },
+    senderId: {
+        type:     mongoose.Schema.Types.ObjectId,
+        ref:      'User',   // Interaction point: any platform user can send
+        required: true
+    },
+
+    receiverId: {
+        type:     mongoose.Schema.Types.ObjectId,
+        ref:      'User',   // Interaction point: any platform user can receive
+        required: true
+    },
+
+    messageContent: {
+        type:     String,
+        required: true
+    },
     dateCreated: { type: Date, required: true },
     dateSeen: { type: Date, required: true },
-    senderID: {type: mongoose.Schema.Types.ObjectId, ref:'Users' , required: true},    // Foreign for sender
-
   })
 
 export const Message = model('Message', messageSchema);             
