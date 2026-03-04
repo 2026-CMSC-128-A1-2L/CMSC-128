@@ -3,36 +3,38 @@ import mongoose from 'mongoose';
 // Creates an object model for studentUnverified
 const studentUnverifiedSchema = new mongoose.Schema({
 
+    userId: {
+        type:     mongoose.Schema.Types.ObjectId,
+        ref:      'User',   // Interaction point: IS-A User
+        required: true
+    },
+
     student_id: {
         type:mongoose.Schema.Types.ObjectId,
         ref: 'Student',
         required: true
     },
 
-    Documents: {//for approval, was url in erd but turned to object id
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Documents',
-        required: true
+    documentsUrl: {
+        type:     String,
+        required: false     // Uploaded ID/supporting docs
     },
 
-    UserInformation: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'UserInformation',
-        required: true
+    userInformation: {
+        type:     String,
+        required: false     // Submitted personal details
     },
 
-    IdImage: {//URL reference to image
+    idImage: {//URL reference to image
         type: String,
         required: true
     },
 
-    VerificationStatus: {
-        type: String,
-        enum: ['Pending', 'Verified', 'Rejected'],
-        default: 'Pending'
-    },
-
-//Does not have any interactions
+    verificationApplicationStatus: {
+        type:    String,
+        enum:    ['pending', 'rejected', 'verified'],
+        default: 'pending'
+    }
 
 }, { timestamps: true });
 
