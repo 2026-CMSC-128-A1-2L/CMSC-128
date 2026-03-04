@@ -3,8 +3,7 @@ import mongoose from 'mongoose';
 
 //Schema for user
 const userSchema = new mongoose.Schema({
-    // Assumed that Mongo will create Primary Key
-
+    userID: { type: mongoose.Schema.Types.ObjectId, unique: true },
     firstName: {
         type:     String,
         required: true

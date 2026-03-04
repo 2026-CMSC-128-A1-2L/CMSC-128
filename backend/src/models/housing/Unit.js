@@ -1,5 +1,6 @@
 // unit schema
 const unitSchema = new mongoose.Schema({
+    unitID: { type: mongoose.Schema.Types.ObjectId, unique: true },
     roomNumber:
     {
         type: Number,

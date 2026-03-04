@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 // Creates an object model for studentUnverified
 const studentUnverifiedSchema = new mongoose.Schema({
-
+    studentUnverifiedID: { type: mongoose.Schema.Types.ObjectId, unique: true },
     userID: {
         type:     mongoose.Schema.Types.ObjectId,
         ref:      'User',   // Interaction point: IS-A User

@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 //Creates an object model for TransferRequest
 const TransferRequestSchema = new mongoose.Schema({
+  transferRequestID: { type: mongoose.Schema.Types.ObjectId, unique: true },
   studentID: {
     type:     mongoose.Schema.Types.ObjectId,
     ref:      'VerifiedStudent', // Interaction point: PAYS relationship
@@ -13,7 +14,7 @@ const TransferRequestSchema = new mongoose.Schema({
     ref:      'Unit',            // Interaction point: payment is for this unit
     required: true
   },
-  
+
   description: {
     type:     String,
     required: false

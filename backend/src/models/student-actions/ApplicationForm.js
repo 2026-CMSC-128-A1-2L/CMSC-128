@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 //Creates an object model for Sample
 const applicationFormSchema = new mongoose.Schema({
-  // Mongodb will make the primary key
+  applicationFormID: { type: mongoose.Schema.Types.ObjectId, unique: true },
   studentID: {
     type:     mongoose.Schema.Types.ObjectId,
     ref:      'VerifiedStudent', // Interaction point: CREATES relationship

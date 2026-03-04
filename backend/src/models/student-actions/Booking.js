@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const visitBookingSchema = new mongoose.Schema({
-  VisitBookingId: { type: mongoose.Schema.Types.ObjectId, unique: true },
+  visitBookingID: { type: mongoose.Schema.Types.ObjectId, unique: true },
   studentID: {
     type:     mongoose.Schema.Types.ObjectId,
     ref:      'VerifiedStudent', // Interaction point: PAYS relationship
