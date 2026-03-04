@@ -1,7 +1,8 @@
 import mongoose from 'mongoose';
 
-const TagSchema = new Schema({ 
-    data_type: {
+const TagSchema = new Schema({
+    tagID: { type: mongoose.Schema.Types.ObjectId, unique: true },
+    dataType: {
         type: String, 
         required: true 
     }, 
