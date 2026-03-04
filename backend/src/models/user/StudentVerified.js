@@ -1,12 +1,38 @@
 import mongoose from 'mongoose';
 
-//Creates an object model for Sample
-const sampleSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  type: { type: String, required: true },
-  price: { type: Number, required: true },
-  description: String,
-  quantity: { type: Number, required: true },
-});
+// Creates an object model for VerifiedStudent
+const verifiedStudentSchema = new mongoose.Schema({
 
-export const Sample = mongoose.model('Sample', sampleSchema);
+    student_id: {
+        type:mongoose.Schema.Types.ObjectId,
+        ref: 'Student',
+        required: true
+    },
+
+    gmail: {//student information are not needed when gmail is present
+        type: String,
+        required: true
+    },
+
+    studentNumber: {//for approval, not in ERD 
+        type: String,
+        required: true
+    },
+
+    bookmarks: [{ //bookmarks of housing facilities
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'HousingFacility'
+    }],
+
+//Some interactions have their own Schema
+/*
+student pay manager
+student converses manager
+student books housing facility
+student rents unit
+student reviews unit
+*/
+
+}, { timestamps: true });
+
+export const verifiedStudent = mongoose.model('verifiedStudent', verifiedStudentSchema);
