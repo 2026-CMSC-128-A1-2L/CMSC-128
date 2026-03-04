@@ -1,15 +1,15 @@
 import mongoose from 'mongoose';
 
 const rentalSchema = new mongoose.Schema({
-  LeaseID: { type: Number, unique: true },
+  LeaseID: { type: mongoose.Schema.Types.ObjectId, unique: true },
   ListingID: { type: mongoose.Schema.Types.ObjectId, ref: 'Listing' },
-  Email: { type: String, ref: 'Student' },
+  Email: { type: mongoose.Schema.Types.ObjectId, ref: 'Student' },
   Status: { type: String, enum: ['active', 'inactive', 'pending', 'cancelled'] }, 
   ActualMoveInDate: { type: Date },
   ActualMoveOutDate: { type: Date },
   ExpectedMoveInDate: { type: Date },
   ExpectedMoveOutDate: { type: Date },
-  Duration: { type: Number }
+  Duration: { type: Number } // optional, can just be calculated from move-in and move-out dates
 });
 
 
