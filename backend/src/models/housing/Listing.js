@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
 const ListingSchema = new Schema({
+    listingID: { type: mongoose.Schema.Types.ObjectId, unique: true },
     housingID: { 
         type: mongoose.Schema.Types.ObjectId,    // reference to parent housing
         ref: 'HousingFacility', 
