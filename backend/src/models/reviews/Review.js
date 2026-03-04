@@ -1,12 +1,37 @@
 import mongoose from 'mongoose';
+// source: https://mongoosejs.com/docs/guide.html
+const { Schema, model } = mongoose;
 
-//Creates an object model for Sample
-const sampleSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  type: { type: String, required: true },
-  price: { type: Number, required: true },
-  description: String,
-  quantity: { type: Number, required: true },
-});
+const reviewSchema = new Schema({
 
-export const Sample = mongoose.model('Sample', sampleSchema);
+    StudentEmail: {
+        type:     Schema.Types.ObjectId,
+        ref:      'VerifiedStudent',
+        required: true
+    },
+
+    ListingId: {
+        type:     Schema.Types.ObjectId,
+        ref:      'Listing',
+        required: true
+    },
+
+    rating: {
+        type:     Number,
+        required: true,
+        min:      1,
+        max:      5 // Numeric rating (number)
+    },
+
+    description: {
+        type: String // Written review body
+    },
+
+    date: {
+        type:    Date,
+        default: Date.now
+    }
+
+}, { timestamps: true });
+
+export default model('Review', reviewSchema);
