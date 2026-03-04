@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
-// Creates an object model for UnverifiedStudent
-const unverifiedStudentSchema = new mongoose.Schema({
+// Creates an object model for studentUnverified
+const studentUnverifiedSchema = new mongoose.Schema({
 
     student_id: {
         type:mongoose.Schema.Types.ObjectId,
@@ -36,4 +36,5 @@ const unverifiedStudentSchema = new mongoose.Schema({
 
 }, { timestamps: true });
 
-export const unverifiedStudent = mongoose.model('unverifiedStudent', unverifiedStudentSchema);
+export const studentUnverified = mongoose.model('studentUnverified', studentUnverifiedSchema);
+
