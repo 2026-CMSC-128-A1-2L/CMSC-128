@@ -4,13 +4,13 @@ const { Schema, model } = mongoose;
 
 const reviewSchema = new Schema({
 
-    StudentEmail: {
+    StudentID: {
         type:     Schema.Types.ObjectId,
         ref:      'VerifiedStudent',
         required: true
     },
 
-    ListingId: {
+    ListingID: {
         type:     Schema.Types.ObjectId,
         ref:      'Listing',
         required: true
