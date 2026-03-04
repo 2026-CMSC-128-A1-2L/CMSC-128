@@ -14,6 +14,11 @@ import mongoose from 'mongoose';
 //Creates an object model for Sample
 const landlordSchema = new mongoose.Schema({
   landlordID: { type: mongoose.Schema.Types.ObjectId, unique: true },
+  userID: {
+    type:     mongoose.Schema.Types.ObjectId,
+    ref:      'User',   // Interaction point: IS-A User
+    required: true
+  },
   name: { type: String, required: true },                                 //user attributes
   profilePicture: { type: String, required: true },                       //unsure paano istore yung image
   contact: { type: Number, required: true },
