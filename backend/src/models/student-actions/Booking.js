@@ -19,9 +19,9 @@ const visitBookingSchema = new mongoose.Schema({
   startDateTime: { type: Date, required: true },
   
   // Reason for booking
-  Request: { type: String },
-  CreatedAt: { type: Date, default: Date.now },
-  UpdatedAt: { type: Date, default: Date.now }
+  request: { type: String },
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now }
 });
 
 export const VisitBooking = mongoose.model('VisitBooking', visitBookingSchema);
