@@ -1,14 +1,23 @@
 import mongoose from 'mongoose';
 
 const HousingFacilitySchema = new Schema({
+    housingID: { type: mongoose.Schema.Types.ObjectId, unique: true },
     name: {
         type: String, 
         required: true 
     },
+
+    landlordId: {
+        type:     mongoose.Schema.Types.ObjectId,
+        ref:      'VerifiedLandlord', // Interaction point: HAS relationship (landlord owns facility)
+        required: true
+    },
+
     manager_id:{
-        type: Schema.Types.ObjectId,    // reference to Manager
+        type: mongoose.Schema.Types.ObjectId,    // reference to Manager
         ref: 'Manager'
     },
+
     location: { // format for GeoJSON
         type: {
             type: String, 
@@ -18,24 +27,52 @@ const HousingFacilitySchema = new Schema({
             type: [Number], // [lat, long]
         }
     },
+
     type: {
-        type: String 
+        type:     String,
+        enum:     ['on-campus', 'off-campus', 'partner housing'],
+        required: true
+        // Spec: Type (on-campus, off-campus, partner housing)
     },
-    documents_url: [
+
+    capacity: {
+        type:     Number,
+        required: true
+        // Spec: Capacity of the housing facility
+    },
+
+    totalUnits: {
+        type:    Number,
+        default: 0
+        // Derived count of rooms/bed spaces under this facility
+    },
+
+    documentsUrl: [
         { type: String }
     ],
+
+    isAcceptingApplications: {
+        type:    Boolean,
+        default: true
+        // Spec: application must be submitted within the allowed application period
+    },
+
+    applicationOpenDate: {
+        type:     Date,
+        required: false     // Spec: start of the allowed application period
+    },
+
+    applicationCloseDate: {
+        type:     Date,
+        required: false     // Spec: end of the allowed application period
+    },
+
     listings: [
         { 
             type: Schema.Types.ObjectId, // array of listing
             ref:'Listing'
         }
     ],
-    listing_reports: [
-        { 
-            type: Schema.Types.ObjectId,   // array of lising report
-            ref: 'ListingReport'    // can change depending on name of Report schema
-        }
-    ]
 });
 
 export const HousingFacility = mongoose.model('HousingFacility', HousingFacilitySchema);
