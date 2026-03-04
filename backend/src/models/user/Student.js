@@ -1,12 +1,19 @@
 import mongoose from 'mongoose';
 
-//Creates an object model for Sample
-const sampleSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  type: { type: String, required: true },
-  price: { type: Number, required: true },
-  description: String,
-  quantity: { type: Number, required: true },
-});
+// Creates an object model for Student
+const studentSchema = new mongoose.Schema({
 
-export const Sample = mongoose.model('Sample', sampleSchema);
+    user_id: {
+        type:mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
+    student_id: {
+        type:mongoose.Schema.Types.ObjectId,
+        ref: 'StudentVerified',
+        required: true
+    },
+}, { timestamps: true });
+
+export const Student = mongoose.model('Student', managerSchema);
+
