@@ -1,12 +1,15 @@
 import mongoose from 'mongoose';
 
-//Creates an object model for Sample
-const sampleSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  type: { type: String, required: true },
-  price: { type: Number, required: true },
-  description: String,
-  quantity: { type: Number, required: true },
-});
+const TagSchema = new Schema({
+    tagID: { type: mongoose.Schema.Types.ObjectId, unique: true },
+    dataType: {
+        type: String, 
+        required: true 
+    }, 
+    name: { 
+        type: String, 
+        required: true 
+    } 
+}); 
 
-export const Sample = mongoose.model('Sample', sampleSchema);
+export const Tag = mongoose.model('Tag', TagSchema);

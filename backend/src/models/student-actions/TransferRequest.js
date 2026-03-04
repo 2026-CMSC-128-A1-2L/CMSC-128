@@ -1,12 +1,30 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-//Creates an object model for Sample
-const sampleSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  type: { type: String, required: true },
-  price: { type: Number, required: true },
-  description: String,
-  quantity: { type: Number, required: true },
+//Creates an object model for TransferRequest
+const TransferRequestSchema = new mongoose.Schema({
+  transferRequestID: { type: mongoose.Schema.Types.ObjectId, unique: true },
+  studentID: {
+    type:     mongoose.Schema.Types.ObjectId,
+    ref:      'VerifiedStudent', // Interaction point: PAYS relationship
+    required: true
+  },
+
+  unitID: {
+    type:     mongoose.Schema.Types.ObjectId,
+    ref:      'Unit',            // Interaction point: payment is for this unit
+    required: true
+  },
+
+  description: {
+    type:     String,
+    required: false
+  },
+
+  dateAndTime: {
+    type:    Date,
+    default: Date.now
+  }
 });
 
-export const Sample = mongoose.model('Sample', sampleSchema);
+export const TransferRequest = mongoose.model("TransferRequest", TransferRequestSchema);
+

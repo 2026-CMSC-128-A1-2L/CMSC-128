@@ -1,12 +1,13 @@
 import mongoose from 'mongoose';
 
-//Creates an object model for Sample
-const sampleSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  type: { type: String, required: true },
-  price: { type: Number, required: true },
-  description: String,
-  quantity: { type: Number, required: true },
-});
+const administratorSchema = new Schema({
+  administratorID: { type: mongoose.Schema.Types.ObjectId, unique: true },
+  userID: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'User', 
+    required: true 
+  },
 
-export const Sample = mongoose.model('Sample', sampleSchema);
+}, { timestamps: true });
+
+export const Administrator = mongoose.model('Administrator', administratorSchema);
