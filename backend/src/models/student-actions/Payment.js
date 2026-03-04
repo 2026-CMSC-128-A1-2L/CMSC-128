@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const paymentSchema = new mongoose.Schema({
-  PaymentID: { type: mongoose.Schema.Types.ObjectId, unique: true },
+  paymentID: { type: mongoose.Schema.Types.ObjectId, unique: true },
 
   studentID: {
     type:     mongoose.Schema.Types.ObjectId,

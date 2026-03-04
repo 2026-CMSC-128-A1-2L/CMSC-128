@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const rentalSchema = new mongoose.Schema({
-  rentalID: { type: mongoose.Schema.Types.ObjectId, unique: true },
+  rentID: { type: mongoose.Schema.Types.ObjectId, unique: true },
 
   studentID: {
     type:     mongoose.Schema.Types.ObjectId,

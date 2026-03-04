@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 
 //Schema message
 const messageSchema = new mongoose.Schema({
-    // Assumed that Mongo will create Primary Key
+    messageID: { type: mongoose.Schema.Types.ObjectId, unique: true },
 
     senderId: {
         type:     mongoose.Schema.Types.ObjectId,

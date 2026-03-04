@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 // Creates an object model for Manager
 const managerSchema = new mongoose.Schema({
-
+    managerID: { type: mongoose.Schema.Types.ObjectId, unique: true },
     userID: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
