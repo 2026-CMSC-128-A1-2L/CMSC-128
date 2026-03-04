@@ -1,12 +1,28 @@
+/*
+basically user attributes + landlord attributes
+and kung anoman connected sa landlord sa erd
+akala ko landlord yung higher in command bat
+manager maghihire ng landlord
+
+inadd ko pala yung HousingFacility and ManagerID pala like macheck natin kung anong
+facility yung kaya nila iedit and kung sino manager nila
+she mongo on my db till i atlas
+*/
+
 import mongoose from 'mongoose';
 
 //Creates an object model for Sample
-const sampleSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  type: { type: String, required: true },
-  price: { type: Number, required: true },
-  description: String,
-  quantity: { type: Number, required: true },
+const landlordSchema = new mongoose.Schema({
+  LandlordID: { type: mongoose.Schema.Types.ObjectId, unique: true },
+  Name: { type: String, required: true },                                 //user attributes
+  ProfilePicture: { type: String, required: true },                       //unsure paano istore yung image
+  Contact: { type: Number, required: true },
+  Email: { type: String, required: true },
+  HousingFacility: { type: String, ref: 'HousingFacility' },              //landlord attributes, new attribute
+  ManagerID: { type: mongoose.Schema.Types.ObjectId, ref: 'Manager' },    //new attribute
+  Applicants: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ApplicationForm' }],
+  Payments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Payment' }]
+  //need pa ng messages
 });
 
-export const Sample = mongoose.model('Sample', sampleSchema);
+export const Landlord = mongoose.model('Landlord', landlordSchema);
