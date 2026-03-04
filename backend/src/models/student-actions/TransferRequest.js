@@ -1,12 +1,12 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-//Creates an object model for Sample
-const sampleSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  type: { type: String, required: true },
-  price: { type: Number, required: true },
-  description: String,
-  quantity: { type: Number, required: true },
+//Creates an object model for TransferRequest
+const TransferRequestSchema = new mongoose.Schema({
+  StudentEmail: { type: String, required: true },
+  UnitId: { type: mongoose.Schema.Types.ObjectId, ref: "Unit" },
+  description: { type: String },
+  DateAndTime: { type: Date },
 });
 
-export const Sample = mongoose.model('Sample', sampleSchema);
+export const TransferRequest = mongoose.model("TransferRequest", TransferRequestSchema);
+
