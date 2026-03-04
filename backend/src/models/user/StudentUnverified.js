@@ -1,12 +1,40 @@
 import mongoose from 'mongoose';
 
-//Creates an object model for Sample
-const sampleSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  type: { type: String, required: true },
-  price: { type: Number, required: true },
-  description: String,
-  quantity: { type: Number, required: true },
-});
+// Creates an object model for studentUnverified
+const studentUnverifiedSchema = new mongoose.Schema({
 
-export const Sample = mongoose.model('Sample', sampleSchema);
+    student_id: {
+        type:mongoose.Schema.Types.ObjectId,
+        ref: 'Student',
+        required: true
+    },
+
+    Documents: {//for approval, was url in erd but turned to object id
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Documents',
+        required: true
+    },
+
+    UserInformation: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'UserInformation',
+        required: true
+    },
+
+    IdImage: {//URL reference to image
+        type: String,
+        required: true
+    },
+
+    VerificationStatus: {
+        type: String,
+        enum: ['Pending', 'Verified', 'Rejected'],
+        default: 'Pending'
+    },
+
+//Does not have any interactions
+
+}, { timestamps: true });
+
+export const studentUnverified = mongoose.model('studentUnverified', studentUnverifiedSchema);
+
