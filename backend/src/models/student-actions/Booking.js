@@ -2,11 +2,12 @@ import mongoose from 'mongoose';
 
 const visitBookingSchema = new mongoose.Schema({
   VisitBookingId: { type: mongoose.Schema.Types.ObjectId, unique: true },
-  StudentEmail: { type: String, ref: 'Student' },
-  HousingID: { type: String, ref: 'Housing' },
+  StudentEmail: { type: mongoose.Schema.Types.ObjectId, ref: 'Student' },
+  HousingID: { type: mongoose.Schema.Types.ObjectId, ref: 'Housing' },
   Status: { type: String, enum: ['pending', 'approved', 'rejected', 'cancelled'] },
   EndDateTime: { type: Date },
   StartDateTime: { type: Date },
+  // Reason for booking
   Request: { type: String },
   CreatedAt: { type: Date, default: Date.now },
   UpdatedAt: { type: Date, default: Date.now }
