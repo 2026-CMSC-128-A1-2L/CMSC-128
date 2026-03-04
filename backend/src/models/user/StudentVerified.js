@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 // Creates an object model for VerifiedStudent
-const verifiedStudentSchema = new mongoose.Schema({
+const studentVerifiedSchema = new mongoose.Schema({
 
     student_id: {
         type:mongoose.Schema.Types.ObjectId,
@@ -35,4 +35,5 @@ student reviews unit
 
 }, { timestamps: true });
 
-export const verifiedStudent = mongoose.model('verifiedStudent', verifiedStudentSchema);
+export const studentVerified = mongoose.model('StudentVerified', studentVerifiedSchema);
+
