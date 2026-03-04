@@ -5,20 +5,54 @@ import mongoose from 'mongoose';
 const userSchema = new mongoose.Schema({
     // Assumed that Mongo will create Primary Key
 
-    firstName: { type: String, required: true },
-    middleName: { type: String, required: true },
-    lastName: { type: String, required: true },
+    firstName: {
+        type:     String,
+        required: true
+    },
+    middleName: {
+        type:     String,
+        required: true
+    },
+    lastName: {
+        type:     String,
+        required: true
+    },
 
-    birthDate: { type: Date, required: true },             //  Student, Manager, Land lord
+    userType: {
+        type:     String,
+        enum:     ['student', 'manager', 'admin', 'guest'],
+        required: true
+    },
 
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
+    birthDate: { 
+        type: Date, 
+        required: true 
+    },             //  Student, Manager, Land lord
+
+    email: { 
+        type: String, 
+        required: true, 
+        unique: true 
+    },
+
+    password: { 
+        type: String, 
+        required: true 
+    },
 
     dateCreated: { type: Date, required: true },
     dateUpdated: { type: Date, required: true },
-    
-    userType: { type: String, required: true },             //  Student, Manager, Land lord
-    accountStatus: { type: String, required: true },        // Active, Unverified, Suspended etc..
+
+    is_active: {
+        type:    Boolean,
+        default: true
+        // Spec: CRUD for student users — para ma allow yung soft-disable of accounts
+    },
+
+    last_login: {
+        type: Date
+        // Spec: user activity logs (for login tracking ito)
+    },
 
     profilePicture:  { type: String, required: true },      // Should be a url
 })
