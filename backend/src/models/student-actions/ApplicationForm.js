@@ -1,12 +1,15 @@
 import mongoose from 'mongoose';
 
 //Creates an object model for Sample
-const sampleSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  type: { type: String, required: true },
-  price: { type: Number, required: true },
-  description: String,
-  quantity: { type: Number, required: true },
+const applicationFormSchema = new mongoose.Schema({
+  // Mongodb will make the primary key
+  StudentEmail: {type: String, required: true},
+  ListingId: {type: mongoose.Schema.ListingId},
+  UnitId: {type: mongoose.Schema.UnitId},
+  Status: {type: String},
+  FormDocumentsUrl: [
+    {type: String}
+  ]
 });
 
-export const Sample = mongoose.model('Sample', sampleSchema);
+export const ApplicationForm = mongoose.model('ApplicationForm', applicationFormSchema);

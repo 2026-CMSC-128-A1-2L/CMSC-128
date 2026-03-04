@@ -1,31 +1,36 @@
-import mongoose from 'mongoose';
-
-const UnitSchema = new Schema({
-    room_number: { 
-        type: Number, 
-        required: true 
+// unit schema
+const unitSchema = new mongoose.Schema({
+    room_number:
+    {
+        type: Number,
+        unique: true,
+        required: true
     },
-    listing_id: { 
-        type: Schema.Types.ObjectId, 
-        ref: 'Listing', 
-        required: true 
+    price:
+    {
+        type: Number,
+        required: true
     },
-    availability_status: { 
-        type: String, 
-        enum: ['Available', 'Occupied'] // add other status types
+    status:
+    {
+        type: String,
+        required: true,
+        enum: ["available", "occupied", "reserved", "maintenance"] // reserved = empty but to be occupied soon
     },
-    description: { 
-        type: String 
+    unit_listing:
+    {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Listing",
+        required: true
     },
-    current_occupancy: { 
-        type: Number, 
-        default: 0 
+    current_student: // student with relation to said unit atm
+    {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Verified Student",
     },
-    price: { 
-        type: Number, 
-        required: true 
+    transfer_request:
+    {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Transfer Request",
     }
-});
-
-export const Unit = mongoose.model('Unit', UnitSchema);
-
+})
