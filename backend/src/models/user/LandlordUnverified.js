@@ -9,20 +9,28 @@ import mongoose from 'mongoose';
 
 //Creates an object model for Sample
 const landlordUnverifiedSchema = new mongoose.Schema({
-  LandlordID: { type: mongoose.Schema.Types.ObjectId, unique: true },
-  Name: { type: String, required: true },                                 //user attributes
-  ProfilePicture: { type: String, required: true },                       //unsure paano istore yung image
-  Contact: { type: Number, required: true },
-  Email: { type: String, required: true },
-  HousingFacility: { type: String, ref: 'HousingFacility' },              //landlord attributes
-  ManagerID: { type: mongoose.Schema.Types.ObjectId, ref: 'Manager' },
-  Applicants: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ApplicationForm' }],   //to rmeove
-  Payments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Payment' }],             //to remove
-  IDImage: { type: String },                                              //unverified landlord attributes
-  DocumentsURL: { type: String },
-  UserInformation: { type: String },
-  VerificationApplicationStatus: { type: Number, default: 0 }             //0 = Pending, 1 = Approved, 2 = Rejected
-  //need pa ng messages
+  landlordUnverifiedID: { type: mongoose.Schema.Types.ObjectId, unique: true },
+  userID: {
+    type:     mongoose.Schema.Types.ObjectId,
+    ref:      'User',   // Interaction point: IS-A User
+    required: true
+  },
+
+  userInformation: {
+    type:     Object,
+    required: false     // Submitted personal details
+  },
+
+  documentsUrl: {
+    type:     String,
+    required: false     // Uploaded ID/supporting docs
+  },
+
+  verificationApplicationStatus: {
+    type:    String,
+    enum:    ['pending', 'rejected', 'approved'],
+    default: 'pending'
+  }
 });
 
 export const LandlordUnverified = mongoose.model('LandlordUnverified', landlordUnverifiedSchema);
