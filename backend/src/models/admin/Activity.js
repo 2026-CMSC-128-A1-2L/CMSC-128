@@ -1,29 +1,45 @@
 // activity schema
 const activitySchema = new mongoose.Schema({
-    activity_id:
-    {
+    activityID: {
         type: Number,
         unique: true,
         required: true
     }, 
-    type:
-    {
-        type: String,
-        required: true,
-        enum: ["login", "logout", "update", "others"] // types of activity to choose, can be expanded
-    }, // activity type
-    text: // to verify attribute use
-    {
+
+    userID: {
+        type:     mongoose.Schema.Types.ObjectId,
+        ref:      'User',   // Interaction point: the user who triggered the activity
+        required: true
+    },
+
+    actionType: {
+        type:     String,
+        enum:     [
+            'login',          // Spec: login activity log
+            'application',    // Spec: application activity log
+            'approval',       // Spec: approval activity log
+            'rejection',
+            'assignment',     // Spec: assignment audit trail
+            'update',         // Spec: update activity log
+            'payment',
+            'report',
+            'override'        // Spec: admin override of room assignments
+        ],
+        required: true
+    },
+
+    targetType: {
+        type:     String,
+        enum:     ['user', 'application', 'unit', 'facility', 'payment', 'report'],
+        required: false     // Kung anong activity
+    },
+
+    text: {
         type: String,
         required: true
     },
-    user: {
-        type: Schema.Types.ObjectId,
-        ref: "User",
-        required: true
-    },
-    activity_date: // time/date of said activity
-    {
+
+    activityDate: {
         type: Date,
         required: true
     }
