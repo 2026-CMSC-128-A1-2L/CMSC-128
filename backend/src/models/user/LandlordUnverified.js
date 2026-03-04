@@ -17,7 +17,7 @@ const landlordUnverifiedSchema = new mongoose.Schema({
   },
 
   userInformation: {
-    type:     Object,
+    type:     String,
     required: false     // Submitted personal details
   },
 
