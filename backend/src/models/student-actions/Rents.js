@@ -1,12 +1,17 @@
 import mongoose from 'mongoose';
 
-//Creates an object model for Sample
-const sampleSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  type: { type: String, required: true },
-  price: { type: Number, required: true },
-  description: String,
-  quantity: { type: Number, required: true },
+const rentalSchema = new mongoose.Schema({
+  LeaseID: { type: mongoose.Schema.Types.ObjectId, unique: true },
+  ListingID: { type: mongoose.Schema.Types.ObjectId, ref: 'Listing' },
+  StudentEmail: { type: mongoose.Schema.Types.ObjectId, ref: 'Student' },
+  Status: { type: String, enum: ['active', 'inactive', 'pending', 'cancelled'] }, 
+  ActualMoveInDate: { type: Date },
+  ActualMoveOutDate: { type: Date },
+  ExpectedMoveInDate: { type: Date },
+  ExpectedMoveOutDate: { type: Date },
+  Duration: { type: Number } // optional, can just be calculated from move-in and move-out dates
 });
 
-export const Sample = mongoose.model('Sample', sampleSchema);
+
+export const Rental = mongoose.model('Rental', rentalSchema);
+
