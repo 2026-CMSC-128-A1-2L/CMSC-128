@@ -1,10 +1,16 @@
 import mongoose from 'mongoose';
 
 const ListingSchema = new Schema({
-    facility_id: { 
-        type: Schema.Types.ObjectId,    // reference to parent housing
+    housingID: { 
+        type: mongoose.Schema.Types.ObjectId,    // reference to parent housing
         ref: 'HousingFacility', 
         required: true 
+    },
+    tags: {
+        type:    Array,
+        default: []
+        // Each entry is an ObjectId ref: 'Tag'
+        // Interaction point: HAS (many-to-many) with Tag.js
     },
     room_type: { 
         type: String, 
@@ -14,32 +20,26 @@ const ListingSchema = new Schema({
         type: Number, 
         required: true 
     },
-    is_private: { 
+    isPrivate: { 
         type: Boolean, 
         default: true 
     },
-    allow_visit: { 
+    allowVisit: { 
         type: Boolean, 
         default: false 
     },
-    allow_transfer: { 
+    allowTransfer: { 
         type: Boolean, 
         default: false 
     },
     description: { 
         type: String 
     },
-    media_urls: [
+    mediaUrls: [
         { type: String }
     ],
     units: [
         { type: Number } // array of room numbers
-    ], 
-    tags: [     // can use embedded instead of reference type
-        { 
-            type: Schema.Types.ObjectId, 
-            ref: 'Tag' 
-        }
     ]
 });
 
