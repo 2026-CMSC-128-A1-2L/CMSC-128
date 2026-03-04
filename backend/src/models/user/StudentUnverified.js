@@ -3,13 +3,13 @@ import mongoose from 'mongoose';
 // Creates an object model for studentUnverified
 const studentUnverifiedSchema = new mongoose.Schema({
 
-    userId: {
+    userID: {
         type:     mongoose.Schema.Types.ObjectId,
         ref:      'User',   // Interaction point: IS-A User
         required: true
     },
 
-    student_id: {
+    studentID: {
         type:mongoose.Schema.Types.ObjectId,
         ref: 'Student',
         required: true
