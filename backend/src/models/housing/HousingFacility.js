@@ -5,6 +5,10 @@ const HousingFacilitySchema = new Schema({
         type: String, 
         required: true 
     },
+    manager_id:{
+        type: Schema.Types.ObjectId,    // reference to Manager
+        ref: 'Manager'
+    },
     location: { // format for GeoJSON
         type: {
             type: String, 
@@ -35,3 +39,4 @@ const HousingFacilitySchema = new Schema({
 });
 
 export const HousingFacility = mongoose.model('HousingFacility', HousingFacilitySchema);
+
