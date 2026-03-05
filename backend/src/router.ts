@@ -34,28 +34,28 @@ const router = Router();
 router.get('/facilities', routeGetFacilities); // no auth
 router.post('/facilities', isManager, routeCreateFacility); // manager/landlord
 
-router.get('/facilities/:facility_id', routeGetFacilityById); // no auth
-router.patch('/facilities/:facility_id', routeUpdateFacility); // correct manager/landlord
-router.delete('/facilities/:facility_id', routeDeleteFacility); // correct manager/landlord, empty only
+router.get('/facilities/:facilityId', routeGetFacilityById); // no auth
+router.patch('/facilities/:facilityId', routeUpdateFacility); // correct manager/landlord
+router.delete('/facilities/:facilityId', routeDeleteFacility); // correct manager/landlord, empty only
 
-router.get('/facilities/:facility_id/listings', listingViewFilter, routeGetListingsByFacility); // correct manager/landlord
+router.get('/facilities/:facilityId/listings', listingViewFilter, routeGetListingsByFacility); // correct manager/landlord
 
 router.get('/listings', routeGetListings); // manager/landlord
 router.post('/listings', routeCreateListing); // manager/landlord
 
-router.get('/listings/:listing_id', listingViewFilter, routeGetListingById); // verified
-router.get('/listings/:listing_id/reviews', listingViewFilter, routeGetListingReviewsById); // verified
-router.patch('/listings/:listing_id', routeUpdateListing); // correct manager/landlord
-router.delete('/listings/:listing_id', routeDeleteListing); // correct manager/landlord
+router.get('/listings/:listingId', listingViewFilter, routeGetListingById); // verified
+router.get('/listings/:listingId/reviews', listingViewFilter, routeGetListingReviewsById); // verified
+router.patch('/listings/:listingId', routeUpdateListing); // correct manager/landlord
+router.delete('/listings/:listingId', routeDeleteListing); // correct manager/landlord
 
-router.get('/listings/:listing_id/units', routeGetUnitsByListing); // correct manager/landlord
+router.get('/listings/:listingId/units', routeGetUnitsByListing); // correct manager/landlord
 
 router.get('/units', isSuperAdmin, routeGetUnits); // superadmin only
 router.post('/units', routeCreateUnit); // correct manager/landlord, should have listing in body
 
-router.get('/units/:unit_id', routeGetUnitById); // correct manager/landlord (and user?)
-router.patch('/units/:unit_id', routeUpdateUnit); // correct manager/landlord
-router.delete('/units/:unit_id', routeDeleteUnit); // correct manager/landlord
+router.get('/units/:unitId', routeGetUnitById); // correct manager/landlord (and user?)
+router.patch('/units/:unitId', routeUpdateUnit); // correct manager/landlord
+router.delete('/units/:unitId', routeDeleteUnit); // correct manager/landlord
 
 router.get(
   '/auth/google/student',
