@@ -1,10 +1,8 @@
+import './config.js';
 import cors from 'cors';
 import express from 'express';
 import mongoose from 'mongoose';
-import dotenv from 'dotenv';
 import { apiRouter } from './router.js';
-
-dotenv.config();
 
 const app = express();
 // Fallback to 5000 if PORT isn't defined in .env
