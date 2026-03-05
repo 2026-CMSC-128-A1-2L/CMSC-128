@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 
 const HousingFacilitySchema = new mongoose.Schema({
-  housingID: { type: mongoose.Schema.Types.ObjectId, unique: true },
   name: {
     type: String,
     required: true,
@@ -42,19 +41,7 @@ const HousingFacilitySchema = new mongoose.Schema({
     // Spec: Capacity of the housing facility
   },
 
-  totalUnits: {
-    type: Number,
-    default: 0,
-    // Derived count of rooms/bed spaces under this facility
-  },
-
-  documentsUrl: [{ type: String }],
-
-  isAcceptingApplications: {
-    type: Boolean,
-    default: true,
-    // Spec: application must be submitted within the allowed application period
-  },
+  documentUrls: [{ type: String }],
 
   applicationOpenDate: {
     type: Date,
