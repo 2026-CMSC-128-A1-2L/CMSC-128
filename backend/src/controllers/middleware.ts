@@ -1,19 +1,43 @@
 import { RequestHandler } from 'express';
-
-/*
- * `listingViewFilter` and `listingUpdateFilter` adds filters to be passed to mongoose.
- */
+import { AppError } from './error';
 
 // Adds filters for private/public listings for unverified/verified users. Used for read actions on listings.
 export const listingViewFilter: RequestHandler = async (req, res, next) => {
+  if (!req.user || !req.user.isVerified) {
+    res.locals.filters = { isPrivate: false };
+  } else {
+    res.locals.filters = {};
+  }
+
   next();
 };
 
-// Adds filters for correct manager/landlord. Used for write actions on listings.
-//
-// ```
-// mongoose.
-// ```
-export const listingUpdateFilter: RequestHandler = async (req, res, next) => {
+export const isManager: RequestHandler = (req, res, next) => {
+  if (!req.user) {
+    return next(new AppError(401, 'Unauthenticated'));
+  }
+
+  if (
+    !(
+      req.user.userType == 'Manager' ||
+      req.user.userType == 'Landlord' ||
+      req.user.userType == 'Admin'
+    )
+  ) {
+    return next(new AppError(403, 'Forbidden'));
+  }
+
+  next();
+};
+
+export const isSuperAdmin: RequestHandler = (req, res, next) => {
+  if (!req.user) {
+    return next(new AppError(401, 'Unauthenticated'));
+  }
+
+  if (req.user.userType != 'Admin') {
+    return next(new AppError(403, 'Forbidden'));
+  }
+
   next();
 };
