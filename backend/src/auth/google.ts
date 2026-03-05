@@ -1,6 +1,6 @@
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
-import { User } from '../models/user/User';
+import { User, Student } from '../models/user/User';
 
 if (!process.env.GOOGLE_CLIENT_ID) {
   throw new Error('Missing GOOGLE_CLIENT_ID in environment variables.');
@@ -30,7 +30,6 @@ passport.use(
         firstName: profile.name.givenName,
         middleName: profile.name.middleName,
         lastName: profile.name.familyName,
-        userType: 'student',
         email: profile.emails[0].value,
         auth: {
           google: profile.id,
@@ -39,7 +38,7 @@ passport.use(
       };
 
       try {
-        const userResult = await User.findOneAndUpdate(searchQuery, updates, {
+        const userResult = await Student.findOneAndUpdate(searchQuery, updates, {
           returnDocument: 'after',
           upsert: true,
           includeResultMetadata: true,
