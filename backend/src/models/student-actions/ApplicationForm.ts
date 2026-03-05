@@ -54,7 +54,7 @@ const applicationFormSchema = new mongoose.Schema({
     // Spec: application must be submitted within the allowed application period
   },
 
-  assignedUnitId: {
+  unitID: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Unit',
     required: false,

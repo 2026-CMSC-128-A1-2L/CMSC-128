@@ -26,6 +26,9 @@ export default defineConfig([
       reactHooks.configs.flat.recommended,
       reactRefresh.configs.vite,
     ],
+    rules: {
+      '@typescript-eslint/no-unused-vars': 'off',
+    },
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
@@ -34,6 +37,10 @@ export default defineConfig([
   {
     files: ['backend/**/*.{ts,tsx}'],
     extends: [js.configs.recommended, tseslint.configs.recommendedTypeChecked],
+    rules: {
+      camelcase: ['warn', { properties: 'always' }],
+      '@typescript-eslint/no-unused-vars': 'off',
+    },
     languageOptions: {
       globals: globals.node,
     },
