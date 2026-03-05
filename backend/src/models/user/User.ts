@@ -41,13 +41,13 @@ const userSchema = new mongoose.Schema({
   dateCreated: { type: Date, required: true },
   dateUpdated: { type: Date, required: true },
 
-  is_active: {
+  isActive: {
     type: Boolean,
     default: true,
     // Spec: CRUD for student users — para ma allow yung soft-disable of accounts
   },
 
-  last_login: {
+  lastLogin: {
     type: Date,
     // Spec: user activity logs (for login tracking ito)
   },
