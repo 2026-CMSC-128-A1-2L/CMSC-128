@@ -9,14 +9,14 @@ facility yung kaya nila iedit and kung sino manager nila
 she mongo on my db till i atlas
 */
 
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 //Creates an object model for Sample
 const landlordSchema = new mongoose.Schema({
   landlordID: { type: mongoose.Schema.Types.ObjectId, unique: true },
   userID: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User", // Interaction point: IS-A User
+    ref: 'User', // Interaction point: IS-A User
     required: true,
   },
   name: { type: String, required: true }, //user attributes
@@ -25,4 +25,4 @@ const landlordSchema = new mongoose.Schema({
   email: { type: String, required: true },
 });
 
-export const Landlord = mongoose.model("Landlord", landlordSchema);
+export const Landlord = mongoose.model('Landlord', landlordSchema);

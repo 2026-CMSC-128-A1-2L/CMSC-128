@@ -9,9 +9,9 @@ import mongoose from 'mongoose';
 const landlordVerifiedSchema = new mongoose.Schema({
   landlordVerifiedID: { type: mongoose.Schema.Types.ObjectId, unique: true },
   userID: {
-    type:     mongoose.Schema.Types.ObjectId,
-    ref:      'User',   // Interaction point: IS-A User
-    required: true
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User', // Interaction point: IS-A User
+    required: true,
   },
 });
 
