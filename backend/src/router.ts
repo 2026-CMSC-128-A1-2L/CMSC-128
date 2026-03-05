@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { errorHandler } from './routes/error.js';
 import {
   routeGetFacilities,
   routeCreateFacility,
@@ -52,5 +53,7 @@ router.post('/units', routeCreateUnit); // correct manager/landlord, should have
 router.get('/units/:unit_id', routeGetUnitById); // correct manager/landlord (and user?)
 router.patch('/units/:unit_id', routeUpdateUnit); // correct manager/landlord
 router.delete('/units/:unit_id', routeDeleteUnit); // correct manager/landlord
+
+router.use(errorHandler);
 
 export { router as apiRouter };
