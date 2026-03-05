@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 // Creates an object model for studentUnverified
 const studentUnverifiedSchema = new mongoose.Schema(
@@ -6,13 +6,13 @@ const studentUnverifiedSchema = new mongoose.Schema(
     studentUnverifiedID: { type: mongoose.Schema.Types.ObjectId, unique: true },
     userID: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User", // Interaction point: IS-A User
+      ref: 'User', // Interaction point: IS-A User
       required: true,
     },
 
     studentID: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Student",
+      ref: 'Student',
       required: true,
     },
 
@@ -34,14 +34,11 @@ const studentUnverifiedSchema = new mongoose.Schema(
 
     verificationApplicationStatus: {
       type: String,
-      enum: ["pending", "rejected", "verified"],
-      default: "pending",
+      enum: ['pending', 'rejected', 'verified'],
+      default: 'pending',
     },
   },
   { timestamps: true },
 );
 
-export const StudentUnverified = mongoose.model(
-  "StudentUnverified",
-  studentUnverifiedSchema,
-);
+export const StudentUnverified = mongoose.model('StudentUnverified', studentUnverifiedSchema);

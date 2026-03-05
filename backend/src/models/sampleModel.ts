@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 // sampleSchema would be renamed to <entity>Schema
 const sampleSchema = new mongoose.Schema(
@@ -15,4 +15,4 @@ const sampleSchema = new mongoose.Schema(
 
 // "Sample" is the model name.
 // "Sample" must be the same name as the collection in mongodb
-export const Sample = mongoose.model("Sample", sampleSchema);
+export const Sample = mongoose.model('Sample', sampleSchema);

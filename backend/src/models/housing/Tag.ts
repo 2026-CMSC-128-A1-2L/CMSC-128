@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const TagSchema = new mongoose.Schema({
   tagID: { type: mongoose.Schema.Types.ObjectId, unique: true },
@@ -12,4 +12,4 @@ const TagSchema = new mongoose.Schema({
   },
 });
 
-export const Tag = mongoose.model("Tag", TagSchema);
+export const Tag = mongoose.model('Tag', TagSchema);

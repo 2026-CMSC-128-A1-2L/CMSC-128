@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 // Creates an object model for VerifiedStudent
 const studentVerifiedSchema = new mongoose.Schema(
@@ -6,13 +6,13 @@ const studentVerifiedSchema = new mongoose.Schema(
     studentVerifiedID: { type: mongoose.Schema.Types.ObjectId, unique: true },
     userID: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User", // Interaction point: IS-A User
+      ref: 'User', // Interaction point: IS-A User
       required: true,
     },
 
     studentID: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Student",
+      ref: 'Student',
       required: true,
     },
 
@@ -27,7 +27,4 @@ const studentVerifiedSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-export const StudentVerified = mongoose.model(
-  "StudentVerified",
-  studentVerifiedSchema,
-);
+export const StudentVerified = mongoose.model('StudentVerified', studentVerifiedSchema);

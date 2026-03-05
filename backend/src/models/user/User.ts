@@ -1,60 +1,58 @@
 import mongoose from 'mongoose';
 
-
 //Schema for user
 const userSchema = new mongoose.Schema({
-    userID: { type: mongoose.Schema.Types.ObjectId, unique: true },
-    firstName: {
-        type:     String,
-        required: true
-    },
-    middleName: {
-        type:     String,
-        required: true
-    },
-    lastName: {
-        type:     String,
-        required: true
-    },
+  userID: { type: mongoose.Schema.Types.ObjectId, unique: true },
+  firstName: {
+    type: String,
+    required: true,
+  },
+  middleName: {
+    type: String,
+    required: true,
+  },
+  lastName: {
+    type: String,
+    required: true,
+  },
 
-    userType: {
-        type:     String,
-        enum:     ['student', 'manager', 'admin', 'guest'],
-        required: true
-    },
+  userType: {
+    type: String,
+    enum: ['student', 'manager', 'admin', 'guest'],
+    required: true,
+  },
 
-    birthDate: { 
-        type: Date, 
-        required: true 
-    },             //  Student, Manager, Land lord
+  birthDate: {
+    type: Date,
+    required: true,
+  }, //  Student, Manager, Land lord
 
-    email: { 
-        type: String, 
-        required: true, 
-        unique: true 
-    },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+  },
 
-    password: { 
-        type: String, 
-        required: true 
-    },
+  password: {
+    type: String,
+    required: true,
+  },
 
-    dateCreated: { type: Date, required: true },
-    dateUpdated: { type: Date, required: true },
+  dateCreated: { type: Date, required: true },
+  dateUpdated: { type: Date, required: true },
 
-    is_active: {
-        type:    Boolean,
-        default: true
-        // Spec: CRUD for student users — para ma allow yung soft-disable of accounts
-    },
+  is_active: {
+    type: Boolean,
+    default: true,
+    // Spec: CRUD for student users — para ma allow yung soft-disable of accounts
+  },
 
-    last_login: {
-        type: Date
-        // Spec: user activity logs (for login tracking ito)
-    },
+  last_login: {
+    type: Date,
+    // Spec: user activity logs (for login tracking ito)
+  },
 
-    profilePicture:  { type: String, required: true },      // Should be a url
-})
+  profilePicture: { type: String, required: true }, // Should be a url
+});
 
-
-export const User = mongoose.model('User', userSchema);     // match name with mongo name
+export const User = mongoose.model('User', userSchema); // match name with mongo name
