@@ -13,12 +13,12 @@ const sampleSchema = new mongoose.Schema(
     name: { type: String, required: true },
     type: { type: String, required: true },
     price: { type: Number, required: true },
-    description: { type: String },
+    description: String,
     quantity: { type: Number, required: true },
   },
-  { timestamps: true } // automatically adds createdAt and updatedAt
+  { timestamps: true }, // automatically adds createdAt and updatedAt
 );
 
 // "Sample" is the model name.
 // "Sample" must be the same name as the collection in mongodb
-module.exports = mongoose.model("Sample", sampleSchema);
+export const Sample = mongoose.model("Sample", sampleSchema);
