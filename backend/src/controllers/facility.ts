@@ -14,8 +14,7 @@ export const routeGetFacilities: RequestHandler = async (req, res, next) => {};
 
 export const routeCreateFacility: RequestHandler = async (req, res, next) => {
   // auth check should be done in middleware before this, so should include user id already
-  // NOTE: the check does not exist yet, this will always be an error
-  const userId = res.locals.user.id;
+  const userId = req.user!._id;
 
   // zod schema for
   const ParamsSchema = z.object({
