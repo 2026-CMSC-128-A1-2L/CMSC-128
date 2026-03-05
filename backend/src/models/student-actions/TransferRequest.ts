@@ -1,17 +1,17 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 //Creates an object model for TransferRequest
 const TransferRequestSchema = new mongoose.Schema({
   transferRequestID: { type: mongoose.Schema.Types.ObjectId, unique: true },
   studentID: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "VerifiedStudent", // Interaction point: PAYS relationship
+    ref: 'VerifiedStudent', // Interaction point: PAYS relationship
     required: true,
   },
 
   unitID: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Unit", // Interaction point: payment is for this unit
+    ref: 'Unit', // Interaction point: payment is for this unit
     required: true,
   },
 
@@ -26,7 +26,4 @@ const TransferRequestSchema = new mongoose.Schema({
   },
 });
 
-export const TransferRequest = mongoose.model(
-  "TransferRequest",
-  TransferRequestSchema,
-);
+export const TransferRequest = mongoose.model('TransferRequest', TransferRequestSchema);

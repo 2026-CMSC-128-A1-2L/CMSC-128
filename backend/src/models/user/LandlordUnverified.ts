@@ -11,26 +11,26 @@ import mongoose from 'mongoose';
 const landlordUnverifiedSchema = new mongoose.Schema({
   landlordUnverifiedID: { type: mongoose.Schema.Types.ObjectId, unique: true },
   userID: {
-    type:     mongoose.Schema.Types.ObjectId,
-    ref:      'User',   // Interaction point: IS-A User
-    required: true
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User', // Interaction point: IS-A User
+    required: true,
   },
 
   userInformation: {
-    type:     String,
-    required: false     // Submitted personal details
+    type: String,
+    required: false, // Submitted personal details
   },
 
   documentsUrl: {
-    type:     String,
-    required: false     // Uploaded ID/supporting docs
+    type: String,
+    required: false, // Uploaded ID/supporting docs
   },
 
   verificationApplicationStatus: {
-    type:    String,
-    enum:    ['pending', 'rejected', 'approved'],
-    default: 'pending'
-  }
+    type: String,
+    enum: ['pending', 'rejected', 'approved'],
+    default: 'pending',
+  },
 });
 
 export const LandlordUnverified = mongoose.model('LandlordUnverified', landlordUnverifiedSchema);
