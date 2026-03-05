@@ -5,7 +5,7 @@ const bookmarkSchema = new mongoose.Schema({
   bookmarkID: { type: mongoose.Schema.Types.ObjectId, unique: true },
   studentID: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'VerifiedStudent', // Interaction point: student saves listing
+    ref: 'Student', // Interaction point: student saves listing
     required: true,
   },
 

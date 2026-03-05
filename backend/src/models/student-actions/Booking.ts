@@ -4,13 +4,13 @@ const visitBookingSchema = new mongoose.Schema({
   visitBookingID: { type: mongoose.Schema.Types.ObjectId, unique: true },
   studentID: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'VerifiedStudent', // Interaction point: PAYS relationship
+    ref: 'Student', // Interaction point: PAYS relationship
     required: true,
   },
 
   housingID: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Housing Facility',
+    ref: 'HousingFacility',
     required: true,
   },
 

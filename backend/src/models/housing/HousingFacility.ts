@@ -8,7 +8,7 @@ const HousingFacilitySchema = new mongoose.Schema({
 
   landlordID: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'VerifiedLandlord', // Interaction point: HAS relationship (landlord owns facility)
+    ref: 'Landlord', // Interaction point: HAS relationship (landlord owns facility)
     required: true,
   },
 
