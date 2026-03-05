@@ -1,10 +1,5 @@
 {
   "devDependencies": {
-    "@types/cors": "^2.8.19",
-    "@types/dotenv": "^6.1.1",
-    "@types/express": "^5.0.6",
-    "@types/mongoose": "^5.11.96",
-    "@types/node": "^25.3.3",
     "concurrently": "^9.2.1"
   },
   "name": "cmsc-128",
@@ -44,12 +39,12 @@
     "dev": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm run dev\""
   },
   "repository": {
-    "type": "git"
+    "type": "git",
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "module",
+  "type": "commonjs",
   "bugs": {
     "url": "https://github.com/quevinjames/CMSC-128/issues"
   },
