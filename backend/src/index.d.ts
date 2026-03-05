@@ -7,7 +7,14 @@ declare global {
       firstName: string;
       middleName: string;
       lastName: string;
-      userType: 'student' | 'manager' | 'admin' | 'landlord';
+      userType:
+        | 'Admin'
+        | 'Student'
+        | 'Manager'
+        | 'Landlord'
+        | 'UnverifiedStudent'
+        | 'UnverifiedManager'
+        | 'UnverifiedLandlord';
       birthDate?: Date;
       email: string;
       auth: {
