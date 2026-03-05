@@ -1,23 +1,23 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const visitBookingSchema = new mongoose.Schema({
   visitBookingID: { type: mongoose.Schema.Types.ObjectId, unique: true },
   studentID: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "VerifiedStudent", // Interaction point: PAYS relationship
+    ref: 'VerifiedStudent', // Interaction point: PAYS relationship
     required: true,
   },
 
   housingID: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Housing Facility",
+    ref: 'Housing Facility',
     required: true,
   },
 
   status: {
     type: String,
-    enum: ["pending", "approved", "rejected", "cancelled"],
-    default: "pending",
+    enum: ['pending', 'approved', 'rejected', 'cancelled'],
+    default: 'pending',
   },
   endDateTime: { type: Date, required: true },
   startDateTime: { type: Date, required: true },
@@ -28,5 +28,4 @@ const visitBookingSchema = new mongoose.Schema({
   updatedAt: { type: Date, default: Date.now },
 });
 
-export const VisitBooking = mongoose.model("VisitBooking", visitBookingSchema);
-
+export const VisitBooking = mongoose.model('VisitBooking', visitBookingSchema);

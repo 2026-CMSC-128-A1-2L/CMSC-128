@@ -1,16 +1,16 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const reviewSchema = new mongoose.Schema(
   {
     StudentID: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "VerifiedStudent",
+      ref: 'VerifiedStudent',
       required: true,
     },
 
     ListingID: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Listing",
+      ref: 'Listing',
       required: true,
     },
 
@@ -33,5 +33,4 @@ const reviewSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-export const ReviewModel = mongoose.model("Review", reviewSchema);
-
+export const ReviewModel = mongoose.model('Review', reviewSchema);

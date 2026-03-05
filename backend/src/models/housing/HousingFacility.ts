@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const HousingFacilitySchema = new mongoose.Schema({
   housingID: { type: mongoose.Schema.Types.ObjectId, unique: true },
@@ -9,20 +9,20 @@ const HousingFacilitySchema = new mongoose.Schema({
 
   landlordId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "VerifiedLandlord", // Interaction point: HAS relationship (landlord owns facility)
+    ref: 'VerifiedLandlord', // Interaction point: HAS relationship (landlord owns facility)
     required: true,
   },
 
   manager_id: {
     type: mongoose.Schema.Types.ObjectId, // reference to Manager
-    ref: "Manager",
+    ref: 'Manager',
   },
 
   location: {
     // format for GeoJSON
     type: {
       type: String,
-      default: "Point",
+      default: 'Point',
     },
     coordinates: {
       type: [Number], // [lat, long]
@@ -31,7 +31,7 @@ const HousingFacilitySchema = new mongoose.Schema({
 
   type: {
     type: String,
-    enum: ["on-campus", "off-campus", "partner housing"],
+    enum: ['on-campus', 'off-campus', 'partner housing'],
     required: true,
     // Spec: Type (on-campus, off-campus, partner housing)
   },
@@ -69,12 +69,9 @@ const HousingFacilitySchema = new mongoose.Schema({
   listings: [
     {
       type: mongoose.Schema.Types.ObjectId, // array of listing
-      ref: "Listing",
+      ref: 'Listing',
     },
   ],
 });
 
-export const HousingFacility = mongoose.model(
-  "HousingFacility",
-  HousingFacilitySchema,
-);
+export const HousingFacility = mongoose.model('HousingFacility', HousingFacilitySchema);

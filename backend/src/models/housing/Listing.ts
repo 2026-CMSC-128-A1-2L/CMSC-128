@@ -1,10 +1,10 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const ListingSchema = new mongoose.Schema({
   listingID: { type: mongoose.Schema.Types.ObjectId, unique: true },
   housingID: {
     type: mongoose.Schema.Types.ObjectId, // reference to parent housing
-    ref: "HousingFacility",
+    ref: 'HousingFacility',
     required: true,
   },
   tags: {
@@ -42,4 +42,4 @@ const ListingSchema = new mongoose.Schema({
   ],
 });
 
-export const Listing = mongoose.model("Listing", ListingSchema);
+export const Listing = mongoose.model('Listing', ListingSchema);

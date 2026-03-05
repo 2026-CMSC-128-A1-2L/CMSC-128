@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 //Schema message
 const messageSchema = new mongoose.Schema({
@@ -6,13 +6,13 @@ const messageSchema = new mongoose.Schema({
 
   senderId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User", // Interaction point: any platform user can send
+    ref: 'User', // Interaction point: any platform user can send
     required: true,
   },
 
   receiverId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User", // Interaction point: any platform user can receive
+    ref: 'User', // Interaction point: any platform user can receive
     required: true,
   },
 
@@ -24,4 +24,4 @@ const messageSchema = new mongoose.Schema({
   dateSeen: { type: Date, required: true },
 });
 
-export const Message = mongoose.model("Message", messageSchema);
+export const Message = mongoose.model('Message', messageSchema);
