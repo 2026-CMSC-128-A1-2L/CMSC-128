@@ -25,6 +25,7 @@ import {
   routeDeleteUnit,
 } from './controllers/unit.js';
 import { listingViewFilter, listingUpdateFilter } from './controllers/middleware.js';
+import passportGoogle from './auth/google.js';
 
 const router = Router();
 
@@ -55,6 +56,18 @@ router.post('/units', routeCreateUnit); // correct manager/landlord, should have
 router.get('/units/:unit_id', routeGetUnitById); // correct manager/landlord (and user?)
 router.patch('/units/:unit_id', routeUpdateUnit); // correct manager/landlord
 router.delete('/units/:unit_id', routeDeleteUnit); // correct manager/landlord
+
+router.get(
+  '/auth/google/student',
+  passportGoogle.authenticate('google', { scope: ['profile', 'email'] }),
+);
+router.get(
+  '/auth/google/student/callback',
+  passportGoogle.authenticate('google', { failureRedirect: '/login' }),
+  function (req, res) {
+    res.json(req.user);
+  },
+);
 
 router.use(errorHandler);
 
