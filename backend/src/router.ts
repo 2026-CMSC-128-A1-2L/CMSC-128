@@ -41,7 +41,8 @@ router.get('/facilities/:facility_id/listings', listingViewFilter, routeGetListi
 router.get('/listings', listingUpdateFilter, routeGetListings); // manager/landlord
 router.post('/listings', listingUpdateFilter, routeCreateListing); // manager/landlord
 
-router.get('/listings/:listing_id', listingViewFilter, routeGetListingById); // correct manager/landlord
+router.get('/listings/:listing_id', listingViewFilter, routeGetListingById); // verified
+router.get('/listings/:listing_id/reviews', listingViewFilter, routeGetListingReviewsById); // verified
 router.patch('/listings/:listing_id', listingUpdateFilter, routeUpdateListing); // correct manager/landlord
 router.delete('/listings/:listing_id', listingUpdateFilter, routeDeleteListing); // correct manager/landlord
 
