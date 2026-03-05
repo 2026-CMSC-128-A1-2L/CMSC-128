@@ -2,6 +2,7 @@ import cors from 'cors';
 import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import { apiRouter } from './router.js';
 
 dotenv.config();
 
@@ -14,9 +15,11 @@ app.use(cors());
 app.use(express.json());
 
 // Test route
-app.get('/', (req, res) => {
-  res.send('Backend is running');
-});
+app
+  .get('/', (req, res) => {
+    res.send('Backend is running');
+  })
+  .use('/api', apiRouter);
 
 if (!process.env.MONGO_URL) {
   throw new Error('Missing MONGO_URL in environment variables.');
