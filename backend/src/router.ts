@@ -6,7 +6,7 @@ import {
   routeUpdateFacility,
   routeDeleteFacility,
   routeGetListingsByFacility,
-} from './routes/facility.js';
+} from './controllers/facility.js';
 import {
   routeGetListings,
   routeCreateListing,
@@ -14,15 +14,16 @@ import {
   routeUpdateListing,
   routeDeleteListing,
   routeGetUnitsByListing,
-} from './routes/listing.js';
+  routeGetListingReviewsById,
+} from './controllers/listing.js';
 import {
   routeGetUnits,
   routeCreateUnit,
   routeGetUnitById,
   routeUpdateUnit,
   routeDeleteUnit,
-} from './routes/unit.js';
-import { listingViewFilter, listingUpdateFilter } from './routes/middleware.js';
+} from './controllers/unit.js';
+import { listingViewFilter, listingUpdateFilter } from './controllers/middleware.js';
 
 const router = Router();
 
