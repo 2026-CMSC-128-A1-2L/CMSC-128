@@ -46,6 +46,10 @@ const userSchema = new mongoose.Schema({
   },
 
   profilePicture: String,
+  isVerified: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 export const User = mongoose.model('User', userSchema); // match name with mongo name
