@@ -63,10 +63,7 @@ router.get(
 );
 router.get(
   '/auth/google/student/callback',
-  passportGoogle.authenticate('google', { failureRedirect: '/login' }),
-  function (req, res) {
-    res.json(req.user);
-  },
+  passportGoogle.authenticate('google', { failureRedirect: '/login', successRedirect: '/' }),
 );
 
 router.use(errorHandler);
