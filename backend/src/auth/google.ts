@@ -53,11 +53,7 @@ passport.use(
         }
 
         // upsert
-        return done(null, {
-          id: user._id.toHexString(),
-          email: user.email,
-          userType: user.userType,
-        });
+        return done(null, user as any);
       } catch (err) {
         return done(err);
       }
@@ -66,7 +62,7 @@ passport.use(
 );
 
 passport.serializeUser((user, done) => {
-  done(null, user.id);
+  done(null, user._id.toHexString());
 });
 
 passport.deserializeUser(async (id, done) => {
@@ -75,7 +71,7 @@ passport.deserializeUser(async (id, done) => {
     done('User not found');
   }
 
-  done(null, user);
+  done(null, user as any);
 });
 
 export default passport;
