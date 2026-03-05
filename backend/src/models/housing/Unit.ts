@@ -48,7 +48,7 @@ const unitSchema = new mongoose.Schema({
   // student with relation to said unit atm
   studentID: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'StudentVerified',
+    ref: 'Student',
   },
 
   transferRequestID: {

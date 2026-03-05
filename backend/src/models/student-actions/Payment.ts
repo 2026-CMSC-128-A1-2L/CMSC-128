@@ -5,7 +5,7 @@ const paymentSchema = new mongoose.Schema({
 
   studentID: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'VerifiedStudent', // Interaction point: PAYS relationship
+    ref: 'Student', // Interaction point: PAYS relationship
     required: true,
   },
 

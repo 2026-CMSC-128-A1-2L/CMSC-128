@@ -4,7 +4,7 @@ const reviewSchema = new mongoose.Schema(
   {
     StudentID: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'VerifiedStudent',
+      ref: 'Student',
       required: true,
     },
 
