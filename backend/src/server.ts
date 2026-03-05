@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 import { apiRouter } from './router.js';
 import session from 'express-session';
 import passport from 'passport';
+import { createProxyMiddleware } from 'http-proxy-middleware';
 import conn from 'connect-mongodb-session';
 
 const MongoDBStore = conn(session);
@@ -47,6 +48,19 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/api', apiRouter);
+
+// just proxy to simplify instead of figuring out how to have credentials work cross-site
+const proxy = createProxyMiddleware({
+  target: {
+    protocol: 'http',
+    port: 5173,
+    host: 'localhost',
+  },
+  changeOrigin: true,
+  ws: true,
+});
+
+app.use('/', proxy);
 
 // Connect to MongoDB
 mongoose
