@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { errorHandler } from './routes/error.js';
+import { errorHandler } from './controllers/error.js';
 import {
   routeGetFacilities,
   routeCreateFacility,
