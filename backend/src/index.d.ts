@@ -1,9 +1,23 @@
+import mongoose from 'mongoose';
+
 declare global {
   namespace Express {
     interface User {
-      id: string;
+      _id: mongoose.Types.ObjectId;
+      firstName: string;
+      middleName: string;
+      lastName: string;
+      userType: 'student' | 'manager' | 'admin' | 'landlord';
+      birthDate?: Date;
       email: string;
-      userType: 'admin' | 'manager' | 'landlord' | 'student';
+      auth: {
+        google?: string;
+        password?: string;
+      };
+      isActive: boolean;
+      lastLogin?: Date;
+      profilePicture?: String;
+      isVerified: boolean;
     }
   }
 }
