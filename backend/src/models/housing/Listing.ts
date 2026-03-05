@@ -13,7 +13,7 @@ const ListingSchema = new mongoose.Schema({
     // Each entry is an ObjectId ref: 'Tag'
     // Interaction point: HAS (many-to-many) with Tag.js
   },
-  room_type: {
+  roomType: {
     type: String,
     required: true,
   },

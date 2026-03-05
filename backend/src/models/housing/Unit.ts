@@ -51,7 +51,7 @@ const unitSchema = new mongoose.Schema({
     ref: 'StudentVerified',
   },
 
-  transfer_request: {
+  transferRequestID: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'TransferRequest',
   },
