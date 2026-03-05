@@ -2,7 +2,6 @@ import mongoose from 'mongoose';
 
 //Schema for user
 const userSchema = new mongoose.Schema({
-  userID: { type: mongoose.Schema.Types.ObjectId, unique: true },
   firstName: {
     type: String,
     required: true,
@@ -18,14 +17,11 @@ const userSchema = new mongoose.Schema({
 
   userType: {
     type: String,
-    enum: ['student', 'manager', 'admin', 'guest'],
+    enum: ['student', 'manager', 'admin', 'landlord'],
     required: true,
   },
 
-  birthDate: {
-    type: Date,
-    required: true,
-  }, //  Student, Manager, Land lord
+  birthDate: Date, //  Student, Manager, Land lord
 
   email: {
     type: String,
@@ -33,13 +29,10 @@ const userSchema = new mongoose.Schema({
     unique: true,
   },
 
-  password: {
-    type: String,
-    required: true,
+  auth: {
+    google: String,
+    password: String,
   },
-
-  dateCreated: { type: Date, required: true },
-  dateUpdated: { type: Date, required: true },
 
   isActive: {
     type: Boolean,
@@ -52,7 +45,7 @@ const userSchema = new mongoose.Schema({
     // Spec: user activity logs (for login tracking ito)
   },
 
-  profilePicture: { type: String, required: true }, // Should be a url
+  profilePicture: String,
 });
 
 export const User = mongoose.model('User', userSchema); // match name with mongo name
