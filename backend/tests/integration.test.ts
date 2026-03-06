@@ -88,6 +88,14 @@ describe('', () => {
         });
         expect(response.statusCode).toBe(422);
       });
+      it('should respond with a 400 status code when an invalid data type is passed', async () => {
+        const response = await landlordAgent.post('/api/facilities').send({
+          ...facility,
+          applicationCloseDate: 'hello',
+        });
+        expect(response.statusCode).toBe(400);
+        expect(response.body.length).toBe(1);
+      });
       it('should respond with a 201 status code and retrieve with GET', async () => {
         const response = await landlordAgent.post('/api/facilities').send(facility);
         expect(response.statusCode).toBe(201);
