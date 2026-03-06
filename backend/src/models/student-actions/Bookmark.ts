@@ -2,22 +2,11 @@ import mongoose from 'mongoose';
 
 //Creates an object model for Sample
 const bookmarkSchema = new mongoose.Schema({
-  bookmarkID: { type: mongoose.Schema.Types.ObjectId, unique: true },
-  studentID: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'VerifiedStudent', // Interaction point: student saves listing
-    required: true,
-  },
-
-  listingID: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Listing', // Interaction point: listing being bookmarked
-    required: true,
-  },
-
-  BookmarkedAt: { type: Date, default: Date.now },
+  studentID: { type: mongoose.Schema.Types.ObjectId, ref: 'Student', required: true }, // Interaction point: student saves listing
+  listingID: { type: mongoose.Schema.Types.ObjectId, ref: 'Listing', required: true }, // Interaction point: listing being bookmarked
+  bookmarkedAt: { type: Date, default: Date.now }, // sort field
   // reason for bookmarking, optional
-  Notes: { type: String },
+  notes: { type: String },
 });
 
 export const Bookmark = mongoose.model('Bookmark', bookmarkSchema);
