@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { RequestHandler, Router } from 'express';
 import { errorHandler } from './controllers/error.js';
 import {
   routeGetFacilities,
@@ -65,11 +65,14 @@ router.delete('/units/:unitId', routeDeleteUnit); // correct manager/landlord
 
 router.get(
   '/auth/google/student',
-  passportGoogle.authenticate('google', { scope: ['profile', 'email'] }),
+  passportGoogle.authenticate('google', { scope: ['profile', 'email'] }) as RequestHandler,
 );
 router.get(
   '/auth/google/student/callback',
-  passportGoogle.authenticate('google', { failureRedirect: '/login', successRedirect: '/' }),
+  passportGoogle.authenticate('google', {
+    failureRedirect: '/login',
+    successRedirect: '/',
+  }) as RequestHandler,
 );
 
 // creation of fake accounts endpoints
