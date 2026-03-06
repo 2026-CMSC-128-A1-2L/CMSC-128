@@ -25,41 +25,92 @@ try {
 }
 
 describe('', () => {
-  const agent = request.agent(app);
+  const landlordAgent = request.agent(app);
+  const managerAgent = request.agent(app);
+  const studentAgent = request.agent(app);
+  const unverifiedStudentAgent = request.agent(app);
+  const guestAgent = request.agent(app);
 
   beforeAll(async () => {
-    // creating test user
-    await agent.post('/api/auth/test/register').send({
+    // creating test users
+    await landlordAgent.post('/api/auth/test/register').send({
+      firstName: 'Sena',
+      lastName: 'Juo',
+      email: 'test@example.com',
+      userType: 'Landlord',
+      auth: {},
+      contact: '09987654321',
+    });
+    await managerAgent.post('/api/auth/test/register').send({
       firstName: 'Misuzu',
       lastName: 'Hataya',
-      email: 'test@example.com',
+      email: 'test2@example.com',
       userType: 'Manager',
       auth: {},
       contact: '09123456789',
     });
-  });
-
-  describe('POST /api/auth/test/login', () => {
-    it('should respond with a 200 status code', async () => {
-      const response = await agent.post('/api/auth/test/login').send({
-        email: 'test@example.com',
-      });
-
-      expect(response.statusCode).toBe(200);
+    await studentAgent.post('/api/auth/test/register').send({
+      firstName: 'Ume',
+      lastName: 'Hanami',
+      email: 'test3@example.com',
+      userType: 'Student',
+      auth: {},
+      studentNumber: '2023-09283',
     });
+    await unverifiedStudentAgent.post('/api/auth/test/register').send({
+      firstName: 'Ume',
+      lastName: 'Saki',
+      email: 'test4@example.com',
+      userType: 'UnverifiedStudent',
+      auth: {},
+    });
+
+    await landlordAgent.post('/api/auth/test/login').send({ email: 'test@example.com' });
+    await managerAgent.post('/api/auth/test/login').send({ email: 'test2@example.com' });
+    await studentAgent.post('/api/auth/test/login').send({ email: 'test3@example.com' });
+    await unverifiedStudentAgent.post('/api/auth/test/login').send({ email: 'test4@example.com' });
   });
 
-  describe('POST /api/facilities', () => {
-    it('should respond with a 200 status code and JSON content', async () => {
-      // logging in test user
-      const response = await agent.post('/api/facilities').send({
-        name: 'Test Facility',
-        type: 'on-campus',
-        location: 'good facility',
-        applicationCloseDate: new Date(Date.now() + 1000000000).toISOString(),
-        applicationOpenDate: new Date(Date.now()).toISOString(),
+  describe('POST /api/facilities', async () => {
+    const facility = {
+      name: 'Test Facility',
+      type: 'on-campus',
+      location: 'good facility',
+      applicationCloseDate: new Date(2026, 3, 6, 18, 15, 10).toISOString(),
+      applicationOpenDate: new Date(2026, 2, 6, 18, 15, 10).toISOString(),
+    };
+    describe('When the user is a Landlord', () => {
+      it('should respond with a 422 status code when the application close date is before the application start date', async () => {
+        const response = await landlordAgent.post('/api/facilities').send({
+          ...facility,
+          applicationCloseDate: facility.applicationOpenDate,
+          applicationOpenDate: facility.applicationCloseDate,
+        });
+        expect(response.statusCode).toBe(422);
       });
-      expect(response.statusCode).toBe(201);
+      it('should respond with a 201 status code and retrieve with GET', async () => {
+        const response = await landlordAgent.post('/api/facilities').send(facility);
+        expect(response.statusCode).toBe(201);
+
+        const id = response.body.d;
+        expect(id).toBeDefined();
+
+        const getResponse = await landlordAgent.get(`/api/facilities/${id}`);
+        expect(getResponse.statusCode).toBe(200);
+        expect(getResponse.body).toMatchObject({ name: facility.name });
+      });
+    });
+    describe('When the user is a Guest', async () => {
+      it('should respond with a 401', async () => {
+        const response = await guestAgent.post('/api/facilities').send(facility);
+        expect(response.statusCode).toBe(401);
+      });
+    });
+    describe('When the user is a Student', async () => {
+      it('should respond with a 403', async () => {
+        const response = await studentAgent.post('/api/facilities').send(facility);
+        expect(response.statusCode).toBe(403);
+      });
     });
   });
 });
