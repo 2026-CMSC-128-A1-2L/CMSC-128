@@ -1,9 +1,10 @@
 import { RequestHandler } from 'express';
 import { AppError } from './error';
+import { isVerified } from '../models/user/User';
 
 // Adds filters for private/public listings for unverified/verified users. Used for read actions on listings.
 export const listingViewFilter: RequestHandler = async (req, res, next) => {
-  if (!req.user || !req.user.isVerified) {
+  if (!req.user || !isVerified(req.user.userType)) {
     res.locals.filters = { isPrivate: false };
   } else {
     res.locals.filters = {};
