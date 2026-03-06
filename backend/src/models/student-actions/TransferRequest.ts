@@ -1,29 +1,13 @@
 import mongoose from 'mongoose';
 
 //Creates an object model for TransferRequest
-const TransferRequestSchema = new mongoose.Schema({
-  transferRequestID: { type: mongoose.Schema.Types.ObjectId, unique: true },
-  studentID: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'VerifiedStudent', // Interaction point: PAYS relationship
-    required: true,
+const TransferRequestSchema = new mongoose.Schema(
+  {
+    studentID: { type: mongoose.Schema.Types.ObjectId, ref: 'Student', required: true },
+    unitID: { type: mongoose.Schema.Types.ObjectId, ref: 'Unit', required: true },
+    description: { type: String, required: false }, // reason for transfer?
   },
-
-  unitID: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Unit', // Interaction point: payment is for this unit
-    required: true,
-  },
-
-  description: {
-    type: String,
-    required: false,
-  },
-
-  dateAndTime: {
-    type: Date,
-    default: Date.now,
-  },
-});
+  { timestamps: true },
+);
 
 export const TransferRequest = mongoose.model('TransferRequest', TransferRequestSchema);
