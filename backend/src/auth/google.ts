@@ -1,6 +1,7 @@
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
-import { User, Student } from '../models/user/User';
+import { User } from '../models/user/User';
+import { createUnverifiedStudent } from '../services/user';
 
 if (!process.env.GOOGLE_CLIENT_ID) {
   throw new Error('Missing GOOGLE_CLIENT_ID in environment variables.');
@@ -22,11 +23,7 @@ passport.use(
         return done('No email or name');
       }
 
-      const searchQuery = {
-        email: profile.emails[0].value,
-      };
-
-      const updates = {
+      const params: CreateUserParams = {
         firstName: profile.name.givenName,
         middleName: profile.name.middleName,
         lastName: profile.name.familyName,
@@ -38,21 +35,7 @@ passport.use(
       };
 
       try {
-        const userResult = await Student.findOneAndUpdate(searchQuery, updates, {
-          returnDocument: 'after',
-          upsert: true,
-          includeResultMetadata: true,
-        });
-
-        console.log(userResult);
-        const user = userResult.value;
-
-        if (!user) {
-          throw new Error('User should not be null after upsert');
-        }
-
-        // upsert
-        return done(null, user as any);
+        return done(null, (await createUnverifiedStudent(params)) as any);
       } catch (err) {
         return done(err);
       }
