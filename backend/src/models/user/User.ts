@@ -11,6 +11,19 @@ const userSchema = new mongoose.Schema(
     auth: { type: { google: String, password: String }, required: true },
     isActive: { type: Boolean, default: true }, // Spec: CRUD for student users — para ma allow yung soft-disable of accounts
     lastLogin: { type: Date }, // Spec: user activity logs (for login tracking ito)
+    userType: {
+      type: String,
+      enum: [
+        'Admin',
+        'Landlord',
+        'Manager',
+        'Student',
+        'UnverifiedLandlord',
+        'UnverifiedManager',
+        'UnverifiedStudent',
+      ],
+      required: true,
+    },
     profilePicture: String,
   },
   { timestamps: true, discriminatorKey: 'userType' },
