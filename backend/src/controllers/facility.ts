@@ -31,7 +31,7 @@ export const routeCreateFacility: RequestHandler = async (req, res, next) => {
     documentsUrl: z.string().optional(),
   });
 
-  const params = ParamsSchema.parse(req.params);
+  const params = ParamsSchema.parse(req.body);
 
   const args: CreateFacilityArguments = {
     landlordID: userId,
