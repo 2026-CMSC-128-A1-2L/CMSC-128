@@ -12,7 +12,6 @@ const userSchema = new mongoose.Schema(
     isActive: { type: Boolean, default: true }, // Spec: CRUD for student users — para ma allow yung soft-disable of accounts
     lastLogin: { type: Date }, // Spec: user activity logs (for login tracking ito)
     profilePicture: String,
-    isVerified: Boolean,
   },
   { timestamps: true, discriminatorKey: 'userType' },
 );
@@ -55,3 +54,6 @@ const verificationSchema = new mongoose.Schema({
 export const UnverifiedLandlord = User.discriminator('UnverifiedLandlord', verificationSchema);
 export const UnverifiedManager = User.discriminator('UnverifiedManager', verificationSchema);
 export const UnverifiedStudent = User.discriminator('UnverifiedStudent', verificationSchema);
+
+export const isVerified = (userType: string) =>
+  userType == 'Admin' || userType == 'Landlord' || userType == 'Manager' || userType == 'Student';
