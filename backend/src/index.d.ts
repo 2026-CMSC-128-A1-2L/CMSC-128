@@ -5,7 +5,7 @@ declare global {
     interface User {
       _id: mongoose.Types.ObjectId;
       firstName: string;
-      middleName: string;
+      middleName?: string | null;
       lastName: string;
       userType:
         | 'Admin'
