@@ -29,7 +29,7 @@ export const createUnverifiedStudent = async (params: CreateUserParams) => {
   return user;
 };
 
-export const createTestUser = async (params: any) => {
+export const createTestUser = async (params: unknown) => {
   const user = new User(params);
   const userResult = await user.save();
 
