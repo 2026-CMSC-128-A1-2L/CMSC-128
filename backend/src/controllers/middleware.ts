@@ -42,3 +42,11 @@ export const isSuperAdmin: RequestHandler = (req, res, next) => {
 
   next();
 };
+
+export const isDevelopment: RequestHandler = (req, res, next) => {
+  if (process.env.NODE_ENV == 'development' || process.env.NODE_ENV == 'test') {
+    return next();
+  }
+
+  res.status(401).send();
+};

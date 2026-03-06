@@ -1,4 +1,4 @@
-import { UnverifiedStudent } from '../models/user/User';
+import { UnverifiedStudent, User } from '../models/user/User';
 
 export type CreateUserParams = {
   firstName: string;
@@ -27,4 +27,16 @@ export const createUnverifiedStudent = async (params: CreateUserParams) => {
 
   // TODO: verify that this does not leak data
   return user;
+};
+
+export const createTestUser = async (params: any) => {
+  const user = new User(params);
+  const userResult = await user.save();
+
+  console.log(userResult);
+  return user;
+};
+
+export const getUserByEmail = async (email: string) => {
+  return await User.findOne({ email });
 };
