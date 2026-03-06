@@ -21,11 +21,11 @@ export const User = mongoose.model('User', userSchema); // match name with mongo
 export const Admin = User.discriminator('Admin', new mongoose.Schema());
 export const Landlord = User.discriminator(
   'Landlord',
-  new mongoose.Schema({ contact: { type: Number, required: true } }),
+  new mongoose.Schema({ contact: { type: String, required: true } }),
 );
 export const Manager = User.discriminator(
   'Manager',
-  new mongoose.Schema({ contact: { type: Number, required: true } }),
+  new mongoose.Schema({ contact: { type: String, required: true } }),
 );
 export const Student = User.discriminator(
   'Student',
