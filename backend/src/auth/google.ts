@@ -35,9 +35,9 @@ passport.use(
         profilePicture: profile.profileUrl,
       };
 
-      createUnverifiedStudent(params).then(
-        user => done(null, user as Express.User)
-      ).catch(err => done(err));
+      createUnverifiedStudent(params)
+        .then((user) => done(null, user as Express.User))
+        .catch((err) => done(err));
     },
   ),
 );
@@ -47,13 +47,15 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser((id, done) => {
-  User.findById(id).then(user => {
-    if (!user) {
-      done('User not found');
-    } else {
-      done(null, user as Express.User);
-    }
-  }).catch(e => done(e));
+  User.findById(id)
+    .then((user) => {
+      if (!user) {
+        done('User not found');
+      } else {
+        done(null, user as Express.User);
+      }
+    })
+    .catch((e) => done(e));
 });
 
 export default passport;
