@@ -16,10 +16,12 @@ const userType = {
 } as const;
 
 const verificationSchema = {
-  verification: z.object({
-    documentUrls: z.array(z.string()),
-    status: z.enum(['pending', 'submitted', 'rejected', 'approved']),
-  }),
+  verification: z
+    .object({
+      documentUrls: z.array(z.string()),
+      status: z.enum(['pending', 'submitted', 'rejected', 'approved']),
+    })
+    .optional(),
 };
 
 const testRegisterSchema = z.discriminatedUnion('userType', [
