@@ -18,7 +18,6 @@ export const routeCreateFacility: RequestHandler = async (req, res, next) => {
 
   // zod schema for
   const ParamsSchema = z.object({
-    landlordID: objectIdSchema,
     managerID: objectIdSchema.optional(),
 
     name: z.string(),
