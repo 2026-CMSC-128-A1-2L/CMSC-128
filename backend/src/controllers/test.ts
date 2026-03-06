@@ -17,7 +17,7 @@ const userType = {
 
 const verificationSchema = {
   verification: z.object({
-    documentUrls: z.record(z.string(), z.string()),
+    documentUrls: z.array(z.string()),
     status: z.enum(['pending', 'submitted', 'rejected', 'approved']),
   }),
 };
@@ -25,7 +25,7 @@ const verificationSchema = {
 const testRegisterSchema = z.discriminatedUnion('userType', [
   z.object({ userType: z.literal('Admin'), ...userType }),
   z.object({ userType: z.literal('UnverifiedLandlord'), ...userType, ...verificationSchema }),
-  z.object({ userType: z.literal('UnverifiedManager'), ...userType, ...verificationSchema }),
+  z.object({ userType: z.literal('UnverifiedManager'), ...userType }),
   z.object({ userType: z.literal('UnverifiedStudent'), ...userType, ...verificationSchema }),
   z.object({ userType: z.literal('Landlord'), ...userType, contact: z.string() }),
   z.object({ userType: z.literal('Manager'), ...userType, contact: z.string() }),

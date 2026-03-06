@@ -6,11 +6,11 @@ const userSchema = new mongoose.Schema(
     firstName: { type: String, required: true },
     middleName: String,
     lastName: { type: String, required: true },
-    birthDate: Date, //  Student, Manager, Land lord
-    email: { type: String, required: true, unique: true },
+
+    birthDate: Date,
+    email: { type: String, unique: true, required: true },
     auth: { type: { google: String, password: String }, required: true },
-    isActive: { type: Boolean, default: true }, // Spec: CRUD for student users — para ma allow yung soft-disable of accounts
-    lastLogin: { type: Date }, // Spec: user activity logs (for login tracking ito)
+    isActive: { type: Boolean, default: true, required: true }, // Spec: CRUD for student users — para ma allow yung soft-disable of accounts
     userType: {
       type: String,
       enum: [
@@ -25,6 +25,7 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
     profilePicture: String,
+    activities: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Activity' }],
   },
   { timestamps: true, discriminatorKey: 'userType' },
 );
@@ -50,12 +51,7 @@ export const Student = User.discriminator(
 
 const verificationSchema = new mongoose.Schema({
   verification: {
-    documentUrls: new mongoose.Schema({
-      metadata: {
-        type: Map,
-        of: [String],
-      },
-    }),
+    documentUrls: [String],
     status: {
       type: String,
       enum: ['pending', 'submitted', 'rejected', 'approved'],
@@ -65,7 +61,7 @@ const verificationSchema = new mongoose.Schema({
 });
 
 export const UnverifiedLandlord = User.discriminator('UnverifiedLandlord', verificationSchema);
-export const UnverifiedManager = User.discriminator('UnverifiedManager', verificationSchema);
+export const UnverifiedManager = User.discriminator('UnverifiedManager', new mongoose.Schema({}));
 export const UnverifiedStudent = User.discriminator('UnverifiedStudent', verificationSchema);
 
 export const isVerified = (userType: string) =>
