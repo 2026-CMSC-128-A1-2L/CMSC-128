@@ -25,8 +25,8 @@ export const routeCreateFacility: RequestHandler = async (req, res, next) => {
     type: z.enum(['on-campus', 'off-campus', 'partner housing']),
     location: z.string(),
 
-    applicationCloseDate: z.coerce.date(),
-    applicationOpenDate: z.coerce.date(),
+    applicationCloseDate: z.iso.datetime().transform((date) => new Date(date)),
+    applicationOpenDate: z.iso.datetime().transform((date) => new Date(date)),
 
     documentsUrl: z.string().optional(),
   });
