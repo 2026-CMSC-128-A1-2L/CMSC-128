@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema(
     lastName: { type: String, required: true },
     birthDate: Date, //  Student, Manager, Land lord
     email: { type: String, required: true, unique: true },
-    auth: { google: String, password: String },
+    auth: { type: { google: String, password: String }, required: true },
     isActive: { type: Boolean, default: true }, // Spec: CRUD for student users — para ma allow yung soft-disable of accounts
     lastLogin: { type: Date }, // Spec: user activity logs (for login tracking ito)
     profilePicture: String,
