@@ -2,8 +2,9 @@ import { RequestHandler } from 'express';
 import { createFacility, CreateFacilityArguments } from '../services/facility.js';
 import z from 'zod';
 import mongoose from 'mongoose';
+import { getFacilityById, updateFacility } from '../services/facility.js';
 
-const objectIdSchema = z
+export const objectIdSchema = z
   .string()
   .refine((val) => mongoose.Types.ObjectId.isValid(val), {
     message: 'Invalid ObjectId',
@@ -54,8 +55,26 @@ export const routeCreateFacility: RequestHandler = async (req, res, next) => {
   });
 };
 
-export const routeGetFacilityById: RequestHandler = async (req, res, next) => {};
-export const routeUpdateFacility: RequestHandler = async (req, res, next) => {};
+export const routeGetFacilityById: RequestHandler = async (req, res, next) => {
+  const facilityID = objectIdSchema.parse(req.params._id);
+  const facility = await getFacilityById(facilityID);
+
+  res.status(201).json({
+    data: facility
+  });
+};
+
+
+export const routeUpdateFacility: RequestHandler = async (req, res, next) => {
+  const facility = res.locals.facility;   // perfrom isFacilityLandlord first to get facility local data
+
+  const updateData = req.body;
+  const updatedFacility = await updateFacility(facility, updateData);
+
+  res.status(201).json({
+    data: updatedFacility
+  });
+};
 export const routeDeleteFacility: RequestHandler = async (req, res, next) => {};
 
 export const routeGetListingsByFacility: RequestHandler = async (req, res, next) => {};
