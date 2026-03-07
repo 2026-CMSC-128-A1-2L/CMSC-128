@@ -1,5 +1,5 @@
 import { RequestHandler } from 'express';
-import { createListing, CreateListingArguments, getListingById } from '../services/listing.js';
+import { createListing, CreateListingArguments, getListingById, GetListingArguemnts, getListings } from '../services/listing.js';
 import z from 'zod';
 import mongoose from 'mongoose';
 
@@ -10,7 +10,31 @@ const objectIdSchema = z
   })
   .transform((val) => new mongoose.Types.ObjectId(val));
 
-export const routeGetListings: RequestHandler = async (req, res, next) => {};
+export const routeGetListings: RequestHandler = async (req, res, next) => {
+  const ParamsSchema = z.object({
+    housingID: objectIdSchema,
+    tags: z.array(z.string()).optional(),
+    capacity: z.number(),
+    isPrivate: z.boolean(),
+    allowVisit: z.boolean(),
+    allowTransfer: z.boolean(),
+    units: z.array(z.string()),
+  });
+
+  const params = ParamsSchema.parse(req.params);
+  
+  const args: GetListingArguemnts = {
+    housingID: params.housingID,
+    tags: params.tags,
+    capacity: params.capacity,
+    isPrivate: params.isPrivate,
+    allowVisit: params.allowVisit,
+    allowTransfer: params.allowTransfer,
+    units: params.units,
+  };
+  const listing = await getListings(args);
+  res.status(200).json(listing); // sends a json of requested
+};
 
 export const routeCreateListing: RequestHandler = async (req, res, next) => {
   // auth check
@@ -68,6 +92,7 @@ export const routeGetListingById: RequestHandler = async (req, res, next) => {
   const listing = await getListingById(params.listingID);
   res.status(200).json(listing); // sends a json of requested
 };
+
 export const routeGetListingReviewsById: RequestHandler = async (req, res, next) => {};
 export const routeUpdateListing: RequestHandler = async (req, res, next) => {};
 export const routeDeleteListing: RequestHandler = async (req, res, next) => {};
