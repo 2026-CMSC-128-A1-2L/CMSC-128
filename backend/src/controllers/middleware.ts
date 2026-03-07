@@ -18,6 +18,14 @@ export const combineFilters = (oldFilter: any, newFilter: any) => ({
   $and: [...(oldFilter?.$and ?? (oldFilter ? [oldFilter] : [])), newFilter],
 });
 
+export const correctManagerOrLandlordFilter: RequestHandler = async (req, res, next) => {
+  res.locals.filters = combineFilters(res.locals.filters, {
+    $or: [{ manager: req.user!._id }, { landlord: req.user!._id }],
+  });
+
+  next();
+};
+
 export const correctLandlordFilter: RequestHandler = async (req, res, next) => {
   res.locals.filters = combineFilters(res.locals.filters, { landlord: req.user!._id });
 
