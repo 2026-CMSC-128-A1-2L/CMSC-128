@@ -80,6 +80,15 @@ export const routeUpdateFacility: RequestHandler = async (req, res, next) => {
   const facilityID = objectIdSchema.parse(req.params.facilityId);
   const updateData = ParamsSchema.parse(req.body);
 
+  if (req.user!.userType === 'Manager') {
+    if (updateData.managerID) {
+      // should not be able to set manager
+      return res.status(400).json({
+        error: 'Only landlords can reassign facility managers.',
+      });
+    }
+  }
+
   const updatedFacility = await updateFacility(facilityID, updateData, res.locals.filters ?? {});
 
   res.status(200).json({
