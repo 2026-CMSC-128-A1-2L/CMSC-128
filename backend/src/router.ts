@@ -26,6 +26,7 @@ import {
 } from './controllers/unit.js';
 import { listingViewFilter, isManager, isSuperAdmin } from './controllers/middleware.js';
 import passportGoogle from './auth/google.js';
+import { RequestHandler } from 'http-proxy-middleware';
 
 const router = Router();
 
@@ -59,11 +60,14 @@ router.delete('/units/:unitId', routeDeleteUnit); // correct manager/landlord
 
 router.get(
   '/auth/google/student',
-  passportGoogle.authenticate('google', { scope: ['profile', 'email'] }),
+  passportGoogle.authenticate('google', { scope: ['profile', 'email'] }) as RequestHandler,
 );
 router.get(
   '/auth/google/student/callback',
-  passportGoogle.authenticate('google', { failureRedirect: '/login', successRedirect: '/' }),
+  passportGoogle.authenticate('google', {
+    failureRedirect: '/login',
+    successRedirect: '/',
+  }) as RequestHandler,
 );
 
 router.use(errorHandler);
