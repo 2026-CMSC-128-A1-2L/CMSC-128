@@ -72,7 +72,7 @@ export const updateFacility = async(facility: mongoose.Document & any, data: Upd
     throw new AppError(422, 'Application close date should not be before application open date.');
   }
 
-  Object.assign(facility, data); 
+  facility.set(data);
 
   return await facility.save();
 };
