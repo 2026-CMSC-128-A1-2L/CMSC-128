@@ -56,10 +56,10 @@ export const routeCreateFacility: RequestHandler = async (req, res, next) => {
 };
 
 export const routeGetFacilityById: RequestHandler = async (req, res, next) => {
-  const facilityID = objectIdSchema.parse(req.params._id);
+  const facilityID = objectIdSchema.parse(req.params.facilityId);
   const facility = await getFacilityById(facilityID);
 
-  res.status(201).json({
+  res.status(200).json({
     data: facility
   });
 };
@@ -71,7 +71,7 @@ export const routeUpdateFacility: RequestHandler = async (req, res, next) => {
   const updateData = req.body;
   const updatedFacility = await updateFacility(facility, updateData);
 
-  res.status(201).json({
+  res.status(200).json({
     data: updatedFacility
   });
 };
