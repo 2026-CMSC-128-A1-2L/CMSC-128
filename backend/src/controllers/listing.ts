@@ -23,7 +23,7 @@ export const routeGetListings: RequestHandler = async (req, res, next) => {
 
   const params = ParamsSchema.parse(req.params);
   
-  const args: GetListingArguemnts = {
+  const args: GetListingArguments = {
     housingID: params.housingID,
     tags: params.tags,
     capacity: params.capacity,
