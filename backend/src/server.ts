@@ -26,7 +26,7 @@ if (!process.env.MONGO_URL) {
   throw new Error('Missing MONGO_URL in environment variables.');
 }
 
-var store = new MongoDBStore({
+const store = new MongoDBStore({
   uri: process.env.MONGO_URL,
   collection: 'sessions',
 });

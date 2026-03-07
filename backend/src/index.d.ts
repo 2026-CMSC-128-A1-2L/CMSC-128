@@ -23,7 +23,7 @@ declare global {
       };
       isActive: boolean;
       lastLogin?: Date;
-      profilePicture?: String;
+      profilePicture?: string;
       isVerified: boolean;
     }
   }
