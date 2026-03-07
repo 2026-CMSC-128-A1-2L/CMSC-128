@@ -11,6 +11,7 @@ const objectIdSchema = z
   .transform((val) => new mongoose.Types.ObjectId(val));
 
 export const routeGetListings: RequestHandler = async (req, res, next) => {};
+
 export const routeCreateListing: RequestHandler = async (req, res, next) => {
   // auth check
   const userId = req.user!._id;
