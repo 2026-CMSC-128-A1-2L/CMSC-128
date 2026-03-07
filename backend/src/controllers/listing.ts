@@ -1,5 +1,5 @@
 import { RequestHandler } from 'express';
-import { createListing, CreateListingArguments } from '../services/listing.js';
+import { createListing, CreateListingArguments, getListingById } from '../services/listing.js';
 import z from 'zod';
 import mongoose from 'mongoose';
 
@@ -26,11 +26,11 @@ export const routeCreateListing: RequestHandler = async (req, res, next) => {
     allowVisit: z.boolean(),
     allowTransfer: z.boolean(),
     description: z.string(),
-    mediaUrls: z.string().optional(),
+    mediaUrls: z.array(z.string()).optional(),
     units: z.array(z.string()),
   });
   const params = ParamsSchema.parse(req.params);
-  
+
   const args: CreateListingArguments = {
     housingID: params.housingID,
 
@@ -55,7 +55,19 @@ export const routeCreateListing: RequestHandler = async (req, res, next) => {
   });
 };
 
-export const routeGetListingById: RequestHandler = async (req, res, next) => {};
+export const routeGetListingById: RequestHandler = async (req, res, next) => {
+  // auth check
+  const userId = req.user!._id;
+
+  //zod schema
+  const ParamsSchema = z.object({
+    listingID: objectIdSchema,
+  });
+
+  const params = ParamsSchema.parse(req.params);
+  const listing = await getListingById(params.listingID);
+  res.status(200).json(listing); // sends a json of requested
+};
 export const routeGetListingReviewsById: RequestHandler = async (req, res, next) => {};
 export const routeUpdateListing: RequestHandler = async (req, res, next) => {};
 export const routeDeleteListing: RequestHandler = async (req, res, next) => {};
