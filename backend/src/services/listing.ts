@@ -13,9 +13,20 @@ export type CreateListingArguments = {
   allowVisit: boolean;
   allowTransfer: boolean;
   description: string;
-  mediaUrls?: string; // Optional
+  mediaUrls?: string[]; // Optional
   units: string[];
 };
+
+// Parameters for flithering listings (Please review for which fields are relevant for filtering)
+export type GetListingArguemnts = {
+  housingID: mongoose.Types.ObjectId; 
+  tags?: string[];     
+  units: string[];
+  isPrivate: boolean;
+  allowVisit: boolean;
+  allowTransfer: boolean;
+  capacity: number;
+}
 
 export const createListing = async(data: CreateListingArguments) => {
   const newListing = new Listing({
@@ -35,3 +46,20 @@ export const createListing = async(data: CreateListingArguments) => {
   })
   return await newListing.save();
 };
+
+export const getListings = async(filters: GetListingArguemnts) => {
+  
+  const query:any = {}; // Changes depending on filter
+  
+  // Only 1 is made for now so that this may be reviewed 
+  
+  if(filters.housingID){ // Checks if housing id was inputed in filters
+    query.housingID = filters.housingID;
+  }
+  
+  return await Listing.find(query); //returns listings
+}
+
+export const getListingById = async(id: mongoose.Types.ObjectId) => {
+  return await Listing.findById(id);
+}
