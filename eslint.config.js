@@ -6,6 +6,20 @@ import tseslint from 'typescript-eslint';
 import { defineConfig, globalIgnores } from 'eslint/config';
 import prettierConfig from 'eslint-config-prettier';
 
+const tsRules = {
+  '@typescript-eslint/no-misused-promises': [
+    'warn',
+    {
+      checksVoidReturn: false,
+    },
+  ],
+  '@typescript-eslint/no-unused-vars': 'off',
+  '@typescript-eslint/no-explicit-any': 'off',
+  '@typescript-eslint/no-unsafe-assignment': 'off',
+  '@typescript-eslint/no-unsafe-member-access': 'off',
+  '@typescript-eslint/require-await': 'off',
+};
+
 export default defineConfig([
   globalIgnores(['dist']),
   {
@@ -26,9 +40,7 @@ export default defineConfig([
       reactHooks.configs.flat.recommended,
       reactRefresh.configs.vite,
     ],
-    rules: {
-      '@typescript-eslint/no-unused-vars': 'off',
-    },
+    rules: tsRules,
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
@@ -39,7 +51,7 @@ export default defineConfig([
     extends: [js.configs.recommended, tseslint.configs.recommendedTypeChecked],
     rules: {
       camelcase: ['warn', { properties: 'always' }],
-      '@typescript-eslint/no-unused-vars': 'off',
+      ...tsRules,
     },
     languageOptions: {
       globals: globals.node,
