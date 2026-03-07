@@ -14,6 +14,10 @@ const unitSchema = new mongoose.Schema({
     enum: ['available', 'occupied', 'reserved', 'maintenance'],
   }, // reserved = empty but to be occupied soon
   listingID: { type: mongoose.Schema.Types.ObjectId, ref: 'Listing', required: true },
+
+  // include both owners for easier checking of owner, changes to these fields should be rare in practice
+  landlordID: { type: mongoose.Schema.Types.ObjectId, ref: 'Landlord', required: true },
+  managerID: { type: mongoose.Schema.Types.ObjectId, ref: 'Manager' },
 });
 
 export const Unit = mongoose.model('Unit', unitSchema);
