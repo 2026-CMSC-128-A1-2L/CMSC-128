@@ -17,7 +17,7 @@ export type CreateListingArguments = {
   units: string[];
 };
 
-export const createFacility = async(data: CreateListingArguments) => {
+export const createListing = async(data: CreateListingArguments) => {
   const newListing = new Listing({
     housingID: data.housingID,      
     tags: data.tags ?? [],  // returns empty array if no tags are given
