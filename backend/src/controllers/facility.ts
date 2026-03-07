@@ -60,14 +60,11 @@ export const routeGetFacilityById: RequestHandler = async (req, res, next) => {
   const facility = await getFacilityById(facilityID);
 
   res.status(200).json({
-    data: facility
+    data: facility,
   });
 };
 
-
 export const routeUpdateFacility: RequestHandler = async (req, res, next) => {
-  const facility = res.locals.facility;   // perfrom isFacilityLandlord first to get facility local data
-
   const ParamsSchema = z.object({
     managerID: objectIdSchema.optional(),
     name: z.string().optional(),
@@ -80,11 +77,13 @@ export const routeUpdateFacility: RequestHandler = async (req, res, next) => {
     documentsUrl: z.string().optional(),
   });
 
+  const facilityID = objectIdSchema.parse(req.params.facilityId);
   const updateData = ParamsSchema.parse(req.body);
-  const updatedFacility = await updateFacility(facility, updateData);
+
+  const updatedFacility = await updateFacility(facilityID, updateData, res.locals.filters ?? {});
 
   res.status(200).json({
-    data: updatedFacility
+    data: updatedFacility,
   });
 };
 

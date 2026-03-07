@@ -14,6 +14,16 @@ export const listingViewFilter: RequestHandler = async (req, res, next) => {
   next();
 };
 
+export const combineFilters = (oldFilter: any, newFilter: any) => ({
+  $and: [...(oldFilter?.$and ?? (oldFilter ? [oldFilter] : [])), newFilter],
+});
+
+export const correctLandlordFilter: RequestHandler = async (req, res, next) => {
+  res.locals.filters = combineFilters(res.locals.filters, { landlord: req.user!._id });
+
+  next();
+};
+
 export const isManager: RequestHandler = (req, res, next) => {
   if (!req.user) {
     return next(new AppError(401, 'Unauthenticated'));
@@ -41,22 +51,5 @@ export const isSuperAdmin: RequestHandler = (req, res, next) => {
     return next(new AppError(403, 'Forbidden'));
   }
 
-  next();
-};
-
-
-export const isFacilityLandlord: RequestHandler = async (req, res, next) => {
-  if(!req.user){
-    return next(new AppError(401, 'Unauthenticated'));
-  }
-
-  const facilityID = objectIdSchema.parse(req.params._id); // route must have id param
-  const facility = await getFacilityById(facilityID);
-
-  if(facility.landlordID.toString() !== req.user._id.toString()){
-    return next(new AppError(403, 'Forbidden: You are not the landlord of this facility'));
-  }
-
-  res.locals.facility = facility;
   next();
 };
