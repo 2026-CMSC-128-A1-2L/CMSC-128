@@ -1,5 +1,5 @@
 import { RequestHandler } from 'express';
-import { createListing, CreateListingArguments, getListingById, GetListingArguemnts, getListings } from '../services/listing.js';
+import { createListing, CreateListingArguments, getListingById, GetListingArguments, getListings } from '../services/listing.js';
 import z from 'zod';
 import mongoose from 'mongoose';
 

@@ -18,7 +18,7 @@ export type CreateListingArguments = {
 };
 
 // Parameters for flithering listings (Please review for which fields are relevant for filtering)
-export type GetListingArguemnts = {
+export type GetListingArguments = {
   housingID: mongoose.Types.ObjectId; 
   tags?: string[];     
   units: string[];
