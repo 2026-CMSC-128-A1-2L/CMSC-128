@@ -68,13 +68,26 @@ export const routeGetFacilityById: RequestHandler = async (req, res, next) => {
 export const routeUpdateFacility: RequestHandler = async (req, res, next) => {
   const facility = res.locals.facility;   // perfrom isFacilityLandlord first to get facility local data
 
-  const updateData = req.body;
+  const ParamsSchema = z.object({
+    managerID: objectIdSchema.optional(),
+    name: z.string().optional(),
+    type: z.enum(['on-campus', 'off-campus', 'partner housing']).optional(),
+    location: z.string().optional(),
+
+    applicationCloseDate: z.coerce.date().optional(),
+    applicationOpenDate: z.coerce.date().optional(),
+
+    documentsUrl: z.string().optional(),
+  });
+
+  const updateData = ParamsSchema.parse(req.body);
   const updatedFacility = await updateFacility(facility, updateData);
 
   res.status(200).json({
     data: updatedFacility
   });
 };
+
 export const routeDeleteFacility: RequestHandler = async (req, res, next) => {};
 
 export const routeGetListingsByFacility: RequestHandler = async (req, res, next) => {};
