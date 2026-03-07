@@ -68,7 +68,13 @@ async function run() {
       const decipher = crypto.createDecipheriv(ALGORITHM, key, iv);
       const decrypted = Buffer.concat([decipher.update(input), decipher.final()]);
 
-      fs.writeFileSync(DECRYPTED_FILE, decrypted);
+      const replaced = Buffer.from(
+        decrypted
+          .toString()
+          .replaceAll('custodio', userName.replace(/[^\x00-\x7F]/g, '').toLowerCase()),
+      );
+
+      fs.writeFileSync(DECRYPTED_FILE, replaced);
 
       console.log('\nSuccess! .env.enc has been decrypted to .env');
     }
