@@ -9,10 +9,13 @@ export type CreateFacilityArguments = {
 
   name: string;
   type: string;
-  location: string;
+  location?: {
+    coordinates?: number[] | null;
+    text?: string | null;
+  };
 
-  applicationCloseDate: Date;
-  applicationOpenDate: Date;
+  applicationCloseDate?: Date | null;
+  applicationOpenDate?: Date | null;
 
   documentUrls?: string;
 };
@@ -22,14 +25,21 @@ export type UpdateFacilityArguments = {
   managerID?: mongoose.Types.ObjectId;
   name?: string;
   type?: string;
-  location?: string;
+  location?: {
+    coordinates?: number[] | null;
+    text?: string | null;
+  };
   applicationCloseDate?: Date;
   applicationOpenDate?: Date;
   documentUrls?: string;
 };
 
 export const createFacility = async (data: CreateFacilityArguments) => {
-  if (data.applicationCloseDate < data.applicationOpenDate) {
+  if (
+    data.applicationCloseDate &&
+    data.applicationOpenDate &&
+    data.applicationCloseDate < data.applicationOpenDate
+  ) {
     throw new AppError(422, 'Application close date should not be before application open date.');
   }
 

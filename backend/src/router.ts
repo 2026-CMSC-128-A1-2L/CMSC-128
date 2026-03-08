@@ -28,10 +28,12 @@ import {
   listingViewFilter,
   isManager,
   isSuperAdmin,
-  correctManagerOrLandlordFilter,
   isDevelopment,
+  correctManagerOrLandlordFilter,
+  isLandlord,
 } from './controllers/middleware.js';
 import passportGoogle from './auth/google.js';
+import { routeCreateTag, routeGetTags } from './controllers/tag.js';
 import { routeTestLogin, routeTestRegister } from './controllers/test.js';
 
 const router = Router();
@@ -39,21 +41,16 @@ const router = Router();
 // TODO: add auth middleware
 
 router.get('/facilities', routeGetFacilities); // no auth
-router.post('/facilities', isManager, routeCreateFacility); // manager/landlord
+router.post('/facilities', isLandlord, routeCreateFacility); // manager/landlord
 
 router.get('/facilities/:facilityId', routeGetFacilityById); // no auth
-router.patch(
-  '/facilities/:facilityId',
-  isManager,
-  correctManagerOrLandlordFilter,
-  routeUpdateFacility,
-); // correct manager/landlord
+router.patch('/facilities/:facilityId', correctManagerOrLandlordFilter, routeUpdateFacility); // correct manager/landlord
 router.delete('/facilities/:facilityId', routeDeleteFacility); // correct manager/landlord, empty only
 
 router.get('/facilities/:facilityId/listings', listingViewFilter, routeGetListingsByFacility); // correct manager/landlord
 
 router.get('/listings', routeGetListings); // manager/landlord
-router.post('/listings', routeCreateListing); // manager/landlord
+router.post('/listings', correctManagerOrLandlordFilter, routeCreateListing); // manager/landlord
 
 router.get('/listings/:listingId', listingViewFilter, routeGetListingById); // verified
 router.get('/listings/:listingId/reviews', listingViewFilter, routeGetListingReviewsById); // verified
@@ -68,6 +65,9 @@ router.post('/units', routeCreateUnit); // correct manager/landlord, should have
 router.get('/units/:unitId', routeGetUnitById); // correct manager/landlord (and user?)
 router.patch('/units/:unitId', routeUpdateUnit); // correct manager/landlord
 router.delete('/units/:unitId', routeDeleteUnit); // correct manager/landlord
+
+router.get('/tags', isSuperAdmin, routeGetTags);
+router.post('/tags', isSuperAdmin, routeCreateTag);
 
 router.get(
   '/auth/google/student',

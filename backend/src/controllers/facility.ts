@@ -13,6 +13,14 @@ export const objectIdSchema = z
 
 export const routeGetFacilities: RequestHandler = async (req, res, next) => {};
 
+const locationSchema = z.object({
+  coordinates: z
+    .array(z.number())
+    .refine((x) => x.length === 2)
+    .optional(),
+  text: z.string().optional(),
+});
+
 export const routeCreateFacility: RequestHandler = async (req, res, next) => {
   // auth check should be done in middleware before this, so should include user id already
   const userId = req.user!._id;
@@ -23,10 +31,16 @@ export const routeCreateFacility: RequestHandler = async (req, res, next) => {
 
     name: z.string(),
     type: z.enum(['on-campus', 'off-campus', 'partner housing']),
-    location: z.string(),
+    location: locationSchema.optional(),
 
-    applicationCloseDate: z.iso.datetime().transform((date) => new Date(date)),
-    applicationOpenDate: z.iso.datetime().transform((date) => new Date(date)),
+    applicationCloseDate: z.iso
+      .datetime()
+      .transform((date) => new Date(date))
+      .optional(),
+    applicationOpenDate: z.iso
+      .datetime()
+      .transform((date) => new Date(date))
+      .optional(),
 
     documentsUrl: z.string().optional(),
   });
@@ -68,10 +82,16 @@ export const routeUpdateFacility: RequestHandler = async (req, res, next) => {
     managerID: objectIdSchema.optional(),
     name: z.string().optional(),
     type: z.enum(['on-campus', 'off-campus', 'partner housing']).optional(),
-    location: z.string().optional(),
+    location: locationSchema.optional(),
 
-    applicationCloseDate: z.coerce.date().optional(),
-    applicationOpenDate: z.coerce.date().optional(),
+    applicationCloseDate: z.iso
+      .datetime()
+      .transform((date) => new Date(date))
+      .optional(),
+    applicationOpenDate: z.iso
+      .datetime()
+      .transform((date) => new Date(date))
+      .optional(),
 
     documentsUrl: z.string().optional(),
   });
@@ -82,7 +102,7 @@ export const routeUpdateFacility: RequestHandler = async (req, res, next) => {
   if (req.user!.userType === 'Manager') {
     if (updateData.managerID) {
       // should not be able to set manager
-      return res.status(400).json({
+      return res.status(403).json({
         error: 'Only landlords can reassign facility managers.',
       });
     }

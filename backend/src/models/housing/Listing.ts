@@ -12,7 +12,10 @@ const ListingSchema = new mongoose.Schema({
   // Interaction point: HAS (many-to-many) with Tag.js
   tags: [
     {
-      tagId: { type: mongoose.Schema.Types.ObjectId, ref: 'Tag', required: true },
+      // Use names instead of id for easier querying:
+      //  When getting listings, filters include the name of the tag and the value (or range).
+      //  The name is not directly inside this document, so it cannot be queried like that.
+      tagId: { type: String, required: true },
       value: mongoose.Schema.Types.Mixed,
     },
   ],
