@@ -13,10 +13,16 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
   "scripts": {
     "lint": "eslint .",
     "format": "prettier --write .",
-    "dev": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm run dev\""
+    "dev": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm run dev\"",
+    "lock": "node secure.js encrypt",
+    "unlock": "node secure.js decrypt"
   },
   "repository": {
     "type": "git"
