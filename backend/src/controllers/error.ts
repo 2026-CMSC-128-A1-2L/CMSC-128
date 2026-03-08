@@ -1,4 +1,5 @@
 import { ErrorRequestHandler } from 'express';
+import { ZodError } from 'zod';
 
 export class AppError extends Error {
   constructor(
@@ -17,7 +18,11 @@ export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
     return;
   }
 
-  // TODO: add validation errors (400)
+  if (err instanceof ZodError) {
+    res.status(400).send(err.issues);
+
+    return;
+  }
 
   if (err instanceof Error) {
     console.error(err.stack);

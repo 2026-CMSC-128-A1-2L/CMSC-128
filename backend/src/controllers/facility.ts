@@ -19,20 +19,19 @@ export const routeCreateFacility: RequestHandler = async (req, res, next) => {
 
   // zod schema for
   const ParamsSchema = z.object({
-    landlordID: objectIdSchema,
     managerID: objectIdSchema.optional(),
 
     name: z.string(),
     type: z.enum(['on-campus', 'off-campus', 'partner housing']),
     location: z.string(),
 
-    applicationCloseDate: z.coerce.date(),
-    applicationOpenDate: z.coerce.date(),
+    applicationCloseDate: z.iso.datetime().transform((date) => new Date(date)),
+    applicationOpenDate: z.iso.datetime().transform((date) => new Date(date)),
 
     documentsUrl: z.string().optional(),
   });
 
-  const params = ParamsSchema.parse(req.params);
+  const params = ParamsSchema.parse(req.body);
 
   const args: CreateFacilityArguments = {
     landlordID: userId,
