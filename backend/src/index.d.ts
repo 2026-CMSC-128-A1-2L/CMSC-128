@@ -5,7 +5,7 @@ declare global {
     interface User {
       _id: mongoose.Types.ObjectId;
       firstName: string;
-      middleName: string;
+      middleName?: string | null;
       lastName: string;
       userType:
         | 'Admin'
@@ -15,16 +15,15 @@ declare global {
         | 'UnverifiedStudent'
         | 'UnverifiedManager'
         | 'UnverifiedLandlord';
-      birthDate?: Date;
+      birthDate?: Date | null;
       email: string;
       auth: {
-        google?: string;
-        password?: string;
+        google?: string | null;
+        password?: string | null;
       };
       isActive: boolean;
-      lastLogin?: Date;
-      profilePicture?: string;
-      isVerified: boolean;
+      lastLogin?: Date | null;
+      profilePicture?: string | null;
     }
   }
 }
