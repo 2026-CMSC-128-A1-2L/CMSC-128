@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { RequestHandler, Router } from 'express';
 import { errorHandler } from './controllers/error.js';
 import {
   routeGetFacilities,
@@ -24,8 +24,14 @@ import {
   routeUpdateUnit,
   routeDeleteUnit,
 } from './controllers/unit.js';
-import { listingViewFilter, isManager, isSuperAdmin } from './controllers/middleware.js';
+import {
+  listingViewFilter,
+  isManager,
+  isSuperAdmin,
+  isDevelopment,
+} from './controllers/middleware.js';
 import passportGoogle from './auth/google.js';
+import { routeTestLogin, routeTestRegister } from './controllers/test.js';
 
 const router = Router();
 
@@ -59,12 +65,19 @@ router.delete('/units/:unitId', routeDeleteUnit); // correct manager/landlord
 
 router.get(
   '/auth/google/student',
-  passportGoogle.authenticate('google', { scope: ['profile', 'email'] }),
+  passportGoogle.authenticate('google', { scope: ['profile', 'email'] }) as RequestHandler,
 );
 router.get(
   '/auth/google/student/callback',
-  passportGoogle.authenticate('google', { failureRedirect: '/login', successRedirect: '/' }),
+  passportGoogle.authenticate('google', {
+    failureRedirect: '/login',
+    successRedirect: '/',
+  }) as RequestHandler,
 );
+
+// creation of fake accounts endpoints
+router.post('/auth/test/register', isDevelopment, routeTestRegister);
+router.post('/auth/test/login', isDevelopment, routeTestLogin);
 
 router.use(errorHandler);
 

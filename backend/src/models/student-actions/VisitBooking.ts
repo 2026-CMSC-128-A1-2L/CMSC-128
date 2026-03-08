@@ -11,9 +11,7 @@ const visitBookingSchema = new mongoose.Schema(
     },
     endDateTime: { type: Date, required: true },
     startDateTime: { type: Date, required: true },
-
-    // Reason for booking
-    request: { type: String },
+    message: { type: String },
   },
   { timestamps: true },
 );

@@ -14,10 +14,11 @@ const Report = mongoose.model('Report', reportSchema);
 export const ListingReport = mongoose.model(
   'ListingReport',
   new mongoose.Schema({
-    facilityID: { type: mongoose.Schema.Types.ObjectId, ref: 'HousingFacility', required: false }, // Spec: many reports are scoped to a specific dormitory/facility
+    facilityID: { type: mongoose.Schema.Types.ObjectId, ref: 'HousingFacility', required: true }, // Spec: many reports are scoped to a specific dormitory/facility
     listingID: { type: mongoose.Schema.Types.ObjectId, ref: 'Listing', required: true },
   }),
 );
+
 export const UserReport = Report.discriminator(
   'UserReport',
   new mongoose.Schema({
