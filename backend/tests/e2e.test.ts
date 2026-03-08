@@ -9,6 +9,8 @@ import request from 'supertest';
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { App } from 'supertest/types.js';
 
+const TEST_RUN_ID = Date.now().toString(36);
+
 // Connect to MongoDB
 let app: App;
 
@@ -19,7 +21,8 @@ try {
     throw new Error('Missing MONGO_TEST_URL in environment variables.');
   }
 
-  await mongoose.connect(process.env.MONGO_TEST_URL);
+  const testDbUrl = `${process.env.MONGO_TEST_URL}-${TEST_RUN_ID}`;
+  await mongoose.connect(testDbUrl);
   await mongoose.connection.db?.dropDatabase();
 
   app = getApp({});
