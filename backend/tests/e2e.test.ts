@@ -6,7 +6,7 @@ import '../src/config.js';
 import mongoose from 'mongoose';
 import { getApp } from '../src/app';
 import request from 'supertest';
-import { describe, it, expect, beforeAll } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { App } from 'supertest/types.js';
 
 // Connect to MongoDB
@@ -124,5 +124,10 @@ describe('', () => {
         expect(response.statusCode).toBe(403);
       });
     });
+  });
+
+  afterAll(async () => {
+    // cleanup
+    await mongoose.connection.db?.dropDatabase();
   });
 });
