@@ -12,7 +12,7 @@ const ListingSchema = new mongoose.Schema({
   // Interaction point: HAS (many-to-many) with Tag.js
   tags: [
     {
-      tagId: { type: mongoose.Schema.Types.ObjectId, ref: 'Tag', required: true },
+      tagID: { type: mongoose.Schema.Types.ObjectId, ref: 'Tag', required: true },
       value: mongoose.Schema.Types.Mixed,
     },
   ],
