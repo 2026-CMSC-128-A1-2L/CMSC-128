@@ -2,14 +2,33 @@ import { RequestHandler } from 'express';
 import { AppError } from './error';
 import { getFacilityById } from '../services/facility';
 import { objectIdSchema } from '../controllers/facility';
+import { isVerified } from '../models/user/User';
 
 // Adds filters for private/public listings for unverified/verified users. Used for read actions on listings.
-export const listingViewFilter: RequestHandler = async (req, res, next) => {
-  if (!req.user || !req.user.isVerified) {
+export const listingViewFilter: RequestHandler = (req, res, next) => {
+  if (!req.user || !isVerified(req.user.userType)) {
     res.locals.filters = { isPrivate: false };
   } else {
     res.locals.filters = {};
   }
+
+  next();
+};
+
+export const combineFilters = (oldFilter: any, newFilter: any) => ({
+  $and: [...(oldFilter?.$and ?? (oldFilter ? [oldFilter] : [])), newFilter],
+});
+
+export const correctManagerOrLandlordFilter: RequestHandler = async (req, res, next) => {
+  res.locals.filters = combineFilters(res.locals.filters, {
+    $or: [{ manager: req.user!._id }, { landlord: req.user!._id }],
+  });
+
+  next();
+};
+
+export const correctLandlordFilter: RequestHandler = async (req, res, next) => {
+  res.locals.filters = combineFilters(res.locals.filters, { landlord: req.user!._id });
 
   next();
 };
@@ -44,19 +63,10 @@ export const isSuperAdmin: RequestHandler = (req, res, next) => {
   next();
 };
 
-
-export const isFacilityLandlord: RequestHandler = async (req, res, next) => {
-  if(!req.user){
-    return next(new AppError(401, 'Unauthenticated'));
+export const isDevelopment: RequestHandler = (req, res, next) => {
+  if (process.env.NODE_ENV == 'development' || process.env.NODE_ENV == 'test') {
+    return next();
   }
 
-  const facilityID = objectIdSchema.parse(req.params._id); // route must have id param
-  const facility = await getFacilityById(facilityID);
-
-  if(facility.landlordID.toString() !== req.user._id.toString()){
-    return next(new AppError(403, 'Forbidden: You are not the landlord of this facility'));
-  }
-
-  res.locals.facility = facility;
-  next();
+  res.status(401).send();
 };
