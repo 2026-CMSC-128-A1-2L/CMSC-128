@@ -15,14 +15,14 @@ const TEST_RUN_ID = Date.now().toString(36);
 let app: App;
 
 try {
-  console.log('MongoDB connected');
-
   if (!process.env.MONGO_TEST_URL) {
     throw new Error('Missing MONGO_TEST_URL in environment variables.');
   }
 
   const testDbUrl = `${process.env.MONGO_TEST_URL}-${TEST_RUN_ID}`;
   await mongoose.connect(testDbUrl);
+  console.log('MongoDB connected');
+
   await mongoose.connection.db?.dropDatabase();
 
   app = getApp({});
