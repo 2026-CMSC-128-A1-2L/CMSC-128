@@ -1,23 +1,37 @@
 import mongoose from 'mongoose';
 
 const paymentSchema = new mongoose.Schema({
-  studentID: { type: mongoose.Schema.Types.ObjectId, ref: 'Student', required: true }, // Interaction point: PAYS relationship
-  unitID: { type: mongoose.Schema.Types.ObjectId, ref: 'Unit', required: true }, // Interaction point: payment is for this unit
-  billingPeriodStart: { type: Date, required: false }, // Spec: billing statement — start of covered period
-  billingPeriodEnd: { type: Date, required: false }, // Spec: billing statement — end of covered period
+  studentID: { type: mongoose.Schema.Types.ObjectId, ref: 'Student', required: true },
+  unitID: { type: mongoose.Schema.Types.ObjectId, ref: 'Unit', required: true },
+
+  // Who the bill is paid to.
   managerID: { type: mongoose.Schema.Types.ObjectId, ref: 'Manager' },
+
+  // Start of covered period
+  billingPeriodStart: { type: Date, required: false },
+
+  // End of covered period
+  billingPeriodEnd: { type: Date, required: false },
+
   dueDate: { type: Date },
   paymentDate: { type: Date },
+  paidAmount: { type: Number },
   amount: { type: Number },
 
-  // Spec: list of overdue or unpaid dormitory fees
-  // Student: view billing and payment status
+  // 'Unpaid' is when `paymentDate` is undefined
+  // 'paid' is when `paymentDate` <= `dueDate`
+  // 'overdue' is when `paymentDate` <= `dueDate`
+  // 'partially_paid' is when `paidAmount` <= `amount`
   paymentStatus: {
     type: String,
     enum: ['unpaid', 'paid', 'overdue', 'partially_paid'],
     default: 'unpaid',
   },
-  proofOfPayment: { type: String }, // URL or file path to the proof of payment
+
+  // TODO: change to file
+  //
+  // URL or file path to the proof of payment
+  proofOfPayment: { type: String },
   paymentType: { type: String }, // e.g., 'rent', 'deposit', 'utility'
 });
 

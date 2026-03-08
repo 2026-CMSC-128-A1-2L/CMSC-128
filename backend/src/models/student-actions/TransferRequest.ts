@@ -1,11 +1,13 @@
 import mongoose from 'mongoose';
 
-//Creates an object model for TransferRequest
+// TODO: verify the flow and add attributes if needed.
 const TransferRequestSchema = new mongoose.Schema(
   {
     studentID: { type: mongoose.Schema.Types.ObjectId, ref: 'Student', required: true },
     unitID: { type: mongoose.Schema.Types.ObjectId, ref: 'Unit', required: true },
-    description: { type: String, required: false }, // reason for transfer?
+
+    // reason for transfer
+    description: { type: String, required: false },
   },
   { timestamps: true },
 );
