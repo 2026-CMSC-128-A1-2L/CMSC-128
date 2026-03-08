@@ -20,6 +20,10 @@ export const combineFilters = (oldFilter: any, newFilter: any) => ({
 });
 
 export const correctManagerOrLandlordFilter: RequestHandler = async (req, res, next) => {
+  if (!req.user) {
+    return next(new AppError(401, 'Unauthenticated'));
+  }
+
   res.locals.filters = combineFilters(res.locals.filters, {
     $or: [{ manager: req.user!._id }, { landlord: req.user!._id }],
   });
@@ -28,6 +32,10 @@ export const correctManagerOrLandlordFilter: RequestHandler = async (req, res, n
 };
 
 export const correctLandlordFilter: RequestHandler = async (req, res, next) => {
+  if (!req.user) {
+    return next(new AppError(401, 'Unauthenticated'));
+  }
+
   res.locals.filters = combineFilters(res.locals.filters, { landlord: req.user!._id });
 
   next();
