@@ -1,3 +1,7 @@
+/*
+ * End-to-end test of all features.
+ */
+
 import '../src/config.js';
 import mongoose from 'mongoose';
 import { getApp } from '../src/app';
