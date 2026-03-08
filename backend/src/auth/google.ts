@@ -1,6 +1,7 @@
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
-import { User, Student } from '../models/user/User';
+import { User } from '../models/user/User';
+import { createUnverifiedStudent, CreateUserParams } from '../services/user';
 
 if (!process.env.GOOGLE_CLIENT_ID) {
   throw new Error('Missing GOOGLE_CLIENT_ID in environment variables.');
@@ -17,16 +18,13 @@ passport.use(
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL: '/api/auth/google/student/callback',
     },
-    async (accessToken, refreshToken, profile, done) => {
+    (accessToken, refreshToken, profile, done) => {
       if (!profile.emails || !profile.name) {
-        return done('No email or name');
+        done('No email or name');
+        return;
       }
 
-      const searchQuery = {
-        email: profile.emails[0].value,
-      };
-
-      const updates = {
+      const params: CreateUserParams = {
         firstName: profile.name.givenName,
         middleName: profile.name.middleName,
         lastName: profile.name.familyName,
@@ -37,25 +35,9 @@ passport.use(
         profilePicture: profile.profileUrl,
       };
 
-      try {
-        const userResult = await Student.findOneAndUpdate(searchQuery, updates, {
-          returnDocument: 'after',
-          upsert: true,
-          includeResultMetadata: true,
-        });
-
-        console.log(userResult);
-        const user = userResult.value;
-
-        if (!user) {
-          throw new Error('User should not be null after upsert');
-        }
-
-        // upsert
-        return done(null, user as any);
-      } catch (err) {
-        return done(err);
-      }
+      createUnverifiedStudent(params)
+        .then((user) => done(null, user as Express.User))
+        .catch((err) => done(err));
     },
   ),
 );
@@ -64,13 +46,16 @@ passport.serializeUser((user, done) => {
   done(null, user._id.toHexString());
 });
 
-passport.deserializeUser(async (id, done) => {
-  const user = await User.findById(id);
-  if (!user) {
-    done('User not found');
-  }
-
-  done(null, user as any);
+passport.deserializeUser((id, done) => {
+  User.findById(id)
+    .then((user) => {
+      if (!user) {
+        done('User not found');
+      } else {
+        done(null, user as Express.User);
+      }
+    })
+    .catch((e) => done(e));
 });
 
 export default passport;
