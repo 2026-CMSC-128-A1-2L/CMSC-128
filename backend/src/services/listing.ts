@@ -47,7 +47,7 @@ export const createListing = async(data: CreateListingArguments) => {
   return await newListing.save();
 };
 
-export const getListings = async(filters: GetListingArguemnts) => {
+export const getListings = async(filters: GetListingArguments) => {
   
   const query:any = {}; // Changes depending on filter
   
