@@ -40,8 +40,12 @@ export type GetListingArguments = {
 export const createListing = async (data: CreateListingArguments, filters: any) => {
   const facility = await HousingFacility.findOne(combineFilters(filters, { _id: data.housingID }));
   if (!facility) {
-    // This can also be a 403, see `updateFacility` in ./facility.ts
-    throw new AppError(404, 'Facility not found.');
+    const facilityNoFilter = await HousingFacility.findById(data.housingID);
+    if (facilityNoFilter) {
+      throw new AppError(403, 'You are not allowed to create a listing for this facility.');
+    } else {
+      throw new AppError(404, 'Facility not found.');
+    }
   }
 
   // There can be a race condition here.
