@@ -24,6 +24,7 @@
     "@types/passport": "^1.0.17",
     "@types/passport-google-oauth20": "^2.0.17",
     "@types/supertest": "^7.2.0",
+    "fishery": "^2.4.0",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   },
