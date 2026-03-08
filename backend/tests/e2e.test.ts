@@ -109,7 +109,7 @@ describe('', () => {
 
         const getResponse = await landlordAgent.get(`/api/facilities/${id}`);
         expect(getResponse.statusCode).toBe(200);
-        expect(getResponse.body).toMatchObject({ name: facility.name });
+        expect(getResponse.body.data).toMatchObject({ name: facility.name });
       });
     });
     describe('When the user is a Guest', async () => {
