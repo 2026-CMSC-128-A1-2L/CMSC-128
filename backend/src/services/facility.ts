@@ -9,7 +9,10 @@ export type CreateFacilityArguments = {
 
   name: string;
   type: string;
-  location: string;
+  location?: {
+    coordinates?: number[] | null;
+    text?: string | null;
+  };
 
   applicationCloseDate: Date;
   applicationOpenDate: Date;
@@ -22,7 +25,10 @@ export type UpdateFacilityArguments = {
   managerID?: mongoose.Types.ObjectId;
   name?: string;
   type?: string;
-  location?: string;
+  location?: {
+    coordinates?: number[] | null;
+    text?: string | null;
+  };
   applicationCloseDate?: Date;
   applicationOpenDate?: Date;
   documentUrls?: string;

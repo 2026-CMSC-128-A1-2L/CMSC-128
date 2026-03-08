@@ -82,7 +82,7 @@ describe('', () => {
     const facility = {
       name: 'Test Facility',
       type: 'on-campus',
-      location: 'good facility',
+      location: { text: 'good facility' },
       applicationCloseDate: new Date(2026, 3, 6, 18, 15, 10).toISOString(),
       applicationOpenDate: new Date(2026, 2, 6, 18, 15, 10).toISOString(),
     };
