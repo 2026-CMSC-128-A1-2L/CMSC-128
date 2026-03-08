@@ -87,5 +87,6 @@ export const updateFacility = async (
   }
 
   facility.set(data);
+
   return await facility.save();
 };
