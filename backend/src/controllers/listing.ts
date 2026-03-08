@@ -62,10 +62,6 @@ export const routeGetListings: RequestHandler = async (req, res, next) => {
 };
 
 export const routeCreateListing: RequestHandler = async (req, res, next) => {
-  // auth check
-  const userId = req.user!._id;
-
-  //zod schema
   const ParamsSchema = z.object({
     housingID: objectIdSchema,
     tags: z.array(z.string()).optional(),
@@ -78,43 +74,19 @@ export const routeCreateListing: RequestHandler = async (req, res, next) => {
     mediaUrls: z.array(z.string()).optional(),
     units: z.array(z.string()),
   });
-  const params = ParamsSchema.parse(req.params);
 
-  const args: CreateListingArguments = {
-    housingID: params.housingID,
+  const params = ParamsSchema.parse(req.body);
+  const newListing = await createListing(params, res.locals.filters);
 
-    tags: params.tags,
-
-    roomType: params.roomType,
-    capacity: params.capacity,
-
-    isPrivate: params.isPrivate,
-    allowVisit: params.allowVisit,
-    allowTransfer: params.allowTransfer,
-
-    description: params.description,
-    mediaUrls: params.mediaUrls,
-
-    units: params.units,
-  };
-
-  const newListing = await createListing(args, res.locals.filters);
-  res.status(201).json({
-    id: newListing.id,
-  });
+  res.status(201).json({ id: newListing.id });
 };
 
 export const routeGetListingById: RequestHandler = async (req, res, next) => {
-  // auth check
-  const userId = req.user!._id;
-
-  //zod schema
-  const ParamsSchema = z.object({
-    listingID: objectIdSchema,
-  });
+  const ParamsSchema = z.object({ listingID: objectIdSchema });
 
   const params = ParamsSchema.parse(req.params);
-  const listing = await getListingById(params.listingID);
+  const listing = await getListingById(params.listingID, res.locals.filters);
+
   res.status(200).json(listing); // sends a json of requested
 };
 
