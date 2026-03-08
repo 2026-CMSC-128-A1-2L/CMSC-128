@@ -52,8 +52,8 @@ router.delete('/facilities/:facilityId', routeDeleteFacility); // correct manage
 
 router.get('/facilities/:facilityId/listings', listingViewFilter, routeGetListingsByFacility); // correct manager/landlord
 
-router.get('/listings', routeGetListings); // manager/landlord
-router.post('/listings', routeCreateListing); // manager/landlord
+router.get('/listings', isManager, routeGetListings); // manager/landlord
+router.post('/listings',isManager , routeCreateListing); // manager/landlord
 
 router.get('/listings/:listingId', listingViewFilter, routeGetListingById); // verified
 router.get('/listings/:listingId/reviews', listingViewFilter, routeGetListingReviewsById); // verified

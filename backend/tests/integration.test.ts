@@ -31,6 +31,8 @@ describe('', () => {
   const unverifiedStudentAgent = request.agent(app);
   const guestAgent = request.agent(app);
 
+  let testFacilityID: string; // Temporary just to test listings
+
   beforeAll(async () => {
     // creating test users
     await landlordAgent.post('/api/auth/test/register').send({
@@ -79,6 +81,7 @@ describe('', () => {
       applicationCloseDate: new Date(2026, 3, 6, 18, 15, 10).toISOString(),
       applicationOpenDate: new Date(2026, 2, 6, 18, 15, 10).toISOString(),
     };
+
     describe('When the user is a Landlord', () => {
       it('should respond with a 422 status code when the application close date is before the application start date', async () => {
         const response = await landlordAgent.post('/api/facilities').send({
@@ -100,12 +103,14 @@ describe('', () => {
         const response = await landlordAgent.post('/api/facilities').send(facility);
         expect(response.statusCode).toBe(201);
 
-        const id = response.body.d;
+        const id = response.body.id;
         expect(id).toBeDefined();
+
+        testFacilityID = id; // Id is stored here (delete this when getfacilities is made)
 
         const getResponse = await landlordAgent.get(`/api/facilities/${id}`);
         expect(getResponse.statusCode).toBe(200);
-        expect(getResponse.body).toMatchObject({ name: facility.name });
+        expect(getResponse.body.data).toMatchObject({ name: facility.name });
       });
     });
     describe('When the user is a Guest', async () => {
@@ -117,6 +122,59 @@ describe('', () => {
     describe('When the user is a Student', async () => {
       it('should respond with a 403', async () => {
         const response = await studentAgent.post('/api/facilities').send(facility);
+        expect(response.statusCode).toBe(403);
+      });
+    });
+  });
+
+  // Testing listings
+  describe('Listings API', () => {
+    let listingID: string;
+    let existingFacilityID: string;
+    //Gets the ONE facility created earlier
+    beforeAll(async () => {
+      existingFacilityID = testFacilityID;
+    });
+
+    // No tags incuded
+    const listingData = {
+      roomType: 'Dorm',
+      capacity: 2,
+      isPrivate: true,
+      allowVisit: true,
+      allowTransfer: false,
+      description: 'Test listing',
+      units: ['A1', 'A2'],
+    };
+
+    // Testing creating a listing as landlord
+    describe('POST /api/listings', () => {
+      
+      it('should create listing and return 201 for Landlord', async () => {
+        const response = await landlordAgent.post('/api/listings').send({
+          ...listingData,
+          housingID: existingFacilityID,
+        });
+
+        expect(response.statusCode).toBe(201);
+        expect(response.body.id).toBeDefined();
+        listingID = response.body.id;
+      });
+
+      // Testing error for unauthorized creation
+      it('should return 401 for Guest (Not Logged In)', async () => {
+        const response = await guestAgent.post('/api/listings').send({
+          ...listingData,
+          housingID: existingFacilityID,
+        });
+        expect(response.statusCode).toBe(401);
+      });
+
+      it('should return 403 for Student (Not Authorized to Create)', async () => {
+        const response = await studentAgent.post('/api/listings').send({
+          ...listingData,
+          housingID: existingFacilityID,
+        });
         expect(response.statusCode).toBe(403);
       });
     });
