@@ -102,7 +102,7 @@ export const routeUpdateFacility: RequestHandler = async (req, res, next) => {
   if (req.user!.userType === 'Manager') {
     if (updateData.managerID) {
       // should not be able to set manager
-      return res.status(400).json({
+      return res.status(403).json({
         error: 'Only landlords can reassign facility managers.',
       });
     }
