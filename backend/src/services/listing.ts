@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { QueryFilter } from 'mongoose';
 import { Listing } from '../models/housing/Listing.js';
 import { combineFilters } from '../controllers/middleware.js';
 import { AppError } from '../controllers/error.js';
@@ -19,15 +19,22 @@ export type CreateListingArguments = {
   units: string[];
 };
 
-// Parameters for flithering listings (Please review for which fields are relevant for filtering)
+type TagValue = {
+  name: string;
+  value:
+    | { type: 'enum'; value: string }
+    | { type: 'boolean'; value: boolean }
+    | { type: 'number'; value: { min?: number; max?: number } };
+};
+
+// Parameters for filtering listings
 export type GetListingArguments = {
-  housingID: mongoose.Types.ObjectId;
-  tags?: string[];
-  units: string[];
+  housingID?: mongoose.Types.ObjectId;
+  tags?: TagValue[];
+  capacity: { min: number; max?: number };
   isPrivate: boolean;
   allowVisit: boolean;
   allowTransfer: boolean;
-  capacity: number;
 };
 
 export const createListing = async (data: CreateListingArguments, filters: any) => {
@@ -58,16 +65,48 @@ export const createListing = async (data: CreateListingArguments, filters: any) 
   return await newListing.save();
 };
 
-export const getListings = async (filters: GetListingArguments) => {
-  const query: any = {}; // Changes depending on filter
+export function buildListingQuery(args: GetListingArguments): QueryFilter<typeof Listing> {
+  const query: QueryFilter<typeof Listing> = {
+    isPrivate: args.isPrivate,
+    allowVisit: args.allowVisit,
+    allowTransfer: args.allowTransfer,
+  };
 
-  // Only 1 is made for now so that this may be reviewed
-
-  if (filters.housingID) {
-    // Checks if housing id was inputed in filters
-    query.housingID = filters.housingID;
+  if (args.housingID) {
+    query.housingID = args.housingID;
   }
 
+  if (args.capacity) {
+    query.capacity = { $gte: args.capacity.min };
+    if (args.capacity.max !== undefined) {
+      query.capacity.$lte = args.capacity.max;
+    }
+  }
+
+  if (args.tags && args.tags.length > 0) {
+    query.tags = {
+      $all: args.tags.map((tag) => {
+        const matchObj: any = { name: tag.name };
+
+        if (tag.value.type === 'enum' || tag.value.type === 'boolean') {
+          matchObj.value = tag.value.value;
+        } else if (tag.value.type === 'number') {
+          matchObj.value = { $gte: tag.value.value.min };
+          if (tag.value.value.max !== undefined) {
+            matchObj.value.$lte = tag.value.value.max;
+          }
+        }
+
+        return { $elemMatch: matchObj };
+      }),
+    };
+  }
+
+  return query;
+}
+
+export const getListings = async (filters: GetListingArguments) => {
+  const query = buildListingQuery(filters);
   return await Listing.find(query); //returns listings
 };
 
