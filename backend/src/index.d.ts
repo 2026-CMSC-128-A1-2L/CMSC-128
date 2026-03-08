@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import 'vitest';
 
 declare global {
   namespace Express {
@@ -26,6 +27,15 @@ declare global {
       profilePicture?: string | null;
     }
   }
+}
+
+interface CustomMatchers<R = unknown> {
+  statusToBe(expected: number): R;
+}
+
+declare module 'vitest' {
+  interface Assertion<T = any> extends CustomMatchers<T> {}
+  interface AsymmetricMatchersContaining extends CustomMatchers {}
 }
 
 export {};
