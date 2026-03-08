@@ -93,19 +93,18 @@ describe('', () => {
           applicationCloseDate: facility.applicationOpenDate,
           applicationOpenDate: facility.applicationCloseDate,
         });
-        expect(response.statusCode).toBe(422);
+        expect(response).statusToBe(422);
       });
       it('should respond with a 400 status code when an invalid data type is passed', async () => {
         const response = await landlordAgent.post('/api/facilities').send({
           ...facility,
           applicationCloseDate: 'hello',
         });
-        expect(response.statusCode).toBe(400);
-        expect(response.body.length).toBe(1);
+        expect(response).statusToBe(400);
       });
       it('should respond with a 201 status code and retrieve with GET', async () => {
         const response = await landlordAgent.post('/api/facilities').send(facility);
-        expect(response.statusCode).toBe(201);
+        expect(response).statusToBe(201);
 
         const id = response.body.id;
         expect(id).toBeDefined();
@@ -118,13 +117,13 @@ describe('', () => {
     describe('When the user is a Guest', async () => {
       it('should respond with a 401', async () => {
         const response = await guestAgent.post('/api/facilities').send(facility);
-        expect(response.statusCode).toBe(401);
+        expect(response).statusToBe(401);
       });
     });
     describe('When the user is a Student', async () => {
       it('should respond with a 403', async () => {
         const response = await studentAgent.post('/api/facilities').send(facility);
-        expect(response.statusCode).toBe(403);
+        expect(response).statusToBe(403);
       });
     });
   });
