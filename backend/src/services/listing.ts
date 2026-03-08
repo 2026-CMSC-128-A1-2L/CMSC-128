@@ -1,5 +1,8 @@
 import mongoose from 'mongoose';
 import { Listing } from '../models/housing/Listing.js';
+import { combineFilters } from '../controllers/middleware.js';
+import { AppError } from '../controllers/error.js';
+import { HousingFacility } from '../models/housing/HousingFacility.js';
 
 export type CreateListingArguments = {
   housingID: mongoose.Types.ObjectId;
@@ -27,8 +30,17 @@ export type GetListingArguments = {
   capacity: number;
 };
 
-export const createListing = async (data: CreateListingArguments) => {
+export const createListing = async (data: CreateListingArguments, filters: any) => {
+  const facility = await HousingFacility.findOne(combineFilters(filters, { _id: data.housingID }));
+  if (!facility) {
+    // This can also be a 403, see `updateFacility` in ./facility.ts
+    throw new AppError(404, 'Facility not found.');
+  }
+
+  // There can be a race condition here.
   const newListing = new Listing({
+    landlordID: facility.landlordID,
+    managerID: facility.managerID,
     housingID: data.housingID,
     tags: data.tags ?? [], // returns empty array if no tags are given
 
@@ -62,4 +74,3 @@ export const getListings = async (filters: GetListingArguments) => {
 export const getListingById = async (id: mongoose.Types.ObjectId) => {
   return await Listing.findById(id);
 };
-

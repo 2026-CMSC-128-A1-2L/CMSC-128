@@ -1,5 +1,11 @@
 import { RequestHandler } from 'express';
-import { createListing, CreateListingArguments, getListingById, GetListingArguments, getListings } from '../services/listing.js';
+import {
+  createListing,
+  CreateListingArguments,
+  getListingById,
+  GetListingArguments,
+  getListings,
+} from '../services/listing.js';
 import z from 'zod';
 import mongoose from 'mongoose';
 
@@ -22,7 +28,7 @@ export const routeGetListings: RequestHandler = async (req, res, next) => {
   });
 
   const params = ParamsSchema.parse(req.params);
-  
+
   const args: GetListingArguments = {
     housingID: params.housingID,
     tags: params.tags,
@@ -73,7 +79,7 @@ export const routeCreateListing: RequestHandler = async (req, res, next) => {
     units: params.units,
   };
 
-  const newListing = await createListing(args);
+  const newListing = await createListing(args, res.locals.filters);
   res.status(201).json({
     id: newListing.id,
   });
