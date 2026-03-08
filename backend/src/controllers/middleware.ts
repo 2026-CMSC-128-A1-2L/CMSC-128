@@ -20,15 +20,23 @@ export const combineFilters = (oldFilter: any, newFilter: any) => ({
 });
 
 export const correctManagerOrLandlordFilter: RequestHandler = async (req, res, next) => {
+  if (!req.user) {
+    return next(new AppError(401, 'Unauthenticated'));
+  }
+
   res.locals.filters = combineFilters(res.locals.filters, {
-    $or: [{ manager: req.user!._id }, { landlord: req.user!._id }],
+    $or: [{ managerID: req.user!._id }, { landlordID: req.user!._id }],
   });
 
   next();
 };
 
 export const correctLandlordFilter: RequestHandler = async (req, res, next) => {
-  res.locals.filters = combineFilters(res.locals.filters, { landlord: req.user!._id });
+  if (!req.user) {
+    return next(new AppError(401, 'Unauthenticated'));
+  }
+
+  res.locals.filters = combineFilters(res.locals.filters, { landlordID: req.user!._id });
 
   next();
 };
@@ -45,6 +53,18 @@ export const isManager: RequestHandler = (req, res, next) => {
       req.user.userType == 'Admin'
     )
   ) {
+    return next(new AppError(403, 'Forbidden'));
+  }
+
+  next();
+};
+
+export const isLandlord: RequestHandler = (req, res, next) => {
+  if (!req.user) {
+    return next(new AppError(401, 'Unauthenticated'));
+  }
+
+  if (!(req.user.userType == 'Landlord' || req.user.userType == 'Admin')) {
     return next(new AppError(403, 'Forbidden'));
   }
 
