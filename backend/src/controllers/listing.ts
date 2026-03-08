@@ -72,7 +72,6 @@ export const routeCreateListing: RequestHandler = async (req, res, next) => {
     allowTransfer: z.boolean(),
     description: z.string(),
     mediaUrls: z.array(z.string()).optional(),
-    units: z.array(z.string()),
   });
   const params = ParamsSchema.parse(req.body);
   const newListing = await createListing(params, res.locals.filters);
