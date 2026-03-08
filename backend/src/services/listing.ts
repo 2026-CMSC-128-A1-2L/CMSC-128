@@ -110,6 +110,9 @@ export const getListings = async (filters: GetListingArguments) => {
   return await Listing.find(query); //returns listings
 };
 
-export const getListingById = async (id: mongoose.Types.ObjectId) => {
-  return await Listing.findById(id);
+export const getListingById = async (
+  id: mongoose.Types.ObjectId,
+  filters: QueryFilter<typeof Listing>,
+) => {
+  return await Listing.findById(combineFilters(filters, { _id: id }));
 };
