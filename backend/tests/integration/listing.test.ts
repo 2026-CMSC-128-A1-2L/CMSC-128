@@ -99,7 +99,6 @@ describe('Listings API', () => {
     allowVisit: true,
     allowTransfer: false,
     description: 'Test listing',
-    units: ['A1', 'A2'],
   };
 
   // Testing creating a listing as landlord

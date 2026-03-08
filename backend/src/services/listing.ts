@@ -16,7 +16,6 @@ export type CreateListingArguments = {
   allowTransfer: boolean;
   description: string;
   mediaUrls?: string[]; // Optional
-  units: string[];
 };
 
 type TagValue = {
@@ -64,7 +63,6 @@ export const createListing = async (data: CreateListingArguments, filters: any) 
 
     description: data.description,
     mediaUrls: data.mediaUrls ?? [],
-    units: data.units,
   });
   return await newListing.save();
 };
