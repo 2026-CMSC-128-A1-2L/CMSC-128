@@ -14,13 +14,13 @@ export class AppError extends Error {
 
 export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
   if (err instanceof AppError) {
-    res.status(err.statusCode).send(err.message);
+    res.status(err.statusCode).send({ error: err.message });
 
     return;
   }
 
   if (err instanceof ZodError) {
-    res.status(400).send(err.issues);
+    res.status(400).send({ error: err.issues });
 
     return;
   }
