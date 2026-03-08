@@ -65,7 +65,8 @@ export const createListing = async (data: CreateListingArguments, filters: any) 
   return await newListing.save();
 };
 
-export function buildListingQuery(args: GetListingArguments): QueryFilter<typeof Listing> {
+export function buildListingQuery(args: 
+                                  ): QueryFilter<typeof Listing> {
   const query: QueryFilter<typeof Listing> = {
     isPrivate: args.isPrivate,
     allowVisit: args.allowVisit,
