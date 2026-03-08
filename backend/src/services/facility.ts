@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import { HousingFacility } from '../models/housing/HousingFacility.js';
 import { AppError } from '../controllers/error.js';
+import { combineFilters } from '../controllers/middleware.js';
 
 export type CreateFacilityArguments = {
   landlordID: mongoose.Types.ObjectId;
@@ -27,7 +28,6 @@ export type UpdateFacilityArguments = {
   documentUrls?: string;
 };
 
-
 export const createFacility = async (data: CreateFacilityArguments) => {
   if (data.applicationCloseDate < data.applicationOpenDate) {
     throw new AppError(422, 'Application close date should not be before application open date.');
@@ -53,22 +53,36 @@ export const createFacility = async (data: CreateFacilityArguments) => {
   return await newFacility.save();
 };
 
-
-export const getFacilityById = async(facilityID: mongoose.Types.ObjectId) => {
+export const getFacilityById = async (facilityID: mongoose.Types.ObjectId) => {
   const facility = await HousingFacility.findById(facilityID);
 
-  if(!facility){
+  if (!facility) {
     throw new AppError(404, 'Facility not found.');
   }
 
   return facility;
 };
 
-export const updateFacility = async(facility: mongoose.Document & any, data: UpdateFacilityArguments) => {
+export const updateFacility = async (
+  facilityID: mongoose.Types.ObjectId,
+  data: UpdateFacilityArguments,
+  filters: any,
+) => {
+  const facility = await HousingFacility.findOne(combineFilters({ _id: facilityID }, filters));
+  if (!facility) {
+    // if the facility doesn't exist, check it without filters
+    const facilityNoFilter = await HousingFacility.findById(facilityID);
+    if (facilityNoFilter) {
+      throw new AppError(403, 'Forbidden: You are not the landlord of this facility');
+    } else {
+      throw new AppError(404, 'Facility not found.');
+    }
+  }
+
   const applicationOpenDate = data.applicationOpenDate ?? facility.applicationOpenDate;
   const applicationCloseDate = data.applicationCloseDate ?? facility.applicationCloseDate;
 
-  if(applicationOpenDate && applicationCloseDate && applicationCloseDate < applicationOpenDate){
+  if (applicationOpenDate && applicationCloseDate && applicationCloseDate < applicationOpenDate) {
     throw new AppError(422, 'Application close date should not be before application open date.');
   }
 

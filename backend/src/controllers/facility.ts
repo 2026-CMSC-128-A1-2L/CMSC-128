@@ -19,20 +19,19 @@ export const routeCreateFacility: RequestHandler = async (req, res, next) => {
 
   // zod schema for
   const ParamsSchema = z.object({
-    landlordID: objectIdSchema,
     managerID: objectIdSchema.optional(),
 
     name: z.string(),
     type: z.enum(['on-campus', 'off-campus', 'partner housing']),
     location: z.string(),
 
-    applicationCloseDate: z.coerce.date(),
-    applicationOpenDate: z.coerce.date(),
+    applicationCloseDate: z.iso.datetime().transform((date) => new Date(date)),
+    applicationOpenDate: z.iso.datetime().transform((date) => new Date(date)),
 
     documentsUrl: z.string().optional(),
   });
 
-  const params = ParamsSchema.parse(req.params);
+  const params = ParamsSchema.parse(req.body);
 
   const args: CreateFacilityArguments = {
     landlordID: userId,
@@ -60,14 +59,11 @@ export const routeGetFacilityById: RequestHandler = async (req, res, next) => {
   const facility = await getFacilityById(facilityID);
 
   res.status(200).json({
-    data: facility
+    data: facility,
   });
 };
 
-
 export const routeUpdateFacility: RequestHandler = async (req, res, next) => {
-  const facility = res.locals.facility;   // perfrom isFacilityLandlord first to get facility local data
-
   const ParamsSchema = z.object({
     managerID: objectIdSchema.optional(),
     name: z.string().optional(),
@@ -80,11 +76,22 @@ export const routeUpdateFacility: RequestHandler = async (req, res, next) => {
     documentsUrl: z.string().optional(),
   });
 
+  const facilityID = objectIdSchema.parse(req.params.facilityId);
   const updateData = ParamsSchema.parse(req.body);
-  const updatedFacility = await updateFacility(facility, updateData);
+
+  if (req.user!.userType === 'Manager') {
+    if (updateData.managerID) {
+      // should not be able to set manager
+      return res.status(400).json({
+        error: 'Only landlords can reassign facility managers.',
+      });
+    }
+  }
+
+  const updatedFacility = await updateFacility(facilityID, updateData, res.locals.filters ?? {});
 
   res.status(200).json({
-    data: updatedFacility
+    data: updatedFacility,
   });
 };
 
