@@ -104,7 +104,7 @@ describe('', () => {
         const response = await landlordAgent.post('/api/facilities').send(facility);
         expect(response.statusCode).toBe(201);
 
-        const id = response.body.d;
+        const id = response.body.id;
         expect(id).toBeDefined();
 
         const getResponse = await landlordAgent.get(`/api/facilities/${id}`);
