@@ -79,7 +79,7 @@ export const routeGetListingById: RequestHandler = async (req, res, next) => {
   const params = ParamsSchema.parse(req.params);
   const listing = await getListingById(params.listingID, res.locals.filters);
 
-  res.status(200).json(listing); // sends a json of requested
+  res.status(200).json({ data: listing }); // sends a json of requested
 };
 
 export const routeGetListingReviewsById: RequestHandler = async (req, res, next) => {};
