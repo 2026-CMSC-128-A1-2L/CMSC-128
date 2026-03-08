@@ -103,32 +103,58 @@ describe('Listings API', () => {
 
   // Testing creating a listing as landlord
   describe('POST /api/listings', () => {
-    it('should create listing and return 201 for Landlord', async () => {
-      const response = await landlordAgent.post('/api/listings').send({
-        ...listingData,
-        housingID: existingFacilityID,
+    describe('Authentication', () => {
+      it('should create listing and return 201 for Landlord', async () => {
+        const response = await landlordAgent.post('/api/listings').send({
+          ...listingData,
+          housingID: existingFacilityID,
+        });
+
+        expect(response).statusToBe(201);
+        expect(response.body.id).toBeDefined();
+        listingID = response.body.id;
       });
 
-      expect(response.statusCode).toBe(201);
-      expect(response.body.id).toBeDefined();
-      listingID = response.body.id;
+      // Testing error for unauthorized creation
+      it('should return 401 for Guest (Not Logged In)', async () => {
+        const response = await guestAgent.post('/api/listings').send({
+          ...listingData,
+          housingID: existingFacilityID,
+        });
+        expect(response).statusToBe(401);
+      });
+
+      it('should return an error for Student (Not Authorized to Create)', async () => {
+        const response = await studentAgent.post('/api/listings').send({
+          ...listingData,
+          housingID: existingFacilityID,
+        });
+        expect(response).statusToBe(403);
+      });
     });
+  });
 
-    // Testing error for unauthorized creation
-    it('should return 401 for Guest (Not Logged In)', async () => {
-      const response = await guestAgent.post('/api/listings').send({
-        ...listingData,
-        housingID: existingFacilityID,
-      });
-      expect(response.statusCode).toBe(401);
-    });
+  describe('GET /api/listings', () => {
+    describe('Logic', () => {
+      it('should retrieve listing', async () => {
+        const filter = { capacity: { min: 0, max: 4 } };
+        const response = await studentAgent.get(
+          `/api/listings?q=${encodeURIComponent(JSON.stringify(filter))}`,
+        );
 
-    it('should return an error for Student (Not Authorized to Create)', async () => {
-      const response = await studentAgent.post('/api/listings').send({
-        ...listingData,
-        housingID: existingFacilityID,
+        expect(response).statusToBe(200);
+        expect(response.body.data.length).toBe(1);
       });
-      expect(response.statusCode).toBe(403);
+
+      it('should not retrieve any listing (filtered out)', async () => {
+        const filter = { capacity: { min: 4, max: 6 } };
+        const response = await studentAgent.get(
+          `/api/listings?q=${encodeURIComponent(JSON.stringify(filter))}`,
+        );
+
+        expect(response).statusToBe(200);
+        expect(response.body.data.length).toBe(0);
+      });
     });
   });
 });
