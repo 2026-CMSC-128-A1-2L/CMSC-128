@@ -56,5 +56,5 @@ export const routeTestLogin: RequestHandler = async (req, res, next) => {
   }
 
   await promisify(req.login.bind(req))(user);
-  res.status(200).send();
+  res.status(200).send(req.user);
 };
