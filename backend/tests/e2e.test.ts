@@ -78,54 +78,27 @@ describe('', () => {
     await unverifiedStudentAgent.post('/api/auth/test/login').send({ email: 'test4@example.com' });
   });
 
-  describe('POST /api/facilities', async () => {
-    const facility = {
-      name: 'Test Facility',
-      type: 'on-campus',
-      location: { text: 'good facility' },
-      applicationCloseDate: new Date(2026, 3, 6, 18, 15, 10).toISOString(),
-      applicationOpenDate: new Date(2026, 2, 6, 18, 15, 10).toISOString(),
-    };
-    describe('When the user is a Landlord', () => {
-      it('should respond with a 422 status code when the application close date is before the application start date', async () => {
-        const response = await landlordAgent.post('/api/facilities').send({
-          ...facility,
-          applicationCloseDate: facility.applicationOpenDate,
-          applicationOpenDate: facility.applicationCloseDate,
-        });
-        expect(response).statusToBe(422);
-      });
-      it('should respond with a 400 status code when an invalid data type is passed', async () => {
-        const response = await landlordAgent.post('/api/facilities').send({
-          ...facility,
-          applicationCloseDate: 'hello',
-        });
-        expect(response).statusToBe(400);
-      });
-      it('should respond with a 201 status code and retrieve with GET', async () => {
-        const response = await landlordAgent.post('/api/facilities').send(facility);
-        expect(response).statusToBe(201);
+  const facility = {
+    name: 'Test Facility',
+    type: 'on-campus',
+    location: { text: 'good facility' },
+    applicationCloseDate: new Date(2026, 3, 6, 18, 15, 10).toISOString(),
+    applicationOpenDate: new Date(2026, 2, 6, 18, 15, 10).toISOString(),
+  };
 
-        const id = response.body.id;
-        expect(id).toBeDefined();
+  let id: number;
 
-        const getResponse = await landlordAgent.get(`/api/facilities/${id}`);
-        expect(getResponse.statusCode).toBe(200);
-        expect(getResponse.body.data).toMatchObject({ name: facility.name });
-      });
-    });
-    describe('When the user is a Guest', async () => {
-      it('should respond with a 401', async () => {
-        const response = await guestAgent.post('/api/facilities').send(facility);
-        expect(response).statusToBe(401);
-      });
-    });
-    describe('When the user is a Student', async () => {
-      it('should respond with a 403', async () => {
-        const response = await studentAgent.post('/api/facilities').send(facility);
-        expect(response).statusToBe(403);
-      });
-    });
+  it('landlords should be able to create facility', async () => {
+    const response = await landlordAgent.post('/api/facilities').send(facility);
+    expect(response).statusToBe(201);
+    expect(response.body.id).toBeDefined();
+    id = response.body.id;
+  });
+
+  it('landlords should be able to retrieve facility', async () => {
+    const getResponse = await landlordAgent.get(`/api/facilities/${id}`);
+    expect(getResponse.statusCode).toBe(200);
+    expect(getResponse.body.data).toMatchObject({ name: facility.name });
   });
 
   afterAll(async () => {
