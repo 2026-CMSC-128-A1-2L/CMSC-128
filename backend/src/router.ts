@@ -28,6 +28,7 @@ import {
   listingViewFilter,
   isManager,
   isSuperAdmin,
+  correctManagerOrLandlordFilter,
   isDevelopment,
 } from './controllers/middleware.js';
 import passportGoogle from './auth/google.js';
@@ -41,7 +42,12 @@ router.get('/facilities', routeGetFacilities); // no auth
 router.post('/facilities', isManager, routeCreateFacility); // manager/landlord
 
 router.get('/facilities/:facilityId', routeGetFacilityById); // no auth
-router.patch('/facilities/:facilityId', routeUpdateFacility); // correct manager/landlord
+router.patch(
+  '/facilities/:facilityId',
+  isManager,
+  correctManagerOrLandlordFilter,
+  routeUpdateFacility,
+); // correct manager/landlord
 router.delete('/facilities/:facilityId', routeDeleteFacility); // correct manager/landlord, empty only
 
 router.get('/facilities/:facilityId/listings', listingViewFilter, routeGetListingsByFacility); // correct manager/landlord
