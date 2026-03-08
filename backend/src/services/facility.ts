@@ -14,8 +14,8 @@ export type CreateFacilityArguments = {
     text?: string | null;
   };
 
-  applicationCloseDate: Date;
-  applicationOpenDate: Date;
+  applicationCloseDate?: Date | null;
+  applicationOpenDate?: Date | null;
 
   documentUrls?: string;
 };
@@ -35,7 +35,11 @@ export type UpdateFacilityArguments = {
 };
 
 export const createFacility = async (data: CreateFacilityArguments) => {
-  if (data.applicationCloseDate < data.applicationOpenDate) {
+  if (
+    data.applicationCloseDate &&
+    data.applicationOpenDate &&
+    data.applicationCloseDate < data.applicationOpenDate
+  ) {
     throw new AppError(422, 'Application close date should not be before application open date.');
   }
 
