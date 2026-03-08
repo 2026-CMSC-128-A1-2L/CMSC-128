@@ -30,6 +30,7 @@ import {
   isSuperAdmin,
   isDevelopment,
   correctManagerOrLandlordFilter,
+  isLandlord,
 } from './controllers/middleware.js';
 import passportGoogle from './auth/google.js';
 import { routeCreateTag, routeGetTags } from './controllers/tag.js';
@@ -40,7 +41,7 @@ const router = Router();
 // TODO: add auth middleware
 
 router.get('/facilities', routeGetFacilities); // no auth
-router.post('/facilities', isManager, routeCreateFacility); // manager/landlord
+router.post('/facilities', isLandlord, routeCreateFacility); // manager/landlord
 
 router.get('/facilities/:facilityId', routeGetFacilityById); // no auth
 router.patch('/facilities/:facilityId', correctManagerOrLandlordFilter, routeUpdateFacility); // correct manager/landlord

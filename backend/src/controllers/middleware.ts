@@ -59,6 +59,18 @@ export const isManager: RequestHandler = (req, res, next) => {
   next();
 };
 
+export const isLandlord: RequestHandler = (req, res, next) => {
+  if (!req.user) {
+    return next(new AppError(401, 'Unauthenticated'));
+  }
+
+  if (!(req.user.userType == 'Landlord' || req.user.userType == 'Admin')) {
+    return next(new AppError(403, 'Forbidden'));
+  }
+
+  next();
+};
+
 export const isSuperAdmin: RequestHandler = (req, res, next) => {
   if (!req.user) {
     return next(new AppError(401, 'Unauthenticated'));
