@@ -33,8 +33,14 @@ export const routeCreateFacility: RequestHandler = async (req, res, next) => {
     type: z.enum(['on-campus', 'off-campus', 'partner housing']),
     location: locationSchema.optional(),
 
-    applicationCloseDate: z.iso.datetime().transform((date) => new Date(date)),
-    applicationOpenDate: z.iso.datetime().transform((date) => new Date(date)),
+    applicationCloseDate: z.iso
+      .datetime()
+      .transform((date) => new Date(date))
+      .optional(),
+    applicationOpenDate: z.iso
+      .datetime()
+      .transform((date) => new Date(date))
+      .optional(),
 
     documentsUrl: z.string().optional(),
   });
@@ -78,8 +84,14 @@ export const routeUpdateFacility: RequestHandler = async (req, res, next) => {
     type: z.enum(['on-campus', 'off-campus', 'partner housing']).optional(),
     location: locationSchema.optional(),
 
-    applicationCloseDate: z.coerce.date().optional(),
-    applicationOpenDate: z.coerce.date().optional(),
+    applicationCloseDate: z.iso
+      .datetime()
+      .transform((date) => new Date(date))
+      .optional(),
+    applicationOpenDate: z.iso
+      .datetime()
+      .transform((date) => new Date(date))
+      .optional(),
 
     documentsUrl: z.string().optional(),
   });
