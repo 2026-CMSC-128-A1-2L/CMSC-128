@@ -26,11 +26,11 @@ import {
 } from './controllers/unit.js';
 import {
   listingViewFilter,
-  isManager,
   isSuperAdmin,
   isDevelopment,
   correctManagerOrLandlordFilter,
   isLandlord,
+  correctLandlordFilter,
 } from './controllers/middleware.js';
 import passportGoogle from './auth/google.js';
 import { routeCreateTag, routeGetTags } from './controllers/tag.js';
@@ -38,33 +38,31 @@ import { routeTestLogin, routeTestRegister } from './controllers/test.js';
 
 const router = Router();
 
-// TODO: add auth middleware
-
 router.get('/facilities', routeGetFacilities); // no auth
 router.post('/facilities', isLandlord, routeCreateFacility); // manager/landlord
 
 router.get('/facilities/:facilityId', routeGetFacilityById); // no auth
 router.patch('/facilities/:facilityId', correctManagerOrLandlordFilter, routeUpdateFacility); // correct manager/landlord
-router.delete('/facilities/:facilityId', routeDeleteFacility); // correct manager/landlord, empty only
+router.delete('/facilities/:facilityId', correctLandlordFilter, routeDeleteFacility); // correct manager/landlord, empty only
 
 router.get('/facilities/:facilityId/listings', listingViewFilter, routeGetListingsByFacility); // correct manager/landlord
 
-router.get('/listings', routeGetListings); // manager/landlord
+router.get('/listings', listingViewFilter, routeGetListings); // manager/landlord
 router.post('/listings', correctManagerOrLandlordFilter, routeCreateListing); // manager/landlord
 
 router.get('/listings/:listingId', listingViewFilter, routeGetListingById); // verified
 router.get('/listings/:listingId/reviews', listingViewFilter, routeGetListingReviewsById); // verified
-router.patch('/listings/:listingId', routeUpdateListing); // correct manager/landlord
-router.delete('/listings/:listingId', routeDeleteListing); // correct manager/landlord
+router.patch('/listings/:listingId', correctManagerOrLandlordFilter, routeUpdateListing); // correct manager/landlord
+router.delete('/listings/:listingId', correctManagerOrLandlordFilter, routeDeleteListing); // correct manager/landlord
 
-router.get('/listings/:listingId/units', routeGetUnitsByListing); // correct manager/landlord
+router.get('/listings/:listingId/units', correctManagerOrLandlordFilter, routeGetUnitsByListing); // correct manager/landlord
 
 router.get('/units', isSuperAdmin, routeGetUnits); // superadmin only
-router.post('/units', routeCreateUnit); // correct manager/landlord, should have listing in body
+router.post('/units', correctManagerOrLandlordFilter, routeCreateUnit); // correct manager/landlord, should have listing in body
 
-router.get('/units/:unitId', routeGetUnitById); // correct manager/landlord (and user?)
-router.patch('/units/:unitId', routeUpdateUnit); // correct manager/landlord
-router.delete('/units/:unitId', routeDeleteUnit); // correct manager/landlord
+router.get('/units/:unitId', correctManagerOrLandlordFilter, routeGetUnitById); // correct manager/landlord (and user?)
+router.patch('/units/:unitId', correctManagerOrLandlordFilter, routeUpdateUnit); // correct manager/landlord
+router.delete('/units/:unitId', correctManagerOrLandlordFilter, routeDeleteUnit); // correct manager/landlord
 
 router.get('/tags', isSuperAdmin, routeGetTags);
 router.post('/tags', isSuperAdmin, routeCreateTag);
