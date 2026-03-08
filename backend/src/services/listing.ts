@@ -6,7 +6,7 @@ import { HousingFacility } from '../models/housing/HousingFacility.js';
 
 export type CreateListingArguments = {
   housingID: mongoose.Types.ObjectId;
-  tags?: string[]; // Tags are optional (note please add type to tag in listing schema)
+  tags?: Record<string, any>; // Tags are optional (note please add type to tag in listing schema)
 
   roomType: string;
   capacity: number;
