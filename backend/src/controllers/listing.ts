@@ -1,11 +1,5 @@
 import { RequestHandler } from 'express';
-import {
-  createListing,
-  CreateListingArguments,
-  getListingById,
-  GetListingArguments,
-  getListings,
-} from '../services/listing.js';
+import { createListing, getListingById, getListings } from '../services/listing.js';
 import z from 'zod';
 import mongoose from 'mongoose';
 
@@ -17,6 +11,12 @@ const objectIdSchema = z
   .transform((val) => new mongoose.Types.ObjectId(val));
 
 export const routeGetListings: RequestHandler = async (req, res, next) => {
+  const QuerySchema = z.object({
+    q: z.string().transform((x) => JSON.parse(x)),
+  });
+
+  const searchQuery = QuerySchema.parse(req.query);
+
   const TagSchema = z.object({
     name: z.string(),
     value: z.discriminatedUnion('type', [
@@ -38,27 +38,21 @@ export const routeGetListings: RequestHandler = async (req, res, next) => {
     ]),
   });
 
-  const ParamsSchema = z.object({
-    housingID: objectIdSchema,
+  const SearchQuerySchema = z.object({
+    housingID: objectIdSchema.optional(),
     tags: z.array(TagSchema).optional(),
-    capacity: z.object({ min: z.number().min(0).default(0), max: z.number().optional() }),
-    isPrivate: z.boolean(),
-    allowVisit: z.boolean(),
-    allowTransfer: z.boolean(),
+    capacity: z
+      .object({ min: z.number().min(0).default(0), max: z.number().optional() })
+      .optional(),
+    isPrivate: z.boolean().optional(),
+    allowVisit: z.boolean().optional(),
+    allowTransfer: z.boolean().optional(),
   });
 
-  const params = ParamsSchema.parse(req.params);
+  const params = SearchQuerySchema.parse(searchQuery.q);
+  const listings = await getListings(params);
 
-  const args: GetListingArguments = {
-    housingID: params.housingID,
-    tags: params.tags,
-    capacity: params.capacity,
-    isPrivate: params.isPrivate,
-    allowVisit: params.allowVisit,
-    allowTransfer: params.allowTransfer,
-  };
-  const listing = await getListings(args);
-  res.status(200).json(listing); // sends a json of requested
+  res.status(200).json({ data: listings }); // sends a json of requested
 };
 
 export const routeCreateListing: RequestHandler = async (req, res, next) => {

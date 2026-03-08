@@ -28,8 +28,8 @@ type TagValue = {
 
 // Parameters for filtering listings
 export type GetListingArguments = {
-  housingID?: mongoose.Types.ObjectId;
-  tags?: TagValue[];
+  housingID: mongoose.Types.ObjectId;
+  tags: TagValue[];
   capacity: { min: number; max?: number };
   isPrivate: boolean;
   allowVisit: boolean;
@@ -67,13 +67,18 @@ export const createListing = async (data: CreateListingArguments, filters: any) 
   return await newListing.save();
 };
 
-export function buildListingQuery(args: GetListingArguments): QueryFilter<typeof Listing> {
-  const query: QueryFilter<typeof Listing> = {
-    isPrivate: args.isPrivate,
-    allowVisit: args.allowVisit,
-    allowTransfer: args.allowTransfer,
-  };
+export function buildListingQuery(args: Partial<GetListingArguments>): QueryFilter<typeof Listing> {
+  const query: QueryFilter<typeof Listing> = {};
 
+  if (args.isPrivate) {
+    query.isPrivate = args.isPrivate;
+  }
+  if (args.allowVisit) {
+    query.allowVisit = args.allowVisit;
+  }
+  if (args.allowTransfer) {
+    query.allowTransfer = args.allowTransfer;
+  }
   if (args.housingID) {
     query.housingID = args.housingID;
   }
@@ -107,7 +112,7 @@ export function buildListingQuery(args: GetListingArguments): QueryFilter<typeof
   return query;
 }
 
-export const getListings = async (filters: GetListingArguments) => {
+export const getListings = async (filters: Partial<GetListingArguments>) => {
   const query = buildListingQuery(filters);
   return await Listing.find(query); //returns listings
 };
