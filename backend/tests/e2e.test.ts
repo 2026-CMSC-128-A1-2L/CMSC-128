@@ -132,5 +132,6 @@ describe('', () => {
   afterAll(async () => {
     // cleanup
     await mongoose.connection.db?.dropDatabase();
+    await mongoose.disconnect();
   });
 });
