@@ -54,8 +54,8 @@ router.post('/listings', correctManagerOrLandlordFilter, routeCreateListing); //
 
 router.get('/listings/:listingId', listingViewFilter, routeGetListingById); // verified
 router.get('/listings/:listingId/reviews', listingViewFilter, routeGetListingReviewsById); // verified
-router.patch('/listings/:listingId', routeUpdateListing); // correct manager/landlord
-router.delete('/listings/:listingId', routeDeleteListing); // correct manager/landlord
+router.patch('/listings/:listingId', correctManagerOrLandlordFilter, routeUpdateListing); // correct manager/landlord
+router.delete('/listings/:listingId', correctManagerOrLandlordFilter, routeDeleteListing); // correct manager/landlord
 
 router.get('/listings/:listingId/units', routeGetUnitsByListing); // correct manager/landlord
 
