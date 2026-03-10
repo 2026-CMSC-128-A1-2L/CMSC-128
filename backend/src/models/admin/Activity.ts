@@ -16,7 +16,7 @@ const activitySchema = new mongoose.Schema(
 
 const dataPath = activitySchema.path<mongoose.Schema.Types.Subdocument>('data');
 
-datatypePath.discriminator(
+dataPath.discriminator(
   'create-facility',
   new mongoose.Schema(
     {
@@ -26,7 +26,7 @@ datatypePath.discriminator(
   ),
 );
 
-datatypePath.discriminator(
+dataPath.discriminator(
   'update-facility',
   new mongoose.Schema(
     {
@@ -36,7 +36,7 @@ datatypePath.discriminator(
   ),
 );
 
-datatypePath.discriminator(
+dataPath.discriminator(
   'delete-facility',
   new mongoose.Schema(
     {
