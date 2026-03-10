@@ -14,8 +14,8 @@ export const CreateTagBodySchema = z.object({
     }),
     z.object({
       name: z.literal('numeric'),
-      min: z.number(),
-      max: z.number(),
+      min: z.number().optional(),
+      max: z.number().optional(),
     }),
   ]),
 });
