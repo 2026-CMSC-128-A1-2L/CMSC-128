@@ -1,7 +1,5 @@
 import { RequestHandler } from 'express';
 import { AppError } from './error';
-import { getFacilityById } from '../services/facility';
-import { objectIdSchema } from '../controllers/facility';
 import { isVerified } from '../models/user/User';
 
 // Adds filters for private/public listings for unverified/verified users. Used for read actions on listings.
