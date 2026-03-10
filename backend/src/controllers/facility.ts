@@ -1,5 +1,5 @@
 import { RequestHandler } from 'express';
-import { createFacility, CreateFacilityArguments } from '../services/facility.js';
+import { createFacility } from '../services/facility.js';
 import { getFacilityById, updateFacility } from '../services/facility.js';
 import { CreateFacilityBodySchema, UpdateFacilityBodySchema } from './schema/facility.js';
 import { ObjectIdSchema } from './schema/common.js';
@@ -8,24 +8,9 @@ export const routeGetFacilities: RequestHandler = async (req, res, next) => {};
 export const routeCreateFacility: RequestHandler = async (req, res, next) => {
   // auth check should be done in middleware before this, so should include user id already
   const userId = req.user!._id;
-
   const params = CreateFacilityBodySchema.parse(req.body);
 
-  const args: CreateFacilityArguments = {
-    landlordID: userId,
-    managerID: params.managerID,
-
-    name: params.name,
-    type: params.type,
-    location: params.location,
-
-    applicationCloseDate: params.applicationCloseDate,
-    applicationOpenDate: params.applicationOpenDate,
-
-    documentUrls: params.documentsUrl,
-  };
-
-  const newFacility = await createFacility(args);
+  const newFacility = await createFacility({ ...params, landlordID: userId });
 
   res.status(201).json({ id: newFacility.id });
 };
