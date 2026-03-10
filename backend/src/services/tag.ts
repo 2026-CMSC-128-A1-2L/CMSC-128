@@ -87,7 +87,7 @@ export const getTags = async () => {
 // update function
 export const updateTag = async (tagName: string, data: UpdateTagArguments, filters: any) => {
   // check if the tag exists
-  const tag = await Tag.findOne(combineFilters({ name: tagName }, filters));
+  const tag = await Tag.findOne(combineFilters(filters, { name: tagName }));
 
   // if the tag doesn't exist, check it without filters
   if (!tag) {

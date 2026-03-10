@@ -160,7 +160,7 @@ export const updateListing = async (
   data: UpdateListingArguments,
   filters: any,
 ) => {
-  const listing = await Listing.findOne(combineFilters({ _id: listingID }, filters));
+  const listing = await Listing.findOne(combineFilters(filters, { _id: listingID }));
   if (!listing) {
     const listingNoFilter = await Listing.findById(listingID);
     if (listingNoFilter) {
@@ -176,7 +176,7 @@ export const updateListing = async (
 };
 
 export const deleteListing = async (listingID: mongoose.Types.ObjectId, filters: any) => {
-  const listing = await Listing.findOne(combineFilters({ _id: listingID }, filters));
+  const listing = await Listing.findOne(combineFilters(filters, { _id: listingID }));
   if (!listing) {
     const listingNoFilter = await Listing.findById(listingID);
     if (listingNoFilter) {
