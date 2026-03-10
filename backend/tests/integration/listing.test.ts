@@ -51,6 +51,7 @@ describe('Listings API', () => {
         const response = await managerAgent.post('/api/listings').send({
           ...listingData,
           capacity: 6,
+          isPrivate: false,
           housingID: existingFacilityID,
         });
 
@@ -153,6 +154,13 @@ describe('Listings API', () => {
 
         expect(response).statusToBe(200);
         expect(response.body.data.length).toBe(0);
+      });
+
+      it('should retrieve one listing (public only)', async () => {
+        const response = await guestAgent.get(`/api/listings?q=`);
+
+        expect(response).statusToBe(200);
+        expect(response.body.data.length).toBe(1);
       });
     });
   });
