@@ -19,7 +19,7 @@ export const TagFilterSchema = z.object({
     z.object({
       type: z.literal('numeric'),
       value: z.object({
-        min: z.number().min(0).default(0),
+        min: z.number().optional(),
         max: z.number().optional(),
       }),
     }),
@@ -71,7 +71,7 @@ export const UpdateListingBodySchema = z.object({
 export const SearchQuerySchema = z.object({
   housingID: ObjectIdSchema.optional(),
   tags: z.array(TagFilterSchema).optional(),
-  capacity: z.object({ min: z.number().min(0).default(0), max: z.number().optional() }).optional(),
+  capacity: z.object({ min: z.number().optional(), max: z.number().optional() }).optional(),
   isPrivate: z.boolean().optional(),
   allowVisit: z.boolean().optional(),
   allowTransfer: z.boolean().optional(),

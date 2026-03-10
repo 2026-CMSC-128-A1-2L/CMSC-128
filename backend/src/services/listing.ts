@@ -40,7 +40,7 @@ export type CreateListingArguments = {
 export type GetListingArguments = {
   housingID: mongoose.Types.ObjectId;
   tags: TagFilter[];
-  capacity: { min: number; max?: number };
+  capacity: { min?: number; max?: number };
   isPrivate: boolean;
   allowVisit: boolean;
   allowTransfer: boolean;
@@ -188,3 +188,4 @@ export const deleteListing = async (listingID: mongoose.Types.ObjectId, filters:
 
   return await listing.deleteOne();
 };
+
