@@ -7,7 +7,7 @@ import { Review } from '../models/reviews/Review.js';
 
 export type CreateListingArguments = {
   housingID: mongoose.Types.ObjectId;
-  tags?: string[]; // Tags are optional (note please add type to tag in listing schema)
+  tags?: Record<string, any>; // Tags are optional (note please add type to tag in listing schema)
 
   roomType: string;
   capacity: number;
@@ -17,7 +17,6 @@ export type CreateListingArguments = {
   allowTransfer: boolean;
   description: string;
   mediaUrls?: string[]; // Optional
-  units: string[];
 };
 
 type TagValue = {
@@ -30,8 +29,8 @@ type TagValue = {
 
 // Parameters for filtering listings
 export type GetListingArguments = {
-  housingID?: mongoose.Types.ObjectId;
-  tags?: TagValue[];
+  housingID: mongoose.Types.ObjectId;
+  tags: TagValue[];
   capacity: { min: number; max?: number };
   isPrivate: boolean;
   allowVisit: boolean;
@@ -41,8 +40,12 @@ export type GetListingArguments = {
 export const createListing = async (data: CreateListingArguments, filters: any) => {
   const facility = await HousingFacility.findOne(combineFilters(filters, { _id: data.housingID }));
   if (!facility) {
-    // This can also be a 403, see `updateFacility` in ./facility.ts
-    throw new AppError(404, 'Facility not found.');
+    const facilityNoFilter = await HousingFacility.findById(data.housingID);
+    if (facilityNoFilter) {
+      throw new AppError(403, 'You are not allowed to create a listing for this facility.');
+    } else {
+      throw new AppError(404, 'Facility not found.');
+    }
   }
 
   // There can be a race condition here.
@@ -61,18 +64,22 @@ export const createListing = async (data: CreateListingArguments, filters: any) 
 
     description: data.description,
     mediaUrls: data.mediaUrls ?? [],
-    units: data.units,
   });
   return await newListing.save();
 };
 
-export function buildListingQuery(args: GetListingArguments): QueryFilter<typeof Listing> {
-  const query: QueryFilter<typeof Listing> = {
-    isPrivate: args.isPrivate,
-    allowVisit: args.allowVisit,
-    allowTransfer: args.allowTransfer,
-  };
+export function buildListingQuery(args: Partial<GetListingArguments>): QueryFilter<typeof Listing> {
+  const query: QueryFilter<typeof Listing> = {};
 
+  if (args.isPrivate) {
+    query.isPrivate = args.isPrivate;
+  }
+  if (args.allowVisit) {
+    query.allowVisit = args.allowVisit;
+  }
+  if (args.allowTransfer) {
+    query.allowTransfer = args.allowTransfer;
+  }
   if (args.housingID) {
     query.housingID = args.housingID;
   }
@@ -106,13 +113,16 @@ export function buildListingQuery(args: GetListingArguments): QueryFilter<typeof
   return query;
 }
 
-export const getListings = async (filters: GetListingArguments) => {
+export const getListings = async (filters: Partial<GetListingArguments>) => {
   const query = buildListingQuery(filters);
   return await Listing.find(query); //returns listings
 };
 
-export const getListingById = async (id: mongoose.Types.ObjectId) => {
-  return await Listing.findById(id);
+export const getListingById = async (
+  id: mongoose.Types.ObjectId,
+  filters: QueryFilter<typeof Listing>,
+) => {
+  return await Listing.findById(combineFilters(filters, { _id: id }));
 };
 
 export const getListingReviewsById = async (listingID: mongoose.Types.ObjectId) => {
