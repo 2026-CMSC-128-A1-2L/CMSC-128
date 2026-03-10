@@ -4,13 +4,13 @@ import { getApp } from './app';
 
 // Connect to MongoDB
 try {
-  console.log('MongoDB connected');
-
   if (!process.env.MONGO_URL) {
     throw new Error('Missing MONGO_URL in environment variables.');
   }
 
   await mongoose.connect(process.env.MONGO_URL);
+  console.log('MongoDB connected');
+
   const app = getApp({});
 
   // use 5000 as fallback
