@@ -2,7 +2,7 @@ import z from 'zod';
 import { ObjectIdSchema } from './common';
 
 export const GetListingsQuerySchema = z.object({
-  q: z.string().transform((x) => JSON.parse(x)),
+  q: z.string().transform((x) => (x ? JSON.parse(x) : {})),
 });
 
 export const TagFilterSchema = z.object({
