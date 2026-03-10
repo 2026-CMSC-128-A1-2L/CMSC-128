@@ -18,7 +18,6 @@ export const createUnverifiedStudent = async (params: CreateUserParams) => {
     includeResultMetadata: true,
   });
 
-  console.log(userResult);
   const user = userResult.value;
 
   if (!user) {
@@ -33,7 +32,6 @@ export const createTestUser = async (params: unknown) => {
   const user = new User(params);
   const userResult = await user.save();
 
-  console.log(userResult);
   return user;
 };
 
