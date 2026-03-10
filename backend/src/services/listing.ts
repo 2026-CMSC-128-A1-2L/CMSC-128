@@ -4,6 +4,7 @@ import { combineFilters } from '../controllers/middleware.js';
 import { AppError } from '../controllers/error.js';
 import { HousingFacility } from '../models/housing/HousingFacility.js';
 import { Review } from '../models/reviews/Review.js';
+import { Tag } from '../models/housing/Tag.js';
 import { ROOM_TYPES } from '../constants.js';
 
 type TagFilter = {
@@ -47,6 +48,42 @@ export type GetListingArguments = {
   allowTransfer: boolean;
 };
 
+const verifyTags = async (tagList: TagValue[]) => {
+  const tagMap = Object.fromEntries(tagList.map((tag) => [tag.name, tag.value]));
+  const namesToFind = tagList.map((tag) => tag.name);
+  const tags = await Tag.find({ name: { $in: namesToFind } });
+  return tags
+    .map((tag) => {
+      if (tag.dataType.name != tagMap[tag.name].type) {
+        return { error: 'Incorrect tag data type' };
+      }
+
+      const value = tagMap[tag.name].value;
+
+      // TODO: add interfaces for specific tag types
+      const tagDoc = tag as any;
+
+      if (tag.dataType.name == 'enum') {
+        if (!tagDoc.values.contains(value)) {
+          return { error: `Invalid value '${value}' for tag '${tag}'` };
+        }
+      } else if (tag.dataType.name == 'numeric') {
+        if (tagDoc.min && tagDoc.min > value) {
+          return {
+            error: `Invalid value '${value}' for tag '${tag}', minimum is set at ${tagDoc.min}`,
+          };
+        }
+        if (tagDoc.max && tagDoc.max < value) {
+          return {
+            error: `Invalid value '${value}' for tag '${tag}', maximum is set at ${tagDoc.max}`,
+          };
+        }
+      }
+      // no checks for boolean, zod already validated it in the controller
+    })
+    .filter((x) => x);
+};
+
 export const createListing = async (data: CreateListingArguments, filters: any) => {
   const facility = await HousingFacility.findOne(combineFilters(filters, { _id: data.housingID }));
   if (!facility) {
@@ -55,6 +92,14 @@ export const createListing = async (data: CreateListingArguments, filters: any) 
       throw new AppError(403, 'You are not allowed to create a listing for this facility.');
     } else {
       throw new AppError(404, 'Facility not found.');
+    }
+  }
+
+  if (data.tags) {
+    const errorList = verifyTags(data.tags);
+
+    if (errorList) {
+      throw new AppError(400, 'Invalid tags', errorList);
     }
   }
 
