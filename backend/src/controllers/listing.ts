@@ -8,127 +8,61 @@ import {
   deleteListing,
 } from '../services/listing.js';
 import z from 'zod';
-import mongoose from 'mongoose';
-
-const objectIdSchema = z
-  .string()
-  .refine((val) => mongoose.Types.ObjectId.isValid(val), {
-    message: 'Invalid ObjectId',
-  })
-  .transform((val) => new mongoose.Types.ObjectId(val));
+import { ObjectIdSchema } from './schema/common.js';
+import {
+  GetListingsQuerySchema,
+  CreateListingBodySchema,
+  UpdateListingBodySchema,
+  SearchQuerySchema,
+} from './schema/listing.js';
 
 export const routeGetListings: RequestHandler = async (req, res, next) => {
-  const QuerySchema = z.object({
-    q: z.string().transform((x) => JSON.parse(x)),
-  });
-
-  const searchQuery = QuerySchema.parse(req.query);
-
-  const TagSchema = z.object({
-    name: z.string(),
-    value: z.discriminatedUnion('type', [
-      z.object({
-        type: z.literal('enum'),
-        value: z.string(),
-      }),
-      z.object({
-        type: z.literal('boolean'),
-        value: z.boolean(),
-      }),
-      z.object({
-        type: z.literal('number'),
-        value: z.object({
-          min: z.number().min(0).default(0),
-          max: z.number().optional(),
-        }),
-      }),
-    ]),
-  });
-
-  const SearchQuerySchema = z.object({
-    housingID: objectIdSchema.optional(),
-    tags: z.array(TagSchema).optional(),
-    capacity: z
-      .object({ min: z.number().min(0).default(0), max: z.number().optional() })
-      .optional(),
-    isPrivate: z.boolean().optional(),
-    allowVisit: z.boolean().optional(),
-    allowTransfer: z.boolean().optional(),
-  });
+  const searchQuery = GetListingsQuerySchema.parse(req.query);
 
   const params = SearchQuerySchema.parse(searchQuery.q);
   const listings = await getListings(params);
 
-  res.status(200).json({ data: listings }); // sends a json of requested
+  res.status(200).json({ data: listings });
 };
 
 export const routeCreateListing: RequestHandler = async (req, res, next) => {
-  const ParamsSchema = z.object({
-    housingID: objectIdSchema,
-    tags: z.array(z.string()).optional(),
-    roomType: z.string(),
-    capacity: z.number(),
-    isPrivate: z.boolean(),
-    allowVisit: z.boolean(),
-    allowTransfer: z.boolean(),
-    description: z.string(),
-    mediaUrls: z.array(z.string()).optional(),
-  });
-  const params = ParamsSchema.parse(req.body);
+  const params = CreateListingBodySchema.parse(req.body);
   const newListing = await createListing(params, res.locals.filters);
 
   res.status(201).json({ id: newListing.id });
 };
 
 export const routeGetListingById: RequestHandler = async (req, res, next) => {
-  const ParamsSchema = z.object({ listingID: objectIdSchema });
+  const GetListingByIdParamsSchema = z.object({ listingID: ObjectIdSchema });
 
-  const params = ParamsSchema.parse(req.params);
+  const params = GetListingByIdParamsSchema.parse(req.params);
   const listing = await getListingById(params.listingID, res.locals.filters);
 
-  res.status(200).json({ data: listing }); // sends a json of requested
+  res.status(200).json({ data: listing });
 };
 
 export const routeGetListingReviewsById: RequestHandler = async (req, res, next) => {
-  const listingID = objectIdSchema.parse(req.params.listingId);
+  const listingID = ObjectIdSchema.parse(req.params.listingId);
   const reviews = await getListingReviewsById(listingID);
 
-  res.status(200).json({
-    data: reviews,
-  });
+  res.status(200).json({ data: reviews });
 };
 
 export const routeUpdateListing: RequestHandler = async (req, res, next) => {
-  const ParamsSchema = z.object({
-    tags: z.array(z.string()).optional(),
-    roomType: z.string().optional(),
-    capacity: z.number().optional(),
-    isPrivate: z.boolean().optional(),
-    allowVisit: z.boolean().optional(),
-    allowTransfer: z.boolean().optional(),
-    description: z.string().optional(),
-    mediaUrls: z.array(z.string()).optional(),
-    units: z.array(z.string()).optional(),
-  });
-
-  const listingID = objectIdSchema.parse(req.params.listingId);
-  const updateData = ParamsSchema.parse(req.body);
+  const listingID = ObjectIdSchema.parse(req.params.listingId);
+  const updateData = UpdateListingBodySchema.parse(req.body);
 
   const updatedListing = await updateListing(listingID, updateData, res.locals.filters ?? {});
 
-  res.status(200).json({
-    data: updatedListing,
-  });
+  res.status(200).json({ data: updatedListing });
 };
 
 export const routeDeleteListing: RequestHandler = async (req, res, next) => {
-  const listingID = objectIdSchema.parse(req.params.listingId);
+  const listingID = ObjectIdSchema.parse(req.params.listingId);
 
   await deleteListing(listingID, res.locals.filters ?? {});
 
-  res.status(200).json({
-    message: 'Listing deleted successfully.',
-  });
+  res.status(200).json({ message: 'Listing deleted successfully.' });
 };
 
 export const routeGetUnitsByListing: RequestHandler = async (req, res, next) => {};
