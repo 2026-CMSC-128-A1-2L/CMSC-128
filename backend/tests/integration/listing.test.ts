@@ -1,99 +1,31 @@
 import '../../src/config.js';
-import mongoose from 'mongoose';
-import { getApp } from '../../src/app';
-import { agent } from 'supertest';
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { App } from 'supertest/types.js';
+import { buildHousingFacility } from '../factories';
 import {
-  buildHousingFacility,
-  buildLandlord,
-  buildManager,
-  buildStudent,
-  HousingFacilityParams,
-} from '../factories';
-
-const TEST_RUN_ID = Date.now().toString(36);
-
-let app: App;
-let landlordAgent: ReturnType<typeof agent>;
-let managerAgent: ReturnType<typeof agent>;
-let otherManagerAgent: ReturnType<typeof agent>;
-let studentAgent: ReturnType<typeof agent>;
-let guestAgent: ReturnType<typeof agent>;
-
-let landlord: any;
-let manager: any;
-let otherManager: any;
-let student: any;
-
-async function createTestUsers() {
-  const landlordData = await buildLandlord.create();
-  const managerData = await buildManager.create();
-  const otherManagerData = await buildManager.create();
-  const studentData = await buildStudent.create();
-
-  const landlordResponse = await landlordAgent
-    .post('/api/auth/test/login')
-    .send({ email: landlordData.email });
-  const managerResponse = await managerAgent
-    .post('/api/auth/test/login')
-    .send({ email: managerData.email });
-  const otherManagerResponse = await otherManagerAgent
-    .post('/api/auth/test/login')
-    .send({ email: otherManagerData.email });
-  const studentResponse = await studentAgent
-    .post('/api/auth/test/login')
-    .send({ email: studentData.email });
-
-  landlord = landlordResponse.body;
-  manager = managerResponse.body;
-  otherManager = otherManagerResponse.body;
-  student = studentResponse.body;
-}
-
-beforeAll(async () => {
-  try {
-    if (!process.env.MONGO_TEST_URL) {
-      throw new Error('Missing MONGO_TEST_URL in environment variables.');
-    }
-
-    const testDbUrl = `${process.env.MONGO_TEST_URL}-${TEST_RUN_ID}`;
-    await mongoose.connect(testDbUrl);
-    await mongoose.connection.db?.dropDatabase();
-
-    app = getApp({});
-
-    landlordAgent = agent(app);
-    managerAgent = agent(app);
-    otherManagerAgent = agent(app);
-    studentAgent = agent(app);
-    guestAgent = agent(app);
-
-    await createTestUsers();
-  } catch (err) {
-    console.error('Could not connect to MongoDB', err);
-    process.exit(1);
-  }
-});
-
-afterAll(async () => {
-  await mongoose.connection.db?.dropDatabase();
-  await mongoose.disconnect();
-});
+  landlord,
+  landlordAgent,
+  guestAgent,
+  studentAgent,
+  managerAgent,
+  manager,
+} from './setup.js';
 
 describe('Listings API', () => {
   let listingID: string;
   let existingFacilityID: string;
 
   beforeAll(async () => {
-    const facility = await buildHousingFacility.create({ landlordID: landlord._id });
+    const facility = await buildHousingFacility.create({
+      landlordID: landlord._id,
+      managerID: manager._id,
+    });
 
     existingFacilityID = (facility as any)._id;
   });
 
   // No tags incuded
   const listingData = {
-    roomType: 'Dorm',
+    roomType: 'double',
     capacity: 2,
     isPrivate: true,
     allowVisit: true,
@@ -107,6 +39,18 @@ describe('Listings API', () => {
       it('should create listing and return 201 for Landlord', async () => {
         const response = await landlordAgent.post('/api/listings').send({
           ...listingData,
+          housingID: existingFacilityID,
+        });
+
+        expect(response).statusToBe(201);
+        expect(response.body.id).toBeDefined();
+        listingID = response.body.id;
+      });
+
+      it('should create listing and return 201 for Manager', async () => {
+        const response = await managerAgent.post('/api/listings').send({
+          ...listingData,
+          capacity: 6,
           housingID: existingFacilityID,
         });
 
@@ -132,11 +76,66 @@ describe('Listings API', () => {
         expect(response).statusToBe(403);
       });
     });
+
+    describe('Validation', () => {
+      it('should return a 400 when passing a negative capacity', async () => {
+        const response = await landlordAgent.post('/api/listings').send({
+          ...listingData,
+          capacity: -1,
+          housingID: existingFacilityID,
+        });
+
+        expect(response).statusToBe(400);
+      });
+      it('should return a 404 when passing an invalid housing facility', async () => {
+        const response = await landlordAgent.post('/api/listings').send({
+          ...listingData,
+          housingID: 'ffffffffffffffffffffffff',
+        });
+
+        expect(response).statusToBe(404);
+      });
+      it('should return a 400 when passing a non-existent tag', async () => {
+        const response = await landlordAgent.post('/api/listings').send({
+          ...listingData,
+          tags: [{ name: 'water', value: { type: 'boolean', value: true } }],
+          housingID: existingFacilityID,
+        });
+
+        expect(response).statusToBe(400);
+      });
+      it('should return a 400 when passing an invalid tag value', async () => {
+        const response = await landlordAgent.post('/api/listings').send({
+          ...listingData,
+          tags: [{ name: 'wifi', value: { type: 'enum', value: 'Invalid Value' } }],
+          housingID: existingFacilityID,
+        });
+
+        expect(response).statusToBe(400);
+      });
+      it('should return a 400 when passing an invalid room type', async () => {
+        const response = await landlordAgent.post('/api/listings').send({
+          ...listingData,
+          roomType: 'invalid-room-type',
+          housingID: existingFacilityID,
+        });
+
+        expect(response).statusToBe(400);
+      });
+      it.skip('should return a 400 when passing invalid media', async () => {});
+    });
   });
 
   describe('GET /api/listings', () => {
     describe('Logic', () => {
-      it('should retrieve listing', async () => {
+      it('should retrieve two listings with empty query', async () => {
+        const response = await studentAgent.get(`/api/listings?q=`);
+
+        expect(response).statusToBe(200);
+        expect(response.body.data.length).toBe(2);
+      });
+
+      it('should retrieve one listing', async () => {
         const filter = { capacity: { min: 0, max: 4 } };
         const response = await studentAgent.get(
           `/api/listings?q=${encodeURIComponent(JSON.stringify(filter))}`,
@@ -147,7 +146,7 @@ describe('Listings API', () => {
       });
 
       it('should not retrieve any listing (filtered out)', async () => {
-        const filter = { capacity: { min: 4, max: 6 } };
+        const filter = { capacity: { min: 10, max: 14 } };
         const response = await studentAgent.get(
           `/api/listings?q=${encodeURIComponent(JSON.stringify(filter))}`,
         );
