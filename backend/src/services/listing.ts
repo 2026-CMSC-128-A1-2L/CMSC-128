@@ -3,6 +3,7 @@ import { Listing } from '../models/housing/Listing.js';
 import { combineFilters } from '../controllers/middleware.js';
 import { AppError } from '../controllers/error.js';
 import { HousingFacility } from '../models/housing/HousingFacility.js';
+import { Review } from '../models/reviews/Review.js';
 
 export type CreateListingArguments = {
   housingID: mongoose.Types.ObjectId;
@@ -112,4 +113,62 @@ export const getListings = async (filters: GetListingArguments) => {
 
 export const getListingById = async (id: mongoose.Types.ObjectId) => {
   return await Listing.findById(id);
+};
+
+export const getListingReviewsById = async (listingID: mongoose.Types.ObjectId) => {
+  const listing = await Listing.findById(listingID);
+  if (!listing) {
+    throw new AppError(404, 'Listing not found.');
+  }
+
+  return await Review.find({ ListingID: listingID });
+};
+
+export type UpdateListingArguments = {
+  tags?: string[];
+  roomType?: string;
+  capacity?: number;
+  isPrivate?: boolean;
+  allowVisit?: boolean;
+  allowTransfer?: boolean;
+  description?: string;
+  mediaUrls?: string[];
+  units?: string[];
+};
+
+export const updateListing = async (
+  listingID: mongoose.Types.ObjectId,
+  data: UpdateListingArguments,
+  filters: any,
+) => {
+  const listing = await Listing.findOne(combineFilters({ _id: listingID }, filters));
+  if (!listing) {
+    const listingNoFilter = await Listing.findById(listingID);
+    if (listingNoFilter) {
+      throw new AppError(403, 'Forbidden: You are not the owner of this listing.');
+    } else {
+      throw new AppError(404, 'Listing not found.');
+    }
+  }
+
+  listing.set(data);
+
+  return await listing.save();
+};
+
+export const deleteListing = async (
+  listingID: mongoose.Types.ObjectId,
+  filters: any,
+) => {
+  const listing = await Listing.findOne(combineFilters({ _id: listingID }, filters));
+  if (!listing) {
+    const listingNoFilter = await Listing.findById(listingID);
+    if (listingNoFilter) {
+      throw new AppError(403, 'Forbidden: You are not the owner of this listing.');
+    } else {
+      throw new AppError(404, 'Listing not found.');
+    }
+  }
+
+  return await listing.deleteOne();
 };
