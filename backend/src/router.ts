@@ -49,7 +49,7 @@ router.delete('/facilities/:facilityId', routeDeleteFacility); // correct manage
 
 router.get('/facilities/:facilityId/listings', listingViewFilter, routeGetListingsByFacility); // correct manager/landlord
 
-router.get('/listings', routeGetListings); // manager/landlord
+router.get('/listings', listingViewFilter, routeGetListings); // no auth (filtered by verification status)
 router.post('/listings', correctManagerOrLandlordFilter, routeCreateListing); // manager/landlord
 
 router.get('/listings/:listingId', listingViewFilter, routeGetListingById); // verified

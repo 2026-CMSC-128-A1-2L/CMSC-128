@@ -20,7 +20,7 @@ export const routeGetListings: RequestHandler = async (req, res, next) => {
   const searchQuery = GetListingsQuerySchema.parse(req.query);
 
   const params = SearchQuerySchema.parse(searchQuery.q);
-  const listings = await getListings(params);
+  const listings = await getListings(params, res.locals.filters);
 
   res.status(200).json({ data: listings });
 };
