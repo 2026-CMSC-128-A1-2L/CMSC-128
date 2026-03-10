@@ -11,7 +11,11 @@ const rentalSchema = new mongoose.Schema({
   // 'inactive' when accepted, but not yet moved in.
   // 'active' when accepted and moved in.
   // 'ended' when accepted, moved in, and moved out.
-  status: { type: String, enum: ['active', 'ended', 'on_waitlist', 'inactive'], default: 'inactive' },
+  status: {
+    type: String,
+    enum: ['active', 'ended', 'on_waitlist', 'inactive'],
+    default: 'inactive',
+  },
 
   // Expected dates are filled up when 'inactive'
   // Actual move in date is filled up when 'active' and the tenant moves in.
@@ -22,7 +26,7 @@ const rentalSchema = new mongoose.Schema({
   actualMoveOutDate: { type: Date },
 
   // Override reason is removed and is instead added to activities.
-  activities: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Activity' }]
+  activities: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Activity' }],
 });
 
 export const Rental = mongoose.model('Rental', rentalSchema);

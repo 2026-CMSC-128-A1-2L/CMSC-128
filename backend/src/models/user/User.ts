@@ -24,11 +24,11 @@ const userSchema = new mongoose.Schema(
         // TODO: remove if not needed
         password: String,
       },
-      required: true
+      required: true,
     },
 
     // Allow soft deletion of accounts.
-    // 
+    //
     // A disabled account has the same access level as an unverified account, but cannot verify
     // again as they are technically verified already.
     isActive: { type: Boolean, default: true, required: true },
@@ -88,7 +88,7 @@ export const Student = User.discriminator(
 
 const verificationSchema = new mongoose.Schema({
   verification: {
-    // TODO: change to File 
+    // TODO: change to File
     documentUrls: [String],
     status: {
       type: String,

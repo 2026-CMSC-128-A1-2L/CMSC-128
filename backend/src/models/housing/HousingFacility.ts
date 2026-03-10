@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { ROOM_TYPES } from '../../constants'
+import { ROOM_TYPES } from '../../constants';
 
 const HousingFacilitySchema = new mongoose.Schema({
   name: { type: String, required: true },
