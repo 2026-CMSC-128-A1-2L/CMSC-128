@@ -168,9 +168,9 @@ export function buildListingQuery(args: Partial<GetListingArguments>): QueryFilt
   return query;
 }
 
-export const getListings = async (filters: Partial<GetListingArguments>) => {
-  const query = buildListingQuery(filters);
-  return await Listing.find(query); //returns listings
+export const getListings = async (query: Partial<GetListingArguments>, filters: any) => {
+  const dbFilters = buildListingQuery(query);
+  return await Listing.find(combineFilters(filters, dbFilters)); //returns listings
 };
 
 export const getListingById = async (
