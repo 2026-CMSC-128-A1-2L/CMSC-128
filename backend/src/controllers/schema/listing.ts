@@ -17,7 +17,7 @@ export const TagFilterSchema = z.object({
       value: z.boolean(),
     }),
     z.object({
-      type: z.literal('number'),
+      type: z.literal('numeric'),
       value: z.object({
         min: z.number().min(0).default(0),
         max: z.number().optional(),
@@ -26,9 +26,27 @@ export const TagFilterSchema = z.object({
   ]),
 });
 
+export const TagSchema = z.object({
+  name: z.string(),
+  value: z.discriminatedUnion('type', [
+    z.object({
+      type: z.literal('enum'),
+      value: z.string(),
+    }),
+    z.object({
+      type: z.literal('boolean'),
+      value: z.boolean(),
+    }),
+    z.object({
+      type: z.literal('numeric'),
+      value: z.number(),
+    }),
+  ]),
+});
+
 export const CreateListingBodySchema = z.object({
   housingID: ObjectIdSchema,
-  tags: z.array(z.string()).optional(),
+  tags: z.array(TagSchema).optional(),
   roomType: z.string(),
   capacity: z.number(),
   isPrivate: z.boolean(),
@@ -39,7 +57,7 @@ export const CreateListingBodySchema = z.object({
 });
 
 export const UpdateListingBodySchema = z.object({
-  tags: z.array(z.string()).optional(),
+  tags: z.array(TagSchema).optional(),
   roomType: z.string().optional(),
   capacity: z.number().optional(),
   isPrivate: z.boolean().optional(),

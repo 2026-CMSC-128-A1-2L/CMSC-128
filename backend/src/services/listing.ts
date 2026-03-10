@@ -5,9 +5,26 @@ import { AppError } from '../controllers/error.js';
 import { HousingFacility } from '../models/housing/HousingFacility.js';
 import { Review } from '../models/reviews/Review.js';
 
+type TagFilter = {
+  name: string;
+  value:
+    | { type: 'enum'; value: string }
+    | { type: 'boolean'; value: boolean }
+    | { type: 'numeric'; value: { min?: number; max?: number } };
+};
+
+// TODO: refactor for values to not require type
+type TagValue = {
+  name: string;
+  value:
+    | { type: 'enum'; value: string }
+    | { type: 'boolean'; value: boolean }
+    | { type: 'numeric'; value: number };
+};
+
 export type CreateListingArguments = {
   housingID: mongoose.Types.ObjectId;
-  tags?: Record<string, any>; // Tags are optional (note please add type to tag in listing schema)
+  tags?: TagValue[];
 
   roomType: string;
   capacity: number;
@@ -19,18 +36,10 @@ export type CreateListingArguments = {
   mediaUrls?: string[]; // Optional
 };
 
-type TagValue = {
-  name: string;
-  value:
-    | { type: 'enum'; value: string }
-    | { type: 'boolean'; value: boolean }
-    | { type: 'number'; value: { min?: number; max?: number } };
-};
-
 // Parameters for filtering listings
 export type GetListingArguments = {
   housingID: mongoose.Types.ObjectId;
-  tags: TagValue[];
+  tags: TagFilter[];
   capacity: { min: number; max?: number };
   isPrivate: boolean;
   allowVisit: boolean;
@@ -98,7 +107,7 @@ export function buildListingQuery(args: Partial<GetListingArguments>): QueryFilt
 
         if (tag.value.type === 'enum' || tag.value.type === 'boolean') {
           matchObj.value = tag.value.value;
-        } else if (tag.value.type === 'number') {
+        } else if (tag.value.type === 'numeric') {
           matchObj.value = { $gte: tag.value.value.min };
           if (tag.value.value.max !== undefined) {
             matchObj.value.$lte = tag.value.value.max;
@@ -135,7 +144,7 @@ export const getListingReviewsById = async (listingID: mongoose.Types.ObjectId) 
 };
 
 export type UpdateListingArguments = {
-  tags?: string[];
+  tags?: TagValue[];
   roomType?: string;
   capacity?: number;
   isPrivate?: boolean;
@@ -166,10 +175,7 @@ export const updateListing = async (
   return await listing.save();
 };
 
-export const deleteListing = async (
-  listingID: mongoose.Types.ObjectId,
-  filters: any,
-) => {
+export const deleteListing = async (listingID: mongoose.Types.ObjectId, filters: any) => {
   const listing = await Listing.findOne(combineFilters({ _id: listingID }, filters));
   if (!listing) {
     const listingNoFilter = await Listing.findById(listingID);
