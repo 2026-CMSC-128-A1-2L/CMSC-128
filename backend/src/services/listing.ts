@@ -4,6 +4,7 @@ import { combineFilters } from '../controllers/middleware.js';
 import { AppError } from '../controllers/error.js';
 import { HousingFacility } from '../models/housing/HousingFacility.js';
 import { Review } from '../models/reviews/Review.js';
+import { ROOM_TYPES } from '../constants.js';
 
 type TagFilter = {
   name: string;
@@ -26,7 +27,7 @@ export type CreateListingArguments = {
   housingID: mongoose.Types.ObjectId;
   tags?: TagValue[];
 
-  roomType: string;
+  roomType: (typeof ROOM_TYPES)[number];
   capacity: number;
 
   isPrivate: boolean;
