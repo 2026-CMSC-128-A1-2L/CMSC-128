@@ -156,7 +156,7 @@ type ListingParams = {
   housingID: mongoose.Types.ObjectId;
   landlordID: mongoose.Types.ObjectId;
   managerID?: mongoose.Types.ObjectId | null;
-  tags: Array<{ tagId: string; value?: unknown }>;
+  tags: { name: string; value?: unknown }[];
   roomType: string;
   capacity: number;
   isPrivate: boolean;
