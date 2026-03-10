@@ -48,8 +48,8 @@ export const TagSchema = z.object({
 export const CreateListingBodySchema = z.object({
   housingID: ObjectIdSchema,
   tags: z.array(TagSchema).optional(),
-  capacity: z.number(),
   roomType: z.enum(ROOM_TYPES),
+  capacity: z.int().min(1),
   isPrivate: z.boolean(),
   allowVisit: z.boolean(),
   allowTransfer: z.boolean(),
