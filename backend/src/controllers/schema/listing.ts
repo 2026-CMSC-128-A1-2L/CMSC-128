@@ -1,5 +1,6 @@
 import z from 'zod';
 import { ObjectIdSchema } from './common';
+import { ROOM_TYPES } from '../../constants';
 
 export const GetListingsQuerySchema = z.object({
   q: z.string().transform((x) => (x ? JSON.parse(x) : {})),
@@ -47,8 +48,8 @@ export const TagSchema = z.object({
 export const CreateListingBodySchema = z.object({
   housingID: ObjectIdSchema,
   tags: z.array(TagSchema).optional(),
-  roomType: z.string(),
   capacity: z.number(),
+  roomType: z.enum(ROOM_TYPES),
   isPrivate: z.boolean(),
   allowVisit: z.boolean(),
   allowTransfer: z.boolean(),
@@ -58,7 +59,7 @@ export const CreateListingBodySchema = z.object({
 
 export const UpdateListingBodySchema = z.object({
   tags: z.array(TagSchema).optional(),
-  roomType: z.string().optional(),
+  roomType: z.enum(ROOM_TYPES).optional(),
   capacity: z.number().optional(),
   isPrivate: z.boolean().optional(),
   allowVisit: z.boolean().optional(),
