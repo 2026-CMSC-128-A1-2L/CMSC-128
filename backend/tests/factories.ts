@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import mongoose from 'mongoose';
 import { Factory } from 'fishery';
 import {
