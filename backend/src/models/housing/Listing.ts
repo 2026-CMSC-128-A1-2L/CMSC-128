@@ -13,7 +13,7 @@ const ListingSchema = new mongoose.Schema({
       // Use names instead of id for easier querying:
       //  When getting listings, filters include the name of the tag and the value (or range).
       //  The name is not directly inside this document, so it cannot be queried like that.
-      tagId: { type: String, required: true },
+      name: { type: String, required: true },
       value: mongoose.Schema.Types.Mixed,
     },
   ],
