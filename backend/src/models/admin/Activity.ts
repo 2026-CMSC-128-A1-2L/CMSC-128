@@ -4,11 +4,9 @@ const activitySchema = new mongoose.Schema(
   {
     userID: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     actionType: {
-      type: String, enum: [
-        "create-facility",
-        "update-facililty",
-        "delete-facility",
-      ], required: true
+      type: String,
+      enum: ['create-facility', 'update-facililty', 'delete-facility'],
+      required: true,
     },
   },
   { timestamps: true, discriminatorKey: 'actionType', _id: false },

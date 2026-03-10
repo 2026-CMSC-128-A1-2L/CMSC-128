@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { ROOM_TYPES } from '../../constants'
+import { ROOM_TYPES } from '../../constants';
 
 const applicationFormSchema = new mongoose.Schema(
   {
