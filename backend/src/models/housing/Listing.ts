@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { ROOM_TYPES } from '../../constants'
 
 const ListingSchema = new mongoose.Schema({
   housingID: { type: mongoose.Schema.Types.ObjectId, ref: 'HousingFacility', required: true },
