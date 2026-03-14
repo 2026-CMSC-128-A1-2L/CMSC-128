@@ -24,7 +24,7 @@ export const routeGetUnits: RequestHandler = async (req, res, next) => {
     currentOccupancy: z.number(),
     price: z.number(),
     floorNumber: z.number(),
-    status: z.string(),
+    status: z.enum(['available', 'unavailable']),
     listingID: objectIdSchema,
     landlordID: objectIdSchema,
     managerID: objectIdSchema
@@ -55,7 +55,7 @@ export const routeCreateUnit: RequestHandler = async (req, res, next) => {
     currentOccupancy: z.number(),
     price: z.number(),
     floorNumber: z.number(),
-    status: z.string(),
+    status: z.enum(['available', 'unavailable']),
     listingID: objectIdSchema,
     landlordID: objectIdSchema,
     managerID: objectIdSchema

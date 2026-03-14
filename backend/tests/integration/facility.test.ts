@@ -4,7 +4,7 @@ import { getApp } from '../../src/app';
 import { agent } from 'supertest';
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { App } from 'supertest/types.js';
-import { buildLandlord, buildManager, buildStudent, HousingFacilityParams } from '../factories';
+import { buildLandlord, buildManager, buildStudent, HousingFacilityParams, buildUnit } from '../factories';
 
 const TEST_RUN_ID = Date.now().toString(36);
 
@@ -25,6 +25,7 @@ async function createTestUsers() {
   const managerData = await buildManager.create();
   const otherManagerData = await buildManager.create();
   const studentData = await buildStudent.create();
+  const unitData = await buildUnit.create();
 
   const landlordResponse = await landlordAgent
     .post('/api/auth/test/login')

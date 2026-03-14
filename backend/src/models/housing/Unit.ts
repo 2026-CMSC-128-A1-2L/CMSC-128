@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 const unitSchema = new mongoose.Schema({
   roomNumber: { type: String, unique: true, required: true }, // Spec: Room number identifier
   capacity: { type: Number, required: true }, // Spec: Capacity per room/bed space
-  currentOccupancy: { type: Number, default: 0 }, // Spec: Current occupancy — used to prevent overbooking of rooms
+  currentOccupancy: { type: Number, default: 0 }, // Spec: Current occupancy — used to prevent overbooking of rooms !!!might need min: 0?!!!
   price: { type: Number, required: true },
   floorNumber: { type: Number, required: false }, // Physical location within the building
   status: {

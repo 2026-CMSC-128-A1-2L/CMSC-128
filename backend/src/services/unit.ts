@@ -8,8 +8,8 @@ export type CreateUnitArguments = {
     capacity: number;
     currentOccupancy: number;
     price: number;
-    floorNumber: number;
-    status: string;
+    floorNumber?: number | null;
+    status: 'available' | 'unavailable';
     listingID: mongoose.Types.ObjectId,
     landlordID: mongoose.Types.ObjectId,
     managerID: mongoose.Types.ObjectId
@@ -21,8 +21,8 @@ export type GetUnitArguments = {
   capacity: number;
   currentOccupancy: number;
   price: number;
-  floorNumber: number;
-  status: string;
+  floorNumber?: number | null;
+  status: 'available' | 'unavailable';
   listingID: mongoose.Types.ObjectId,
   landlordID: mongoose.Types.ObjectId,
   managerID: mongoose.Types.ObjectId
