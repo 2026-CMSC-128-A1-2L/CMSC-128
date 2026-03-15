@@ -12,6 +12,7 @@ import {
 } from '../services/unit.js';
 import z from 'zod';
 import mongoose from 'mongoose';
+import { GetUnitsQuerySchema, CreateUnitBodySchema, UpdateUnitBodySchema } from './schema/unit.js';
 
 const objectIdSchema = z
   .string()
@@ -95,7 +96,7 @@ export const routeGetUnitById: RequestHandler = async (req, res, next) => {
 };
 export const routeUpdateUnit: RequestHandler = async (req, res, next) => {
   try {
-    const unitId = ObjectIdSchema.parse(req.params.unitId);
+    const unitId = objectIdSchema.parse(req.params.unitId);
     const updateData = UpdateUnitBodySchema.parse(req.body);
 
     const updatedUnit = await updateUnit(unitId, updateData, res.locals.filters ?? {});
@@ -104,7 +105,16 @@ export const routeUpdateUnit: RequestHandler = async (req, res, next) => {
     next(err);
   }
 };
-export const routeDeleteUnit: RequestHandler = async (req, res, next) => {};
+export const routeDeleteUnit: RequestHandler = async (req, res, next) => {
+  try {
+    const unitId = objectIdSchema.parse(req.params.unitId);
+
+    await deleteUnit(unitId, res.locals.filters ?? {});
+    res.status(200).json({ message: 'Unit deleted successfully.' });
+  } catch (err) {
+    next(err);
+  }
+};
 export const routeGetUnitsByListing: RequestHandler = async (req, res, next) => {
   //zod schema
   const ParamsSchema = z.object({
