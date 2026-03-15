@@ -3,12 +3,32 @@ import { Listing } from '../models/housing/Listing.js';
 import { combineFilters } from '../controllers/middleware.js';
 import { AppError } from '../controllers/error.js';
 import { HousingFacility } from '../models/housing/HousingFacility.js';
+import { Review } from '../models/reviews/Review.js';
+import { Tag } from '../models/housing/Tag.js';
+import { ROOM_TYPES } from '../constants.js';
+
+type TagFilter = {
+  name: string;
+  value:
+    | { type: 'enum'; value: string }
+    | { type: 'boolean'; value: boolean }
+    | { type: 'numeric'; value: { min?: number; max?: number } };
+};
+
+// TODO: refactor for values to not require type
+type TagValue = {
+  name: string;
+  value:
+    | { type: 'enum'; value: string }
+    | { type: 'boolean'; value: boolean }
+    | { type: 'numeric'; value: number };
+};
 
 export type CreateListingArguments = {
   housingID: mongoose.Types.ObjectId;
-  tags?: string[]; // Tags are optional (note please add type to tag in listing schema)
+  tags?: TagValue[];
 
-  roomType: string;
+  roomType: (typeof ROOM_TYPES)[number];
   capacity: number;
 
   isPrivate: boolean;
@@ -16,32 +36,71 @@ export type CreateListingArguments = {
   allowTransfer: boolean;
   description: string;
   mediaUrls?: string[]; // Optional
-  units: string[];
-};
-
-type TagValue = {
-  name: string;
-  value:
-    | { type: 'enum'; value: string }
-    | { type: 'boolean'; value: boolean }
-    | { type: 'number'; value: { min?: number; max?: number } };
 };
 
 // Parameters for filtering listings
 export type GetListingArguments = {
-  housingID?: mongoose.Types.ObjectId;
-  tags?: TagValue[];
-  capacity: { min: number; max?: number };
+  housingID: mongoose.Types.ObjectId;
+  tags: TagFilter[];
+  capacity: { min?: number; max?: number };
   isPrivate: boolean;
   allowVisit: boolean;
   allowTransfer: boolean;
 };
 
+const verifyTags = async (tagList: TagValue[]) => {
+  const tagMap = Object.fromEntries(tagList.map((tag) => [tag.name, tag.value]));
+  const namesToFind = tagList.map((tag) => tag.name);
+  const tags = await Tag.find({ name: { $in: namesToFind } });
+  return tags
+    .map((tag) => {
+      if (tag.dataType.name != tagMap[tag.name].type) {
+        return { error: 'Incorrect tag data type' };
+      }
+
+      const value = tagMap[tag.name].value;
+
+      // TODO: add interfaces for specific tag types
+      const tagDoc = tag as any;
+
+      if (tag.dataType.name == 'enum') {
+        if (!tagDoc.values.contains(value)) {
+          return { error: `Invalid value '${value}' for tag '${tag}'` };
+        }
+      } else if (tag.dataType.name == 'numeric') {
+        if (tagDoc.min && tagDoc.min > value) {
+          return {
+            error: `Invalid value '${value}' for tag '${tag}', minimum is set at ${tagDoc.min}`,
+          };
+        }
+        if (tagDoc.max && tagDoc.max < value) {
+          return {
+            error: `Invalid value '${value}' for tag '${tag}', maximum is set at ${tagDoc.max}`,
+          };
+        }
+      }
+      // no checks for boolean, zod already validated it in the controller
+    })
+    .filter((x) => x);
+};
+
 export const createListing = async (data: CreateListingArguments, filters: any) => {
   const facility = await HousingFacility.findOne(combineFilters(filters, { _id: data.housingID }));
   if (!facility) {
-    // This can also be a 403, see `updateFacility` in ./facility.ts
-    throw new AppError(404, 'Facility not found.');
+    const facilityNoFilter = await HousingFacility.findById(data.housingID);
+    if (facilityNoFilter) {
+      throw new AppError(403, 'You are not allowed to create a listing for this facility.');
+    } else {
+      throw new AppError(404, 'Facility not found.');
+    }
+  }
+
+  if (data.tags) {
+    const errorList = verifyTags(data.tags);
+
+    if (errorList) {
+      throw new AppError(400, 'Invalid tags', errorList);
+    }
   }
 
   // There can be a race condition here.
@@ -60,18 +119,22 @@ export const createListing = async (data: CreateListingArguments, filters: any) 
 
     description: data.description,
     mediaUrls: data.mediaUrls ?? [],
-    units: data.units,
   });
   return await newListing.save();
 };
 
-export function buildListingQuery(args: GetListingArguments): QueryFilter<typeof Listing> {
-  const query: QueryFilter<typeof Listing> = {
-    isPrivate: args.isPrivate,
-    allowVisit: args.allowVisit,
-    allowTransfer: args.allowTransfer,
-  };
+export function buildListingQuery(args: Partial<GetListingArguments>): QueryFilter<typeof Listing> {
+  const query: QueryFilter<typeof Listing> = {};
 
+  if (args.isPrivate) {
+    query.isPrivate = args.isPrivate;
+  }
+  if (args.allowVisit) {
+    query.allowVisit = args.allowVisit;
+  }
+  if (args.allowTransfer) {
+    query.allowTransfer = args.allowTransfer;
+  }
   if (args.housingID) {
     query.housingID = args.housingID;
   }
@@ -90,7 +153,7 @@ export function buildListingQuery(args: GetListingArguments): QueryFilter<typeof
 
         if (tag.value.type === 'enum' || tag.value.type === 'boolean') {
           matchObj.value = tag.value.value;
-        } else if (tag.value.type === 'number') {
+        } else if (tag.value.type === 'numeric') {
           matchObj.value = { $gte: tag.value.value.min };
           if (tag.value.value.max !== undefined) {
             matchObj.value.$lte = tag.value.value.max;
@@ -105,11 +168,70 @@ export function buildListingQuery(args: GetListingArguments): QueryFilter<typeof
   return query;
 }
 
-export const getListings = async (filters: GetListingArguments) => {
-  const query = buildListingQuery(filters);
-  return await Listing.find(query); //returns listings
+export const getListings = async (query: Partial<GetListingArguments>, filters: any) => {
+  const dbFilters = buildListingQuery(query);
+  return await Listing.find(combineFilters(filters, dbFilters)); //returns listings
 };
 
-export const getListingById = async (id: mongoose.Types.ObjectId) => {
-  return await Listing.findById(id);
+export const getListingById = async (
+  id: mongoose.Types.ObjectId,
+  filters: QueryFilter<typeof Listing>,
+) => {
+  return await Listing.findById(combineFilters(filters, { _id: id }));
 };
+
+export const getListingReviewsById = async (listingID: mongoose.Types.ObjectId) => {
+  const listing = await Listing.findById(listingID);
+  if (!listing) {
+    throw new AppError(404, 'Listing not found.');
+  }
+
+  return await Review.find({ ListingID: listingID });
+};
+
+export type UpdateListingArguments = {
+  tags?: TagValue[];
+  roomType?: string;
+  capacity?: number;
+  isPrivate?: boolean;
+  allowVisit?: boolean;
+  allowTransfer?: boolean;
+  description?: string;
+  mediaUrls?: string[];
+  units?: string[];
+};
+
+export const updateListing = async (
+  listingID: mongoose.Types.ObjectId,
+  data: UpdateListingArguments,
+  filters: any,
+) => {
+  const listing = await Listing.findOne(combineFilters(filters, { _id: listingID }));
+  if (!listing) {
+    const listingNoFilter = await Listing.findById(listingID);
+    if (listingNoFilter) {
+      throw new AppError(403, 'Forbidden: You are not the owner of this listing.');
+    } else {
+      throw new AppError(404, 'Listing not found.');
+    }
+  }
+
+  listing.set(data);
+
+  return await listing.save();
+};
+
+export const deleteListing = async (listingID: mongoose.Types.ObjectId, filters: any) => {
+  const listing = await Listing.findOne(combineFilters(filters, { _id: listingID }));
+  if (!listing) {
+    const listingNoFilter = await Listing.findById(listingID);
+    if (listingNoFilter) {
+      throw new AppError(403, 'Forbidden: You are not the owner of this listing.');
+    } else {
+      throw new AppError(404, 'Listing not found.');
+    }
+  }
+
+  return await listing.deleteOne();
+};
+

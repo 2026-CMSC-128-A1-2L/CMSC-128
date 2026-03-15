@@ -1,18 +1,18 @@
 import mongoose from 'mongoose';
 
-// unit schema
 const unitSchema = new mongoose.Schema({
-  roomNumber: { type: String, unique: true, required: true }, // Spec: Room number identifier
-  capacity: { type: Number, required: true }, // Spec: Capacity per room/bed space
-  currentOccupancy: { type: Number, default: 0 }, // Spec: Current occupancy — used to prevent overbooking of rooms !!!might need min: 0?!!!
-  price: { type: Number, required: true },
-  floorNumber: { type: Number, required: false }, // Physical location within the building
-  status: {
-    type: String,
-    required: true,
-    enum: ['available', 'unavailable'],
-  },
   listingID: { type: mongoose.Schema.Types.ObjectId, ref: 'Listing', required: true },
+
+  roomNumber: { type: String, unique: true, required: true },
+  capacity: { type: Number, required: true },
+
+  // NOTE: Always keep consistent everytime a user gets accepted or moves out.
+  currentOccupancy: { type: Number, default: 0 },
+  price: { type: Number, required: true },
+
+  // Location inside the building
+  location: { type: String, required: false },
+  isAvailable: { type: Boolean, required: true, default: true },
 
   // include both owners for easier checking of owner, changes to these fields should be rare in practice
   landlordID: { type: mongoose.Schema.Types.ObjectId, ref: 'Landlord', required: true },

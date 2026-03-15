@@ -1,80 +1,15 @@
 import '../../src/config.js';
-import mongoose from 'mongoose';
-import { getApp } from '../../src/app';
-import { agent } from 'supertest';
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { App } from 'supertest/types.js';
-import { buildLandlord, buildManager, buildStudent, HousingFacilityParams, buildUnit } from '../factories';
-
-const TEST_RUN_ID = Date.now().toString(36);
-
-let app: App;
-let landlordAgent: ReturnType<typeof agent>;
-let managerAgent: ReturnType<typeof agent>;
-let otherManagerAgent: ReturnType<typeof agent>;
-let studentAgent: ReturnType<typeof agent>;
-let guestAgent: ReturnType<typeof agent>;
-
-let landlord: any;
-let manager: any;
-let otherManager: any;
-let student: any;
-
-async function createTestUsers() {
-  const landlordData = await buildLandlord.create();
-  const managerData = await buildManager.create();
-  const otherManagerData = await buildManager.create();
-  const studentData = await buildStudent.create();
-  const unitData = await buildUnit.create();
-
-  const landlordResponse = await landlordAgent
-    .post('/api/auth/test/login')
-    .send({ email: landlordData.email });
-  const managerResponse = await managerAgent
-    .post('/api/auth/test/login')
-    .send({ email: managerData.email });
-  const otherManagerResponse = await otherManagerAgent
-    .post('/api/auth/test/login')
-    .send({ email: otherManagerData.email });
-  const studentResponse = await studentAgent
-    .post('/api/auth/test/login')
-    .send({ email: studentData.email });
-
-  landlord = landlordResponse.body;
-  manager = managerResponse.body;
-  otherManager = otherManagerResponse.body;
-  student = studentResponse.body;
-}
-
-beforeAll(async () => {
-  try {
-    if (!process.env.MONGO_TEST_URL) {
-      throw new Error('Missing MONGO_TEST_URL in environment variables.');
-    }
-
-    const testDbUrl = `${process.env.MONGO_TEST_URL}-${TEST_RUN_ID}`;
-    await mongoose.connect(testDbUrl);
-    await mongoose.connection.db?.dropDatabase();
-
-    app = getApp({});
-
-    landlordAgent = agent(app);
-    managerAgent = agent(app);
-    otherManagerAgent = agent(app);
-    studentAgent = agent(app);
-    guestAgent = agent(app);
-
-    await createTestUsers();
-  } catch (err) {
-    console.error('Could not connect to MongoDB', err);
-    process.exit(1);
-  }
-});
-
-afterAll(async () => {
-  await mongoose.connection.db?.dropDatabase();
-  await mongoose.disconnect();
-});
+import { describe, it, expect, beforeAll } from 'vitest';
+import { HousingFacilityParams } from '../factories';
+import {
+  landlord,
+  landlordAgent,
+  managerAgent,
+  guestAgent,
+  studentAgent,
+  manager,
+  otherManagerAgent,
+} from './setup.js';
 
 describe('Facilities API', () => {
   let facilityId: string;
@@ -220,11 +155,5 @@ describe('Facilities API', () => {
         expect(response).statusToBe(401);
       });
     });
-    // describe('Validation', () => {});
-    // describe('Logic', () => {});
   });
 });
-
-// describe('Authentication', () => {})
-// describe('Validation', () => {})
-// describe('Logic', () => {})

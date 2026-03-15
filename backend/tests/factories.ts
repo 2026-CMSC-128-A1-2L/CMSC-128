@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import mongoose from 'mongoose';
 import { Factory } from 'fishery';
 import {
@@ -156,7 +156,7 @@ type ListingParams = {
   housingID: mongoose.Types.ObjectId;
   landlordID: mongoose.Types.ObjectId;
   managerID?: mongoose.Types.ObjectId | null;
-  tags: Array<{ tagId: string; value?: unknown }>;
+  tags: { name: string; value?: unknown }[];
   roomType: string;
   capacity: number;
   isPrivate: boolean;

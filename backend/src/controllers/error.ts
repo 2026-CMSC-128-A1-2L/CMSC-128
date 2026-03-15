@@ -6,6 +6,7 @@ export class AppError extends Error {
   constructor(
     public statusCode: number,
     message: string,
+    public details?: any,
   ) {
     super(message);
     this.name = 'AppError';
@@ -14,7 +15,20 @@ export class AppError extends Error {
 
 export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
   if (err instanceof AppError) {
-    res.status(err.statusCode).send({ error: err.message });
+    if (err.details) {
+      res.status(err.statusCode).send({
+        error: {
+          message: err.message,
+        },
+      });
+    } else {
+      res.status(err.statusCode).send({
+        error: {
+          message: err.message,
+          details: err.details,
+        },
+      });
+    }
 
     return;
   }

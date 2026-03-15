@@ -78,7 +78,7 @@ export const updateFacility = async (
   data: UpdateFacilityArguments,
   filters: any,
 ) => {
-  const facility = await HousingFacility.findOne(combineFilters({ _id: facilityID }, filters));
+  const facility = await HousingFacility.findOne(combineFilters(filters, { _id: facilityID }));
   if (!facility) {
     // if the facility doesn't exist, check it without filters
     const facilityNoFilter = await HousingFacility.findById(facilityID);

@@ -1,7 +1,5 @@
 import { RequestHandler } from 'express';
 import { AppError } from './error';
-import { getFacilityById } from '../services/facility';
-import { objectIdSchema } from '../controllers/facility';
 import { isVerified } from '../models/user/User';
 
 // Adds filters for private/public listings for unverified/verified users. Used for read actions on listings.
@@ -25,7 +23,7 @@ export const correctManagerOrLandlordFilter: RequestHandler = async (req, res, n
   }
 
   res.locals.filters = combineFilters(res.locals.filters, {
-    $or: [{ managerID: req.user!._id }, { landlordID: req.user!._id }],
+    $or: [{ managerID: req.user._id }, { landlordID: req.user._id }],
   });
 
   next();
@@ -36,7 +34,7 @@ export const correctLandlordFilter: RequestHandler = async (req, res, next) => {
     return next(new AppError(401, 'Unauthenticated'));
   }
 
-  res.locals.filters = combineFilters(res.locals.filters, { landlordID: req.user!._id });
+  res.locals.filters = combineFilters(res.locals.filters, { landlordID: req.user._id });
 
   next();
 };
