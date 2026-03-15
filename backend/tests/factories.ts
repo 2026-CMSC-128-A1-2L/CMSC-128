@@ -216,3 +216,27 @@ export const buildBooleanTag = buildTag.params({
   name: 'pets_allowed',
   displayName: 'Pets Allowed',
 });
+
+type UnitParams = {
+  roomNumber: number;
+  capacity: number;
+  currentOccupancy: number;
+  price: number;
+  floorNumber?: number | null;
+  status: 'available' | 'unavailable';
+  listingID: mongoose.Types.ObjectId;
+  landlordID: mongoose.Types.ObjectId;
+  managerID? : mongoose.Types.ObjectId | null;
+};
+
+export const buildUnit = Factory.define<UnitParams>(({ sequence }) => ({
+  roomNumber: sequence,
+  capacity: 1,
+  currentOccupancy: 0,
+  price: 3000,
+  floorNumber: 1,
+  status: 'available',
+  listingID: new mongoose.Types.ObjectId(),
+  landlordID: new mongoose.Types.ObjectId(),
+  managerID: null
+})).onCreate((data) => new Unit(data).save() as any);
