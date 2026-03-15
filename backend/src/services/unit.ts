@@ -81,3 +81,45 @@ export const getUnitById = async (id: mongoose.Types.ObjectId) => {
 export const getUnitByListing = async (listingID: mongoose.Types.ObjectId) => {
   return await Unit.find({ listingID });
 };
+
+export type UpdateUnitArguments = {
+  roomNumber?: number;
+  capacity?: number;
+  currentOccupancy?: number;
+  price?: number;
+  floorNumber?: number | null;
+  status?: 'available' | 'unavailable';
+  isAvailable?: boolean;
+};
+
+export const updateUnit = async (
+  unitID: mongoose.Types.ObjectId,
+  data: UpdateUnitArguments,
+  filters: any,
+) => {
+  // Try finding it with the ownership filter first
+  const unit = await Unit.findOne(combineFilters(filters, { _id: unitID }));
+
+  if (!unit) {
+
+    // Check if it exists at all (without filter)
+    const unitNoFilter = await Unit.findById(unitID);
+    if (unitNoFilter) {
+      // Exisiting unit pero not the owener
+      throw new AppError(403, 'Forbidden: You are not the owner of this unit.');
+    }
+
+    // Non-existing talaga yung unit
+    throw new AppError(404, 'Unit not found.');
+  }
+
+  // Business rule: occupancy can never exceed capacity after the update
+  const newCapacity = data.capacity ?? unit.capacity;
+  const newOccupancy = data.currentOccupancy ?? unit.currentOccupancy;
+  if (newOccupancy > newCapacity) {
+    throw new AppError(422, 'Current occupancy cannot exceed capacity.');
+  }
+
+  unit.set(data);
+  return await unit.save();
+};
