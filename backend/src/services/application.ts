@@ -3,6 +3,81 @@ import { ApplicationForm } from '../models/student-actions/ApplicationForm.js';
 import { combineFilters } from '../controllers/middleware.js';
 import { AppError } from '../controllers/error.js';
 
+export type CreateApplicationArguments = {
+  studentID: mongoose.Types.ObjectId;
+  listingID: mongoose.Types.ObjectId;
+  preferredRoomType?: 'single' | 'double' | 'shared';
+  status?:
+    | 'pending'
+    | 'manager-approved'
+    | 'manager-rejected'
+    | 'manager-waitlisted'
+    | 'landlord-rejected'
+    | 'landlord-approved'
+    | 'landlord-waitlisted';
+  documentUrls?: string[];
+  unitID?: mongoose.Types.ObjectId; // Not required when created
+  accommodationNoticeUrl?: string; // Not required when created
+};
+
+export type GetApplicationsArguments = {
+  studentID: mongoose.Types.ObjectId;
+  listingID: mongoose.Types.ObjectId;
+  preferredRoomType?: 'single' | 'double' | 'shared';
+  status?:
+    | 'pending'
+    | 'manager-approved'
+    | 'manager-rejected'
+    | 'manager-waitlisted'
+    | 'landlord-rejected'
+    | 'landlord-approved'
+    | 'landlord-waitlisted';
+  unitID?: mongoose.Types.ObjectId;
+};
+
+export const createApplication = async (data: CreateApplicationArguments) => {
+  const newApplication = new ApplicationForm({
+    studentID: data.studentID,
+    listingID: data.listingID,
+    preferredRoomType: data.preferredRoomType,
+    documentUrls: data.documentUrls || [],
+    unitID: data.unitID,
+    accommodationNoticeUrl: data.accommodationNoticeUrl,
+  });
+  return await newApplication.save();
+};
+
+export function buildApplicationQuery(args: Partial<GetApplicationsArguments>,): QueryFilter<typeof ApplicationForm> { 
+  const query: QueryFilter<typeof ApplicationForm> = {};
+
+  if (args.studentID) {
+    query.studentID = args.studentID;
+  }
+
+  if (args.listingID) {
+    query.listingID = args.listingID;
+  }
+
+  if (args.preferredRoomType) {
+    query.preferredRoomType = args.preferredRoomType;
+  }
+
+  if (args.status) {
+    query.status = args.status;
+  }
+
+  if (args.unitID) {
+    query.unitID = args.unitID;
+  }
+
+  return query;
+}
+
+export const getApplications = async (query: Partial<GetApplicationsArguments>, filters: any) => {
+  const dbFilters = buildApplicationQuery(query);
+  return await ApplicationForm.find(combineFilters(filters, dbFilters));
+};
+
 // Service functions for application forms, which are the main way students apply to listings
 export const getApplicationById = async (applicationID: mongoose.Types.ObjectId) => {
   const application = await ApplicationForm.findById(applicationID);
