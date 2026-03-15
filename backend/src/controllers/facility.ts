@@ -1,103 +1,30 @@
 import { RequestHandler } from 'express';
-import { createFacility, CreateFacilityArguments } from '../services/facility.js';
-import z from 'zod';
-import mongoose from 'mongoose';
+import { createFacility } from '../services/facility.js';
 import { getFacilityById, updateFacility } from '../services/facility.js';
-
-export const objectIdSchema = z
-  .string()
-  .refine((val) => mongoose.Types.ObjectId.isValid(val), {
-    message: 'Invalid ObjectId',
-  })
-  .transform((val) => new mongoose.Types.ObjectId(val));
+import { CreateFacilityBodySchema, UpdateFacilityBodySchema } from './schema/facility.js';
+import { ObjectIdSchema } from './schema/common.js';
 
 export const routeGetFacilities: RequestHandler = async (req, res, next) => {};
-
-const locationSchema = z.object({
-  coordinates: z
-    .array(z.number())
-    .refine((x) => x.length === 2)
-    .optional(),
-  text: z.string().optional(),
-});
-
 export const routeCreateFacility: RequestHandler = async (req, res, next) => {
   // auth check should be done in middleware before this, so should include user id already
   const userId = req.user!._id;
+  const params = CreateFacilityBodySchema.parse(req.body);
 
-  // zod schema for
-  const ParamsSchema = z.object({
-    managerID: objectIdSchema.optional(),
+  const newFacility = await createFacility({ ...params, landlordID: userId });
 
-    name: z.string(),
-    type: z.enum(['on-campus', 'off-campus', 'partner housing']),
-    location: locationSchema.optional(),
-
-    applicationCloseDate: z.iso
-      .datetime()
-      .transform((date) => new Date(date))
-      .optional(),
-    applicationOpenDate: z.iso
-      .datetime()
-      .transform((date) => new Date(date))
-      .optional(),
-
-    documentsUrl: z.string().optional(),
-  });
-
-  const params = ParamsSchema.parse(req.body);
-
-  const args: CreateFacilityArguments = {
-    landlordID: userId,
-    managerID: params.managerID,
-
-    name: params.name,
-    type: params.type,
-    location: params.location,
-
-    applicationCloseDate: params.applicationCloseDate,
-    applicationOpenDate: params.applicationOpenDate,
-
-    documentUrls: params.documentsUrl,
-  };
-
-  const newFacility = await createFacility(args);
-
-  res.status(201).json({
-    id: newFacility.id,
-  });
+  res.status(201).json({ id: newFacility.id });
 };
 
 export const routeGetFacilityById: RequestHandler = async (req, res, next) => {
-  const facilityID = objectIdSchema.parse(req.params.facilityId);
+  const facilityID = ObjectIdSchema.parse(req.params.facilityId);
   const facility = await getFacilityById(facilityID);
 
-  res.status(200).json({
-    data: facility,
-  });
+  res.status(200).json({ data: facility });
 };
 
 export const routeUpdateFacility: RequestHandler = async (req, res, next) => {
-  const ParamsSchema = z.object({
-    managerID: objectIdSchema.optional(),
-    name: z.string().optional(),
-    type: z.enum(['on-campus', 'off-campus', 'partner housing']).optional(),
-    location: locationSchema.optional(),
-
-    applicationCloseDate: z.iso
-      .datetime()
-      .transform((date) => new Date(date))
-      .optional(),
-    applicationOpenDate: z.iso
-      .datetime()
-      .transform((date) => new Date(date))
-      .optional(),
-
-    documentsUrl: z.string().optional(),
-  });
-
-  const facilityID = objectIdSchema.parse(req.params.facilityId);
-  const updateData = ParamsSchema.parse(req.body);
+  const facilityID = ObjectIdSchema.parse(req.params.facilityId);
+  const updateData = UpdateFacilityBodySchema.parse(req.body);
 
   if (req.user!.userType === 'Manager') {
     if (updateData.managerID) {

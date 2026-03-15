@@ -33,7 +33,7 @@ import {
   isLandlord,
 } from './controllers/middleware.js';
 import passportGoogle from './auth/google.js';
-import { routeCreateTag, routeGetTags } from './controllers/tag.js';
+import { routeCreateTag, routeDeleteTag, routeGetTags, routeUpdateTag } from './controllers/tag.js';
 import { routeTestLogin, routeTestRegister } from './controllers/test.js';
 
 const router = Router();
@@ -49,13 +49,13 @@ router.delete('/facilities/:facilityId', routeDeleteFacility); // correct manage
 
 router.get('/facilities/:facilityId/listings', listingViewFilter, routeGetListingsByFacility); // correct manager/landlord
 
-router.get('/listings', routeGetListings); // manager/landlord
+router.get('/listings', listingViewFilter, routeGetListings); // no auth (filtered by verification status)
 router.post('/listings', correctManagerOrLandlordFilter, routeCreateListing); // manager/landlord
 
 router.get('/listings/:listingId', listingViewFilter, routeGetListingById); // verified
 router.get('/listings/:listingId/reviews', listingViewFilter, routeGetListingReviewsById); // verified
-router.patch('/listings/:listingId', routeUpdateListing); // correct manager/landlord
-router.delete('/listings/:listingId', routeDeleteListing); // correct manager/landlord
+router.patch('/listings/:listingId', correctManagerOrLandlordFilter, routeUpdateListing); // correct manager/landlord
+router.delete('/listings/:listingId', correctManagerOrLandlordFilter, routeDeleteListing); // correct manager/landlord
 
 router.get('/listings/:listingId/units', routeGetUnitsByListing); // correct manager/landlord
 
@@ -66,8 +66,10 @@ router.get('/units/:unitId', routeGetUnitById); // correct manager/landlord (and
 router.patch('/units/:unitId', routeUpdateUnit); // correct manager/landlord
 router.delete('/units/:unitId', routeDeleteUnit); // correct manager/landlord
 
-router.get('/tags', isSuperAdmin, routeGetTags);
+router.get('/tags', routeGetTags);
 router.post('/tags', isSuperAdmin, routeCreateTag);
+router.patch('/tags/:tagName', isSuperAdmin, routeUpdateTag);
+router.delete('/tags/:tagName', isSuperAdmin, routeDeleteTag);
 
 router.get(
   '/auth/google/student',
