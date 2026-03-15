@@ -93,7 +93,17 @@ export const routeGetUnitById: RequestHandler = async (req, res, next) => {
   const unit = await getUnitById(params.unitID);
   res.status(200).json(unit); // sends a json of requested
 };
-export const routeUpdateUnit: RequestHandler = async (req, res, next) => {};
+export const routeUpdateUnit: RequestHandler = async (req, res, next) => {
+  try {
+    const unitId = ObjectIdSchema.parse(req.params.unitId);
+    const updateData = UpdateUnitBodySchema.parse(req.body);
+
+    const updatedUnit = await updateUnit(unitId, updateData, res.locals.filters ?? {});
+    res.status(200).json({ data: updatedUnit });
+  } catch (err) {
+    next(err);
+  }
+};
 export const routeDeleteUnit: RequestHandler = async (req, res, next) => {};
 export const routeGetUnitsByListing: RequestHandler = async (req, res, next) => {
   //zod schema
