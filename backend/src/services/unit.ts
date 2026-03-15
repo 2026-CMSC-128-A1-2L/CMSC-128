@@ -123,3 +123,20 @@ export const updateUnit = async (
   unit.set(data);
   return await unit.save();
 };
+
+export const deleteUnit = async (
+  unitID: mongoose.Types.ObjectId,
+  filters: any,
+) => {
+  const unit = await Unit.findOne(combineFilters(filters, { _id: unitID }));
+
+  if (!unit) {
+    const unitNoFilter = await Unit.findById(unitID);
+    if (unitNoFilter) {
+      throw new AppError(403, 'Forbidden: You are not the owner of this unit.');
+    }
+    throw new AppError(404, 'Unit not found.');
+  }
+
+  return await unit.deleteOne();
+};
