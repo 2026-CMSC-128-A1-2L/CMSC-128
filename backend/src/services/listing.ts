@@ -221,6 +221,30 @@ export const updateListing = async (
   return await listing.save();
 };
 
+export const updateListingTags = async (
+  listingID: mongoose.Types.ObjectId,
+  tags: TagValue[],
+  filters: any,
+) => {
+  const listing = await Listing.findOne(combineFilters(filters, { _id: listingID }));
+  if (!listing) {
+    const listingNoFilter = await Listing.findById(listingID);
+    if (listingNoFilter) {
+      throw new AppError(403, 'Forbidden: You are not the owner of this listing.');
+    } else {
+      throw new AppError(404, 'Listing not found.');
+    }
+  }
+
+  const errorList = await verifyTags(tags);
+  if (errorList.length > 0) {
+    throw new AppError(400, 'Invalid tags', errorList);
+  }
+
+  listing.tags = tags as any;
+  return await listing.save();
+};
+
 export const deleteListing = async (listingID: mongoose.Types.ObjectId, filters: any) => {
   const listing = await Listing.findOne(combineFilters(filters, { _id: listingID }));
   if (!listing) {
@@ -234,4 +258,3 @@ export const deleteListing = async (listingID: mongoose.Types.ObjectId, filters:
 
   return await listing.deleteOne();
 };
-
