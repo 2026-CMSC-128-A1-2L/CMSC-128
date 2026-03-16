@@ -4,15 +4,15 @@ import { combineFilters } from '../controllers/middleware.js';
 import { AppError } from '../controllers/error.js';
 
 export type CreateUnitArguments = {
-    roomNumber: number;
-    capacity: number;
-    currentOccupancy: number;
-    price: number;
-    floorNumber?: number | null;
-    status: 'available' | 'unavailable';
-    listingID: mongoose.Types.ObjectId,
-    landlordID: mongoose.Types.ObjectId,
-    managerID: mongoose.Types.ObjectId
+  roomNumber: number;
+  capacity: number;
+  currentOccupancy: number;
+  price: number;
+  location?: string | null;
+  isAvailable: boolean;
+  listingID: mongoose.Types.ObjectId;
+  landlordID: mongoose.Types.ObjectId;
+  managerID: mongoose.Types.ObjectId;
 };
 
 // Parameters for filtering listings
@@ -21,11 +21,11 @@ export type GetUnitArguments = {
   capacity: number;
   currentOccupancy: number;
   price: number;
-  floorNumber?: number | null;
-  status: 'available' | 'unavailable';
-  listingID: mongoose.Types.ObjectId,
-  landlordID: mongoose.Types.ObjectId,
-  managerID: mongoose.Types.ObjectId
+  location: string;
+  isAvailable: boolean;
+  listingID: mongoose.Types.ObjectId;
+  landlordID: mongoose.Types.ObjectId;
+  managerID: mongoose.Types.ObjectId;
 };
 
 export const createUnit = async (data: CreateUnitArguments, filters: any) => {
@@ -41,35 +41,20 @@ export const createUnit = async (data: CreateUnitArguments, filters: any) => {
     capacity: unit.capacity,
     currentOccupancy: unit.currentOccupancy,
     price: unit.price,
-    floorNumber: unit.floorNumber,
-    status: unit.status,
+    location: unit.location,
+    isAvailable: unit.isAvailable,
     listingID: unit.listingID,
     landlordID: unit.landlordID,
-    managerID: unit.managerID
+    managerID: unit.managerID,
   });
   return await newUnit.save();
 };
 
-export function buildUnitQuery(args: GetUnitArguments): QueryFilter<typeof Unit> {
-  const query: QueryFilter<typeof Unit> = {
-    roomNumber: args.roomNumber,
-    capacity: args.capacity,
-    currentOccupancy: args.currentOccupancy,
-    price: args.price,
-    floorNumber: args.floorNumber,
-    status: args.status,
-    listingID: args.listingID,
-    landlordID: args.landlordID
-  };
-
-  if (args.managerID) {
-    query.managerID = args.managerID;
-  }
-
-  return query;
+export function buildUnitQuery(args: Partial<GetUnitArguments>): QueryFilter<typeof Unit> {
+  return args;
 }
 
-export const getUnits = async (filters: GetUnitArguments) => {
+export const getUnits = async (filters: Partial<GetUnitArguments>) => {
   const query = buildUnitQuery(filters);
   return await Unit.find(query); //returns units
 };
