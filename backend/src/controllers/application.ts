@@ -1,7 +1,31 @@
 import { RequestHandler } from 'express';
 import z from 'zod';
-import { getApplicationById, getApplicationsByListing, getApplicationsByStudent } from '../services/application';
+import {
+  createApplication,
+  getApplications,
+  getApplicationById,
+  getApplicationsByListing,
+  getApplicationsByStudent,
+} from '../services/application';
 import { ObjectIdSchema } from './schema/common.js';
+import {
+    CreateApplicationBodySchema,
+    GetApplicationsQuerySchema,
+} from './schema/application.js';
+
+export const routeCreateApplication: RequestHandler = async (req, res, next) => {
+  const params = CreateApplicationBodySchema.parse(req.body);
+  const newApplication = await createApplication(params);
+
+  res.status(201).json({ id: newApplication.id });
+};
+
+export const routeGetApplications: RequestHandler = async (req, res, next) => {
+  const params = GetApplicationsQuerySchema.parse(req.query);
+  const applications = await getApplications(params, res.locals.filters);
+
+  res.status(200).json({ data: applications });
+};
 
 export const routeGetApplicationById: RequestHandler = async (req, res, next) => {
   const applicationID = ObjectIdSchema.parse(req.params.applicationId);
