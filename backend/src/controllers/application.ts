@@ -6,11 +6,14 @@ import {
   getApplicationById,
   getApplicationsByListing,
   getApplicationsByStudent,
+  updateApplication,
+  deleteApplication,
 } from '../services/application';
 import { ObjectIdSchema } from './schema/common.js';
 import {
     CreateApplicationBodySchema,
     GetApplicationsQuerySchema,
+    UpdateApplicationBodySchema,
 } from './schema/application.js';
 
 export const routeCreateApplication: RequestHandler = async (req, res, next) => {
@@ -55,4 +58,21 @@ export const routeGetApplicationsByStudent: RequestHandler = async (req, res, ne
   res.status(200).json({
     data: applications,
   });
+};
+
+export const routeUpdateApplication: RequestHandler = async (req, res, next) => {
+  const applicationID = ObjectIdSchema.parse(req.params.applicationId);
+  const params = UpdateApplicationBodySchema.parse(req.body);
+
+  const updatedApplication = await updateApplication(applicationID, params, res.locals.filters);
+
+  res.status(200).json({ data: updatedApplication });
+};
+
+export const routeDeleteApplication: RequestHandler = async (req, res, next) => {
+  const applicationID = ObjectIdSchema.parse(req.params.applicationId);
+
+  await deleteApplication(applicationID, res.locals.filters);
+
+  res.status(204).send();
 };
