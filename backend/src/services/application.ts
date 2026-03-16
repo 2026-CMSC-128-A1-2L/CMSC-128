@@ -98,3 +98,47 @@ export const getApplicationsByListing = async (listingID: mongoose.Types.ObjectI
 export const getApplicationsByStudent = async (studentID: mongoose.Types.ObjectId) => {
   return await ApplicationForm.find({ studentID });
 };
+
+export type UpdateApplicationArguments = {
+  preferredRoomType?: 'single' | 'double' | 'shared';
+  status?:
+    | 'pending'
+    | 'manager-approved'
+    | 'manager-rejected'
+    | 'manager-waitlisted'
+    | 'landlord-rejected'
+    | 'landlord-approved'
+    | 'landlord-waitlisted';
+  documentUrls?: string[];
+  unitID?: mongoose.Types.ObjectId;
+};
+
+export const updateApplication = async (applicationID: mongoose.Types.ObjectId, data: UpdateApplicationArguments, filters: any) => {
+  const application = await ApplicationForm.findOne(combineFilters({ _id: applicationID }, filters));
+  if (!application) {
+    const applicationNoFilter = await ApplicationForm.findById(applicationID);
+    if (applicationNoFilter) {
+      throw new AppError(403, 'Forbidden: You do not have permission to update this application.');
+    } else {
+      throw new AppError(404, 'Application not found.');
+    }
+  }
+
+  application.set(data);
+
+  return await application.save();
+};
+
+export const deleteApplication = async (applicationID: mongoose.Types.ObjectId, filters: any) => {
+  const application = await ApplicationForm.findOne(combineFilters({ _id: applicationID }, filters));
+  if (!application) {
+    const applicationNoFilter = await ApplicationForm.findById(applicationID);
+    if (applicationNoFilter) {
+      throw new AppError(403, 'Forbidden: You do not have permission to delete this application.');
+    } else {
+      throw new AppError(404, 'Application not found.');
+    }
+  }
+
+  return await application.deleteOne();
+};
