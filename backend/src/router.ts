@@ -18,6 +18,7 @@ import {
   routeGetListingReviewsById,
   routeGetApplicationsByListing,
   routeGetVisitBookingsByListing,
+  routeUpdateListingTags,
 } from './controllers/listing.js';
 import {
   routeGetUnits,
@@ -109,6 +110,7 @@ router.get(
   routeGetVisitBookingsByListing,
 );
 router.patch('/listings/:listingId', correctManagerOrLandlordFilter, routeUpdateListing); // correct manager/landlord
+router.patch('/listings/:listingId/tags', correctManagerOrLandlordFilter, routeUpdateListingTags); // correct manager/landlord
 router.delete('/listings/:listingId', correctManagerOrLandlordFilter, routeDeleteListing); // correct manager/landlord
 
 router.get('/listings/:listingId/units', routeGetUnitsByListing); // correct manager/landlord
