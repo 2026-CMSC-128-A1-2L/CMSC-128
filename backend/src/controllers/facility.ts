@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
-import { createFacility } from '../services/facility.js';
-import { getFacilityById, updateFacility } from '../services/facility.js';
+import { createFacility, getFacilityById, updateFacility, deleteFacility } from '../services/facility.js';
+import { getListingsByFacility } from '../services/listing.js';
 import { CreateFacilityBodySchema, UpdateFacilityBodySchema } from './schema/facility.js';
 import { ObjectIdSchema } from './schema/common.js';
 
@@ -42,6 +42,20 @@ export const routeUpdateFacility: RequestHandler = async (req, res, next) => {
   });
 };
 
-export const routeDeleteFacility: RequestHandler = async (req, res, next) => {};
+export const routeDeleteFacility: RequestHandler = async (req, res, next) => {
 
-export const routeGetListingsByFacility: RequestHandler = async (req, res, next) => {};
+  const facilityID = ObjectIdSchema.parse(req.params.facilityId);
+
+  await deleteFacility(facilityID);
+
+  // send back success
+  res.status(200).json({ message: 'Facility deleted successfully.' });
+
+};
+
+export const routeGetListingsByFacility: RequestHandler = async (req, res, next) => {
+  const facilityID = ObjectIdSchema.parse(req.params.facilityId);
+  const listings = await getListingsByFacility(facilityID, res.locals.filters);
+
+  res.status(200).json({ data: listings });
+};
