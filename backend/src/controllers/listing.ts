@@ -68,3 +68,4 @@ export const routeDeleteListing: RequestHandler = async (req, res, next) => {
 export const routeGetUnitsByListing: RequestHandler = async (req, res, next) => {};
 export const routeGetApplicationsByListing: RequestHandler = async (req, res, next) => {};
 export const routeGetVisitBookingsByListing: RequestHandler = async (req, res, next) => {};
+export const routeUpdateListingTags: RequestHandler = async (req, res, next) => {};
