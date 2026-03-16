@@ -116,11 +116,10 @@ router.delete('/listings/:listingId', correctManagerOrLandlordFilter, routeDelet
 router.get('/listings/:listingId/units', routeGetUnitsByListing); // correct manager/landlord
 
 router.get('/units', isSuperAdmin, routeGetUnits); // superadmin only
-router.post('/units', routeCreateUnit); // correct manager/landlord, should have listing in body
-
-router.get('/units/:unitId', routeGetUnitById); // correct manager/landlord (and user?)
-router.patch('/units/:unitId', routeUpdateUnit); // correct manager/landlord
-router.delete('/units/:unitId', routeDeleteUnit); // correct manager/landlord
+router.post('/units', correctManagerOrLandlordFilter, routeCreateUnit); // correct manager/landlord, should have listing in body
+router.get('/units/:unitId', isTenantManagerOrLandlord, routeGetUnitById); // correct manager/landlord (and user?)
+router.patch('/units/:unitId', correctManagerOrLandlordFilter, routeUpdateUnit); // correct manager/landlord
+router.delete('/units/:unitId', correctManagerOrLandlordFilter, routeDeleteUnit); // correct manager/landlord
 
 router.get('/tags', routeGetTags);
 router.post('/tags', isSuperAdmin, routeCreateTag);
@@ -182,11 +181,6 @@ router.delete('/visits/:visitId', isSelfOrManager, routeCancelVisitBooking);
 
 router.post('/invites/landlord/:inviteId/accept', routeAcceptLandlordInvite);
 router.post('/invites/manager', isLandlord, routeInviteManager);
-
-router.post('/units', correctManagerOrLandlordFilter, routeCreateUnit);
-router.get('/units/:unitId', isTenantManagerOrLandlord, routeGetUnitById);
-router.patch('/units/:unitId', correctManagerOrLandlordFilter, routeUpdateUnit);
-router.delete('/units/:unitId', correctManagerOrLandlordFilter, routeDeleteUnit);
 
 // creation of fake accounts endpoints
 router.post('/auth/test/register', isDevelopment, routeTestRegister);
