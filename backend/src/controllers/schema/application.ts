@@ -28,3 +28,20 @@ export const GetApplicationsQuerySchema = z.object({
     .optional(),
   unitID: ObjectIdSchema.optional(),
 });
+
+export const UpdateApplicationBodySchema = z.object({
+  preferredRoomType: z.enum(['single', 'double', 'shared']).optional(),
+  status: z
+    .enum([
+      'pending',
+      'manager-approved',
+      'manager-rejected',
+      'manager-waitlisted',
+      'landlord-rejected',
+      'landlord-approved',
+      'landlord-waitlisted',
+    ])
+    .optional(),
+  documentUrls: z.array(z.string()).optional(),
+  unitID: ObjectIdSchema.optional(),
+});
