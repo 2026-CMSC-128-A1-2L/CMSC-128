@@ -33,7 +33,7 @@ import {
   isLandlord,
 } from './controllers/middleware.js';
 import passportGoogle from './auth/google.js';
-import { routeCreateTag, routeDeleteTag, routeGetTags, routeUpdateTag } from './controllers/tag.js';
+import { routeCreateTag, routeDeleteTag, routeGetTags, routeUpdateTag, routeUpdateListingTag } from './controllers/tag.js';
 import { routeTestLogin, routeTestRegister } from './controllers/test.js';
 
 const router = Router();
@@ -54,6 +54,7 @@ router.post('/listings', correctManagerOrLandlordFilter, routeCreateListing); //
 
 router.get('/listings/:listingId', listingViewFilter, routeGetListingById); // verified
 router.get('/listings/:listingId/reviews', listingViewFilter, routeGetListingReviewsById); // verified
+router.patch('/listings/:listingId/tags', correctManagerOrLandlordFilter, routeUpdateListingTag);
 router.patch('/listings/:listingId', correctManagerOrLandlordFilter, routeUpdateListing); // correct manager/landlord
 router.delete('/listings/:listingId', correctManagerOrLandlordFilter, routeDeleteListing); // correct manager/landlord
 
