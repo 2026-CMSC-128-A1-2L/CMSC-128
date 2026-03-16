@@ -29,7 +29,6 @@ import {
 } from './controllers/unit.js';
 import {
   listingViewFilter,
-  isManager,
   isSuperAdmin,
   isDevelopment,
   correctManagerOrLandlordFilter,
@@ -50,6 +49,7 @@ import {
   routeUpdateUser,
   routeDeleteUser,
   routeGetApplicationsByStudent,
+  routeGetVisitBookingsByStudent,
 } from './controllers/user.js';
 import {
   routeCreateApplication,
@@ -80,6 +80,7 @@ import {
   routeGetVisitBookings,
 } from './controllers/visits.js';
 import { routeAcceptLandlordInvite, routeInviteManager } from './controllers/invites.js';
+import { routeCreateTransferRequest, routeCancelTransferRequest } from './controllers/transfers.js';
 
 const router = Router();
 
@@ -141,8 +142,10 @@ router.get(
 router.get('/users', isSuperAdmin, routeGetUsers);
 router.get('/users/:userId', isSelfOrSuperAdmin, routeGetUserById);
 router.patch('/users/:userId', isSelfOrSuperAdmin, routeUpdateUser);
+// router.patch('/users/:userId', isSuperAdmin, routeUpdateStatus);
 router.delete('/users/:userId', isSelfOrSuperAdmin, routeDeleteUser);
 router.get('/users/:userId/applications', isSelfOrSuperAdmin, routeGetApplicationsByStudent);
+router.get('/users/:userId/visits', isSelfOrSuperAdmin, routeGetVisitBookingsByStudent);
 router.post('/applications', isVerifiedStudent, routeCreateApplication);
 router.get('/applications', isSuperAdmin, routeGetApplications);
 router.get('/applications/:applicationId', isSelfManagerOrSuperAdmin, routeGetApplicationByID);
@@ -178,6 +181,11 @@ router.get('/visits', isSuperAdmin, routeGetVisitBookings);
 router.post('/visits', isVerifiedStudent, routeCreateVisitBooking);
 router.patch('/visits/:visitId', isSelfOrManager, routeUpdateVisitBooking);
 router.delete('/visits/:visitId', isSelfOrManager, routeCancelVisitBooking);
+
+// router.get('/transfers', isSuperAdmin, routeGetTransferRequests);
+// router.get('/transfers/:transferId', isSelfOrSuperAdmin, routeGetTransferRequestByID);
+router.post('/transfers', isVerifiedStudent, routeCreateTransferRequest);
+router.delete('/transfers/:transferId', isSelfOrSuperAdmin, routeCancelTransferRequest);
 
 router.post('/invites/landlord/:inviteId/accept', routeAcceptLandlordInvite);
 router.post('/invites/manager', isLandlord, routeInviteManager);
