@@ -14,7 +14,9 @@ const rentalSchema = new mongoose.Schema({
   status: {
     type: String,
     enum: ['active', 'ended', 'on_waitlist', 'inactive'],
-    default: 'inactive',
+
+    // TODO: verify if should be 'active' since rental is created after contract is signed
+    default: 'inactive',   
   },
 
   // Expected dates are filled up when 'inactive'

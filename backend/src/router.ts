@@ -36,6 +36,12 @@ import passportGoogle from './auth/google.js';
 import { routeCreateTag, routeDeleteTag, routeGetTags, routeUpdateTag } from './controllers/tag.js';
 import { routeTestLogin, routeTestRegister } from './controllers/test.js';
 
+import {
+  routeGetRentals,
+  routeUpdateRental,
+  routeDeleteRental,
+} from './controllers/rentals.js';
+
 const router = Router();
 
 // TODO: add auth middleware
@@ -70,6 +76,10 @@ router.get('/tags', routeGetTags);
 router.post('/tags', isSuperAdmin, routeCreateTag);
 router.patch('/tags/:tagName', isSuperAdmin, routeUpdateTag);
 router.delete('/tags/:tagName', isSuperAdmin, routeDeleteTag);
+
+router.get('/rentals', isSuperAdmin, routeGetRentals);
+router.patch('/rentals/:rentalId', correctManagerOrLandlordFilter, routeUpdateRental);
+router.delete('/rentals/:rentalId', isSuperAdmin, routeDeleteRental);
 
 router.get(
   '/auth/google/student',
