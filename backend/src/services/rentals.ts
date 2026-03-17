@@ -4,6 +4,7 @@ import { AppError } from '../controllers/error';
 import { combineFilters } from '../controllers/middleware';
 
 // TODO: verify if actual move-in/out dates are needed 
+// No activities field yet
 export type CreateRentalArguments = {
     studentID: mongoose.Types.ObjectId;
     unitID: mongoose.Types.ObjectId;
@@ -14,7 +15,7 @@ export type CreateRentalArguments = {
     expectedMoveOutDate?: Date | null;
 };
 
-
+// No activities field yet
 export type UpdateRentalArguments = {
     status?: string | null;
 
@@ -52,7 +53,7 @@ export const getRentals = async () => {
     return await Rental.find();
 };
 
-export const updateRentals = async (
+export const updateRental = async (
     rentalID: mongoose.Types.ObjectId, 
     data: UpdateRentalArguments, 
     filters: any
