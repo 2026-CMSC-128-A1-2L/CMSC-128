@@ -1,10 +1,19 @@
 import { RequestHandler } from 'express';
-import { createFacility } from '../services/facility.js';
-import { getFacilityById, updateFacility } from '../services/facility.js';
+import {
+  createFacility,
+  getFacilityById,
+  updateFacility,
+  deleteFacility,
+} from '../services/facility.js';
+import { getListingsByFacility } from '../services/listing.js';
 import { CreateFacilityBodySchema, UpdateFacilityBodySchema } from './schema/facility.js';
 import { ObjectIdSchema } from './schema/common.js';
 
-export const routeGetFacilities: RequestHandler = async (req, res, next) => {};
+// TODO: filtering
+export const routeGetFacilities: RequestHandler = async (req, res, next) => {
+  return await getFacilities();
+};
+
 export const routeCreateFacility: RequestHandler = async (req, res, next) => {
   // auth check should be done in middleware before this, so should include user id already
   const userId = req.user!._id;
@@ -42,6 +51,18 @@ export const routeUpdateFacility: RequestHandler = async (req, res, next) => {
   });
 };
 
-export const routeDeleteFacility: RequestHandler = async (req, res, next) => {};
+export const routeDeleteFacility: RequestHandler = async (req, res, next) => {
+  const facilityID = ObjectIdSchema.parse(req.params.facilityId);
 
-export const routeGetListingsByFacility: RequestHandler = async (req, res, next) => {};
+  await deleteFacility(facilityID);
+
+  // send back success
+  res.status(200).json({ message: 'Facility deleted successfully.' });
+};
+
+export const routeGetListingsByFacility: RequestHandler = async (req, res, next) => {
+  const facilityID = ObjectIdSchema.parse(req.params.facilityId);
+  const listings = await getListingsByFacility(facilityID, res.locals.filters);
+
+  res.status(200).json({ data: listings });
+};
