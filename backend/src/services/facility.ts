@@ -73,6 +73,10 @@ export const getFacilityById = async (facilityID: mongoose.Types.ObjectId) => {
   return facility;
 };
 
+export const getFacilities = async () => {
+  return await HousingFacility.find();
+};
+
 export const updateFacility = async (
   facilityID: mongoose.Types.ObjectId,
   data: UpdateFacilityArguments,
@@ -100,3 +104,19 @@ export const updateFacility = async (
 
   return await facility.save();
 };
+
+export const deleteFacility = async (facilityID: mongoose.Types.ObjectId) => {
+  const facility = await HousingFacility.findById(facilityID);
+
+  // throw a 404 error
+  if (!facility) {
+    throw new AppError(404, 'Facility not found.');
+  }
+
+  if (facility.listings.length > 0) {
+    throw new AppError(422, 'Cannot delete a facility that still has listings.');
+  }
+
+  await HousingFacility.findByIdAndDelete(facilityID);
+};
+
