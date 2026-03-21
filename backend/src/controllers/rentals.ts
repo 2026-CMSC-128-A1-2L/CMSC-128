@@ -3,9 +3,6 @@ import { getRentals, updateRental, deleteRental  } from '../services/rentals';
 import { ObjectIdSchema } from './schema/common';
 import { UpdateRentalSchema } from './schema/rentals';
 
-
-export const routeCreateRental: RequestHandler = async (req, res, next) => {};
-
 export const routeGetRentals: RequestHandler = async (req, res, next) => {
     return await getRentals();
 };
