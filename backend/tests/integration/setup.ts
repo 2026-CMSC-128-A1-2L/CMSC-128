@@ -4,30 +4,36 @@ import { getApp } from '../../src/app';
 import { agent } from 'supertest';
 import { beforeAll, afterAll } from 'vitest';
 import { App } from 'supertest/types.js';
-import { buildLandlord, buildManager, buildStudent } from '../factories';
+import { buildAdmin, buildLandlord, buildManager, buildStudent } from '../factories';
 
 // Random run ID so that if tests run in parallel, they use different databases.
 const TEST_RUN_ID = Date.now().toString(36);
 
 let app: App;
 
+export let adminAgent: ReturnType<typeof agent>;
 export let landlordAgent: ReturnType<typeof agent>;
 export let managerAgent: ReturnType<typeof agent>;
 export let otherManagerAgent: ReturnType<typeof agent>;
 export let studentAgent: ReturnType<typeof agent>;
 export let guestAgent: ReturnType<typeof agent>;
 
+export let admin: any;
 export let landlord: any;
 export let manager: any;
 export let otherManager: any;
 export let student: any;
 
 async function createTestUsers() {
+  const adminData = await buildAdmin.create();
   const landlordData = await buildLandlord.create();
   const managerData = await buildManager.create();
   const otherManagerData = await buildManager.create();
   const studentData = await buildStudent.create();
 
+  const adminResponse = await adminAgent
+    .post('/api/auth/test/login')
+    .send({ email: adminData.email });
   const landlordResponse = await landlordAgent
     .post('/api/auth/test/login')
     .send({ email: landlordData.email });
@@ -41,6 +47,7 @@ async function createTestUsers() {
     .post('/api/auth/test/login')
     .send({ email: studentData.email });
 
+  admin = adminResponse.body;
   landlord = landlordResponse.body;
   manager = managerResponse.body;
   otherManager = otherManagerResponse.body;
@@ -59,6 +66,7 @@ beforeAll(async () => {
 
     app = getApp({});
 
+    adminAgent = agent(app);
     landlordAgent = agent(app);
     managerAgent = agent(app);
     otherManagerAgent = agent(app);

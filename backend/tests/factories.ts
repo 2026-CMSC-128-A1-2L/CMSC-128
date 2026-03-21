@@ -15,6 +15,13 @@ import { HousingFacility } from '../src/models/housing/HousingFacility.js';
 import { Listing } from '../src/models/housing/Listing.js';
 import { Unit } from '../src/models/housing/Unit.js';
 import { Tag } from '../src/models/housing/Tag.js';
+import { ApplicationForm } from '../src/models/student-actions/ApplicationForm.js';
+import { Rental } from '../src/models/student-actions/Rents.js';
+import { Payment } from '../src/models/student-actions/Payment.js';
+import { Bookmark } from '../src/models/student-actions/Bookmark.js';
+import { Review } from '../src/models/reviews/Review.js';
+import { VisitBooking } from '../src/models/student-actions/VisitBooking.js';
+import { TransferRequest } from '../src/models/student-actions/TransferRequest.js';
 
 type UserParams = {
   firstName: string;
@@ -218,25 +225,144 @@ export const buildBooleanTag = buildTag.params({
 });
 
 type UnitParams = {
-  roomNumber: number;
+  roomNumber: string;
   capacity: number;
   currentOccupancy: number;
   price: number;
-  floorNumber?: number | null;
-  status: 'available' | 'unavailable';
+  location?: string;
+  isAvailable: boolean;
   listingID: mongoose.Types.ObjectId;
   landlordID: mongoose.Types.ObjectId;
-  managerID? : mongoose.Types.ObjectId | null;
+  managerID?: mongoose.Types.ObjectId | null;
 };
 
 export const buildUnit = Factory.define<UnitParams>(({ sequence }) => ({
-  roomNumber: sequence,
+  roomNumber: `${sequence}`,
   capacity: 1,
   currentOccupancy: 0,
   price: 3000,
-  floorNumber: 1,
-  status: 'available',
+  location: 'Floor 1',
+  isAvailable: true,
   listingID: new mongoose.Types.ObjectId(),
   landlordID: new mongoose.Types.ObjectId(),
-  managerID: null
+  managerID: null,
 })).onCreate((data) => new Unit(data).save() as any);
+
+type ApplicationParams = {
+  studentID: mongoose.Types.ObjectId;
+  listingID: mongoose.Types.ObjectId;
+  preferredRoomType?: 'single' | 'double' | 'shared';
+  status:
+    | 'pending'
+    | 'manager-approved'
+    | 'manager-rejected'
+    | 'manager-waitlisted'
+    | 'landlord-rejected'
+    | 'landlord-approved'
+    | 'landlord-waitlisted';
+  documentUrls: string[];
+  unitID?: mongoose.Types.ObjectId;
+};
+
+export const buildApplication = Factory.define<ApplicationParams>(({ sequence }) => ({
+  studentID: new mongoose.Types.ObjectId(),
+  listingID: new mongoose.Types.ObjectId(),
+  preferredRoomType: 'single',
+  status: 'pending',
+  documentUrls: [],
+})).onCreate((data) => new ApplicationForm(data).save() as any);
+
+type RentalParams = {
+  studentID: mongoose.Types.ObjectId;
+  unitID: mongoose.Types.ObjectId;
+  applicationID?: mongoose.Types.ObjectId;
+  status: 'active' | 'ended' | 'on_waitlist' | 'inactive';
+  expectedMoveInDate?: Date;
+  expectedMoveOutDate?: Date;
+  actualMoveInDate?: Date;
+  actualMoveOutDate?: Date;
+};
+
+export const buildRental = Factory.define<RentalParams>(({ sequence }) => ({
+  studentID: new mongoose.Types.ObjectId(),
+  unitID: new mongoose.Types.ObjectId(),
+  status: 'inactive',
+})).onCreate((data) => new Rental(data).save() as any);
+
+type PaymentParams = {
+  studentID: mongoose.Types.ObjectId;
+  unitID: mongoose.Types.ObjectId;
+  managerID?: mongoose.Types.ObjectId;
+  billingPeriodStart?: Date;
+  billingPeriodEnd?: Date;
+  dueDate?: Date;
+  paymentDate?: Date;
+  paidAmount?: number;
+  amount?: number;
+  paymentStatus: 'unpaid' | 'paid' | 'overdue' | 'partially_paid';
+  proofOfPayment?: string;
+  paymentType?: string;
+};
+
+export const buildPayment = Factory.define<PaymentParams>(({ sequence }) => ({
+  studentID: new mongoose.Types.ObjectId(),
+  unitID: new mongoose.Types.ObjectId(),
+  paymentStatus: 'unpaid',
+  amount: 5000,
+})).onCreate((data) => new Payment(data).save() as any);
+
+type BookmarkParams = {
+  studentID: mongoose.Types.ObjectId;
+  listingID: mongoose.Types.ObjectId;
+  bookmarkedAt: Date;
+  notes?: string;
+};
+
+export const buildBookmark = Factory.define<BookmarkParams>(({ sequence }) => ({
+  studentID: new mongoose.Types.ObjectId(),
+  listingID: new mongoose.Types.ObjectId(),
+  bookmarkedAt: new Date(),
+})).onCreate((data) => new Bookmark(data).save() as any);
+
+type ReviewParams = {
+  studentID: mongoose.Types.ObjectId;
+  listingID: mongoose.Types.ObjectId;
+  rating: number;
+  description?: string;
+};
+
+export const buildReview = Factory.define<ReviewParams>(({ sequence }) => ({
+  studentID: new mongoose.Types.ObjectId(),
+  listingID: new mongoose.Types.ObjectId(),
+  rating: 4,
+  description: `Test review ${sequence}`,
+})).onCreate((data) => new Review(data).save() as any);
+
+type VisitBookingParams = {
+  studentID: mongoose.Types.ObjectId;
+  housingID: mongoose.Types.ObjectId;
+  status: 'pending' | 'approved' | 'rejected' | 'cancelled';
+  startDate: Date;
+  endDate: Date;
+  message?: string;
+};
+
+export const buildVisitBooking = Factory.define<VisitBookingParams>(({ sequence }) => ({
+  studentID: new mongoose.Types.ObjectId(),
+  housingID: new mongoose.Types.ObjectId(),
+  status: 'pending',
+  startDate: new Date('2026-04-01'),
+  endDate: new Date('2026-04-01'),
+})).onCreate((data) => new VisitBooking(data).save() as any);
+
+type TransferRequestParams = {
+  studentID: mongoose.Types.ObjectId;
+  unitID: mongoose.Types.ObjectId;
+  description?: string;
+};
+
+export const buildTransferRequest = Factory.define<TransferRequestParams>(({ sequence }) => ({
+  studentID: new mongoose.Types.ObjectId(),
+  unitID: new mongoose.Types.ObjectId(),
+  description: `Transfer request ${sequence}`,
+})).onCreate((data) => new TransferRequest(data).save() as any);
