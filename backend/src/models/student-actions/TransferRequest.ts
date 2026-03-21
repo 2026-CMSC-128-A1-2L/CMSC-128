@@ -8,6 +8,7 @@ const TransferRequestSchema = new mongoose.Schema(
 
     // reason for transfer
     description: { type: String, required: false },
+    status: { type: String, required: false },
   },
   { timestamps: true },
 );

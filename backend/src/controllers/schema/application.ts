@@ -24,6 +24,7 @@ export const GetApplicationsQuerySchema = z.object({
       'landlord-rejected',
       'landlord-approved',
       'landlord-waitlisted',
+      'contract-signed'
     ])
     .optional(),
   unitID: ObjectIdSchema.optional(),

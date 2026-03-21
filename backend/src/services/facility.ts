@@ -73,6 +73,10 @@ export const getFacilityById = async (facilityID: mongoose.Types.ObjectId) => {
   return facility;
 };
 
+export const getFacilities = async () => {
+  return await HousingFacility.find();
+};
+
 export const updateFacility = async (
   facilityID: mongoose.Types.ObjectId,
   data: UpdateFacilityArguments,
@@ -101,7 +105,6 @@ export const updateFacility = async (
   return await facility.save();
 };
 
-
 export const deleteFacility = async (facilityID: mongoose.Types.ObjectId) => {
   const facility = await HousingFacility.findById(facilityID);
 
@@ -116,3 +119,4 @@ export const deleteFacility = async (facilityID: mongoose.Types.ObjectId) => {
 
   await HousingFacility.findByIdAndDelete(facilityID);
 };
+

@@ -14,7 +14,8 @@ export type CreateApplicationArguments = {
     | 'manager-waitlisted'
     | 'landlord-rejected'
     | 'landlord-approved'
-    | 'landlord-waitlisted';
+    | 'landlord-waitlisted'
+    | 'contract-signed';
   documentUrls?: string[];
   unitID?: mongoose.Types.ObjectId; // Not required when created
   accommodationNoticeUrl?: string; // Not required when created
@@ -31,7 +32,8 @@ export type GetApplicationsArguments = {
     | 'manager-waitlisted'
     | 'landlord-rejected'
     | 'landlord-approved'
-    | 'landlord-waitlisted';
+    | 'landlord-waitlisted'
+    | 'contract-signed';
   unitID?: mongoose.Types.ObjectId;
 };
 
