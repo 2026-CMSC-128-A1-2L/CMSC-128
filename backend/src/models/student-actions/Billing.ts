@@ -1,17 +1,11 @@
 import mongoose from 'mongoose';
 
-const paymentSchema = new mongoose.Schema({
+const billingSchema = new mongoose.Schema({
   studentID: { type: mongoose.Schema.Types.ObjectId, ref: 'Student', required: true },
   unitID: { type: mongoose.Schema.Types.ObjectId, ref: 'Unit', required: true },
 
   // Who the bill is paid to.
   managerID: { type: mongoose.Schema.Types.ObjectId, ref: 'Manager' },
-
-  // Start of covered period
-  billingPeriodStart: { type: Date, required: false },
-
-  // End of covered period
-  billingPeriodEnd: { type: Date, required: false },
 
   dueDate: { type: Date },
   paymentDate: { type: Date },
@@ -35,4 +29,4 @@ const paymentSchema = new mongoose.Schema({
   paymentType: { type: String }, // e.g., 'rent', 'deposit', 'utility'
 });
 
-export const Payment = mongoose.model('Payment', paymentSchema);
+export const Billing = mongoose.model('Billing', billingSchema);
