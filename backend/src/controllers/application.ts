@@ -77,3 +77,6 @@ export const routeDeleteApplication: RequestHandler = async (req, res, next) => 
 
   res.status(204).send();
 };
+
+export const routeUpdateApplicationStatus: RequestHandler = async (req, res, next) => {};
+export const routeAssignApplicationUnit: RequestHandler = async (req, res, next) => {};
