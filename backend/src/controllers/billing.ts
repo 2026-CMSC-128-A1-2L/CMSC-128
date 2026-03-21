@@ -2,7 +2,7 @@ import { RequestHandler } from 'express';
 import {
   createBilling,
   getBillings
-} from '../services/Billing.js';
+} from '../services/billing.js';
 import { CreateBillingBodySchema,GetBillingsQuerySchema } from './schema/billing.js';
 import { ObjectIdSchema } from './schema/common.js';
 
