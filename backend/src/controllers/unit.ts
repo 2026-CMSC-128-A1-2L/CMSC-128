@@ -3,7 +3,6 @@ import {
   createUnit,
   CreateUnitArguments,
   getUnitById,
-  GetUnitArguments,
   getUnits,
   getUnitByListing,
   updateUnit,
@@ -23,30 +22,18 @@ const objectIdSchema = z
 
 export const routeGetUnits: RequestHandler = async (req, res, next) => {
   const ParamsSchema = z.object({
-    roomNumber: z.number(),
-    capacity: z.number(),
-    currentOccupancy: z.number(),
-    price: z.number(),
-    floorNumber: z.number(),
-    status: z.enum(['available', 'unavailable']),
-    listingID: objectIdSchema,
-    landlordID: objectIdSchema,
-    managerID: objectIdSchema
+    roomNumber: z.number().optional(),
+    capacity: z.number().optional(),
+    currentOccupancy: z.number().optional(),
+    price: z.number().optional(),
+    location: z.string().optional(),
+    isAvailable: z.boolean().optional(),
+    listingID: objectIdSchema.optional(),
+    landlordID: objectIdSchema.optional(),
+    managerID: objectIdSchema.optional(),
   });
 
-  const params = ParamsSchema.parse(req.params);
-
-  const args: GetUnitArguments = {
-    roomNumber: params.roomNumber,
-    capacity: params.capacity,
-    currentOccupancy: params.currentOccupancy,
-    price: params.price,
-    floorNumber: params.floorNumber,
-    status: params.status,
-    listingID: params.listingID,
-    landlordID: params.landlordID,
-    managerID: params.managerID
-  };
+  const args = ParamsSchema.parse(req.params);
   const unit = await getUnits(args);
   res.status(200).json(unit); // sends a json of requested
 };
@@ -58,11 +45,11 @@ export const routeCreateUnit: RequestHandler = async (req, res, next) => {
     capacity: z.number(),
     currentOccupancy: z.number(),
     price: z.number(),
-    floorNumber: z.number(),
-    status: z.enum(['available', 'unavailable']),
+    location: z.string(),
+    isAvailable: z.boolean(),
     listingID: objectIdSchema,
     landlordID: objectIdSchema,
-    managerID: objectIdSchema
+    managerID: objectIdSchema,
   });
   const params = ParamsSchema.parse(req.params);
 
@@ -71,11 +58,11 @@ export const routeCreateUnit: RequestHandler = async (req, res, next) => {
     capacity: params.capacity,
     currentOccupancy: params.currentOccupancy,
     price: params.price,
-    floorNumber: params.floorNumber,
-    status: params.status,
+    location: params.location,
+    isAvailable: params.isAvailable,
     listingID: params.listingID,
     landlordID: params.landlordID,
-    managerID: params.managerID
+    managerID: params.managerID,
   };
 
   const newListing = await createUnit(args, res.locals.filters);
@@ -125,4 +112,3 @@ export const routeGetUnitsByListing: RequestHandler = async (req, res, next) => 
   const unit = await getUnitByListing(params.listingID);
   res.status(200).json(unit); // sends a json of requested
 };
-
