@@ -1,6 +1,6 @@
 import '../../src/config.js';
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { buildHousingFacility } from '../factories';
+import { buildHousingFacility, buildEnumTag } from '../factories';
 import {
   landlord,
   landlordAgent,
@@ -20,10 +20,11 @@ describe('Listings API', () => {
       managerID: manager._id,
     });
 
+    const tag = await buildEnumTag.create();
+
     existingFacilityID = (facility as any)._id;
   });
 
-  // No tags incuded
   const listingData = {
     roomType: 'double',
     capacity: 2,
@@ -31,6 +32,7 @@ describe('Listings API', () => {
     allowVisit: true,
     allowTransfer: false,
     description: 'Test listing',
+    tags: [{ name: 'wifi-status', value: { type: 'enum', value: 'No WiFi' } }],
   };
 
   // Testing creating a listing as landlord
@@ -108,7 +110,7 @@ describe('Listings API', () => {
       it('should return a 400 when passing an invalid tag value', async () => {
         const response = await landlordAgent.post('/api/listings').send({
           ...listingData,
-          tags: [{ name: 'wifi', value: { type: 'enum', value: 'Invalid Value' } }],
+          tags: [{ name: 'wifi-status', value: { type: 'enum', value: 'Invalid Value' } }],
           housingID: existingFacilityID,
         });
 
@@ -123,7 +125,7 @@ describe('Listings API', () => {
 
         expect(response).statusToBe(400);
       });
-      it.skip('should return a 400 when passing invalid media', async () => {});
+      it.skip('should return a 400 when passing invalid media', async () => { });
     });
   });
 

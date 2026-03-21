@@ -91,6 +91,18 @@ describe('Facilities API', () => {
     });
   });
 
+  describe('GET /api/facilities', () => {
+    describe('Authentication', () => {
+      it('should allow guests to get facility by id', async () => {
+        const response = await guestAgent.get(`/api/facilities/`);
+        expect(response).statusToBe(200);
+        expect(response.body.data).toBeDefined();
+        expect(response.body.data.length).toBe(1);
+      });
+    });
+    // TODO: add tests for filtering
+  });
+
   describe('GET /api/facilities/:id', () => {
     describe('Authentication', () => {
       it('should allow guests to get facility by id', async () => {
@@ -153,6 +165,16 @@ describe('Facilities API', () => {
           .patch(`/api/facilities/${facilityId}`)
           .send({ name: 'Updated Name' });
         expect(response).statusToBe(401);
+      });
+    });
+
+    describe('Logic', () => {
+      it('should return 422 when close date is before open date', async () => {
+        const response = await landlordAgent.patch(`/api/facilities/${facilityId}`).send({
+          applicationCloseDate: validFacility.applicationOpenDate,
+          applicationOpenDate: validFacility.applicationCloseDate,
+        });
+        expect(response).statusToBe(422);
       });
     });
   });
