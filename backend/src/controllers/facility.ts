@@ -4,6 +4,7 @@ import {
   getFacilityById,
   updateFacility,
   deleteFacility,
+  getFacilities
 } from '../services/facility.js';
 import { getListingsByFacility } from '../services/listing.js';
 import { CreateFacilityBodySchema, UpdateFacilityBodySchema } from './schema/facility.js';

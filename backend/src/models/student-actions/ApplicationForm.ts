@@ -16,6 +16,7 @@ const applicationFormSchema = new mongoose.Schema(
         'landlord-rejected',
         'landlord-approved',
         'landlord-waitlisted',
+        'contract-signed',
       ],
       default: 'pending',
     },
