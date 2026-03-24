@@ -226,7 +226,7 @@ type UnitParams = {
   status: 'available' | 'unavailable';
   listingID: mongoose.Types.ObjectId;
   landlordID: mongoose.Types.ObjectId;
-  managerID? : mongoose.Types.ObjectId | null;
+  managerID?: mongoose.Types.ObjectId | null;
 };
 
 export const buildUnit = Factory.define<UnitParams>(({ sequence }) => ({
@@ -238,5 +238,5 @@ export const buildUnit = Factory.define<UnitParams>(({ sequence }) => ({
   status: 'available',
   listingID: new mongoose.Types.ObjectId(),
   landlordID: new mongoose.Types.ObjectId(),
-  managerID: null
+  managerID: null,
 })).onCreate((data) => new Unit(data).save() as any);

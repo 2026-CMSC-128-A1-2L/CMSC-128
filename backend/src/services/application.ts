@@ -49,7 +49,9 @@ export const createApplication = async (data: CreateApplicationArguments) => {
   return await newApplication.save();
 };
 
-export function buildApplicationQuery(args: Partial<GetApplicationsArguments>,): QueryFilter<typeof ApplicationForm> { 
+export function buildApplicationQuery(
+  args: Partial<GetApplicationsArguments>,
+): QueryFilter<typeof ApplicationForm> {
   const query: QueryFilter<typeof ApplicationForm> = {};
 
   if (args.studentID) {
@@ -115,8 +117,14 @@ export type UpdateApplicationArguments = {
   unitID?: mongoose.Types.ObjectId;
 };
 
-export const updateApplication = async (applicationID: mongoose.Types.ObjectId, data: UpdateApplicationArguments, filters: any) => {
-  const application = await ApplicationForm.findOne(combineFilters({ _id: applicationID }, filters));
+export const updateApplication = async (
+  applicationID: mongoose.Types.ObjectId,
+  data: UpdateApplicationArguments,
+  filters: any,
+) => {
+  const application = await ApplicationForm.findOne(
+    combineFilters({ _id: applicationID }, filters),
+  );
   if (!application) {
     const applicationNoFilter = await ApplicationForm.findById(applicationID);
     if (applicationNoFilter) {
@@ -132,7 +140,9 @@ export const updateApplication = async (applicationID: mongoose.Types.ObjectId, 
 };
 
 export const deleteApplication = async (applicationID: mongoose.Types.ObjectId, filters: any) => {
-  const application = await ApplicationForm.findOne(combineFilters({ _id: applicationID }, filters));
+  const application = await ApplicationForm.findOne(
+    combineFilters({ _id: applicationID }, filters),
+  );
   if (!application) {
     const applicationNoFilter = await ApplicationForm.findById(applicationID);
     if (applicationNoFilter) {

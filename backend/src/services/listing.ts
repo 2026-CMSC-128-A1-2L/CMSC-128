@@ -48,17 +48,20 @@ export type GetListingArguments = {
   allowTransfer: boolean;
 };
 
-type TagSpec = {
-  name: 'enum',
-  values: string[],
-} | {
-  name: 'numeric',
-  min: number,
-  max: number,
-} | {
-  name: 'boolean',
-  value: boolean,
-};
+type TagSpec =
+  | {
+      name: 'enum';
+      values: string[];
+    }
+  | {
+      name: 'numeric';
+      min: number;
+      max: number;
+    }
+  | {
+      name: 'boolean';
+      value: boolean;
+    };
 
 const verifyTags = async (tagList: TagValue[]) => {
   const tagMap = Object.fromEntries(tagList.map((tag) => [tag.name, tag.value]));
@@ -72,15 +75,15 @@ const verifyTags = async (tagList: TagValue[]) => {
 
       const value = tagMap[tag.name].value;
 
-      const tagDoc = (tag.dataType as unknown) as TagSpec;
+      const tagDoc = tag.dataType as unknown as TagSpec;
 
       if (tagDoc.name == 'enum') {
-        assert(typeof value === "string");
+        assert(typeof value === 'string');
         if (!tagDoc.values.includes(value)) {
           return { error: `Invalid value '${value}' for tag '${tag.name}'` };
         }
       } else if (tagDoc.name == 'numeric') {
-        assert(typeof value === "number");
+        assert(typeof value === 'number');
         if (tagDoc.min && tagDoc.min > value) {
           return {
             error: `Invalid value '${value}' for tag '${tag.name}', minimum is set at ${tagDoc.min}`,
@@ -248,20 +251,13 @@ export const deleteListing = async (listingID: mongoose.Types.ObjectId, filters:
   return await listing.deleteOne();
 };
 
-
-export const getListingsByFacility = async (
-  facilityID: mongoose.Types.ObjectId,
-  filters: any,
-) => {
-
+export const getListingsByFacility = async (facilityID: mongoose.Types.ObjectId, filters: any) => {
   const facility = await HousingFacility.findById(facilityID);
   if (!facility) {
     throw new AppError(404, 'Facility not found.');
   }
 
-  const listings = await Listing.find(
-    combineFilters(filters, { housingID: facilityID })
-  );
+  const listings = await Listing.find(combineFilters(filters, { housingID: facilityID }));
 
   return listings;
 };

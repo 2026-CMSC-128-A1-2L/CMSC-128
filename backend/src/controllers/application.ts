@@ -12,9 +12,9 @@ import {
 } from '../services/application';
 import { ObjectIdSchema } from './schema/common.js';
 import {
-    CreateApplicationBodySchema,
-    GetApplicationsQuerySchema,
-    UpdateApplicationBodySchema,
+  CreateApplicationBodySchema,
+  GetApplicationsQuerySchema,
+  UpdateApplicationBodySchema,
 } from './schema/application.js';
 
 export const routeCreateApplication: RequestHandler = async (req, res, next) => {

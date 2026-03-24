@@ -125,7 +125,7 @@ describe('Listings API', () => {
 
         expect(response).statusToBe(400);
       });
-      it.skip('should return a 400 when passing invalid media', async () => { });
+      it.skip('should return a 400 when passing invalid media', async () => {});
     });
   });
 

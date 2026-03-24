@@ -7,18 +7,18 @@ export const CreateBillingBodySchema = z.object({
   managerID: ObjectIdSchema,
 
   dueDate: z.coerce.date(), // Auto converts date string to Z date
-    
-  paymentDate: z.iso
-  .datetime()
-  .transform((date) => new Date(date))
-  .optional(), // Done after creation
 
-  amount:z.number(),
-  paidAmount:z.number().optional(), // Done after creation
+  paymentDate: z.iso
+    .datetime()
+    .transform((date) => new Date(date))
+    .optional(), // Done after creation
+
+  amount: z.number(),
+  paidAmount: z.number().optional(), // Done after creation
 
   paymentStatus: z.enum(['unpaid', 'paid', 'overdue', 'partially_paid']).optional(),
 
-  proofOfPayment: z.string().optional(),  // Done after creation
+  proofOfPayment: z.string().optional(), // Done after creation
   paymentType: z.string(), // 'rent', 'deposit', etc.
 });
 

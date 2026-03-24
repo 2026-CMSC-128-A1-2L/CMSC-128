@@ -1,8 +1,5 @@
 import { RequestHandler } from 'express';
-import {
-  createBilling,
-  getBillings
-} from '../services/billing.js';
+import { createBilling, getBillings } from '../services/billing.js';
 import { CreateBillingBodySchema, GetBillingsQuerySchema } from './schema/billing.js';
 import { ObjectIdSchema } from './schema/common.js';
 
@@ -13,10 +10,9 @@ export const routeCreateBilling: RequestHandler = async (req, res, next) => {
 
   const newBilling = await createBilling(params);
   res.status(201).json({ id: newBilling.id });
-}
+};
 
 export const routeGetBillings: RequestHandler = async (req, res, next) => {
   const params = GetBillingsQuerySchema.parse(req.query);
   const Billings = await getBillings(params, res.locals.filters);
-
-}
+};

@@ -1,7 +1,6 @@
 import z from 'zod';
 import { ObjectIdSchema } from './common';
 
-
 // No activities field yet
 export const UpdateRentalSchema = z.object({
   status: z.enum(['active', 'ended', 'on_waitlist', 'inactive']).optional(),
