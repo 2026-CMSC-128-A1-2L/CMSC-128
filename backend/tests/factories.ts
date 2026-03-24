@@ -17,7 +17,7 @@ import { Unit } from '../src/models/housing/Unit.js';
 import { Tag } from '../src/models/housing/Tag.js';
 import { ApplicationForm } from '../src/models/student-actions/ApplicationForm.js';
 import { Rental } from '../src/models/student-actions/Rents.js';
-import { Payment } from '../src/models/student-actions/Payment.js';
+import { Billing } from '../src/models/student-actions/Billing.js';
 import { Bookmark } from '../src/models/student-actions/Bookmark.js';
 import { Review } from '../src/models/reviews/Review.js';
 import { VisitBooking } from '../src/models/student-actions/VisitBooking.js';
@@ -259,7 +259,8 @@ type ApplicationParams = {
     | 'manager-waitlisted'
     | 'landlord-rejected'
     | 'landlord-approved'
-    | 'landlord-waitlisted';
+    | 'landlord-waitlisted'
+    | 'contract-signed';
   documentUrls: string[];
   unitID?: mongoose.Types.ObjectId;
 };
@@ -289,7 +290,7 @@ export const buildRental = Factory.define<RentalParams>(({ sequence }) => ({
   status: 'inactive',
 })).onCreate((data) => new Rental(data).save() as any);
 
-type PaymentParams = {
+type BillingParams = {
   studentID: mongoose.Types.ObjectId;
   unitID: mongoose.Types.ObjectId;
   managerID?: mongoose.Types.ObjectId;
@@ -304,12 +305,12 @@ type PaymentParams = {
   paymentType?: string;
 };
 
-export const buildPayment = Factory.define<PaymentParams>(({ sequence }) => ({
+export const buildBilling = Factory.define<BillingParams>(({ sequence }) => ({
   studentID: new mongoose.Types.ObjectId(),
   unitID: new mongoose.Types.ObjectId(),
   paymentStatus: 'unpaid',
   amount: 5000,
-})).onCreate((data) => new Payment(data).save() as any);
+})).onCreate((data) => new Billing(data).save() as any);
 
 type BookmarkParams = {
   studentID: mongoose.Types.ObjectId;

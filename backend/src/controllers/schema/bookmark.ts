@@ -6,6 +6,11 @@ export const CreateBookmarkBodySchema = z.object({
   notes: z.string().optional(),
 });
 
+export const DeleteBookmarkBodySchema = z.object({
+  listingID: ObjectIdSchema,
+  notes: z.string().optional(),
+});
+
 export const BookmarkParamsSchema = z.object({
   unitId: ObjectIdSchema,
 });
