@@ -1,3 +1,4 @@
+import mongoose, { QueryFilter } from 'mongoose';
 import { UnverifiedStudent, User } from '../models/user/User';
 
 export type CreateUserParams = {
@@ -37,4 +38,36 @@ export const createTestUser = async (params: unknown) => {
 
 export const getUserByEmail = async (email: string) => {
   return await User.findOne({ email });
+};
+
+export const getUserById = async (userId: mongoose.Types.ObjectId) => {
+  return await User.findById(userId);
+};
+
+export const deleteUser = async (userId: mongoose.Types.ObjectId) => {
+  return await User.updateOne({ _id: userId }, { isActive: false });
+};
+
+type GetUsersArguments = {
+  userID?: mongoose.Types.ObjectId | null;
+  userType?:
+    | 'Admin'
+    | 'Student'
+    | 'Manager'
+    | 'Landlord'
+    | 'UnverifiedStudent'
+    | 'UnverifiedManager'
+    | 'UnverifiedLandlord';
+};
+
+export const getUsers = async (params: GetUsersArguments) => {
+  const filter: QueryFilter<typeof User> = {};
+  if (params.userID) {
+    filter._id = params.userID;
+  }
+  if (params.userType) {
+    filter.userType = filter;
+  }
+
+  return await User.find(filter);
 };
