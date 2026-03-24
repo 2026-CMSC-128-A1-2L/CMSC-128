@@ -11,4 +11,6 @@ const bookmarkSchema = new mongoose.Schema({
   notes: { type: String },
 });
 
+bookmarkSchema.index({ studentID: 1, listingID: 1 }, { unique: true });
+
 export const Bookmark = mongoose.model('Bookmark', bookmarkSchema);
