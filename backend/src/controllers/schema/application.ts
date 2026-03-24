@@ -27,7 +27,26 @@ export const ApplicationFilterSchema = z.object({
       'landlord-rejected',
       'landlord-approved',
       'landlord-waitlisted',
+      'contract-signed',
     ])
     .optional(),
+  unitID: ObjectIdSchema.optional(),
+});
+
+export const UpdateApplicationBodySchema = z.object({
+  preferredRoomType: z.enum(['single', 'double', 'shared']).optional(),
+  status: z
+    .enum([
+      'pending',
+      'manager-approved',
+      'manager-rejected',
+      'manager-waitlisted',
+      'landlord-rejected',
+      'landlord-approved',
+      'landlord-waitlisted',
+      'contract-signed',
+    ])
+    .optional(),
+  documentUrls: z.array(z.string()).optional(),
   unitID: ObjectIdSchema.optional(),
 });
