@@ -11,16 +11,16 @@ import {
 } from './setup.js';
 
 describe('Listings API', () => {
-  let listingID: string;
-  let existingFacilityID: string;
+  let listingId: string;
+  let existingFacilityId: string;
 
   beforeAll(async () => {
     const facility = await buildHousingFacility.create({
-      landlordID: landlord._id,
-      managerID: manager._id,
+      landlordId: landlord._id,
+      managerId: manager._id,
     });
 
-    existingFacilityID = (facility as any)._id;
+    existingFacilityId = (facility as any)._id;
   });
 
   // No tags incuded
@@ -39,12 +39,12 @@ describe('Listings API', () => {
       it('should create listing and return 201 for Landlord', async () => {
         const response = await landlordAgent.post('/api/listings').send({
           ...listingData,
-          housingID: existingFacilityID,
+          housingId: existingFacilityId,
         });
 
         expect(response).statusToBe(201);
         expect(response.body.id).toBeDefined();
-        listingID = response.body.id;
+        listingId = response.body.id;
       });
 
       it('should create listing and return 201 for Manager', async () => {
@@ -52,19 +52,19 @@ describe('Listings API', () => {
           ...listingData,
           capacity: 6,
           isPrivate: false,
-          housingID: existingFacilityID,
+          housingId: existingFacilityId,
         });
 
         expect(response).statusToBe(201);
         expect(response.body.id).toBeDefined();
-        listingID = response.body.id;
+        listingId = response.body.id;
       });
 
       // Testing error for unauthorized creation
       it('should return 401 for Guest (Not Logged In)', async () => {
         const response = await guestAgent.post('/api/listings').send({
           ...listingData,
-          housingID: existingFacilityID,
+          housingId: existingFacilityId,
         });
         expect(response).statusToBe(401);
       });
@@ -72,7 +72,7 @@ describe('Listings API', () => {
       it('should return an error for Student (Not Authorized to Create)', async () => {
         const response = await studentAgent.post('/api/listings').send({
           ...listingData,
-          housingID: existingFacilityID,
+          housingId: existingFacilityId,
         });
         expect(response).statusToBe(403);
       });
@@ -83,7 +83,7 @@ describe('Listings API', () => {
         const response = await landlordAgent.post('/api/listings').send({
           ...listingData,
           capacity: -1,
-          housingID: existingFacilityID,
+          housingId: existingFacilityId,
         });
 
         expect(response).statusToBe(400);
@@ -91,7 +91,7 @@ describe('Listings API', () => {
       it('should return a 404 when passing an invalid housing facility', async () => {
         const response = await landlordAgent.post('/api/listings').send({
           ...listingData,
-          housingID: 'ffffffffffffffffffffffff',
+          housingId: 'ffffffffffffffffffffffff',
         });
 
         expect(response).statusToBe(404);
@@ -100,7 +100,7 @@ describe('Listings API', () => {
         const response = await landlordAgent.post('/api/listings').send({
           ...listingData,
           tags: [{ name: 'water', value: { type: 'boolean', value: true } }],
-          housingID: existingFacilityID,
+          housingId: existingFacilityId,
         });
 
         expect(response).statusToBe(400);
@@ -109,7 +109,7 @@ describe('Listings API', () => {
         const response = await landlordAgent.post('/api/listings').send({
           ...listingData,
           tags: [{ name: 'wifi', value: { type: 'enum', value: 'Invalid Value' } }],
-          housingID: existingFacilityID,
+          housingId: existingFacilityId,
         });
 
         expect(response).statusToBe(400);
@@ -118,7 +118,7 @@ describe('Listings API', () => {
         const response = await landlordAgent.post('/api/listings').send({
           ...listingData,
           roomType: 'invalid-room-type',
-          housingID: existingFacilityID,
+          housingId: existingFacilityId,
         });
 
         expect(response).statusToBe(400);

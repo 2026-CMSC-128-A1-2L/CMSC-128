@@ -18,20 +18,20 @@ describe('Facilities API', () => {
 
   beforeAll(async () => {
     const facility = await buildHousingFacility.create({
-      landlordID: landlord._id,
-      managerID: manager._id,
+      landlordId: landlord._id,
+      managerId: manager._id,
     });
 
     const listing = await buildListing.create({
-      landlordID: landlord._id,
-      managerID: manager._id,
-      housingID: (facility as any)._id
+      landlordId: landlord._id,
+      managerId: manager._id,
+      housingId: (facility as any)._id
     })
 
     const otherListing = await buildListing.create({
-      landlordID: landlord._id,
-      managerID: manager._id,
-      housingID: (facility as any)._id
+      landlordId: landlord._id,
+      managerId: manager._id,
+      housingId: (facility as any)._id
     })
 
     listingId = (listing as any)._id;
@@ -42,18 +42,18 @@ describe('Facilities API', () => {
     describe('Authentication', () => {
       it('should not bookmark as landlord', async () => {
         const response = await landlordAgent.post('/api/bookmarks').send({
-          listingID: listingId
+          listingId: listingId
         });
         expect(response).statusToBe(403);
       });
 
       it('should not bookmark as unauthenticated user', async () => {
-        const response = await guestAgent.post('/api/bookmarks').send({ listingID: listingId });
+        const response = await guestAgent.post('/api/bookmarks').send({ listingId: listingId });
         expect(response).statusToBe(401);
       });
 
       it('should bookmark as student', async () => {
-        const response = await studentAgent.post('/api/bookmarks').send({ listingID: listingId });
+        const response = await studentAgent.post('/api/bookmarks').send({ listingId: listingId });
         expect(response).statusToBe(201);
       });
     });

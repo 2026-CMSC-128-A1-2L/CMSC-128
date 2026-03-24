@@ -6,10 +6,10 @@ import { combineFilters } from '../controllers/middleware';
 // TODO: verify if actual move-in/out dates are needed
 // No activities field yet
 export type CreateRentalArguments = {
-  studentID: mongoose.Types.ObjectId;
-  unitID: mongoose.Types.ObjectId;
+  studentId: mongoose.Types.ObjectId;
+  unitId: mongoose.Types.ObjectId;
 
-  applicationID: mongoose.Types.ObjectId;
+  applicationId: mongoose.Types.ObjectId;
 
   expectedMoveInDate?: Date | null;
   expectedMoveOutDate?: Date | null;
@@ -35,10 +35,10 @@ export const createRental = async (data: CreateRentalArguments) => {
   }
 
   const newRental = new Rental({
-    studentID: data.studentID,
-    unitID: data.unitID,
+    studentId: data.studentId,
+    unitId: data.unitId,
 
-    applicationID: data.applicationID,
+    applicationId: data.applicationId,
 
     expectedMoveInDate: data.expectedMoveInDate,
     expectedMoveOutDate: data.expectedMoveOutDate,
@@ -52,14 +52,14 @@ export const getRentals = async () => {
 };
 
 export const updateRental = async (
-  rentalID: mongoose.Types.ObjectId,
+  rentalId: mongoose.Types.ObjectId,
   data: UpdateRentalArguments,
   filters: any,
 ) => {
-  const rental = await Rental.findOne(combineFilters(filters, { _id: rentalID }));
+  const rental = await Rental.findOne(combineFilters(filters, { _id: rentalId }));
 
   if (!rental) {
-    const rentalNoFilter = await Rental.findById(rentalID);
+    const rentalNoFilter = await Rental.findById(rentalId);
 
     if (rentalNoFilter) {
       throw new AppError(403, 'You cannot edit this rental.');
@@ -89,11 +89,11 @@ export const updateRental = async (
   return await rental.save();
 };
 
-export const deleteRental = async (rentalID: mongoose.Types.ObjectId, filters: any) => {
-  const rental = await Rental.findOne(combineFilters(filters, { _id: rentalID }));
+export const deleteRental = async (rentalId: mongoose.Types.ObjectId, filters: any) => {
+  const rental = await Rental.findOne(combineFilters(filters, { _id: rentalId }));
 
   if (!rental) {
-    const rentalNoFilter = await Rental.findById(rentalID);
+    const rentalNoFilter = await Rental.findById(rentalId);
 
     if (rentalNoFilter) {
       throw new AppError(403, 'You cannot delete this rental.');

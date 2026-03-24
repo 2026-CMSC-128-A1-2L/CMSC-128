@@ -3,8 +3,8 @@ import { ObjectIdSchema } from './common.js';
 
 // GET /visits
 export const GetBookingsQuerySchema = z.object({
-  studentID: ObjectIdSchema.optional(),
-  housingID: ObjectIdSchema.optional(),
+  studentId: ObjectIdSchema.optional(),
+  housingId: ObjectIdSchema.optional(),
   startDate: z.iso.date().transform(x => new Date(x)).optional(),
   endDate: z.iso.date().transform(x => new Date(x)).optional(),
   status: z.enum(['pending', 'approved', 'rejected', 'cancelled']).optional(),
@@ -19,8 +19,8 @@ export const GetBookingParamsSchema = z.object({
 
 // POST /visits
 export const CreateBookingBodySchema = z.object({
-  studentID: ObjectIdSchema,
-  housingID: ObjectIdSchema,
+  studentId: ObjectIdSchema,
+  housingId: ObjectIdSchema,
   startDate: z.iso.datetime().transform(x => new Date(x)),
   endDate: z.iso.datetime().transform(x => new Date(x)),
   status: z.enum(['pending', 'approved', 'rejected', 'cancelled']).default('pending'),

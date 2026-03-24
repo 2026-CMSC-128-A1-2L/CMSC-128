@@ -11,9 +11,9 @@ export const UnitFilterSchema = z.object({
   price: z.number().optional(),
   location: z.string().optional(),
   isAvailable: z.boolean().optional(),
-  listingID: ObjectIdSchema.optional(),
-  landlordID: ObjectIdSchema.optional(),
-  managerID: ObjectIdSchema.optional(),
+  listingId: ObjectIdSchema.optional(),
+  landlordId: ObjectIdSchema.optional(),
+  managerId: ObjectIdSchema.optional(),
 });
 
 // POST /units
@@ -24,7 +24,7 @@ export const CreateUnitBodySchema = z.object({
   price: z.number().positive(),
   location: z.string().optional(),
   isAvailable: z.boolean(),
-  listingID: ObjectIdSchema,
+  listingId: ObjectIdSchema,
 });
 
 // PATCH /units/:unitId

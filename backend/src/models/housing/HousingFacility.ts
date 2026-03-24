@@ -4,8 +4,8 @@ import { ROOM_TYPES } from '../../constants';
 const HousingFacilitySchema = new mongoose.Schema({
   name: { type: String, required: true },
 
-  landlordID: { type: mongoose.Schema.Types.ObjectId, ref: 'Landlord', required: true },
-  managerID: { type: mongoose.Schema.Types.ObjectId, ref: 'Manager' },
+  landlordId: { type: mongoose.Schema.Types.ObjectId, ref: 'Landlord', required: true },
+  managerId: { type: mongoose.Schema.Types.ObjectId, ref: 'Manager' },
 
   location: {
     coordinates: {

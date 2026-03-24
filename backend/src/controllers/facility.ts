@@ -20,24 +20,24 @@ export const routeCreateFacility: RequestHandler = async (req, res, next) => {
   const userId = req.user!._id;
   const params = CreateFacilityBodySchema.parse(req.body);
 
-  const newFacility = await createFacility({ ...params, landlordID: userId });
+  const newFacility = await createFacility({ ...params, landlordId: userId });
 
   res.status(201).json({ id: newFacility.id });
 };
 
 export const routeGetFacilityById: RequestHandler = async (req, res, next) => {
-  const facilityID = ObjectIdSchema.parse(req.params.facilityId);
-  const facility = await getFacilityById(facilityID);
+  const facilityId = ObjectIdSchema.parse(req.params.facilityId);
+  const facility = await getFacilityById(facilityId);
 
   res.status(200).json({ data: facility });
 };
 
 export const routeUpdateFacility: RequestHandler = async (req, res, next) => {
-  const facilityID = ObjectIdSchema.parse(req.params.facilityId);
+  const facilityId = ObjectIdSchema.parse(req.params.facilityId);
   const updateData = UpdateFacilityBodySchema.parse(req.body);
 
   if (req.user!.userType === 'Manager') {
-    if (updateData.managerID) {
+    if (updateData.managerId) {
       // should not be able to set manager
       return res.status(403).json({
         error: 'Only landlords can reassign facility managers.',
@@ -45,7 +45,7 @@ export const routeUpdateFacility: RequestHandler = async (req, res, next) => {
     }
   }
 
-  const updatedFacility = await updateFacility(facilityID, updateData, res.locals.filters ?? {});
+  const updatedFacility = await updateFacility(facilityId, updateData, res.locals.filters ?? {});
 
   res.status(200).json({
     data: updatedFacility,
@@ -53,17 +53,17 @@ export const routeUpdateFacility: RequestHandler = async (req, res, next) => {
 };
 
 export const routeDeleteFacility: RequestHandler = async (req, res, next) => {
-  const facilityID = ObjectIdSchema.parse(req.params.facilityId);
+  const facilityId = ObjectIdSchema.parse(req.params.facilityId);
 
-  await deleteFacility(facilityID);
+  await deleteFacility(facilityId);
 
   // send back success
   res.status(200).json({ message: 'Facility deleted successfully.' });
 };
 
 export const routeGetListingsByFacility: RequestHandler = async (req, res, next) => {
-  const facilityID = ObjectIdSchema.parse(req.params.facilityId);
-  const listings = await getListingsByFacility(facilityID, res.locals.filters);
+  const facilityId = ObjectIdSchema.parse(req.params.facilityId);
+  const listings = await getListingsByFacility(facilityId, res.locals.filters);
 
   res.status(200).json({ data: listings });
 };
