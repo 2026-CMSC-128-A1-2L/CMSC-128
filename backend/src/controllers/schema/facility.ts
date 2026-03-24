@@ -1,39 +1,39 @@
 import z from 'zod';
-import { LocationSchema, ObjectIdSchema } from './common';
+import { LocationSchema, ObjectIdSchema, QuerySchema } from './common';
+import { FACILITY_TYPES } from '../../constants';
 
+// POST /api/facilities
 export const CreateFacilityBodySchema = z.object({
   managerID: ObjectIdSchema.optional(),
-
   name: z.string(),
-  type: z.enum(['on-campus', 'off-campus', 'partner housing']),
+  type: z.enum(FACILITY_TYPES),
   location: LocationSchema.optional(),
-
-  applicationCloseDate: z.iso
-    .datetime()
-    .transform((date) => new Date(date))
-    .optional(),
-  applicationOpenDate: z.iso
-    .datetime()
-    .transform((date) => new Date(date))
-    .optional(),
-
+  applicationCloseDate: z.iso.datetime().transform(x => new Date(x)).optional(),
+  applicationOpenDate: z.iso.datetime().transform(x => new Date(x)).optional(),
   documentsUrl: z.string().optional(),
 });
 
+// PATCH /api/facilities
 export const UpdateFacilityBodySchema = z.object({
   managerID: ObjectIdSchema.optional(),
   name: z.string().optional(),
-  type: z.enum(['on-campus', 'off-campus', 'partner housing']).optional(),
+  type: z.enum(FACILITY_TYPES).optional(),
   location: LocationSchema.optional(),
-
-  applicationCloseDate: z.iso
-    .datetime()
-    .transform((date) => new Date(date))
-    .optional(),
-  applicationOpenDate: z.iso
-    .datetime()
-    .transform((date) => new Date(date))
-    .optional(),
-
+  applicationCloseDate: z.iso.datetime().transform(x => new Date(x)).optional(),
+  applicationOpenDate: z.iso.datetime().transform(x => new Date(x)).optional(),
   documentsUrl: z.string().optional(),
 });
+
+// GET /api/facilities/:facilityId
+export const GetFacilityParamsSchema = z.object({
+  facilityId: ObjectIdSchema,
+});
+
+// GET /api/facilities
+export const GetFacilitiesQuerySchema = QuerySchema;
+
+export const FacilityFilterSchema = z.object({
+  landlordID: ObjectIdSchema.optional(),
+  managerID: ObjectIdSchema.optional(),
+  type: z.enum(FACILITY_TYPES).optional(),
+})

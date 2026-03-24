@@ -13,13 +13,15 @@ import {
   GetListingsQuerySchema,
   CreateListingBodySchema,
   UpdateListingBodySchema,
-  SearchQuerySchema,
+  ListingFilterSchema,
 } from './schema/listing.js';
+import { Listing } from '../models/housing/Listing.js';
+import { QueryFilter } from 'mongoose';
 
 export const routeGetListings: RequestHandler = async (req, res, next) => {
   const searchQuery = GetListingsQuerySchema.parse(req.query);
 
-  const params = SearchQuerySchema.parse(searchQuery.q);
+  const params = ListingFilterSchema.parse(searchQuery.q);
   const listings = await getListings(params, res.locals.filters);
 
   res.status(200).json({ data: listings });
@@ -36,7 +38,7 @@ export const routeGetListingById: RequestHandler = async (req, res, next) => {
   const GetListingByIdParamsSchema = z.object({ listingID: ObjectIdSchema });
 
   const params = GetListingByIdParamsSchema.parse(req.params);
-  const listing = await getListingById(params.listingID, res.locals.filters);
+  const listing = await getListingById(params.listingID, res.locals.filters as QueryFilter<typeof Listing>);
 
   res.status(200).json({ data: listing });
 };
@@ -65,7 +67,7 @@ export const routeDeleteListing: RequestHandler = async (req, res, next) => {
   res.status(200).json({ message: 'Listing deleted successfully.' });
 };
 
-export const routeGetUnitsByListing: RequestHandler = async (req, res, next) => {};
-export const routeGetApplicationsByListing: RequestHandler = async (req, res, next) => {};
-export const routeGetVisitBookingsByListing: RequestHandler = async (req, res, next) => {};
-export const routeUpdateListingTags: RequestHandler = async (req, res, next) => {};
+export const routeGetUnitsByListing: RequestHandler = async (req, res, next) => { };
+export const routeGetApplicationsByListing: RequestHandler = async (req, res, next) => { };
+export const routeGetVisitBookingsByListing: RequestHandler = async (req, res, next) => { };
+export const routeUpdateListingTags: RequestHandler = async (req, res, next) => { };
