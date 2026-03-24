@@ -58,7 +58,7 @@ export const createBilling = async (data: CreateBillingArguments) => {
 }
 
 
-export function buildBillingQuery(args: Partial<GetBillingArguments>,): QueryFilter<typeof ApplicationForm> { 
+export function buildBillingQuery(args: Partial<GetBillingArguments>,): QueryFilter<typeof Billing> { 
   const query: QueryFilter<typeof Billing> = {};
 
   if (args.studentID) {
