@@ -1,6 +1,5 @@
 import { RequestHandler } from 'express';
 
-import z from 'zod';
 import {
   createApplication,
   getApplications,
