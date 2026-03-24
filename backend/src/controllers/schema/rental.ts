@@ -14,8 +14,8 @@ export const UpdateRentalBodySchema = z.object({
 export const GetRentalsQuerySchema = QuerySchema;
 
 export const RentalFilterSchema = z.object({
-  studentID: ObjectIdSchema.optional(),
-  unitID: ObjectIdSchema.optional(),
+  studentId: ObjectIdSchema.optional(),
+  unitId: ObjectIdSchema.optional(),
   status: z.enum(['active', 'ended', 'on_waitlist', 'inactive']).optional(),
 });
 

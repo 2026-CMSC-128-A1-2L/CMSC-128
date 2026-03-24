@@ -2,11 +2,11 @@ import mongoose from 'mongoose';
 
 // Created after application is accepted by the landlord.
 const rentalSchema = new mongoose.Schema({
-  studentID: { type: mongoose.Schema.Types.ObjectId, ref: 'Student', required: true },
-  unitID: { type: mongoose.Schema.Types.ObjectId, ref: 'Unit', required: true },
+  studentId: { type: mongoose.Schema.Types.ObjectId, ref: 'Student', required: true },
+  unitId: { type: mongoose.Schema.Types.ObjectId, ref: 'Unit', required: true },
 
   // TODO: verify if not required, do all rentals come from applications?
-  applicationID: { type: mongoose.Schema.Types.ObjectId, ref: 'ApplicationForm', required: false },
+  applicationId: { type: mongoose.Schema.Types.ObjectId, ref: 'ApplicationForm', required: false },
 
   // 'inactive' when accepted, but not yet moved in.
   // 'active' when accepted and moved in.

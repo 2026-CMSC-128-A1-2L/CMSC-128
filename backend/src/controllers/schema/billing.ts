@@ -3,9 +3,9 @@ import { ObjectIdSchema, QuerySchema } from './common';
 
 // POST /payments
 export const CreateBillingBodySchema = z.object({
-  studentID: ObjectIdSchema,
-  unitID: ObjectIdSchema,
-  managerID: ObjectIdSchema,
+  studentId: ObjectIdSchema,
+  unitId: ObjectIdSchema,
+  managerId: ObjectIdSchema,
   dueDate: z.iso.datetime().transform(x => new Date(x)),
   paymentDate: z.iso.datetime().transform(x => new Date(x)).optional(), // Done after creation
   amount: z.number(),
@@ -17,9 +17,9 @@ export const CreateBillingBodySchema = z.object({
 
 // GET /payments
 export const GetBillingsFilterSchema = z.object({
-  studentID: ObjectIdSchema.optional(),
-  unitID: ObjectIdSchema.optional(),
-  managerID: ObjectIdSchema.optional(),
+  studentId: ObjectIdSchema.optional(),
+  unitId: ObjectIdSchema.optional(),
+  managerId: ObjectIdSchema.optional(),
   dueDate: z.iso.date().transform(x => new Date(x)).optional(),
   paymentDate: z.iso.date().transform(x => new Date(x)).optional(),
   amount: z.number().optional(),

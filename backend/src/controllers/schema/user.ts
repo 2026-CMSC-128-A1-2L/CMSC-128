@@ -19,6 +19,6 @@ export const UpdateUserBodySchema = z.object({
 export const GetUsersQuerySchema = QuerySchema;
 
 export const UserFilterSchema = z.object({
-  userID: ObjectIdSchema.optional(),
+  userId: ObjectIdSchema.optional(),
   userType: z.enum(USER_TYPES).optional(),
 });

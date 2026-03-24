@@ -3,6 +3,6 @@ import { ObjectIdSchema } from './common.js';
 
 // POST /transfers
 export const CreateTransferBodySchema = z.object({
-  unitID: ObjectIdSchema,
+  unitId: ObjectIdSchema,
   description: z.string().optional(),
 });

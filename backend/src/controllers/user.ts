@@ -13,16 +13,16 @@ export const routeGetUsers: RequestHandler = async (req, res, next) => {
 };
 
 export const routeGetUserById: RequestHandler = async (req, res, next) => {
-  const userID = ObjectIdSchema.parse(req.params.userId);
-  const user = await getUserById(userID);
+  const userId = ObjectIdSchema.parse(req.params.userId);
+  const user = await getUserById(userId);
 
   res.status(200).json({ data: user });
 };
 
 export const routeUpdateUser: RequestHandler = async (req, res, next) => { };
 export const routeDeleteUser: RequestHandler = async (req, res, next) => {
-  const userID = ObjectIdSchema.parse(req.params.userId);
-  const user = await deleteUser(userID);
+  const userId = ObjectIdSchema.parse(req.params.userId);
+  const user = await deleteUser(userId);
 
   res.status(200).json({ data: user });
 };

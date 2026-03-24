@@ -4,7 +4,7 @@ import { FACILITY_TYPES } from '../../constants';
 
 // POST /api/facilities
 export const CreateFacilityBodySchema = z.object({
-  managerID: ObjectIdSchema.optional(),
+  managerId: ObjectIdSchema.optional(),
   name: z.string(),
   type: z.enum(FACILITY_TYPES),
   location: LocationSchema.optional(),
@@ -15,7 +15,7 @@ export const CreateFacilityBodySchema = z.object({
 
 // PATCH /api/facilities
 export const UpdateFacilityBodySchema = z.object({
-  managerID: ObjectIdSchema.optional(),
+  managerId: ObjectIdSchema.optional(),
   name: z.string().optional(),
   type: z.enum(FACILITY_TYPES).optional(),
   location: LocationSchema.optional(),
@@ -33,7 +33,7 @@ export const GetFacilityParamsSchema = z.object({
 export const GetFacilitiesQuerySchema = QuerySchema;
 
 export const FacilityFilterSchema = z.object({
-  landlordID: ObjectIdSchema.optional(),
-  managerID: ObjectIdSchema.optional(),
+  landlordId: ObjectIdSchema.optional(),
+  managerId: ObjectIdSchema.optional(),
   type: z.enum(FACILITY_TYPES).optional(),
 })

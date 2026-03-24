@@ -10,10 +10,10 @@ export const routeGetRentals: RequestHandler = async (req, res, next) => {
 };
 
 export const routeUpdateRental: RequestHandler = async (req, res, next) => {
-  const rentalID = ObjectIdSchema.parse(req.params.rentalId);
+  const rentalId = ObjectIdSchema.parse(req.params.rentalId);
   const updateData = UpdateRentalBodySchema.parse(req.body);
 
-  const updatedRental = await updateRental(rentalID, updateData, res.locals.filters ?? {});
+  const updatedRental = await updateRental(rentalId, updateData, res.locals.filters ?? {});
 
   res.status(200).json({
     data: updatedRental,
@@ -21,9 +21,9 @@ export const routeUpdateRental: RequestHandler = async (req, res, next) => {
 };
 
 export const routeDeleteRental: RequestHandler = async (req, res, next) => {
-  const rentalID = ObjectIdSchema.parse(req.params.rentalId);
+  const rentalId = ObjectIdSchema.parse(req.params.rentalId);
 
-  await deleteRental(rentalID, res.locals.filters ?? {});
+  await deleteRental(rentalId, res.locals.filters ?? {});
 
   res.status(200).json({
     message: 'Rental deleted successfully',

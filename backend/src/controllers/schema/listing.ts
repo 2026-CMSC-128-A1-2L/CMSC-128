@@ -47,7 +47,7 @@ export const TagSchema = z.object({
 });
 
 export const ListingFilterSchema = z.object({
-  housingID: ObjectIdSchema.optional(),
+  housingId: ObjectIdSchema.optional(),
   tags: z.array(TagFilterSchema).optional(),
   capacity: z.object({
     min: z.number().optional(),
@@ -60,7 +60,7 @@ export const ListingFilterSchema = z.object({
 
 // POST /listings
 export const CreateListingBodySchema = z.object({
-  housingID: ObjectIdSchema,
+  housingId: ObjectIdSchema,
   tags: z.array(TagSchema).optional(),
   roomType: z.enum(ROOM_TYPES),
   capacity: z.int().min(1),

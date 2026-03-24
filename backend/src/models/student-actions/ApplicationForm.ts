@@ -3,8 +3,8 @@ import { ROOM_TYPES } from '../../constants';
 
 const applicationFormSchema = new mongoose.Schema(
   {
-    studentID: { type: mongoose.Schema.Types.ObjectId, ref: 'Student', required: true },
-    listingID: { type: mongoose.Schema.Types.ObjectId, ref: 'Listing', required: true },
+    studentId: { type: mongoose.Schema.Types.ObjectId, ref: 'Student', required: true },
+    listingId: { type: mongoose.Schema.Types.ObjectId, ref: 'Listing', required: true },
     preferredRoomType: { type: String, enum: ROOM_TYPES, required: false },
     status: {
       type: String,
@@ -27,7 +27,7 @@ const applicationFormSchema = new mongoose.Schema(
     documentUrls: [String],
 
     // Room the student is assigned to
-    unitID: { type: mongoose.Schema.Types.ObjectId, ref: 'Unit' },
+    unitId: { type: mongoose.Schema.Types.ObjectId, ref: 'Unit' },
   },
   { timestamps: true },
 );

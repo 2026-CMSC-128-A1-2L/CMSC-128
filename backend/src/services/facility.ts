@@ -4,8 +4,8 @@ import { AppError } from '../controllers/error.js';
 import { combineFilters } from '../controllers/middleware.js';
 
 export type CreateFacilityArguments = {
-  landlordID: mongoose.Types.ObjectId;
-  managerID?: mongoose.Types.ObjectId;
+  landlordId: mongoose.Types.ObjectId;
+  managerId?: mongoose.Types.ObjectId;
 
   name: string;
   type: string;
@@ -22,7 +22,7 @@ export type CreateFacilityArguments = {
 
 // NOTE: attributes to update are not yet finalized
 export type UpdateFacilityArguments = {
-  managerID?: mongoose.Types.ObjectId;
+  managerId?: mongoose.Types.ObjectId;
   name?: string;
   type?: string;
   location?: {
@@ -44,8 +44,8 @@ export const createFacility = async (data: CreateFacilityArguments) => {
   }
 
   const newFacility = new HousingFacility({
-    landlordID: data.landlordID,
-    managerID: data.managerID,
+    landlordId: data.landlordId,
+    managerId: data.managerId,
 
     name: data.name,
     type: data.type,
@@ -63,8 +63,8 @@ export const createFacility = async (data: CreateFacilityArguments) => {
   return await newFacility.save();
 };
 
-export const getFacilityById = async (facilityID: mongoose.Types.ObjectId) => {
-  const facility = await HousingFacility.findById(facilityID);
+export const getFacilityById = async (facilityId: mongoose.Types.ObjectId) => {
+  const facility = await HousingFacility.findById(facilityId);
 
   if (!facility) {
     throw new AppError(404, 'Facility not found.');
@@ -78,14 +78,14 @@ export const getFacilities = async () => {
 };
 
 export const updateFacility = async (
-  facilityID: mongoose.Types.ObjectId,
+  facilityId: mongoose.Types.ObjectId,
   data: UpdateFacilityArguments,
   filters: any,
 ) => {
-  const facility = await HousingFacility.findOne(combineFilters(filters, { _id: facilityID }));
+  const facility = await HousingFacility.findOne(combineFilters(filters, { _id: facilityId }));
   if (!facility) {
     // if the facility doesn't exist, check it without filters
-    const facilityNoFilter = await HousingFacility.findById(facilityID);
+    const facilityNoFilter = await HousingFacility.findById(facilityId);
     if (facilityNoFilter) {
       throw new AppError(403, 'Forbidden: You are not the landlord of this facility');
     } else {
@@ -105,8 +105,8 @@ export const updateFacility = async (
   return await facility.save();
 };
 
-export const deleteFacility = async (facilityID: mongoose.Types.ObjectId) => {
-  const facility = await HousingFacility.findById(facilityID);
+export const deleteFacility = async (facilityId: mongoose.Types.ObjectId) => {
+  const facility = await HousingFacility.findById(facilityId);
 
   // throw a 404 error
   if (!facility) {
@@ -117,5 +117,5 @@ export const deleteFacility = async (facilityID: mongoose.Types.ObjectId) => {
     throw new AppError(422, 'Cannot delete a facility that still has listings.');
   }
 
-  await HousingFacility.findByIdAndDelete(facilityID);
+  await HousingFacility.findByIdAndDelete(facilityId);
 };
