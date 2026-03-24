@@ -155,3 +155,35 @@ export const deleteApplication = async (applicationID: mongoose.Types.ObjectId, 
 
   return await application.deleteOne();
 };
+
+export const updateApplicationStatus = async (applicationID: mongoose.Types.ObjectId, data: UpdateApplicationArguments, filters: any) => {
+  const application = await ApplicationForm.findOne(combineFilters({ _id: applicationID }, filters));
+  if (!application) {
+    const applicationNoFilter = await ApplicationForm.findById(applicationID);
+    if (applicationNoFilter) {
+      throw new AppError(403, 'Forbidden: You do not have permission to update this application.');
+    } else {
+      throw new AppError(404, 'Application not found.');
+    }
+  }
+
+  application.set({status: data.status});
+
+  return await application.save();
+};
+
+export const assignApplicationUnit = async (applicationID: mongoose.Types.ObjectId, data: UpdateApplicationArguments, filters: any) => {
+  const application = await ApplicationForm.findOne(combineFilters({ _id: applicationID }, filters));
+  if (!application) {
+    const applicationNoFilter = await ApplicationForm.findById(applicationID);
+    if (applicationNoFilter) {
+      throw new AppError(403, 'Forbidden: You do not have permission to update this application.');
+    } else {
+      throw new AppError(404, 'Application not found.');
+    }
+  }
+
+  application.set({unitID: data.unitID});
+
+  return await application.save();
+};

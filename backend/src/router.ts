@@ -82,12 +82,6 @@ import {
 import { routeAcceptLandlordInvite, routeInviteManager } from './controllers/invites.js';
 import { routeCreateTransferRequest, routeCancelTransferRequest } from './controllers/transfers.js';
 
-import {
-  routeGetRentals,
-  routeUpdateRental,
-  routeDeleteRental,
-} from './controllers/rentals.js';
-
 const router = Router();
 
 // TODO: add auth middleware

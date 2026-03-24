@@ -11,15 +11,6 @@ const USER_TYPES = [
   'UnverifiedStudent',
 ] as const;
 
-export const GetUsersQuerySchema = z.object({
-  userType: z.enum(USER_TYPES).optional(),
-  isActive: z
-    .enum(['true', 'false'])
-    .transform((v) => v === 'true')
-    .optional(),
-  search: z.string().optional(),
-});
-
 export const UpdateUserBodySchema = z.object({
   firstName: z.string().optional(),
   middleName: z.string().nullable().optional(),
@@ -42,4 +33,23 @@ export const GetUserApplicationsParamsSchema = z.object({
 
 export const GetUserVisitsParamsSchema = z.object({
   userId: ObjectIdSchema,
+});
+
+export const GetUsersQuerySchema = z.object({
+  q: z.string().transform((x) => (x ? JSON.parse(x) : {})),
+});
+
+export const UserSearchQuerySchema = z.object({
+  userID: ObjectIdSchema.optional(),
+  userType: z
+    .enum([
+      'Admin',
+      'Student',
+      'Manager',
+      'Landlord',
+      'UnverifiedStudent',
+      'UnverifiedManager',
+      'UnverifiedLandlord',
+    ])
+    .optional(),
 });

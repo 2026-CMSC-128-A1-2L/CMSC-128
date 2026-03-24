@@ -13,3 +13,7 @@ export const BookmarkParamsSchema = z.object({
 export const GetBookmarksQuerySchema = z.object({
   listingID: ObjectIdSchema.optional(),
 });
+
+export const DeleteBookmarkParamsSchema = z.object({
+  listingID: ObjectIdSchema,
+});
