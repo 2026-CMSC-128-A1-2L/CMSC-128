@@ -29,4 +29,3 @@ export const routeDeleteTag: RequestHandler = async (req, res, next) => {
 
   res.status(200).json({ message: 'Tag deleted successfully' });
 };
-

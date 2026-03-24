@@ -65,7 +65,6 @@ import {
   routeAddBookmark,
   routeDeleteBookmark,
 } from './controllers/bookmarks.js';
-import { routePayUnit, routeGetPayments } from './controllers/payments.js';
 import {
   routeGetRentals,
   routeCreateRental,
@@ -81,6 +80,7 @@ import {
 } from './controllers/visits.js';
 import { routeAcceptLandlordInvite, routeInviteManager } from './controllers/invites.js';
 import { routeCreateTransferRequest, routeCancelTransferRequest } from './controllers/transfers.js';
+import { routeCreateBilling, routeGetBilling, routeGetBillings, routeUpdateBilling } from './controllers/billing.js';
 
 const router = Router();
 
@@ -162,14 +162,16 @@ router.get('/rentals', isSuperAdmin, routeGetRentals);
 router.post('/rentals', correctManagerOrLandlordFilter, routeCreateRental);
 router.patch('/rentals/:rentalId', correctManagerOrLandlordFilter, routeUpdateRental);
 router.delete('/rentals/:rentalId', isSuperAdmin, routeDeleteRental);
-router.post('/payments', isVerifiedStudent, routePayUnit);
-router.get('/payments', isSelfOrSuperAdmin, routeGetPayments);
+router.get('/billings', isSelfOrSuperAdmin, routeGetBillings);
+router.post('/billings', isVerifiedStudent, routeCreateBilling);
+router.get('/billings/:billingId', isSelfOrSuperAdmin, routeGetBilling);
+router.patch('/billings/:billingId', isVerifiedStudent, routeUpdateBilling);
 
 router.get('/bookmarks', isVerifiedStudent, routeGetBookmarkedUnits);
-router.post('/bookmarks/:unitId', isVerifiedStudent, routeAddBookmark);
-router.delete('/bookmarks/:unitId', isVerifiedStudent, routeDeleteBookmark);
+router.post('/bookmarks', isVerifiedStudent, routeAddBookmark);
+router.delete('/bookmarks/:bookmarkId', isVerifiedStudent, routeDeleteBookmark);
 
-router.post('/reviews/:listingId', isVerifiedStudent, routeCreateReview);
+router.post('/reviews', isVerifiedStudent, routeCreateReview);
 router.patch('/reviews/:reviewId', isSelf, routeUpdateReview);
 router.delete('/reviews/:reviewId', isSelfOrSuperAdmin, routeDeleteReview);
 

@@ -1,10 +1,8 @@
-import { ObjectIdSchema } from "./common";
-import z from "zod";
+import z from 'zod';
+import { ObjectIdSchema } from './common.js';
 
-export const CreateBookmarkParamsSchema = z.object({
+// POST /bookmarks
+export const CreateBookmarkBodySchema = z.object({
   listingID: ObjectIdSchema,
-});
-
-export const DeleteBookmarkParamsSchema = z.object({
-  listingID: ObjectIdSchema,
+  notes: z.string().optional(),
 });

@@ -12,7 +12,7 @@ export type CreateUnitArguments = {
   isAvailable: boolean;
   listingID: mongoose.Types.ObjectId;
   landlordID: mongoose.Types.ObjectId;
-  managerID: mongoose.Types.ObjectId;
+  managerID?: mongoose.Types.ObjectId | null;
 };
 
 // Parameters for filtering listings
@@ -72,8 +72,7 @@ export type UpdateUnitArguments = {
   capacity?: number;
   currentOccupancy?: number;
   price?: number;
-  floorNumber?: number | null;
-  status?: 'available' | 'unavailable';
+  location?: string | null;
   isAvailable?: boolean;
 };
 
@@ -86,7 +85,6 @@ export const updateUnit = async (
   const unit = await Unit.findOne(combineFilters(filters, { _id: unitID }));
 
   if (!unit) {
-
     // Check if it exists at all (without filter)
     const unitNoFilter = await Unit.findById(unitID);
     if (unitNoFilter) {
@@ -109,10 +107,7 @@ export const updateUnit = async (
   return await unit.save();
 };
 
-export const deleteUnit = async (
-  unitID: mongoose.Types.ObjectId,
-  filters: any,
-) => {
+export const deleteUnit = async (unitID: mongoose.Types.ObjectId, filters: any) => {
   const unit = await Unit.findOne(combineFilters(filters, { _id: unitID }));
 
   if (!unit) {

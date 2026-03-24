@@ -48,6 +48,21 @@ export type GetListingArguments = {
   allowTransfer: boolean;
 };
 
+type TagSpec =
+  | {
+      name: 'enum';
+      values: string[];
+    }
+  | {
+      name: 'numeric';
+      min: number;
+      max: number;
+    }
+  | {
+      name: 'boolean';
+      value: boolean;
+    };
+
 const verifyTags = async (tagList: TagValue[]) => {
   const tagMap = Object.fromEntries(tagList.map((tag) => [tag.name, tag.value]));
   const namesToFind = tagList.map((tag) => tag.name);
@@ -60,22 +75,23 @@ const verifyTags = async (tagList: TagValue[]) => {
 
       const value = tagMap[tag.name].value;
 
-      // TODO: add interfaces for specific tag types
-      const tagDoc = tag as any;
+      const tagDoc = tag.dataType as unknown as TagSpec;
 
-      if (tag.dataType.name == 'enum') {
-        if (!tagDoc.values.contains(value)) {
-          return { error: `Invalid value '${value}' for tag '${tag}'` };
+      if (tagDoc.name == 'enum') {
+        assert(typeof value === 'string');
+        if (!tagDoc.values.includes(value)) {
+          return { error: `Invalid value '${value}' for tag '${tag.name}'` };
         }
-      } else if (tag.dataType.name == 'numeric') {
+      } else if (tagDoc.name == 'numeric') {
+        assert(typeof value === 'number');
         if (tagDoc.min && tagDoc.min > value) {
           return {
-            error: `Invalid value '${value}' for tag '${tag}', minimum is set at ${tagDoc.min}`,
+            error: `Invalid value '${value}' for tag '${tag.name}', minimum is set at ${tagDoc.min}`,
           };
         }
         if (tagDoc.max && tagDoc.max < value) {
           return {
-            error: `Invalid value '${value}' for tag '${tag}', maximum is set at ${tagDoc.max}`,
+            error: `Invalid value '${value}' for tag '${tag.name}', maximum is set at ${tagDoc.max}`,
           };
         }
       }
@@ -96,7 +112,7 @@ export const createListing = async (data: CreateListingArguments, filters: any) 
   }
 
   if (data.tags) {
-    const errorList = verifyTags(data.tags);
+    const errorList = await verifyTags(data.tags);
 
     if (errorList) {
       throw new AppError(400, 'Invalid tags', errorList);
@@ -235,20 +251,13 @@ export const deleteListing = async (listingID: mongoose.Types.ObjectId, filters:
   return await listing.deleteOne();
 };
 
-
-export const getListingsByFacility = async (
-  facilityID: mongoose.Types.ObjectId,
-  filters: any,
-) => {
-
+export const getListingsByFacility = async (facilityID: mongoose.Types.ObjectId, filters: any) => {
   const facility = await HousingFacility.findById(facilityID);
   if (!facility) {
     throw new AppError(404, 'Facility not found.');
   }
 
-  const listings = await Listing.find(
-    combineFilters(filters, { housingID: facilityID })
-  );
+  const listings = await Listing.find(combineFilters(filters, { housingID: facilityID }));
 
   return listings;
 };
