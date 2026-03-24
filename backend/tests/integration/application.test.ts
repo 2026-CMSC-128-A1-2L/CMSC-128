@@ -2,14 +2,13 @@ import '../../src/config.js';
 import { describe, it, expect, beforeAll } from 'vitest';
 import { buildListing, buildStudent } from '../factories';
 import {
+  adminAgent,
   studentAgent,
   guestAgent,
   landlordAgent,
   managerAgent,
   landlord,
   manager,
-  student,
-
 } from './setup.js';
 
 describe('Applications API', () => {
@@ -17,47 +16,469 @@ describe('Applications API', () => {
   let studentId: string;
   let listingId: string;
   let applicationId: string;
+  let otherListingId: string;
 
-  beforeAll(async ()=>{
-    // Create Test Listings and students
+  beforeAll(async () => {
     const testStudent = await buildStudent.create({});
     const testListing = buildListing.create({
-      landlordId: landlord._id, 
+      landlordId: landlord._id,
       managerId: manager._id,
-    });  
-      
+    });
+
+    const otherListing = buildListing.create({
+      landlordId: landlord._id,
+      managerId: manager._id,
+    });
+
     studentId = (testStudent as any)._id;
     listingId = (testListing as any)._id;
+    otherListingId = (otherListing as any)._id;
   });
 
-    const applicationData = () => ({
-    studentId,
+  const applicationData = () => ({
     listingId,
     preferredRoomType: 'single',
     documentUrls: [],
   });
 
   describe('POST /api/applications', () => {
-    it('should create application and return 201 for Student', async () => {
-      const response = await studentAgent.post('/api/applications').send(applicationData());
-      expect(response.status).toBe(201);
-      expect(response.body.id).toBeDefined();
-      applicationId = response.body.id;
+    describe('Authentication', () => {
+      it('should return 201 for Student', async () => {
+        const response = await studentAgent.post('/api/applications').send(applicationData());
+        expect(response.status).toBe(201);
+        expect(response.body.id).toBeDefined();
+        applicationId = response.body.id;
+      });
+
+      it('should return 401 for Guest', async () => {
+        const response = await guestAgent.post('/api/applications').send(applicationData());
+        expect(response.status).toBe(401);
+      });
+
+      it('should return 403 for Landlord', async () => {
+        const response = await landlordAgent.post('/api/applications').send(applicationData());
+        expect(response.status).toBe(403);
+      });
+
+      it('should return 403 for Manager', async () => {
+        const response = await managerAgent.post('/api/applications').send(applicationData());
+        expect(response.status).toBe(403);
+      });
     });
 
-    it('should return 401 for Guest (Not Logged In)', async () => {
-      const response = await guestAgent.post('/api/applications').send(applicationData());
-      expect(response.status).toBe(401);
+    describe('Validation', () => {
+      it('should return 400 for missing listingId', async () => {
+        const response = await studentAgent.post('/api/applications').send({
+          preferredRoomType: 'single',
+        });
+        expect(response.status).toBe(400);
+      });
+
+      it('should return 400 for invalid listingId format', async () => {
+        const response = await studentAgent.post('/api/applications').send({
+          listingId: 'invalid-id',
+        });
+        expect(response.status).toBe(400);
+      });
+
+      it('should return 400 for invalid preferredRoomType', async () => {
+        const response = await studentAgent.post('/api/applications').send({
+          listingId,
+          preferredRoomType: 'invalid',
+        });
+        expect(response.status).toBe(400);
+      });
     });
 
-    it('should return 403 for Landlord (Not Authorized)', async () => {
-      const response = await landlordAgent.post('/api/applications').send(applicationData());
-      expect(response.status).toBe(403);
+    describe('Logic', () => {
+      it('should return 404 for non-existent listing', async () => {
+        const fakeId = '000000000000000000000000';
+        const response = await studentAgent.post('/api/applications').send({
+          listingId: fakeId,
+        });
+        expect(response.status).toBe(404);
+      });
+
+      it('should return 409 for duplicate application', async () => {
+        const response = await studentAgent.post('/api/applications').send({
+          listingId,
+        });
+        expect(response.status).toBe(409);
+      });
     });
 
-    it('should return 403 for Manager (Not Authorized)', async () => {
-      const response = await managerAgent.post('/api/applications').send(applicationData());
-      expect(response.status).toBe(403);
+    describe('Success', () => {
+      it('should create application without optional fields', async () => {
+        const response = await studentAgent.post('/api/applications').send({
+          listingId: otherListingId,
+        });
+        expect(response.status).toBe(201);
+      });
+    });
+  });
+
+  describe('GET /api/applications', () => {
+    describe('Authentication', () => {
+      it('should return 200 for admin', async () => {
+        const response = await adminAgent.get('/api/applications');
+        expect(response.status).toBe(200);
+        expect(response.body.data).toBeDefined();
+      });
+
+      it('should return 403 for student', async () => {
+        const response = await studentAgent.get('/api/applications');
+        expect(response.status).toBe(403);
+      });
+
+      it('should return 403 for landlord', async () => {
+        const response = await landlordAgent.get('/api/applications');
+        expect(response.status).toBe(403);
+      });
+
+      it('should return 403 for manager', async () => {
+        const response = await managerAgent.get('/api/applications');
+        expect(response.status).toBe(403);
+      });
+
+      it('should return 401 for guest', async () => {
+        const response = await guestAgent.get('/api/applications');
+        expect(response.status).toBe(401);
+      });
+    });
+
+    describe('Validation', () => {
+      it('should return 400 for invalid status', async () => {
+        const filter = { status: 'invalid' };
+        const response = await adminAgent.get(
+          `/api/applications?q=${encodeURIComponent(JSON.stringify(filter))}`,
+        );
+        expect(response.status).toBe(400);
+      });
+
+      it('should return 400 for invalid preferredRoomType', async () => {
+        const filter = { preferredRoomType: 'invalid' };
+        const response = await adminAgent.get(
+          `/api/applications?q=${encodeURIComponent(JSON.stringify(filter))}`,
+        );
+        expect(response.status).toBe(400);
+      });
+    });
+
+    describe('Success', () => {
+      it('should return applications array', async () => {
+        const response = await adminAgent.get('/api/applications');
+        expect(response.status).toBe(200);
+        expect(Array.isArray(response.body.data)).toBe(true);
+      });
+    });
+  });
+
+  describe('GET /api/applications/:applicationId', () => {
+    describe('Authentication', () => {
+      it('should return 200 for admin', async () => {
+        const response = await adminAgent.get(`/api/applications/${applicationId}`);
+        expect(response.status).toBe(200);
+        expect(response.body.data).toBeDefined();
+      });
+
+      it('should return 200 for self (student)', async () => {
+        const response = await studentAgent.get(`/api/applications/${applicationId}`);
+        expect(response.status).toBe(200);
+      });
+
+      it('should return 200 for manager', async () => {
+        const response = await managerAgent.get(`/api/applications/${applicationId}`);
+        expect(response.status).toBe(200);
+      });
+
+      it('should return 403 for landlord', async () => {
+        const response = await landlordAgent.get(`/api/applications/${applicationId}`);
+        expect(response.status).toBe(403);
+      });
+
+      it('should return 401 for guest', async () => {
+        const response = await guestAgent.get(`/api/applications/${applicationId}`);
+        expect(response.status).toBe(401);
+      });
+    });
+
+    describe('Validation', () => {
+      it('should return 400 for invalid applicationId format', async () => {
+        const response = await adminAgent.get('/api/applications/invalid-id');
+        expect(response.status).toBe(400);
+      });
+    });
+
+    describe('Logic', () => {
+      it('should return 404 for non-existent application', async () => {
+        const fakeId = '000000000000000000000000';
+        const response = await adminAgent.get(`/api/applications/${fakeId}`);
+        expect(response.status).toBe(404);
+      });
+    });
+  });
+
+  describe('PATCH /api/applications/:applicationId', () => {
+    describe('Authentication', () => {
+      it('should return 200 for admin', async () => {
+        const response = await adminAgent.patch(`/api/applications/${applicationId}`).send({
+          preferredRoomType: 'double',
+        });
+        expect(response.status).toBe(200);
+      });
+
+      it('should return 200 for self (student)', async () => {
+        const response = await studentAgent.patch(`/api/applications/${applicationId}`).send({
+          preferredRoomType: 'shared',
+        });
+        expect(response.status).toBe(200);
+      });
+
+      it('should return 200 for manager', async () => {
+        const response = await managerAgent.patch(`/api/applications/${applicationId}`).send({
+          documentUrls: ['http://example.com/doc.pdf'],
+        });
+        expect(response.status).toBe(200);
+      });
+
+      it('should return 403 for landlord', async () => {
+        const response = await landlordAgent.patch(`/api/applications/${applicationId}`).send({
+          preferredRoomType: 'single',
+        });
+        expect(response.status).toBe(403);
+      });
+
+      it('should return 401 for guest', async () => {
+        const response = await guestAgent.patch(`/api/applications/${applicationId}`).send({
+          preferredRoomType: 'single',
+        });
+        expect(response.status).toBe(401);
+      });
+    });
+
+    describe('Validation', () => {
+      it('should return 400 for invalid preferredRoomType', async () => {
+        const response = await adminAgent.patch(`/api/applications/${applicationId}`).send({
+          preferredRoomType: 'invalid',
+        });
+        expect(response.status).toBe(400);
+      });
+    });
+
+    describe('Logic', () => {
+      it('should return 404 for non-existent application', async () => {
+        const fakeId = '000000000000000000000000';
+        const response = await adminAgent.patch(`/api/applications/${fakeId}`).send({
+          preferredRoomType: 'single',
+        });
+        expect(response.status).toBe(404);
+      });
+    });
+  });
+
+  describe('PATCH /api/applications/:applicationId/status', () => {
+    describe('Authentication', () => {
+      it('should return 200 for landlord', async () => {
+        const response = await landlordAgent
+          .patch(`/api/applications/${applicationId}/status`)
+          .send({
+            status: 'landlord-approved',
+          });
+        expect(response.status).toBe(200);
+      });
+
+      it('should return 200 for manager', async () => {
+        const newStudent = await buildStudent.create({});
+        const newListing = buildListing.create({
+          landlordId: landlord._id,
+          managerId: manager._id,
+        });
+        const createResponse = await studentAgent.post('/api/applications').send({
+          listingId: (newListing as any)._id,
+        });
+        const newAppId = createResponse.body.id;
+
+        const statusResponse = await managerAgent
+          .patch(`/api/applications/${newAppId}/status`)
+          .send({
+            status: 'manager-approved',
+          });
+        expect(statusResponse.status).toBe(200);
+      });
+
+      it('should return 403 for student', async () => {
+        const response = await studentAgent
+          .patch(`/api/applications/${applicationId}/status`)
+          .send({
+            status: 'pending',
+          });
+        expect(response.status).toBe(403);
+      });
+
+      it('should return 401 for guest', async () => {
+        const response = await guestAgent.patch(`/api/applications/${applicationId}/status`).send({
+          status: 'pending',
+        });
+        expect(response.status).toBe(401);
+      });
+    });
+
+    describe('Validation', () => {
+      it('should return 400 for invalid status', async () => {
+        const response = await landlordAgent
+          .patch(`/api/applications/${applicationId}/status`)
+          .send({
+            status: 'invalid',
+          });
+        expect(response.status).toBe(400);
+      });
+    });
+
+    describe('Logic', () => {
+      it('should return 404 for non-existent application', async () => {
+        const fakeId = '000000000000000000000000';
+        const response = await landlordAgent.patch(`/api/applications/${fakeId}/status`).send({
+          status: 'pending',
+        });
+        expect(response.status).toBe(404);
+      });
+    });
+  });
+
+  describe('PATCH /api/applications/:applicationId/assign', () => {
+    describe('Authentication', () => {
+      it('should return 200 for landlord', async () => {
+        const response = await landlordAgent
+          .patch(`/api/applications/${applicationId}/assign`)
+          .send({
+            unitId: '000000000000000000000001',
+          });
+        expect(response.status).toBe(200);
+      });
+
+      it('should return 200 for manager', async () => {
+        const newStudent = await buildStudent.create({});
+        const newListing = buildListing.create({
+          landlordId: landlord._id,
+          managerId: manager._id,
+        });
+        const createResponse = await studentAgent.post('/api/applications').send({
+          listingId: (newListing as any)._id,
+        });
+        const newAppId = createResponse.body.id;
+
+        const assignResponse = await managerAgent
+          .patch(`/api/applications/${newAppId}/assign`)
+          .send({
+            unitId: '000000000000000000000001',
+          });
+        expect(assignResponse.status).toBe(200);
+      });
+
+      it('should return 403 for student', async () => {
+        const response = await studentAgent
+          .patch(`/api/applications/${applicationId}/assign`)
+          .send({
+            unitId: '000000000000000000000001',
+          });
+        expect(response.status).toBe(403);
+      });
+
+      it('should return 401 for guest', async () => {
+        const response = await guestAgent.patch(`/api/applications/${applicationId}/assign`).send({
+          unitId: '000000000000000000000001',
+        });
+        expect(response.status).toBe(401);
+      });
+    });
+
+    describe('Validation', () => {
+      it('should return 400 for missing unitId', async () => {
+        const response = await landlordAgent
+          .patch(`/api/applications/${applicationId}/assign`)
+          .send({});
+        expect(response.status).toBe(400);
+      });
+
+      it('should return 400 for invalid unitId format', async () => {
+        const response = await landlordAgent
+          .patch(`/api/applications/${applicationId}/assign`)
+          .send({
+            unitId: 'invalid',
+          });
+        expect(response.status).toBe(400);
+      });
+    });
+
+    describe('Logic', () => {
+      it('should return 404 for non-existent application', async () => {
+        const fakeId = '000000000000000000000000';
+        const response = await landlordAgent.patch(`/api/applications/${fakeId}/assign`).send({
+          unitId: '000000000000000000000001',
+        });
+        expect(response.status).toBe(404);
+      });
+    });
+  });
+
+  describe('DELETE /api/applications/:applicationId', () => {
+    let deletableAppId: string;
+
+    beforeAll(async () => {
+      const newStudent = await buildStudent.create({});
+      const newListing = buildListing.create({
+        landlordId: landlord._id,
+        managerId: manager._id,
+      });
+      const createResponse = await studentAgent.post('/api/applications').send({
+        listingId: (newListing as any)._id,
+      });
+      deletableAppId = createResponse.body.id;
+    });
+
+    describe('Authentication', () => {
+      it('should return 200 for admin', async () => {
+        const response = await adminAgent.delete(`/api/applications/${deletableAppId}`);
+        expect(response.status).toBe(200);
+        expect(response.body.message).toBe('Application deleted successfully.');
+      });
+
+      it('should return 200 for self (student)', async () => {
+        const newStudent = await buildStudent.create({});
+        const newListing = buildListing.create({
+          landlordId: landlord._id,
+          managerId: manager._id,
+        });
+        const createResponse = await studentAgent.post('/api/applications').send({
+          listingId: (newListing as any)._id,
+        });
+
+        const response = await studentAgent.delete(`/api/applications/${createResponse.body.id}`);
+        expect(response.status).toBe(200);
+      });
+
+      it('should return 403 for landlord', async () => {
+        const response = await landlordAgent.delete(`/api/applications/${deletableAppId}`);
+        expect(response.status).toBe(403);
+      });
+
+      it('should return 403 for manager', async () => {
+        const response = await managerAgent.delete(`/api/applications/${deletableAppId}`);
+        expect(response.status).toBe(403);
+      });
+
+      it('should return 401 for guest', async () => {
+        const response = await guestAgent.delete(`/api/applications/${deletableAppId}`);
+        expect(response.status).toBe(401);
+      });
+    });
+
+    describe('Logic', () => {
+      it('should return 404 for non-existent application', async () => {
+        const fakeId = '000000000000000000000000';
+        const response = await adminAgent.delete(`/api/applications/${fakeId}`);
+        expect(response.status).toBe(404);
+      });
     });
   });
 });
