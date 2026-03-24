@@ -235,20 +235,13 @@ export const deleteListing = async (listingID: mongoose.Types.ObjectId, filters:
   return await listing.deleteOne();
 };
 
-
-export const getListingsByFacility = async (
-  facilityID: mongoose.Types.ObjectId,
-  filters: any,
-) => {
-
+export const getListingsByFacility = async (facilityID: mongoose.Types.ObjectId, filters: any) => {
   const facility = await HousingFacility.findById(facilityID);
   if (!facility) {
     throw new AppError(404, 'Facility not found.');
   }
 
-  const listings = await Listing.find(
-    combineFilters(filters, { housingID: facilityID })
-  );
+  const listings = await Listing.find(combineFilters(filters, { housingID: facilityID }));
 
   return listings;
 };

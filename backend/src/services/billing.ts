@@ -55,10 +55,11 @@ export const createBilling = async (data: CreateBillingArguments) => {
     paymentType: data.paymentType,
   });
   return await newBilling.save();
-}
+};
 
-
-export function buildBillingQuery(args: Partial<GetBillingArguments>,): QueryFilter<typeof ApplicationForm> { 
+export function buildBillingQuery(
+  args: Partial<GetBillingArguments>,
+): QueryFilter<typeof ApplicationForm> {
   const query: QueryFilter<typeof Billing> = {};
 
   if (args.studentID) {

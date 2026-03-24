@@ -86,15 +86,19 @@ export const routeUpdateApplicationStatus: RequestHandler = async (req, res, nex
   const applicationID = ObjectIdSchema.parse(req.params.applicationId);
   const params = UpdateApplicationBodySchema.parse(req.body);
 
-  const updatedApplication = await updateApplicationStatus(applicationID, params, res.locals.filters);
-  
+  const updatedApplication = await updateApplicationStatus(
+    applicationID,
+    params,
+    res.locals.filters,
+  );
+
   res.status(200).json({ data: updatedApplication });
 };
 
 export const routeAssignApplicationUnit: RequestHandler = async (req, res, next) => {
   const applicationID = ObjectIdSchema.parse(req.params.applicationId);
   const params = UpdateApplicationBodySchema.parse(req.body);
-  
+
   const updatedApplication = await assignApplicationUnit(applicationID, params, res.locals.filters);
 
   res.status(200).json({ data: updatedApplication });
