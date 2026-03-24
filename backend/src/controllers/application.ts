@@ -13,9 +13,10 @@ import {
 } from '../services/application';
 import { ObjectIdSchema } from './schema/common.js';
 import {
-    CreateApplicationBodySchema,
-    GetApplicationsQuerySchema,
-    UpdateApplicationBodySchema,
+  ApplicationFilterSchema,
+  CreateApplicationBodySchema,
+  GetApplicationsQuerySchema,
+  UpdateApplicationBodySchema,
 } from './schema/application.js';
 
 export const routeCreateApplication: RequestHandler = async (req, res, next) => {
@@ -27,7 +28,8 @@ export const routeCreateApplication: RequestHandler = async (req, res, next) => 
 
 export const routeGetApplications: RequestHandler = async (req, res, next) => {
   const params = GetApplicationsQuerySchema.parse(req.query);
-  const applications = await getApplications(params, res.locals.filters);
+  const q = ApplicationFilterSchema.parse(params.q);
+  const applications = await getApplications(q, res.locals.filters);
 
   res.status(200).json({ data: applications });
 };
@@ -83,15 +85,19 @@ export const routeUpdateApplicationStatus: RequestHandler = async (req, res, nex
   const applicationID = ObjectIdSchema.parse(req.params.applicationId);
   const params = UpdateApplicationBodySchema.parse(req.body);
 
-  const updatedApplication = await updateApplicationStatus(applicationID, params, res.locals.filters);
-  
+  const updatedApplication = await updateApplicationStatus(
+    applicationID,
+    params,
+    res.locals.filters,
+  );
+
   res.status(200).json({ data: updatedApplication });
 };
 
 export const routeAssignApplicationUnit: RequestHandler = async (req, res, next) => {
   const applicationID = ObjectIdSchema.parse(req.params.applicationId);
   const params = UpdateApplicationBodySchema.parse(req.body);
-  
+
   const updatedApplication = await assignApplicationUnit(applicationID, params, res.locals.filters);
 
   res.status(200).json({ data: updatedApplication });

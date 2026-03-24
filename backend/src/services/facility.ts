@@ -119,4 +119,3 @@ export const deleteFacility = async (facilityID: mongoose.Types.ObjectId) => {
 
   await HousingFacility.findByIdAndDelete(facilityID);
 };
-

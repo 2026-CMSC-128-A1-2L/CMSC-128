@@ -1,34 +1,38 @@
 import z from 'zod';
-import { ObjectIdSchema } from './common.js';
+import { ObjectIdSchema, QuerySchema } from './common.js';
 
-export const GetUnitsQuerySchema = z.object({
-  roomNumber: z.coerce.number().optional(), // coerce because query strings are always text
-  capacity: z.coerce.number().optional(),
-  currentOccupancy: z.coerce.number().optional(),
-  price: z.coerce.number().optional(),
-  floorNumber: z.coerce.number().optional(),
-  status: z.enum(['available', 'unavailable']).optional(),
+// GET /units
+export const GetUnitsQuerySchema = QuerySchema;
+
+export const UnitFilterSchema = z.object({
+  roomNumber: z.number().optional(),
+  capacity: z.number().optional(),
+  currentOccupancy: z.number().optional(),
+  price: z.number().optional(),
+  location: z.string().optional(),
+  isAvailable: z.boolean().optional(),
   listingID: ObjectIdSchema.optional(),
   landlordID: ObjectIdSchema.optional(),
   managerID: ObjectIdSchema.optional(),
 });
 
+// POST /units
 export const CreateUnitBodySchema = z.object({
   roomNumber: z.number(),
   capacity: z.number().int().min(1),
   currentOccupancy: z.number().int().min(0).optional(),
   price: z.number().positive(),
-  floorNumber: z.number().optional(),
-  status: z.enum(['available', 'unavailable']),
+  location: z.string().optional(),
+  isAvailable: z.boolean(),
   listingID: ObjectIdSchema,
-  // landlordID and managerID nde kasama rito — set from req.user in the controller
 });
 
+// PATCH /units/:unitId
 export const UpdateUnitBodySchema = z.object({
   roomNumber: z.number().optional(),
   capacity: z.number().int().min(1).optional(),
   currentOccupancy: z.number().int().min(0).optional(),
   price: z.number().positive().optional(),
-  floorNumber: z.number().optional(),
-  status: z.enum(['available', 'unavailable']).optional(),
+  location: z.string().optional(),
+  isAvailable: z.boolean().optional(),
 });
