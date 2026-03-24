@@ -52,7 +52,7 @@ import {
 import {
   routeCreateApplication,
   routeGetApplications,
-  routeGetApplicationByID,
+  routeGetApplicationById,
   routeGetApplicationsByListing,
   routeGetApplicationsByStudent,
   routeUpdateApplication,
@@ -142,7 +142,7 @@ router.delete('/users/:userId', isSelfOrSuperAdmin, routeDeleteUser);
 router.get('/users/:userId/visits', isSelfOrSuperAdmin, routeGetVisitBookingsByStudent);
 router.post('/applications', isVerifiedStudent, routeCreateApplication);
 router.get('/applications', isSuperAdmin, routeGetApplications);
-router.get('/applications/:applicationId', isSelfManagerOrSuperAdmin, routeGetApplicationByID);
+router.get('/applications/:applicationId', isSelfManagerOrSuperAdmin, routeGetApplicationById);
 router.get('/applications/:userId', isSelfOrSuperAdmin, routeGetApplicationsByStudent);
 router.get('/applications/:listingId', isSelfOrSuperAdmin, routeGetApplicationsByListing);
 router.patch('/applications/:applicationId', isSelfManagerOrSuperAdmin, routeUpdateApplication);
@@ -181,7 +181,7 @@ router.patch('/visits/:visitId', isSelfOrManager, routeUpdateVisitBooking);
 router.delete('/visits/:visitId', isSelfOrManager, routeCancelVisitBooking);
 
 // router.get('/transfers', isSuperAdmin, routeGetTransferRequests);
-// router.get('/transfers/:transferId', isSelfOrSuperAdmin, routeGetTransferRequestByID);
+// router.get('/transfers/:transferId', isSelfOrSuperAdmin, routeGetTransferRequestById);
 router.post('/transfers', isVerifiedStudent, routeCreateTransferRequest);
 router.delete('/transfers/:transferId', isSelfOrSuperAdmin, routeCancelTransferRequest);
 

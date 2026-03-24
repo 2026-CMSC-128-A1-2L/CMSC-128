@@ -3,9 +3,9 @@ import { combineFilters } from '../controllers/middleware.js';
 import { Billing } from '../models/student-actions/Billing.js';
 
 export type CreateBillingArguments = {
-  studentID: mongoose.Types.ObjectId;
-  unitID: mongoose.Types.ObjectId;
-  managerID?: mongoose.Types.ObjectId;
+  studentId: mongoose.Types.ObjectId;
+  unitId: mongoose.Types.ObjectId;
+  managerId?: mongoose.Types.ObjectId;
   dueDate: Date;
   paymentDate?: Date; // Needed yet
   amount?: number;
@@ -16,9 +16,9 @@ export type CreateBillingArguments = {
 };
 
 export type GetBillingArguments = {
-  studentID: mongoose.Types.ObjectId;
-  unitID: mongoose.Types.ObjectId;
-  managerID: mongoose.Types.ObjectId;
+  studentId: mongoose.Types.ObjectId;
+  unitId: mongoose.Types.ObjectId;
+  managerId: mongoose.Types.ObjectId;
   dueDate: Date;
   paymentDate: Date;
   amount: number;
@@ -30,9 +30,9 @@ export type GetBillingArguments = {
 
 export const createBilling = async (data: CreateBillingArguments) => {
   const newBilling = new Billing({
-    studentID: data.studentID,
-    unitID: data.unitID,
-    managerID: data.managerID,
+    studentId: data.studentId,
+    unitId: data.unitId,
+    managerId: data.managerId,
     dueDate: data.dueDate,
     paymentDate: data.paymentDate,
     amount: data.amount,
@@ -49,16 +49,16 @@ export function buildBillingQuery(
 ): QueryFilter<typeof Billing> {
   const query: QueryFilter<typeof Billing> = {};
 
-  if (args.studentID) {
-    query.studentID = args.studentID;
+  if (args.studentId) {
+    query.studentId = args.studentId;
   }
 
-  if (args.unitID) {
-    query.unitID = args.unitID;
+  if (args.unitId) {
+    query.unitId = args.unitId;
   }
 
-  if (args.managerID) {
-    query.managerID = args.managerID;
+  if (args.managerId) {
+    query.managerId = args.managerId;
   }
 
   if (args.dueDate) {

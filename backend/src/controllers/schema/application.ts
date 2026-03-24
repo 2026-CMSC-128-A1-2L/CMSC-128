@@ -3,11 +3,11 @@ import { ObjectIdSchema, QuerySchema } from './common';
 
 // POST /api/applications
 export const CreateApplicationBodySchema = z.object({
-  studentID: ObjectIdSchema,
-  listingID: ObjectIdSchema,
+  studentId: ObjectIdSchema,
+  listingId: ObjectIdSchema,
   preferredRoomType: z.enum(['single', 'double', 'shared']).optional(),
   documentUrls: z.array(z.string()).optional(),
-  unitID: ObjectIdSchema.optional(),
+  unitId: ObjectIdSchema.optional(),
   accommodationNoticeUrl: z.string().optional(),
 });
 
@@ -15,8 +15,8 @@ export const CreateApplicationBodySchema = z.object({
 export const GetApplicationsQuerySchema = QuerySchema;
 
 export const ApplicationFilterSchema = z.object({
-  studentID: ObjectIdSchema.optional(),
-  listingID: ObjectIdSchema.optional(),
+  studentId: ObjectIdSchema.optional(),
+  listingId: ObjectIdSchema.optional(),
   preferredRoomType: z.enum(['single', 'double', 'shared']).optional(),
   status: z
     .enum([
@@ -30,7 +30,7 @@ export const ApplicationFilterSchema = z.object({
       'contract-signed',
     ])
     .optional(),
-  unitID: ObjectIdSchema.optional(),
+  unitId: ObjectIdSchema.optional(),
 });
 
 // PATCH /api/applications
@@ -49,5 +49,5 @@ export const UpdateApplicationBodySchema = z.object({
     ])
     .optional(),
   documentUrls: z.array(z.string()).optional(),
-  unitID: ObjectIdSchema.optional(),
+  unitId: ObjectIdSchema.optional(),
 });

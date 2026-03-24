@@ -3,7 +3,7 @@ import { ObjectIdSchema, QuerySchema } from './common.js';
 
 // POST /visits
 export const CreateVisitBodySchema = z.object({
-  housingID: ObjectIdSchema,
+  housingId: ObjectIdSchema,
   startDate: z.iso.datetime().transform(x => new Date(x)),
   endDate: z.iso.datetime().transform(x => new Date(x)),
   message: z.string().optional(),
@@ -21,7 +21,7 @@ export const UpdateVisitBodySchema = z.object({
 export const GetVisitsQuerySchema = QuerySchema;
 
 export const VisitFilterSchema = z.object({
-  studentID: ObjectIdSchema.optional(),
-  housingID: ObjectIdSchema.optional(),
+  studentId: ObjectIdSchema.optional(),
+  housingId: ObjectIdSchema.optional(),
   status: z.enum(['pending', 'approved', 'rejected', 'cancelled']).optional(),
 });

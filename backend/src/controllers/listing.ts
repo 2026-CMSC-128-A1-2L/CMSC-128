@@ -35,34 +35,34 @@ export const routeCreateListing: RequestHandler = async (req, res, next) => {
 };
 
 export const routeGetListingById: RequestHandler = async (req, res, next) => {
-  const GetListingByIdParamsSchema = z.object({ listingID: ObjectIdSchema });
+  const GetListingByIdParamsSchema = z.object({ listingId: ObjectIdSchema });
 
   const params = GetListingByIdParamsSchema.parse(req.params);
-  const listing = await getListingById(params.listingID, res.locals.filters as QueryFilter<typeof Listing>);
+  const listing = await getListingById(params.listingId, res.locals.filters as QueryFilter<typeof Listing>);
 
   res.status(200).json({ data: listing });
 };
 
 export const routeGetListingReviewsById: RequestHandler = async (req, res, next) => {
-  const listingID = ObjectIdSchema.parse(req.params.listingId);
-  const reviews = await getListingReviewsById(listingID);
+  const listingId = ObjectIdSchema.parse(req.params.listingId);
+  const reviews = await getListingReviewsById(listingId);
 
   res.status(200).json({ data: reviews });
 };
 
 export const routeUpdateListing: RequestHandler = async (req, res, next) => {
-  const listingID = ObjectIdSchema.parse(req.params.listingId);
+  const listingId = ObjectIdSchema.parse(req.params.listingId);
   const updateData = UpdateListingBodySchema.parse(req.body);
 
-  const updatedListing = await updateListing(listingID, updateData, res.locals.filters ?? {});
+  const updatedListing = await updateListing(listingId, updateData, res.locals.filters ?? {});
 
   res.status(200).json({ data: updatedListing });
 };
 
 export const routeDeleteListing: RequestHandler = async (req, res, next) => {
-  const listingID = ObjectIdSchema.parse(req.params.listingId);
+  const listingId = ObjectIdSchema.parse(req.params.listingId);
 
-  await deleteListing(listingID, res.locals.filters ?? {});
+  await deleteListing(listingId, res.locals.filters ?? {});
 
   res.status(200).json({ message: 'Listing deleted successfully.' });
 };

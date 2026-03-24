@@ -4,21 +4,21 @@ import { CreateBookmarkBodySchema } from './schema/bookmark';
 import { ObjectIdSchema } from './schema/common';
 
 export const routeGetBookmarkedUnits: RequestHandler = async (req, res, next) => {
-  const userID = req.user!._id;
-  const result = await getBookmarksByUser(userID);
+  const userId = req.user!._id;
+  const result = await getBookmarksByUser(userId);
   res.status(200).json(result);
 };
 
 export const routeAddBookmark: RequestHandler = async (req, res, next) => {
   const params = CreateBookmarkBodySchema.parse(req.body);
-  const userID = req.user!._id;
-  const result = await createBookmark(userID, params.listingID);
+  const userId = req.user!._id;
+  const result = await createBookmark(userId, params.listingId);
   res.status(201).json(result);
 };
 
 export const routeDeleteBookmark: RequestHandler = async (req, res, next) => {
   const bookmarkId = ObjectIdSchema.parse(req.params.bookmarkId);
-  const userID = req.user!._id;
-  const result = await deleteBookmark(userID, bookmarkId);
+  const userId = req.user!._id;
+  const result = await deleteBookmark(userId, bookmarkId);
   res.status(200).json(result);
 };

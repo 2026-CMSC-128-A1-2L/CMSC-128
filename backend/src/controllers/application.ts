@@ -34,10 +34,10 @@ export const routeGetApplications: RequestHandler = async (req, res, next) => {
   res.status(200).json({ data: applications });
 };
 
-export const routeGetApplicationByID: RequestHandler = async (req, res, next) => {
-  const applicationID = ObjectIdSchema.parse(req.params.applicationId);
+export const routeGetApplicationById: RequestHandler = async (req, res, next) => {
+  const applicationId = ObjectIdSchema.parse(req.params.applicationId);
 
-  const application = await getApplicationById(applicationID);
+  const application = await getApplicationById(applicationId);
 
   res.status(200).json({
     data: application,
@@ -45,9 +45,9 @@ export const routeGetApplicationByID: RequestHandler = async (req, res, next) =>
 };
 
 export const routeGetApplicationsByListing: RequestHandler = async (req, res, next) => {
-  const listingID = ObjectIdSchema.parse(req.params.listingId);
+  const listingId = ObjectIdSchema.parse(req.params.listingId);
 
-  const applications = await getApplicationsByListing(listingID);
+  const applications = await getApplicationsByListing(listingId);
 
   res.status(200).json({
     data: applications,
@@ -55,9 +55,9 @@ export const routeGetApplicationsByListing: RequestHandler = async (req, res, ne
 };
 
 export const routeGetApplicationsByStudent: RequestHandler = async (req, res, next) => {
-  const studentID = ObjectIdSchema.parse(req.params.studentId);
+  const studentId = ObjectIdSchema.parse(req.params.studentId);
 
-  const applications = await getApplicationsByStudent(studentID);
+  const applications = await getApplicationsByStudent(studentId);
 
   res.status(200).json({
     data: applications,
@@ -65,28 +65,28 @@ export const routeGetApplicationsByStudent: RequestHandler = async (req, res, ne
 };
 
 export const routeUpdateApplication: RequestHandler = async (req, res, next) => {
-  const applicationID = ObjectIdSchema.parse(req.params.applicationId);
+  const applicationId = ObjectIdSchema.parse(req.params.applicationId);
   const params = UpdateApplicationBodySchema.parse(req.body);
 
-  const updatedApplication = await updateApplication(applicationID, params, res.locals.filters);
+  const updatedApplication = await updateApplication(applicationId, params, res.locals.filters);
 
   res.status(200).json({ data: updatedApplication });
 };
 
 export const routeDeleteApplication: RequestHandler = async (req, res, next) => {
-  const applicationID = ObjectIdSchema.parse(req.params.applicationId);
+  const applicationId = ObjectIdSchema.parse(req.params.applicationId);
 
-  await deleteApplication(applicationID, res.locals.filters);
+  await deleteApplication(applicationId, res.locals.filters);
 
   res.status(204).send();
 };
 
 export const routeUpdateApplicationStatus: RequestHandler = async (req, res, next) => {
-  const applicationID = ObjectIdSchema.parse(req.params.applicationId);
+  const applicationId = ObjectIdSchema.parse(req.params.applicationId);
   const params = UpdateApplicationBodySchema.parse(req.body);
 
   const updatedApplication = await updateApplicationStatus(
-    applicationID,
+    applicationId,
     params,
     res.locals.filters,
   );
@@ -95,10 +95,10 @@ export const routeUpdateApplicationStatus: RequestHandler = async (req, res, nex
 };
 
 export const routeAssignApplicationUnit: RequestHandler = async (req, res, next) => {
-  const applicationID = ObjectIdSchema.parse(req.params.applicationId);
+  const applicationId = ObjectIdSchema.parse(req.params.applicationId);
   const params = UpdateApplicationBodySchema.parse(req.body);
 
-  const updatedApplication = await assignApplicationUnit(applicationID, params, res.locals.filters);
+  const updatedApplication = await assignApplicationUnit(applicationId, params, res.locals.filters);
 
   res.status(200).json({ data: updatedApplication });
 };
