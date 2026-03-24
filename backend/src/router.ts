@@ -82,6 +82,12 @@ import {
 import { routeAcceptLandlordInvite, routeInviteManager } from './controllers/invites.js';
 import { routeCreateTransferRequest, routeCancelTransferRequest } from './controllers/transfers.js';
 
+import {
+  routeGetRentals,
+  routeUpdateRental,
+  routeDeleteRental,
+} from './controllers/rentals.js';
+
 const router = Router();
 
 // TODO: add auth middleware
@@ -126,6 +132,10 @@ router.get('/tags', routeGetTags);
 router.post('/tags', isSuperAdmin, routeCreateTag);
 router.patch('/tags/:tagName', isSuperAdmin, routeUpdateTag);
 router.delete('/tags/:tagName', isSuperAdmin, routeDeleteTag);
+
+router.get('/rentals', isSuperAdmin, routeGetRentals);
+router.patch('/rentals/:rentalId', correctManagerOrLandlordFilter, routeUpdateRental);
+router.delete('/rentals/:rentalId', isSuperAdmin, routeDeleteRental);
 
 router.get(
   '/auth/google/student',
