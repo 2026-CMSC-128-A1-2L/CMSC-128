@@ -1,5 +1,5 @@
 import { RequestHandler } from 'express';
-import { getRentals, updateRental, deleteRental  } from '../services/rentals';
+import { getRentals, updateRental, deleteRental, getRentalsByUnitID  } from '../services/rentals';
 import { ObjectIdSchema } from './schema/common';
 import { UpdateRentalSchema } from './schema/rentals';
 
@@ -31,3 +31,10 @@ export const routeDeleteRental: RequestHandler = async (req, res, next) => {
         message: 'Rental deleted successfully'
     });
 };
+
+export const routeGetRentalsByUnitID: RequestHandler = async (req, res, next) => {
+    const unitID = ObjectIdSchema.parse(req.params.unitId);
+    const rentals = await getRentalsByUnitID(unitID, res.locals.filters ?? {});
+    res.status(200).json(rentals);
+};
+
