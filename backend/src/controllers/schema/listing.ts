@@ -49,10 +49,12 @@ export const TagSchema = z.object({
 export const ListingFilterSchema = z.object({
   housingId: ObjectIdSchema.optional(),
   tags: z.array(TagFilterSchema).optional(),
-  capacity: z.object({
-    min: z.number().optional(),
-    max: z.number().optional()
-  }).optional(),
+  capacity: z
+    .object({
+      min: z.number().optional(),
+      max: z.number().optional(),
+    })
+    .optional(),
   isPrivate: z.boolean().optional(),
   allowVisit: z.boolean().optional(),
   allowTransfer: z.boolean().optional(),

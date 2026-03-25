@@ -5,8 +5,14 @@ import { ObjectIdSchema } from './common.js';
 export const GetBookingsQuerySchema = z.object({
   studentId: ObjectIdSchema.optional(),
   housingId: ObjectIdSchema.optional(),
-  startDate: z.iso.date().transform(x => new Date(x)).optional(),
-  endDate: z.iso.date().transform(x => new Date(x)).optional(),
+  startDate: z.iso
+    .date()
+    .transform((x) => new Date(x))
+    .optional(),
+  endDate: z.iso
+    .date()
+    .transform((x) => new Date(x))
+    .optional(),
   status: z.enum(['pending', 'approved', 'rejected', 'cancelled']).optional(),
   message: z.string().optional(),
 });
@@ -16,13 +22,12 @@ export const GetBookingParamsSchema = z.object({
   visitId: ObjectIdSchema,
 });
 
-
 // POST /visits
 export const CreateBookingBodySchema = z.object({
   studentId: ObjectIdSchema,
   housingId: ObjectIdSchema,
-  startDate: z.iso.datetime().transform(x => new Date(x)),
-  endDate: z.iso.datetime().transform(x => new Date(x)),
+  startDate: z.iso.datetime().transform((x) => new Date(x)),
+  endDate: z.iso.datetime().transform((x) => new Date(x)),
   status: z.enum(['pending', 'approved', 'rejected', 'cancelled']).default('pending'),
   message: z.string().optional(),
 });

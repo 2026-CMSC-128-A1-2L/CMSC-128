@@ -25,14 +25,14 @@ describe('Facilities API', () => {
     const listing = await buildListing.create({
       landlordId: landlord._id,
       managerId: manager._id,
-      housingId: (facility as any)._id
-    })
+      housingId: (facility as any)._id,
+    });
 
     const otherListing = await buildListing.create({
       landlordId: landlord._id,
       managerId: manager._id,
-      housingId: (facility as any)._id
-    })
+      housingId: (facility as any)._id,
+    });
 
     listingId = (listing as any)._id;
     otherListingId = (otherListing as any)._id;
@@ -42,7 +42,7 @@ describe('Facilities API', () => {
     describe('Authentication', () => {
       it('should not bookmark as landlord', async () => {
         const response = await landlordAgent.post('/api/bookmarks').send({
-          listingId: listingId
+          listingId: listingId,
         });
         expect(response).statusToBe(403);
       });

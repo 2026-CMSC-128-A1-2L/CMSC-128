@@ -8,8 +8,14 @@ export const CreateFacilityBodySchema = z.object({
   name: z.string(),
   type: z.enum(FACILITY_TYPES),
   location: LocationSchema.optional(),
-  applicationCloseDate: z.iso.datetime().transform(x => new Date(x)).optional(),
-  applicationOpenDate: z.iso.datetime().transform(x => new Date(x)).optional(),
+  applicationCloseDate: z.iso
+    .datetime()
+    .transform((x) => new Date(x))
+    .optional(),
+  applicationOpenDate: z.iso
+    .datetime()
+    .transform((x) => new Date(x))
+    .optional(),
   documentsUrl: z.string().optional(),
 });
 
@@ -19,8 +25,14 @@ export const UpdateFacilityBodySchema = z.object({
   name: z.string().optional(),
   type: z.enum(FACILITY_TYPES).optional(),
   location: LocationSchema.optional(),
-  applicationCloseDate: z.iso.datetime().transform(x => new Date(x)).optional(),
-  applicationOpenDate: z.iso.datetime().transform(x => new Date(x)).optional(),
+  applicationCloseDate: z.iso
+    .datetime()
+    .transform((x) => new Date(x))
+    .optional(),
+  applicationOpenDate: z.iso
+    .datetime()
+    .transform((x) => new Date(x))
+    .optional(),
   documentsUrl: z.string().optional(),
 });
 
@@ -36,4 +48,4 @@ export const FacilityFilterSchema = z.object({
   landlordId: ObjectIdSchema.optional(),
   managerId: ObjectIdSchema.optional(),
   type: z.enum(FACILITY_TYPES).optional(),
-})
+});

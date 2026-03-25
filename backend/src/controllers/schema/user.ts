@@ -7,7 +7,10 @@ export const UpdateUserBodySchema = z.object({
   firstName: z.string().optional(),
   middleName: z.string().nullable().optional(),
   lastName: z.string().optional(),
-  birthDate: z.iso.date().transform(x => new Date(x)).optional(),
+  birthDate: z.iso
+    .date()
+    .transform((x) => new Date(x))
+    .optional(),
   profilePicture: z.url().nullable().optional(),
   contact: z.string().optional(),
   studentNumber: z.string().optional(),
