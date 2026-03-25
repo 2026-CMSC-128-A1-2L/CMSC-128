@@ -60,7 +60,7 @@ export const routeCreateUnit: RequestHandler = async (req, res, next) => {
   });
 };
 
-export const routeGetUnitById: RequestHandler = async (req, res, next) => {
+export const routeGetUnit: RequestHandler = async (req, res, next) => {
   //zod schema
   const ParamsSchema = z.object({
     unitId: objectIdSchema,

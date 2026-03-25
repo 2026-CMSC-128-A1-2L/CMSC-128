@@ -25,7 +25,7 @@ export const routeCreateFacility: RequestHandler = async (req, res, next) => {
   res.status(201).json({ id: newFacility.id });
 };
 
-export const routeGetFacilityById: RequestHandler = async (req, res, next) => {
+export const routeGetFacility: RequestHandler = async (req, res, next) => {
   const facilityId = ObjectIdSchema.parse(req.params.facilityId);
   const facility = await getFacilityById(facilityId);
 

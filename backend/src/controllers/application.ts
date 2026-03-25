@@ -34,7 +34,7 @@ export const routeGetApplications: RequestHandler = async (req, res, next) => {
   res.status(200).json({ data: applications });
 };
 
-export const routeGetApplicationById: RequestHandler = async (req, res, next) => {
+export const routeGetApplication: RequestHandler = async (req, res, next) => {
   const applicationId = ObjectIdSchema.parse(req.params.applicationId);
 
   const application = await getApplicationById(applicationId);

@@ -12,7 +12,7 @@ export const routeGetUsers: RequestHandler = async (req, res, next) => {
   res.status(200).json({ data: users });
 };
 
-export const routeGetUserById: RequestHandler = async (req, res, next) => {
+export const routeGetUser: RequestHandler = async (req, res, next) => {
   const userId = ObjectIdSchema.parse(req.params.userId);
   const user = await getUserById(userId);
 
@@ -28,3 +28,8 @@ export const routeDeleteUser: RequestHandler = async (req, res, next) => {
 };
 export const routeGetApplicationsByStudent: RequestHandler = async (req, res, next) => { };
 export const routeGetVisitBookingsByStudent: RequestHandler = async (req, res, next) => { };
+export const routeGetDocuments: RequestHandler = async (req, res, next) => { };
+export const routeAddDocument: RequestHandler = async (req, res, next) => { };
+export const routeDeleteDocument: RequestHandler = async (req, res, next) => { };
+export const routeApproveUser: RequestHandler = async (req, res, next) => { };
+export const routeRejectUser: RequestHandler = async (req, res, next) => { };

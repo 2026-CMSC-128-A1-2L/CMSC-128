@@ -1,28 +1,27 @@
 import { RequestHandler, Router } from 'express';
 import { errorHandler } from './controllers/error.js';
 import {
-  routeGetFacilities,
   routeCreateFacility,
-  routeGetFacilityById,
+  routeGetFacility,
   routeUpdateFacility,
   routeDeleteFacility,
   routeGetListingsByFacility,
+  routeGetFacilities,
 } from './controllers/facility.js';
 import {
   routeGetListings,
   routeCreateListing,
-  routeGetListingById,
+  routeGetListing,
   routeUpdateListing,
   routeDeleteListing,
   routeGetUnitsByListing,
-  routeGetListingReviewsById,
   routeGetVisitBookingsByListing,
-  routeUpdateListingTags,
+  routeApproveListing,
 } from './controllers/listing.js';
 import {
   routeGetUnits,
   routeCreateUnit,
-  routeGetUnitById,
+  routeGetUnit,
   routeUpdateUnit,
   routeDeleteUnit,
 } from './controllers/unit.js';
@@ -44,15 +43,20 @@ import { routeCreateTag, routeDeleteTag, routeGetTags, routeUpdateTag } from './
 import { routeTestLogin, routeTestRegister } from './controllers/test.js';
 import {
   routeGetUsers,
-  routeGetUserById,
+  routeGetUser,
   routeUpdateUser,
   routeDeleteUser,
   routeGetVisitBookingsByStudent,
+  routeAddDocument,
+  routeGetDocuments,
+  routeApproveUser,
+  routeDeleteDocument,
+  routeRejectUser,
 } from './controllers/user.js';
 import {
   routeCreateApplication,
   routeGetApplications,
-  routeGetApplicationById,
+  routeGetApplication,
   routeGetApplicationsByListing,
   routeGetApplicationsByStudent,
   routeUpdateApplication,
@@ -67,63 +71,170 @@ import {
 } from './controllers/bookmarks.js';
 import {
   routeGetRentals,
-  routeCreateRental,
   routeUpdateRental,
-  routeDeleteRental,
+  routeGetRental,
+  routeGetRentalsByListing,
+  routeGetRentalsByUnit,
+  routeGetRentalsByUser,
+  routeMoveIn,
+  routeMoveOut,
 } from './controllers/rentals.js';
-import { routeCreateReview, routeUpdateReview, routeDeleteReview } from './controllers/reviews.js';
-import {
-  routeCreateVisitBooking,
-  routeUpdateVisitBooking,
-  routeCancelVisitBooking,
-  routeGetVisitBookings,
-} from './controllers/visits.js';
-import { routeAcceptLandlordInvite, routeInviteManager } from './controllers/invites.js';
-import { routeCreateTransferRequest, routeCancelTransferRequest } from './controllers/transfers.js';
-import { routeCreateBilling, routeGetBilling, routeGetBillings, routeUpdateBilling } from './controllers/billing.js';
+import { routeCreateReview, routeUpdateReview, routeDeleteReview, routeGetFacilityReviews, routeGetListingReviews } from './controllers/reviews.js';
+import { routeAcceptInvite, routeDeclineInvite, routeGetInvites, routeInviteManager } from './controllers/invites.js';
+import { routeCreateTransferRequest, routeCancelTransferRequest, routeApproveTransferRequest, routeGetTransferRequests, routeRejectTransferRequest } from './controllers/transfers.js';
+import { routeCreateBilling, routeGetBilling, routeGetBillings, routeGetUnitBillings, routeGetUserBillings, routeSubmitBillingPayment, routeUpdateBilling, routeVerifyBillingPayment } from './controllers/billing.js';
+import { routeGetBookings, routeCreateBooking, routeApproveBooking, routeCancelBooking, routeRejectBooking, routeUpdateBooking } from './controllers/booking.js';
+import { routeGetActivities } from './controllers/activity.js';
+import { routeGetMessages, routeGetUserMessages, routeSendMessage } from './controllers/message.js';
+import { routeGetNotifications, routeReadAllNotifications, routeReadNotification } from './controllers/notifications.js';
+import { routeGetReports, routeResolveReport, routeReportListing, routeReportUser } from './controllers/report.js';
+import { routeGetCalendar } from './controllers/calendar.js';
 
 const router = Router();
 
 // TODO: add auth middleware
 
-router.get('/facilities', routeGetFacilities); // no auth
-router.post('/facilities', isLandlord, routeCreateFacility); // manager/landlord
+// Facilities
+router.get('/facilities', routeGetFacilities);
+router.post('/facilities', isLandlord, routeCreateFacility);
+router.get('/facilities/:facilityId', routeGetFacility);
+router.patch('/facilities/:facilityId', correctManagerOrLandlordFilter, routeUpdateFacility);
+router.delete('/facilities/:facilityId', routeDeleteFacility);
 
-router.get('/facilities/:facilityId', routeGetFacilityById); // no auth
-router.patch('/facilities/:facilityId', correctManagerOrLandlordFilter, routeUpdateFacility); // correct manager/landlord
-router.delete('/facilities/:facilityId', routeDeleteFacility); // correct manager/landlord, empty only
+// Listings
+router.get('/listings', listingViewFilter, routeGetListings);
+router.get('/listings/:listingId', listingViewFilter, routeGetListing);
+router.patch('/listings/:listingId', correctManagerOrLandlordFilter, routeUpdateListing);
+router.delete('/listings/:listingId', correctManagerOrLandlordFilter, routeDeleteListing);
+router.post('/listings/:listingId/approve', isSuperAdmin, routeApproveListing);
+router.get('/facilities/:facilityId/listings', listingViewFilter, routeGetListingsByFacility);
+router.post('/facilities/:facilityId/listings', correctManagerOrLandlordFilter, routeCreateListing); // TODO: fix implementation, use parameter
+// router.patch('/listings/:listingId/tags', correctManagerOrLandlordFilter, routeUpdateListingTags);
 
-router.get('/facilities/:facilityId/listings', listingViewFilter, routeGetListingsByFacility); // correct manager/landlord
+// Units
+router.get('/units', isSuperAdmin, routeGetUnits);
+router.get('/units/:unitId', isTenantManagerOrLandlord, routeGetUnit);
+router.patch('/units/:unitId', correctManagerOrLandlordFilter, routeUpdateUnit);
+router.delete('/units/:unitId', correctManagerOrLandlordFilter, routeDeleteUnit);
+router.get('/listings/:listingId/units', routeGetUnitsByListing);
+router.post('/listing/:listingId/units', correctManagerOrLandlordFilter, routeCreateUnit); // TODO: 
 
-router.get('/listings', listingViewFilter, routeGetListings); // no auth (filtered by verification status)
-router.post('/listings', correctManagerOrLandlordFilter, routeCreateListing); // manager/landlord
-
-router.get('/listings/:listingId', listingViewFilter, routeGetListingById); // verified
-router.get('/listings/:listingId/reviews', listingViewFilter, routeGetListingReviewsById); // verified
-router.get(
-  '/listings/:listingId/visits',
-  correctManagerOrLandlordFilter,
-  routeGetVisitBookingsByListing,
-);
-router.patch('/listings/:listingId', correctManagerOrLandlordFilter, routeUpdateListing); // correct manager/landlord
-router.patch('/listings/:listingId/tags', correctManagerOrLandlordFilter, routeUpdateListingTags); // correct manager/landlord
-router.delete('/listings/:listingId', correctManagerOrLandlordFilter, routeDeleteListing); // correct manager/landlord
-
-router.get('/listings/:listingId/units', routeGetUnitsByListing); // correct manager/landlord
-
-router.get('/units', isSuperAdmin, routeGetUnits); // superadmin only
-router.post('/units', correctManagerOrLandlordFilter, routeCreateUnit); // correct manager/landlord, should have listing in body
-router.get('/units/:unitId', isTenantManagerOrLandlord, routeGetUnitById); // correct manager/landlord (and user?)
-router.patch('/units/:unitId', correctManagerOrLandlordFilter, routeUpdateUnit); // correct manager/landlord
-router.delete('/units/:unitId', correctManagerOrLandlordFilter, routeDeleteUnit); // correct manager/landlord
-
+// Tags
 router.get('/tags', routeGetTags);
 router.post('/tags', isSuperAdmin, routeCreateTag);
 router.patch('/tags/:tagName', isSuperAdmin, routeUpdateTag);
 router.delete('/tags/:tagName', isSuperAdmin, routeDeleteTag);
 
-router.get(
-  '/auth/google/student',
+// Users
+router.get('/users', isSuperAdmin, routeGetUsers);
+router.get('/users/:userId', isSelfOrSuperAdmin, routeGetUser);
+router.patch('/users/:userId', isSelfOrSuperAdmin, routeUpdateUser);
+router.delete('/users/:userId', isSelfOrSuperAdmin, routeDeleteUser);
+router.get('/users/:userId/documents', isSelfOrSuperAdmin, routeGetDocuments);
+router.post('/users/:userId/documents', isSelfOrSuperAdmin, routeAddDocument);
+router.delete('/users/:userId/documents/:documentId', isSelfOrSuperAdmin, routeDeleteDocument);
+router.post('/users/:userId/approve', isSelfOrSuperAdmin, routeApproveUser);
+router.post('/users/:userId/reject', isSelfOrSuperAdmin, routeRejectUser);
+
+// Applications
+router.get('/applications', isSuperAdmin, routeGetApplications);
+router.post('/applications', isVerifiedStudent, routeCreateApplication);
+router.get('/applications/:applicationId', isSelfManagerOrSuperAdmin, routeGetApplication);
+router.patch('/applications/:applicationId', isSelfManagerOrSuperAdmin, routeUpdateApplication);
+router.delete('/applications/:applicationId', isSelfOrSuperAdmin, routeDeleteApplication);
+router.post('/applications/:applicationId/approve', correctManagerOrLandlordFilter, routeUpdateApplicationStatus);
+router.post('/applications/:applicationId/reject', correctManagerOrLandlordFilter, routeUpdateApplicationStatus);
+router.post('/applications/:applicationId/assign-unit', correctManagerOrLandlordFilter, routeAssignApplicationUnit);
+router.get('/users/:userId/applications', isSelfOrSuperAdmin, routeGetApplicationsByStudent);
+router.get('/listings/:listingId/applications', isSelfOrSuperAdmin, routeGetApplicationsByListing);
+
+// Rentals
+router.get('/rentals', isSuperAdmin, routeGetRentals);
+router.get('/rentals/:rentalId', isSuperAdmin, routeGetRental);
+router.get('/users/:userId/rentals', isSuperAdmin, routeGetRentalsByUser);
+router.get('/listing/:listingId/rentals', isSuperAdmin, routeGetRentalsByListing);
+router.get('/units/:unitId/rentals', isSuperAdmin, routeGetRentalsByUnit);
+router.patch('/rentals/:rentalId', correctManagerOrLandlordFilter, routeUpdateRental);
+router.post('/rentals/:rentalId/move-in', correctManagerOrLandlordFilter, routeMoveIn);
+router.post('/rentals/:rentalId/move-out', correctManagerOrLandlordFilter, routeMoveOut);
+// TODO: check what else changes when a rental is deleted
+// router.delete('/rentals/:rentalId', isSuperAdmin, routeDeleteRental);
+
+// Billings
+router.get('/billings', isSelfOrSuperAdmin, routeGetBillings);
+router.post('/billings', isVerifiedStudent, routeCreateBilling);
+router.get('/billings/:billingId', isVerifiedStudent, routeGetBilling);
+router.patch('/billings/:billingId', isVerifiedStudent, routeUpdateBilling);
+router.post('/billings/:billingId/pay', isVerifiedStudent, routeSubmitBillingPayment);
+router.post('/billings/:billingId/verify', isVerifiedStudent, routeVerifyBillingPayment);
+router.get('/users/:userId/billings', isVerifiedStudent, routeGetUserBillings);
+router.get('/unit/:unitId/billings', isVerifiedStudent, routeGetUnitBillings);
+
+// Bookmarks
+router.get('/bookmarks', isVerifiedStudent, routeGetBookmarkedUnits);
+router.post('/bookmarks/:listingId', isVerifiedStudent, routeAddBookmark);
+router.delete('/bookmarks/:listingId', isVerifiedStudent, routeDeleteBookmark);
+
+// Reviews
+router.get('/reviews', listingViewFilter, routeGetListingReviews);
+router.get('/listings/:listingId/reviews', listingViewFilter, routeCreateReview);
+router.post('/listings/:listingId/reviews', listingViewFilter, routeGetListingReviews);
+router.get('/facilities/:facilityId/reviews', routeGetFacilityReviews);
+router.patch('/reviews/:reviewId', listingViewFilter, routeUpdateReview);
+router.delete('/reviews/:reviewId', listingViewFilter, routeDeleteReview);
+
+// Visit Bookings
+router.get('/bookings', isSuperAdmin, routeGetBookings);
+router.post('/bookings', isVerifiedStudent, routeCreateBooking);
+router.patch('/bookings/:bookingId', isSelfOrManager, routeUpdateBooking);
+router.delete('/bookings/:bookingId', isSelfOrManager, routeCancelBooking);
+router.post('/bookings/:bookingId/approve', isSelfOrManager, routeApproveBooking);
+router.post('/bookings/:bookingId/reject', isSelfOrManager, routeRejectBooking);
+router.get('/users/:userId/bookings', isSelfOrSuperAdmin, routeGetVisitBookingsByStudent);
+router.get('/listings/:listingId/bookings', correctManagerOrLandlordFilter, routeGetVisitBookingsByListing);
+
+// Lease Transfers
+router.get('/transfers', isVerifiedStudent, routeGetTransferRequests);
+router.post('/transfers', isVerifiedStudent, routeCreateTransferRequest);
+router.post('/transfers/:transferId/approve', isSelfOrSuperAdmin, routeApproveTransferRequest);
+router.post('/transfers/:transferId/reject', isSelfOrSuperAdmin, routeRejectTransferRequest);
+router.delete('/transfers/:transferId', isSelfOrSuperAdmin, routeCancelTransferRequest);
+
+// Invites
+router.get('/invites', routeGetInvites);
+router.post('/invites', isLandlord, routeInviteManager);
+router.post('/invites/:inviteId/accept', routeAcceptInvite);
+router.post('/invites/:inviteId/decline', routeDeclineInvite);
+
+// Activities
+router.get('/activities', routeGetActivities);
+
+// Reports
+router.get('/reports', routeGetReports);
+router.post('/reports/:reportId/resolve', routeResolveReport);
+router.post('/listings/:listingId/report', isVerifiedStudent, routeReportListing);
+router.post('/users/:userId/report', isSelfOrSuperAdmin, routeReportUser);
+
+// Messages
+router.get('/messages', routeGetMessages);
+router.get('/messages/:userId', routeGetUserMessages);
+router.post('/messages/:userId', routeSendMessage);
+
+// Summaries
+// Files
+// Notifications
+router.get('/notifications', routeGetNotifications);
+router.post('/notifications/read-all', routeReadAllNotifications);
+router.post('/notifications/:notificationId/read', routeReadNotification);
+
+// Calendar
+router.get('/calendar', routeGetCalendar)
+
+// creation of fake accounts endpoints
+router.post('/auth/test/register', isDevelopment, routeTestRegister);
+router.post('/auth/test/login', isDevelopment, routeTestLogin);
+
+router.get('/auth/google/student',
   passportGoogle.authenticate('google', { scope: ['profile', 'email'] }) as RequestHandler,
 );
 router.get(
@@ -133,60 +244,6 @@ router.get(
     successRedirect: '/',
   }) as RequestHandler,
 );
-
-router.get('/users', isSuperAdmin, routeGetUsers);
-router.get('/users/:userId', isSelfOrSuperAdmin, routeGetUserById);
-router.patch('/users/:userId', isSelfOrSuperAdmin, routeUpdateUser);
-// router.patch('/users/:userId', isSuperAdmin, routeUpdateStatus);
-router.delete('/users/:userId', isSelfOrSuperAdmin, routeDeleteUser);
-router.get('/users/:userId/visits', isSelfOrSuperAdmin, routeGetVisitBookingsByStudent);
-router.post('/applications', isVerifiedStudent, routeCreateApplication);
-router.get('/applications', isSuperAdmin, routeGetApplications);
-router.get('/applications/:applicationId', isSelfManagerOrSuperAdmin, routeGetApplicationById);
-router.get('/applications/:userId', isSelfOrSuperAdmin, routeGetApplicationsByStudent);
-router.get('/applications/:listingId', isSelfOrSuperAdmin, routeGetApplicationsByListing);
-router.patch('/applications/:applicationId', isSelfManagerOrSuperAdmin, routeUpdateApplication);
-router.patch(
-  '/applications/:applicationId/status',
-  correctManagerOrLandlordFilter,
-  routeUpdateApplicationStatus,
-);
-router.patch(
-  '/applications/:applicationId/assign',
-  correctManagerOrLandlordFilter,
-  routeAssignApplicationUnit,
-);
-router.delete('/applications/:applicationId', isSelfOrSuperAdmin, routeDeleteApplication);
-
-router.get('/rentals', isSuperAdmin, routeGetRentals);
-router.post('/rentals', correctManagerOrLandlordFilter, routeCreateRental);
-router.patch('/rentals/:rentalId', correctManagerOrLandlordFilter, routeUpdateRental);
-router.delete('/rentals/:rentalId', isSuperAdmin, routeDeleteRental);
-router.get('/billings', isSelfOrSuperAdmin, routeGetBillings);
-router.post('/billings', isVerifiedStudent, routeCreateBilling);
-router.get('/billings/:billingId', isSelfOrSuperAdmin, routeGetBilling);
-router.patch('/billings/:billingId', isVerifiedStudent, routeUpdateBilling);
-
-router.get('/bookmarks', isVerifiedStudent, routeGetBookmarkedUnits);
-router.post('/bookmarks', isVerifiedStudent, routeAddBookmark);
-router.delete('/bookmarks/:bookmarkId', isVerifiedStudent, routeDeleteBookmark);
-
-router.post('/reviews', isVerifiedStudent, routeCreateReview);
-router.patch('/reviews/:reviewId', isSelf, routeUpdateReview);
-router.delete('/reviews/:reviewId', isSelfOrSuperAdmin, routeDeleteReview);
-
-router.get('/visits', isSuperAdmin, routeGetVisitBookings);
-router.post('/visits', isVerifiedStudent, routeCreateVisitBooking);
-router.patch('/visits/:visitId', isSelfOrManager, routeUpdateVisitBooking);
-router.delete('/visits/:visitId', isSelfOrManager, routeCancelVisitBooking);
-
-// router.get('/transfers', isSuperAdmin, routeGetTransferRequests);
-// router.get('/transfers/:transferId', isSelfOrSuperAdmin, routeGetTransferRequestById);
-router.post('/transfers', isVerifiedStudent, routeCreateTransferRequest);
-router.delete('/transfers/:transferId', isSelfOrSuperAdmin, routeCancelTransferRequest);
-
-router.post('/invites/landlord/:inviteId/accept', routeAcceptLandlordInvite);
-router.post('/invites/manager', isLandlord, routeInviteManager);
 
 // creation of fake accounts endpoints
 router.post('/auth/test/register', isDevelopment, routeTestRegister);

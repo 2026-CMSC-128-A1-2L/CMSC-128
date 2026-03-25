@@ -3,8 +3,6 @@ import { getRentals, updateRental, deleteRental } from '../services/rentals';
 import { ObjectIdSchema } from './schema/common';
 import { UpdateRentalBodySchema } from './schema/rental';
 
-export const routeCreateRental: RequestHandler = async (req, res, next) => { };
-
 export const routeGetRentals: RequestHandler = async (req, res, next) => {
   return await getRentals();
 };
@@ -29,3 +27,11 @@ export const routeDeleteRental: RequestHandler = async (req, res, next) => {
     message: 'Rental deleted successfully',
   });
 };
+
+export const routeGetRental: RequestHandler = async (req, res, next) => { };
+export const routeGetRentalsByUser: RequestHandler = async (req, res, next) => { };
+export const routeGetRentalsByListing: RequestHandler = async (req, res, next) => { };
+export const routeGetRentalsByUnit: RequestHandler = async (req, res, next) => { };
+export const routeMoveIn: RequestHandler = async (req, res, next) => { };
+export const routeMoveOut: RequestHandler = async (req, res, next) => { };
+
