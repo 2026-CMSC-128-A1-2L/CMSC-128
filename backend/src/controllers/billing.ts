@@ -17,5 +17,9 @@ export const routeGetBillings: RequestHandler = async (req, res, next) => {
   res.status(200).json({ data: billings });
 };
 
-export const routeGetBilling: RequestHandler = async (req, res, next) => { };
-export const routeUpdateBilling: RequestHandler = async (req, res, next) => { };
+export const routeGetBilling: RequestHandler = async (req, res, next) => { }
+export const routeUpdateBilling: RequestHandler = async (req, res, next) => { }
+export const routeSubmitBillingPayment: RequestHandler = async (req, res, next) => { }
+export const routeVerifyBillingPayment: RequestHandler = async (req, res, next) => { }
+export const routeGetUserBillings: RequestHandler = async (req, res, next) => { }
+export const routeGetUnitBillings: RequestHandler = async (req, res, next) => { }
