@@ -38,7 +38,10 @@ export const routeGetListing: RequestHandler = async (req, res, next) => {
   const GetListingByIdParamsSchema = z.object({ listingId: ObjectIdSchema });
 
   const params = GetListingByIdParamsSchema.parse(req.params);
-  const listing = await getListingById(params.listingId, res.locals.filters as QueryFilter<typeof Listing>);
+  const listing = await getListingById(
+    params.listingId,
+    res.locals.filters as QueryFilter<typeof Listing>,
+  );
 
   res.status(200).json({ data: listing });
 };
@@ -67,7 +70,7 @@ export const routeDeleteListing: RequestHandler = async (req, res, next) => {
   res.status(200).json({ message: 'Listing deleted successfully.' });
 };
 
-export const routeGetUnitsByListing: RequestHandler = async (req, res, next) => { };
-export const routeGetApplicationsByListing: RequestHandler = async (req, res, next) => { };
-export const routeGetVisitBookingsByListing: RequestHandler = async (req, res, next) => { };
-export const routeApproveListing: RequestHandler = async (req, res, next) => { };
+export const routeGetUnitsByListing: RequestHandler = async (req, res, next) => {};
+export const routeGetApplicationsByListing: RequestHandler = async (req, res, next) => {};
+export const routeGetVisitBookingsByListing: RequestHandler = async (req, res, next) => {};
+export const routeApproveListing: RequestHandler = async (req, res, next) => {};

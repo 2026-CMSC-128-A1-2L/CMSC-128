@@ -28,10 +28,9 @@ export const routeDeleteRental: RequestHandler = async (req, res, next) => {
   });
 };
 
-export const routeGetRental: RequestHandler = async (req, res, next) => { };
-export const routeGetRentalsByUser: RequestHandler = async (req, res, next) => { };
-export const routeGetRentalsByListing: RequestHandler = async (req, res, next) => { };
-export const routeGetRentalsByUnit: RequestHandler = async (req, res, next) => { };
-export const routeMoveIn: RequestHandler = async (req, res, next) => { };
-export const routeMoveOut: RequestHandler = async (req, res, next) => { };
-
+export const routeGetRental: RequestHandler = async (req, res, next) => {};
+export const routeGetRentalsByUser: RequestHandler = async (req, res, next) => {};
+export const routeGetRentalsByListing: RequestHandler = async (req, res, next) => {};
+export const routeGetRentalsByUnit: RequestHandler = async (req, res, next) => {};
+export const routeMoveIn: RequestHandler = async (req, res, next) => {};
+export const routeMoveOut: RequestHandler = async (req, res, next) => {};

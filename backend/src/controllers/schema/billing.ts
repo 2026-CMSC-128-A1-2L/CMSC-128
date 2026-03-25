@@ -6,8 +6,11 @@ export const CreateBillingBodySchema = z.object({
   studentId: ObjectIdSchema,
   unitId: ObjectIdSchema,
   managerId: ObjectIdSchema,
-  dueDate: z.iso.datetime().transform(x => new Date(x)),
-  paymentDate: z.iso.datetime().transform(x => new Date(x)).optional(), // Done after creation
+  dueDate: z.iso.datetime().transform((x) => new Date(x)),
+  paymentDate: z.iso
+    .datetime()
+    .transform((x) => new Date(x))
+    .optional(), // Done after creation
   amount: z.number(),
   paidAmount: z.number().optional(), // Done after creation
   paymentStatus: z.enum(['unpaid', 'paid', 'overdue', 'partially_paid']).default('unpaid'),
@@ -20,8 +23,14 @@ export const GetBillingsFilterSchema = z.object({
   studentId: ObjectIdSchema.optional(),
   unitId: ObjectIdSchema.optional(),
   managerId: ObjectIdSchema.optional(),
-  dueDate: z.iso.date().transform(x => new Date(x)).optional(),
-  paymentDate: z.iso.date().transform(x => new Date(x)).optional(),
+  dueDate: z.iso
+    .date()
+    .transform((x) => new Date(x))
+    .optional(),
+  paymentDate: z.iso
+    .date()
+    .transform((x) => new Date(x))
+    .optional(),
   amount: z.number().optional(),
   paidAmount: z.number().optional(),
   paymentStatus: z.enum(['unpaid', 'paid', 'overdue', 'partially_paid']).optional(),

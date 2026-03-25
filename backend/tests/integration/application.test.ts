@@ -9,7 +9,6 @@ import {
   landlord,
   manager,
   student,
-
 } from './setup.js';
 
 describe('Applications API', () => {
@@ -18,19 +17,19 @@ describe('Applications API', () => {
   let listingId: string;
   let applicationId: string;
 
-  beforeAll(async ()=>{
+  beforeAll(async () => {
     // Create Test Listings and students
     const testStudent = await buildStudent.create({});
     const testListing = buildListing.create({
-      landlordId: landlord._id, 
+      landlordId: landlord._id,
       managerId: manager._id,
-    });  
-      
+    });
+
     studentId = (testStudent as any)._id;
     listingId = (testListing as any)._id;
   });
 
-    const applicationData = () => ({
+  const applicationData = () => ({
     studentId,
     listingId,
     preferredRoomType: 'single',
