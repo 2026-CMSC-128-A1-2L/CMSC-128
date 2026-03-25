@@ -16,7 +16,6 @@ import {
   routeDeleteListing,
   routeGetUnitsByListing,
   routeGetListingReviewsById,
-  routeGetApplicationsByListing,
   routeGetVisitBookingsByListing,
   routeUpdateListingTags,
 } from './controllers/listing.js';
@@ -48,13 +47,14 @@ import {
   routeGetUserById,
   routeUpdateUser,
   routeDeleteUser,
-  routeGetApplicationsByStudent,
   routeGetVisitBookingsByStudent,
 } from './controllers/user.js';
 import {
   routeCreateApplication,
   routeGetApplications,
   routeGetApplicationByID,
+  routeGetApplicationsByListing,
+  routeGetApplicationsByStudent,
   routeUpdateApplication,
   routeUpdateApplicationStatus,
   routeAssignApplicationUnit,
@@ -101,11 +101,6 @@ router.post('/listings', correctManagerOrLandlordFilter, routeCreateListing); //
 router.get('/listings/:listingId', listingViewFilter, routeGetListingById); // verified
 router.get('/listings/:listingId/reviews', listingViewFilter, routeGetListingReviewsById); // verified
 router.get(
-  '/listings/:listingId/applications',
-  correctManagerOrLandlordFilter,
-  routeGetApplicationsByListing,
-);
-router.get(
   '/listings/:listingId/visits',
   correctManagerOrLandlordFilter,
   routeGetVisitBookingsByListing,
@@ -127,10 +122,6 @@ router.post('/tags', isSuperAdmin, routeCreateTag);
 router.patch('/tags/:tagName', isSuperAdmin, routeUpdateTag);
 router.delete('/tags/:tagName', isSuperAdmin, routeDeleteTag);
 
-router.get('/rentals', isSuperAdmin, routeGetRentals);
-router.patch('/rentals/:rentalId', correctManagerOrLandlordFilter, routeUpdateRental);
-router.delete('/rentals/:rentalId', isSuperAdmin, routeDeleteRental);
-
 router.get(
   '/auth/google/student',
   passportGoogle.authenticate('google', { scope: ['profile', 'email'] }) as RequestHandler,
@@ -148,11 +139,12 @@ router.get('/users/:userId', isSelfOrSuperAdmin, routeGetUserById);
 router.patch('/users/:userId', isSelfOrSuperAdmin, routeUpdateUser);
 // router.patch('/users/:userId', isSuperAdmin, routeUpdateStatus);
 router.delete('/users/:userId', isSelfOrSuperAdmin, routeDeleteUser);
-router.get('/users/:userId/applications', isSelfOrSuperAdmin, routeGetApplicationsByStudent);
 router.get('/users/:userId/visits', isSelfOrSuperAdmin, routeGetVisitBookingsByStudent);
 router.post('/applications', isVerifiedStudent, routeCreateApplication);
 router.get('/applications', isSuperAdmin, routeGetApplications);
 router.get('/applications/:applicationId', isSelfManagerOrSuperAdmin, routeGetApplicationByID);
+router.get('/applications/:userId', isSelfOrSuperAdmin, routeGetApplicationsByStudent);
+router.get('/applications/:listingId', isSelfOrSuperAdmin, routeGetApplicationsByListing);
 router.patch('/applications/:applicationId', isSelfManagerOrSuperAdmin, routeUpdateApplication);
 router.patch(
   '/applications/:applicationId/status',
