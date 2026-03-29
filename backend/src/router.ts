@@ -287,7 +287,7 @@ router.get('/listings/:listingId/reviews', listingViewFilter, routeGetListingRev
 // POST /api/listings/:listingId/reviews
 router.post('/listings/:listingId/reviews', listingViewFilter, routeCreateReview);
 // GET /api/facilities/:facilityId/reviews
-router.get('/facilities/:facilityId/reviews', routeGetFacilityReviews);
+router.get('/facilities/:facilityId/reviews', listingViewFilter, routeGetFacilityReviews);
 // PATCH /api/reviews/:reviewId
 router.patch('/reviews/:reviewId', isSelf, routeUpdateReview);
 // DELETE /api/reviews/:reviewId
