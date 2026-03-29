@@ -79,15 +79,57 @@ import {
   routeMoveIn,
   routeMoveOut,
 } from './controllers/rentals.js';
-import { routeCreateReview, routeUpdateReview, routeDeleteReview, routeGetFacilityReviews, routeGetListingReviews } from './controllers/reviews.js';
-import { routeAcceptInvite, routeDeclineInvite, routeGetInvites, routeInviteManager } from './controllers/invites.js';
-import { routeCreateTransferRequest, routeCancelTransferRequest, routeApproveTransferRequest, routeGetTransferRequests, routeRejectTransferRequest } from './controllers/transfers.js';
-import { routeCreateBilling, routeGetBilling, routeGetBillings, routeGetUnitBillings, routeGetUserBillings, routeSubmitBillingPayment, routeUpdateBilling, routeVerifyBillingPayment } from './controllers/billing.js';
-import { routeGetBookings, routeCreateBooking, routeApproveBooking, routeCancelBooking, routeRejectBooking, routeUpdateBooking } from './controllers/booking.js';
+import {
+  routeCreateReview,
+  routeUpdateReview,
+  routeDeleteReview,
+  routeGetFacilityReviews,
+  routeGetListingReviews,
+} from './controllers/reviews.js';
+import {
+  routeAcceptInvite,
+  routeDeclineInvite,
+  routeGetInvites,
+  routeInviteManager,
+} from './controllers/invites.js';
+import {
+  routeCreateTransferRequest,
+  routeCancelTransferRequest,
+  routeApproveTransferRequest,
+  routeGetTransferRequests,
+  routeRejectTransferRequest,
+} from './controllers/transfers.js';
+import {
+  routeCreateBilling,
+  routeGetBilling,
+  routeGetBillings,
+  routeGetUnitBillings,
+  routeGetUserBillings,
+  routeSubmitBillingPayment,
+  routeUpdateBilling,
+  routeVerifyBillingPayment,
+} from './controllers/billing.js';
+import {
+  routeGetBookings,
+  routeCreateBooking,
+  routeApproveBooking,
+  routeCancelBooking,
+  routeRejectBooking,
+  routeUpdateBooking,
+} from './controllers/booking.js';
 import { routeGetActivities } from './controllers/activity.js';
 import { routeGetMessages, routeGetUserMessages, routeSendMessage } from './controllers/message.js';
-import { routeGetNotifications, routeReadAllNotifications, routeReadNotification } from './controllers/notifications.js';
-import { routeGetReports, routeResolveReport, routeReportListing, routeReportUser } from './controllers/report.js';
+import {
+  routeGetNotifications,
+  routeReadAllNotifications,
+  routeReadNotification,
+} from './controllers/notifications.js';
+import {
+  routeGetReports,
+  routeResolveReport,
+  routeReportListing,
+  routeReportUser,
+} from './controllers/report.js';
 import { routeGetCalendar } from './controllers/calendar.js';
 
 const router = Router();
@@ -117,7 +159,7 @@ router.get('/units/:unitId', isTenantManagerOrLandlord, routeGetUnit);
 router.patch('/units/:unitId', correctManagerOrLandlordFilter, routeUpdateUnit);
 router.delete('/units/:unitId', correctManagerOrLandlordFilter, routeDeleteUnit);
 router.get('/listings/:listingId/units', routeGetUnitsByListing);
-router.post('/listing/:listingId/units', correctManagerOrLandlordFilter, routeCreateUnit); // TODO: 
+router.post('/listing/:listingId/units', correctManagerOrLandlordFilter, routeCreateUnit); // TODO:
 
 // Tags
 router.get('/tags', routeGetTags);
@@ -142,9 +184,21 @@ router.post('/applications', isVerifiedStudent, routeCreateApplication);
 router.get('/applications/:applicationId', isSelfManagerOrSuperAdmin, routeGetApplication);
 router.patch('/applications/:applicationId', isSelfManagerOrSuperAdmin, routeUpdateApplication);
 router.delete('/applications/:applicationId', isSelfOrSuperAdmin, routeDeleteApplication);
-router.post('/applications/:applicationId/approve', correctManagerOrLandlordFilter, routeUpdateApplicationStatus);
-router.post('/applications/:applicationId/reject', correctManagerOrLandlordFilter, routeUpdateApplicationStatus);
-router.post('/applications/:applicationId/assign-unit', correctManagerOrLandlordFilter, routeAssignApplicationUnit);
+router.post(
+  '/applications/:applicationId/approve',
+  correctManagerOrLandlordFilter,
+  routeUpdateApplicationStatus,
+);
+router.post(
+  '/applications/:applicationId/reject',
+  correctManagerOrLandlordFilter,
+  routeUpdateApplicationStatus,
+);
+router.post(
+  '/applications/:applicationId/assign-unit',
+  correctManagerOrLandlordFilter,
+  routeAssignApplicationUnit,
+);
 router.get('/users/:userId/applications', isSelfOrSuperAdmin, routeGetApplicationsByStudent);
 router.get('/listings/:listingId/applications', isSelfOrSuperAdmin, routeGetApplicationsByListing);
 
@@ -191,7 +245,11 @@ router.delete('/bookings/:bookingId', isSelfOrManager, routeCancelBooking);
 router.post('/bookings/:bookingId/approve', isSelfOrManager, routeApproveBooking);
 router.post('/bookings/:bookingId/reject', isSelfOrManager, routeRejectBooking);
 router.get('/users/:userId/bookings', isSelfOrSuperAdmin, routeGetVisitBookingsByStudent);
-router.get('/listings/:listingId/bookings', correctManagerOrLandlordFilter, routeGetVisitBookingsByListing);
+router.get(
+  '/listings/:listingId/bookings',
+  correctManagerOrLandlordFilter,
+  routeGetVisitBookingsByListing,
+);
 
 // Lease Transfers
 router.get('/transfers', isVerifiedStudent, routeGetTransferRequests);
@@ -228,13 +286,14 @@ router.post('/notifications/read-all', routeReadAllNotifications);
 router.post('/notifications/:notificationId/read', routeReadNotification);
 
 // Calendar
-router.get('/calendar', routeGetCalendar)
+router.get('/calendar', routeGetCalendar);
 
 // creation of fake accounts endpoints
 router.post('/auth/test/register', isDevelopment, routeTestRegister);
 router.post('/auth/test/login', isDevelopment, routeTestLogin);
 
-router.get('/auth/google/student',
+router.get(
+  '/auth/google/student',
   passportGoogle.authenticate('google', { scope: ['profile', 'email'] }) as RequestHandler,
 );
 router.get(
@@ -244,6 +303,10 @@ router.get(
     successRedirect: '/',
   }) as RequestHandler,
 );
+
+// creation of fake accounts endpoints
+router.post('/auth/test/register', isDevelopment, routeTestRegister);
+router.post('/auth/test/login', isDevelopment, routeTestLogin);
 
 router.use(errorHandler);
 

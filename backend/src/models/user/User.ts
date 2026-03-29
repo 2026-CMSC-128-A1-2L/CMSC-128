@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema(
 
     auth: {
       type: {
-        // Google account ID
+        // Google account Id
         //
         // An account's email can change over time while this does not.
         google: String,

@@ -2,11 +2,11 @@ import mongoose from 'mongoose';
 import { ROOM_TYPES } from '../../constants';
 
 const ListingSchema = new mongoose.Schema({
-  housingID: { type: mongoose.Schema.Types.ObjectId, ref: 'HousingFacility', required: true },
+  housingId: { type: mongoose.Schema.Types.ObjectId, ref: 'HousingFacility', required: true },
 
   // include both owners for easier checking of owner, changes to these fields should be rare in practice
-  landlordID: { type: mongoose.Schema.Types.ObjectId, ref: 'Landlord', required: true },
-  managerID: { type: mongoose.Schema.Types.ObjectId, ref: 'Manager' },
+  landlordId: { type: mongoose.Schema.Types.ObjectId, ref: 'Landlord', required: true },
+  managerId: { type: mongoose.Schema.Types.ObjectId, ref: 'Manager' },
 
   tags: [
     {

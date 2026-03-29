@@ -1,11 +1,11 @@
 import mongoose from 'mongoose';
 
 const billingSchema = new mongoose.Schema({
-  studentID: { type: mongoose.Schema.Types.ObjectId, ref: 'Student', required: true },
-  unitID: { type: mongoose.Schema.Types.ObjectId, ref: 'Unit', required: true },
+  studentId: { type: mongoose.Schema.Types.ObjectId, ref: 'Student', required: true },
+  unitId: { type: mongoose.Schema.Types.ObjectId, ref: 'Unit', required: true },
 
   // Who the bill is paid to.
-  managerID: { type: mongoose.Schema.Types.ObjectId, ref: 'Manager' },
+  managerId: { type: mongoose.Schema.Types.ObjectId, ref: 'Manager' },
 
   dueDate: { type: Date },
   paymentDate: { type: Date },

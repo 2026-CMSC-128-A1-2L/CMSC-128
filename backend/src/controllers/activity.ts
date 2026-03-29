@@ -1,3 +1,3 @@
-import { RequestHandler } from "express";
+import { RequestHandler } from 'express';
 
-export const routeGetActivities: RequestHandler = async (req, res, next) => { };
+export const routeGetActivities: RequestHandler = async (req, res, next) => {};

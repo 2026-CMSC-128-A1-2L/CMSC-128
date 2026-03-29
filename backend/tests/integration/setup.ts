@@ -6,7 +6,7 @@ import { beforeAll, afterAll } from 'vitest';
 import { App } from 'supertest/types.js';
 import { buildLandlord, buildManager, buildStudent } from '../factories';
 
-// Random run ID so that if tests run in parallel, they use different databases.
+// Random run Id so that if tests run in parallel, they use different databases.
 const TEST_RUN_ID = Date.now().toString(36);
 
 let app: App;

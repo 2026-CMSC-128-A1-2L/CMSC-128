@@ -10,9 +10,9 @@ export type CreateUnitArguments = {
   price: number;
   location?: string | null;
   isAvailable: boolean;
-  listingID: mongoose.Types.ObjectId;
-  landlordID: mongoose.Types.ObjectId;
-  managerID: mongoose.Types.ObjectId;
+  listingId: mongoose.Types.ObjectId;
+  landlordId: mongoose.Types.ObjectId;
+  managerId?: mongoose.Types.ObjectId | null;
 };
 
 // Parameters for filtering listings
@@ -23,9 +23,9 @@ export type GetUnitArguments = {
   price: number;
   location: string;
   isAvailable: boolean;
-  listingID: mongoose.Types.ObjectId;
-  landlordID: mongoose.Types.ObjectId;
-  managerID: mongoose.Types.ObjectId;
+  listingId: mongoose.Types.ObjectId;
+  landlordId: mongoose.Types.ObjectId;
+  managerId: mongoose.Types.ObjectId;
 };
 
 export const createUnit = async (data: CreateUnitArguments, filters: any) => {
@@ -43,9 +43,9 @@ export const createUnit = async (data: CreateUnitArguments, filters: any) => {
     price: unit.price,
     location: unit.location,
     isAvailable: unit.isAvailable,
-    listingID: unit.listingID,
-    landlordID: unit.landlordID,
-    managerID: unit.managerID,
+    listingId: unit.listingId,
+    landlordId: unit.landlordId,
+    managerId: unit.managerId,
   });
   return await newUnit.save();
 };
@@ -63,8 +63,8 @@ export const getUnitById = async (id: mongoose.Types.ObjectId) => {
   return await Unit.findById(id);
 };
 
-export const getUnitByListing = async (listingID: mongoose.Types.ObjectId) => {
-  return await Unit.find({ listingID });
+export const getUnitByListing = async (listingId: mongoose.Types.ObjectId) => {
+  return await Unit.find({ listingId });
 };
 
 export type UpdateUnitArguments = {
@@ -72,23 +72,21 @@ export type UpdateUnitArguments = {
   capacity?: number;
   currentOccupancy?: number;
   price?: number;
-  floorNumber?: number | null;
-  status?: 'available' | 'unavailable';
+  location?: string | null;
   isAvailable?: boolean;
 };
 
 export const updateUnit = async (
-  unitID: mongoose.Types.ObjectId,
+  unitId: mongoose.Types.ObjectId,
   data: UpdateUnitArguments,
   filters: any,
 ) => {
   // Try finding it with the ownership filter first
-  const unit = await Unit.findOne(combineFilters(filters, { _id: unitID }));
+  const unit = await Unit.findOne(combineFilters(filters, { _id: unitId }));
 
   if (!unit) {
-
     // Check if it exists at all (without filter)
-    const unitNoFilter = await Unit.findById(unitID);
+    const unitNoFilter = await Unit.findById(unitId);
     if (unitNoFilter) {
       // Exisiting unit pero not the owener
       throw new AppError(403, 'Forbidden: You are not the owner of this unit.');
@@ -109,14 +107,11 @@ export const updateUnit = async (
   return await unit.save();
 };
 
-export const deleteUnit = async (
-  unitID: mongoose.Types.ObjectId,
-  filters: any,
-) => {
-  const unit = await Unit.findOne(combineFilters(filters, { _id: unitID }));
+export const deleteUnit = async (unitId: mongoose.Types.ObjectId, filters: any) => {
+  const unit = await Unit.findOne(combineFilters(filters, { _id: unitId }));
 
   if (!unit) {
-    const unitNoFilter = await Unit.findById(unitID);
+    const unitNoFilter = await Unit.findById(unitId);
     if (unitNoFilter) {
       throw new AppError(403, 'Forbidden: You are not the owner of this unit.');
     }
