@@ -71,10 +71,10 @@ import {
 } from './controllers/bookmarks.js';
 import {
   routeGetRentals,
+  routeGetRentalsByUnit,
   routeUpdateRental,
   routeGetRental,
   routeGetRentalsByListing,
-  routeGetRentalsByUnit,
   routeGetRentalsByUser,
   routeMoveIn,
   routeMoveOut,
