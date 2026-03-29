@@ -68,6 +68,7 @@ import {
 import { routePayUnit, routeGetPayments } from './controllers/payments.js';
 import {
   routeGetRentals,
+  routeGetRentalsByUnitID,
   routeCreateRental,
   routeUpdateRental,
   routeDeleteRental,
@@ -159,6 +160,7 @@ router.patch(
 router.delete('/applications/:applicationId', isSelfOrSuperAdmin, routeDeleteApplication);
 
 router.get('/rentals', isSuperAdmin, routeGetRentals);
+router.get('/rentals/:unitId', correctManagerOrLandlordFilter, routeGetRentalsByUnitID);
 router.post('/rentals', correctManagerOrLandlordFilter, routeCreateRental);
 router.patch('/rentals/:rentalId', correctManagerOrLandlordFilter, routeUpdateRental);
 router.delete('/rentals/:rentalId', isSuperAdmin, routeDeleteRental);
