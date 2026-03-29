@@ -111,3 +111,21 @@ export const deleteRental = async (
     return await rental.deleteOne();
 };
 
+export const getRentalsByUnitID = async (
+    unitID: mongoose.Types.ObjectId,
+    filters: any
+) => {
+    const rentals = await Rental.find(combineFilters(filters, {unitID: unitID}));
+
+    if (!rentals) {
+        const rentalsNoFilter = await Rental.find({unitID: unitID});
+
+        if (rentalsNoFilter) {
+            throw new AppError(403, 'You don\'t have permission to view these rentals.');
+        } else {
+            throw new AppError(404, 'Rentals not found.')
+        }
+    }
+
+    return rentals;
+};
