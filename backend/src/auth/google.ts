@@ -4,7 +4,7 @@ import { User } from '../models/user/User';
 import { createUnverifiedStudent, CreateUserParams } from '../services/user';
 
 if (!process.env.GOOGLE_CLIENT_ID) {
-  throw new Error('Missing GOOGLE_CLIENT_ID in environment variables.');
+  throw new Error('Missing GOOGLE_CLIENT_Id in environment variables.');
 }
 
 if (!process.env.GOOGLE_CLIENT_SECRET) {

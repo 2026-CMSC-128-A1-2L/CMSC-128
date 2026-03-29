@@ -3,7 +3,7 @@ import { Rental } from '../models/student-actions/Rents';
 import { AppError } from '../controllers/error';
 import { combineFilters } from '../controllers/middleware';
 
-// TODO: verify if actual move-in/out dates are needed 
+// TODO: verify if actual move-in/out dates are needed
 // No activities field yet
 export type CreateRentalArguments = {
   studentId: mongoose.Types.ObjectId;
@@ -25,7 +25,6 @@ export type UpdateRentalArguments = {
   actualMoveOutDate?: Date | null;
 };
 
-
 export const createRental = async (data: CreateRentalArguments) => {
   if (
     data.expectedMoveInDate &&
@@ -42,12 +41,11 @@ export const createRental = async (data: CreateRentalArguments) => {
     applicationId: data.applicationId,
 
     expectedMoveInDate: data.expectedMoveInDate,
-    expectedMoveOutDate: data.expectedMoveOutDate
+    expectedMoveOutDate: data.expectedMoveOutDate,
   });
 
   return await newRental.save();
 };
-
 
 export const getRentals = async () => {
   return await Rental.find();
@@ -56,7 +54,7 @@ export const getRentals = async () => {
 export const updateRental = async (
   rentalId: mongoose.Types.ObjectId,
   data: UpdateRentalArguments,
-  filters: any
+  filters: any,
 ) => {
   const rental = await Rental.findOne(combineFilters(filters, { _id: rentalId }));
 
@@ -66,7 +64,7 @@ export const updateRental = async (
     if (rentalNoFilter) {
       throw new AppError(403, 'You cannot edit this rental.');
     } else {
-      throw new AppError(404, 'Rental not found.')
+      throw new AppError(404, 'Rental not found.');
     }
   }
 
@@ -86,16 +84,12 @@ export const updateRental = async (
     throw new AppError(422, 'Actual move-out date should not be before actual move-in date.');
   }
 
-
   rental.set(data);
 
   return await rental.save();
 };
 
-export const deleteRental = async (
-  rentalId: mongoose.Types.ObjectId,
-  filters: any
-) => {
+export const deleteRental = async (rentalId: mongoose.Types.ObjectId, filters: any) => {
   const rental = await Rental.findOne(combineFilters(filters, { _id: rentalId }));
 
   if (!rental) {
@@ -104,7 +98,7 @@ export const deleteRental = async (
     if (rentalNoFilter) {
       throw new AppError(403, 'You cannot delete this rental.');
     } else {
-      throw new AppError(404, 'Rental not found.')
+      throw new AppError(404, 'Rental not found.');
     }
   }
 

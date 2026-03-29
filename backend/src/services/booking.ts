@@ -27,13 +27,8 @@ export type GetBookingArguments = {
 };
 
 export const createBooking = async (data: CreateBookingArguments, filters: any) => {
-  if (
-    data.startDate &&
-    data.endDate &&
-    data.endDate < data.startDate
-  ) {
-      throw new AppError(422, 'Booking end date should not be before booking start date date.');
-
+  if (data.startDate && data.endDate && data.endDate < data.startDate) {
+    throw new AppError(422, 'Booking end date should not be before booking start date date.');
   }
   const facility = await HousingFacility.findOne(combineFilters(filters, { _id: data.housingID }));
   if (!facility) {
@@ -58,7 +53,8 @@ export const createBooking = async (data: CreateBookingArguments, filters: any) 
   return await newBooking.save();
 };
 
-export function buildBookingQuery(args: Partial<GetBookingArguments>
+export function buildBookingQuery(
+  args: Partial<GetBookingArguments>,
 ): QueryFilter<typeof VisitBooking> {
   const query: QueryFilter<typeof VisitBooking> = {};
 

@@ -9,30 +9,29 @@ import {
   landlord,
   manager,
   student,
-
 } from './setup.js';
 
 describe('Applications API', () => {
-  // Test IDs
-  let studentID: string;
-  let listingID: string;
-  let applicationID: string;
+  // Test Ids
+  let studentId: string;
+  let listingId: string;
+  let applicationId: string;
 
-  beforeAll(async ()=>{
+  beforeAll(async () => {
     // Create Test Listings and students
     const testStudent = await buildStudent.create({});
     const testListing = buildListing.create({
-      landlordID: landlord._id, 
-      managerID: manager._id,
-    });  
-      
-    studentID = (testStudent as any)._id;
-    listingID = (testListing as any)._id;
+      landlordId: landlord._id,
+      managerId: manager._id,
+    });
+
+    studentId = (testStudent as any)._id;
+    listingId = (testListing as any)._id;
   });
 
-    const applicationData = () => ({
-    studentID,
-    listingID,
+  const applicationData = () => ({
+    studentId,
+    listingId,
     preferredRoomType: 'single',
     documentUrls: [],
   });
@@ -42,7 +41,7 @@ describe('Applications API', () => {
       const response = await studentAgent.post('/api/applications').send(applicationData());
       expect(response.status).toBe(201);
       expect(response.body.id).toBeDefined();
-      applicationID = response.body.id;
+      applicationId = response.body.id;
     });
 
     it('should return 401 for Guest (Not Logged In)', async () => {

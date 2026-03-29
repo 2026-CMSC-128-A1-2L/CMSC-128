@@ -1,3 +1,3 @@
-import { RequestHandler } from "express";
+import { RequestHandler } from 'express';
 
-export const routeGetCalendar: RequestHandler = async (req, res, next) => { };
+export const routeGetCalendar: RequestHandler = async (req, res, next) => {};
