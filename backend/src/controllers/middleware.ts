@@ -89,9 +89,9 @@ export const isDevelopment: RequestHandler = (req, res, next) => {
   res.status(401).send();
 };
 
-export const isSelfOrSuperAdmin: RequestHandler = async (req, res, next) => {};
-export const isVerifiedStudent: RequestHandler = async (req, res, next) => {};
-export const isSelfManagerOrSuperAdmin: RequestHandler = async (req, res, next) => {};
-export const isSelf: RequestHandler = async (req, res, next) => {};
-export const isSelfOrManager: RequestHandler = async (req, res, next) => {};
-export const isTenantManagerOrLandlord: RequestHandler = async (req, res, next) => {};
+export const isSelfOrSuperAdmin: RequestHandler = async (req, res, next) => { };
+export const isVerifiedStudent: RequestHandler = async (req, res, next) => { };
+export const isSelfManagerOrSuperAdmin: RequestHandler = async (req, res, next) => { };
+export const isSelf: RequestHandler = async (req, res, next) => { };
+export const isSelfOrManager: RequestHandler = async (req, res, next) => { };
+export const isTenantManagerOrLandlord: RequestHandler = async (req, res, next) => { };
