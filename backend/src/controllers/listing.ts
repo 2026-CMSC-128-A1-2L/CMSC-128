@@ -6,6 +6,7 @@ import {
   getListingReviewsById,
   updateListing,
   deleteListing,
+  updateListingTags,
 } from '../services/listing.js';
 import z from 'zod';
 import { ObjectIdSchema } from './schema/common.js';
@@ -14,6 +15,7 @@ import {
   CreateListingBodySchema,
   UpdateListingBodySchema,
   SearchQuerySchema,
+  TagSchema,
 } from './schema/listing.js';
 
 export const routeGetListings: RequestHandler = async (req, res, next) => {
@@ -68,4 +70,14 @@ export const routeDeleteListing: RequestHandler = async (req, res, next) => {
 export const routeGetUnitsByListing: RequestHandler = async (req, res, next) => {};
 export const routeGetApplicationsByListing: RequestHandler = async (req, res, next) => {};
 export const routeGetVisitBookingsByListing: RequestHandler = async (req, res, next) => {};
-export const routeUpdateListingTags: RequestHandler = async (req, res, next) => {};
+export const routeUpdateListingTags: RequestHandler = async (req, res, next) => {
+  const listingID = ObjectIdSchema.parse(req.params.listingId);
+  
+  const updateData = z.object({
+    tags: z.array(TagSchema)
+  }).parse(req.body);
+
+  const updatedListing = await updateListingTags(listingID, updateData, res.locals.filters ?? {});
+
+  res.status(200).json({ data: updatedListing });
+};
