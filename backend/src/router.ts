@@ -140,14 +140,73 @@ const router = Router();
 
 // Facilities
 // GET /api/facilities
+//
+// Auth:
+//   Any user
+// Input:
+//   none
+// Output:
+//   200 OK:
+//     For all roles, a list of Facilities
 router.get('/facilities', routeGetFacilities);
+
 // POST /api/facilities
+//
+// Auth:
+//   A verified landlord
+// Input:
+//   Body:
+//    `managers`: list of ManagerPermissions objects
+//    `name`: string
+//    `type`: one of FacilityType`
+//    `location`: coordinates or text
+//    `isAcceptingApplications`: boolean
+//    `applicationOpenDate`: ISO date string
+//    `applicationCloseDate`: ISO date string, should be at least open
+//    `documents`: list of file ids
+// Output:
+//   Facility object
 router.post('/facilities', isLandlord, routeCreateFacility);
+
 // GET /api/facilities/:facilityId
+//
+// Auth:
+//   Any user
+// Input:
+//   Parameters:
+//     `facilityId`
+// Output:
+//   For all roles, a list of Facilities
 router.get('/facilities/:facilityId', routeGetFacility);
+
 // PATCH /api/facilities/:facilityId
+// Auth:
+//   Manager or Landlord
+// Input:
+//   Body:
+//     `name`
+//     `managers` -- should only be modified by landlord
+//     `location`
+//     `type`
+//     `capacity`
+//     `isAcceptingApplications`
+//     `applicationOpenDate`
+//     `applicationCloseDate`
+// Output:
+//   No Content (204)
 router.patch('/facilities/:facilityId', correctManagerOrLandlordFilter, routeUpdateFacility);
+
 // DELETE /api/facilities/:facilityId
+// Auth:
+//   Landlord
+// Input:
+//   Body
+// Output:
+//   204
+//
+// NOTE:
+//   this should just do a soft-delete, marking the facility and all of its listings
+//   deleted.
 router.delete('/facilities/:facilityId', correctLandlordFilter, routeDeleteFacility);
 
 // Listings
@@ -250,8 +309,6 @@ router.patch('/rentals/:rentalId', correctManagerOrLandlordFilter, routeUpdateRe
 router.post('/rentals/:rentalId/move-in', correctManagerOrLandlordFilter, routeMoveIn);
 // POST /api/rentals/:rentalId/move-out
 router.post('/rentals/:rentalId/move-out', correctManagerOrLandlordFilter, routeMoveOut);
-// TODO: check what else changes when a rental is deleted
-// router.delete('/rentals/:rentalId', isSuperAdmin, routeDeleteRental);
 
 // Billings
 // GET /api/billings
