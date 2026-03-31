@@ -38,6 +38,7 @@ import {
   isSelfOrManager,
   isTenantManagerOrLandlord,
   correctLandlordFilter,
+  hasAccount,
 } from './controllers/middleware.js';
 import passportGoogle from './auth/google.js';
 import { routeCreateTag, routeDeleteTag, routeGetTags, routeUpdateTag } from './controllers/tag.js';
@@ -133,6 +134,37 @@ import {
   routeReportUser,
 } from './controllers/report.js';
 import { routeGetCalendar } from './controllers/calendar.js';
+
+import multer from "multer";
+import multerS3 from "multer-s3";
+
+import { S3Client } from "@aws-sdk/client-s3";
+import path from 'path';
+import { routeUploadFile } from './controllers/file.js';
+
+const s3 = new S3Client({
+  region: "auto",
+  endpoint: process.env.R2_ENDPOINT!,
+  credentials: {
+    accessKeyId: process.env.R2_ACCESS_KEY!,
+    secretAccessKey: process.env.R2_SECRET!,
+  },
+});
+
+const upload = multer({
+  storage: multerS3({
+    s3: s3,
+    bucket: process.env.R2_BUCKET_NAME!,
+    contentType: multerS3.AUTO_CONTENT_TYPE,
+    metadata: (req, file, cb) => {
+      cb(null, { fieldName: file.fieldname });
+    },
+    key: (req, file, cb) => {
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+      cb(null, uniqueSuffix + path.extname(file.originalname));
+    },
+  }),
+});
 
 const router = Router();
 
@@ -357,6 +389,8 @@ router.post('/messages/:userId', routeSendMessage);
 
 // Summaries
 // Files
+router.post("/files", hasAccount, upload.single("file"), routeUploadFile);
+
 // Notifications
 // GET /api/notifications
 router.get('/notifications', routeGetNotifications);

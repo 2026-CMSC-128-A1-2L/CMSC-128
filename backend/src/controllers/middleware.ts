@@ -57,6 +57,14 @@ export const isManager: RequestHandler = (req, res, next) => {
   next();
 };
 
+export const hasAccount: RequestHandler = (req, res, next) => {
+  if (!req.user) {
+    return next(new AppError(401, 'Unauthenticated'));
+  }
+
+  next();
+};
+
 export const isLandlord: RequestHandler = (req, res, next) => {
   if (!req.user) {
     return next(new AppError(401, 'Unauthenticated'));
