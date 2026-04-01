@@ -1,7 +1,5 @@
 import z from 'zod';
 import { ObjectIdSchema } from './common.js';
-import { student } from '../../../tests/integration/setup.js';
-
 
 // POST /transfers
 export const CreateTransferBodySchema = z.object({

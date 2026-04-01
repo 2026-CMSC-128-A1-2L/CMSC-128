@@ -51,10 +51,6 @@ export const CreateTransferRequest = async ( data: CreateTransferRequestArgument
     return await newTransferRequest.save();
 };
 
-export const getTransferRequests = async (args: GetTransferRequestsArguments) => {
-  return await TransferRequest.find(args).populate('unitId');
-}
-
 export const CancelTransferRequest = async (transferRequestId: mongoose.Types.ObjectId, filters: any) => {
     //check if it exists and can access
     const request = await TransferRequest.findOne(combineFilters(filters, { _id: transferRequestId }));
@@ -78,10 +74,3 @@ export const CancelTransferRequest = async (transferRequestId: mongoose.Types.Ob
     request.status = 'cancelled';
     return await request.save();
 }
-
-export const DeleteTransferRequest = async (
-  studentId: mongoose.Types.ObjectId,
-  transferRequestId: mongoose.Types.ObjectId,
-) => {
-  return await TransferRequest.deleteOne({ _id: transferRequestId, studentId: studentId });
-};
