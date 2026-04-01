@@ -2,20 +2,21 @@ import mongoose, { QueryFilter } from 'mongoose';
 import { Unit } from '../models/housing/Unit.js';
 import { combineFilters } from '../controllers/middleware.js';
 import { AppError } from '../controllers/error.js';
+import { Listing } from '../models/housing/Listing.js';
+import { request } from 'https';
 
 export type CreateUnitArguments = {
   roomNumber: number;
   capacity: number;
   currentOccupancy: number;
   price: number;
-  location?: string | null;
+  location?: string;
   isAvailable: boolean;
   listingId: mongoose.Types.ObjectId;
   landlordId: mongoose.Types.ObjectId;
-  managerId?: mongoose.Types.ObjectId | null;
+  managerId?: mongoose.Types.ObjectId;
 };
 
-// Parameters for filtering listings
 export type GetUnitArguments = {
   roomNumber: number;
   capacity: number;
@@ -28,95 +29,93 @@ export type GetUnitArguments = {
   managerId: mongoose.Types.ObjectId;
 };
 
-export const createUnit = async (data: CreateUnitArguments, filters: any) => {
+export const CreateUnit = async (data: CreateUnitArguments, filters: any) => {
   const unit = await Unit.findOne(combineFilters(filters, { roomNumber: data.roomNumber }));
   if (!unit) {
-    // This can also be a 403, see `updateFacility` in ./facility.ts
     throw new AppError(404, 'Unit not found.');
   }
 
-  // There can be a race condition here.
   const newUnit = new Unit({
-    roomNumber: unit.roomNumber,
-    capacity: unit.capacity,
-    currentOccupancy: unit.currentOccupancy,
-    price: unit.price,
-    location: unit.location,
-    isAvailable: unit.isAvailable,
-    listingId: unit.listingId,
-    landlordId: unit.landlordId,
-    managerId: unit.managerId,
+    roomNumber: data.roomNumber,
+    capacity: data.capacity,
+    currentOccupancy: data.currentOccupancy,
+    price: data.price,
+    location: data.location,
+    isAvailable: data.isAvailable,
+    listingId: data.listingId,
+    landlordId: data.landlordId,
+    managerId: data.managerId,
   });
   return await newUnit.save();
 };
 
 export function buildUnitQuery(args: Partial<GetUnitArguments>): QueryFilter<typeof Unit> {
-  return args;
+  const query: QueryFilter<typeof Unit> = {};
+
+  if (args.roomNumber) {
+    query.roomNumber = args.roomNumber;
+  }
+  if (args.capacity) {
+    query.capacity = args.capacity;
+  }
+  if (args.currentOccupancy) {
+    query.currentOccupancy = args.currentOccupancy;
+  }
+  if (args.price) {
+    query.price = args.price;
+  }
+  if (args.location) {
+    query.location = args.location;
+  }
+  if (args.isAvailable) {
+    query.isAvailable = args.isAvailable;
+  }
+  if (args.listingId) {
+    query.listingId = args.listingId;
+  }
+  if (args.landlordId) {
+    query.landlordId = args.landlordId;
+  }
+  if (args.managerId) {
+    query.managerId = args.managerId;
+  }
+
+  return query;
 }
 
-export const getUnits = async (filters: Partial<GetUnitArguments>) => {
-  const query = buildUnitQuery(filters);
-  return await Unit.find(query); //returns units
+export const GetUnits = async (query: Partial<GetUnitArguments>, filters: any) => {
+  const unitQuery = buildUnitQuery(query);
+  return await Unit.find(combineFilters(filters, unitQuery));
 };
 
-export const getUnitById = async (id: mongoose.Types.ObjectId) => {
-  return await Unit.findById(id);
+export const GetUnitById = async (unitId: mongoose.Types.ObjectId) => {
+  //check if it exists and can access
+  const unit = await Unit.findOne({ _id: unitId });
+  if (!unit){
+      const UnitNoFilter = await Unit.findById(unitId);
+      if (UnitNoFilter) {
+        throw new AppError(403, "You cannot access this unit.");
+      } else {
+        throw new AppError(404, 'Unit not found.');
+      }
+  }
+
+  //no issues, return units of listing  
+  return unit;
 };
 
-export const getUnitByListing = async (listingId: mongoose.Types.ObjectId) => {
+export const GetUnitByListing = async (listingId: mongoose.Types.ObjectId, filters: any) => {
+  //check if it exists and can access
+  const listing = await Listing.findOne(combineFilters(filters, { _id: listingId }));
+  if (!listing){
+      const listingNoFilter = await Listing.findById(listingId);
+      if (listingNoFilter) {
+        throw new AppError(403, "You cannot access this listing's unit.");
+      } else {
+        throw new AppError(404, 'Listing not found.');
+      }
+  }
+
+  //no issues, return units of listing  
   return await Unit.find({ listingId });
-};
-
-export type UpdateUnitArguments = {
-  roomNumber?: number;
-  capacity?: number;
-  currentOccupancy?: number;
-  price?: number;
-  location?: string | null;
-  isAvailable?: boolean;
-};
-
-export const updateUnit = async (
-  unitId: mongoose.Types.ObjectId,
-  data: UpdateUnitArguments,
-  filters: any,
-) => {
-  // Try finding it with the ownership filter first
-  const unit = await Unit.findOne(combineFilters(filters, { _id: unitId }));
-
-  if (!unit) {
-    // Check if it exists at all (without filter)
-    const unitNoFilter = await Unit.findById(unitId);
-    if (unitNoFilter) {
-      // Exisiting unit pero not the owener
-      throw new AppError(403, 'Forbidden: You are not the owner of this unit.');
-    }
-
-    // Non-existing talaga yung unit
-    throw new AppError(404, 'Unit not found.');
-  }
-
-  // Business rule: occupancy can never exceed capacity after the update
-  const newCapacity = data.capacity ?? unit.capacity;
-  const newOccupancy = data.currentOccupancy ?? unit.currentOccupancy;
-  if (newOccupancy > newCapacity) {
-    throw new AppError(422, 'Current occupancy cannot exceed capacity.');
-  }
-
-  unit.set(data);
-  return await unit.save();
-};
-
-export const deleteUnit = async (unitId: mongoose.Types.ObjectId, filters: any) => {
-  const unit = await Unit.findOne(combineFilters(filters, { _id: unitId }));
-
-  if (!unit) {
-    const unitNoFilter = await Unit.findById(unitId);
-    if (unitNoFilter) {
-      throw new AppError(403, 'Forbidden: You are not the owner of this unit.');
-    }
-    throw new AppError(404, 'Unit not found.');
-  }
-
-  return await unit.deleteOne();
 };

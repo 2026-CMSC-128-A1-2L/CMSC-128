@@ -1,13 +1,11 @@
 import z from 'zod';
-import { ObjectIdSchema, QuerySchema } from './common.js';
+import { ObjectIdSchema } from './common.js';
 
 // GET /units
-export const GetUnitsQuerySchema = QuerySchema;
-
-export const UnitFilterSchema = z.object({
+export const GetUnitBodySchema = z.object({
   roomNumber: z.number().optional(),
   capacity: z.number().optional(),
-  currentOccupancy: z.number().optional(),
+  currentOccupancy: z.number().int().min(0).optional(),
   price: z.number().optional(),
   location: z.string().optional(),
   isAvailable: z.boolean().optional(),
@@ -20,19 +18,21 @@ export const UnitFilterSchema = z.object({
 export const CreateUnitBodySchema = z.object({
   roomNumber: z.number(),
   capacity: z.number().int().min(1),
-  currentOccupancy: z.number().int().min(0).optional(),
+  currentOccupancy: z.number().int().min(0),
   price: z.number().positive(),
   location: z.string().optional(),
   isAvailable: z.boolean(),
   listingId: ObjectIdSchema,
+  landlordId: ObjectIdSchema,
+  managerId: ObjectIdSchema.optional(),
 });
 
-// PATCH /units/:unitId
-export const UpdateUnitBodySchema = z.object({
-  roomNumber: z.number().optional(),
-  capacity: z.number().int().min(1).optional(),
-  currentOccupancy: z.number().int().min(0).optional(),
-  price: z.number().positive().optional(),
-  location: z.string().optional(),
-  isAvailable: z.boolean().optional(),
+// GET /units/:unitId
+export const GetUnitByIdSchema = z.object({
+  unitID: ObjectIdSchema
+});
+
+// GET /units/listing/:listingId
+export const GetUnitByListingSchema = z.object({
+  listingId: ObjectIdSchema
 });
