@@ -1,6 +1,7 @@
 import mongoose, { QueryFilter } from 'mongoose';
 import { combineFilters } from '../controllers/middleware.js';
 import { Billing } from '../models/student-actions/Billing.js';
+import { manager } from '../../tests/integration/setup.js';
 
 export type CreateBillingArguments = {
   studentId: mongoose.Types.ObjectId;
@@ -94,3 +95,25 @@ export const getBillings = async (query: Partial<GetBillingArguments>, filters: 
   const dbFilters = buildBillingQuery(query);
   return await Billing.find(combineFilters(filters, dbFilters));
 };
+
+  export const getUserBillings = async (userId: mongoose.Types.ObjectId, filters: any) => {
+    // User ID must Exist WITH fither
+    return  await Billing.find({
+      $and:[
+        {
+          $or: [
+            {studentId:userId},
+            {managerId:userId},
+          ]
+        },
+        filters
+      ]
+    });
+  };
+
+export const getUnitBillings = async (unitId: mongoose.Types.ObjectId,filters: any) => {
+  return await Billing.find(combineFilters(filters, { unitId }));
+};
+
+
+
