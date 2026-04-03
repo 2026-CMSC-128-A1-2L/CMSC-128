@@ -122,8 +122,8 @@ import {
 import { routeGetActivities } from './controllers/activity.js';
 import { routeGetMessages, routeGetUserMessages, routeSendMessage } from './controllers/message.js';
 import {
+  routeGetNotification,
   routeGetNotifications,
-  routeReadAllNotifications,
   routeReadNotification,
 } from './controllers/notifications.js';
 import {
@@ -360,8 +360,8 @@ router.post('/messages/:userId', routeSendMessage);
 // Notifications
 // GET /api/notifications
 router.get('/notifications', routeGetNotifications);
-// POST /api/notifications/read-all
-router.post('/notifications/read-all', routeReadAllNotifications);
+// POST /api/notifications/:notificationId
+router.get('/notifications/:notificationId', routeGetNotification);
 // POST /api/notifications/:notificationId/read
 router.post('/notifications/:notificationId/read', routeReadNotification);
 
