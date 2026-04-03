@@ -2,8 +2,8 @@ import mongoose, { QueryFilter } from 'mongoose';
 import { Notification } from '../models/communication/Notification';
 import { combineFilters } from '../controllers/middleware';
 
-export const sendNotification = async (userId: mongoose.Types.ObjectId, content: string) => {
-  const notification = new Notification({ userId, content });
+export const sendNotification = async (userId: mongoose.Types.ObjectId, subject: string, content: string) => {
+  const notification = new Notification({ userId, subject, content });
   return await notification.save();
 };
 

@@ -89,3 +89,25 @@ export const getBookings = async (query: Partial<GetBookingArguments>, filters: 
   const dbFilters = buildBookingQuery(query);
   return await VisitBooking.find(combineFilters(filters, dbFilters));
 };
+
+export const updateBookingStatus = async (
+  bookingId: mongoose.Types.ObjectId,
+  status: 'approved' | 'rejected' | 'cancelled',
+  filters: any,
+) => {
+  const booking = await VisitBooking.findOne(combineFilters(filters, { _id: bookingId }));
+  if (!booking) {
+    const bookingNoFilter = await VisitBooking.findById(bookingId);
+    if (bookingNoFilter) {
+      throw new AppError(403, 'Forbidden: You are not allowed to update this booking.');
+    }
+    throw new AppError(404, 'Booking not found.');
+  }
+
+  if (booking.status !== 'pending') {
+    throw new AppError(400, 'Booking has already been processed.');
+  }
+
+  booking.status = status;
+  return await booking.save();
+};

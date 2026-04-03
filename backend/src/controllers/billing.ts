@@ -1,13 +1,12 @@
 import { RequestHandler } from 'express';
 import { createBilling, getBillings } from '../services/billing.js';
+import { sendNotification } from '../services/notifications.js';
 import { CreateBillingBodySchema, GetBillingsFilterSchema } from './schema/billing.js';
 
 export const routeCreateBilling: RequestHandler = async (req, res, next) => {
-  // auth check should be done in middleware before this, so should include user id already
-  // TODO: use userId instead of passing
-  const userId = req.user!._id;
   const params = CreateBillingBodySchema.parse(req.body);
   const newBilling = await createBilling(params);
+  await sendNotification(params.studentId, 'New Billing Created', `A new billing of type ${params.paymentType} has been created. Due date: ${params.dueDate.toISOString().split('T')[0]}.`);
   res.status(201).json({ id: newBilling.id });
 };
 

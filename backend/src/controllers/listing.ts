@@ -14,7 +14,6 @@ import {
   GetListingsQuerySchema,
   CreateListingBodySchema,
   UpdateListingBodySchema,
-  SearchQuerySchema,
   TagSchema,
   ListingFilterSchema,
 } from './schema/listing.js';

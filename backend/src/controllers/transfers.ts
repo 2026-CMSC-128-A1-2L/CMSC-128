@@ -1,5 +1,6 @@
 import { RequestHandler } from 'express';
 import { getTransferRequests, approveTransferRequest, rejectTransferRequest } from '../services/transfer';
+import { sendNotification } from '../services/notifications.js';
 import { ObjectIdSchema } from './schema/common.js';
 
 export const routeGetTransferRequests: RequestHandler = async (req, res, next) => {
@@ -19,6 +20,8 @@ export const routeApproveTransferRequest: RequestHandler = async (req, res, next
     res.locals.filters ?? {},
   );
 
+  await sendNotification(updatedTransfer.studentId, 'Transfer Request Approved', 'Your transfer request has been approved.');
+
   res.status(200).json({
     data: updatedTransfer,
   });
@@ -30,6 +33,8 @@ export const routeRejectTransferRequest: RequestHandler = async (req, res, next)
     transferID,
     res.locals.filters ?? {},
   );
+
+  await sendNotification(updatedTransfer.studentId, 'Transfer Request Rejected', 'Your transfer request has been rejected.');
 
   res.status(200).json({
     data: updatedTransfer,
