@@ -14,12 +14,9 @@ import {
   GetListingsQuerySchema,
   CreateListingBodySchema,
   UpdateListingBodySchema,
-<<<<<<< backend/updateListingTags
   SearchQuerySchema,
   TagSchema,
-=======
   ListingFilterSchema,
->>>>>>> develop
 } from './schema/listing.js';
 import { Listing } from '../models/housing/Listing.js';
 import { QueryFilter } from 'mongoose';
@@ -79,7 +76,6 @@ export const routeDeleteListing: RequestHandler = async (req, res, next) => {
 export const routeGetUnitsByListing: RequestHandler = async (req, res, next) => {};
 export const routeGetApplicationsByListing: RequestHandler = async (req, res, next) => {};
 export const routeGetVisitBookingsByListing: RequestHandler = async (req, res, next) => {};
-<<<<<<< backend/updateListingTags
 export const routeUpdateListingTags: RequestHandler = async (req, res, next) => {
   const listingID = ObjectIdSchema.parse(req.params.listingId);
   
@@ -91,6 +87,4 @@ export const routeUpdateListingTags: RequestHandler = async (req, res, next) => 
 
   res.status(200).json({ data: updatedListing });
 };
-=======
 export const routeApproveListing: RequestHandler = async (req, res, next) => {};
->>>>>>> develop
