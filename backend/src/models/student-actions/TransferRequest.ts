@@ -8,7 +8,11 @@ const TransferRequestSchema = new mongoose.Schema(
 
     // reason for transfer
     description: { type: String, required: false },
-    status: { type: String, required: false },
+    status: {
+      type: String,
+      enum: ['pending', 'approved', 'rejected', 'cancelled'],
+      default: 'pending',
+    },
   },
   { timestamps: true },
 );
