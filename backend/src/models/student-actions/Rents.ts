@@ -1,11 +1,13 @@
 import mongoose from 'mongoose';
 
 // Created after application is accepted by the landlord.
+// Rentals are created when an application becomes contract-signed.
+// Note: Existing tenants from the old system may have rentals without applications.
 const rentalSchema = new mongoose.Schema({
   studentId: { type: mongoose.Schema.Types.ObjectId, ref: 'Student', required: true },
   unitId: { type: mongoose.Schema.Types.ObjectId, ref: 'Unit', required: true },
 
-  // TODO: verify if not required, do all rentals come from applications?
+  // Not required because existing tenants from the old system may not have applications.
   applicationId: { type: mongoose.Schema.Types.ObjectId, ref: 'ApplicationForm', required: false },
 
   // 'inactive' when accepted, but not yet moved in.
