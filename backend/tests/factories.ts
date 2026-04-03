@@ -26,7 +26,6 @@ type UserParams = {
   isActive: boolean;
   userType: string;
   profilePicture?: string | null;
-  activities: mongoose.Types.ObjectId[];
   contact?: string;
   studentNumber?: string;
   degreeProgram?: string;
@@ -45,7 +44,6 @@ export const buildUser = Factory.define<UserParams>(({ sequence }) => ({
   isActive: true,
   userType: 'Student',
   profilePicture: null,
-  activities: [],
 })).onCreate((data) => {
   switch (data.userType) {
     case 'Admin':
@@ -121,7 +119,7 @@ export const buildUnverifiedStudent = buildUser.params({
 export type HousingFacilityParams = {
   name: string;
   landlordId: mongoose.Types.ObjectId;
-  managerId?: mongoose.Types.ObjectId | null;
+  managers?: { managerId: mongoose.Types.ObjectId; permissions: { manageBillings: boolean; manageApplications: boolean; manageListings: boolean } }[];
   location?: {
     coordinates?: number[];
     text?: string;
@@ -138,7 +136,7 @@ export type HousingFacilityParams = {
 export const buildHousingFacility = Factory.define<HousingFacilityParams>(({ sequence }) => ({
   name: `Test Facility ${sequence}`,
   landlordId: new mongoose.Types.ObjectId(),
-  managerId: null,
+  managers: [],
   location: {
     coordinates: [14.0, 121.0],
     text: 'Test Location',
@@ -155,7 +153,7 @@ export const buildHousingFacility = Factory.define<HousingFacilityParams>(({ seq
 type ListingParams = {
   housingId: mongoose.Types.ObjectId;
   landlordId: mongoose.Types.ObjectId;
-  managerId?: mongoose.Types.ObjectId | null;
+  managers?: { managerId: mongoose.Types.ObjectId; permissions: { manageBillings: boolean; manageApplications: boolean; manageListings: boolean } }[];
   tags: { name: string; value?: unknown }[];
   roomType: string;
   capacity: number;
@@ -170,7 +168,7 @@ type ListingParams = {
 export const buildListing = Factory.define<ListingParams>(({ sequence }) => ({
   housingId: new mongoose.Types.ObjectId(),
   landlordId: new mongoose.Types.ObjectId(),
-  managerId: null,
+  managers: [],
   tags: [],
   roomType: 'single',
   capacity: 1,
@@ -226,7 +224,6 @@ type UnitParams = {
   status: 'available' | 'unavailable';
   listingId: mongoose.Types.ObjectId;
   landlordId: mongoose.Types.ObjectId;
-  managerId?: mongoose.Types.ObjectId | null;
 };
 
 export const buildUnit = Factory.define<UnitParams>(({ sequence }) => ({
@@ -238,5 +235,4 @@ export const buildUnit = Factory.define<UnitParams>(({ sequence }) => ({
   status: 'available',
   listingId: new mongoose.Types.ObjectId(),
   landlordId: new mongoose.Types.ObjectId(),
-  managerId: null,
 })).onCreate((data) => new Unit(data).save() as any);

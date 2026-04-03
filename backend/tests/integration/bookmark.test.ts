@@ -19,18 +19,18 @@ describe('Facilities API', () => {
   beforeAll(async () => {
     const facility = await buildHousingFacility.create({
       landlordId: landlord._id,
-      managerId: manager._id,
+      managers: [{ managerId: manager._id, permissions: { manageBillings: true, manageApplications: true, manageListings: true } }],
     });
 
     const listing = await buildListing.create({
       landlordId: landlord._id,
-      managerId: manager._id,
+      managers: [{ managerId: manager._id, permissions: { manageBillings: true, manageApplications: true, manageListings: true } }],
       housingId: (facility as any)._id,
     });
 
     const otherListing = await buildListing.create({
       landlordId: landlord._id,
-      managerId: manager._id,
+      managers: [{ managerId: manager._id, permissions: { manageBillings: true, manageApplications: true, manageListings: true } }],
       housingId: (facility as any)._id,
     });
 
@@ -38,22 +38,20 @@ describe('Facilities API', () => {
     otherListingId = (otherListing as any)._id;
   });
 
-  describe('POST /api/bookmarks', () => {
+  describe('POST /api/bookmarks/:listingId', () => {
     describe('Authentication', () => {
       it('should not bookmark as landlord', async () => {
-        const response = await landlordAgent.post('/api/bookmarks').send({
-          listingId: listingId,
-        });
+        const response = await landlordAgent.post(`/api/bookmarks/${listingId}`);
         expect(response).statusToBe(403);
       });
 
       it('should not bookmark as unauthenticated user', async () => {
-        const response = await guestAgent.post('/api/bookmarks').send({ listingId: listingId });
+        const response = await guestAgent.post(`/api/bookmarks/${listingId}`);
         expect(response).statusToBe(401);
       });
 
       it('should bookmark as student', async () => {
-        const response = await studentAgent.post('/api/bookmarks').send({ listingId: listingId });
+        const response = await studentAgent.post(`/api/bookmarks/${listingId}`);
         expect(response).statusToBe(201);
       });
     });

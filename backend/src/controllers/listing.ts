@@ -31,8 +31,11 @@ export const routeGetListings: RequestHandler = async (req, res, next) => {
 };
 
 export const routeCreateListing: RequestHandler = async (req, res, next) => {
+  const housingId = req.params.facilityId
+    ? ObjectIdSchema.parse(req.params.facilityId)
+    : ObjectIdSchema.parse(req.body.housingId);
   const params = CreateListingBodySchema.parse(req.body);
-  const newListing = await createListing(params, res.locals.filters);
+  const newListing = await createListing({ ...params, housingId }, res.locals.filters);
 
   res.status(201).json({ id: newListing.id });
 };

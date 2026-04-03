@@ -48,14 +48,17 @@ const isManagerOfWithPermission = (
 };
 
 // Helper: check if user is landlord or manager with permission on a facility
+// Returns: 'owner' | 'manager' | 'not_found' | 'forbidden'
 const checkFacilityPermission = async (
   userId: mongoose.Types.ObjectId,
   facilityId: mongoose.Types.ObjectId,
   permission: ManagerPermission,
-): Promise<boolean> => {
+): Promise<'owner' | 'manager' | 'not_found' | 'forbidden'> => {
   const facility = await HousingFacility.findById(facilityId);
-  if (!facility) return false;
-  return isLandlordOf(facility, userId) || isManagerOfWithPermission(facility, userId, permission);
+  if (!facility) return 'not_found';
+  if (isLandlordOf(facility, userId)) return 'owner';
+  if (isManagerOfWithPermission(facility, userId, permission)) return 'manager';
+  return 'forbidden';
 };
 
 // Helper: get listing and check permission via its managers array
@@ -63,14 +66,15 @@ const checkListingPermission = async (
   userId: mongoose.Types.ObjectId,
   listingId: mongoose.Types.ObjectId,
   permission: ManagerPermission,
-): Promise<boolean> => {
+): Promise<'owner' | 'manager' | 'not_found' | 'forbidden'> => {
   const listing = await Listing.findById(listingId);
-  if (!listing) return false;
-  if (listing.landlordId.toString() === userId.toString()) return true;
-  return (listing.managers ?? []).some(
+  if (!listing) return 'not_found';
+  if (listing.landlordId.toString() === userId.toString()) return 'owner';
+  if ((listing.managers ?? []).some(
     (m: any) =>
       m.managerId.toString() === userId.toString() && m.permissions?.[permission] === true,
-  );
+  )) return 'manager';
+  return 'forbidden';
 };
 
 // Parameterized middleware: checks if user is landlord or manager with the given permission
@@ -83,37 +87,37 @@ export const correctManagerOrLandlordFilter = (permission: ManagerPermission): R
     const userId = req.user._id as mongoose.Types.ObjectId;
 
     // Determine the resource and its parent facility/listing to check permissions
-    let hasPermission = false;
+    let result: 'owner' | 'manager' | 'not_found' | 'forbidden' = 'not_found';
 
     // Facility routes
     if (req.params.facilityId) {
-      hasPermission = await checkFacilityPermission(userId, toId(req.params.facilityId), permission);
+      result = await checkFacilityPermission(userId, toId(req.params.facilityId), permission);
     }
     // Listing routes
     else if (req.params.listingId) {
-      hasPermission = await checkListingPermission(userId, toId(req.params.listingId), permission);
+      result = await checkListingPermission(userId, toId(req.params.listingId), permission);
     }
     // Unit routes — traverse unit → listing
     else if (req.params.unitId) {
       const unit = await Unit.findById(req.params.unitId).select('listingId landlordId');
       if (!unit) return next(new AppError(404, 'Unit not found.'));
       if (unit.landlordId.toString() === userId.toString()) {
-        hasPermission = true;
+        result = 'owner';
       } else {
-        hasPermission = await checkListingPermission(userId, unit.listingId, permission);
+        result = await checkListingPermission(userId, unit.listingId, permission);
       }
     }
     // Application routes — traverse application → listing
     else if (req.params.applicationId) {
       const app = await ApplicationForm.findById(req.params.applicationId).select('listingId');
       if (!app) return next(new AppError(404, 'Application not found.'));
-      hasPermission = await checkListingPermission(userId, app.listingId, permission);
+      result = await checkListingPermission(userId, app.listingId, permission);
     }
     // Billing routes — check via facilityId on the billing
     else if (req.params.billingId) {
       const billing = await Billing.findById(req.params.billingId).select('facilityId');
       if (!billing) return next(new AppError(404, 'Billing not found.'));
-      hasPermission = await checkFacilityPermission(userId, billing.facilityId, permission);
+      result = await checkFacilityPermission(userId, billing.facilityId, permission);
     }
     // Rental routes — traverse rental → unit → listing
     else if (req.params.rentalId) {
@@ -122,9 +126,9 @@ export const correctManagerOrLandlordFilter = (permission: ManagerPermission): R
       const unit = await Unit.findById(rental.unitId).select('listingId landlordId');
       if (!unit) return next(new AppError(404, 'Unit not found.'));
       if (unit.landlordId.toString() === userId.toString()) {
-        hasPermission = true;
+        result = 'owner';
       } else {
-        hasPermission = await checkListingPermission(userId, unit.listingId, permission);
+        result = await checkListingPermission(userId, unit.listingId, permission);
       }
     }
     // Transfer routes — traverse transfer → unit → listing
@@ -134,19 +138,23 @@ export const correctManagerOrLandlordFilter = (permission: ManagerPermission): R
       const unit = await Unit.findById(transfer.unitId).select('listingId landlordId');
       if (!unit) return next(new AppError(404, 'Unit not found.'));
       if (unit.landlordId.toString() === userId.toString()) {
-        hasPermission = true;
+        result = 'owner';
       } else {
-        hasPermission = await checkListingPermission(userId, unit.listingId, permission);
+        result = await checkListingPermission(userId, unit.listingId, permission);
       }
     }
     // Booking routes (by listing) — traverse booking → facility
     else if (req.params.bookingId && req.route?.path?.includes('bookings')) {
       const booking = await VisitBooking.findById(req.params.bookingId).select('housingId');
       if (!booking) return next(new AppError(404, 'Booking not found.'));
-      hasPermission = await checkFacilityPermission(userId, booking.housingId, permission);
+      result = await checkFacilityPermission(userId, booking.housingId, permission);
     }
 
-    if (!hasPermission) {
+    if (result === 'not_found') {
+      return next(new AppError(404, 'Resource not found.'));
+    }
+
+    if (result === 'forbidden') {
       return next(new AppError(403, 'Forbidden'));
     }
 
@@ -289,23 +297,23 @@ export const isSelfManagerOrSuperAdmin = (permission: ManagerPermission): Reques
     }
 
     // Check if user is a manager of the resource's facility with the given permission
-    let hasPermission = false;
+    let result: 'owner' | 'manager' | 'not_found' | 'forbidden' = 'forbidden';
 
     if (req.params.applicationId) {
       const app = await ApplicationForm.findById(req.params.applicationId).select('listingId');
       if (app) {
         const listing = await Listing.findById(app.listingId).select('housingId');
         if (listing) {
-          hasPermission = await checkFacilityPermission(userId, listing.housingId, permission);
+          result = await checkFacilityPermission(userId, listing.housingId, permission);
         }
       }
     } else if (req.params.listingId) {
-      hasPermission = await checkListingPermission(userId, toId(req.params.listingId), permission);
+      result = await checkListingPermission(userId, toId(req.params.listingId), permission);
     } else if (req.params.facilityId) {
-      hasPermission = await checkFacilityPermission(userId, toId(req.params.facilityId), permission);
+      result = await checkFacilityPermission(userId, toId(req.params.facilityId), permission);
     }
 
-    if (!hasPermission) {
+    if (result === 'not_found' || result === 'forbidden') {
       return next(new AppError(403, 'Forbidden'));
     }
 
@@ -343,20 +351,20 @@ export const isSelfOrManager = (permission: ManagerPermission): RequestHandler =
     }
 
     // Check if user is a manager of the resource with the given permission
-    let hasPermission = false;
+    let result: 'owner' | 'manager' | 'not_found' | 'forbidden' = 'forbidden';
 
     if (req.params.bookingId) {
       const booking = await VisitBooking.findById(req.params.bookingId).select('housingId');
       if (booking) {
-        hasPermission = await checkFacilityPermission(userId, booking.housingId, permission);
+        result = await checkFacilityPermission(userId, booking.housingId, permission);
       }
     } else if (req.params.listingId) {
-      hasPermission = await checkListingPermission(userId, toId(req.params.listingId), permission);
+      result = await checkListingPermission(userId, toId(req.params.listingId), permission);
     } else if (req.params.facilityId) {
-      hasPermission = await checkFacilityPermission(userId, toId(req.params.facilityId), permission);
+      result = await checkFacilityPermission(userId, toId(req.params.facilityId), permission);
     }
 
-    if (!hasPermission) {
+    if (result === 'not_found' || result === 'forbidden') {
       return next(new AppError(403, 'Forbidden'));
     }
 

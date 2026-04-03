@@ -20,13 +20,13 @@ describe('Applications API', () => {
   beforeAll(async () => {
     // Create Test Listings and students
     const testStudent = await buildStudent.create({});
-    const testListing = buildListing.create({
+    const testListing = await buildListing.create({
       landlordId: landlord._id,
-      managerId: manager._id,
+      managers: [{ managerId: manager._id, permissions: { manageBillings: true, manageApplications: true, manageListings: true } }],
     });
 
-    studentId = (testStudent as any)._id;
-    listingId = (testListing as any)._id;
+    studentId = (testStudent as any)._id.toString();
+    listingId = (testListing as any)._id.toString();
   });
 
   const applicationData = () => ({

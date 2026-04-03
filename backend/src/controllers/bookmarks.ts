@@ -10,9 +10,9 @@ export const routeGetBookmarkedUnits: RequestHandler = async (req, res, next) =>
 };
 
 export const routeAddBookmark: RequestHandler = async (req, res, next) => {
-  const params = CreateBookmarkBodySchema.parse(req.body);
+  const listingId = ObjectIdSchema.parse(req.params.listingId);
   const userId = req.user!._id;
-  const result = await createBookmark(userId, params.listingId);
+  const result = await createBookmark(userId, listingId);
   res.status(201).json(result);
 };
 

@@ -19,6 +19,7 @@ describe('Facilities API', () => {
     validFacility = {
       name: `Test Facility 1`,
       landlordId: landlord._id,
+      managers: [{ managerId: manager._id, permissions: { manageBillings: true, manageApplications: true, manageListings: true } }],
       type: 'on-campus',
       capacity: 100,
       documentUrls: [],
@@ -114,7 +115,7 @@ describe('Facilities API', () => {
       it('should update facility as landlord', async () => {
         const response = await landlordAgent
           .patch(`/api/facilities/${facilityId}`)
-          .send({ name: 'Updated Facility Name', managerId: manager._id });
+          .send({ name: 'Updated Facility Name' });
         expect(response).statusToBe(200);
         expect(response.body.data.name).toBe('Updated Facility Name');
       });
@@ -133,10 +134,10 @@ describe('Facilities API', () => {
         expect(response).statusToBe(403);
       });
 
-      it('should return 400 for manager if changing manager', async () => {
+      it('should return 403 for manager if changing managers', async () => {
         const response = await managerAgent
           .patch(`/api/facilities/${facilityId}`)
-          .send({ managerId: 'ffffffffffffffffffffffff' });
+          .send({ managers: [] });
         expect(response).statusToBe(403);
       });
 

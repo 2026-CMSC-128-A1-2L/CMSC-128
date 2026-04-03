@@ -60,9 +60,9 @@ export const ListingFilterSchema = z.object({
   allowTransfer: z.boolean().optional(),
 });
 
-// POST /listings
+// POST /facilities/:facilityId/listings
 export const CreateListingBodySchema = z.object({
-  housingId: ObjectIdSchema,
+  housingId: ObjectIdSchema.optional(),
   tags: z.array(TagSchema).optional(),
   roomType: z.enum(ROOM_TYPES),
   capacity: z.int().min(1),
