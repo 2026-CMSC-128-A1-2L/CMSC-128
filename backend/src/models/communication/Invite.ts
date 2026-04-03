@@ -2,10 +2,10 @@ import mongoose from 'mongoose';
 import crypto from 'crypto';
 
 const inviteSchema = new mongoose.Schema({
-  landlordID: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  facilityID: { type: mongoose.Schema.Types.ObjectId, ref: 'HousingFacility', required: true },
+  landlordId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  facilityId: { type: mongoose.Schema.Types.ObjectId, ref: 'HousingFacility', required: true },
 
-  // store email instead of managerID
+  // store email instead of managerId
   email: { type: String, required: true },
 
   // unique token for accepting the invite

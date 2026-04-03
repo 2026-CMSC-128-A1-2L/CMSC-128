@@ -8,23 +8,23 @@ import { HousingFacility } from '../models/housing/HousingFacility.js';
 export const getReviews = async (filters: any) => {
   const visibleListings = await Listing.find(filters).select('_id');
 
-  const listingIDs = visibleListings.map((listing) => listing._id);
+  const listingIds = visibleListings.map((listing) => listing._id);
 
   return await Review.find({
-    listingID: { $in: listingIDs },
+    listingId: { $in: listingIds },
   });
 };
 
 export const getListingReviews = async (
-  listingID: mongoose.Types.ObjectId,
+  listingId: mongoose.Types.ObjectId,
   filters: any,
 ) => {
   const listing = await Listing.findOne(
-    combineFilters({ _id: listingID }, filters),
+    combineFilters({ _id: listingId }, filters),
   );
 
   if (!listing) {
-    const listingNoFilter = await Listing.findById(listingID);
+    const listingNoFilter = await Listing.findById(listingId);
 
     if (listingNoFilter) {
       throw new AppError(403, 'Forbidden: Listing is private.');
@@ -33,14 +33,14 @@ export const getListingReviews = async (
     }
   }
 
-  return await Review.find({ listingID });
+  return await Review.find({ listingId });
 };
 
 export const getFacilityReviews = async (
-  facilityID: mongoose.Types.ObjectId,
+  facilityId: mongoose.Types.ObjectId,
   filters: any,
 ) => {
-  const facility = await HousingFacility.findById(facilityID);
+  const facility = await HousingFacility.findById(facilityId);
 
   if (!facility) {
     throw new AppError(404, 'Facility not found.');
@@ -49,15 +49,15 @@ export const getFacilityReviews = async (
   const listings = await Listing.find(
     combineFilters(
       {
-        housingID: facilityID,
+        housingId: facilityId,
       },
       filters,
     ),
   ).select('_id');
 
-  const listingIDs = listings.map((listing) => listing._id);
+  const listingIds = listings.map((listing) => listing._id);
 
   return await Review.find({
-    listingID: { $in: listingIDs },
+    listingId: { $in: listingIds },
   });
 };
