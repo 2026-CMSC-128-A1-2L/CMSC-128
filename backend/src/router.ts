@@ -419,10 +419,6 @@ router.get(
   }) as RequestHandler,
 );
 
-// creation of fake accounts endpoints
-router.post('/auth/test/register', isDevelopment, routeTestRegister);
-router.post('/auth/test/login', isDevelopment, routeTestLogin);
-
 router.use(errorHandler);
 
 export { router as apiRouter };

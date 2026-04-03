@@ -1,9 +1,37 @@
 import mongoose from 'mongoose';
 import { Review } from '../models/reviews/Review.js';
 import { Listing } from '../models/housing/Listing.js';
+import { Unit } from '../models/housing/Unit.js';
 import { AppError } from '../controllers/error.js';
 import { combineFilters } from '../controllers/middleware.js';
 import { HousingFacility } from '../models/housing/HousingFacility.js';
+import { Rental } from '../models/student-actions/Rents.js';
+
+export const createReview = async (
+  studentId: mongoose.Types.ObjectId,
+  listingId: mongoose.Types.ObjectId,
+  rating: number,
+  description?: string,
+) => {
+  const listing = await Listing.findById(listingId);
+  if (!listing) {
+    throw new AppError(404, 'Listing not found.');
+  }
+
+  const hasEndedRental = await Rental.findOne({
+    studentId,
+    unitId: { $in: await Unit.find({ listingId }).distinct('_id') },
+    status: 'ended',
+    actualMoveOutDate: { $exists: true },
+  });
+
+  if (!hasEndedRental) {
+    throw new AppError(403, 'You can only review a listing after you have moved out.');
+  }
+
+  const review = new Review({ studentId, listingId, rating, description });
+  return await review.save();
+};
 
 export const getReviews = async (filters: any) => {
   const visibleListings = await Listing.find(filters).select('_id');
