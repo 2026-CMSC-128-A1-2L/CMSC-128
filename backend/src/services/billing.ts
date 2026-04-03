@@ -1,76 +1,62 @@
 import mongoose, { QueryFilter } from 'mongoose';
 import { combineFilters } from '../controllers/middleware.js';
 import { Billing } from '../models/student-actions/Billing.js';
-import { AppError } from '../controllers/error.js';
 
 export type CreateBillingArguments = {
-  studentID: mongoose.Types.ObjectId;
-  unitID: mongoose.Types.ObjectId;
-  managerID?: mongoose.Types.ObjectId;
-
+  studentId: mongoose.Types.ObjectId;
+  unitId: mongoose.Types.ObjectId;
+  managerId?: mongoose.Types.ObjectId;
   dueDate: Date;
   paymentDate?: Date; // Needed yet
-
   amount?: number;
   paidAmount?: number; // Not needed yet
-
-  paymentStatus?: 'unpaid' | 'paid' | 'overdue' | 'partially_paid';
-
+  paymentStatus: 'unpaid' | 'paid' | 'overdue' | 'partially_paid';
   proofOfPayment?: string; // Not needed yet
   paymentType: string; // 'rent', 'deposit', 'utility', etc. // Description of billing
 };
 
 export type GetBillingArguments = {
-  studentID?: mongoose.Types.ObjectId;
-  unitID?: mongoose.Types.ObjectId;
-  managerID?: mongoose.Types.ObjectId;
-
-  dueDate?: Date;
-  paymentDate?: Date;
-
-  amount?: number;
-  paidAmount?: number;
-
-  paymentStatus?: 'unpaid' | 'paid' | 'overdue' | 'partially_paid';
-
-  proofOfPayment?: string;
-  paymentType?: string;
+  studentId: mongoose.Types.ObjectId;
+  unitId: mongoose.Types.ObjectId;
+  managerId: mongoose.Types.ObjectId;
+  dueDate: Date;
+  paymentDate: Date;
+  amount: number;
+  paidAmount: number;
+  paymentStatus: 'unpaid' | 'paid' | 'overdue' | 'partially_paid';
+  proofOfPayment: string;
+  paymentType: string;
 };
 
 export const createBilling = async (data: CreateBillingArguments) => {
   const newBilling = new Billing({
-    studentID: data.studentID,
-    unitID: data.unitID,
-    managerID: data.managerID,
-
+    studentId: data.studentId,
+    unitId: data.unitId,
+    managerId: data.managerId,
     dueDate: data.dueDate,
     paymentDate: data.paymentDate,
-
     amount: data.amount,
     paidAmount: data.paidAmount,
-
-    paymentStatus: data.paymentStatus ?? 'unpaid',
-
+    paymentStatus: data.paymentStatus,
     proofOfPayment: data.proofOfPayment,
     paymentType: data.paymentType,
   });
   return await newBilling.save();
-}
+};
 
-
-export function buildBillingQuery(args: Partial<GetBillingArguments>,): QueryFilter<typeof ApplicationForm> { 
+export function buildBillingQuery(args: Partial<GetBillingArguments>): QueryFilter<typeof Billing> {
   const query: QueryFilter<typeof Billing> = {};
 
-  if (args.studentID) {
-    query.studentID = args.studentID;
+  if (args.studentId) {
+    query.studentId = args.studentId;
   }
 
-  if (args.unitID) {
-    query.unitID = args.unitID;
+  if (args.unitId) {
+    query.unitId = args.unitId;
   }
 
-  if (args.managerID) {
-    query.managerID = args.managerID;
+  if (args.managerId) {
+    query.managerId = args.managerId;
   }
 
   if (args.dueDate) {

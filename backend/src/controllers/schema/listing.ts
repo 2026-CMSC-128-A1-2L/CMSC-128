@@ -1,11 +1,11 @@
 import z from 'zod';
-import { ObjectIdSchema } from './common';
+import { ObjectIdSchema, QuerySchema } from './common';
 import { ROOM_TYPES } from '../../constants';
 
-export const GetListingsQuerySchema = z.object({
-  q: z.string().transform((x) => (x ? JSON.parse(x) : {})),
-});
+// GET /listings
+export const GetListingsQuerySchema = QuerySchema;
 
+// Schema for filtering for tag values
 export const TagFilterSchema = z.object({
   name: z.string(),
   value: z.discriminatedUnion('type', [
@@ -27,6 +27,7 @@ export const TagFilterSchema = z.object({
   ]),
 });
 
+// Schema for tag values
 export const TagSchema = z.object({
   name: z.string(),
   value: z.discriminatedUnion('type', [
@@ -45,8 +46,23 @@ export const TagSchema = z.object({
   ]),
 });
 
+export const ListingFilterSchema = z.object({
+  housingId: ObjectIdSchema.optional(),
+  tags: z.array(TagFilterSchema).optional(),
+  capacity: z
+    .object({
+      min: z.number().optional(),
+      max: z.number().optional(),
+    })
+    .optional(),
+  isPrivate: z.boolean().optional(),
+  allowVisit: z.boolean().optional(),
+  allowTransfer: z.boolean().optional(),
+});
+
+// POST /listings
 export const CreateListingBodySchema = z.object({
-  housingID: ObjectIdSchema,
+  housingId: ObjectIdSchema,
   tags: z.array(TagSchema).optional(),
   roomType: z.enum(ROOM_TYPES),
   capacity: z.int().min(1),
@@ -57,6 +73,7 @@ export const CreateListingBodySchema = z.object({
   mediaUrls: z.array(z.string()).optional(),
 });
 
+// PATCH /listings/:listingId
 export const UpdateListingBodySchema = z.object({
   tags: z.array(TagSchema).optional(),
   roomType: z.enum(ROOM_TYPES).optional(),
@@ -67,13 +84,4 @@ export const UpdateListingBodySchema = z.object({
   description: z.string().optional(),
   mediaUrls: z.array(z.string()).optional(),
   units: z.array(z.string()).optional(),
-});
-
-export const SearchQuerySchema = z.object({
-  housingID: ObjectIdSchema.optional(),
-  tags: z.array(TagFilterSchema).optional(),
-  capacity: z.object({ min: z.number().optional(), max: z.number().optional() }).optional(),
-  isPrivate: z.boolean().optional(),
-  allowVisit: z.boolean().optional(),
-  allowTransfer: z.boolean().optional(),
 });

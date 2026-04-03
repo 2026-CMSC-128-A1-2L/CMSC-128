@@ -23,7 +23,7 @@ export const correctManagerOrLandlordFilter: RequestHandler = async (req, res, n
   }
 
   res.locals.filters = combineFilters(res.locals.filters, {
-    $or: [{ managerID: req.user._id }, { landlordID: req.user._id }],
+    $or: [{ managerId: req.user._id }, { landlordId: req.user._id }],
   });
 
   next();
@@ -34,7 +34,7 @@ export const correctLandlordFilter: RequestHandler = async (req, res, next) => {
     return next(new AppError(401, 'Unauthenticated'));
   }
 
-  res.locals.filters = combineFilters(res.locals.filters, { landlordID: req.user._id });
+  res.locals.filters = combineFilters(res.locals.filters, { landlordId: req.user._id });
 
   next();
 };
@@ -89,9 +89,9 @@ export const isDevelopment: RequestHandler = (req, res, next) => {
   res.status(401).send();
 };
 
-export const isSelfOrSuperAdmin: RequestHandler = async (req, res, next) => {};
-export const isVerifiedStudent: RequestHandler = async (req, res, next) => {};
-export const isSelfManagerOrSuperAdmin: RequestHandler = async (req, res, next) => {};
-export const isSelf: RequestHandler = async (req, res, next) => {};
-export const isSelfOrManager: RequestHandler = async (req, res, next) => {};
-export const isTenantManagerOrLandlord: RequestHandler = async (req, res, next) => {};
+export const isSelfOrSuperAdmin: RequestHandler = async (req, res, next) => { };
+export const isVerifiedStudent: RequestHandler = async (req, res, next) => { };
+export const isSelfManagerOrSuperAdmin: RequestHandler = async (req, res, next) => { };
+export const isSelf: RequestHandler = async (req, res, next) => { };
+export const isSelfOrManager: RequestHandler = async (req, res, next) => { };
+export const isTenantManagerOrLandlord: RequestHandler = async (req, res, next) => { };

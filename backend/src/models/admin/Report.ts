@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 // Base Report Schema
 const reportSchema = new mongoose.Schema({
-  reporterID: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  reporterId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   reportDescription: { type: String, required: true },
   reportEvidence: { type: [String], required: true },
   dateCreated: { type: Date, required: true },
@@ -14,14 +14,14 @@ const Report = mongoose.model('Report', reportSchema);
 export const ListingReport = mongoose.model(
   'ListingReport',
   new mongoose.Schema({
-    facilityID: { type: mongoose.Schema.Types.ObjectId, ref: 'HousingFacility', required: true },
-    listingID: { type: mongoose.Schema.Types.ObjectId, ref: 'Listing', required: true },
+    facilityId: { type: mongoose.Schema.Types.ObjectId, ref: 'HousingFacility', required: true },
+    listingId: { type: mongoose.Schema.Types.ObjectId, ref: 'Listing', required: true },
   }),
 );
 
 export const UserReport = Report.discriminator(
   'UserReport',
   new mongoose.Schema({
-    userID: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   }),
 );
