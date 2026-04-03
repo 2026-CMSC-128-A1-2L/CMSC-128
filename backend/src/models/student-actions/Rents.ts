@@ -26,9 +26,6 @@ const rentalSchema = new mongoose.Schema({
   expectedMoveOutDate: { type: Date },
   actualMoveInDate: { type: Date },
   actualMoveOutDate: { type: Date },
-
-  // Override reason is removed and is instead added to activities.
-  activities: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Activity' }],
 });
 
 export const Rental = mongoose.model('Rental', rentalSchema);

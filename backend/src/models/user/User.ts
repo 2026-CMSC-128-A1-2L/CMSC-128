@@ -60,7 +60,6 @@ const userSchema = new mongoose.Schema(
       ],
       required: true,
     },
-    activities: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Activity' }],
   },
   { timestamps: true, discriminatorKey: 'userType' },
 );
