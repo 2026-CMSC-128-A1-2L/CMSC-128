@@ -6,6 +6,7 @@ import { HousingFacility } from '../models/housing/HousingFacility.js';
 import { Review } from '../models/reviews/Review.js';
 import { Tag } from '../models/housing/Tag.js';
 import { ROOM_TYPES } from '../constants.js';
+import assert from 'node:assert';
 
 type TagFilter = {
   name: string;
