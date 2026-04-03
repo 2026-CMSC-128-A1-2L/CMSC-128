@@ -6,6 +6,7 @@ import {
   // getListingReviewsById,
   updateListing,
   deleteListing,
+  updateListingTags,
 } from '../services/listing.js';
 import z from 'zod';
 import { ObjectIdSchema } from './schema/common.js';
@@ -13,7 +14,12 @@ import {
   GetListingsQuerySchema,
   CreateListingBodySchema,
   UpdateListingBodySchema,
+<<<<<<< backend/updateListingTags
+  SearchQuerySchema,
+  TagSchema,
+=======
   ListingFilterSchema,
+>>>>>>> develop
 } from './schema/listing.js';
 import { Listing } from '../models/housing/Listing.js';
 import { QueryFilter } from 'mongoose';
@@ -73,4 +79,18 @@ export const routeDeleteListing: RequestHandler = async (req, res, next) => {
 export const routeGetUnitsByListing: RequestHandler = async (req, res, next) => {};
 export const routeGetApplicationsByListing: RequestHandler = async (req, res, next) => {};
 export const routeGetVisitBookingsByListing: RequestHandler = async (req, res, next) => {};
+<<<<<<< backend/updateListingTags
+export const routeUpdateListingTags: RequestHandler = async (req, res, next) => {
+  const listingID = ObjectIdSchema.parse(req.params.listingId);
+  
+  const updateData = z.object({
+    tags: z.array(TagSchema)
+  }).parse(req.body);
+
+  const updatedListing = await updateListingTags(listingID, updateData, res.locals.filters ?? {});
+
+  res.status(200).json({ data: updatedListing });
+};
+=======
 export const routeApproveListing: RequestHandler = async (req, res, next) => {};
+>>>>>>> develop

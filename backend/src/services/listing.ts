@@ -261,3 +261,31 @@ export const getListingsByFacility = async (facilityId: mongoose.Types.ObjectId,
 
   return listings;
 };
+
+export type UpdateListingTagsArguments = {
+  tags: TagValue[];
+};
+
+export const updateListingTags = async (
+  listingID: mongoose.Types.ObjectId,
+  data: UpdateListingTagsArguments,
+  filters: any,
+) => {
+  const listing = await Listing.findOne(combineFilters(filters, { _id: listingID }));
+  if (!listing) {
+    const listingNoFilter = await Listing.findById(listingID);
+    if (listingNoFilter) {
+      throw new AppError(403, 'Forbidden: You are not the owner of this listing.');
+    } else {
+      throw new AppError(404, 'Listing not found.');
+    }
+  }
+
+  const errorList = await verifyTags(data.tags);
+  if (errorList.length > 0) {
+    throw new AppError(400, 'Invalid tags', errorList);
+  }
+
+  listing.set({ tags: data.tags });
+  return await listing.save();
+};
