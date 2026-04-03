@@ -12,7 +12,6 @@ export type CreateUnitArguments = {
   isAvailable: boolean;
   listingId: mongoose.Types.ObjectId;
   landlordId: mongoose.Types.ObjectId;
-  managerId?: mongoose.Types.ObjectId | null;
 };
 
 // Parameters for filtering listings
@@ -25,7 +24,6 @@ export type GetUnitArguments = {
   isAvailable: boolean;
   listingId: mongoose.Types.ObjectId;
   landlordId: mongoose.Types.ObjectId;
-  managerId: mongoose.Types.ObjectId;
 };
 
 export const createUnit = async (data: CreateUnitArguments, filters: any) => {

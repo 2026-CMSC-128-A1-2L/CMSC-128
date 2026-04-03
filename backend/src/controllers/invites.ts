@@ -20,7 +20,12 @@ export const routeInviteManager: RequestHandler = async (req, res, next) => {
   const landlordID = req.user!._id;
   const params = CreateInviteManagerBodySchema.parse(req.body);
 
-  const invite = await inviteManager(landlordID, params.facilityId, params.email);
+  const invite = await inviteManager({
+    landlordId: landlordID,
+    facilityId: params.facilityId,
+    email: params.email,
+    permissions: params.permissions,
+  });
 
   res.status(201).json({ data: invite });
 };

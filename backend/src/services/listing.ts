@@ -123,7 +123,7 @@ export const createListing = async (data: CreateListingArguments, filters: any) 
   // There can be a race condition here.
   const newListing = new Listing({
     landlordId: facility.landlordId,
-    managerId: facility.managerId,
+    managers: facility.managers ?? [],
     housingId: data.housingId,
     tags: data.tags ?? [], // returns empty array if no tags are given
 

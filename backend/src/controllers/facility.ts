@@ -5,6 +5,7 @@ import {
   updateFacility,
   deleteFacility,
   getFacilities,
+  removeManagerFromFacility,
 } from '../services/facility.js';
 import { getListingsByFacility } from '../services/listing.js';
 import { CreateFacilityBodySchema, UpdateFacilityBodySchema } from './schema/facility.js';
@@ -37,10 +38,10 @@ export const routeUpdateFacility: RequestHandler = async (req, res, next) => {
   const updateData = UpdateFacilityBodySchema.parse(req.body);
 
   if (req.user!.userType === 'Manager') {
-    if (updateData.managerId) {
-      // should not be able to set manager
+    if (updateData.managers) {
+      // managers should not be able to add/remove other managers
       return res.status(403).json({
-        error: 'Only landlords can reassign facility managers.',
+        error: 'Only landlords can modify facility managers.',
       });
     }
   }
@@ -59,6 +60,15 @@ export const routeDeleteFacility: RequestHandler = async (req, res, next) => {
 
   // send back success
   res.status(200).json({ message: 'Facility deleted successfully.' });
+};
+
+export const routeRemoveManager: RequestHandler = async (req, res, next) => {
+  const facilityId = ObjectIdSchema.parse(req.params.facilityId);
+  const managerId = ObjectIdSchema.parse(req.params.managerId);
+
+  await removeManagerFromFacility(facilityId, managerId);
+
+  res.status(200).json({ message: 'Manager removed successfully.' });
 };
 
 export const routeGetListingsByFacility: RequestHandler = async (req, res, next) => {

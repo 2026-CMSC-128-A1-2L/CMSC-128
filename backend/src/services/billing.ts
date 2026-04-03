@@ -5,7 +5,7 @@ import { Billing } from '../models/student-actions/Billing.js';
 export type CreateBillingArguments = {
   studentId: mongoose.Types.ObjectId;
   unitId: mongoose.Types.ObjectId;
-  managerId?: mongoose.Types.ObjectId;
+  facilityId: mongoose.Types.ObjectId;
   dueDate: Date;
   paymentDate?: Date; // Needed yet
   amount?: number;
@@ -18,7 +18,7 @@ export type CreateBillingArguments = {
 export type GetBillingArguments = {
   studentId: mongoose.Types.ObjectId;
   unitId: mongoose.Types.ObjectId;
-  managerId: mongoose.Types.ObjectId;
+  facilityId: mongoose.Types.ObjectId;
   dueDate: Date;
   paymentDate: Date;
   amount: number;
@@ -32,7 +32,7 @@ export const createBilling = async (data: CreateBillingArguments) => {
   const newBilling = new Billing({
     studentId: data.studentId,
     unitId: data.unitId,
-    managerId: data.managerId,
+    facilityId: data.facilityId,
     dueDate: data.dueDate,
     paymentDate: data.paymentDate,
     amount: data.amount,
@@ -55,8 +55,8 @@ export function buildBillingQuery(args: Partial<GetBillingArguments>): QueryFilt
     query.unitId = args.unitId;
   }
 
-  if (args.managerId) {
-    query.managerId = args.managerId;
+  if (args.facilityId) {
+    query.facilityId = args.facilityId;
   }
 
   if (args.dueDate) {

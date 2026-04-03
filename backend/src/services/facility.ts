@@ -1,11 +1,12 @@
 import mongoose from 'mongoose';
 import { HousingFacility } from '../models/housing/HousingFacility.js';
+import { Listing } from '../models/housing/Listing.js';
 import { AppError } from '../controllers/error.js';
 import { combineFilters } from '../controllers/middleware.js';
 
 export type CreateFacilityArguments = {
   landlordId: mongoose.Types.ObjectId;
-  managerId?: mongoose.Types.ObjectId;
+  managers?: { managerId: mongoose.Types.ObjectId; permissions: { manageBillings: boolean; manageApplications: boolean; manageListings: boolean } }[];
 
   name: string;
   type: string;
@@ -22,7 +23,7 @@ export type CreateFacilityArguments = {
 
 // NOTE: attributes to update are not yet finalized
 export type UpdateFacilityArguments = {
-  managerId?: mongoose.Types.ObjectId;
+  managers?: { managerId: mongoose.Types.ObjectId; permissions: { manageBillings: boolean; manageApplications: boolean; manageListings: boolean } }[];
   name?: string;
   type?: string;
   location?: {
@@ -45,7 +46,7 @@ export const createFacility = async (data: CreateFacilityArguments) => {
 
   const newFacility = new HousingFacility({
     landlordId: data.landlordId,
-    managerId: data.managerId,
+    managers: data.managers ?? [],
 
     name: data.name,
     type: data.type,
@@ -118,4 +119,25 @@ export const deleteFacility = async (facilityId: mongoose.Types.ObjectId) => {
   }
 
   await HousingFacility.findByIdAndDelete(facilityId);
+};
+
+export const removeManagerFromFacility = async (
+  facilityId: mongoose.Types.ObjectId,
+  managerId: mongoose.Types.ObjectId,
+) => {
+  const facility = await HousingFacility.findById(facilityId);
+  if (!facility) {
+    throw new AppError(404, 'Facility not found.');
+  }
+
+  facility.managers = facility.managers.filter(
+    (m: any) => m.managerId.toString() !== managerId.toString(),
+  ) as any;
+  await facility.save();
+
+  // cascade removal to all listings under this facility
+  await Listing.updateMany(
+    { housingId: facilityId },
+    { $pull: { managers: { managerId } } },
+  );
 };

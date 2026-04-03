@@ -1,15 +1,23 @@
 import mongoose from 'mongoose';
 import { Invite } from '../models/communication/Invite.js';
 import { HousingFacility } from '../models/housing/HousingFacility.js';
+import { Listing } from '../models/housing/Listing.js';
 import { User } from '../models/user/User.js';
 import { AppError } from '../controllers/error.js';
 
+export type InviteManagerArguments = {
+  landlordId: mongoose.Types.ObjectId;
+  facilityId: mongoose.Types.ObjectId;
+  email: string;
+  permissions: {
+    manageBillings: boolean;
+    manageApplications: boolean;
+    manageListings: boolean;
+  };
+};
 
-export const inviteManager = async (
-  landlordId: mongoose.Types.ObjectId,
-  facilityId: mongoose.Types.ObjectId,
-  email: string,
-) => {
+export const inviteManager = async (data: InviteManagerArguments) => {
+  const { landlordId, facilityId, email, permissions } = data;
 
   // make sure the facility exists and belongs to this landlord
   const facility = await HousingFacility.findOne({ _id: facilityId, landlordId });
@@ -23,13 +31,10 @@ export const inviteManager = async (
     throw new AppError(409, 'A pending invite already exists for this user.');
   }
 
-  // create the invite
-  const invite = new Invite({ landlordId, facilityId, email });
+  // create the invite with specified permissions
+  const invite = new Invite({ landlordId, facilityId, email, permissions });
   return await invite.save();
 };
-
-
-
 
 export const acceptInvite = async (
   inviteID: mongoose.Types.ObjectId,
@@ -55,8 +60,28 @@ export const acceptInvite = async (
   // upgrade user from UnverifiedManager → Manager
   await User.findByIdAndUpdate(userID, { userType: 'Manager' });
 
-  // assign them as manager of the facility
-  await HousingFacility.findByIdAndUpdate(invite.facilityId, { managerId: userID });
+  // add them as manager of the facility with the invite's permissions
+  await HousingFacility.findByIdAndUpdate(invite.facilityId, {
+    $push: {
+      managers: {
+        managerId: userID,
+        permissions: invite.permissions,
+      },
+    },
+  });
+
+  // cascade to all existing listings under this facility
+  await Listing.updateMany(
+    { housingId: invite.facilityId },
+    {
+      $push: {
+        managers: {
+          managerId: userID,
+          permissions: invite.permissions,
+        },
+      },
+    },
+  );
 
   invite.status = 'accepted';
   invite.dateAccepted = new Date();

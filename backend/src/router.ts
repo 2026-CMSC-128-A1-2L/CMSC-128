@@ -7,6 +7,7 @@ import {
   routeDeleteFacility,
   routeGetListingsByFacility,
   routeGetFacilities,
+  routeRemoveManager,
 } from './controllers/facility.js';
 import {
   routeGetListings,
@@ -178,9 +179,11 @@ router.post('/facilities', isLandlord, routeCreateFacility);
 // GET /api/facilities/:facilityId
 router.get('/facilities/:facilityId', routeGetFacility);
 // PATCH /api/facilities/:facilityId
-router.patch('/facilities/:facilityId', correctManagerOrLandlordFilter, routeUpdateFacility);
+router.patch('/facilities/:facilityId', correctManagerOrLandlordFilter('manageListings'), routeUpdateFacility);
 // DELETE /api/facilities/:facilityId
 router.delete('/facilities/:facilityId', correctLandlordFilter, routeDeleteFacility);
+// DELETE /api/facilities/:facilityId/managers/:managerId
+router.delete('/facilities/:facilityId/managers/:managerId', isLandlord, routeRemoveManager);
 
 // Listings
 // GET /api/listings
@@ -188,15 +191,15 @@ router.get('/listings', listingViewFilter, routeGetListings);
 // GET /api/listings/:listingId
 router.get('/listings/:listingId', listingViewFilter, routeGetListing);
 // PATCH /api/listings/:listingId
-router.patch('/listings/:listingId', correctManagerOrLandlordFilter, routeUpdateListing);
+router.patch('/listings/:listingId', correctManagerOrLandlordFilter('manageListings'), routeUpdateListing);
 // DELETE /api/listings/:listingId
-router.delete('/listings/:listingId', correctManagerOrLandlordFilter, routeDeleteListing);
+router.delete('/listings/:listingId', correctManagerOrLandlordFilter('manageListings'), routeDeleteListing);
 // POST /api/listings/:listingId/approve
 router.post('/listings/:listingId/approve', isSuperAdmin, routeApproveListing);
 // GET /api/facilities/:facilityId/listings
 router.get('/facilities/:facilityId/listings', listingViewFilter, routeGetListingsByFacility);
 // POST /api/facilities/:facilityId/listings
-router.post('/facilities/:facilityId/listings', correctManagerOrLandlordFilter, routeCreateListing); // TODO: fix implementation, use parameter
+router.post('/facilities/:facilityId/listings', correctManagerOrLandlordFilter('manageListings'), routeCreateListing); // TODO: fix implementation, use parameter
 // router.patch('/listings/:listingId/tags', correctManagerOrLandlordFilter, routeUpdateListingTags);
 
 // Units
@@ -205,13 +208,13 @@ router.get('/units', isSuperAdmin, routeGetUnits);
 // GET /api/units/:unitId
 router.get('/units/:unitId', isTenantManagerOrLandlord, routeGetUnit);
 // PATCH /api/units/:unitId
-router.patch('/units/:unitId', correctManagerOrLandlordFilter, routeUpdateUnit);
+router.patch('/units/:unitId', correctManagerOrLandlordFilter('manageListings'), routeUpdateUnit);
 // DELETE /api/units/:unitId
-router.delete('/units/:unitId', correctManagerOrLandlordFilter, routeDeleteUnit);
+router.delete('/units/:unitId', correctManagerOrLandlordFilter('manageListings'), routeDeleteUnit);
 // GET /api/listings/:listingId/units
 router.get('/listings/:listingId/units', routeGetUnitsByListing);
 // POST /api/listings/:listingId/units
-router.post('/listings/:listingId/units', correctManagerOrLandlordFilter, routeCreateUnit); // TODO:
+router.post('/listings/:listingId/units', correctManagerOrLandlordFilter('manageListings'), routeCreateUnit); // TODO:
 
 // Tags
 // GET /api/tags
@@ -249,21 +252,21 @@ router.get('/applications', isSuperAdmin, routeGetApplications);
 // POST /api/applications
 router.post('/applications', isVerifiedStudent, routeCreateApplication);
 // GET /api/applications/:applicationId
-router.get('/applications/:applicationId', isSelfManagerOrSuperAdmin, routeGetApplication);
+router.get('/applications/:applicationId', isSelfManagerOrSuperAdmin('manageApplications'), routeGetApplication);
 // PATCH /api/applications/:applicationId
-router.patch('/applications/:applicationId', isSelfManagerOrSuperAdmin, routeUpdateApplication);
+router.patch('/applications/:applicationId', isSelfManagerOrSuperAdmin('manageApplications'), routeUpdateApplication);
 // DELETE /api/applications/:applicationId
 router.delete('/applications/:applicationId', isSelf, routeDeleteApplication);
 // POST /api/applications/:applicationId/approve
-router.post('/applications/:applicationId/approve', correctManagerOrLandlordFilter, routeUpdateApplicationStatus);
+router.post('/applications/:applicationId/approve', correctManagerOrLandlordFilter('manageApplications'), routeUpdateApplicationStatus);
 // POST /api/applications/:applicationId/reject
-router.post('/applications/:applicationId/reject', correctManagerOrLandlordFilter, routeUpdateApplicationStatus);
+router.post('/applications/:applicationId/reject', correctManagerOrLandlordFilter('manageApplications'), routeUpdateApplicationStatus);
 // POST /api/applications/:applicationId/assign-unit
-router.post('/applications/:applicationId/assign-unit', correctManagerOrLandlordFilter, routeAssignApplicationUnit);
+router.post('/applications/:applicationId/assign-unit', correctManagerOrLandlordFilter('manageApplications'), routeAssignApplicationUnit);
 // GET /api/users/:userId/applications
 router.get('/users/:userId/applications', isSelf, routeGetApplicationsByStudent);
 // GET /api/listings/:listingId/applications
-router.get('/listings/:listingId/applications', correctManagerOrLandlordFilter, routeGetApplicationsByListing);
+router.get('/listings/:listingId/applications', correctManagerOrLandlordFilter('manageApplications'), routeGetApplicationsByListing);
 
 // Rentals
 // GET /api/rentals
@@ -275,13 +278,13 @@ router.get('/users/:userId/rentals', isSelf, routeGetRentalsByUser);
 // GET /api/listings/:listingId/rentals
 router.get('/listings/:listingId/rentals', isSuperAdmin, routeGetRentalsByListing);
 // GET /api/units/:unitId/rentals
-router.get('/units/:unitId/rentals', correctManagerOrLandlordFilter, routeGetRentalsByUnit);
+router.get('/units/:unitId/rentals', correctManagerOrLandlordFilter('manageListings'), routeGetRentalsByUnit);
 // PATCH /api/rentals/:rentalId
-router.patch('/rentals/:rentalId', correctManagerOrLandlordFilter, routeUpdateRental);
+router.patch('/rentals/:rentalId', correctManagerOrLandlordFilter('manageListings'), routeUpdateRental);
 // POST /api/rentals/:rentalId/move-in
-router.post('/rentals/:rentalId/move-in', correctManagerOrLandlordFilter, routeMoveIn);
+router.post('/rentals/:rentalId/move-in', correctManagerOrLandlordFilter('manageListings'), routeMoveIn);
 // POST /api/rentals/:rentalId/move-out
-router.post('/rentals/:rentalId/move-out', correctManagerOrLandlordFilter, routeMoveOut);
+router.post('/rentals/:rentalId/move-out', correctManagerOrLandlordFilter('manageListings'), routeMoveOut);
 // TODO: check what else changes when a rental is deleted
 // router.delete('/rentals/:rentalId', isSuperAdmin, routeDeleteRental);
 
@@ -289,15 +292,15 @@ router.post('/rentals/:rentalId/move-out', correctManagerOrLandlordFilter, route
 // GET /api/billings
 router.get('/billings', isSuperAdmin, routeGetBillings);
 // POST /api/billings
-router.post('/billings', correctManagerOrLandlordFilter, routeCreateBilling);
+router.post('/billings', correctManagerOrLandlordFilter('manageBillings'), routeCreateBilling);
 // GET /api/billings/:billingId
-router.get('/billings/:billingId', isSelfOrManager, routeGetBilling);
+router.get('/billings/:billingId', isSelfOrManager('manageBillings'), routeGetBilling);
 // PATCH /api/billings/:billingId
-router.patch('/billings/:billingId', correctManagerOrLandlordFilter, routeUpdateBilling);
+router.patch('/billings/:billingId', correctManagerOrLandlordFilter('manageBillings'), routeUpdateBilling);
 // POST /api/billings/:billingId/pay
 router.post('/billings/:billingId/pay', isVerifiedStudent, routeSubmitBillingPayment);
 // POST /api/billings/:billingId/verify
-router.post('/billings/:billingId/verify', correctManagerOrLandlordFilter, routeVerifyBillingPayment);
+router.post('/billings/:billingId/verify', correctManagerOrLandlordFilter('manageBillings'), routeVerifyBillingPayment);
 // GET /api/users/:userId/billings
 router.get('/users/:userId/billings', isSelf, routeGetUserBillings);
 // GET /api/units/:unitId/billings
@@ -331,17 +334,17 @@ router.get('/bookings', isSuperAdmin, routeGetBookings);
 // POST /api/bookings
 router.post('/bookings', isVerifiedStudent, routeCreateBooking);
 // PATCH /api/bookings/:bookingId
-router.patch('/bookings/:bookingId', isSelfOrManager, routeUpdateBooking);
+router.patch('/bookings/:bookingId', isSelfOrManager('manageListings'), routeUpdateBooking);
 // DELETE /api/bookings/:bookingId
-router.delete('/bookings/:bookingId', isSelfOrManager, routeCancelBooking);
+router.delete('/bookings/:bookingId', isSelfOrManager('manageListings'), routeCancelBooking);
 // POST /api/bookings/:bookingId/approve
-router.post('/bookings/:bookingId/approve', isSelfOrManager, routeApproveBooking);
+router.post('/bookings/:bookingId/approve', isSelfOrManager('manageListings'), routeApproveBooking);
 // POST /api/bookings/:bookingId/reject
-router.post('/bookings/:bookingId/reject', isSelfOrManager, routeRejectBooking);
+router.post('/bookings/:bookingId/reject', isSelfOrManager('manageListings'), routeRejectBooking);
 // GET /api/users/:userId/bookings
 router.get('/users/:userId/bookings', isSelfOrSuperAdmin, routeGetVisitBookingsByStudent);
 // GET /api/listings/:listingId/bookings
-router.get('/listings/:listingId/bookings', correctManagerOrLandlordFilter, routeGetVisitBookingsByListing);
+router.get('/listings/:listingId/bookings', correctManagerOrLandlordFilter('manageListings'), routeGetVisitBookingsByListing);
 
 // Lease Transfers
 // GET /api/transfers
@@ -349,9 +352,9 @@ router.get('/transfers', isVerifiedStudent, routeGetTransferRequests);
 // POST /api/transfers
 router.post('/transfers', isVerifiedStudent, routeCreateTransferRequest);
 // POST /api/transfers/:transferId/approve
-router.post('/transfers/:transferId/approve', correctManagerOrLandlordFilter, routeApproveTransferRequest);
+router.post('/transfers/:transferId/approve', correctManagerOrLandlordFilter('manageListings'), routeApproveTransferRequest);
 // POST /api/transfers/:transferId/reject
-router.post('/transfers/:transferId/reject', correctManagerOrLandlordFilter, routeRejectTransferRequest);
+router.post('/transfers/:transferId/reject', correctManagerOrLandlordFilter('manageListings'), routeRejectTransferRequest);
 // DELETE /api/transfers/:transferId
 router.delete('/transfers/:transferId', isSelf, routeCancelTransferRequest); // TODO: check if transfer is already processed, cannot delete
 

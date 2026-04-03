@@ -30,7 +30,6 @@ export const routeGetUnits: RequestHandler = async (req, res, next) => {
     isAvailable: z.boolean().optional(),
     listingId: objectIdSchema.optional(),
     landlordId: objectIdSchema.optional(),
-    managerId: objectIdSchema.optional(),
   });
 
   const args = ParamsSchema.parse(req.params);
@@ -50,8 +49,7 @@ export const routeCreateUnit: RequestHandler = async (req, res, next) => {
     location: params.location ?? null,
     isAvailable: params.isAvailable,
     listingId: params.listingId,
-    landlordId: user.userType === 'Landlord' ? user._id : user._id,
-    managerId: user.userType === 'Manager' ? user._id : null,
+    landlordId: user._id,
   };
 
   const newUnit = await createUnit(args, res.locals.filters);
