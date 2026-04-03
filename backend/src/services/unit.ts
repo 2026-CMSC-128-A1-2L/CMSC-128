@@ -29,24 +29,12 @@ export type GetUnitArguments = {
 };
 
 export const createUnit = async (data: CreateUnitArguments, filters: any) => {
-  const unit = await Unit.findOne(combineFilters(filters, { roomNumber: data.roomNumber }));
-  if (!unit) {
-    // This can also be a 403, see `updateFacility` in ./facility.ts
-    throw new AppError(404, 'Unit not found.');
+  const existingUnit = await Unit.findOne(combineFilters(filters, { roomNumber: data.roomNumber }));
+  if (existingUnit) {
+    throw new AppError(409, 'A unit with this room number already exists in this listing.');
   }
 
-  // There can be a race condition here.
-  const newUnit = new Unit({
-    roomNumber: unit.roomNumber,
-    capacity: unit.capacity,
-    currentOccupancy: unit.currentOccupancy,
-    price: unit.price,
-    location: unit.location,
-    isAvailable: unit.isAvailable,
-    listingId: unit.listingId,
-    landlordId: unit.landlordId,
-    managerId: unit.managerId,
-  });
+  const newUnit = new Unit(data);
   return await newUnit.save();
 };
 

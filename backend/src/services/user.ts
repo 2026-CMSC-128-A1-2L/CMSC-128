@@ -66,7 +66,7 @@ export const getUsers = async (params: GetUsersArguments) => {
     filter._id = params.userID;
   }
   if (params.userType) {
-    filter.userType = filter;
+    filter.userType = params.userType;
   }
 
   return await User.find(filter);
