@@ -5,7 +5,7 @@ import { ObjectIdSchema, QuerySchema } from './common';
 export const CreateBillingBodySchema = z.object({
   studentId: ObjectIdSchema,
   unitId: ObjectIdSchema,
-  managerId: ObjectIdSchema,
+  facilityId: ObjectIdSchema,
   dueDate: z.iso.datetime().transform((x) => new Date(x)),
   paymentDate: z.iso
     .datetime()
@@ -22,7 +22,7 @@ export const CreateBillingBodySchema = z.object({
 export const GetBillingsFilterSchema = z.object({
   studentId: ObjectIdSchema.optional(),
   unitId: ObjectIdSchema.optional(),
-  managerId: ObjectIdSchema.optional(),
+  facilityId: ObjectIdSchema.optional(),
   dueDate: z.iso
     .date()
     .transform((x) => new Date(x))

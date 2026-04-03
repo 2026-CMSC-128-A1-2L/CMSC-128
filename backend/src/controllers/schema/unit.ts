@@ -13,7 +13,6 @@ export const UnitFilterSchema = z.object({
   isAvailable: z.boolean().optional(),
   listingId: ObjectIdSchema.optional(),
   landlordId: ObjectIdSchema.optional(),
-  managerId: ObjectIdSchema.optional(),
 });
 
 // POST /units

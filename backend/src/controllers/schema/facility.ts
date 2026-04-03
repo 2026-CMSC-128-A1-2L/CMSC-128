@@ -2,9 +2,20 @@ import z from 'zod';
 import { LocationSchema, ObjectIdSchema, QuerySchema } from './common';
 import { FACILITY_TYPES } from '../../constants';
 
+const ManagerPermissionSchema = z.object({
+  manageBillings: z.boolean().default(false),
+  manageApplications: z.boolean().default(false),
+  manageListings: z.boolean().default(false),
+});
+
+const ManagerEntrySchema = z.object({
+  managerId: ObjectIdSchema,
+  permissions: ManagerPermissionSchema,
+});
+
 // POST /api/facilities
 export const CreateFacilityBodySchema = z.object({
-  managerId: ObjectIdSchema.optional(),
+  managers: z.array(ManagerEntrySchema).optional(),
   name: z.string(),
   type: z.enum(FACILITY_TYPES),
   location: LocationSchema.optional(),
@@ -21,7 +32,7 @@ export const CreateFacilityBodySchema = z.object({
 
 // PATCH /api/facilities
 export const UpdateFacilityBodySchema = z.object({
-  managerId: ObjectIdSchema.optional(),
+  managers: z.array(ManagerEntrySchema).optional(),
   name: z.string().optional(),
   type: z.enum(FACILITY_TYPES).optional(),
   location: LocationSchema.optional(),
