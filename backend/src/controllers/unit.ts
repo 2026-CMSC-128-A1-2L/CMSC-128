@@ -28,9 +28,9 @@ export const routeGetUnits: RequestHandler = async (req, res, next) => {
     price: z.number().optional(),
     location: z.string().optional(),
     isAvailable: z.boolean().optional(),
-    listingID: objectIdSchema.optional(),
-    landlordID: objectIdSchema.optional(),
-    managerID: objectIdSchema.optional(),
+    listingId: objectIdSchema.optional(),
+    landlordId: objectIdSchema.optional(),
+    managerId: objectIdSchema.optional(),
   });
 
   const args = ParamsSchema.parse(req.params);
@@ -39,46 +39,35 @@ export const routeGetUnits: RequestHandler = async (req, res, next) => {
 };
 
 export const routeCreateUnit: RequestHandler = async (req, res, next) => {
-  //zod schema
-  const ParamsSchema = z.object({
-    roomNumber: z.number(),
-    capacity: z.number(),
-    currentOccupancy: z.number(),
-    price: z.number(),
-    location: z.string(),
-    isAvailable: z.boolean(),
-    listingID: objectIdSchema,
-    landlordID: objectIdSchema,
-    managerID: objectIdSchema,
-  });
-  const params = ParamsSchema.parse(req.params);
+  const params = CreateUnitBodySchema.parse(req.body);
+  const user = req.user!;
 
   const args: CreateUnitArguments = {
     roomNumber: params.roomNumber,
     capacity: params.capacity,
-    currentOccupancy: params.currentOccupancy,
+    currentOccupancy: params.currentOccupancy ?? 0,
     price: params.price,
-    location: params.location,
+    location: params.location ?? null,
     isAvailable: params.isAvailable,
-    listingID: params.listingID,
-    landlordID: params.landlordID,
-    managerID: params.managerID,
+    listingId: params.listingId,
+    landlordId: user.userType === 'Landlord' ? user._id : user._id,
+    managerId: user.userType === 'Manager' ? user._id : null,
   };
 
-  const newListing = await createUnit(args, res.locals.filters);
+  const newUnit = await createUnit(args, res.locals.filters);
   res.status(201).json({
-    id: newListing.id,
+    id: newUnit.id,
   });
 };
 
-export const routeGetUnitById: RequestHandler = async (req, res, next) => {
+export const routeGetUnit: RequestHandler = async (req, res, next) => {
   //zod schema
   const ParamsSchema = z.object({
-    unitID: objectIdSchema,
+    unitId: objectIdSchema,
   });
 
   const params = ParamsSchema.parse(req.params);
-  const unit = await getUnitById(params.unitID);
+  const unit = await getUnitById(params.unitId);
   res.status(200).json(unit); // sends a json of requested
 };
 export const routeUpdateUnit: RequestHandler = async (req, res, next) => {
@@ -105,10 +94,10 @@ export const routeDeleteUnit: RequestHandler = async (req, res, next) => {
 export const routeGetUnitsByListing: RequestHandler = async (req, res, next) => {
   //zod schema
   const ParamsSchema = z.object({
-    listingID: objectIdSchema,
+    listingId: objectIdSchema,
   });
 
   const params = ParamsSchema.parse(req.params);
-  const unit = await getUnitByListing(params.listingID);
+  const unit = await getUnitByListing(params.listingId);
   res.status(200).json(unit); // sends a json of requested
 };

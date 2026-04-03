@@ -3,7 +3,7 @@ import {
   createListing,
   getListingById,
   getListings,
-  getListingReviewsById,
+  // getListingReviewsById,
   updateListing,
   deleteListing,
   updateListingTags,
@@ -14,14 +14,20 @@ import {
   GetListingsQuerySchema,
   CreateListingBodySchema,
   UpdateListingBodySchema,
+<<<<<<< backend/updateListingTags
   SearchQuerySchema,
   TagSchema,
+=======
+  ListingFilterSchema,
+>>>>>>> develop
 } from './schema/listing.js';
+import { Listing } from '../models/housing/Listing.js';
+import { QueryFilter } from 'mongoose';
 
 export const routeGetListings: RequestHandler = async (req, res, next) => {
   const searchQuery = GetListingsQuerySchema.parse(req.query);
 
-  const params = SearchQuerySchema.parse(searchQuery.q);
+  const params = ListingFilterSchema.parse(searchQuery.q);
   const listings = await getListings(params, res.locals.filters);
 
   res.status(200).json({ data: listings });
@@ -34,35 +40,38 @@ export const routeCreateListing: RequestHandler = async (req, res, next) => {
   res.status(201).json({ id: newListing.id });
 };
 
-export const routeGetListingById: RequestHandler = async (req, res, next) => {
-  const GetListingByIdParamsSchema = z.object({ listingID: ObjectIdSchema });
+export const routeGetListing: RequestHandler = async (req, res, next) => {
+  const GetListingByIdParamsSchema = z.object({ listingId: ObjectIdSchema });
 
   const params = GetListingByIdParamsSchema.parse(req.params);
-  const listing = await getListingById(params.listingID, res.locals.filters);
+  const listing = await getListingById(
+    params.listingId,
+    res.locals.filters as QueryFilter<typeof Listing>,
+  );
 
   res.status(200).json({ data: listing });
 };
 
-export const routeGetListingReviewsById: RequestHandler = async (req, res, next) => {
-  const listingID = ObjectIdSchema.parse(req.params.listingId);
-  const reviews = await getListingReviewsById(listingID);
+// export const routeGetListingReviews: RequestHandler = async (req, res, next) => {
+//   const listingId = ObjectIdSchema.parse(req.params.listingId);
+//   const reviews = await getListingReviewsById(listingId);
 
-  res.status(200).json({ data: reviews });
-};
+//   res.status(200).json({ data: reviews });
+// };
 
 export const routeUpdateListing: RequestHandler = async (req, res, next) => {
-  const listingID = ObjectIdSchema.parse(req.params.listingId);
+  const listingId = ObjectIdSchema.parse(req.params.listingId);
   const updateData = UpdateListingBodySchema.parse(req.body);
 
-  const updatedListing = await updateListing(listingID, updateData, res.locals.filters ?? {});
+  const updatedListing = await updateListing(listingId, updateData, res.locals.filters ?? {});
 
   res.status(200).json({ data: updatedListing });
 };
 
 export const routeDeleteListing: RequestHandler = async (req, res, next) => {
-  const listingID = ObjectIdSchema.parse(req.params.listingId);
+  const listingId = ObjectIdSchema.parse(req.params.listingId);
 
-  await deleteListing(listingID, res.locals.filters ?? {});
+  await deleteListing(listingId, res.locals.filters ?? {});
 
   res.status(200).json({ message: 'Listing deleted successfully.' });
 };
@@ -70,6 +79,7 @@ export const routeDeleteListing: RequestHandler = async (req, res, next) => {
 export const routeGetUnitsByListing: RequestHandler = async (req, res, next) => {};
 export const routeGetApplicationsByListing: RequestHandler = async (req, res, next) => {};
 export const routeGetVisitBookingsByListing: RequestHandler = async (req, res, next) => {};
+<<<<<<< backend/updateListingTags
 export const routeUpdateListingTags: RequestHandler = async (req, res, next) => {
   const listingID = ObjectIdSchema.parse(req.params.listingId);
   
@@ -81,3 +91,6 @@ export const routeUpdateListingTags: RequestHandler = async (req, res, next) => 
 
   res.status(200).json({ data: updatedListing });
 };
+=======
+export const routeApproveListing: RequestHandler = async (req, res, next) => {};
+>>>>>>> develop

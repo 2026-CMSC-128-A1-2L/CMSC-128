@@ -1,26 +1,33 @@
 import z from 'zod';
 import { ObjectIdSchema } from './common.js';
 
-export const GetBookingQuerySchema = z.object({
-  studentID: ObjectIdSchema.optional(),
-  housingID: ObjectIdSchema.optional(),
-
-  startDate: z.coerce.date().optional(),
-  endDate: z.coerce.date().optional(),
-
+// GET /visits
+export const GetBookingsQuerySchema = z.object({
+  studentId: ObjectIdSchema.optional(),
+  housingId: ObjectIdSchema.optional(),
+  startDate: z.iso
+    .date()
+    .transform((x) => new Date(x))
+    .optional(),
+  endDate: z.iso
+    .date()
+    .transform((x) => new Date(x))
+    .optional(),
   status: z.enum(['pending', 'approved', 'rejected', 'cancelled']).optional(),
-
   message: z.string().optional(),
 });
 
+// GET /visits/:visitId
+export const GetBookingParamsSchema = z.object({
+  visitId: ObjectIdSchema,
+});
+
+// POST /visits
 export const CreateBookingBodySchema = z.object({
-  studentID: ObjectIdSchema,
-  housingID: ObjectIdSchema,
-
-  startDate: z.coerce.date(),
-  endDate: z.coerce.date(),
-
-  status: z.enum(['pending', 'approved', 'rejected', 'cancelled']).optional(),
-
+  studentId: ObjectIdSchema,
+  housingId: ObjectIdSchema,
+  startDate: z.iso.datetime().transform((x) => new Date(x)),
+  endDate: z.iso.datetime().transform((x) => new Date(x)),
+  status: z.enum(['pending', 'approved', 'rejected', 'cancelled']).default('pending'),
   message: z.string().optional(),
 });
