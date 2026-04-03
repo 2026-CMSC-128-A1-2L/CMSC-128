@@ -4,8 +4,8 @@ const billingSchema = new mongoose.Schema({
   studentId: { type: mongoose.Schema.Types.ObjectId, ref: 'Student', required: true },
   unitId: { type: mongoose.Schema.Types.ObjectId, ref: 'Unit', required: true },
 
-  // Who the bill is paid to.
-  managerId: { type: mongoose.Schema.Types.ObjectId, ref: 'Manager' },
+  // Which facility this billing belongs to (for permission checks)
+  facilityId: { type: mongoose.Schema.Types.ObjectId, ref: 'HousingFacility', required: true },
 
   dueDate: { type: Date },
   paymentDate: { type: Date },

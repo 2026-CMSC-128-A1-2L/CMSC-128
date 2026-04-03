@@ -16,7 +16,6 @@ const unitSchema = new mongoose.Schema({
 
   // include both owners for easier checking of owner, changes to these fields should be rare in practice
   landlordId: { type: mongoose.Schema.Types.ObjectId, ref: 'Landlord', required: true },
-  managerId: { type: mongoose.Schema.Types.ObjectId, ref: 'Manager' },
 });
 
 export const Unit = mongoose.model('Unit', unitSchema);

@@ -8,6 +8,13 @@ const inviteSchema = new mongoose.Schema({
   // store email instead of managerId
   email: { type: String, required: true },
 
+  // permissions granted to the manager upon acceptance
+  permissions: {
+    manageBillings: { type: Boolean, default: false },
+    manageApplications: { type: Boolean, default: false },
+    manageListings: { type: Boolean, default: false },
+  },
+
   // unique token for accepting the invite
   token: {
     type: String,
