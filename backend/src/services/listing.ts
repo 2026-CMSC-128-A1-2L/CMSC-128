@@ -196,14 +196,14 @@ export const getListingById = async (
   return await Listing.findById(combineFilters(filters, { _id: id }));
 };
 
-export const getListingReviewsById = async (listingId: mongoose.Types.ObjectId) => {
-  const listing = await Listing.findById(listingId);
-  if (!listing) {
-    throw new AppError(404, 'Listing not found.');
-  }
+// export const getListingReviewsById = async (listingId: mongoose.Types.ObjectId) => {
+//   const listing = await Listing.findById(listingId);
+//   if (!listing) {
+//     throw new AppError(404, 'Listing not found.');
+//   }
 
-  return await Review.find({ ListingId: listingId });
-};
+//   return await Review.find({ ListingId: listingId });
+// };
 
 export type UpdateListingArguments = {
   tags?: TagValue[];

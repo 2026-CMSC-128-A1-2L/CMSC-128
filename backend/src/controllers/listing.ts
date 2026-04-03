@@ -3,7 +3,7 @@ import {
   createListing,
   getListingById,
   getListings,
-  getListingReviewsById,
+  // getListingReviewsById,
   updateListing,
   deleteListing,
 } from '../services/listing.js';
@@ -46,12 +46,12 @@ export const routeGetListing: RequestHandler = async (req, res, next) => {
   res.status(200).json({ data: listing });
 };
 
-export const routeGetListingReviews: RequestHandler = async (req, res, next) => {
-  const listingId = ObjectIdSchema.parse(req.params.listingId);
-  const reviews = await getListingReviewsById(listingId);
+// export const routeGetListingReviews: RequestHandler = async (req, res, next) => {
+//   const listingId = ObjectIdSchema.parse(req.params.listingId);
+//   const reviews = await getListingReviewsById(listingId);
 
-  res.status(200).json({ data: reviews });
-};
+//   res.status(200).json({ data: reviews });
+// };
 
 export const routeUpdateListing: RequestHandler = async (req, res, next) => {
   const listingId = ObjectIdSchema.parse(req.params.listingId);
