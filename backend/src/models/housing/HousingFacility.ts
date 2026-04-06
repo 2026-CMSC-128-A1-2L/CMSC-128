@@ -26,8 +26,10 @@ const HousingFacilitySchema = new mongoose.Schema({
   type: { type: String, enum: ['on-campus', 'off-campus', 'partner housing'], required: true },
   capacity: { type: Number, required: true },
 
-  // TODO: replace with Files
-  documentUrls: [{ type: String }],
+  documents: [{
+    file: { type: String, ref: 'File', required: true },
+    isVerified: { type: Boolean, default: false },
+  }],
 
   // Overrides dates if specified
   isAcceptingApplications: { type: Boolean, default: false },

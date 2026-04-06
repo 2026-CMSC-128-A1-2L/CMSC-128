@@ -22,10 +22,11 @@ const billingSchema = new mongoose.Schema({
     default: 'unpaid',
   },
 
-  // TODO: change to file
-  //
   // URL or file path to the proof of payment
-  proofOfPayment: { type: String },
+  proofOfPayment: {
+    file: { type: String, ref: 'File', required: true },
+    isVerified: { type: Boolean, default: false },
+  },
   paymentType: { type: String }, // e.g., 'rent', 'deposit', 'utility'
 });
 
