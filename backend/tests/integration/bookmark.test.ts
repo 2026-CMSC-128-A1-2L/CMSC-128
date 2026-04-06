@@ -19,19 +19,34 @@ describe('Facilities API', () => {
   beforeAll(async () => {
     const facility = await buildHousingFacility.create({
       landlordId: landlord._id,
-      managers: [{ managerId: manager._id, permissions: { manageBillings: true, manageApplications: true, manageListings: true } }],
+      managers: [
+        {
+          managerId: manager._id,
+          permissions: { manageBillings: true, manageApplications: true, manageListings: true },
+        },
+      ],
     });
 
     const listing = await buildListing.create({
       landlordId: landlord._id,
-      managers: [{ managerId: manager._id, permissions: { manageBillings: true, manageApplications: true, manageListings: true } }],
-      housingId: (facility as any)._id,
+      managers: [
+        {
+          managerId: manager._id,
+          permissions: { manageBillings: true, manageApplications: true, manageListings: true },
+        },
+      ],
+      facilityId: (facility as any)._id,
     });
 
     const otherListing = await buildListing.create({
       landlordId: landlord._id,
-      managers: [{ managerId: manager._id, permissions: { manageBillings: true, manageApplications: true, manageListings: true } }],
-      housingId: (facility as any)._id,
+      managers: [
+        {
+          managerId: manager._id,
+          permissions: { manageBillings: true, manageApplications: true, manageListings: true },
+        },
+      ],
+      facilityId: (facility as any)._id,
     });
 
     listingId = (listing as any)._id;

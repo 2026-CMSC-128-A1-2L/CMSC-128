@@ -1,7 +1,23 @@
 import { RequestHandler } from 'express';
-import { getAllRentals, updateRental, deleteRental, getRentalsByUnitId, getRental, getRentalsByUser, getRentalsByListing, moveIn, moveOut } from '../services/rentals';
+import {
+  getAllRentals,
+  updateRental,
+  deleteRental,
+  getRentalsByUnitId,
+  getRental,
+  getRentalsByUser,
+  getRentalsByListing,
+  moveIn,
+  moveOut,
+} from '../services/rentals';
 import { ObjectIdSchema } from './schema/common';
-import { GetRentalsQuerySchema, MoveInBodySchema, MoveOutBodySchema, RentalFilterSchema, UpdateRentalBodySchema } from './schema/rental';
+import {
+  GetRentalsQuerySchema,
+  MoveInBodySchema,
+  MoveOutBodySchema,
+  RentalFilterSchema,
+  UpdateRentalBodySchema,
+} from './schema/rental';
 
 export const routeGetRentals: RequestHandler = async (req, res, next) => {
   const query = GetRentalsQuerySchema.parse(req.query);
@@ -10,7 +26,7 @@ export const routeGetRentals: RequestHandler = async (req, res, next) => {
 
   res.status(200).json({
     status: 'success',
-    data: rentals
+    data: rentals,
   });
 };
 
@@ -35,22 +51,21 @@ export const routeDeleteRental: RequestHandler = async (req, res, next) => {
   });
 };
 
-export const routeGetRental: RequestHandler = async (req, res, next) => { 
+export const routeGetRental: RequestHandler = async (req, res, next) => {
   const rentalId = ObjectIdSchema.parse(req.params.rentalId);
   const rental = await getRental(rentalId, res.locals.filters ?? {});
 
   res.status(200).json(rental);
 };
 
-
-export const routeGetRentalsByUser: RequestHandler = async (req, res, next) => { 
+export const routeGetRentalsByUser: RequestHandler = async (req, res, next) => {
   const userId = ObjectIdSchema.parse(req.params.userId);
 
   const rentals = await getRentalsByUser(userId, res.locals.filters ?? {});
   res.status(200).json(rentals);
 };
 
-export const routeGetRentalsByListing: RequestHandler = async (req, res, next) => { 
+export const routeGetRentalsByListing: RequestHandler = async (req, res, next) => {
   const listingId = ObjectIdSchema.parse(req.params.listingId);
 
   const rentals = await getRentalsByListing(listingId, res.locals.filters ?? {});
@@ -71,7 +86,7 @@ export const routeMoveIn: RequestHandler = async (req, res, next) => {
 
   res.status(200).json({
     status: 'success',
-    data: rental
+    data: rental,
   });
 };
 
@@ -83,6 +98,6 @@ export const routeMoveOut: RequestHandler = async (req, res, next) => {
 
   res.status(200).json({
     status: 'success',
-    data: rental
+    data: rental,
   });
 };

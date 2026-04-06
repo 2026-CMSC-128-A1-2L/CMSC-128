@@ -9,7 +9,7 @@ const ManagerPermissionSchema = z.object({
 });
 
 const ManagerEntrySchema = z.object({
-  managerId: ObjectIdSchema,
+  userId: ObjectIdSchema,
   permissions: ManagerPermissionSchema,
 });
 

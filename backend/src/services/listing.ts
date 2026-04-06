@@ -26,7 +26,7 @@ type TagValue = {
 };
 
 export type CreateListingArguments = {
-  housingId: mongoose.Types.ObjectId;
+  facilityId: mongoose.Types.ObjectId;
   tags?: TagValue[];
 
   roomType: (typeof ROOM_TYPES)[number];
@@ -41,7 +41,7 @@ export type CreateListingArguments = {
 
 // Parameters for filtering listings
 export type GetListingArguments = {
-  housingId: mongoose.Types.ObjectId;
+  facilityId: mongoose.Types.ObjectId;
   tags: TagFilter[];
   capacity: { min?: number; max?: number };
   isPrivate: boolean;
@@ -102,9 +102,9 @@ const verifyTags = async (tagList: TagValue[]) => {
 };
 
 export const createListing = async (data: CreateListingArguments, filters: any) => {
-  const facility = await HousingFacility.findOne(combineFilters(filters, { _id: data.housingId }));
+  const facility = await HousingFacility.findOne(combineFilters(filters, { _id: data.facilityId }));
   if (!facility) {
-    const facilityNoFilter = await HousingFacility.findById(data.housingId);
+    const facilityNoFilter = await HousingFacility.findById(data.facilityId);
     if (facilityNoFilter) {
       throw new AppError(403, 'You are not allowed to create a listing for this facility.');
     } else {
@@ -124,7 +124,7 @@ export const createListing = async (data: CreateListingArguments, filters: any) 
   const newListing = new Listing({
     landlordId: facility.landlordId,
     managers: facility.managers ?? [],
-    housingId: data.housingId,
+    facilityId: data.facilityId,
     tags: data.tags ?? [], // returns empty array if no tags are given
 
     roomType: data.roomType,
@@ -152,8 +152,8 @@ export function buildListingQuery(args: Partial<GetListingArguments>): QueryFilt
   if (args.allowTransfer) {
     query.allowTransfer = args.allowTransfer;
   }
-  if (args.housingId) {
-    query.housingId = args.housingId;
+  if (args.facilityId) {
+    query.facilityId = args.facilityId;
   }
 
   if (args.capacity) {
@@ -258,7 +258,7 @@ export const getListingsByFacility = async (facilityId: mongoose.Types.ObjectId,
     throw new AppError(404, 'Facility not found.');
   }
 
-  const listings = await Listing.find(combineFilters(filters, { housingId: facilityId }));
+  const listings = await Listing.find(combineFilters(filters, { facilityId: facilityId }));
 
   return listings;
 };

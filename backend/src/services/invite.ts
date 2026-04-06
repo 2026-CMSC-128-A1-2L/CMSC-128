@@ -37,11 +37,10 @@ export const inviteManager = async (data: InviteManagerArguments) => {
 };
 
 export const acceptInvite = async (
-  inviteID: mongoose.Types.ObjectId,
-  userID: mongoose.Types.ObjectId,
+  inviteId: mongoose.Types.ObjectId,
+  userId: mongoose.Types.ObjectId,
 ) => {
-
-  const invite = await Invite.findById(inviteID);
+  const invite = await Invite.findById(inviteId);
   if (!invite) {
     throw new AppError(404, 'Invite not found.');
   }
@@ -52,19 +51,18 @@ export const acceptInvite = async (
   }
 
   // make sure the logged in user's email matches the invite
-  const user = await User.findById(userID);
-  if (!user || user.email !== invite.email) {
+  if (invite.userId !== userId) {
     throw new AppError(403, 'This invite was not sent to your account.');
   }
 
   // upgrade user from UnverifiedManager → Manager
-  await User.findByIdAndUpdate(userID, { userType: 'Manager' });
+  await User.findByIdAndUpdate(userId, { userType: 'Manager' });
 
   // add them as manager of the facility with the invite's permissions
   await HousingFacility.findByIdAndUpdate(invite.facilityId, {
     $push: {
       managers: {
-        managerId: userID,
+        userId,
         permissions: invite.permissions,
       },
     },
@@ -72,11 +70,11 @@ export const acceptInvite = async (
 
   // cascade to all existing listings under this facility
   await Listing.updateMany(
-    { housingId: invite.facilityId },
+    { facilityId: invite.facilityId },
     {
       $push: {
         managers: {
-          managerId: userID,
+          managerId: userId,
           permissions: invite.permissions,
         },
       },
@@ -90,33 +88,28 @@ export const acceptInvite = async (
   return invite;
 };
 
-
-
 export const declineInvite = async (
-    inviteID: mongoose.Types.ObjectId,
-    userID: mongoose.Types.ObjectId,
-  ) => {
+  inviteId: mongoose.Types.ObjectId,
+  userId: mongoose.Types.ObjectId,
+) => {
+  const invite = await Invite.findById(inviteId);
+  if (!invite) {
+    throw new AppError(404, 'Invite not found.');
+  }
 
-    const invite = await Invite.findById(inviteID);
-    if (!invite) {
-      throw new AppError(404, 'Invite not found.');
-    }
-  
-    // make sure it's still pending
-    if (invite.status !== 'pending') {
-      throw new AppError(400, 'Invite has already been accepted or declined.');
-    }
-  
-    // make sure the logged in user's email matches the invite
-    const user = await User.findById(userID);
-    if (!user || user.email !== invite.email) {
-      throw new AppError(403, 'This invite was not sent to your account.');
-    }
-  
-    invite.status = 'declined';
-    invite.dateDeclined = new Date();
-    await invite.save();
+  // make sure it's still pending
+  if (invite.status !== 'pending') {
+    throw new AppError(400, 'Invite has already been accepted or declined.');
+  }
 
+  // make sure the logged in user's email matches the invite
+  if (invite.userId !== userId) {
+    throw new AppError(403, 'This invite was not sent to your account.');
+  }
 
-    return invite;
+  invite.status = 'declined';
+  invite.dateDeclined = new Date();
+  await invite.save();
+
+  return invite;
 };

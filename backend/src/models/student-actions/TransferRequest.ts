@@ -8,7 +8,7 @@ import mongoose from 'mongoose';
 // TODO: Billing implications when a transfer occurs need to be defined.
 const TransferRequestSchema = new mongoose.Schema(
   {
-    studentId: { type: mongoose.Schema.Types.ObjectId, ref: 'Student', required: true },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'Student', required: true },
     unitId: { type: mongoose.Schema.Types.ObjectId, ref: 'Unit', required: true },
 
     // reason for transfer

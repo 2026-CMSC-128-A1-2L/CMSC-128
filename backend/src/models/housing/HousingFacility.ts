@@ -7,11 +7,14 @@ const HousingFacilitySchema = new mongoose.Schema({
   landlordId: { type: mongoose.Schema.Types.ObjectId, ref: 'Landlord', required: true },
   managers: [
     {
-      managerId: { type: mongoose.Schema.Types.ObjectId, ref: 'Manager', required: true },
+      userId: { type: mongoose.Schema.Types.ObjectId, ref: 'Manager', required: true },
       permissions: {
-        manageBillings: { type: Boolean, default: false },
-        manageApplications: { type: Boolean, default: false },
-        manageListings: { type: Boolean, default: false },
+        type: {
+          manageBillings: { type: Boolean, default: false },
+          manageApplications: { type: Boolean, default: false },
+          manageListings: { type: Boolean, default: false },
+        },
+        required: true,
       },
     },
   ],
@@ -26,10 +29,12 @@ const HousingFacilitySchema = new mongoose.Schema({
   type: { type: String, enum: ['on-campus', 'off-campus', 'partner housing'], required: true },
   capacity: { type: Number, required: true },
 
-  documents: [{
-    file: { type: String, ref: 'File', required: true },
-    isVerified: { type: Boolean, default: false },
-  }],
+  documents: [
+    {
+      file: { type: String, ref: 'File', required: true },
+      isVerified: { type: Boolean, default: false },
+    },
+  ],
 
   // Overrides dates if specified
   isAcceptingApplications: { type: Boolean, default: false },
@@ -37,9 +42,6 @@ const HousingFacilitySchema = new mongoose.Schema({
   // Range of allowed application period. Can be overridden by `isAcceptingApplications`
   applicationOpenDate: { type: Date, required: false },
   applicationCloseDate: { type: Date, required: false },
-
-  // Reference to Listings
-  listings: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Listing' }],
 });
 
 export const HousingFacility = mongoose.model('HousingFacility', HousingFacilitySchema);

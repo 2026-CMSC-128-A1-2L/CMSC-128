@@ -30,11 +30,11 @@ export const routeGetListings: RequestHandler = async (req, res, next) => {
 };
 
 export const routeCreateListing: RequestHandler = async (req, res, next) => {
-  const housingId = req.params.facilityId
+  const facilityId = req.params.facilityId
     ? ObjectIdSchema.parse(req.params.facilityId)
-    : ObjectIdSchema.parse(req.body.housingId);
+    : ObjectIdSchema.parse(req.body.facilityId);
   const params = CreateListingBodySchema.parse(req.body);
-  const newListing = await createListing({ ...params, housingId }, res.locals.filters);
+  const newListing = await createListing({ ...params, facilityId }, res.locals.filters);
 
   res.status(201).json({ id: newListing.id });
 };
@@ -80,13 +80,16 @@ export const routeGetApplicationsByListing: RequestHandler = async (req, res, ne
 export const routeGetVisitBookingsByListing: RequestHandler = async (req, res, next) => {};
 export const routeUpdateListingTags: RequestHandler = async (req, res, next) => {
   const listingID = ObjectIdSchema.parse(req.params.listingId);
-  
-  const updateData = z.object({
-    tags: z.array(TagSchema)
-  }).parse(req.body);
+
+  const updateData = z
+    .object({
+      tags: z.array(TagSchema),
+    })
+    .parse(req.body);
 
   const updatedListing = await updateListingTags(listingID, updateData, res.locals.filters ?? {});
 
   res.status(200).json({ data: updatedListing });
 };
 export const routeApproveListing: RequestHandler = async (req, res, next) => {};
+export const routeRejectListing: RequestHandler = async (req, res, next) => {};

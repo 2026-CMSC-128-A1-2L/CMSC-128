@@ -3,7 +3,7 @@ import { combineFilters } from '../controllers/middleware.js';
 import { Billing } from '../models/student-actions/Billing.js';
 
 export type CreateBillingArguments = {
-  studentId: mongoose.Types.ObjectId;
+  userId: mongoose.Types.ObjectId;
   unitId: mongoose.Types.ObjectId;
   facilityId: mongoose.Types.ObjectId;
   dueDate: Date;
@@ -16,7 +16,7 @@ export type CreateBillingArguments = {
 };
 
 export type GetBillingArguments = {
-  studentId: mongoose.Types.ObjectId;
+  userId: mongoose.Types.ObjectId;
   unitId: mongoose.Types.ObjectId;
   facilityId: mongoose.Types.ObjectId;
   dueDate: Date;
@@ -30,7 +30,7 @@ export type GetBillingArguments = {
 
 export const createBilling = async (data: CreateBillingArguments) => {
   const newBilling = new Billing({
-    studentId: data.studentId,
+    userId: data.userId,
     unitId: data.unitId,
     facilityId: data.facilityId,
     dueDate: data.dueDate,
@@ -47,8 +47,8 @@ export const createBilling = async (data: CreateBillingArguments) => {
 export function buildBillingQuery(args: Partial<GetBillingArguments>): QueryFilter<typeof Billing> {
   const query: QueryFilter<typeof Billing> = {};
 
-  if (args.studentId) {
-    query.studentId = args.studentId;
+  if (args.userId) {
+    query.userId = args.userId;
   }
 
   if (args.unitId) {

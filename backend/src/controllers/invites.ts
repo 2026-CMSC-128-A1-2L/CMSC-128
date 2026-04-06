@@ -38,7 +38,11 @@ export const routeAcceptInvite: RequestHandler = async (req, res, next) => {
   const inviteID = ObjectIdSchema.parse(req.params.inviteId);
 
   const invite = await acceptInvite(inviteID, userID);
-  await sendNotification(invite.landlordId, 'Manager Invite Accepted', `A manager has accepted your invite for the facility.`);
+  await sendNotification(
+    invite.landlordId,
+    'Manager Invite Accepted',
+    `A manager has accepted your invite for the facility.`,
+  );
 
   res.status(200).json({ data: invite });
 };
@@ -50,7 +54,11 @@ export const routeDeclineInvite: RequestHandler = async (req, res, next) => {
   const inviteID = ObjectIdSchema.parse(req.params.inviteId);
 
   const invite = await declineInvite(inviteID, userID);
-  await sendNotification(invite.landlordId, 'Manager Invite Declined', `A manager has declined your invite for the facility.`);
+  await sendNotification(
+    invite.landlordId,
+    'Manager Invite Declined',
+    `A manager has declined your invite for the facility.`,
+  );
 
   res.status(200).json({ data: invite });
 };

@@ -19,7 +19,12 @@ describe('Facilities API', () => {
     validFacility = {
       name: `Test Facility 1`,
       landlordId: landlord._id,
-      managers: [{ managerId: manager._id, permissions: { manageBillings: true, manageApplications: true, manageListings: true } }],
+      managers: [
+        {
+          managerId: manager._id,
+          permissions: { manageBillings: true, manageApplications: true, manageListings: true },
+        },
+      ],
       type: 'on-campus',
       capacity: 100,
       documentUrls: [],

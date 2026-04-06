@@ -2,11 +2,15 @@ import mongoose from 'mongoose';
 import crypto from 'crypto';
 
 const inviteSchema = new mongoose.Schema({
+  // manager id
+  //
+  // userId is used when the account exists already, email if not
+  // after a manager creates an account with this email, the userId is set.
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  email: String,
+
   landlordId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   facilityId: { type: mongoose.Schema.Types.ObjectId, ref: 'HousingFacility', required: true },
-
-  // store email instead of managerId
-  email: { type: String, required: true },
 
   // permissions granted to the manager upon acceptance
   permissions: {
@@ -28,7 +32,7 @@ const inviteSchema = new mongoose.Schema({
     default: 'pending',
   },
 
-  dateInvited:  { type: Date, default: Date.now },
+  dateInvited: { type: Date, default: Date.now },
   dateAccepted: { type: Date },
   dateDeclined: { type: Date },
 });

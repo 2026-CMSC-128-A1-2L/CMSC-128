@@ -3,7 +3,7 @@ import { ObjectIdSchema, QuerySchema } from './common';
 
 // POST /payments
 export const CreateBillingBodySchema = z.object({
-  studentId: ObjectIdSchema,
+  userId: ObjectIdSchema,
   unitId: ObjectIdSchema,
   facilityId: ObjectIdSchema,
   dueDate: z.iso.datetime().transform((x) => new Date(x)),
@@ -20,7 +20,7 @@ export const CreateBillingBodySchema = z.object({
 
 // GET /payments
 export const GetBillingsFilterSchema = z.object({
-  studentId: ObjectIdSchema.optional(),
+  userId: ObjectIdSchema.optional(),
   unitId: ObjectIdSchema.optional(),
   facilityId: ObjectIdSchema.optional(),
   dueDate: z.iso

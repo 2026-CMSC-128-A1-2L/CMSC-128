@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const bookmarkSchema = new mongoose.Schema({
-  studentId: { type: mongoose.Schema.Types.ObjectId, ref: 'Student', required: true },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'Student', required: true },
   listingId: { type: mongoose.Schema.Types.ObjectId, ref: 'Listing', required: true },
 
   // Sort field
@@ -11,6 +11,6 @@ const bookmarkSchema = new mongoose.Schema({
   notes: { type: String },
 });
 
-bookmarkSchema.index({ studentId: 1, listingId: 1 }, { unique: true });
+bookmarkSchema.index({ userId: 1, listingId: 1 }, { unique: true });
 
 export const Bookmark = mongoose.model('Bookmark', bookmarkSchema);

@@ -1,11 +1,10 @@
 import mongoose from 'mongoose';
-import { ROOM_TYPES } from '../../constants';
 
 const applicationFormSchema = new mongoose.Schema(
   {
-    studentId: { type: mongoose.Schema.Types.ObjectId, ref: 'Student', required: true },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'Student', required: true },
     listingId: { type: mongoose.Schema.Types.ObjectId, ref: 'Listing', required: true },
-    preferredRoomType: { type: String, enum: ROOM_TYPES, required: false },
+    // TODO: check what preferred room type should do
     status: {
       type: String,
       enum: [
@@ -24,7 +23,12 @@ const applicationFormSchema = new mongoose.Schema(
     // TODO: change to Files
     //
     // Other supporting documents uploaded by student
-    documentUrls: [String],
+    documentUrls: [
+      {
+        file: { type: String, ref: 'File', required: true },
+        isVerified: { type: Boolean, default: false },
+      },
+    ],
 
     // Room the student is assigned to
     unitId: { type: mongoose.Schema.Types.ObjectId, ref: 'Unit' },

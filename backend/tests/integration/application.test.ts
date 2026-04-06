@@ -13,7 +13,7 @@ import {
 
 describe('Applications API', () => {
   // Test Ids
-  let studentId: string;
+  let userId: string;
   let listingId: string;
   let applicationId: string;
 
@@ -22,15 +22,20 @@ describe('Applications API', () => {
     const testStudent = await buildStudent.create({});
     const testListing = await buildListing.create({
       landlordId: landlord._id,
-      managers: [{ managerId: manager._id, permissions: { manageBillings: true, manageApplications: true, manageListings: true } }],
+      managers: [
+        {
+          managerId: manager._id,
+          permissions: { manageBillings: true, manageApplications: true, manageListings: true },
+        },
+      ],
     });
 
-    studentId = (testStudent as any)._id.toString();
+    userId = (testStudent as any)._id.toString();
     listingId = (testListing as any)._id.toString();
   });
 
   const applicationData = () => ({
-    studentId,
+    userId,
     listingId,
     preferredRoomType: 'single',
     documentUrls: [],

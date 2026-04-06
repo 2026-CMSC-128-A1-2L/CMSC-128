@@ -1,6 +1,6 @@
-import { RequestHandler } from "express";
-import { File } from "../models/File"
-import assert from "node:assert"
+import { RequestHandler } from 'express';
+import { File } from '../models/File';
+import assert from 'node:assert';
 
 export const routeUploadFile: RequestHandler = async (req, res, next) => {
   if (!req.file) {
@@ -9,7 +9,7 @@ export const routeUploadFile: RequestHandler = async (req, res, next) => {
   }
 
   // Already checked in middleware, should exist at this point.
-  assert.ok(req.user, "User should exist/have an account.");
+  assert.ok(req.user, 'User should exist/have an account.');
 
   const newFile = new File({
     key: (req.file as any).key,

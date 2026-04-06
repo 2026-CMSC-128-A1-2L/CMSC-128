@@ -7,24 +7,24 @@ import { Notification } from '../models/communication/Notification';
 import { QueryFilter } from 'mongoose';
 
 const buildNotificationQuery = (args: z.infer<typeof NotificationFilterSchema>) => {
-  const query: QueryFilter<typeof Notification> = {}
+  const query: QueryFilter<typeof Notification> = {};
 
   const sevenDaysAgo = new Date();
   sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
   if (args.status) {
-    if (args.status == "unread") {
+    if (args.status == 'unread') {
       query.status = 'unread';
-    } else if (args.status == "read") {
+    } else if (args.status == 'read') {
       query.status = 'read';
       query.updateAt = {
-        $gt: sevenDaysAgo
-      }
-    } else if (args.status == "archived") {
+        $gt: sevenDaysAgo,
+      };
+    } else if (args.status == 'archived') {
       query.status = 'read';
       query.updateAt = {
-        $lte: sevenDaysAgo
-      }
+        $lte: sevenDaysAgo,
+      };
     }
   } else {
     query.$or = [
@@ -32,15 +32,14 @@ const buildNotificationQuery = (args: z.infer<typeof NotificationFilterSchema>) 
       {
         status: 'read',
         updateAt: {
-
-          $gt: sevenDaysAgo
-        }
-      }
+          $gt: sevenDaysAgo,
+        },
+      },
     ];
   }
 
   return query;
-}
+};
 
 export const routeGetNotifications: RequestHandler = async (req, res, next) => {
   const userId = req.user!._id;

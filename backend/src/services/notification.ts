@@ -26,8 +26,5 @@ export const markNotificationAsRead = async (
 };
 
 export const markAllNotificationsAsRead = async (userId: mongoose.Types.ObjectId) => {
-  return await Notification.updateMany(
-    { userId, status: 'unread' },
-    { status: 'read' },
-  );
+  return await Notification.updateMany({ userId, status: 'unread' }, { status: 'read' });
 };

@@ -3,7 +3,8 @@ import mongoose from 'mongoose';
 const userSchema = new mongoose.Schema(
   {
     // Obtained through Google automatically after login with a Google email address.
-    email: { type: String, unique: true, required: true },
+    // TODO: change email check flow
+    emails: [String],
     profilePicture: String,
     firstName: { type: String, required: true },
     middleName: String,
@@ -87,8 +88,12 @@ export const Student = User.discriminator(
 
 const verificationSchema = new mongoose.Schema({
   verification: {
-    // TODO: change to File
-    documentUrls: [String],
+    documents: [
+      {
+        file: { type: String, ref: 'File', required: true },
+        isVerified: { type: Boolean, default: false },
+      },
+    ],
     status: {
       type: String,
       enum: ['pending', 'submitted', 'rejected', 'approved'],

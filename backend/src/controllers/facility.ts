@@ -16,6 +16,8 @@ export const routeGetFacilities: RequestHandler = async (req, res, next) => {
   return await getFacilities();
 };
 
+export const routeSearchFacilities: RequestHandler = async (req, res, next) => {};
+
 export const routeCreateFacility: RequestHandler = async (req, res, next) => {
   // auth check should be done in middleware before this, so should include user id already
   const userId = req.user!._id;
@@ -70,6 +72,8 @@ export const routeRemoveManager: RequestHandler = async (req, res, next) => {
 
   res.status(200).json({ message: 'Manager removed successfully.' });
 };
+
+export const routeUpdateManagerPermissions: RequestHandler = async (req, res, next) => {};
 
 export const routeGetListingsByFacility: RequestHandler = async (req, res, next) => {
   const facilityId = ObjectIdSchema.parse(req.params.facilityId);

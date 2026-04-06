@@ -5,16 +5,11 @@ import { combineFilters } from '../controllers/middleware';
 import { Unit } from '../models/housing/Unit';
 import { Listing } from '../models/housing/Listing';
 
-export const getTransferRequests = async (
-  studentID: mongoose.Types.ObjectId,
-) => {
-  return await TransferRequest.find({ studentId: studentID });
+export const getTransferRequests = async (userId: mongoose.Types.ObjectId) => {
+  return await TransferRequest.find({ userId });
 };
 
-export const approveTransferRequest = async (
-  transferID: mongoose.Types.ObjectId,
-  filters: any,
-) => {
+export const approveTransferRequest = async (transferID: mongoose.Types.ObjectId, filters: any) => {
   const transfer = await TransferRequest.findById(transferID);
 
   if (!transfer) {
@@ -26,12 +21,7 @@ export const approveTransferRequest = async (
     throw new AppError(404, 'Unit not found.');
   }
 
-  const listing = await Listing.findOne(
-    combineFilters(
-      { _id: unit.listingId },
-      filters,
-    ),
-  );
+  const listing = await Listing.findOne(combineFilters({ _id: unit.listingId }, filters));
 
   if (!listing) {
     throw new AppError(403, 'Forbidden.');
@@ -42,10 +32,7 @@ export const approveTransferRequest = async (
   return await transfer.save();
 };
 
-export const rejectTransferRequest = async (
-  transferID: mongoose.Types.ObjectId,
-  filters: any,
-) => {
+export const rejectTransferRequest = async (transferID: mongoose.Types.ObjectId, filters: any) => {
   const transfer = await TransferRequest.findById(transferID);
 
   if (!transfer) {
@@ -57,12 +44,7 @@ export const rejectTransferRequest = async (
     throw new AppError(404, 'Unit not found.');
   }
 
-  const listing = await Listing.findOne(
-    combineFilters(
-      { _id: unit.listingId },
-      filters,
-    ),
-  );
+  const listing = await Listing.findOne(combineFilters({ _id: unit.listingId }, filters));
 
   if (!listing) {
     throw new AppError(403, 'Forbidden.');

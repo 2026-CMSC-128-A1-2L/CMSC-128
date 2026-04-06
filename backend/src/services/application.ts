@@ -4,7 +4,7 @@ import { combineFilters } from '../controllers/middleware.js';
 import { AppError } from '../controllers/error.js';
 
 export type CreateApplicationArguments = {
-  studentId: mongoose.Types.ObjectId;
+  userId: mongoose.Types.ObjectId;
   listingId: mongoose.Types.ObjectId;
   preferredRoomType?: 'single' | 'double' | 'shared';
   status?:
@@ -22,7 +22,7 @@ export type CreateApplicationArguments = {
 };
 
 export type GetApplicationsArguments = {
-  studentId: mongoose.Types.ObjectId;
+  userId: mongoose.Types.ObjectId;
   listingId: mongoose.Types.ObjectId;
   preferredRoomType?: 'single' | 'double' | 'shared';
   status?:
@@ -39,7 +39,7 @@ export type GetApplicationsArguments = {
 
 export const createApplication = async (data: CreateApplicationArguments) => {
   const newApplication = new ApplicationForm({
-    studentId: data.studentId,
+    userId: data.userId,
     listingId: data.listingId,
     preferredRoomType: data.preferredRoomType,
     documentUrls: data.documentUrls || [],
@@ -54,8 +54,8 @@ export function buildApplicationQuery(
 ): QueryFilter<typeof ApplicationForm> {
   const query: QueryFilter<typeof ApplicationForm> = {};
 
-  if (args.studentId) {
-    query.studentId = args.studentId;
+  if (args.userId) {
+    query.userId = args.userId;
   }
 
   if (args.listingId) {
@@ -99,8 +99,8 @@ export const getApplicationsByListing = async (listingId: mongoose.Types.ObjectI
   return await ApplicationForm.find({ listingId });
 };
 
-export const getApplicationsByStudent = async (studentId: mongoose.Types.ObjectId) => {
-  return await ApplicationForm.find({ studentId });
+export const getApplicationsByStudent = async (userId: mongoose.Types.ObjectId) => {
+  return await ApplicationForm.find({ userId });
 };
 
 export type UpdateApplicationArguments = {

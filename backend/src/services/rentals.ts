@@ -7,7 +7,7 @@ import { ApplicationForm } from '../models/student-actions/ApplicationForm';
 // TODO: verify if actual move-in/out dates are needed
 // No activities field yet
 export type CreateRentalArguments = {
-  studentId: mongoose.Types.ObjectId;
+  userId: mongoose.Types.ObjectId;
   unitId: mongoose.Types.ObjectId;
 
   applicationId: mongoose.Types.ObjectId;
@@ -36,7 +36,7 @@ export const createRental = async (data: CreateRentalArguments) => {
   }
 
   const newRental = new Rental({
-    studentId: data.studentId,
+    userId: data.userId,
     unitId: data.unitId,
 
     applicationId: data.applicationId,
@@ -48,7 +48,7 @@ export const createRental = async (data: CreateRentalArguments) => {
   return await newRental.save();
 };
 
-export const getAllRentals = async ( filters: any ) => {
+export const getAllRentals = async (filters: any) => {
   return await Rental.find(filters);
 };
 
@@ -106,68 +106,55 @@ export const deleteRental = async (rentalId: mongoose.Types.ObjectId, filters: a
   return await rental.deleteOne();
 };
 
-export const getRentalsByUnitId = async (
-  unitId: mongoose.Types.ObjectId,
-  filters: any
-) => {
+export const getRentalsByUnitId = async (unitId: mongoose.Types.ObjectId, filters: any) => {
   const rentals = await Rental.find(combineFilters(filters, { unitId }));
 
   if (!rentals.length) {
     const rentalsNoFilter = await Rental.find({ unitId });
 
     if (rentalsNoFilter) {
-      throw new AppError(403, 'You don\'t have permission to view these rentals.');
+      throw new AppError(403, "You don't have permission to view these rentals.");
     } else {
-      throw new AppError(404, 'Rentals not found.')
+      throw new AppError(404, 'Rentals not found.');
     }
   }
 
   return rentals;
 };
 
-export const getRental = async (
-  rentalId: mongoose.Types.ObjectId,
-  filters: any
-) => {
+export const getRental = async (rentalId: mongoose.Types.ObjectId, filters: any) => {
   const rental = await Rental.findOne(combineFilters(filters, { rentalId }));
 
   if (!rental) {
     const rentalNoFilter = await Rental.findOne({ rentalId });
 
     if (rentalNoFilter) {
-      throw new AppError(403, 'You don\'t have permission to view this rental.');
+      throw new AppError(403, "You don't have permission to view this rental.");
     } else {
-      throw new AppError(404, 'Rental not found.')
+      throw new AppError(404, 'Rental not found.');
     }
   }
 
   return rental;
 };
 
-
-export const getRentalsByUser = async (
-  userId: mongoose.Types.ObjectId,
-  filters: any
-) => {
+export const getRentalsByUser = async (userId: mongoose.Types.ObjectId, filters: any) => {
   const rentals = await Rental.find(combineFilters(filters, { userId }));
 
   if (!rentals.length) {
     const rentalsNoFilter = await Rental.find({ userId });
 
     if (rentalsNoFilter) {
-      throw new AppError(403, 'You don\'t have permission to view these rentals.');
+      throw new AppError(403, "You don't have permission to view these rentals.");
     } else {
-      throw new AppError(404, 'Rentals not found.')
+      throw new AppError(404, 'Rentals not found.');
     }
   }
 
   return rentals;
 };
 
-export const getRentalsByListing = async (
-  listingId: mongoose.Types.ObjectId,
-  filters: any
-) => {
+export const getRentalsByListing = async (listingId: mongoose.Types.ObjectId, filters: any) => {
   const applications = await ApplicationForm.find({ listingId }).select('_id');
 
   if (!applications.length) {
@@ -176,10 +163,12 @@ export const getRentalsByListing = async (
 
   const applicationIds = applications.map((app) => app._id);
 
-  const rentals = await Rental.find(combineFilters(filters, { applicationId: { $in: applicationIds } }));
+  const rentals = await Rental.find(
+    combineFilters(filters, { applicationId: { $in: applicationIds } }),
+  );
 
   if (!rentals.length) {
-    const rentalsNoFilter = await Rental.find({applicationId: { $in: applicationIds }});
+    const rentalsNoFilter = await Rental.find({ applicationId: { $in: applicationIds } });
 
     if (rentalsNoFilter.length) {
       throw new AppError(403, "You don't have permission to view these rentals.");
@@ -210,7 +199,6 @@ export const moveIn = async (
     }
   }
 
-
   if (rental.status !== 'inactive') {
     if (rental.status === 'active') {
       throw new AppError(422, 'Tenant has already moved in to this rental.');
@@ -223,7 +211,6 @@ export const moveIn = async (
 
   const moveInDate = actualMoveInDate ?? new Date();
 
-
   rental.set({
     status: 'active',
     actualMoveInDate: moveInDate,
@@ -231,7 +218,6 @@ export const moveIn = async (
 
   return await rental.save();
 };
-
 
 // set status to ended
 // actualMoveOutDate param is optional (set to curr date if null)
@@ -251,7 +237,6 @@ export const moveOut = async (
       throw new AppError(404, 'Rental not found.');
     }
   }
-
 
   if (rental.status !== 'active') {
     if (rental.status === 'inactive') {

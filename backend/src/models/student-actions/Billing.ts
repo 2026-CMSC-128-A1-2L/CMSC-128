@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const billingSchema = new mongoose.Schema({
-  studentId: { type: mongoose.Schema.Types.ObjectId, ref: 'Student', required: true },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'Student', required: true },
   unitId: { type: mongoose.Schema.Types.ObjectId, ref: 'Unit', required: true },
 
   // Which facility this billing belongs to (for permission checks)

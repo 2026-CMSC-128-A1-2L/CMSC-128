@@ -33,6 +33,8 @@ export const routeGetVisitBookingsByStudent: RequestHandler = async (req, res, n
 export const routeGetDocuments: RequestHandler = async (req, res, next) => {};
 export const routeAddDocument: RequestHandler = async (req, res, next) => {};
 export const routeDeleteDocument: RequestHandler = async (req, res, next) => {};
+export const routeApproveDocument: RequestHandler = async (req, res, next) => {};
+export const routeRejectDocument: RequestHandler = async (req, res, next) => {};
 
 export const routeApproveUser: RequestHandler = async (req, res, next) => {
   const userId = ObjectIdSchema.parse(req.params.userId);
@@ -44,6 +46,10 @@ export const routeApproveUser: RequestHandler = async (req, res, next) => {
 export const routeRejectUser: RequestHandler = async (req, res, next) => {
   const userId = ObjectIdSchema.parse(req.params.userId);
   await User.findByIdAndUpdate(userId, { isActive: false });
-  await sendNotification(userId, 'Verification Rejected', 'Your account verification has been rejected.');
+  await sendNotification(
+    userId,
+    'Verification Rejected',
+    'Your account verification has been rejected.',
+  );
   res.status(200).json({ message: 'User rejected successfully.' });
 };

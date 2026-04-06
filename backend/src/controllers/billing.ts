@@ -6,7 +6,11 @@ import { CreateBillingBodySchema, GetBillingsFilterSchema } from './schema/billi
 export const routeCreateBilling: RequestHandler = async (req, res, next) => {
   const params = CreateBillingBodySchema.parse(req.body);
   const newBilling = await createBilling(params);
-  await sendNotification(params.studentId, 'New Billing Created', `A new billing of type ${params.paymentType} has been created. Due date: ${params.dueDate.toISOString().split('T')[0]}.`);
+  await sendNotification(
+    params.userId,
+    'New Billing Created',
+    `A new billing of type ${params.paymentType} has been created. Due date: ${params.dueDate.toISOString().split('T')[0]}.`,
+  );
   res.status(201).json({ id: newBilling.id });
 };
 

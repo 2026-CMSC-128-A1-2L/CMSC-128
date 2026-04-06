@@ -6,7 +6,10 @@ import { combineFilters } from '../controllers/middleware.js';
 
 export type CreateFacilityArguments = {
   landlordId: mongoose.Types.ObjectId;
-  managers?: { managerId: mongoose.Types.ObjectId; permissions: { manageBillings: boolean; manageApplications: boolean; manageListings: boolean } }[];
+  managers?: {
+    managerId: mongoose.Types.ObjectId;
+    permissions: { manageBillings: boolean; manageApplications: boolean; manageListings: boolean };
+  }[];
 
   name: string;
   type: string;
@@ -23,7 +26,10 @@ export type CreateFacilityArguments = {
 
 // NOTE: attributes to update are not yet finalized
 export type UpdateFacilityArguments = {
-  managers?: { managerId: mongoose.Types.ObjectId; permissions: { manageBillings: boolean; manageApplications: boolean; manageListings: boolean } }[];
+  managers?: {
+    managerId: mongoose.Types.ObjectId;
+    permissions: { manageBillings: boolean; manageApplications: boolean; manageListings: boolean };
+  }[];
   name?: string;
   type?: string;
   location?: {
@@ -114,16 +120,14 @@ export const deleteFacility = async (facilityId: mongoose.Types.ObjectId) => {
     throw new AppError(404, 'Facility not found.');
   }
 
-  if (facility.listings.length > 0) {
-    throw new AppError(422, 'Cannot delete a facility that still has listings.');
-  }
+  // TODO: check listing count
 
   await HousingFacility.findByIdAndDelete(facilityId);
 };
 
 export const removeManagerFromFacility = async (
   facilityId: mongoose.Types.ObjectId,
-  managerId: mongoose.Types.ObjectId,
+  userId: mongoose.Types.ObjectId,
 ) => {
   const facility = await HousingFacility.findById(facilityId);
   if (!facility) {
@@ -131,13 +135,10 @@ export const removeManagerFromFacility = async (
   }
 
   facility.managers = facility.managers.filter(
-    (m: any) => m.managerId.toString() !== managerId.toString(),
+    (m: any) => m.userId.toString() !== userId.toString(),
   ) as any;
   await facility.save();
 
   // cascade removal to all listings under this facility
-  await Listing.updateMany(
-    { housingId: facilityId },
-    { $pull: { managers: { managerId } } },
-  );
+  await Listing.updateMany({ facilityId: facilityId }, { $pull: { managers: { userId } } });
 };

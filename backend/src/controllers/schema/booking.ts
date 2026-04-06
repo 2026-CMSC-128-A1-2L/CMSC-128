@@ -3,7 +3,7 @@ import { ObjectIdSchema } from './common.js';
 
 // GET /visits
 export const GetBookingsQuerySchema = z.object({
-  studentId: ObjectIdSchema.optional(),
+  userId: ObjectIdSchema.optional(),
   housingId: ObjectIdSchema.optional(),
   startDate: z.iso
     .date()
@@ -24,7 +24,7 @@ export const GetBookingParamsSchema = z.object({
 
 // POST /visits
 export const CreateBookingBodySchema = z.object({
-  studentId: ObjectIdSchema,
+  userId: ObjectIdSchema,
   housingId: ObjectIdSchema,
   startDate: z.iso.datetime().transform((x) => new Date(x)),
   endDate: z.iso.datetime().transform((x) => new Date(x)),

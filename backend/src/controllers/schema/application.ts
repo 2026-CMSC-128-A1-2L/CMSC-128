@@ -3,7 +3,7 @@ import { ObjectIdSchema, QuerySchema } from './common';
 
 // POST /api/applications
 export const CreateApplicationBodySchema = z.object({
-  studentId: ObjectIdSchema,
+  userId: ObjectIdSchema,
   listingId: ObjectIdSchema,
   preferredRoomType: z.enum(['single', 'double', 'shared']).optional(),
   documentUrls: z.array(z.string()).optional(),
@@ -15,7 +15,7 @@ export const CreateApplicationBodySchema = z.object({
 export const GetApplicationsQuerySchema = QuerySchema;
 
 export const ApplicationFilterSchema = z.object({
-  studentId: ObjectIdSchema.optional(),
+  userId: ObjectIdSchema.optional(),
   listingId: ObjectIdSchema.optional(),
   preferredRoomType: z.enum(['single', 'double', 'shared']).optional(),
   status: z

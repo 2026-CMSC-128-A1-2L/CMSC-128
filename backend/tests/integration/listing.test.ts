@@ -17,7 +17,12 @@ describe('Listings API', () => {
   beforeAll(async () => {
     const facility = await buildHousingFacility.create({
       landlordId: landlord._id,
-      managers: [{ managerId: manager._id, permissions: { manageBillings: true, manageApplications: true, manageListings: true } }],
+      managers: [
+        {
+          managerId: manager._id,
+          permissions: { manageBillings: true, manageApplications: true, manageListings: true },
+        },
+      ],
     });
 
     existingFacilityId = (facility as any)._id;
@@ -36,9 +41,11 @@ describe('Listings API', () => {
   describe('POST /api/facilities/:facilityId/listings', () => {
     describe('Authentication', () => {
       it('should create listing and return 201 for Landlord', async () => {
-        const response = await landlordAgent.post(`/api/facilities/${existingFacilityId}/listings`).send({
-          ...listingData,
-        });
+        const response = await landlordAgent
+          .post(`/api/facilities/${existingFacilityId}/listings`)
+          .send({
+            ...listingData,
+          });
 
         expect(response).statusToBe(201);
         expect(response.body.id).toBeDefined();
@@ -46,11 +53,13 @@ describe('Listings API', () => {
       });
 
       it('should create listing and return 201 for Manager', async () => {
-        const response = await managerAgent.post(`/api/facilities/${existingFacilityId}/listings`).send({
-          ...listingData,
-          capacity: 6,
-          isPrivate: false,
-        });
+        const response = await managerAgent
+          .post(`/api/facilities/${existingFacilityId}/listings`)
+          .send({
+            ...listingData,
+            capacity: 6,
+            isPrivate: false,
+          });
 
         expect(response).statusToBe(201);
         expect(response.body.id).toBeDefined();
@@ -59,57 +68,71 @@ describe('Listings API', () => {
 
       // Testing error for unauthorized creation
       it('should return 401 for Guest (Not Logged In)', async () => {
-        const response = await guestAgent.post(`/api/facilities/${existingFacilityId}/listings`).send({
-          ...listingData,
-        });
+        const response = await guestAgent
+          .post(`/api/facilities/${existingFacilityId}/listings`)
+          .send({
+            ...listingData,
+          });
         expect(response).statusToBe(401);
       });
 
       it('should return an error for Student (Not Authorized to Create)', async () => {
-        const response = await studentAgent.post(`/api/facilities/${existingFacilityId}/listings`).send({
-          ...listingData,
-        });
+        const response = await studentAgent
+          .post(`/api/facilities/${existingFacilityId}/listings`)
+          .send({
+            ...listingData,
+          });
         expect(response).statusToBe(403);
       });
     });
 
     describe('Validation', () => {
       it('should return a 400 when passing a negative capacity', async () => {
-        const response = await landlordAgent.post(`/api/facilities/${existingFacilityId}/listings`).send({
-          ...listingData,
-          capacity: -1,
-        });
+        const response = await landlordAgent
+          .post(`/api/facilities/${existingFacilityId}/listings`)
+          .send({
+            ...listingData,
+            capacity: -1,
+          });
 
         expect(response).statusToBe(400);
       });
       it('should return a 404 when passing an invalid housing facility', async () => {
-        const response = await landlordAgent.post('/api/facilities/ffffffffffffffffffffffff/listings').send({
-          ...listingData,
-        });
+        const response = await landlordAgent
+          .post('/api/facilities/ffffffffffffffffffffffff/listings')
+          .send({
+            ...listingData,
+          });
 
         expect(response).statusToBe(404);
       });
       it('should return a 400 when passing a non-existent tag', async () => {
-        const response = await landlordAgent.post(`/api/facilities/${existingFacilityId}/listings`).send({
-          ...listingData,
-          tags: [{ name: 'water', value: { type: 'boolean', value: true } }],
-        });
+        const response = await landlordAgent
+          .post(`/api/facilities/${existingFacilityId}/listings`)
+          .send({
+            ...listingData,
+            tags: [{ name: 'water', value: { type: 'boolean', value: true } }],
+          });
 
         expect(response).statusToBe(400);
       });
       it('should return a 400 when passing an invalid tag value', async () => {
-        const response = await landlordAgent.post(`/api/facilities/${existingFacilityId}/listings`).send({
-          ...listingData,
-          tags: [{ name: 'wifi', value: { type: 'enum', value: 'Invalid Value' } }],
-        });
+        const response = await landlordAgent
+          .post(`/api/facilities/${existingFacilityId}/listings`)
+          .send({
+            ...listingData,
+            tags: [{ name: 'wifi', value: { type: 'enum', value: 'Invalid Value' } }],
+          });
 
         expect(response).statusToBe(400);
       });
       it('should return a 400 when passing an invalid room type', async () => {
-        const response = await landlordAgent.post(`/api/facilities/${existingFacilityId}/listings`).send({
-          ...listingData,
-          roomType: 'invalid-room-type',
-        });
+        const response = await landlordAgent
+          .post(`/api/facilities/${existingFacilityId}/listings`)
+          .send({
+            ...listingData,
+            roomType: 'invalid-room-type',
+          });
 
         expect(response).statusToBe(400);
       });

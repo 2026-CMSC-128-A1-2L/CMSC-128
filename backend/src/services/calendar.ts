@@ -26,26 +26,36 @@ export const getCalendar = async (
 
   if (userType === 'Student') {
     const bookings = await VisitBooking.find({
-      studentId: userId,
+      userId: userId,
       startDate: { $lte: endDate },
       endDate: { $gte: startDate },
     });
     for (const b of bookings) {
-      events.push({ type: 'booking', date: b.startDate, title: 'Visit booking', referenceId: b._id });
+      events.push({
+        type: 'booking',
+        date: b.startDate,
+        title: 'Visit booking',
+        referenceId: b._id,
+      });
     }
 
     const billings = await Billing.find({
-      studentId: userId,
+      userId: userId,
       dueDate: { $gte: startDate, $lte: endDate },
     });
     for (const b of billings) {
       if (b.dueDate) {
-        events.push({ type: 'billing', date: b.dueDate, title: `Billing due (${b.paymentType})`, referenceId: b._id });
+        events.push({
+          type: 'billing',
+          date: b.dueDate,
+          title: `Billing due (${b.paymentType})`,
+          referenceId: b._id,
+        });
       }
     }
 
     const rentals = await Rental.find({
-      studentId: userId,
+      userId: userId,
       $or: [
         { expectedMoveInDate: { $gte: startDate, $lte: endDate } },
         { actualMoveInDate: { $gte: startDate, $lte: endDate } },
@@ -54,17 +64,49 @@ export const getCalendar = async (
       ],
     });
     for (const r of rentals) {
-      if (r.expectedMoveInDate && r.expectedMoveInDate >= startDate && r.expectedMoveInDate <= endDate) {
-        events.push({ type: 'move-in', date: r.expectedMoveInDate, title: 'Expected move-in', referenceId: r._id });
+      if (
+        r.expectedMoveInDate &&
+        r.expectedMoveInDate >= startDate &&
+        r.expectedMoveInDate <= endDate
+      ) {
+        events.push({
+          type: 'move-in',
+          date: r.expectedMoveInDate,
+          title: 'Expected move-in',
+          referenceId: r._id,
+        });
       }
       if (r.actualMoveInDate && r.actualMoveInDate >= startDate && r.actualMoveInDate <= endDate) {
-        events.push({ type: 'move-in', date: r.actualMoveInDate, title: 'Move-in', referenceId: r._id });
+        events.push({
+          type: 'move-in',
+          date: r.actualMoveInDate,
+          title: 'Move-in',
+          referenceId: r._id,
+        });
       }
-      if (r.expectedMoveOutDate && r.expectedMoveOutDate >= startDate && r.expectedMoveOutDate <= endDate) {
-        events.push({ type: 'move-out', date: r.expectedMoveOutDate, title: 'Expected move-out', referenceId: r._id });
+      if (
+        r.expectedMoveOutDate &&
+        r.expectedMoveOutDate >= startDate &&
+        r.expectedMoveOutDate <= endDate
+      ) {
+        events.push({
+          type: 'move-out',
+          date: r.expectedMoveOutDate,
+          title: 'Expected move-out',
+          referenceId: r._id,
+        });
       }
-      if (r.actualMoveOutDate && r.actualMoveOutDate >= startDate && r.actualMoveOutDate <= endDate) {
-        events.push({ type: 'move-out', date: r.actualMoveOutDate, title: 'Move-out', referenceId: r._id });
+      if (
+        r.actualMoveOutDate &&
+        r.actualMoveOutDate >= startDate &&
+        r.actualMoveOutDate <= endDate
+      ) {
+        events.push({
+          type: 'move-out',
+          date: r.actualMoveOutDate,
+          title: 'Move-out',
+          referenceId: r._id,
+        });
       }
     }
   } else if (userType === 'Manager' || userType === 'Landlord') {
@@ -82,15 +124,20 @@ export const getCalendar = async (
 
     if (facilityIds.length > 0) {
       const bookings = await VisitBooking.find({
-        housingId: { $in: facilityIds },
+        facilityId: { $in: facilityIds },
         startDate: { $lte: endDate },
         endDate: { $gte: startDate },
       });
       for (const b of bookings) {
-        events.push({ type: 'booking', date: b.startDate, title: 'Visit booking', referenceId: b._id });
+        events.push({
+          type: 'booking',
+          date: b.startDate,
+          title: 'Visit booking',
+          referenceId: b._id,
+        });
       }
 
-      const listings = await Listing.find({ housingId: { $in: facilityIds } }).select('_id');
+      const listings = await Listing.find({ facilityId: { $in: facilityIds } }).select('_id');
       const listingIds = listings.map((l) => l._id as mongoose.Types.ObjectId);
 
       if (listingIds.length > 0) {
@@ -104,7 +151,12 @@ export const getCalendar = async (
           });
           for (const b of billings) {
             if (b.dueDate) {
-              events.push({ type: 'billing', date: b.dueDate, title: `Billing due (${b.paymentType})`, referenceId: b._id });
+              events.push({
+                type: 'billing',
+                date: b.dueDate,
+                title: `Billing due (${b.paymentType})`,
+                referenceId: b._id,
+              });
             }
           }
 
@@ -118,17 +170,53 @@ export const getCalendar = async (
             ],
           });
           for (const r of rentals) {
-            if (r.expectedMoveInDate && r.expectedMoveInDate >= startDate && r.expectedMoveInDate <= endDate) {
-              events.push({ type: 'move-in', date: r.expectedMoveInDate, title: 'Expected move-in', referenceId: r._id });
+            if (
+              r.expectedMoveInDate &&
+              r.expectedMoveInDate >= startDate &&
+              r.expectedMoveInDate <= endDate
+            ) {
+              events.push({
+                type: 'move-in',
+                date: r.expectedMoveInDate,
+                title: 'Expected move-in',
+                referenceId: r._id,
+              });
             }
-            if (r.actualMoveInDate && r.actualMoveInDate >= startDate && r.actualMoveInDate <= endDate) {
-              events.push({ type: 'move-in', date: r.actualMoveInDate, title: 'Move-in', referenceId: r._id });
+            if (
+              r.actualMoveInDate &&
+              r.actualMoveInDate >= startDate &&
+              r.actualMoveInDate <= endDate
+            ) {
+              events.push({
+                type: 'move-in',
+                date: r.actualMoveInDate,
+                title: 'Move-in',
+                referenceId: r._id,
+              });
             }
-            if (r.expectedMoveOutDate && r.expectedMoveOutDate >= startDate && r.expectedMoveOutDate <= endDate) {
-              events.push({ type: 'move-out', date: r.expectedMoveOutDate, title: 'Expected move-out', referenceId: r._id });
+            if (
+              r.expectedMoveOutDate &&
+              r.expectedMoveOutDate >= startDate &&
+              r.expectedMoveOutDate <= endDate
+            ) {
+              events.push({
+                type: 'move-out',
+                date: r.expectedMoveOutDate,
+                title: 'Expected move-out',
+                referenceId: r._id,
+              });
             }
-            if (r.actualMoveOutDate && r.actualMoveOutDate >= startDate && r.actualMoveOutDate <= endDate) {
-              events.push({ type: 'move-out', date: r.actualMoveOutDate, title: 'Move-out', referenceId: r._id });
+            if (
+              r.actualMoveOutDate &&
+              r.actualMoveOutDate >= startDate &&
+              r.actualMoveOutDate <= endDate
+            ) {
+              events.push({
+                type: 'move-out',
+                date: r.actualMoveOutDate,
+                title: 'Move-out',
+                referenceId: r._id,
+              });
             }
           }
         }

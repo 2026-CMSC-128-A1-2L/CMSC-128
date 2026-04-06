@@ -5,8 +5,8 @@ import { HousingFacility } from '../models/housing/HousingFacility.js';
 import { AppError } from '../controllers/error.js';
 
 export type CreateBookingArguments = {
-  studentId: mongoose.Types.ObjectId;
-  housingId: mongoose.Types.ObjectId;
+  userId: mongoose.Types.ObjectId;
+  facilityId: mongoose.Types.ObjectId;
 
   startDate: Date;
   endDate: Date;
@@ -16,8 +16,8 @@ export type CreateBookingArguments = {
 };
 
 export type GetBookingArguments = {
-  studentId?: mongoose.Types.ObjectId;
-  housingId?: mongoose.Types.ObjectId;
+  userId?: mongoose.Types.ObjectId;
+  facilityId?: mongoose.Types.ObjectId;
 
   startDate?: Date;
   endDate?: Date;
@@ -30,9 +30,9 @@ export const createBooking = async (data: CreateBookingArguments, filters: any) 
   if (data.startDate && data.endDate && data.endDate < data.startDate) {
     throw new AppError(422, 'Booking end date should not be before booking start date date.');
   }
-  const facility = await HousingFacility.findOne(combineFilters(filters, { _id: data.housingId }));
+  const facility = await HousingFacility.findOne(combineFilters(filters, { _id: data.facilityId }));
   if (!facility) {
-    const facilityNoFilter = await HousingFacility.findById(data.housingId);
+    const facilityNoFilter = await HousingFacility.findById(data.facilityId);
     if (facilityNoFilter) {
       throw new AppError(403, 'You are not allowed to create a booking for this facility.');
     } else {
@@ -41,8 +41,8 @@ export const createBooking = async (data: CreateBookingArguments, filters: any) 
   }
 
   const newBooking = new VisitBooking({
-    studentId: data.studentId,
-    housingId: data.housingId,
+    userId: data.userId,
+    facilityId: data.facilityId,
 
     startDate: data.startDate,
     endDate: data.endDate,
@@ -58,12 +58,12 @@ export function buildBookingQuery(
 ): QueryFilter<typeof VisitBooking> {
   const query: QueryFilter<typeof VisitBooking> = {};
 
-  if (args.studentId) {
-    query.studentId = args.studentId;
+  if (args.userId) {
+    query.userId = args.userId;
   }
 
-  if (args.housingId) {
-    query.housingId = args.housingId;
+  if (args.facilityId) {
+    query.facilityId = args.facilityId;
   }
 
   if (args.startDate) {

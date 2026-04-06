@@ -119,7 +119,10 @@ export const buildUnverifiedStudent = buildUser.params({
 export type HousingFacilityParams = {
   name: string;
   landlordId: mongoose.Types.ObjectId;
-  managers?: { managerId: mongoose.Types.ObjectId; permissions: { manageBillings: boolean; manageApplications: boolean; manageListings: boolean } }[];
+  managers?: {
+    managerId: mongoose.Types.ObjectId;
+    permissions: { manageBillings: boolean; manageApplications: boolean; manageListings: boolean };
+  }[];
   location?: {
     coordinates?: number[];
     text?: string;
@@ -151,9 +154,12 @@ export const buildHousingFacility = Factory.define<HousingFacilityParams>(({ seq
 })).onCreate((data) => new HousingFacility(data).save() as any);
 
 type ListingParams = {
-  housingId: mongoose.Types.ObjectId;
+  facilityId: mongoose.Types.ObjectId;
   landlordId: mongoose.Types.ObjectId;
-  managers?: { managerId: mongoose.Types.ObjectId; permissions: { manageBillings: boolean; manageApplications: boolean; manageListings: boolean } }[];
+  managers?: {
+    managerId: mongoose.Types.ObjectId;
+    permissions: { manageBillings: boolean; manageApplications: boolean; manageListings: boolean };
+  }[];
   tags: { name: string; value?: unknown }[];
   roomType: string;
   capacity: number;
@@ -166,7 +172,7 @@ type ListingParams = {
 };
 
 export const buildListing = Factory.define<ListingParams>(({ sequence }) => ({
-  housingId: new mongoose.Types.ObjectId(),
+  facilityId: new mongoose.Types.ObjectId(),
   landlordId: new mongoose.Types.ObjectId(),
   managers: [],
   tags: [],

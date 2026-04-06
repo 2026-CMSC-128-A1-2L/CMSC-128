@@ -8,7 +8,7 @@ import { HousingFacility } from '../models/housing/HousingFacility.js';
 import { Rental } from '../models/student-actions/Rents.js';
 
 export const createReview = async (
-  studentId: mongoose.Types.ObjectId,
+  userId: mongoose.Types.ObjectId,
   listingId: mongoose.Types.ObjectId,
   rating: number,
   description?: string,
@@ -19,7 +19,7 @@ export const createReview = async (
   }
 
   const hasEndedRental = await Rental.findOne({
-    studentId,
+    userId,
     unitId: { $in: await Unit.find({ listingId }).distinct('_id') },
     status: 'ended',
     actualMoveOutDate: { $exists: true },
@@ -29,7 +29,7 @@ export const createReview = async (
     throw new AppError(403, 'You can only review a listing after you have moved out.');
   }
 
-  const review = new Review({ studentId, listingId, rating, description });
+  const review = new Review({ userId, listingId, rating, description });
   return await review.save();
 };
 
@@ -43,13 +43,8 @@ export const getReviews = async (filters: any) => {
   });
 };
 
-export const getListingReviews = async (
-  listingId: mongoose.Types.ObjectId,
-  filters: any,
-) => {
-  const listing = await Listing.findOne(
-    combineFilters({ _id: listingId }, filters),
-  );
+export const getListingReviews = async (listingId: mongoose.Types.ObjectId, filters: any) => {
+  const listing = await Listing.findOne(combineFilters({ _id: listingId }, filters));
 
   if (!listing) {
     const listingNoFilter = await Listing.findById(listingId);
@@ -64,10 +59,7 @@ export const getListingReviews = async (
   return await Review.find({ listingId });
 };
 
-export const getFacilityReviews = async (
-  facilityId: mongoose.Types.ObjectId,
-  filters: any,
-) => {
+export const getFacilityReviews = async (facilityId: mongoose.Types.ObjectId, filters: any) => {
   const facility = await HousingFacility.findById(facilityId);
 
   if (!facility) {
@@ -77,7 +69,7 @@ export const getFacilityReviews = async (
   const listings = await Listing.find(
     combineFilters(
       {
-        housingId: facilityId,
+        facilityId: facilityId,
       },
       filters,
     ),

@@ -26,7 +26,7 @@ export const UpdateRentalBodySchema = z.object({
 export const GetRentalsQuerySchema = QuerySchema;
 
 export const RentalFilterSchema = z.object({
-  studentId: ObjectIdSchema.optional(),
+  userId: ObjectIdSchema.optional(),
   unitId: ObjectIdSchema.optional(),
   status: z.enum(['active', 'ended', 'on_waitlist', 'inactive']).optional(),
 });
@@ -35,7 +35,6 @@ export const RentalFilterSchema = z.object({
 export const RentalParamsSchema = z.object({
   rentalId: ObjectIdSchema,
 });
-
 
 // POST /rentals/:rentalId/move-in
 export const MoveInBodySchema = z.object({
