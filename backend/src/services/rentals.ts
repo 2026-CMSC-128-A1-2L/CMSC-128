@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import { Rental } from '../models/student-actions/Rents';
 import { AppError } from '../controllers/error';
 import { combineFilters } from '../controllers/middleware';
+import { ApplicationForm } from '../models/student-actions/ApplicationForm';
 
 // TODO: verify if actual move-in/out dates are needed
 // No activities field yet
@@ -47,8 +48,8 @@ export const createRental = async (data: CreateRentalArguments) => {
   return await newRental.save();
 };
 
-export const getRentals = async () => {
-  return await Rental.find();
+export const getAllRentals = async ( filters: any ) => {
+  return await Rental.find(filters);
 };
 
 export const updateRental = async (
@@ -111,7 +112,7 @@ export const getRentalsByUnitId = async (
 ) => {
   const rentals = await Rental.find(combineFilters(filters, { unitId }));
 
-  if (!rentals) {
+  if (!rentals.length) {
     const rentalsNoFilter = await Rental.find({ unitId });
 
     if (rentalsNoFilter) {
@@ -122,4 +123,156 @@ export const getRentalsByUnitId = async (
   }
 
   return rentals;
+};
+
+export const getRental = async (
+  rentalId: mongoose.Types.ObjectId,
+  filters: any
+) => {
+  const rental = await Rental.findOne(combineFilters(filters, { rentalId }));
+
+  if (!rental) {
+    const rentalNoFilter = await Rental.findOne({ rentalId });
+
+    if (rentalNoFilter) {
+      throw new AppError(403, 'You don\'t have permission to view this rental.');
+    } else {
+      throw new AppError(404, 'Rental not found.')
+    }
+  }
+
+  return rental;
+};
+
+
+export const getRentalsByUser = async (
+  userId: mongoose.Types.ObjectId,
+  filters: any
+) => {
+  const rentals = await Rental.find(combineFilters(filters, { userId }));
+
+  if (!rentals.length) {
+    const rentalsNoFilter = await Rental.find({ userId });
+
+    if (rentalsNoFilter) {
+      throw new AppError(403, 'You don\'t have permission to view these rentals.');
+    } else {
+      throw new AppError(404, 'Rentals not found.')
+    }
+  }
+
+  return rentals;
+};
+
+export const getRentalsByListing = async (
+  listingId: mongoose.Types.ObjectId,
+  filters: any
+) => {
+  const applications = await ApplicationForm.find({ listingId }).select('_id');
+
+  if (!applications.length) {
+    throw new AppError(404, 'No applications found for this listing.');
+  }
+
+  const applicationIds = applications.map((app) => app._id);
+
+  const rentals = await Rental.find(combineFilters(filters, { applicationId: { $in: applicationIds } }));
+
+  if (!rentals.length) {
+    const rentalsNoFilter = await Rental.find({applicationId: { $in: applicationIds }});
+
+    if (rentalsNoFilter.length) {
+      throw new AppError(403, "You don't have permission to view these rentals.");
+    } else {
+      throw new AppError(404, 'No rentals found for this listing.');
+    }
+  }
+
+  return rentals;
+};
+
+// set status to active
+// actualMoveInDate param is optional (set to curr date if null)
+export const moveIn = async (
+  rentalId: mongoose.Types.ObjectId,
+  filters: any,
+  actualMoveInDate?: Date,
+) => {
+  const rental = await Rental.findOne(combineFilters(filters, { _id: rentalId }));
+
+  if (!rental) {
+    const rentalNoFilter = await Rental.findById(rentalId);
+
+    if (rentalNoFilter) {
+      throw new AppError(403, 'You cannot move in to this rental.');
+    } else {
+      throw new AppError(404, 'Rental not found.');
+    }
+  }
+
+
+  if (rental.status !== 'inactive') {
+    if (rental.status === 'active') {
+      throw new AppError(422, 'Tenant has already moved in to this rental.');
+    } else if (rental.status === 'ended') {
+      throw new AppError(422, 'This rental has already ended.');
+    } else {
+      throw new AppError(422, `Cannot move in to a rental with status '${rental.status}'.`); // for on_waitlist
+    }
+  }
+
+  const moveInDate = actualMoveInDate ?? new Date();
+
+
+  rental.set({
+    status: 'active',
+    actualMoveInDate: moveInDate,
+  });
+
+  return await rental.save();
+};
+
+
+// set status to ended
+// actualMoveOutDate param is optional (set to curr date if null)
+export const moveOut = async (
+  rentalId: mongoose.Types.ObjectId,
+  filters: any,
+  actualMoveOutDate?: Date,
+) => {
+  const rental = await Rental.findOne(combineFilters(filters, { _id: rentalId }));
+
+  if (!rental) {
+    const rentalNoFilter = await Rental.findById(rentalId);
+
+    if (rentalNoFilter) {
+      throw new AppError(403, 'You cannot move out of this rental.');
+    } else {
+      throw new AppError(404, 'Rental not found.');
+    }
+  }
+
+
+  if (rental.status !== 'active') {
+    if (rental.status === 'inactive') {
+      throw new AppError(422, 'Tenant has not yet moved in to this rental.');
+    } else if (rental.status === 'ended') {
+      throw new AppError(422, 'This rental has already ended.');
+    } else {
+      throw new AppError(422, `Cannot move out to a rental with status '${rental.status}'.`);
+    }
+  }
+
+  const moveOutDate = actualMoveOutDate ?? new Date();
+
+  if (rental.actualMoveInDate && moveOutDate < rental.actualMoveInDate) {
+    throw new AppError(422, 'Actual move-out date cannot be before the actual move-in date.');
+  }
+
+  rental.set({
+    status: 'active',
+    actualMoveOutDate: moveOutDate,
+  });
+
+  return await rental.save();
 };
