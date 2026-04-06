@@ -2,6 +2,7 @@ import { RequestHandler } from 'express';
 import { GetUsersQuerySchema, UserFilterSchema } from './schema/user';
 import { ObjectIdSchema } from './schema/common';
 import { deleteUser, getUserById, getUsers } from '../services/user';
+import { getBookingsByStudent } from '../services/booking';
 
 export const routeGetUsers: RequestHandler = async (req, res, next) => {
   const searchQuery = GetUsersQuerySchema.parse(req.query);
@@ -27,7 +28,12 @@ export const routeDeleteUser: RequestHandler = async (req, res, next) => {
   res.status(200).json({ data: user });
 };
 export const routeGetApplicationsByStudent: RequestHandler = async (req, res, next) => {};
-export const routeGetVisitBookingsByStudent: RequestHandler = async (req, res, next) => {};
+export const routeGetVisitBookingsByStudent: RequestHandler = async (req, res, next) => {
+  const userId = ObjectIdSchema.parse(req.params.userId);
+  const bookings = await getBookingsByStudent(userId);
+
+  res.status(200).json({ data: bookings });
+};
 export const routeGetDocuments: RequestHandler = async (req, res, next) => {};
 export const routeAddDocument: RequestHandler = async (req, res, next) => {};
 export const routeDeleteDocument: RequestHandler = async (req, res, next) => {};
