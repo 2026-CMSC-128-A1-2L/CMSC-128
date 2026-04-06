@@ -35,3 +35,20 @@ export const RentalFilterSchema = z.object({
 export const RentalParamsSchema = z.object({
   rentalId: ObjectIdSchema,
 });
+
+
+// POST /rentals/:rentalId/move-in
+export const MoveInBodySchema = z.object({
+  actualMoveInDate: z.iso
+    .date()
+    .transform((x) => new Date(x))
+    .optional(),
+});
+
+// POST /rentals/:rentalId/move-out
+export const MoveOutBodySchema = z.object({
+  actualMoveOutDate: z.iso
+    .date()
+    .transform((x) => new Date(x))
+    .optional(),
+});
