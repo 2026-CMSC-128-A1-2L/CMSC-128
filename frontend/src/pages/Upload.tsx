@@ -2,7 +2,7 @@ function Upload() {
   return (
     <div>
       <h1>Upload File</h1>
-      <form action="/api/v1/files" method="POST" encType="multipart/form-data">
+      <form action="/api/files" method="POST" encType="multipart/form-data">
         <label>
           File: <input type="file" name="file" />
         </label>
