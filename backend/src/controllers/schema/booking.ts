@@ -31,3 +31,14 @@ export const CreateBookingBodySchema = z.object({
   status: z.enum(['pending', 'approved', 'rejected', 'cancelled']).default('pending'),
   message: z.string().optional(),
 });
+
+// PATCH /bookings/:bookingId
+export const UpdateBookingBodySchema = z.object({
+  startDate: z.iso.datetime().transform((x) => new Date(x)).optional(),
+  endDate: z.iso.datetime().transform((x) => new Date(x)).optional(),
+  message: z.string().optional(),
+});
+
+export const BookingParamsSchema = z.object({
+  bookingId: ObjectIdSchema,
+});
