@@ -26,7 +26,7 @@ export type ResolveReportArgs = {
 };
 
 export const getReports = async () => {
-  return await Report.find().sort({ dateCreated: -1 });
+  return await Report.find().sort({ createdAt: -1 });
 };
 
 export const reportListing = async (data: CreateListingReportArgs) => {
@@ -77,7 +77,7 @@ export const reportUser = async (data: CreateUserReportArgs) => {
   }
 
   const report = new UserReport({
-    reportedBy: data.reporterId,
+    reporterId: data.reporterId,
     userReported: data.userReported,
     reportDescription: data.reportDescription,
     reportFlags: data.reportFlags,
