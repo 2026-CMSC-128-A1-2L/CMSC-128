@@ -18,11 +18,9 @@ import {
   routeUpdateListing,
   routeDeleteListing,
   routeGetUnitsByListing,
-  routeGetVisitBookingsByListing,
   routeApproveListing,
   routeUpdateListingTags,
   routeRejectListing,
-  routeGetVisitBookingsByStudent,
 } from './controllers/listing.js';
 import {
   routeGetUnits,
@@ -124,6 +122,8 @@ import {
   routeCancelBooking,
   routeRejectBooking,
   routeUpdateBooking,
+  routeGetVisitBookingsByListing,
+  routeGetVisitBookingsByStudent,
 } from './controllers/booking.js';
 import { routeGetActivities } from './controllers/activity.js';
 import { routeGetMessages, routeGetUserMessages, routeSendMessage } from './controllers/message.js';
@@ -385,12 +385,12 @@ router.post('/users/:userId/documents', isSelfOrSuperAdmin, routeAddDocument);
 // POST /api/users/:userId/documents/:documentId/approve
 //
 // admin only
-router.delete('/users/:userId/documents/:documentId/approve', isSuperAdmin, routeApproveDocument);
+router.post('/users/:userId/documents/:documentId/approve', isSuperAdmin, routeApproveDocument);
 
 // POST /api/users/:userId/documents/:documentId/reject
 //
 // admin only
-router.delete('/users/:userId/documents/:documentId/reject', isSuperAdmin, routeRejectDocument);
+router.post('/users/:userId/documents/:documentId/reject', isSuperAdmin, routeRejectDocument);
 
 // POST /api/users/:userId/approve
 //
