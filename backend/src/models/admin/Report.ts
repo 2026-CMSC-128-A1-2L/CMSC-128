@@ -1,17 +1,24 @@
 import mongoose from 'mongoose';
 
-// Base Report Schema
-const reportSchema = new mongoose.Schema({
-  reporterId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  reportDescription: { type: String, required: true },
-  reportEvidence: { type: [String], required: true },
-  dateCreated: { type: Date, required: true },
-  dateResolved: { type: Date, required: true },
-});
+const reportSchema = new mongoose.Schema(
+  {
+    reporterId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    reportDescription: { type: String, required: true },
+    reportFlags: { type: [String], required: true },
+    reportEvidence: { type: [String], required: true },
+    status: {
+      type: String,
+      enum: ['pending', 'resolved', 'dismissed'],
+      default: 'pending',
+      required: true
+    },
+  } ,
+  { timestamps: true },
+);
 
-const Report = mongoose.model('Report', reportSchema);
+export const Report = mongoose.model('Report', reportSchema);
 
-export const ListingReport = mongoose.model(
+export const ListingReport = Report.discriminator(
   'ListingReport',
   new mongoose.Schema({
     facilityId: { type: mongoose.Schema.Types.ObjectId, ref: 'HousingFacility', required: true },
@@ -22,6 +29,6 @@ export const ListingReport = mongoose.model(
 export const UserReport = Report.discriminator(
   'UserReport',
   new mongoose.Schema({
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    userReported: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   }),
 );
