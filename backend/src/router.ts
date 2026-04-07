@@ -22,6 +22,7 @@ import {
   routeApproveListing,
   routeUpdateListingTags,
   routeRejectListing,
+  routeGetVisitBookingsByStudent,
 } from './controllers/listing.js';
 import {
   routeGetUnits,
@@ -51,7 +52,6 @@ import {
   routeGetUser,
   routeUpdateUser,
   routeDeleteUser,
-  routeGetVisitBookingsByStudent,
   routeAddDocument,
   routeGetDocuments,
   routeApproveUser,
