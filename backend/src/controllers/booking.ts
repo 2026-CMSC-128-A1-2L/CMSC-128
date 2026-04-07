@@ -1,8 +1,21 @@
 import { RequestHandler } from 'express';
-import { createBooking, getBookings, updateBookingStatus } from '../services/booking.js';
 import { sendNotification } from '../services/notifications.js';
-import { CreateBookingBodySchema, GetBookingsQuerySchema } from './schema/booking.js';
 import { ObjectIdSchema } from './schema/common.js';
+import {
+  cancelBooking,
+  createBooking,
+  getBookings,
+  updateBookingStatus,
+  updateBooking,
+  getBookingsByStudent,
+  getBookingsByListing,
+} from '../services/booking.js';
+import {
+  BookingParamsSchema,
+  CreateBookingBodySchema,
+  GetBookingsQuerySchema,
+  UpdateBookingBodySchema,
+} from './schema/booking.js';
 
 export const routeCreateBooking: RequestHandler = async (req, res, next) => {
   const userId = req.user!._id;
@@ -16,9 +29,6 @@ export const routeGetBookings: RequestHandler = async (req, res, next) => {
   const bookings = await getBookings(params, {});
   res.status(200).json({ data: bookings });
 };
-
-export const routeUpdateBooking: RequestHandler = async (req, res, next) => {};
-export const routeCancelBooking: RequestHandler = async (req, res, next) => {};
 
 export const routeApproveBooking: RequestHandler = async (req, res, next) => {
   const bookingId = ObjectIdSchema.parse(req.params.bookingId);
@@ -40,4 +50,36 @@ export const routeRejectBooking: RequestHandler = async (req, res, next) => {
     'Your visit booking has been rejected.',
   );
   res.status(200).json({ data: updatedBooking });
+}
+
+export const routeUpdateBooking: RequestHandler = async (req, res, next) => {
+  const { bookingId } = BookingParamsSchema.parse(req.params);
+  const data = UpdateBookingBodySchema.parse(req.body);
+
+  const updated = await updateBooking(bookingId, data);
+
+  res.status(200).json({ data: updated });
 };
+
+export const routeCancelBooking: RequestHandler = async (req, res, next) => {
+  const { bookingId } = BookingParamsSchema.parse(req.params);
+
+  const cancelled = await cancelBooking(bookingId);
+
+  res.status(200).json({ data: cancelled });
+};
+
+export const routeGetVisitBookingsByStudent: RequestHandler = async (req, res, next) => {
+  const userId = ObjectIdSchema.parse(req.params.userId);
+  const bookings = await getBookingsByStudent(userId);
+
+  res.status(200).json({ data: bookings });
+};
+
+export const routeGetVisitBookingsByListing: RequestHandler = async (req, res, next) => {
+  const listingId = ObjectIdSchema.parse(req.params.listingId);
+  const bookings = await getBookingsByListing(listingId, res.locals.filters ?? {});
+
+  res.status(200).json({ data: bookings });
+};
+
