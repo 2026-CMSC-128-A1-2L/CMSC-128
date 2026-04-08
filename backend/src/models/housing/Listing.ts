@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { ROOM_TYPES } from '../../constants';
+import { documentSchema } from '../Document';
 
 const ListingSchema = new mongoose.Schema({
   facilityId: { type: mongoose.Schema.Types.ObjectId, ref: 'HousingFacility', required: true },
@@ -39,6 +40,7 @@ const ListingSchema = new mongoose.Schema({
       value: { type: String, required: true },
     },
   ],
+  documents: [documentSchema],
 });
 
 export const Listing = mongoose.model('Listing', ListingSchema);

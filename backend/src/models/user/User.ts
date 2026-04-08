@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { documentSchema } from '../Document';
 
 const userSchema = new mongoose.Schema(
   {
@@ -88,12 +89,7 @@ export const Student = User.discriminator(
 
 const verificationSchema = new mongoose.Schema({
   verification: {
-    documents: [
-      {
-        file: { type: String, ref: 'File', required: true },
-        isVerified: { type: Boolean, default: false },
-      },
-    ],
+    documents: [documentSchema],
     status: {
       type: String,
       enum: ['pending', 'submitted', 'rejected', 'approved'],

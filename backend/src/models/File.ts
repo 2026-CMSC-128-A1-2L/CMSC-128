@@ -6,7 +6,7 @@ const fileSchema = new mongoose.Schema(
     key: { type: String, required: true, unique: true },
 
     // User ID of the uploader
-    userId: { type: String, required: true },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
 
     // Original filename of the file
     filename: { type: String, required: true },

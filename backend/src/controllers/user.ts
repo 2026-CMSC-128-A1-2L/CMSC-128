@@ -29,12 +29,6 @@ export const routeDeleteUser: RequestHandler = async (req, res, next) => {
   res.status(200).json({ data: user });
 };
 
-export const routeGetDocuments: RequestHandler = async (req, res, next) => { };
-export const routeAddDocument: RequestHandler = async (req, res, next) => { };
-export const routeDeleteDocument: RequestHandler = async (req, res, next) => { };
-export const routeApproveDocument: RequestHandler = async (req, res, next) => { };
-export const routeRejectDocument: RequestHandler = async (req, res, next) => { };
-
 export const routeApproveUser: RequestHandler = async (req, res, next) => {
   const userId = ObjectIdSchema.parse(req.params.userId);
   await User.findByIdAndUpdate(userId, { userType: 'Student' });

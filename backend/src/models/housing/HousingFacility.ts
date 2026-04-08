@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { ROOM_TYPES } from '../../constants';
+import { documentSchema } from '../Document';
 
 const HousingFacilitySchema = new mongoose.Schema({
   name: { type: String, required: true },
@@ -29,12 +30,7 @@ const HousingFacilitySchema = new mongoose.Schema({
   type: { type: String, enum: ['on-campus', 'off-campus', 'partner housing'], required: true },
   capacity: { type: Number, required: true },
 
-  documents: [
-    {
-      file: { type: String, ref: 'File', required: true },
-      isVerified: { type: Boolean, default: false },
-    },
-  ],
+  documents: [documentSchema],
 
   // Overrides dates if specified
   isAcceptingApplications: { type: Boolean, default: false },

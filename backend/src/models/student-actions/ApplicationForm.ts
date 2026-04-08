@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { documentSchema } from '../Document';
 
 const applicationFormSchema = new mongoose.Schema(
   {
@@ -23,12 +24,7 @@ const applicationFormSchema = new mongoose.Schema(
     // TODO: change to Files
     //
     // Other supporting documents uploaded by student
-    documentUrls: [
-      {
-        file: { type: String, ref: 'File', required: true },
-        isVerified: { type: Boolean, default: false },
-      },
-    ],
+    documents: [documentSchema],
 
     // Room the student is assigned to
     unitId: { type: mongoose.Schema.Types.ObjectId, ref: 'Unit' },
