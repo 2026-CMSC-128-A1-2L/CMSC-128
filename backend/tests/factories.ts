@@ -11,10 +11,7 @@ import {
   UnverifiedManager,
   UnverifiedStudent,
 } from '../src/models/user/User.js';
-import { HousingFacility } from '../src/models/housing/HousingFacility.js';
-import { Listing } from '../src/models/housing/Listing.js';
-import { Unit } from '../src/models/housing/Unit.js';
-import { Tag } from '../src/models/housing/Tag.js';
+import { HousingFacility, HousingFacilityType } from '../src/models/housing/HousingFacility.js';
 
 type UserParams = {
   firstName: string;
@@ -116,129 +113,20 @@ export const buildUnverifiedStudent = buildUser.params({
   },
 });
 
-export type HousingFacilityParams = {
-  name: string;
-  landlordId: mongoose.Types.ObjectId;
-  managers?: {
-    managerId: mongoose.Types.ObjectId;
-    permissions: { manageBillings: boolean; manageApplications: boolean; manageListings: boolean };
-  }[];
-  location?: {
-    coordinates?: number[];
-    text?: string;
-  };
-  type: 'on-campus' | 'off-campus' | 'partner housing';
-  capacity: number;
-  documentUrls: string[];
-  isAcceptingApplications: boolean;
-  applicationOpenDate?: string | null;
-  applicationCloseDate?: string | null;
-  listings: mongoose.Types.ObjectId[];
-};
+export type HousingFacilityParams = Omit<HousingFacilityType, '_id' | 'createdAt' | 'updatedAt'>;
 
 export const buildHousingFacility = Factory.define<HousingFacilityParams>(({ sequence }) => ({
   name: `Test Facility ${sequence}`,
-  landlordId: new mongoose.Types.ObjectId(),
+  landlord: new mongoose.Types.ObjectId(),
   managers: [],
   location: {
-    coordinates: [14.0, 121.0],
+    coordinates: { lat: 14.0, long: 121.0 },
     text: 'Test Location',
   },
   type: 'on-campus',
   capacity: 100,
-  documentUrls: [],
+  documents: [],
   isAcceptingApplications: false,
-  applicationOpenDate: null,
-  applicationCloseDate: null,
-  listings: [],
-})).onCreate((data) => new HousingFacility(data).save() as any);
-
-type ListingParams = {
-  facilityId: mongoose.Types.ObjectId;
-  landlordId: mongoose.Types.ObjectId;
-  managers?: {
-    managerId: mongoose.Types.ObjectId;
-    permissions: { manageBillings: boolean; manageApplications: boolean; manageListings: boolean };
-  }[];
-  tags: { name: string; value?: unknown }[];
-  roomType: string;
-  capacity: number;
-  isPrivate: boolean;
-  allowVisit: boolean;
-  allowTransfer: boolean;
-  description?: string | null;
-  mediaUrls: string[];
-  units: string[];
-};
-
-export const buildListing = Factory.define<ListingParams>(({ sequence }) => ({
-  facilityId: new mongoose.Types.ObjectId(),
-  landlordId: new mongoose.Types.ObjectId(),
-  managers: [],
-  tags: [],
-  roomType: 'single',
-  capacity: 1,
-  isPrivate: false,
-  allowVisit: false,
-  allowTransfer: false,
-  description: `Test listing ${sequence}`,
-  mediaUrls: [],
-  units: [],
-})).onCreate((data) => new Listing(data).save() as any);
-
-type TagParams = {
-  dataType:
-    | { name: 'enum'; values?: string[] }
-    | { name: 'numeric'; min?: number; max?: number }
-    | { name: 'boolean' };
-  name: string;
-  displayName: string;
-  isRequired: boolean;
-};
-
-export const buildTag = Factory.define<TagParams>(({ sequence }) => ({
-  dataType: { name: 'boolean' },
-  name: `tag${sequence}`,
-  displayName: `Tag ${sequence}`,
-  isRequired: false,
-})).onCreate((data) => new Tag(data).save() as any);
-
-export const buildEnumTag = buildTag.params({
-  dataType: { name: 'enum', values: ['No WiFi', 'Has WiFi', 'WiFi on Lobby'] },
-  name: 'wifi-status',
-  displayName: 'WiFi Status',
+})).onCreate(async (data) => {
+  return await new HousingFacility(data).save() as HousingFacilityType
 });
-
-export const buildNumericTag = buildTag.params({
-  dataType: { name: 'numeric', min: 0, max: 100 },
-  name: 'distance',
-  displayName: 'Distance from campus (km)',
-});
-
-export const buildBooleanTag = buildTag.params({
-  dataType: { name: 'boolean' },
-  name: 'pets_allowed',
-  displayName: 'Pets Allowed',
-});
-
-type UnitParams = {
-  roomNumber: number;
-  capacity: number;
-  currentOccupancy: number;
-  price: number;
-  floorNumber?: number | null;
-  status: 'available' | 'unavailable';
-  listingId: mongoose.Types.ObjectId;
-  landlordId: mongoose.Types.ObjectId;
-};
-
-export const buildUnit = Factory.define<UnitParams>(({ sequence }) => ({
-  roomNumber: sequence,
-  capacity: 1,
-  currentOccupancy: 0,
-  price: 3000,
-  floorNumber: 1,
-  status: 'available',
-  listingId: new mongoose.Types.ObjectId(),
-  landlordId: new mongoose.Types.ObjectId(),
-})).onCreate((data) => new Unit(data).save() as any);

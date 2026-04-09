@@ -18,20 +18,19 @@ describe('Facilities API', () => {
   beforeAll(() => {
     validFacility = {
       name: `Test Facility 1`,
-      landlordId: landlord._id,
+      landlord: landlord._id,
       managers: [
         {
-          managerId: manager._id,
+          user: manager._id,
           permissions: { manageBillings: true, manageApplications: true, manageListings: true },
         },
       ],
       type: 'on-campus',
       capacity: 100,
-      documentUrls: [],
+      documents: [],
       isAcceptingApplications: false,
-      applicationCloseDate: new Date(2026, 3, 6, 18, 15, 10).toISOString(),
-      applicationOpenDate: new Date(2026, 2, 6, 18, 15, 10).toISOString(),
-      listings: [],
+      applicationCloseDate: new Date(2026, 3, 6, 18, 15, 10),
+      applicationOpenDate: new Date(2026, 2, 6, 18, 15, 10),
     };
   });
 
