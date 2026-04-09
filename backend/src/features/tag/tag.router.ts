@@ -7,21 +7,21 @@ const router = Router();
 // GET /api/tags
 //
 // used for search, no restrictions
-router.get('/tags', routeGetTags);
+router.get('/', routeGetTags);
 
 // POST /api/tags
 //
 // admin only
-router.post('/tags', isSuperAdmin, routeCreateTag);
+router.post('/', isSuperAdmin, routeCreateTag);
 
 // PATCH /api/tags/:tagName
 //
 // admin only
-router.patch('/tags/:tagName', isSuperAdmin, routeUpdateTag);
+router.patch('/:tagName', isSuperAdmin, routeUpdateTag);
 
 // DELETE /api/tags/:tagName
 //
 // admin only
-router.delete('/tags/:tagName', isSuperAdmin, routeDeleteTag);
+router.delete('/:tagName', isSuperAdmin, routeDeleteTag);
 
 export default router;

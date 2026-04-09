@@ -87,6 +87,6 @@ router.patch('/:facilityId/managers/:managerId', isLandlord, routeUpdateManagerP
 router.post('/:facilityId/listings', managerFilter('direct', 'manageListings'), routeCreateListing); // TODO: fix implementation, use parameter
 
 // GET /api/facilities/:facilityId/reviews
-router.get('/facilities/:facilityId/reviews', listingViewFilter, routeGetFacilityReviews);
+router.get('/:facilityId/reviews', listingViewFilter, routeGetFacilityReviews);
 
 export default router;

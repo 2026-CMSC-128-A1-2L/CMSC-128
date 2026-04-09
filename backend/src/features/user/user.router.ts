@@ -70,6 +70,6 @@ router.get('/:userId/bookings', isSelfOrSuperAdmin, routeGetVisitBookingsByStude
 // make filter for that
 //
 // POST /api/users/:userId/report
-router.post('/users/:userId/report', isVerifiedStudent, routeReportUser);
+router.post('/:userId/report', isVerifiedStudent, routeReportUser);
 
 export default router;

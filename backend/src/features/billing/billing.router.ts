@@ -13,31 +13,31 @@ const router = Router();
 
 // Billings
 // GET /api/billings
-router.get('/billings', isSuperAdmin, routeGetBillings);
+router.get('/', isSuperAdmin, routeGetBillings);
 
 // POST /api/billings
-router.post('/billings', managerFilter('facility', 'manageBillings'), routeCreateBilling);
+router.post('/', managerFilter('facility', 'manageBillings'), routeCreateBilling);
 
 // GET /api/billings/:billingId
 router.get(
-  '/billings/:billingId',
+  '/:billingId',
   managerFilter('facility', 'manageBillings', true),
   routeGetBilling,
 );
 
 // PATCH /api/billings/:billingId
 router.patch(
-  '/billings/:billingId',
+  '/:billingId',
   managerFilter('facility', 'manageBillings', true),
   routeUpdateBilling,
 );
 
 // POST /api/billings/:billingId/pay
-router.post('/billings/:billingId/pay', isVerifiedStudent, routeSubmitBillingPayment);
+router.post('/:billingId/pay', isVerifiedStudent, routeSubmitBillingPayment);
 
 // POST /api/billings/:billingId/verify
 router.post(
-  '/billings/:billingId/verify',
+  '/:billingId/verify',
   managerFilter('facility', 'manageBillings'),
   routeVerifyBillingPayment,
 );

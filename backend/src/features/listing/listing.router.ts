@@ -81,22 +81,22 @@ router.get(
 );
 
 // GET /api/listings/:listingId/rentals
-router.get('/listings/:listingId/rentals', isSuperAdmin, routeGetRentalsByListing);
+router.get('/:listingId/rentals', isSuperAdmin, routeGetRentalsByListing);
 
 // GET /api/listings/:listingId/reviews
-router.get('/listings/:listingId/reviews', listingViewFilter, routeGetListingReviews);
+router.get('/:listingId/reviews', listingViewFilter, routeGetListingReviews);
 
 // POST /api/listings/:listingId/reviews
-router.post('/listings/:listingId/reviews', listingViewFilter, routeCreateReview);
+router.post('/:listingId/reviews', listingViewFilter, routeCreateReview);
 
 // GET /api/listings/:listingId/bookings
 router.get(
-  '/listings/:listingId/bookings',
+  '/:listingId/bookings',
   managerFilter('facility', 'manageListings'),
   routeGetVisitBookingsByListing,
 );
 
 // POST /api/listings/:listingId/report
-router.post('/listings/:listingId/report', isVerifiedStudent, routeReportListing);
+router.post('/:listingId/report', isVerifiedStudent, routeReportListing);
 
 export default router;

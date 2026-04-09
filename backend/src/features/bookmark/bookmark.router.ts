@@ -10,10 +10,10 @@ const router = Router();
 
 // Bookmarks
 // GET /api/bookmarks
-router.get('/bookmarks', isVerifiedStudent, routeGetBookmarkedUnits);
+router.get('/', isVerifiedStudent, routeGetBookmarkedUnits);
 // POST /api/bookmarks/:listingId
-router.post('/bookmarks/:listingId', isVerifiedStudent, routeAddBookmark);
+router.post('/:listingId', isVerifiedStudent, routeAddBookmark);
 // DELETE /api/bookmarks/:listingId
-router.delete('/bookmarks/:listingId', isVerifiedStudent, routeDeleteBookmark);
+router.delete('/:listingId', isVerifiedStudent, routeDeleteBookmark);
 
 export default router;

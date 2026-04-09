@@ -35,6 +35,6 @@ const upload = multer({
 });
 
 // Files
-router.post('/files', hasAccount, upload.single('file'), routeUploadFile);
+router.post('/', hasAccount, upload.single('file'), routeUploadFile);
 
 export default router;

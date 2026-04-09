@@ -26,14 +26,14 @@ router.delete('/:unitId', managerFilter('listing', 'manageListings'), routeDelet
 
 // GET /api/units/:unitId/rentals
 router.get(
-  '/units/:unitId/rentals',
+  '/:unitId/rentals',
   managerFilter('facility', 'manageListings'),
   routeGetRentalsByUnit,
 );
 
 // GET /api/units/:unitId/billings
 router.get(
-  '/units/:unitId/billings',
+  '/:unitId/billings',
   managerFilter('facility', 'manageBillings'),
   routeGetUnitBillings,
 );

@@ -12,30 +12,30 @@ import { isSuperAdmin, isVerifiedStudent, managerFilter } from '../../middleware
 const router = Router();
 
 // GET /api/bookings
-router.get('/bookings', isSuperAdmin, routeGetBookings);
+router.get('/', isSuperAdmin, routeGetBookings);
 // POST /api/bookings
-router.post('/bookings', isVerifiedStudent, routeCreateBooking);
+router.post('/', isVerifiedStudent, routeCreateBooking);
 // PATCH /api/bookings/:bookingId
 router.patch(
-  '/bookings/:bookingId',
+  '/:bookingId',
   managerFilter('facility', 'manageListings', true),
   routeUpdateBooking,
 );
 // DELETE /api/bookings/:bookingId
 router.delete(
-  '/bookings/:bookingId',
+  '/:bookingId',
   managerFilter('facility', 'manageListings', true),
   routeCancelBooking,
 );
 // POST /api/bookings/:bookingId/approve
 router.post(
-  '/bookings/:bookingId/approve',
+  '/:bookingId/approve',
   managerFilter('facility', 'manageListings'),
   routeApproveBooking,
 );
 // POST /api/bookings/:bookingId/reject
 router.post(
-  '/bookings/:bookingId/reject',
+  '/:bookingId/reject',
   managerFilter('facility', 'manageListings'),
   routeRejectBooking,
 );

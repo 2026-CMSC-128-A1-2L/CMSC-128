@@ -6,10 +6,10 @@ const router = Router();
 
 // Reviews
 // GET /api/reviews
-router.get('/reviews', listingViewFilter, routeGetReviews);
+router.get('/', listingViewFilter, routeGetReviews);
 // PATCH /api/reviews/:reviewId
-router.patch('/reviews/:reviewId', selfFilter(false), routeUpdateReview);
+router.patch('/:reviewId', selfFilter(false), routeUpdateReview);
 // DELETE /api/reviews/:reviewId
-router.delete('/reviews/:reviewId', selfFilter(false), routeDeleteReview);
+router.delete('/:reviewId', selfFilter(false), routeDeleteReview);
 
 export default router;
