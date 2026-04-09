@@ -93,8 +93,6 @@ export const Student = User.discriminator(
   'Student',
   new mongoose.Schema({
     studentNumber: { type: String, required: true },
-
-    // TODO: verify if this should really be optional
     degreeProgram: String,
   }),
 );
