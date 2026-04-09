@@ -44,16 +44,6 @@ router.get(
   createDocumentRouter(isSelf, isSuperAdmin, User as any),
 );
 
-// POST /api/users/:userId/approve
-//
-// admin only
-router.post('/:userId/approve', isSuperAdmin, routeApproveUser);
-
-// POST /api/users/:userId/reject
-//
-// admin only
-router.post('/:userId/reject', isSuperAdmin, routeRejectUser);
-
 // GET /api/users/:userId/applications
 router.get('/:userId/applications', selfFilter(false), routeGetApplicationsByStudent);
 
@@ -71,5 +61,35 @@ router.get('/:userId/bookings', isSelfOrSuperAdmin, routeGetVisitBookingsByStude
 //
 // POST /api/users/:userId/report
 router.post('/:userId/report', isVerifiedStudent, routeReportUser);
+
+// ============================================================================
+// User Verification
+//
+// Users need to be verified before getting access to other parts of the site.
+// The required documents are sent and are checked by the admin.
+// Each requirement can be verified individually.
+// 
+// The admin can only verify a user if all of the requirements are met.
+// The admin can only reject a user if at least one of the requirements are not
+// met.
+//
+// TODO:
+//   Clarify if a verification can only be accepted if all documents are
+//   verified, and if a verification can only be rejected if there is at least
+//   one document that is not verified.
+//
+// Verifying and rejecting can only be done by the admin.
+// ============================================================================
+
+// ============================================================================
+// POST /api/users/:userId/approve
+// ============================================================================
+router.post('/:userId/approve', isSuperAdmin, routeApproveUser);
+
+// ============================================================================
+// POST /api/users/:userId/reject
+// ============================================================================
+router.post('/:userId/reject', isSuperAdmin, routeRejectUser);
+
 
 export default router;

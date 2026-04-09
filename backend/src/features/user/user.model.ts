@@ -62,12 +62,24 @@ const userSchema = new mongoose.Schema(
       ],
       required: true,
     },
+    documents: { type: [documentSchema], required: true, default: [] },
+
+    // Currently, there are two sources of truth in verification,
+    // status being 'approved', and the userType being ones that are verified
+    // based on the isVerified function. 
+    //
+    // TODO: use one source for verification status
+    status: {
+      type: String,
+      enum: ['pending', 'submitted', 'rejected', 'approved'],
+      required: 'true',
+      default: 'pending',
+    },
   },
   { timestamps: true, discriminatorKey: 'userType' },
 );
 
 export const User = mongoose.model('User', userSchema);
-
 export const Admin = User.discriminator('Admin', new mongoose.Schema());
 export const Landlord = User.discriminator(
   'Landlord',
@@ -87,21 +99,12 @@ export const Student = User.discriminator(
   }),
 );
 
-const verificationSchema = new mongoose.Schema({
-  documents: [documentSchema],
-  status: {
-    type: String,
-    enum: ['pending', 'submitted', 'rejected', 'approved'],
-    default: 'pending',
-  },
-});
-
-export const UnverifiedLandlord = User.discriminator('UnverifiedLandlord', verificationSchema);
+export const UnverifiedLandlord = User.discriminator('UnverifiedLandlord', new mongoose.Schema({}));
+export const UnverifiedStudent = User.discriminator('UnverifiedStudent', new mongoose.Schema({}));
 
 // No verification is needed by managers. Being invited by a landlord as a manager and accepting it
 // will turn them the account verified.
 export const UnverifiedManager = User.discriminator('UnverifiedManager', new mongoose.Schema({}));
-export const UnverifiedStudent = User.discriminator('UnverifiedStudent', verificationSchema);
 
 export const isVerified = (userType: string) =>
   userType == 'Admin' || userType == 'Landlord' || userType == 'Manager' || userType == 'Student';

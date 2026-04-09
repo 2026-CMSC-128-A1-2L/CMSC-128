@@ -79,9 +79,31 @@ export const approveUser = async (userId: mongoose.Types.ObjectId) => {
   if (!user)
     throw new AppError(404, "User not found.");
 
+  if (user.status === 'approved') {
+    throw new AppError(422, "User is already verified.");
+  }
+
+  if (user.status !== 'submitted') {
+    throw new AppError(422, "Verification not submitted yet.");
+  }
+
+  let documentsAccepted = true;
+  user.documents.forEach(doc => {
+    if (doc.status === 'rejected' || doc.status === 'pending') {
+      documentsAccepted = false;
+    }
+  });
+
+  if (!documentsAccepted) {
+    throw new AppError(422, "Not all documents are accepted.");
+  }
+
+  // all documents must be accepted first
   if (user.userType === 'UnverifiedStudent') {
+    user.status = 'approved';
     user.userType = 'Student';
   } else if (user.userType === 'UnverifiedLandlord') {
+    user.status = 'approved';
     user.userType = 'Landlord';
   } else {
     throw new AppError(422, `User of type '${user.userType}' cannot be verified.`);
@@ -89,4 +111,39 @@ export const approveUser = async (userId: mongoose.Types.ObjectId) => {
 
   await user.save();
   await sendNotification(userId, 'Verification Approved', 'Your account has been verified.');
+}
+
+export const rejectUser = async (userId: mongoose.Types.ObjectId) => {
+  const user = await User.findById(userId);
+  if (!user)
+    throw new AppError(404, "User not found.");
+
+  if (user.status === 'approved') {
+    throw new AppError(422, "User is already verified.");
+  }
+
+  if (user.status !== 'submitted') {
+    throw new AppError(422, "Verification not submitted yet.");
+  }
+
+  let documentsAccepted = true;
+  user.documents.forEach(doc => {
+    if (doc.status === 'rejected' || doc.status === 'pending') {
+      documentsAccepted = false;
+    }
+  });
+
+  if (documentsAccepted) {
+    // TODO: related to comment in router, this may be too restrictive.
+    throw new AppError(422, "Cannot reject a user with complete requirements.");
+  }
+
+  if (user.userType === 'UnverifiedStudent' || user.userType === 'UnverifiedLandlord') {
+    user.status = 'rejected';
+  } else {
+    throw new AppError(422, `User of type '${user.userType}' cannot be rejected.`);
+  }
+
+  await user.save();
+  await sendNotification(userId, 'Verification Rejected', 'Your account has been rejected.');
 }
