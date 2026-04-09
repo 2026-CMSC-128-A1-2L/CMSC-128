@@ -5,7 +5,7 @@ const userSchema = new mongoose.Schema(
   {
     // Obtained through Google automatically after login with a Google email address.
     // TODO: change email check flow
-    emails: [String],
+    emails: { type: [String], required: true, default: [] },
     profilePicture: String,
     firstName: { type: String, required: true },
     middleName: String,
