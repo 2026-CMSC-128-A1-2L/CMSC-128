@@ -7,6 +7,7 @@ import {
   updateListing,
   deleteListing,
   updateListingTags,
+  getListingsByFacility,
 } from '../services/listing.js';
 import { getBookingsByListing } from '../services/booking.js';
 import z from 'zod';
@@ -52,12 +53,12 @@ export const routeGetListing: RequestHandler = async (req, res, next) => {
   res.status(200).json({ data: listing });
 };
 
-// export const routeGetListingReviews: RequestHandler = async (req, res, next) => {
-//   const listingId = ObjectIdSchema.parse(req.params.listingId);
-//   const reviews = await getListingReviewsById(listingId);
+export const routeGetListingsByFacility: RequestHandler = async (req, res, next) => {
+  const facilityId = ObjectIdSchema.parse(req.params.facilityId);
+  const listings = await getListingsByFacility(facilityId, res.locals.filters);
 
-//   res.status(200).json({ data: reviews });
-// };
+  res.status(200).json({ data: listings });
+};
 
 export const routeUpdateListing: RequestHandler = async (req, res, next) => {
   const listingId = ObjectIdSchema.parse(req.params.listingId);

@@ -1,11 +1,54 @@
 import mongoose from 'mongoose';
-import { ROOM_TYPES } from '../../constants';
 import { documentSchema } from '../Document';
+import { DOCUMENT_STATUS, FacilityType, USER_TYPES } from 'shared';
 
-const HousingFacilitySchema = new mongoose.Schema({
+export type ManagerPermissionType = {
+  manageBillings: boolean,
+  manageApplications: boolean,
+  manageListings: boolean,
+}
+
+type DocumentType = {
+  docId: string,
+  name: string,
+  status: typeof DOCUMENT_STATUS,
+  message?: string,
+  files?: string[],
+}
+
+export type HousingFacilityType = {
+  _id: mongoose.Types.ObjectId,
+  name: string,
+  landlord: mongoose.Types.ObjectId,
+  managers: {
+    user: mongoose.Types.ObjectId,
+    permissions: ManagerPermissionType,
+  }[],
+  location?: {
+    coordinates?: {
+      lat: number,
+      long: number,
+    },
+    text?: string,
+  },
+  type: FacilityType,
+  capacity: number,
+  documents: DocumentType[],
+
+  // Overrides dates if specified
+  isAcceptingApplications?: boolean,
+
+  // Range of allowed application period. Can be overridden by `isAcceptingApplications`
+  applicationOpenDate?: Date,
+  applicationCloseDate?: Date,
+
+  createdAt: Date,
+  updatedAt: Date,
+};
+
+const HousingFacilitySchema = new mongoose.Schema<HousingFacilityType>({
   name: { type: String, required: true },
-
-  landlordId: { type: mongoose.Schema.Types.ObjectId, ref: 'Landlord', required: true },
+  landlord: { type: mongoose.Schema.Types.ObjectId, ref: 'Landlord', required: true },
   managers: [
     {
       userId: { type: mongoose.Schema.Types.ObjectId, ref: 'Manager', required: true },
@@ -19,17 +62,16 @@ const HousingFacilitySchema = new mongoose.Schema({
       },
     },
   ],
-
   location: {
     coordinates: {
-      type: [Number], // [lat, long]
+      lat: { type: Number, required: true },
+      long: { type: Number, required: true },
     },
+    // TODO: cache distances
     text: String, // location as text
   },
-
   type: { type: String, enum: ['on-campus', 'off-campus', 'partner housing'], required: true },
   capacity: { type: Number, required: true },
-
   documents: [documentSchema],
 
   // Overrides dates if specified
@@ -38,6 +80,6 @@ const HousingFacilitySchema = new mongoose.Schema({
   // Range of allowed application period. Can be overridden by `isAcceptingApplications`
   applicationOpenDate: { type: Date, required: false },
   applicationCloseDate: { type: Date, required: false },
-});
+}, { timestamps: true });
 
 export const HousingFacility = mongoose.model('HousingFacility', HousingFacilitySchema);

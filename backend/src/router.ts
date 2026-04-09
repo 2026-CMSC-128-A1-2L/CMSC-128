@@ -5,7 +5,6 @@ import {
   routeGetFacility,
   routeUpdateFacility,
   routeDeleteFacility,
-  routeGetListingsByFacility,
   routeGetFacilities,
   routeRemoveManager,
   routeSearchFacilities,
@@ -41,6 +40,8 @@ import {
   managerFilter,
   selfFilter,
   currentTenantManagerFilter,
+  getUserId,
+  isSelf,
 } from './controllers/middleware.js';
 import passportGoogle from './auth/google.js';
 import { routeCreateTag, routeDeleteTag, routeGetTags, routeUpdateTag } from './controllers/tag.js';
@@ -50,13 +51,8 @@ import {
   routeGetUser,
   routeUpdateUser,
   routeDeleteUser,
-  routeAddDocument,
-  routeGetDocuments,
   routeApproveUser,
-  routeDeleteDocument,
   routeRejectUser,
-  routeApproveDocument,
-  routeRejectDocument,
 } from './controllers/user.js';
 import {
   routeCreateApplication,
@@ -146,6 +142,8 @@ import multerS3 from 'multer-s3';
 import { S3Client } from '@aws-sdk/client-s3';
 import path from 'path';
 import { routeUploadFile } from './controllers/file.js';
+import { createDocumentRouter } from './documentRouter.js';
+import { User } from './models/user/User.js';
 
 const s3 = new S3Client({
   region: 'auto',
@@ -375,22 +373,7 @@ router.patch('/users/:userId', isSelfOrSuperAdmin, routeUpdateUser);
 router.delete('/users/:userId', isSelfOrSuperAdmin, routeDeleteUser);
 
 // GET /api/users/:userId/documents
-router.get('/users/:userId/documents', isSelfOrSuperAdmin, routeGetDocuments);
-
-// POST /api/users/:userId/documents
-//
-// user or admin only
-router.post('/users/:userId/documents', isSelfOrSuperAdmin, routeAddDocument);
-
-// POST /api/users/:userId/documents/:documentId/approve
-//
-// admin only
-router.post('/users/:userId/documents/:documentId/approve', isSuperAdmin, routeApproveDocument);
-
-// POST /api/users/:userId/documents/:documentId/reject
-//
-// admin only
-router.post('/users/:userId/documents/:documentId/reject', isSuperAdmin, routeRejectDocument);
+router.get('/users/:userId/documents', getUserId, createDocumentRouter(isSelf, isSuperAdmin, User as any));
 
 // POST /api/users/:userId/approve
 //

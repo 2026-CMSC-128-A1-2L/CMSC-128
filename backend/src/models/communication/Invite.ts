@@ -9,7 +9,7 @@ const inviteSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   email: String,
 
-  landlordId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  landlord: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   facilityId: { type: mongoose.Schema.Types.ObjectId, ref: 'HousingFacility', required: true },
 
   // permissions granted to the manager upon acceptance

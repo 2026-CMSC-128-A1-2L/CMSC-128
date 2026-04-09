@@ -5,6 +5,7 @@ import { isVerified } from '../models/user/User';
 import { Listing } from '../models/housing/Listing';
 import { HousingFacility } from '../models/housing/HousingFacility';
 import { Rental } from '../models/student-actions/Rents';
+import { ObjectIdSchema } from 'shared';
 
 export type ManagerPermission = 'manageBillings' | 'manageApplications' | 'manageListings';
 
@@ -55,13 +56,13 @@ export const managerFilter = (
 
     let newFilter: QueryFilter<{
       managers: {
-        userId: mongoose.Types.ObjectId;
+        user: mongoose.Types.ObjectId;
         permissions: {
           manageBillings: boolean;
           manageApplications: boolean;
           manageListings: boolean;
         };
-      };
+      }[];
     }>;
     if (permission) {
       const innerFilter: any = { userId };
@@ -125,7 +126,7 @@ export const correctLandlordFilter: RequestHandler = async (req, res, next) => {
     return next(new AppError(401, 'Unauthenticated'));
   }
 
-  res.locals.filters = combineFilters(res.locals.filters, { landlordId: req.user._id });
+  res.locals.filters = combineFilters(res.locals.filters, { landlord: req.user._id });
 
   next();
 };
@@ -187,6 +188,15 @@ export const isVerifiedStudent: RequestHandler = (req, res, next) => {
     return next(new AppError(403, 'Forbidden'));
   }
 
+  next();
+};
+
+export const isSelf: RequestHandler = async (req, res, next) => {
+  if (!req.user) {
+    return next(new AppError(401, 'Unauthenticated'));
+  }
+
+  res.locals.filters = combineFilters(res.locals.filters, { userId: req.user._id });
   next();
 };
 

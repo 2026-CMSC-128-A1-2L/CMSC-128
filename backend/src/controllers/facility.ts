@@ -6,78 +6,104 @@ import {
   deleteFacility,
   getFacilities,
   removeManagerFromFacility,
+  updateManagerPermissions,
 } from '../services/facility.js';
-import { getListingsByFacility } from '../services/listing.js';
-import { CreateFacilityBodySchema, UpdateFacilityBodySchema } from './schema/facility.js';
-import { ObjectIdSchema } from './schema/common.js';
+import { CreateFacilityRequestBodySchema, GetFacilityResponseBodySchema, GetFacilitiesRequestQuerySchema, ObjectIdSchema, UpdateFacilityRequestBodySchema, UpdateManagerPermissionsRequestBodySchema } from 'shared';
+import z from 'zod';
 
-// TODO: filtering
+// GET /facilities: routeGetFacilities
 export const routeGetFacilities: RequestHandler = async (req, res, next) => {
-  return await getFacilities();
-};
+  const query = GetFacilitiesRequestQuerySchema.parse(req.query);
+  return await getFacilities(query);
+}
 
-export const routeSearchFacilities: RequestHandler = async (req, res, next) => {};
+// POST /facilities/search: routeSearchFacilities
+export const routeSearchFacilities: RequestHandler = async (req, res, next) => { };
 
+// POST /facilities: routeCreateFacility
 export const routeCreateFacility: RequestHandler = async (req, res, next) => {
   // auth check should be done in middleware before this, so should include user id already
   const userId = req.user!._id;
-  const params = CreateFacilityBodySchema.parse(req.body);
+  const params = CreateFacilityRequestBodySchema.parse(req.body);
 
   const newFacility = await createFacility({ ...params, landlordId: userId });
 
   res.status(201).json({ id: newFacility.id });
 };
 
+// GET /facilities/:facilityId: routeGetFacility
 export const routeGetFacility: RequestHandler = async (req, res, next) => {
   const facilityId = ObjectIdSchema.parse(req.params.facilityId);
   const facility = await getFacilityById(facilityId);
+  const facilityResponse: z.infer<typeof GetFacilityResponseBodySchema> = {
+    id: facility._id,
+    name: facility.name,
+    landlord: {
+      id: facility.landlord._id,
+      profilePicture: facility.landlord.profilePicture,
+      firstName: facility.landlord.firstName,
+      middleName: facility.landlord.middleName,
+      lastName: facility.landlord.lastName,
+
+      // TODO:  fetch actual number of units
+      numUnits: 0,
+      createdAt: facility.landlord.createdAt,
+    },
+    managers: facility.managers.map(x => ({
+      id: x.user._id,
+      profilePicture: x.user.profilePicture,
+      firstName: x.user.firstName,
+      middleName: x.user.middleName,
+      lastName: x.user.lastName,
+    })),
+    location: facility.location,
+    type: facility.type,
+    isAcceptingApplications: facility.isAcceptingApplications,
+    applicationOpenDate: facility.applicationOpenDate,
+    applicationCloseDate: facility.applicationCloseDate,
+  }
 
   res.status(200).json({ data: facility });
 };
 
+// PATCH /facilities/:facilityId: routeUpdateFacility
 export const routeUpdateFacility: RequestHandler = async (req, res, next) => {
   const facilityId = ObjectIdSchema.parse(req.params.facilityId);
-  const updateData = UpdateFacilityBodySchema.parse(req.body);
+  const updateData = UpdateFacilityRequestBodySchema.parse(req.body);
 
-  if (req.user!.userType === 'Manager') {
-    if (updateData.managers) {
-      // managers should not be able to add/remove other managers
-      return res.status(403).json({
-        error: 'Only landlords can modify facility managers.',
-      });
-    }
-  }
+  await updateFacility(facilityId, updateData, res.locals.filters ?? {});
 
-  const updatedFacility = await updateFacility(facilityId, updateData, res.locals.filters ?? {});
-
-  res.status(200).json({
-    data: updatedFacility,
-  });
+  res.sendStatus(204);
 };
 
+// DELETE /facilities/:facilityId: routeDeleteFacility
 export const routeDeleteFacility: RequestHandler = async (req, res, next) => {
   const facilityId = ObjectIdSchema.parse(req.params.facilityId);
 
   await deleteFacility(facilityId);
 
   // send back success
-  res.status(200).json({ message: 'Facility deleted successfully.' });
+  res.sendStatus(204);
 };
 
+// DELETE /facilities/:facilityId/managers/:managerId: routeRemoveManager
 export const routeRemoveManager: RequestHandler = async (req, res, next) => {
   const facilityId = ObjectIdSchema.parse(req.params.facilityId);
   const managerId = ObjectIdSchema.parse(req.params.managerId);
 
   await removeManagerFromFacility(facilityId, managerId);
 
-  res.status(200).json({ message: 'Manager removed successfully.' });
+  res.sendStatus(204);
 };
 
-export const routeUpdateManagerPermissions: RequestHandler = async (req, res, next) => {};
-
-export const routeGetListingsByFacility: RequestHandler = async (req, res, next) => {
+// PATCH /facilities/:facilityId/managers/:managerId: routeUpdateManagerPermissions
+export const routeUpdateManagerPermissions: RequestHandler = async (req, res, next) => {
   const facilityId = ObjectIdSchema.parse(req.params.facilityId);
-  const listings = await getListingsByFacility(facilityId, res.locals.filters);
+  const managerId = ObjectIdSchema.parse(req.params.managerId);
 
-  res.status(200).json({ data: listings });
+  const body = UpdateManagerPermissionsRequestBodySchema.parse(req.body);
+
+  await updateManagerPermissions(facilityId, managerId, body);
+
+  res.sendStatus(204);
 };

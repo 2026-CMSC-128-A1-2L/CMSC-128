@@ -11,18 +11,18 @@ import assert from 'node:assert';
 type TagFilter = {
   name: string;
   value:
-    | { type: 'enum'; value: string }
-    | { type: 'boolean'; value: boolean }
-    | { type: 'numeric'; value: { min?: number; max?: number } };
+  | { type: 'enum'; value: string }
+  | { type: 'boolean'; value: boolean }
+  | { type: 'numeric'; value: { min?: number; max?: number } };
 };
 
 // TODO: refactor for values to not require type
 type TagValue = {
   name: string;
   value:
-    | { type: 'enum'; value: string }
-    | { type: 'boolean'; value: boolean }
-    | { type: 'numeric'; value: number };
+  | { type: 'enum'; value: string }
+  | { type: 'boolean'; value: boolean }
+  | { type: 'numeric'; value: number };
 };
 
 export type CreateListingArguments = {
@@ -51,18 +51,18 @@ export type GetListingArguments = {
 
 type TagSpec =
   | {
-      name: 'enum';
-      values: string[];
-    }
+    name: 'enum';
+    values: string[];
+  }
   | {
-      name: 'numeric';
-      min: number;
-      max: number;
-    }
+    name: 'numeric';
+    min: number;
+    max: number;
+  }
   | {
-      name: 'boolean';
-      value: boolean;
-    };
+    name: 'boolean';
+    value: boolean;
+  };
 
 const verifyTags = async (tagList: TagValue[]) => {
   const tagMap = Object.fromEntries(tagList.map((tag) => [tag.name, tag.value]));
@@ -122,7 +122,7 @@ export const createListing = async (data: CreateListingArguments, filters: any) 
 
   // There can be a race condition here.
   const newListing = new Listing({
-    landlordId: facility.landlordId,
+    landlordId: facility.landlord,
     managers: facility.managers ?? [],
     facilityId: data.facilityId,
     tags: data.tags ?? [], // returns empty array if no tags are given

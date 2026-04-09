@@ -88,13 +88,11 @@ export const Student = User.discriminator(
 );
 
 const verificationSchema = new mongoose.Schema({
-  verification: {
-    documents: [documentSchema],
-    status: {
-      type: String,
-      enum: ['pending', 'submitted', 'rejected', 'approved'],
-      default: 'pending',
-    },
+  documents: [documentSchema],
+  status: {
+    type: String,
+    enum: ['pending', 'submitted', 'rejected', 'approved'],
+    default: 'pending',
   },
 });
 

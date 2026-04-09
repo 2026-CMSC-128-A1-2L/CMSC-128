@@ -12,7 +12,7 @@ import { ModelWithDocument } from "./services/documents";
 
 // The model this handles should have a documents array
 // Middleware preceding this router should be added which includes the id of the parent.
-export const createDocumentRouter = (ownerMiddleware: RequestHandler, verifierMiddleware: RequestHandler, model: ModelWithDocument, docIds: string[]) => {
+export const createDocumentRouter = (ownerMiddleware: RequestHandler, verifierMiddleware: RequestHandler, model: ModelWithDocument) => {
   const documentRouter = Router({ mergeParams: true });
 
   documentRouter.get("/", ownerMiddleware, routeGetDocuments(model))
