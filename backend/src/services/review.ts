@@ -18,11 +18,13 @@ export type updateReviewArguments = {
   description?: String;
 }
 
-export const createReview = async (
+export const createReview = async (   
   listingId: mongoose.Types.ObjectId, 
   data: createReviewArguments,
   filters: any,
 ) => {
+  // TODO: add admin create review eligibility checks for approval:
+  // check for minimum tenancy, if reviewer is flagged, etc.
   const listing = Listing.findOne(combineFilters({_id: listingId}, filters));  
 
   if(!listing){
@@ -116,3 +118,5 @@ export const deleteReview = async (reviewId: mongoose.Types.ObjectId) => {
 
   return await Review.findByIdAndDelete(reviewId);
 };
+
+// TODO: approve, reject of review
