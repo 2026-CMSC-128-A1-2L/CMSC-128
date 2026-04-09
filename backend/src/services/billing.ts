@@ -15,6 +15,20 @@ export type CreateBillingArguments = {
   paymentType: string; // 'rent', 'deposit', 'utility', etc. // Description of billing
 };
 
+export type UpdateBillingArguments = {
+// just assumed that amount here is the monthly amount because there is no record of total balance
+  billingId: string;
+  data: {
+    dueDate?: Date;
+    paymentDate?: Date;
+    amount?: number;//assumed monthly
+    paidAmount?: number;
+    paymentStatus?: 'unpaid' | 'paid' | 'overdue' | 'partially_paid';
+    proofOfPayment?: string;
+    paymentType?: string;
+  };
+};
+
 export type GetBillingArguments = {
   studentId: mongoose.Types.ObjectId;
   unitId: mongoose.Types.ObjectId;
@@ -93,4 +107,16 @@ export function buildBillingQuery(args: Partial<GetBillingArguments>): QueryFilt
 export const getBillings = async (query: Partial<GetBillingArguments>, filters: any) => {
   const dbFilters = buildBillingQuery(query);
   return await Billing.find(combineFilters(filters, dbFilters));
+};
+
+export const getBilling = async (billingId: string) => {
+  return await Billing.findById(billingId);
+};
+
+export const updateBilling = async (billingId: string, data: UpdateBillingArguments) => {
+  return await Billing.findByIdAndUpdate(
+    billingId,
+    { $set: data },
+    { new: true, runValidators: true }
+  );
 };

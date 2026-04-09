@@ -38,4 +38,5 @@ export const GetBillingsFilterSchema = z.object({
   paymentType: z.string().optional(),
 });
 
+export const UpdateBillingBodySchema = CreateBillingBodySchema.partial();
 export const GetBillingsQuerySchema = QuerySchema;
