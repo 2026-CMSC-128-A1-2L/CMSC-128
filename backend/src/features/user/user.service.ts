@@ -9,26 +9,30 @@ export type CreateUserParams = {
   lastName: string;
   email: string;
   auth: {
-    google?: string;
+    google: string;
   };
   profilePicture?: string;
 };
 
 export const createUnverifiedStudent = async (params: CreateUserParams) => {
-  const userResult = await UnverifiedStudent.findOneAndUpdate({ email: params.email }, params, {
-    returnDocument: 'after',
-    upsert: true,
-    includeResultMetadata: true,
-  });
-
-  const user = userResult.value;
-
-  if (!user) {
-    throw new Error('User should not be null after upsert');
+  const userResult = await User.findOne({ emails: params.email });
+  if (userResult) {
+    throw new AppError(409, "User with this email already exists.");
   }
 
-  // TODO: verify that this does not leak data
-  return user;
+  const newUser = new UnverifiedStudent({
+    firstName: params.firstName,
+    middleName: params.middleName,
+    lastName: params.lastName,
+    emails: [params.email],
+    auth: {
+      google: [params.auth.google],
+    },
+    profilePicture: params.profilePicture
+  });
+
+  // TODO: check for conflicts
+  return await newUser.save();
 };
 
 export const createTestUser = async (params: unknown) => {
@@ -39,7 +43,7 @@ export const createTestUser = async (params: unknown) => {
 };
 
 export const getUserByEmail = async (email: string) => {
-  return await User.findOne({ email });
+  return await User.findOne({ emails: email });
 };
 
 export const getUserById = async (userId: mongoose.Types.ObjectId) => {
