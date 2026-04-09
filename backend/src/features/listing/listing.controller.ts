@@ -1,9 +1,23 @@
 import { RequestHandler } from 'express';
 import z from 'zod';
 import { QueryFilter } from 'mongoose';
-import { GetListingsQuerySchema, ObjectIdSchema, CreateListingBodySchema, UpdateListingBodySchema, TagSchema } from 'shared';
+import {
+  GetListingsQuerySchema,
+  ObjectIdSchema,
+  CreateListingBodySchema,
+  UpdateListingBodySchema,
+  TagSchema,
+} from 'shared';
 import { Listing } from './listing.model';
-import { getListings, createListing, getListingById, getListingsByFacility, updateListing, deleteListing, updateListingTags } from './listing.service';
+import {
+  getListings,
+  createListing,
+  getListingById,
+  getListingsByFacility,
+  updateListing,
+  deleteListing,
+  updateListingTags,
+} from './listing.service';
 
 export const routeGetListings: RequestHandler = async (req, res, next) => {
   const params = GetListingsQuerySchema.parse(req.query);
@@ -13,7 +27,7 @@ export const routeGetListings: RequestHandler = async (req, res, next) => {
 };
 
 export const routeCreateListing: RequestHandler = async (req, res, next) => {
-  const facilityId = ObjectIdSchema.parse(req.params.facilityId)
+  const facilityId = ObjectIdSchema.parse(req.params.facilityId);
   const params = CreateListingBodySchema.parse(req.body);
   const newListing = await createListing({ ...params, facilityId }, res.locals.filters);
 
@@ -54,8 +68,8 @@ export const routeDeleteListing: RequestHandler = async (req, res, next) => {
   res.status(200).json({ message: 'Listing deleted successfully.' });
 };
 
-export const routeGetUnitsByListing: RequestHandler = async (req, res, next) => { };
-export const routeGetApplicationsByListing: RequestHandler = async (req, res, next) => { };
+export const routeGetUnitsByListing: RequestHandler = async (req, res, next) => {};
+export const routeGetApplicationsByListing: RequestHandler = async (req, res, next) => {};
 export const routeUpdateListingTags: RequestHandler = async (req, res, next) => {
   const listingID = ObjectIdSchema.parse(req.params.listingId);
 
@@ -69,5 +83,5 @@ export const routeUpdateListingTags: RequestHandler = async (req, res, next) => 
 
   res.status(200).json({ data: updatedListing });
 };
-export const routeApproveListing: RequestHandler = async (req, res, next) => { };
-export const routeRejectListing: RequestHandler = async (req, res, next) => { };
+export const routeApproveListing: RequestHandler = async (req, res, next) => {};
+export const routeRejectListing: RequestHandler = async (req, res, next) => {};

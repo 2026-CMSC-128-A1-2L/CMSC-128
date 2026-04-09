@@ -47,7 +47,8 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser((id, done) => {
-  User.findById(id).lean()
+  User.findById(id)
+    .lean()
     .then((user) => {
       if (!user) {
         done('User not found');

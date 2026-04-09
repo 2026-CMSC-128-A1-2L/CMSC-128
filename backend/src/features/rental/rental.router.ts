@@ -1,6 +1,12 @@
 import { Router } from 'express';
 import { isSuperAdmin, managerFilter } from '../../middleware';
-import { routeGetRentals, routeGetRental, routeUpdateRental, routeMoveIn, routeMoveOut } from './rental.controller';
+import {
+  routeGetRentals,
+  routeGetRental,
+  routeUpdateRental,
+  routeMoveIn,
+  routeMoveOut,
+} from './rental.controller';
 
 const router = Router();
 
@@ -19,9 +25,7 @@ router.post(
   routeMoveOut,
 );
 
-
 // TODO: check what else changes when a rental is deleted
 // router.delete('/rentals/:rentalId', isSuperAdmin, routeDeleteRental);
-
 
 export default router;

@@ -1,6 +1,12 @@
 import { Router } from 'express';
 import { isVerifiedStudent, managerFilter, selfFilter } from '../../middleware';
-import { routeGetTransferRequests, routeCreateTransferRequest, routeApproveTransferRequest, routeRejectTransferRequest, routeCancelTransferRequest } from './transfer.controller';
+import {
+  routeGetTransferRequests,
+  routeCreateTransferRequest,
+  routeApproveTransferRequest,
+  routeRejectTransferRequest,
+  routeCancelTransferRequest,
+} from './transfer.controller';
 
 const router = Router();
 

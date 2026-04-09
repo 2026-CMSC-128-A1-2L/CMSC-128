@@ -1,7 +1,14 @@
-import { RequestHandler } from "express";
-import z from "zod";
-import { ModelWithDocument, createGetDocuments, createAddDocument, createDeleteDocument, createAcceptDocument, createRejectDocument } from "./document.service";
-import mongoose from "mongoose";
+import { RequestHandler } from 'express';
+import z from 'zod';
+import {
+  ModelWithDocument,
+  createGetDocuments,
+  createAddDocument,
+  createDeleteDocument,
+  createAcceptDocument,
+  createRejectDocument,
+} from './document.service';
+import mongoose from 'mongoose';
 
 // GET ../documents
 export const routeGetDocuments = (model: ModelWithDocument): RequestHandler => {
@@ -9,8 +16,8 @@ export const routeGetDocuments = (model: ModelWithDocument): RequestHandler => {
   return async (req, res, next) => {
     assert.ok(res.locals.id);
     res.send({ data: await getDocuments(res.locals.id as mongoose.Types.ObjectId) });
-  }
-}
+  };
+};
 
 // POST ../documents/:docId/files
 const AddDocumentParamsSchema = z.object({
@@ -28,9 +35,16 @@ export const routeAddDocument = (model: ModelWithDocument): RequestHandler => {
     const body = AddDocumentBodySchema.parse(req.body);
 
     assert.ok(res.locals.id);
-    res.send({ data: await addDocument(res.locals.id as mongoose.Types.ObjectId, params.docId, body.fileId, req.user!._id) });
-  }
-}
+    res.send({
+      data: await addDocument(
+        res.locals.id as mongoose.Types.ObjectId,
+        params.docId,
+        body.fileId,
+        req.user!._id,
+      ),
+    });
+  };
+};
 
 // DELETE ../documents/:docId/files/:fileId
 const DeleteDocumentParamsSchema = z.object({
@@ -43,9 +57,16 @@ export const routeDeleteDocument = (model: ModelWithDocument): RequestHandler =>
   return async (req, res, next) => {
     const params = DeleteDocumentParamsSchema.parse(req.params);
     assert.ok(res.locals.id);
-    res.send({ data: await deleteDocument(res.locals.id as mongoose.Types.ObjectId, params.docId, params.fileId, req.user!._id) });
-  }
-}
+    res.send({
+      data: await deleteDocument(
+        res.locals.id as mongoose.Types.ObjectId,
+        params.docId,
+        params.fileId,
+        req.user!._id,
+      ),
+    });
+  };
+};
 
 // POST ../documents/:docId/accept
 const AcceptDocumentParamsSchema = z.object({
@@ -58,9 +79,11 @@ export const routeAcceptDocument = (model: ModelWithDocument): RequestHandler =>
     const params = AcceptDocumentParamsSchema.parse(req.params);
 
     assert.ok(res.locals.id);
-    res.send({ data: await acceptDocument(res.locals.id as mongoose.Types.ObjectId, params.docId) });
-  }
-}
+    res.send({
+      data: await acceptDocument(res.locals.id as mongoose.Types.ObjectId, params.docId),
+    });
+  };
+};
 
 // POST ../documents/:docId/reject
 const RejectDocumentParamsSchema = z.object({
@@ -78,7 +101,12 @@ export const routeRejectDocument = (model: ModelWithDocument): RequestHandler =>
     const body = RejectDocumentBodySchema.parse(req.body);
 
     assert.ok(res.locals.id);
-    res.send({ data: await rejectDocument(res.locals.id as mongoose.Types.ObjectId, params.docId, body.message) });
-  }
-}
-
+    res.send({
+      data: await rejectDocument(
+        res.locals.id as mongoose.Types.ObjectId,
+        params.docId,
+        body.message,
+      ),
+    });
+  };
+};

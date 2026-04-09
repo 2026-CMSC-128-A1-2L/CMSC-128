@@ -1,7 +1,20 @@
 import { RequestHandler } from 'express';
-import { CreateBookingBodySchema, GetBookingsQuerySchema, ObjectIdSchema, UpdateBookingBodySchema } from 'shared';
+import {
+  CreateBookingBodySchema,
+  GetBookingsQuerySchema,
+  ObjectIdSchema,
+  UpdateBookingBodySchema,
+} from 'shared';
 import { sendNotification } from '../notification/notification.service';
-import { createBooking, getBookings, updateBookingStatus, updateBooking, cancelBooking, getBookingsByStudent, getBookingsByListing } from './booking.service';
+import {
+  createBooking,
+  getBookings,
+  updateBookingStatus,
+  updateBooking,
+  cancelBooking,
+  getBookingsByStudent,
+  getBookingsByListing,
+} from './booking.service';
 
 export const routeCreateBooking: RequestHandler = async (req, res, next) => {
   const userId = req.user!._id;
@@ -36,7 +49,7 @@ export const routeRejectBooking: RequestHandler = async (req, res, next) => {
     'Your visit booking has been rejected.',
   );
   res.status(200).json({ data: updatedBooking });
-}
+};
 
 export const routeUpdateBooking: RequestHandler = async (req, res, next) => {
   const bookingId = ObjectIdSchema.parse(req.params.bookingId);
@@ -67,4 +80,3 @@ export const routeGetVisitBookingsByListing: RequestHandler = async (req, res, n
 
   res.status(200).json({ data: bookings });
 };
-

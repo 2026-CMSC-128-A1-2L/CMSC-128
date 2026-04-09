@@ -87,10 +87,7 @@ export const reportUser = async (data: CreateUserReportArgs) => {
   return await report.save();
 };
 
-export const resolveReport = async (
-  userId: mongoose.Types.ObjectId,
-  data: ResolveReportArgs,
-) => {
+export const resolveReport = async (userId: mongoose.Types.ObjectId, data: ResolveReportArgs) => {
   const report = await Report.findById(userId);
   if (!report) {
     throw new AppError(404, 'Report not found.');

@@ -6,4 +6,3 @@ export const NotificationFilterSchema = z.object({
 });
 
 export const GetNotificationQuerySchema = QuerySchema(NotificationFilterSchema);
-

@@ -19,8 +19,8 @@ export const routeCreateReview: RequestHandler = async (req, res, next) => {
   res.status(201).json({ id: review._id });
 };
 
-export const routeUpdateReview: RequestHandler = async (req, res, next) => { };
-export const routeDeleteReview: RequestHandler = async (req, res, next) => { };
+export const routeUpdateReview: RequestHandler = async (req, res, next) => {};
+export const routeDeleteReview: RequestHandler = async (req, res, next) => {};
 export const routeGetListingReviews: RequestHandler = async (req, res, next) => {
   const rawListingID = req.params.listingId;
 

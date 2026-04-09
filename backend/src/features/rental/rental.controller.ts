@@ -1,6 +1,23 @@
 import { RequestHandler } from 'express';
-import { GetRentalsQuerySchema, RentalFilterSchema, ObjectIdSchema, UpdateRentalBodySchema, MoveInBodySchema, MoveOutBodySchema } from 'shared';
-import { getAllRentals, updateRental, deleteRental, getRental, getRentalsByUser, getRentalsByListing, getRentalsByUnitId, moveIn, moveOut } from './rental.service';
+import {
+  GetRentalsQuerySchema,
+  RentalFilterSchema,
+  ObjectIdSchema,
+  UpdateRentalBodySchema,
+  MoveInBodySchema,
+  MoveOutBodySchema,
+} from 'shared';
+import {
+  getAllRentals,
+  updateRental,
+  deleteRental,
+  getRental,
+  getRentalsByUser,
+  getRentalsByListing,
+  getRentalsByUnitId,
+  moveIn,
+  moveOut,
+} from './rental.service';
 
 export const routeGetRentals: RequestHandler = async (req, res, next) => {
   const filters = GetRentalsQuerySchema.parse(req.query);

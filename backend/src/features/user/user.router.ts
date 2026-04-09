@@ -1,7 +1,21 @@
 import { Router } from 'express';
 import { createDocumentRouter } from '../document/document.router';
-import { isSuperAdmin, isSelfOrSuperAdmin, getUserId, isSelf, selfFilter, isVerifiedStudent } from '../../middleware';
-import { routeGetUsers, routeGetUser, routeUpdateUser, routeDeleteUser, routeApproveUser, routeRejectUser } from './user.controller';
+import {
+  isSuperAdmin,
+  isSelfOrSuperAdmin,
+  getUserId,
+  isSelf,
+  selfFilter,
+  isVerifiedStudent,
+} from '../../middleware';
+import {
+  routeGetUsers,
+  routeGetUser,
+  routeUpdateUser,
+  routeDeleteUser,
+  routeApproveUser,
+  routeRejectUser,
+} from './user.controller';
 import { User } from './user.model';
 import { routeGetApplicationsByStudent } from '../application/application.controller';
 import { routeGetRentalsByUser } from '../rental/rental.controller';
@@ -24,7 +38,11 @@ router.patch('/:userId', isSelfOrSuperAdmin, routeUpdateUser);
 router.delete('/:userId', isSelfOrSuperAdmin, routeDeleteUser);
 
 // GET /api/users/:userId/documents
-router.get('/:userId/documents', getUserId, createDocumentRouter(isSelf, isSuperAdmin, User as any));
+router.get(
+  '/:userId/documents',
+  getUserId,
+  createDocumentRouter(isSelf, isSuperAdmin, User as any),
+);
 
 // POST /api/users/:userId/approve
 //

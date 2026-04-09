@@ -1,16 +1,31 @@
 import { RequestHandler } from 'express';
-import { CreateFacilityRequestBodySchema, GetFacilityResponseBodySchema, GetFacilitiesRequestQuerySchema, ObjectIdSchema, UpdateFacilityRequestBodySchema, UpdateManagerPermissionsRequestBodySchema } from 'shared';
+import {
+  CreateFacilityRequestBodySchema,
+  GetFacilityResponseBodySchema,
+  GetFacilitiesRequestQuerySchema,
+  ObjectIdSchema,
+  UpdateFacilityRequestBodySchema,
+  UpdateManagerPermissionsRequestBodySchema,
+} from 'shared';
 import z from 'zod';
-import { getFacilities, createFacility, getFacilityById, updateFacility, deleteFacility, removeManagerFromFacility, updateManagerPermissions } from './facility.service';
+import {
+  getFacilities,
+  createFacility,
+  getFacilityById,
+  updateFacility,
+  deleteFacility,
+  removeManagerFromFacility,
+  updateManagerPermissions,
+} from './facility.service';
 
 // GET /facilities: routeGetFacilities
 export const routeGetFacilities: RequestHandler = async (req, res, next) => {
   const query = GetFacilitiesRequestQuerySchema.parse(req.query);
   return await getFacilities(query);
-}
+};
 
 // POST /facilities/search: routeSearchFacilities
-export const routeSearchFacilities: RequestHandler = async (req, res, next) => { };
+export const routeSearchFacilities: RequestHandler = async (req, res, next) => {};
 
 // POST /facilities: routeCreateFacility
 export const routeCreateFacility: RequestHandler = async (req, res, next) => {
@@ -41,7 +56,7 @@ export const routeGetFacility: RequestHandler = async (req, res, next) => {
       numUnits: 0,
       createdAt: facility.landlord.createdAt,
     },
-    managers: facility.managers.map(x => ({
+    managers: facility.managers.map((x) => ({
       id: x.user._id,
       profilePicture: x.user.profilePicture,
       firstName: x.user.firstName,
@@ -53,7 +68,7 @@ export const routeGetFacility: RequestHandler = async (req, res, next) => {
     isAcceptingApplications: facility.isAcceptingApplications,
     applicationOpenDate: facility.applicationOpenDate,
     applicationCloseDate: facility.applicationCloseDate,
-  }
+  };
 
   res.status(200).json({ data: facility });
 };

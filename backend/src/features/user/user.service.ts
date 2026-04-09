@@ -51,13 +51,13 @@ export const deleteUser = async (userId: mongoose.Types.ObjectId) => {
 type GetUsersArguments = {
   userID?: mongoose.Types.ObjectId | null;
   userType?:
-  | 'Admin'
-  | 'Student'
-  | 'Manager'
-  | 'Landlord'
-  | 'UnverifiedStudent'
-  | 'UnverifiedManager'
-  | 'UnverifiedLandlord';
+    | 'Admin'
+    | 'Student'
+    | 'Manager'
+    | 'Landlord'
+    | 'UnverifiedStudent'
+    | 'UnverifiedManager'
+    | 'UnverifiedLandlord';
 };
 
 export const getUsers = async (params: GetUsersArguments) => {

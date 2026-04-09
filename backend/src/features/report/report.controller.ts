@@ -1,5 +1,10 @@
 import { RequestHandler } from 'express';
-import { ObjectIdSchema, ResolveReportBodySchema, ReportListingBodySchema, ReportUserBodySchema } from 'shared';
+import {
+  ObjectIdSchema,
+  ResolveReportBodySchema,
+  ReportListingBodySchema,
+  ReportUserBodySchema,
+} from 'shared';
 import { getReports, resolveReport, reportListing, reportUser } from './report.service';
 
 export const routeGetReports: RequestHandler = async (req, res, next) => {

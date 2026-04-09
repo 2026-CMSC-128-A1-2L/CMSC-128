@@ -2,7 +2,16 @@
 import mongoose from 'mongoose';
 import { Factory } from 'fishery';
 import { HousingFacilityType, HousingFacility } from '../features/facility/facility.model';
-import { Landlord, Manager, Student, UnverifiedLandlord, UnverifiedManager, UnverifiedStudent, User, Admin } from '../features/user/user.model';
+import {
+  Landlord,
+  Manager,
+  Student,
+  UnverifiedLandlord,
+  UnverifiedManager,
+  UnverifiedStudent,
+  User,
+  Admin,
+} from '../features/user/user.model';
 
 type UserParams = {
   firstName: string;
@@ -119,5 +128,5 @@ export const buildHousingFacility = Factory.define<HousingFacilityParams>(({ seq
   documents: [],
   isAcceptingApplications: false,
 })).onCreate(async (data) => {
-  return await new HousingFacility(data).save() as HousingFacilityType
+  return (await new HousingFacility(data).save()) as HousingFacilityType;
 });

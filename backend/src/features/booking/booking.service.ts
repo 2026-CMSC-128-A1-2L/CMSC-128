@@ -158,7 +158,9 @@ export const approveBooking = async (bookingId: mongoose.Types.ObjectId, filters
     throw new AppError(422, 'Only pending bookings can be approved.');
   }
 
-  const listing = await Listing.findOne(combineFilters(filters, { facilityId: booking.facilityId }));
+  const listing = await Listing.findOne(
+    combineFilters(filters, { facilityId: booking.facilityId }),
+  );
   if (!listing) {
     throw new AppError(403, 'Forbidden.');
   }
@@ -176,7 +178,9 @@ export const rejectBooking = async (bookingId: mongoose.Types.ObjectId, filters:
     throw new AppError(422, 'Only pending bookings can be rejected.');
   }
 
-  const listing = await Listing.findOne(combineFilters(filters, { facilityId: booking.facilityId }));
+  const listing = await Listing.findOne(
+    combineFilters(filters, { facilityId: booking.facilityId }),
+  );
   if (!listing) {
     throw new AppError(403, 'Forbidden.');
   }
@@ -189,10 +193,7 @@ export const getBookingsByStudent = async (studentId: mongoose.Types.ObjectId) =
   return await VisitBooking.find({ studentId });
 };
 
-export const getBookingsByListing = async (
-  listingId: mongoose.Types.ObjectId,
-  filters: any,
-) => {
+export const getBookingsByListing = async (listingId: mongoose.Types.ObjectId, filters: any) => {
   const listing = await Listing.findOne(combineFilters(filters, { _id: listingId }));
   if (!listing) {
     throw new AppError(404, 'Listing not found.');

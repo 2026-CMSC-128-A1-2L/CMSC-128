@@ -1,8 +1,22 @@
-import { Router } from "express";
-import { routeGetFacilities, routeSearchFacilities, routeCreateFacility, routeGetFacility, routeUpdateFacility, routeDeleteFacility, routeRemoveManager, routeUpdateManagerPermissions } from "./facility.controller";
-import { routeCreateListing } from "../listing/listing.controller";
-import { routeGetFacilityReviews } from "../review/review.controller";
-import { correctLandlordFilter, isLandlord, listingViewFilter, managerFilter } from "../../middleware";
+import { Router } from 'express';
+import {
+  routeGetFacilities,
+  routeSearchFacilities,
+  routeCreateFacility,
+  routeGetFacility,
+  routeUpdateFacility,
+  routeDeleteFacility,
+  routeRemoveManager,
+  routeUpdateManagerPermissions,
+} from './facility.controller';
+import { routeCreateListing } from '../listing/listing.controller';
+import { routeGetFacilityReviews } from '../review/review.controller';
+import {
+  correctLandlordFilter,
+  isLandlord,
+  listingViewFilter,
+  managerFilter,
+} from '../../middleware';
 
 const router = Router();
 
@@ -41,11 +55,7 @@ router.get('/:facilityId', routeGetFacility);
 // Edits a facility.
 //
 // manager with manageListings permission only
-router.patch(
-  '/:facilityId',
-  managerFilter('direct', 'manageListings'),
-  routeUpdateFacility,
-);
+router.patch('/:facilityId', managerFilter('direct', 'manageListings'), routeUpdateFacility);
 
 // DELETE /api/facilities/:facilityId
 //
@@ -64,11 +74,7 @@ router.delete('/:facilityId/managers/:managerId', isLandlord, routeRemoveManager
 // Updates the permissions for a manager.
 //
 // update permissions, landlord only
-router.patch(
-  '/:facilityId/managers/:managerId',
-  isLandlord,
-  routeUpdateManagerPermissions,
-);
+router.patch('/:facilityId/managers/:managerId', isLandlord, routeUpdateManagerPermissions);
 
 // GET /api/facilities/:facilityId/listings
 //
@@ -78,11 +84,7 @@ router.patch(
 // POST /api/facilities/:facilityId/listings
 //
 // Manager with manageListings permission or landlord
-router.post(
-  '/:facilityId/listings',
-  managerFilter('direct', 'manageListings'),
-  routeCreateListing,
-); // TODO: fix implementation, use parameter
+router.post('/:facilityId/listings', managerFilter('direct', 'manageListings'), routeCreateListing); // TODO: fix implementation, use parameter
 
 // GET /api/facilities/:facilityId/reviews
 router.get('/facilities/:facilityId/reviews', listingViewFilter, routeGetFacilityReviews);

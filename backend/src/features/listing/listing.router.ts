@@ -1,11 +1,26 @@
-import { Router } from "express";
-import { listingViewFilter, managerFilter, isSuperAdmin, isVerifiedStudent } from "../../middleware";
-import { routeGetListings, routeGetListing, routeUpdateListing, routeDeleteListing, routeApproveListing, routeRejectListing, routeUpdateListingTags, routeGetUnitsByListing, routeGetApplicationsByListing } from "./listing.controller";
-import { routeCreateUnit } from "../unit/unit.controller";
-import { routeGetRentalsByListing } from "../rental/rental.controller";
-import { routeGetListingReviews, routeCreateReview } from "../review/review.controller";
-import { routeGetVisitBookingsByListing } from "../booking/booking.controller";
-import { routeReportListing } from "../report/report.controller";
+import { Router } from 'express';
+import {
+  listingViewFilter,
+  managerFilter,
+  isSuperAdmin,
+  isVerifiedStudent,
+} from '../../middleware';
+import {
+  routeGetListings,
+  routeGetListing,
+  routeUpdateListing,
+  routeDeleteListing,
+  routeApproveListing,
+  routeRejectListing,
+  routeUpdateListingTags,
+  routeGetUnitsByListing,
+  routeGetApplicationsByListing,
+} from './listing.controller';
+import { routeCreateUnit } from '../unit/unit.controller';
+import { routeGetRentalsByListing } from '../rental/rental.controller';
+import { routeGetListingReviews, routeCreateReview } from '../review/review.controller';
+import { routeGetVisitBookingsByListing } from '../booking/booking.controller';
+import { routeReportListing } from '../report/report.controller';
 
 const router = Router();
 
@@ -27,11 +42,7 @@ router.patch('/:listingId', managerFilter('direct', 'manageListings'), routeUpda
 // DELETE /api/listings/:listingId
 //
 // Manager with manageListings permission or landlord
-router.delete(
-  '/:listingId',
-  managerFilter('direct', 'manageListings'),
-  routeDeleteListing,
-);
+router.delete('/:listingId', managerFilter('direct', 'manageListings'), routeDeleteListing);
 
 // POST /api/listings/:listingId/approve
 //
@@ -42,7 +53,6 @@ router.post('/:listingId/approve', isSuperAdmin, routeApproveListing);
 //
 // admin only
 router.post('/:listingId/reject', isSuperAdmin, routeRejectListing);
-
 
 // PATCH /listings/:listingId/tags
 //
@@ -55,21 +65,13 @@ router.post('/:listingId/reject', isSuperAdmin, routeRejectListing);
 //   }
 // }
 // Manager with manageListings permission or landlord
-router.patch(
-  '/:listingId/tags',
-  managerFilter('direct', 'manageListings'),
-  routeUpdateListingTags,
-);
+router.patch('/:listingId/tags', managerFilter('direct', 'manageListings'), routeUpdateListingTags);
 
 // GET /api/listings/:listingId/units
 router.get('/:listingId/units', managerFilter('listing', null), routeGetUnitsByListing);
 
 // POST /api/listings/:listingId/units
-router.post(
-  '/:listingId/units',
-  managerFilter('listing', 'manageListings'),
-  routeCreateUnit,
-); // TODO:
+router.post('/:listingId/units', managerFilter('listing', 'manageListings'), routeCreateUnit); // TODO:
 
 // GET /api/listings/:listingId/applications
 router.get(

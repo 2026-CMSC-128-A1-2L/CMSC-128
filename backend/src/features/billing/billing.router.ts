@@ -1,5 +1,12 @@
 import { Router } from 'express';
-import { routeGetBillings, routeCreateBilling, routeGetBilling, routeSubmitBillingPayment, routeUpdateBilling, routeVerifyBillingPayment } from './billing.controller';
+import {
+  routeGetBillings,
+  routeCreateBilling,
+  routeGetBilling,
+  routeSubmitBillingPayment,
+  routeUpdateBilling,
+  routeVerifyBillingPayment,
+} from './billing.controller';
 import { isSuperAdmin, managerFilter, isVerifiedStudent } from '../../middleware';
 
 const router = Router();

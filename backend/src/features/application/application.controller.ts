@@ -1,7 +1,22 @@
 import { RequestHandler } from 'express';
-import { CreateApplicationBodySchema, GetApplicationsQuerySchema, ObjectIdSchema, UpdateApplicationBodySchema } from 'shared';
+import {
+  CreateApplicationBodySchema,
+  GetApplicationsQuerySchema,
+  ObjectIdSchema,
+  UpdateApplicationBodySchema,
+} from 'shared';
 import { sendNotification } from '../notification/notification.service';
-import { createApplication, getApplications, getApplicationById, getApplicationsByListing, getApplicationsByStudent, updateApplication, deleteApplication, updateApplicationStatus, assignApplicationUnit } from './application.service';
+import {
+  createApplication,
+  getApplications,
+  getApplicationById,
+  getApplicationsByListing,
+  getApplicationsByStudent,
+  updateApplication,
+  deleteApplication,
+  updateApplicationStatus,
+  assignApplicationUnit,
+} from './application.service';
 
 export const routeCreateApplication: RequestHandler = async (req, res, next) => {
   const params = CreateApplicationBodySchema.parse(req.body);

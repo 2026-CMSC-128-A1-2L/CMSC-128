@@ -1,5 +1,12 @@
 import { Router } from 'express';
-import { routeGetBookings, routeCreateBooking, routeUpdateBooking, routeCancelBooking, routeApproveBooking, routeRejectBooking } from './booking.controller';
+import {
+  routeGetBookings,
+  routeCreateBooking,
+  routeUpdateBooking,
+  routeCancelBooking,
+  routeApproveBooking,
+  routeRejectBooking,
+} from './booking.controller';
 import { isSuperAdmin, isVerifiedStudent, managerFilter } from '../../middleware';
 
 const router = Router();

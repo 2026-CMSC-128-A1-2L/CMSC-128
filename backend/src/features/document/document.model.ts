@@ -1,13 +1,13 @@
-import mongoose from "mongoose";
-import { DOCUMENT_STATUS, DocumentStatusType } from "shared/src/constants";
+import mongoose from 'mongoose';
+import { DOCUMENT_STATUS, DocumentStatusType } from 'shared/src/constants';
 
 export type DocumentType = {
-  docId: string,
-  name: string,
-  status: DocumentStatusType,
-  message?: string,
-  files?: string[],
-}
+  docId: string;
+  name: string;
+  status: DocumentStatusType;
+  message?: string;
+  files?: string[];
+};
 
 export const documentSchema = new mongoose.Schema<DocumentType>({
   docId: { type: String, required: true },

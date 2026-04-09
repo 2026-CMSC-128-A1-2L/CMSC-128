@@ -8,14 +8,14 @@ export type CreateApplicationArguments = {
   listingId: mongoose.Types.ObjectId;
   preferredRoomType?: 'single' | 'double' | 'shared';
   status?:
-  | 'pending'
-  | 'manager-approved'
-  | 'manager-rejected'
-  | 'manager-waitlisted'
-  | 'landlord-rejected'
-  | 'landlord-approved'
-  | 'landlord-waitlisted'
-  | 'contract-signed';
+    | 'pending'
+    | 'manager-approved'
+    | 'manager-rejected'
+    | 'manager-waitlisted'
+    | 'landlord-rejected'
+    | 'landlord-approved'
+    | 'landlord-waitlisted'
+    | 'contract-signed';
   documentUrls?: string[];
   unitId?: mongoose.Types.ObjectId; // Not required when created
   accommodationNoticeUrl?: string; // Not required when created
@@ -26,14 +26,14 @@ export type GetApplicationsArguments = {
   listingId: mongoose.Types.ObjectId;
   preferredRoomType?: 'single' | 'double' | 'shared';
   status?:
-  | 'pending'
-  | 'manager-approved'
-  | 'manager-rejected'
-  | 'manager-waitlisted'
-  | 'landlord-rejected'
-  | 'landlord-approved'
-  | 'landlord-waitlisted'
-  | 'contract-signed';
+    | 'pending'
+    | 'manager-approved'
+    | 'manager-rejected'
+    | 'manager-waitlisted'
+    | 'landlord-rejected'
+    | 'landlord-approved'
+    | 'landlord-waitlisted'
+    | 'contract-signed';
   unitId?: mongoose.Types.ObjectId;
 };
 
@@ -106,14 +106,14 @@ export const getApplicationsByStudent = async (userId: mongoose.Types.ObjectId) 
 export type UpdateApplicationArguments = {
   preferredRoomType?: 'single' | 'double' | 'shared';
   status?:
-  | 'pending'
-  | 'manager-approved'
-  | 'manager-rejected'
-  | 'manager-waitlisted'
-  | 'landlord-rejected'
-  | 'landlord-approved'
-  | 'landlord-waitlisted'
-  | 'contract-signed';
+    | 'pending'
+    | 'manager-approved'
+    | 'manager-rejected'
+    | 'manager-waitlisted'
+    | 'landlord-rejected'
+    | 'landlord-approved'
+    | 'landlord-waitlisted'
+    | 'contract-signed';
   documentUrls?: string[];
   unitId?: mongoose.Types.ObjectId;
 };

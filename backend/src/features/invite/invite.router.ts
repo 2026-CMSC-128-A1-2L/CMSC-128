@@ -1,9 +1,13 @@
 import { Router } from 'express';
-import { routeGetInvites, routeInviteManager, routeAcceptInvite, routeDeclineInvite } from './invite.controller';
+import {
+  routeGetInvites,
+  routeInviteManager,
+  routeAcceptInvite,
+  routeDeclineInvite,
+} from './invite.controller';
 import { isLandlord } from '../../middleware';
 
 const router = Router();
-
 
 // Invites
 // GET /api/invites

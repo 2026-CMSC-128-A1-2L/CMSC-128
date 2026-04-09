@@ -6,5 +6,4 @@ const router = Router();
 // GET /api/activities
 router.get('/activities', routeGetActivities);
 
-
 export default router;

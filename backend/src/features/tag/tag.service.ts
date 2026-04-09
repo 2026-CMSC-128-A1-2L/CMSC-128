@@ -1,24 +1,24 @@
-import { AppError } from "../../error";
-import { combineFilters } from "../../middleware";
-import { Tag } from "./tag.model";
+import { AppError } from '../../error';
+import { combineFilters } from '../../middleware';
+import { Tag } from './tag.model';
 
 export type CreateTagArguments = {
   name: string;
   displayName: string;
   isRequired: boolean;
   dataType:
-  | {
-    name: 'enum';
-    values: string[];
-  }
-  | {
-    name: 'boolean';
-  }
-  | {
-    name: 'numeric';
-    min?: number | null;
-    max?: number | null;
-  };
+    | {
+        name: 'enum';
+        values: string[];
+      }
+    | {
+        name: 'boolean';
+      }
+    | {
+        name: 'numeric';
+        min?: number | null;
+        max?: number | null;
+      };
 };
 
 // alomost same as create, but not allowed to change name, and all fields are optional
@@ -26,18 +26,18 @@ export type UpdateTagArguments = {
   displayName?: string;
   isRequired?: boolean;
   dataType?:
-  | {
-    name: 'enum';
-    values: string[];
-  }
-  | {
-    name: 'numeric';
-    min?: number | null;
-    max?: number | null;
-  }
-  | {
-    name: 'boolean';
-  };
+    | {
+        name: 'enum';
+        values: string[];
+      }
+    | {
+        name: 'numeric';
+        min?: number | null;
+        max?: number | null;
+      }
+    | {
+        name: 'boolean';
+      };
 };
 
 // simple create funciton for tags

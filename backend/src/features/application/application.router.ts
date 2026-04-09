@@ -1,9 +1,16 @@
 import { Router } from 'express';
-import { routeGetApplications, routeCreateApplication, routeGetApplication, routeUpdateApplication, routeDeleteApplication, routeUpdateApplicationStatus, routeAssignApplicationUnit } from './application.controller';
+import {
+  routeGetApplications,
+  routeCreateApplication,
+  routeGetApplication,
+  routeUpdateApplication,
+  routeDeleteApplication,
+  routeUpdateApplicationStatus,
+  routeAssignApplicationUnit,
+} from './application.controller';
 import { isSuperAdmin, isVerifiedStudent, managerFilter, selfFilter } from '../../middleware';
 
 const router = Router();
-
 
 // GET /api/applications
 router.get('/applications', isSuperAdmin, routeGetApplications);

@@ -122,19 +122,19 @@ export const correctLandlordFilter: RequestHandler = async (req, res, next) => {
 
 export const selfFilter =
   (direct: boolean): RequestHandler =>
-    async (req, res, next) => {
-      if (!req.user) {
-        return next(new AppError(401, 'Unauthenticated'));
-      }
+  async (req, res, next) => {
+    if (!req.user) {
+      return next(new AppError(401, 'Unauthenticated'));
+    }
 
-      if (direct) {
-        res.locals.filters = combineFilters(res.locals.filters, { _id: req.user._id });
-      } else {
-        res.locals.filters = combineFilters(res.locals.filters, { userId: req.user._id });
-      }
+    if (direct) {
+      res.locals.filters = combineFilters(res.locals.filters, { _id: req.user._id });
+    } else {
+      res.locals.filters = combineFilters(res.locals.filters, { userId: req.user._id });
+    }
 
-      next();
-    };
+    next();
+  };
 
 export const hasAccount: RequestHandler = (req, res, next) => {
   if (!req.user) {
@@ -213,4 +213,4 @@ export const isDevelopment: RequestHandler = (req, res, next) => {
 export const getUserId: RequestHandler = (req, res, next) => {
   res.locals.id = ObjectIdSchema.parse(req.params.userId);
   return next();
-}
+};

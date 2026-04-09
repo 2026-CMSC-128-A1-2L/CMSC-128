@@ -5,7 +5,6 @@ import { routeTestRegister, routeTestLogin } from './auth.controller';
 
 const router = Router();
 
-
 router.get(
   '/google/student',
   passportGoogle.authenticate('google', { scope: ['profile', 'email'] }) as RequestHandler,

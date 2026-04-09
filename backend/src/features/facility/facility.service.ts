@@ -7,38 +7,41 @@ import { Listing } from '../listing/listing.model';
 import { HousingFacility, HousingFacilityType, ManagerPermissionType } from './facility.model';
 
 type FacilityFilters = {
-  name?: string,
-  landlordId?: mongoose.Types.ObjectId,
+  name?: string;
+  landlordId?: mongoose.Types.ObjectId;
   location?: {
     coordinates?: {
       lat: {
-        min: number,
-        max: number,
-      },
+        min: number;
+        max: number;
+      };
       long: {
-        min: number,
-        max: number,
-      }
-    },
-    text?: string,
-  },
-  types?: FacilityType[],
+        min: number;
+        max: number;
+      };
+    };
+    text?: string;
+  };
+  types?: FacilityType[];
   capacity?: {
-    min?: number,
-    max?: number,
-  },
-  isAcceptingApplications?: boolean
+    min?: number;
+    max?: number;
+  };
+  isAcceptingApplications?: boolean;
   applicationOpenDate?: {
-    min?: Date,
-    max?: Date,
-  }
+    min?: Date;
+    max?: Date;
+  };
   applicationCloseDate?: {
-    min?: Date,
-    max?: Date,
-  }
-}
+    min?: Date;
+    max?: Date;
+  };
+};
 
-function buildRangeQueryFilter(range: { min?: number; max?: number }): { $gte?: number; $lte?: number };
+function buildRangeQueryFilter(range: { min?: number; max?: number }): {
+  $gte?: number;
+  $lte?: number;
+};
 function buildRangeQueryFilter(range: { min?: Date; max?: Date }): { $gte?: Date; $lte?: Date };
 
 function buildRangeQueryFilter(range: { min?: any; max?: any }) {
@@ -55,8 +58,10 @@ function buildRangeQueryFilter(range: { min?: any; max?: any }) {
   return queryFilter;
 }
 
-const buildFacilityFilterQuery = (filters: FacilityFilters): QueryFilter<typeof HousingFacility> => {
-  const queryFilter: QueryFilter<typeof HousingFacility> = {}
+const buildFacilityFilterQuery = (
+  filters: FacilityFilters,
+): QueryFilter<typeof HousingFacility> => {
+  const queryFilter: QueryFilter<typeof HousingFacility> = {};
   if (filters.name != null) {
     queryFilter.name = filters.name;
   }
@@ -77,7 +82,7 @@ const buildFacilityFilterQuery = (filters: FacilityFilters): QueryFilter<typeof 
   }
 
   if (filters.types && filters.types.length > 0) {
-    queryFilter.type = { $in: filters.types }
+    queryFilter.type = { $in: filters.types };
   }
 
   if (filters.capacity !== null && filters.capacity !== undefined) {
@@ -95,36 +100,36 @@ const buildFacilityFilterQuery = (filters: FacilityFilters): QueryFilter<typeof 
         {
           isAcceptingApplications: { $ne: false },
           applicationStartDate: { $lte: now },
-          applicationEndDate: { $gte: now }
-        }
-      ]
+          applicationEndDate: { $gte: now },
+        },
+      ];
     } else {
       queryFilter.$or = [
         { isAcceptingApplications: false },
         {
           isAcceptingApplications: { $ne: true },
-          $or: [
-            { applicationStartDate: { $gt: now } },
-            { applicationEndDate: { $lt: now } }
-          ]
-        }
-      ]
+          $or: [{ applicationStartDate: { $gt: now } }, { applicationEndDate: { $lt: now } }],
+        },
+      ];
     }
   }
 
   return queryFilter;
-}
+};
 
 export const getFacilities = async (filters: FacilityFilters) => {
   const queryFilter = buildFacilityFilterQuery(filters);
-  return await HousingFacility.find(queryFilter).populate([
-    {
-      path: 'landlord',
-    }, {
-      path: 'managers.userId'
-    }
-  ]).lean();
-}
+  return await HousingFacility.find(queryFilter)
+    .populate([
+      {
+        path: 'landlord',
+      },
+      {
+        path: 'managers.userId',
+      },
+    ])
+    .lean();
+};
 
 export type CreateFacilityArguments = {
   landlordId: mongoose.Types.ObjectId;
@@ -137,8 +142,8 @@ export type CreateFacilityArguments = {
   type: string;
   location?: {
     coordinates?: {
-      lat: number,
-      long: number,
+      lat: number;
+      long: number;
     } | null;
     text?: string | null;
   };
@@ -152,8 +157,8 @@ export type UpdateFacilityArguments = {
   type?: string;
   location?: {
     coordinates?: {
-      lat: number,
-      long: number,
+      lat: number;
+      long: number;
     } | null;
     text?: string | null;
   };
@@ -189,40 +194,42 @@ export const createFacility = async (data: CreateFacilityArguments) => {
 };
 
 type UserType = {
-  _id: mongoose.Types.ObjectId,
-  emails: string[],
-  profilePicture?: string,
-  firstName: string,
-  middleName?: string,
-  lastName: string,
-  birthDate?: Date,
+  _id: mongoose.Types.ObjectId;
+  emails: string[];
+  profilePicture?: string;
+  firstName: string;
+  middleName?: string;
+  lastName: string;
+  birthDate?: Date;
   auth: {
-    google: string,
-    password: string,
-  },
-  isActive: boolean,
-  userType: typeof USER_TYPES,
-  createdAt: Date,
-  updatedAt: Date,
-}
+    google: string;
+    password: string;
+  };
+  isActive: boolean;
+  userType: typeof USER_TYPES;
+  createdAt: Date;
+  updatedAt: Date;
+};
 
 type UserWithContactType = UserType & {
-  contact: string
+  contact: string;
 };
 
 type LandlordType = UserWithContactType;
 type ManagerType = UserWithContactType;
 
 type HousingFacilityWithManagersType = Omit<HousingFacilityType, 'landlord' | 'managers'> & {
-  landlord: LandlordType,
+  landlord: LandlordType;
   managers: {
-    user: ManagerType,
-    permissions: ManagerPermissionType,
-  }[],
+    user: ManagerType;
+    permissions: ManagerPermissionType;
+  }[];
 };
 
 export const getFacilityById = async (facilityId: mongoose.Types.ObjectId) => {
-  const facility = await HousingFacility.findById(facilityId).populate('landlord managers.userId').lean() as (HousingFacilityWithManagersType | null);
+  const facility = (await HousingFacility.findById(facilityId)
+    .populate('landlord managers.userId')
+    .lean()) as HousingFacilityWithManagersType | null;
 
   if (!facility) {
     throw new AppError(404, 'Facility not found.');
@@ -293,18 +300,16 @@ export const updateManagerPermissions = async (
     throw new AppError(404, 'Facility not found.');
   }
 
-  facility.managers = facility.managers.map(
-    (m) => {
-      if (m.user.toString() !== userId.toString()) {
-        return m;
-      } else {
-        return {
-          user: m.user,
-          permissions: newPermissions,
-        }
-      }
+  facility.managers = facility.managers.map((m) => {
+    if (m.user.toString() !== userId.toString()) {
+      return m;
+    } else {
+      return {
+        user: m.user,
+        permissions: newPermissions,
+      };
     }
-  );
+  });
   await facility.save();
 
   // cascade removal to all listings under this facility

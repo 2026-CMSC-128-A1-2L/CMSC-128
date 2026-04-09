@@ -2,7 +2,7 @@ import z from 'zod';
 import { ObjectIdSchema, QuerySchema, RangeSchema } from './common';
 import { DOCUMENT_STATUS, FACILITY_TYPES, FacilityType, ROOM_TYPES } from '../constants';
 
-const DateTimeSchema = z.iso.datetime().transform(x => new Date(x));
+const DateTimeSchema = z.iso.datetime().transform((x) => new Date(x));
 
 const FacilityTypeSchema: z.ZodType<FacilityType> = z.enum(FACILITY_TYPES);
 
@@ -31,11 +31,13 @@ const ManagerPermissionsSchema = z.object({
 });
 
 const FacilityLocationSchema = z.object({
-  coordinates: z.object({
-    lat: z.number(),
-    long: z.number(),
-  }).optional(),
-  text: z.string().optional()
+  coordinates: z
+    .object({
+      lat: z.number(),
+      long: z.number(),
+    })
+    .optional(),
+  text: z.string().optional(),
 });
 
 const ManagerSchema = z.object({
@@ -74,12 +76,12 @@ const UserFacilitySchema = z.object({
 const UserListing = z.object({
   name: z.string(),
   price: RangeSchema(z.number()),
-  tags: z.record(z.string(), z.union([z.number(), z.boolean(), z.string()]))
+  tags: z.record(z.string(), z.union([z.number(), z.boolean(), z.string()])),
 });
 
 const UserFacilityWithListingsSchema = UserFacilitySchema.extend({
   listings: z.array(UserListing),
-})
+});
 
 const ManagerFacilitySchema = UserFacilitySchema.extend({
   capacity: z.int(),
@@ -108,10 +110,12 @@ export const GetFacilitiesFilterSchema = z.object({
 
   // Search within a rectangle
   location: z.object({
-    coordinates: z.object({
-      lat: RangeSchema(z.number()),
-      long: RangeSchema(z.number()),
-    }).optional(),
+    coordinates: z
+      .object({
+        lat: RangeSchema(z.number()),
+        long: RangeSchema(z.number()),
+      })
+      .optional(),
 
     // Lowercase, substring search
     text: z.string().optional(),
@@ -125,7 +129,9 @@ export const GetFacilitiesFilterSchema = z.object({
   isAcceptingApplications: z.boolean().optional(),
 });
 export const GetFacilitiesRequestQuerySchema = QuerySchema(GetFacilitiesFilterSchema);
-export const GetFacilitiesResponseBodySchema = z.array(z.union([ManagerFacilitySchema, UserFacilitySchema]));
+export const GetFacilitiesResponseBodySchema = z.array(
+  z.union([ManagerFacilitySchema, UserFacilitySchema]),
+);
 
 // ============================================================================
 // POST /facilities: routeCreateFacility
@@ -163,11 +169,7 @@ export const SearchFacilitiesRequestBodySchema = z.object({
   //   Filtering by manager, it is omitted.
   //   Filtering by private status
 
-  tags: z.union([
-    z.string(),
-    z.boolean(),
-    RangeSchema(z.number()),
-  ]),
+  tags: z.union([z.string(), z.boolean(), RangeSchema(z.number())]),
   roomType: z.enum(ROOM_TYPES).optional(),
   capacity: RangeSchema(z.int()),
   allowVisit: z.boolean(),
@@ -183,14 +185,16 @@ export const SearchFacilitiesResponseBodySchema = z.array(UserFacilityWithListin
 export const GetFacilityResponseBodySchema = z.union([ManagerFacilitySchema, UserFacilitySchema]);
 
 // PATCH /facilities/:facilityId: routeUpdateFacility
-export const UpdateFacilityRequestBodySchema = z.object({
-  name: z.string(),
-  type: FacilityTypeSchema,
-  location: FacilityLocationSchema,
-  isAcceptingApplications: z.boolean(),
-  applicationCloseDate: DateTimeSchema,
-  applicationOpenDate: DateTimeSchema,
-}).partial();
+export const UpdateFacilityRequestBodySchema = z
+  .object({
+    name: z.string(),
+    type: FacilityTypeSchema,
+    location: FacilityLocationSchema,
+    isAcceptingApplications: z.boolean(),
+    applicationCloseDate: DateTimeSchema,
+    applicationOpenDate: DateTimeSchema,
+  })
+  .partial();
 
 // ============================================================================
 // DELETE /facilities/:facilityId: routeDeleteFacility

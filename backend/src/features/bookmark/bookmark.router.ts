@@ -1,5 +1,9 @@
 import { Router } from 'express';
-import { routeGetBookmarkedUnits, routeAddBookmark, routeDeleteBookmark } from './bookmark.controller';
+import {
+  routeGetBookmarkedUnits,
+  routeAddBookmark,
+  routeDeleteBookmark,
+} from './bookmark.controller';
 import { isVerifiedStudent } from '../../middleware';
 
 const router = Router();
@@ -11,6 +15,5 @@ router.get('/bookmarks', isVerifiedStudent, routeGetBookmarkedUnits);
 router.post('/bookmarks/:listingId', isVerifiedStudent, routeAddBookmark);
 // DELETE /api/bookmarks/:listingId
 router.delete('/bookmarks/:listingId', isVerifiedStudent, routeDeleteBookmark);
-
 
 export default router;

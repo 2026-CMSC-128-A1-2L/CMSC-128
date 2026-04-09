@@ -4,7 +4,6 @@ import { routeGetReviews, routeUpdateReview, routeDeleteReview } from './review.
 
 const router = Router();
 
-
 // Reviews
 // GET /api/reviews
 router.get('/reviews', listingViewFilter, routeGetReviews);
@@ -12,6 +11,5 @@ router.get('/reviews', listingViewFilter, routeGetReviews);
 router.patch('/reviews/:reviewId', selfFilter(false), routeUpdateReview);
 // DELETE /api/reviews/:reviewId
 router.delete('/reviews/:reviewId', selfFilter(false), routeDeleteReview);
-
 
 export default router;

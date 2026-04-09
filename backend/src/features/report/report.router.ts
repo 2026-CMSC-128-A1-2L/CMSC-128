@@ -9,5 +9,4 @@ router.get('/reports', isSuperAdmin, routeGetReports);
 // POST /api/reports/:reportId/resolve
 router.post('/reports/:reportId/resolve', isSuperAdmin, routeResolveReport);
 
-
 export default router;

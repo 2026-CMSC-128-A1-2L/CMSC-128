@@ -18,7 +18,7 @@ export const routeGetUser: RequestHandler = async (req, res, next) => {
   res.status(200).json({ data: user });
 };
 
-export const routeUpdateUser: RequestHandler = async (req, res, next) => { };
+export const routeUpdateUser: RequestHandler = async (req, res, next) => {};
 export const routeDeleteUser: RequestHandler = async (req, res, next) => {
   const userId = ObjectIdSchema.parse(req.params.userId);
   const user = await deleteUser(userId);
