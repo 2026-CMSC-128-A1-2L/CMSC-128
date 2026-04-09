@@ -25,24 +25,88 @@ import { routeReportUser } from '../report/report.controller';
 
 const router = Router();
 
+// ============================================================================
 // GET /api/users
+//
+// Retrieves a list of users that satisfies the filters.
+// Can only be used by the admin.
+//
+// TODO:
+//   Add filter based on verification status
+//
+// ============================================================================
 router.get('/', isSuperAdmin, routeGetUsers);
 
+// ============================================================================
 // GET /api/users/:userId
+//
+// Retrieves a user.
+// Can only be used by the user or the admin.
+//
+// TODO:
+//   Clarify if users should be able to see more details about landlords and
+//   managers.
+//
+// ============================================================================
 router.get('/:userId', isSelfOrSuperAdmin, routeGetUser);
 
+// ============================================================================
 // PATCH /api/users/:userId
+//
+// TODO:
+//   Clarify which fields can be edited by the user. This would be the only way
+//   birth date can be set so far if implemented. Clarify if admins should be
+//   able to edit a user's personal information.
+//
+// ============================================================================
 router.patch('/:userId', isSelfOrSuperAdmin, routeUpdateUser);
 
+// ============================================================================
 // DELETE /api/users/:userId
+//
+// Soft deletes a user by setting `isActive` false. The user should not be able
+// to log-in and have all sessions invalidated. 
+//
+// TODO:
+//   Clarify what happens if the user tries to log-in again.
+//
+// ============================================================================
 router.delete('/:userId', isSelfOrSuperAdmin, routeDeleteUser);
 
+// ============================================================================
 // GET /api/users/:userId/documents
-router.get(
+//
+// Documents for a user's verification.
+// ============================================================================
+router.use(
   '/:userId/documents',
   getUserId,
   createDocumentRouter(isSelf, isSuperAdmin, User as any),
 );
+
+// ============================================================================
+// GET /api/users/:userId/billings
+//
+// Returns a user's billings with a summary.
+//
+// TODO:
+//   Implement summary.
+//
+// ============================================================================
+router.get('/:userId/billings', selfFilter(false), routeGetUserBillings);
+
+// ============================================================================
+// POST /api/users/:userId/report
+//
+// TODO:
+//   User is to be reported by manager/landlord make filter for that
+//
+// ============================================================================
+router.post('/:userId/report', isVerifiedStudent, routeReportUser);
+
+// ============================================================================
+// These endpoints might be redundant.
+// ============================================================================
 
 // GET /api/users/:userId/applications
 router.get('/:userId/applications', selfFilter(false), routeGetApplicationsByStudent);
@@ -52,15 +116,6 @@ router.get('/:userId/rentals', selfFilter(false), routeGetRentalsByUser);
 
 // GET /api/users/:userId/billings
 router.get('/:userId/billings', selfFilter(false), routeGetUserBillings);
-
-// GET /api/users/:userId/bookings
-router.get('/:userId/bookings', isSelfOrSuperAdmin, routeGetVisitBookingsByStudent);
-
-// TODO: user is to be reported by manager/landlord
-// make filter for that
-//
-// POST /api/users/:userId/report
-router.post('/:userId/report', isVerifiedStudent, routeReportUser);
 
 // ============================================================================
 // User Verification
