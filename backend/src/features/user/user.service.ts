@@ -1,5 +1,7 @@
 import mongoose, { QueryFilter } from 'mongoose';
 import { UnverifiedStudent, User } from './user.model';
+import { AppError } from '../../error';
+import { sendNotification } from '../notification/notification.service';
 
 export type CreateUserParams = {
   firstName: string;
@@ -51,13 +53,13 @@ export const deleteUser = async (userId: mongoose.Types.ObjectId) => {
 type GetUsersArguments = {
   userID?: mongoose.Types.ObjectId | null;
   userType?:
-    | 'Admin'
-    | 'Student'
-    | 'Manager'
-    | 'Landlord'
-    | 'UnverifiedStudent'
-    | 'UnverifiedManager'
-    | 'UnverifiedLandlord';
+  | 'Admin'
+  | 'Student'
+  | 'Manager'
+  | 'Landlord'
+  | 'UnverifiedStudent'
+  | 'UnverifiedManager'
+  | 'UnverifiedLandlord';
 };
 
 export const getUsers = async (params: GetUsersArguments) => {
@@ -71,3 +73,20 @@ export const getUsers = async (params: GetUsersArguments) => {
 
   return await User.find(filter);
 };
+
+export const approveUser = async (userId: mongoose.Types.ObjectId) => {
+  const user = await User.findById(userId);
+  if (!user)
+    throw new AppError(404, "User not found.");
+
+  if (user.userType === 'UnverifiedStudent') {
+    user.userType = 'Student';
+  } else if (user.userType === 'UnverifiedLandlord') {
+    user.userType = 'Landlord';
+  } else {
+    throw new AppError(422, `User of type '${user.userType}' cannot be verified.`);
+  }
+
+  await user.save();
+  await sendNotification(userId, 'Verification Approved', 'Your account has been verified.');
+}
