@@ -12,3 +12,4 @@ export const USER_TYPES = [
 export const DOCUMENT_STATUS = ['accepted', 'rejected', 'pending'] as const;
 
 export type FacilityType = (typeof FACILITY_TYPES)[number];
+export type DocumentStatusType = (typeof DOCUMENT_STATUS)[number];

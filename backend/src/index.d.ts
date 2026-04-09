@@ -9,21 +9,20 @@ declare global {
       middleName?: string | null;
       lastName: string;
       userType:
-        | 'Admin'
-        | 'Student'
-        | 'Manager'
-        | 'Landlord'
-        | 'UnverifiedStudent'
-        | 'UnverifiedManager'
-        | 'UnverifiedLandlord';
+      | 'Admin'
+      | 'Student'
+      | 'Manager'
+      | 'Landlord'
+      | 'UnverifiedStudent'
+      | 'UnverifiedManager'
+      | 'UnverifiedLandlord';
       birthDate?: Date | null;
-      email: string;
+      emails: string[];
       auth: {
-        google?: string | null;
+        google: string[];
         password?: string | null;
       };
       isActive: boolean;
-      lastLogin?: Date | null;
       profilePicture?: string | null;
     }
   }
@@ -35,9 +34,9 @@ interface CustomMatchers<R = unknown> {
 
 declare module 'vitest' {
   /* eslint-disable @typescript-eslint/no-empty-object-type */
-  interface Assertion<T = any> extends CustomMatchers<T> {}
+  interface Assertion<T = any> extends CustomMatchers<T> { }
   /* eslint-disable @typescript-eslint/no-empty-object-type */
-  interface AsymmetricMatchersContaining extends CustomMatchers {}
+  interface AsymmetricMatchersContaining extends CustomMatchers { }
 }
 
-export {};
+export { };
