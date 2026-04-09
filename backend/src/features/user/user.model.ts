@@ -66,7 +66,7 @@ const userSchema = new mongoose.Schema(
 
     // Currently, there are two sources of truth in verification,
     // status being 'approved', and the userType being ones that are verified
-    // based on the isVerified function. 
+    // based on the isVerified function.
     //
     // TODO: use one source for verification status
     status: {

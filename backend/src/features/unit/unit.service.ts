@@ -2,61 +2,59 @@ import mongoose, { QueryFilter } from 'mongoose';
 import { AppError } from '../../error';
 import { combineFilters } from '../../middleware';
 import { Unit } from './unit.model';
+import { Listing } from '../listing/listing.model';
+import { getListingById } from '../listing/listing.service';
 
 export type CreateUnitArguments = {
-  roomNumber: number;
-  capacity: number;
-  currentOccupancy: number;
+  listingId: mongoose.Types.ObjectId;
+  roomNumber: string;
   price: number;
   location?: string | null;
   isAvailable: boolean;
-  listingId: mongoose.Types.ObjectId;
-  landlordId: mongoose.Types.ObjectId;
 };
 
 // Parameters for filtering listings
 export type GetUnitArguments = {
-  roomNumber: number;
-  capacity: number;
-  currentOccupancy: number;
+  listingId: mongoose.Types.ObjectId;
+  roomNumber: string;
   price: number;
   location: string;
   isAvailable: boolean;
-  listingId: mongoose.Types.ObjectId;
-  landlordId: mongoose.Types.ObjectId;
 };
 
-export const createUnit = async (data: CreateUnitArguments, filters: any) => {
-  const existingUnit = await Unit.findOne(combineFilters(filters, { roomNumber: data.roomNumber }));
-  if (existingUnit) {
-    throw new AppError(409, 'A unit with this room number already exists in this listing.');
+export const createUnit = async (
+  data: CreateUnitArguments,
+  filters: QueryFilter<typeof Listing>,
+) => {
+  const listing = await getListingById(data.listingId, filters);
+  if (!listing) {
+    throw new AppError(404, 'Listing not found.');
   }
 
-  const newUnit = new Unit(data);
-  return await newUnit.save();
+  return await new Unit(data).save();
 };
 
 export function buildUnitQuery(args: Partial<GetUnitArguments>): QueryFilter<typeof Unit> {
   return args;
 }
 
-export const getUnits = async (filters: Partial<GetUnitArguments>) => {
-  const query = buildUnitQuery(filters);
-  return await Unit.find(query); //returns units
+export const getUnits = async (
+  args: Partial<GetUnitArguments>,
+  filter: QueryFilter<typeof Unit>,
+) => {
+  const query = buildUnitQuery(args);
+  return await Unit.find(combineFilters(query, filter));
 };
 
-export const getUnitById = async (id: mongoose.Types.ObjectId) => {
-  return await Unit.findById(id);
-};
-
-export const getUnitByListing = async (listingId: mongoose.Types.ObjectId) => {
-  return await Unit.find({ listingId });
+export const getUnitById = async (
+  id: mongoose.Types.ObjectId,
+  filter: QueryFilter<typeof Unit>,
+) => {
+  return await Unit.find(combineFilters({ _id: id }, filter));
 };
 
 export type UpdateUnitArguments = {
-  roomNumber?: number;
-  capacity?: number;
-  currentOccupancy?: number;
+  roomNumber?: string;
   price?: number;
   location?: string | null;
   isAvailable?: boolean;
@@ -67,7 +65,7 @@ export const updateUnit = async (
   data: UpdateUnitArguments,
   filters: QueryFilter<typeof Unit>,
 ) => {
-  const unit = await Unit.findOne(combineFilters(filters, { _id: unitId }));
+  const unit = await Unit.findOne(combineFilters({ _id: unitId }, filters));
 
   if (!unit) {
     throw new AppError(404, 'Unit not found.');
@@ -77,12 +75,16 @@ export const updateUnit = async (
   return await unit.save();
 };
 
-export const deleteUnit = async (unitId: mongoose.Types.ObjectId, filters: any) => {
-  const unit = await Unit.findOne(combineFilters(filters, { _id: unitId }));
+export const deleteUnit = async (
+  unitId: mongoose.Types.ObjectId,
+  filters: QueryFilter<typeof Unit>,
+) => {
+  const unit = await Unit.findOne(combineFilters({ _id: unitId }, filters));
 
   if (!unit) {
     throw new AppError(404, 'Unit not found.');
   }
 
+  // TODO: replace with soft delete
   return await unit.deleteOne();
 };

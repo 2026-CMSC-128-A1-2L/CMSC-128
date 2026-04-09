@@ -65,7 +65,7 @@ router.patch('/:userId', isSelfOrSuperAdmin, routeUpdateUser);
 // DELETE /api/users/:userId
 //
 // Soft deletes a user by setting `isActive` false. The user should not be able
-// to log-in and have all sessions invalidated. 
+// to log-in and have all sessions invalidated.
 //
 // TODO:
 //   Clarify what happens if the user tries to log-in again.
@@ -123,7 +123,7 @@ router.get('/:userId/billings', selfFilter(false), routeGetUserBillings);
 // Users need to be verified before getting access to other parts of the site.
 // The required documents are sent and are checked by the admin.
 // Each requirement can be verified individually.
-// 
+//
 // The admin can only verify a user if all of the requirements are met.
 // The admin can only reject a user if at least one of the requirements are not
 // met.
@@ -145,6 +145,5 @@ router.post('/:userId/approve', isSuperAdmin, routeApproveUser);
 // POST /api/users/:userId/reject
 // ============================================================================
 router.post('/:userId/reject', isSuperAdmin, routeRejectUser);
-
 
 export default router;

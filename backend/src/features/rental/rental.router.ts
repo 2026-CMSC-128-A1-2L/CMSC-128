@@ -19,11 +19,7 @@ router.patch('/:rentalId', managerFilter('facility', 'manageListings'), routeUpd
 // POST /api/rentals/:rentalId/move-in
 router.post('/:rentalId/move-in', managerFilter('facility', 'manageListings'), routeMoveIn);
 // POST /api/rentals/:rentalId/move-out
-router.post(
-  '/:rentalId/move-out',
-  managerFilter('facility', 'manageListings'),
-  routeMoveOut,
-);
+router.post('/:rentalId/move-out', managerFilter('facility', 'manageListings'), routeMoveOut);
 
 // TODO: check what else changes when a rental is deleted
 // router.delete('/:rentalId', isSuperAdmin, routeDeleteRental);

@@ -70,8 +70,17 @@ router.patch('/:listingId/tags', managerFilter('direct', 'manageListings'), rout
 // GET /api/listings/:listingId/units
 router.get('/:listingId/units', managerFilter('listing', null), routeGetUnitsByListing);
 
+// ============================================================================
 // POST /api/listings/:listingId/units
-router.post('/:listingId/units', managerFilter('listing', 'manageListings'), routeCreateUnit); // TODO:
+//
+// Uses `listing-direct` filter because unit has not been created yet, compare
+// directly to provided `listingId`.
+// ============================================================================
+router.post(
+  '/:listingId/units',
+  managerFilter('listing-direct', 'manageListings'),
+  routeCreateUnit,
+); // TODO:
 
 // GET /api/listings/:listingId/applications
 router.get(

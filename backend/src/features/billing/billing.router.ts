@@ -19,18 +19,10 @@ router.get('/', isSuperAdmin, routeGetBillings);
 router.post('/', managerFilter('facility', 'manageBillings'), routeCreateBilling);
 
 // GET /api/billings/:billingId
-router.get(
-  '/:billingId',
-  managerFilter('facility', 'manageBillings', true),
-  routeGetBilling,
-);
+router.get('/:billingId', managerFilter('facility', 'manageBillings', true), routeGetBilling);
 
 // PATCH /api/billings/:billingId
-router.patch(
-  '/:billingId',
-  managerFilter('facility', 'manageBillings', true),
-  routeUpdateBilling,
-);
+router.patch('/:billingId', managerFilter('facility', 'manageBillings', true), routeUpdateBilling);
 
 // POST /api/billings/:billingId/pay
 router.post('/:billingId/pay', isVerifiedStudent, routeSubmitBillingPayment);

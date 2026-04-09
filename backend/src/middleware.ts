@@ -26,7 +26,7 @@ export const combineFilters = (oldFilter: any, newFilter: any) => ({
 
 // Used for queries on documents which have the managers array, which are `HousingFacility` and `Listing`.
 export const managerFilter = (
-  filterType: 'direct' | 'facility' | 'listing',
+  filterType: 'direct' | 'facility' | 'listing' | 'facility-direct' | 'listing-direct',
   permission: ManagerPermission | null,
   includeSelf: boolean = false,
 ): RequestHandler => {
@@ -69,9 +69,17 @@ export const managerFilter = (
 
     if (filterType === 'direct') {
       res.locals.filters = combineFilters(res.locals.filters, newFilter);
+    } else if (filterType === 'listing-direct') {
+      res.locals.filters = combineFilters(res.locals.filters, {
+        _id: { $in: await Listing.find(newFilter).distinct('_id') },
+      });
     } else if (filterType === 'listing') {
       res.locals.filters = combineFilters(res.locals.filters, {
         listingId: { $in: await Listing.find(newFilter).distinct('_id') },
+      });
+    } else if (filterType === 'facility-direct') {
+      res.locals.filters = combineFilters(res.locals.filters, {
+        _id: { $in: await HousingFacility.find(newFilter).distinct('_id') },
       });
     } else if (filterType === 'facility') {
       res.locals.filters = combineFilters(res.locals.filters, {
