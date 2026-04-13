@@ -289,3 +289,25 @@ export const updateListingTags = async (
   listing.set({ tags: data.tags });
   return await listing.save();
 };
+
+export const approveListing = async (
+  listingId: mongoose.Types.ObjectId,
+  filters: any,
+) => {
+  const listing = await Listing.findOne(combineFilters(filters, { _id: listingId }));
+  if (!listing) {
+    const listingNoFilter = await Listing.findById(listingId);
+    if (listingNoFilter) {
+      throw new AppError(403, 'Forbidden: You are not the owner of this listing.');
+    } else {
+      throw new AppError(404, 'Listing not found.');
+    }
+  }
+
+  if (listing.isPrivate) {
+    throw new AppError(409, 'Listing is already approved.');
+  }
+  listing.isPrivate = true;
+
+  return await listing.save();
+};

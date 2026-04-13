@@ -7,6 +7,7 @@ import {
   updateListing,
   deleteListing,
   updateListingTags,
+  approveListing
 } from '../services/listing.js';
 import { getBookingsByListing } from '../services/booking.js';
 import z from 'zod';
@@ -93,4 +94,11 @@ export const routeUpdateListingTags: RequestHandler = async (req, res, next) => 
 
   res.status(200).json({ data: updatedListing });
 };
-export const routeApproveListing: RequestHandler = async (req, res, next) => {};
+
+export const routeApproveListing: RequestHandler = async (req, res, next) => {
+  const listingId = ObjectIdSchema.parse(req.params.listingId);
+
+  const approvedListing = await approveListing(listingId, res.locals.filters ?? {});
+
+  res.status(200).json({ data: approvedListing });
+};
