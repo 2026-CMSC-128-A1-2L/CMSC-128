@@ -182,13 +182,54 @@ router.get('/listings/:listingId/units', routeGetUnitsByListing);
 router.post('/listings/:listingId/units', correctManagerOrLandlordFilter, routeCreateUnit); // TODO:
 
 // Tags
-// GET /api/tags
+// GET /tags
+// Input:
+// - None
+//
+// Output:
+// - Array of Tag objects
+//
+// Considerations:
+// - Returns all tag definitions (used for UI + validation)
+// - Includes datatype rules (enum, numeric, boolean)
 router.get('/tags', routeGetTags);
-// POST /api/tags
+// POST /tags
+// Input:
+// - name (string)
+// - displayName (string)
+// - dataType (enum | numeric | boolean)
+//
+// Output:
+// - Created Tag object
+//
+// Considerations:
+// - Name must be unique
+// - dataType must match schema (e.g., enum requires values)
+// - Numeric must respect min/max if provided
 router.post('/tags', isSuperAdmin, routeCreateTag);
-// PATCH /api/tags/:tagName
+// PATCH /tags/:tagName
+// Input:
+// - tagName
+// - Optional fields to update (name, displayName, dataType)
+//
+// Output:
+// - Updated Tag object
+//
+// Considerations:
+// - Only provided fields are updated
+// - Must maintain valid dataType constraints
+// - Changing type may affect existing listings
 router.patch('/tags/:tagName', isSuperAdmin, routeUpdateTag);
-// DELETE /api/tags/:tagName
+// DELETE /tags/:tagId
+// Input:
+// - tagName
+//
+// Output:
+// - Success message or deleted Tag
+//
+// Considerations:
+// - Tag must exist
+// - May affect listings using this tag (ensure safe deletion policy)
 router.delete('/tags/:tagName', isSuperAdmin, routeDeleteTag);
 
 // Users
@@ -216,7 +257,16 @@ router.post('/users/:userId/reject', isSuperAdmin, routeRejectUser);
 router.get('/applications', isSuperAdmin, routeGetApplications);
 // POST /api/applications
 router.post('/applications', isVerifiedStudent, routeCreateApplication);
-// GET /api/applications/:applicationId
+// GET /applications/:applicationId
+// Input:
+// - applicationId (ObjectId)
+//
+// Output:
+// - ApplicationForm object
+//
+// Considerations:
+// - Returns 404 if not found
+// - Should enforce access control (student or authorized staff)
 router.get('/applications/:applicationId', isSelfManagerOrSuperAdmin, routeGetApplication);
 // PATCH /api/applications/:applicationId
 router.patch('/applications/:applicationId', isSelfManagerOrSuperAdmin, routeUpdateApplication);
@@ -229,8 +279,26 @@ router.post('/applications/:applicationId/reject', correctManagerOrLandlordFilte
 // POST /api/applications/:applicationId/assign-unit
 router.post('/applications/:applicationId/assign-unit', correctManagerOrLandlordFilter, routeAssignApplicationUnit);
 // GET /api/users/:userId/applications
+// Input:
+// - userId (ObjectId)
+//
+// Output:
+// - Array of ApplicationForm objects
+//
+// Considerations:
+// - Returns only applications of current user
 router.get('/users/:userId/applications', isSelf, routeGetApplicationsByStudent);
-// GET /api/listings/:listingId/applications
+// GET /listings/:listingId/applications
+// Input:
+// - listingId (ObjectId)
+//
+// Output:
+// - Array of ApplicationForm objects
+//
+// Considerations:
+// - Intended for managers/landlords
+// - Returns all applications for a listing
+// - Should enforce ownership via listing
 router.get('/listings/:listingId/applications', correctManagerOrLandlordFilter, routeGetApplicationsByListing);
 
 // Rentals
@@ -281,12 +349,44 @@ router.delete('/bookmarks/:listingId', isVerifiedStudent, routeDeleteBookmark);
 
 // Reviews
 // GET /api/reviews
+// Input:
+// - None (filters via middleware)
+//
+// Output:
+// - Array of Review objects
+//
+// Considerations:
+// - Applies listingViewFilter
+// - Returns only reviews of visible listings
+// - Prevents leaking private listing reviews
 router.get('/reviews', listingViewFilter, routeGetReviews);
 // GET /api/listings/:listingId/reviews
+// Input:
+// - listingId (ObjectId)
+//
+// Output:
+// - Array of Review objects
+//
+// Considerations:
+// - Applies listingViewFilter
+// - Returns 403 if listing exists but is not accessible
+// - Returns 404 if listing does not exist
+// - Fetches reviews only if listing is visible
 router.get('/listings/:listingId/reviews', listingViewFilter, routeGetListingReviews);
 // POST /api/listings/:listingId/reviews
 router.post('/listings/:listingId/reviews', listingViewFilter, routeCreateReview);
 // GET /api/facilities/:facilityId/reviews
+// Input:
+// - facilityId (ObjectId)
+//
+// Output:
+// - Array of Review objects, reviews of the listings within a facility
+//
+// Considerations:
+// - Applies listingViewFilter to listings under facility
+// - Returns 404 if facility not found
+// - Uses relation: Facility → Listings → Reviews
+// - Empty array is valid if no reviews
 router.get('/facilities/:facilityId/reviews', listingViewFilter, routeGetFacilityReviews);
 // PATCH /api/reviews/:reviewId
 router.patch('/reviews/:reviewId', isSelf, routeUpdateReview);
@@ -313,12 +413,46 @@ router.get('/listings/:listingId/bookings', correctManagerOrLandlordFilter, rout
 
 // Lease Transfers
 // GET /api/transfers
+// Input:
+// - None (uses req.user._id)
+//
+// Output:
+// - Array of TransferRequest objects
+//
+// Considerations:
+// - Requires verified student
+// - Returns only user's own transfer requests
+// - No access to others' data
 router.get('/transfers', isVerifiedStudent, routeGetTransferRequests);
 // POST /api/transfers
 router.post('/transfers', isVerifiedStudent, routeCreateTransferRequest);
 // POST /api/transfers/:transferId/approve
+// Input:
+// - transferId (ObjectId)
+//
+// Output:
+// - Updated TransferRequest object
+//
+// Considerations:
+// - Requires manager/landlord ownership
+// - Validates via: Transfer → Unit → Listing
+// - Returns 403 if not authorized
+// - Returns 404 if resource not found
+// - Sets status to 'approved'
 router.post('/transfers/:transferId/approve', correctManagerOrLandlordFilter, routeApproveTransferRequest);
 // POST /api/transfers/:transferId/reject
+// Input:
+// - transferId (ObjectId)
+//
+// Output:
+// - Updated TransferRequest object
+//
+// Considerations:
+// - Requires manager/landlord ownership
+// - Validates via: Transfer → Unit → Listing
+// - Returns 403 if not authorized
+// - Returns 404 if resource not found
+// - Sets status to 'rejected'
 router.post('/transfers/:transferId/reject', correctManagerOrLandlordFilter, routeRejectTransferRequest);
 // DELETE /api/transfers/:transferId
 router.delete('/transfers/:transferId', isSelf, routeCancelTransferRequest); // TODO: check if transfer is already processed, cannot delete
