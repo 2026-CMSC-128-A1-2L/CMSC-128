@@ -377,7 +377,9 @@ router.post('/reports/:reportId/resolve', isSuperAdmin, routeResolveReport);
 // POST /api/listings/:listingId/report
 router.post('/listings/:listingId/report', isVerifiedStudent, routeReportListing);
 // POST /api/users/:userId/report
-router.post('/users/:userId/report', isSelfOrSuperAdmin, routeReportUser);
+router.post('/users/:userId/report', isVerifiedStudent, routeReportUser);
+//TODO: user is to be reported by manager/landlord
+//make filter for that
 
 // Messages
 // GET /api/messages
