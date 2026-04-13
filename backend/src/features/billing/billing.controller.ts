@@ -1,7 +1,7 @@
-import { RequestHandler } from 'express';
-import { CreateBillingBodySchema, GetBillingsFilterSchema } from 'shared';
+import { application, RequestHandler } from 'express';
+import { CreateBillingBodySchema, GetBillingsFilterSchema, ObjectIdSchema, UpdateBillingBodySchema } from 'shared';
 import { sendNotification } from '../notification/notification.service';
-import { createBilling, getBillings } from './billing.service';
+import { createBilling, getBillings, submitBillingPayment, verifyBillingPayment } from './billing.service';
 
 export const routeCreateBilling: RequestHandler = async (req, res, next) => {
   const params = CreateBillingBodySchema.parse(req.body);
@@ -20,9 +20,34 @@ export const routeGetBillings: RequestHandler = async (req, res, next) => {
   res.status(200).json({ data: billings });
 };
 
-export const routeGetBilling: RequestHandler = async (req, res, next) => {};
-export const routeUpdateBilling: RequestHandler = async (req, res, next) => {};
-export const routeSubmitBillingPayment: RequestHandler = async (req, res, next) => {};
-export const routeVerifyBillingPayment: RequestHandler = async (req, res, next) => {};
+export const routeUpdateBilling: RequestHandler = async (req, res, next) => {  };
+
+export const routeSubmitBillingPayment: RequestHandler = async (req, res, next) => {
+  const billingId = ObjectIdSchema.parse(req.params.billingId);
+  const params = UpdateBillingBodySchema.parse(req.body);
+
+  const updatedBilling = await submitBillingPayment(
+    billingId,
+    params,
+    res.locals.filters,
+  );
+  res.status(200).json({ data: updatedBilling});
+};
+
+export const routeVerifyBillingPayment: RequestHandler = async (req, res, next) => {
+  const billingId = ObjectIdSchema.parse(req.params.billingId);
+  const params = UpdateBillingBodySchema.parse(req.body);
+
+  const updatedBilling = await verifyBillingPayment(
+    billingId,
+    params,
+    res.locals.filters,
+  );
+  // TODO notifs
+  res.status(200).json({ data: updatedBilling});
+};
+
 export const routeGetUserBillings: RequestHandler = async (req, res, next) => {};
+
 export const routeGetUnitBillings: RequestHandler = async (req, res, next) => {};
+export const routeGetBilling: RequestHandler = async (req, res, next) => {};
