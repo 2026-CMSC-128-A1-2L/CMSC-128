@@ -8,6 +8,7 @@ import {
   deleteListing,
   updateListingTags,
 } from '../services/listing.js';
+import { getBookingsByListing } from '../services/booking.js';
 import z from 'zod';
 import { ObjectIdSchema } from './schema/common.js';
 import {
@@ -75,7 +76,12 @@ export const routeDeleteListing: RequestHandler = async (req, res, next) => {
 
 export const routeGetUnitsByListing: RequestHandler = async (req, res, next) => {};
 export const routeGetApplicationsByListing: RequestHandler = async (req, res, next) => {};
-export const routeGetVisitBookingsByListing: RequestHandler = async (req, res, next) => {};
+export const routeGetVisitBookingsByListing: RequestHandler = async (req, res, next) => {
+  const listingId = ObjectIdSchema.parse(req.params.listingId);
+  const bookings = await getBookingsByListing(listingId, res.locals.filters ?? {});
+
+  res.status(200).json({ data: bookings });
+};
 export const routeUpdateListingTags: RequestHandler = async (req, res, next) => {
   const listingID = ObjectIdSchema.parse(req.params.listingId);
   
