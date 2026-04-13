@@ -5,6 +5,42 @@ import { AppError } from '../controllers/error.js';
 import { combineFilters } from '../controllers/middleware.js';
 import { HousingFacility } from '../models/housing/HousingFacility.js';
 
+export type createReviewArguments = {
+  studentId: mongoose.Types.ObjectId, 
+  listingId: mongoose.Types.ObjectId;
+  rating: number;
+  description?: String;
+}
+
+export type updateReviewArguments = {
+  reviewId: mongoose.Types.ObjectId,
+  rating?: number;
+  description?: String;
+}
+
+export const createReview = async (   
+  listingId: mongoose.Types.ObjectId, 
+  data: createReviewArguments,
+  filters: any,
+) => {
+  // TODO: add admin create review eligibility checks for approval:
+  // check for minimum tenancy, if reviewer is flagged, etc.
+  const listing = Listing.findOne(combineFilters({_id: listingId}, filters));  
+
+  if(!listing){
+    throw new AppError(404, 'Listing not found.');
+  }
+  
+  const newReview = new Review({
+    studentId: data.studentId,
+    listingId: data.listingId,
+    rating: data.rating,
+    description: data.description
+  });
+
+  await newReview.save();
+};
+
 export const getReviews = async (filters: any) => {
   const visibleListings = await Listing.find(filters).select('_id');
 
@@ -61,3 +97,26 @@ export const getFacilityReviews = async (
     listingID: { $in: listingIDs },
   });
 };
+
+export const updateReview = async (data: updateReviewArguments) => {
+  const review = await Review.findById(data.reviewId);
+  if(!review){
+    throw new AppError(404, 'Review not found.');
+  };
+
+  review.set(data);
+
+  return await review.save();
+};
+
+export const deleteReview = async (reviewId: mongoose.Types.ObjectId) => {
+  const review = await Review.findById(reviewId);
+  
+  if(!review){
+    throw new AppError(404, 'Review not found.');
+  }
+
+  return await Review.findByIdAndDelete(reviewId);
+};
+
+// TODO: approve, reject of review

@@ -3,6 +3,7 @@ import { ObjectIdSchema } from './common.js';
 
 // POST /reviews
 export const CreateReviewBodySchema = z.object({
+  studentId: ObjectIdSchema,
   listingId: ObjectIdSchema,
   rating: z.number().int().min(1).max(5),
   description: z.string().optional(),
