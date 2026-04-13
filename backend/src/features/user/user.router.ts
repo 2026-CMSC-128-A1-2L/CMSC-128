@@ -4,7 +4,6 @@ import {
   isSuperAdmin,
   isSelfOrSuperAdmin,
   getUserId,
-  isSelf,
   selfFilter,
   isVerifiedStudent,
 } from '../../middleware';
@@ -81,7 +80,7 @@ router.delete('/:userId', isSelfOrSuperAdmin, routeDeleteUser);
 router.use(
   '/:userId/documents',
   getUserId,
-  createDocumentRouter(isSelf, isSuperAdmin, User as any),
+  createDocumentRouter(selfFilter(false), isSuperAdmin, User as any),
 );
 
 // ============================================================================
@@ -116,6 +115,9 @@ router.get('/:userId/rentals', selfFilter(false), routeGetRentalsByUser);
 
 // GET /api/users/:userId/billings
 router.get('/:userId/billings', selfFilter(false), routeGetUserBillings);
+
+// GET /api/users/:userId/bookings
+router.get('/:userId/bookings', selfFilter(false), routeGetVisitBookingsByStudent);
 
 // ============================================================================
 // User Verification

@@ -25,6 +25,7 @@ export const createDocumentRouter = (
 ) => {
   const documentRouter = Router({ mergeParams: true });
 
+  // TODO: verify if this should use a filter middleware or a response
   documentRouter.get('/', ownerMiddleware, routeGetDocuments(model));
   documentRouter.post('/:documentId', ownerMiddleware, routeAddDocument(model));
   documentRouter.delete('/:documentId', ownerMiddleware, routeDeleteDocument(model));
