@@ -15,6 +15,14 @@ export type CreateBillingArguments = {
   paymentType: string; // 'rent', 'deposit', 'utility', etc. // Description of billing
 };
 
+export type UpdateBillingArguments = {
+  dueDate?: Date;
+  paymentDate?: Date;
+  amount?: number;
+  paidAmount?: number;
+  paymentType?: string;
+};
+
 export type GetBillingArguments = {
   userId: mongoose.Types.ObjectId;
   unitId: mongoose.Types.ObjectId;
@@ -93,4 +101,15 @@ export function buildBillingQuery(args: Partial<GetBillingArguments>): QueryFilt
 export const getBillings = async (query: Partial<GetBillingArguments>, filters: any) => {
   const dbFilters = buildBillingQuery(query);
   return await Billing.find(combineFilters(filters, dbFilters));
+};
+
+export const getBilling = async (billingId: mongoose.Types.ObjectId, filters: any) => {
+  return await Billing.findOne(combineFilters({ _id: billingId }, filters));
+};
+
+export const updateBilling = async (billingId: mongoose.Types.ObjectId, data: UpdateBillingArguments, filters: any) => {
+  return await Billing.findOneAndUpdate(
+    combineFilters({ _id: billingId }, filters),
+    { $set: data },
+  );
 };
