@@ -36,6 +36,7 @@ export type CreateListingArguments = {
   allowTransfer: boolean;
   description: string;
   mediaUrls?: string[]; // Optional
+  status: 'Available' | 'Pending' | 'Rejected';
 };
 
 // Parameters for filtering listings
@@ -135,6 +136,7 @@ export const createListing = async (data: CreateListingArguments, filters: any) 
 
     description: data.description,
     mediaUrls: data.mediaUrls ?? [],
+    status: data.status,
   });
   return await newListing.save();
 };
@@ -215,6 +217,7 @@ export type UpdateListingArguments = {
   description?: string;
   mediaUrls?: string[];
   units?: string[];
+  status? : 'Available'|'Pending'|'Rejected'
 };
 
 export const updateListing = async (
@@ -287,5 +290,49 @@ export const updateListingTags = async (
   }
 
   listing.set({ tags: data.tags });
+  return await listing.save();
+};
+
+export const approveListing = async (
+  listingId: mongoose.Types.ObjectId,
+  filters: any,
+) => {
+  const listing = await Listing.findOne(combineFilters(filters, { _id: listingId }));
+  if (!listing) {
+    const listingNoFilter = await Listing.findById(listingId);
+    if (listingNoFilter) {
+      throw new AppError(403, 'Forbidden: You are not the owner of this listing.');
+    } else {
+      throw new AppError(404, 'Listing not found.');
+    }
+  }
+
+  if (listing.status !== 'Pending') {
+    throw new AppError(409, 'Only pending listings can be approved.');
+  }
+  listing.status = 'Available';
+
+  return await listing.save();
+};
+
+export const rejectListing = async (
+  listingId: mongoose.Types.ObjectId,
+  filters: any,
+) => {
+  const listing = await Listing.findOne(combineFilters(filters, { _id: listingId }));
+  if (!listing) {
+    const listingNoFilter = await Listing.findById(listingId);
+    if (listingNoFilter) {
+      throw new AppError(403, 'Forbidden: You are not the owner of this listing.');
+    } else {
+      throw new AppError(404, 'Listing not found.');
+    }
+  }
+
+  if (listing.status !== 'Pending') {
+    throw new AppError(409, 'Only pending listings can be rejected.');
+  }
+  listing.status = 'Rejected';
+
   return await listing.save();
 };

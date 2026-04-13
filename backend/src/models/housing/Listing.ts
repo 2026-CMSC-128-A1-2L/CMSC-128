@@ -25,6 +25,7 @@ const ListingSchema = new mongoose.Schema({
   description: { type: String },
   mediaUrls: [{ type: String }],
   units: [{ type: String }], // room "numbers" can contain non-numeric characters
+  status: { type: String, required: true, enum: ['Available', 'Pending', 'Rejected'], default: 'Pending' },
 });
 
 export const Listing = mongoose.model('Listing', ListingSchema);

@@ -71,6 +71,7 @@ export const CreateListingBodySchema = z.object({
   allowTransfer: z.boolean(),
   description: z.string(),
   mediaUrls: z.array(z.string()).optional(),
+  status: z.enum(['Available', 'Pending', 'Rejected']),
 });
 
 // PATCH /listings/:listingId
@@ -84,4 +85,5 @@ export const UpdateListingBodySchema = z.object({
   description: z.string().optional(),
   mediaUrls: z.array(z.string()).optional(),
   units: z.array(z.string()).optional(),
+  status: z.enum(['Available', 'Pending', 'Rejected']).optional(),
 });
