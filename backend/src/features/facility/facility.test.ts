@@ -18,7 +18,7 @@ describe('Facilities API', () => {
   beforeAll(() => {
     validFacility = {
       name: `Test Facility 1`,
-      landlord: landlord._id,
+      landlordId: landlord._id,
       managers: [
         {
           user: manager._id,

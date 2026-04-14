@@ -46,7 +46,7 @@ export const routeGetFacility: RequestHandler = async (req, res, next) => {
   const facilityResponse: z.infer<typeof GetFacilityResponseBodySchema> = {
     id: facility._id,
     name: facility.name,
-    landlord: {
+    landlordId: {
       id: facility.landlord._id,
       profilePicture: facility.landlord.profilePicture,
       firstName: facility.landlord.firstName,

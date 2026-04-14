@@ -17,7 +17,7 @@ export let otherManagerAgent: ReturnType<typeof agent>;
 export let studentAgent: ReturnType<typeof agent>;
 export let guestAgent: ReturnType<typeof agent>;
 
-export let landlord: any;
+export let landlordId: any;
 export let manager: any;
 export let otherManager: any;
 export let student: any;

@@ -62,7 +62,7 @@ const LandlordSchema = z.object({
 const UserFacilitySchema = z.object({
   id: ObjectIdSchema,
   name: z.string(),
-  landlord: LandlordSchema,
+  landlordId: LandlordSchema,
   managers: z.array(ManagerSchema),
   location: FacilityLocationSchema.optional(),
   type: FacilityTypeSchema,

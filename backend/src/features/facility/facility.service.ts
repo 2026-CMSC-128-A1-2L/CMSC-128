@@ -122,7 +122,7 @@ export const getFacilities = async (filters: FacilityFilters) => {
   return await HousingFacility.find(queryFilter)
     .populate([
       {
-        path: 'landlord',
+        path: 'landlordId',
       },
       {
         path: 'managers.userId',
@@ -176,7 +176,7 @@ export const createFacility = async (data: CreateFacilityArguments) => {
   }
 
   const newFacility = new HousingFacility({
-    landlord: data.landlordId,
+    landlordId: data.landlordId,
     managers: data.managers ?? [],
 
     name: data.name,
@@ -219,7 +219,7 @@ type LandlordType = UserWithContactType;
 type ManagerType = UserWithContactType;
 
 type HousingFacilityWithManagersType = Omit<HousingFacilityType, 'landlord' | 'managers'> & {
-  landlord: LandlordType;
+  landlordId: LandlordType;
   managers: {
     user: ManagerType;
     permissions: ManagerPermissionType;
@@ -228,7 +228,7 @@ type HousingFacilityWithManagersType = Omit<HousingFacilityType, 'landlord' | 'm
 
 export const getFacilityById = async (facilityId: mongoose.Types.ObjectId) => {
   const facility = (await HousingFacility.findById(facilityId)
-    .populate('landlord managers.userId')
+    .populate('landlordId managers.userId')
     .lean()) as HousingFacilityWithManagersType | null;
 
   if (!facility) {

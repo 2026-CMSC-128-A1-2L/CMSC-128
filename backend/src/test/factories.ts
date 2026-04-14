@@ -117,7 +117,7 @@ export type HousingFacilityParams = Omit<HousingFacilityType, '_id' | 'createdAt
 
 export const buildHousingFacility = Factory.define<HousingFacilityParams>(({ sequence }) => ({
   name: `Test Facility ${sequence}`,
-  landlord: new mongoose.Types.ObjectId(),
+  landlordId: new mongoose.Types.ObjectId(),
   managers: [],
   location: {
     coordinates: { lat: 14.0, long: 121.0 },

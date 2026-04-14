@@ -123,7 +123,7 @@ export const correctLandlordFilter: RequestHandler = async (req, res, next) => {
     return next(new AppError(401, 'Unauthenticated'));
   }
 
-  res.locals.filters = combineFilters(res.locals.filters, { landlord: req.user._id });
+  res.locals.filters = combineFilters(res.locals.filters, { landlordId: req.user._id });
 
   next();
 };

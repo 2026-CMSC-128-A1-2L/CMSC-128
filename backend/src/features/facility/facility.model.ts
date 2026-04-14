@@ -11,7 +11,7 @@ export type ManagerPermissionType = {
 export type HousingFacilityType = {
   _id: mongoose.Types.ObjectId;
   name: string;
-  landlord: mongoose.Types.ObjectId;
+  landlordId: mongoose.Types.ObjectId;
   managers: {
     user: mongoose.Types.ObjectId;
     permissions: ManagerPermissionType;
@@ -42,7 +42,7 @@ export type HousingFacilityType = {
 const HousingFacilitySchema = new mongoose.Schema<HousingFacilityType>(
   {
     name: { type: String, required: true },
-    landlord: { type: mongoose.Schema.Types.ObjectId, ref: 'Landlord', required: true },
+    landlordId: { type: mongoose.Schema.Types.ObjectId, ref: 'Landlord', required: true },
     managers: [
       {
         userId: { type: mongoose.Schema.Types.ObjectId, ref: 'Manager', required: true },
