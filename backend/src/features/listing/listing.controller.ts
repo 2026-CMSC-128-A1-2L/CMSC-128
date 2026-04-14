@@ -68,8 +68,8 @@ export const routeDeleteListing: RequestHandler = async (req, res, next) => {
   res.status(200).json({ message: 'Listing deleted successfully.' });
 };
 
-export const routeGetUnitsByListing: RequestHandler = async (req, res, next) => {};
-export const routeGetApplicationsByListing: RequestHandler = async (req, res, next) => {};
+export const routeGetUnitsByListing: RequestHandler = async (req, res, next) => { };
+export const routeGetApplicationsByListing: RequestHandler = async (req, res, next) => { };
 export const routeUpdateListingTags: RequestHandler = async (req, res, next) => {
   const listingID = ObjectIdSchema.parse(req.params.listingId);
 
@@ -83,5 +83,4 @@ export const routeUpdateListingTags: RequestHandler = async (req, res, next) => 
 
   res.status(200).json({ data: updatedListing });
 };
-export const routeApproveListing: RequestHandler = async (req, res, next) => {};
-export const routeRejectListing: RequestHandler = async (req, res, next) => {};
+

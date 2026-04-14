@@ -8,12 +8,15 @@ import {
   routeDeleteFacility,
   routeRemoveManager,
   routeUpdateManagerPermissions,
+  routeApproveFacility,
+  routeRejectFacility,
 } from './facility.controller';
 import { routeCreateListing } from '../listing/listing.controller';
 import { routeGetFacilityReviews } from '../review/review.controller';
 import {
   correctLandlordFilter,
   isLandlord,
+  isSuperAdmin,
   listingViewFilter,
   managerFilter,
 } from '../../middleware';
@@ -89,4 +92,13 @@ router.post('/:facilityId/listings', managerFilter('direct', 'manageListings'), 
 // GET /api/facilities/:facilityId/reviews
 router.get('/:facilityId/reviews', listingViewFilter, routeGetFacilityReviews);
 
+// POST /api/facilities/:facilityId/approve
+//
+// admin only
+router.post('/:facilityId/approve', isSuperAdmin, routeApproveFacility);
+
+// POST /api/facilities/:facilityId/reject
+//
+// admin only
+router.post('/:facilityId/reject', isSuperAdmin, routeRejectFacility);
 export default router;

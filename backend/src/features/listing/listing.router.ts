@@ -10,8 +10,6 @@ import {
   routeGetListing,
   routeUpdateListing,
   routeDeleteListing,
-  routeApproveListing,
-  routeRejectListing,
   routeUpdateListingTags,
   routeGetUnitsByListing,
   routeGetApplicationsByListing,
@@ -43,16 +41,6 @@ router.patch('/:listingId', managerFilter('direct', 'manageListings'), routeUpda
 //
 // Manager with manageListings permission or landlord
 router.delete('/:listingId', managerFilter('direct', 'manageListings'), routeDeleteListing);
-
-// POST /api/listings/:listingId/approve
-//
-// admin only
-router.post('/:listingId/approve', isSuperAdmin, routeApproveListing);
-
-// POST /api/listings/:listingId/reject
-//
-// admin only
-router.post('/:listingId/reject', isSuperAdmin, routeRejectListing);
 
 // PATCH /listings/:listingId/tags
 //

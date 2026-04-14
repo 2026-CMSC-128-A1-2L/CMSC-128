@@ -315,3 +315,34 @@ export const updateManagerPermissions = async (
   // cascade removal to all listings under this facility
   await Listing.updateMany({ facilityId: facilityId }, { $pull: { managers: { userId } } });
 };
+
+export const approveFacility = async (
+  facilityId: mongoose.Types.ObjectId,
+  filters: any,
+) => {
+  const facility = await HousingFacility.findOne(combineFilters(filters, { _id: facilityId }));
+  if (!facility) {
+    throw new AppError(404, 'Facility not found.');
+  }
+
+  // TODO: use document status for approve
+
+  facility.status = 'approved';
+  return await facility.save();
+};
+
+
+export const rejectFacility = async (
+  facilityId: mongoose.Types.ObjectId,
+  filters: any,
+) => {
+  const facility = await HousingFacility.findOne(combineFilters(filters, { _id: facilityId }));
+  if (!facility) {
+    throw new AppError(404, 'Facility not found.');
+  }
+
+  // TODO: use document status for approve
+
+  facility.status = 'rejected';
+  return await facility.save();
+};

@@ -24,6 +24,7 @@ export type HousingFacilityType = {
     text?: string;
   };
   type: FacilityType;
+  status: 'pending' | 'approved' | 'rejected' | 'submitted';
   capacity: number;
   documents: DocumentType[];
 
@@ -64,6 +65,7 @@ const HousingFacilitySchema = new mongoose.Schema<HousingFacilityType>(
       text: String, // location as text
     },
     type: { type: String, enum: ['on-campus', 'off-campus', 'partner housing'], required: true },
+    status: { type: String, enum: ['pending', 'approved', 'rejected', 'submitted'], required: true, default: 'pending' },
     capacity: { type: Number, required: true },
     documents: [documentSchema],
 

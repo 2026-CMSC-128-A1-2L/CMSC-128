@@ -40,7 +40,6 @@ const ListingSchema = new mongoose.Schema({
       value: { type: String, required: true },
     },
   ],
-  documents: [documentSchema],
 });
 
 export const Listing = mongoose.model('Listing', ListingSchema);

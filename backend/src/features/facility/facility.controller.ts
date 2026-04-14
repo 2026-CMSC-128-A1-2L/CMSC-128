@@ -16,6 +16,7 @@ import {
   deleteFacility,
   removeManagerFromFacility,
   updateManagerPermissions,
+  approveFacility,
 } from './facility.service';
 
 // GET /facilities: routeGetFacilities
@@ -25,7 +26,7 @@ export const routeGetFacilities: RequestHandler = async (req, res, next) => {
 };
 
 // POST /facilities/search: routeSearchFacilities
-export const routeSearchFacilities: RequestHandler = async (req, res, next) => {};
+export const routeSearchFacilities: RequestHandler = async (req, res, next) => { };
 
 // POST /facilities: routeCreateFacility
 export const routeCreateFacility: RequestHandler = async (req, res, next) => {
@@ -113,4 +114,20 @@ export const routeUpdateManagerPermissions: RequestHandler = async (req, res, ne
   await updateManagerPermissions(facilityId, managerId, body);
 
   res.sendStatus(204);
+};
+
+export const routeApproveFacility: RequestHandler = async (req, res, next) => {
+  const facilityId = ObjectIdSchema.parse(req.params.facilityId);
+
+  const approvedFacility = await approveFacility(facilityId, res.locals.filters ?? {});
+
+  res.status(200).json({ data: approvedFacility });
+};
+
+export const routeRejectFacility: RequestHandler = async (req, res, next) => {
+  const facilityId = ObjectIdSchema.parse(req.params.facilityId);
+
+  const approvedFacility = await approveFacility(facilityId, res.locals.filters ?? {});
+
+  res.status(200).json({ data: approvedFacility });
 };
