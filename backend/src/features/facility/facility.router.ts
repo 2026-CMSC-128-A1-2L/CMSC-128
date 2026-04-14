@@ -90,6 +90,17 @@ router.patch('/:facilityId/managers/:managerId', isLandlord, routeUpdateManagerP
 router.post('/:facilityId/listings', managerFilter('direct', 'manageListings'), routeCreateListing); // TODO: fix implementation, use parameter
 
 // GET /api/facilities/:facilityId/reviews
+// Input:
+// - facilityId (ObjectId)
+//
+// Output:
+// - Array of Review objects, reviews of the listings within a facility
+//
+// Considerations:
+// - Applies listingViewFilter to listings under facility
+// - Returns 404 if facility not found
+// - Uses relation: Facility → Listings → Reviews
+// - Empty array is valid if no reviews
 router.get('/:facilityId/reviews', listingViewFilter, routeGetFacilityReviews);
 
 // POST /api/facilities/:facilityId/approve

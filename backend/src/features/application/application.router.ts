@@ -19,6 +19,15 @@ router.get('/', isSuperAdmin, routeGetApplications);
 router.post('/', isVerifiedStudent, routeCreateApplication);
 
 // GET /api/applications/:applicationId
+// Input:
+// - applicationId (ObjectId)
+//
+// Output:
+// - ApplicationForm object
+//
+// Considerations:
+// - Returns 404 if not found
+// - Should enforce access control (student or authorized staff)
 router.get(
   '/:applicationId',
   managerFilter('listing', 'manageApplications', true),

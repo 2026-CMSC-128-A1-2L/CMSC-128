@@ -12,16 +12,50 @@ const router = Router();
 
 // Lease Transfers
 // GET /api/transfers
+// Input:
+// - None (uses req.user._id)
+//
+// Output:
+// - Array of TransferRequest objects
+//
+// Considerations:
+// - Requires verified student
+// - Returns only user's own transfer requests
+// - No access to others' data
 router.get('/', isVerifiedStudent, routeGetTransferRequests);
 // POST /api/transfers
 router.post('/', isVerifiedStudent, routeCreateTransferRequest);
 // POST /api/transfers/:transferId/approve
+// Input:
+// - transferId (ObjectId)
+//
+// Output:
+// - Updated TransferRequest object
+//
+// Considerations:
+// - Requires manager/landlord ownership
+// - Validates via: Transfer → Unit → Listing
+// - Returns 403 if not authorized
+// - Returns 404 if resource not found
+// - Sets status to 'approved'
 router.post(
   '/:transferId/approve',
   managerFilter('facility', 'manageListings'),
   routeApproveTransferRequest,
 );
 // POST /api/transfers/:transferId/reject
+// Input:
+// - transferId (ObjectId)
+//
+// Output:
+// - Updated TransferRequest object
+//
+// Considerations:
+// - Requires manager/landlord ownership
+// - Validates via: Transfer → Unit → Listing
+// - Returns 403 if not authorized
+// - Returns 404 if resource not found
+// - Sets status to 'rejected'
 router.post(
   '/:transferId/reject',
   managerFilter('facility', 'manageListings'),

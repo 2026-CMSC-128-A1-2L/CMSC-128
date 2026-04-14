@@ -108,6 +108,14 @@ router.post('/:userId/report', isVerifiedStudent, routeReportUser);
 // ============================================================================
 
 // GET /api/users/:userId/applications
+// Input:
+// - userId (ObjectId)
+//
+// Output:
+// - Array of ApplicationForm objects
+//
+// Considerations:
+// - Returns only applications of current user
 router.get('/:userId/applications', selfFilter(false), routeGetApplicationsByStudent);
 
 // GET /api/users/:userId/rentals

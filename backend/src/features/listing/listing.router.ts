@@ -70,7 +70,17 @@ router.post(
   routeCreateUnit,
 ); // TODO:
 
-// GET /api/listings/:listingId/applications
+// GET /listings/:listingId/applications
+// Input:
+// - listingId (ObjectId)
+//
+// Output:
+// - Array of ApplicationForm objects
+//
+// Considerations:
+// - Intended for managers/landlords
+// - Returns all applications for a listing
+// - Should enforce ownership via listing
 router.get(
   '/:listingId/applications',
   managerFilter('listing', 'manageApplications'),
@@ -81,6 +91,17 @@ router.get(
 router.get('/:listingId/rentals', isSuperAdmin, routeGetRentalsByListing);
 
 // GET /api/listings/:listingId/reviews
+// Input:
+// - listingId (ObjectId)
+//
+// Output:
+// - Array of Review objects
+//
+// Considerations:
+// - Applies listingViewFilter
+// - Returns 403 if listing exists but is not accessible
+// - Returns 404 if listing does not exist
+// - Fetches reviews only if listing is visible
 router.get('/:listingId/reviews', listingViewFilter, routeGetListingReviews);
 
 // POST /api/listings/:listingId/reviews
