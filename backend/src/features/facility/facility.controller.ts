@@ -47,15 +47,15 @@ export const routeGetFacility: RequestHandler = async (req, res, next) => {
     id: facility._id,
     name: facility.name,
     landlordId: {
-      id: facility.landlord._id,
-      profilePicture: facility.landlord.profilePicture,
-      firstName: facility.landlord.firstName,
-      middleName: facility.landlord.middleName,
-      lastName: facility.landlord.lastName,
+      id: facility.landlordId._id,
+      profilePicture: facility.landlordId.profilePicture,
+      firstName: facility.landlordId.firstName,
+      middleName: facility.landlordId.middleName,
+      lastName: facility.landlordId.lastName,
 
       // TODO:  fetch actual number of units
       numUnits: 0,
-      createdAt: facility.landlord.createdAt,
+      createdAt: facility.landlordId.createdAt,
     },
     managers: facility.managers.map((x) => ({
       id: x.user._id,
