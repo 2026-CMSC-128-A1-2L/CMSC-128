@@ -1,6 +1,8 @@
 import mongoose, { QueryFilter } from 'mongoose';
 import { combineFilters } from '../../middleware';
 import { Billing } from './billing.model';
+import { id } from 'zod/v4/locales';
+import { AppError } from '../../error';
 
 export type CreateBillingArguments = {
   userId: mongoose.Types.ObjectId;
@@ -15,13 +17,13 @@ export type CreateBillingArguments = {
   paymentType: string; // 'rent', 'deposit', 'utility', etc. // Description of billing
 };
 
-export type UpdateBillingArguments = {
-  dueDate?: Date;
-  paymentDate?: Date;
-  amount?: number;
-  paidAmount?: number;
-  paymentType?: string;
-};
+// export type UpdateBillingArguments = {
+//   dueDate?: Date;
+//   paymentDate?: Date;
+//   amount?: number;
+//   paidAmount?: number;
+//   paymentType?: string;
+// };
 
 export type GetBillingArguments = {
   userId: mongoose.Types.ObjectId;
@@ -35,6 +37,21 @@ export type GetBillingArguments = {
   proofOfPayment: string;
   paymentType: string;
 };
+
+export type UpdateBillingArguments = {
+  dueDate?: Date;
+  paymentDate?: Date;
+
+  paidAmount?: number;
+  amount?: number;
+  paymentStatus?: 'unpaid' | 'paid' | 'overdue' | 'partially_paid';
+
+  proofOfPayment?: {
+    file?: string;
+    isVerified?: boolean;
+  }
+  paymentType?: string;
+}
 
 export const createBilling = async (data: CreateBillingArguments) => {
   const newBilling = new Billing({
@@ -113,3 +130,69 @@ export const updateBilling = async (billingId: mongoose.Types.ObjectId, data: Up
     { $set: data },
   );
 };
+
+export const submitBillingPayment = async (
+  billingId: mongoose.Types.ObjectId,
+  data: UpdateBillingArguments,
+  filters: any
+) => {
+
+  const billing = await Billing.findOne(
+    combineFilters({ _id: billingId }, filters),
+  );
+
+  if (!billing) {
+    throw new AppError(404, 'Billing not found.');
+  }
+
+  // send proof of payment
+  billing.proofOfPayment = {
+    file: data.proofOfPayment?.file || '',
+    isVerified: false
+  };
+  // set payment amount
+  billing.paidAmount = data.paidAmount;
+
+  // set date
+  billing.paymentDate = new Date();
+  // set type
+  billing.paymentType = data.paymentType;
+
+  //TODO send notif
+
+  return await billing.save();
+};
+
+export const verifyBillingPayment = async (
+  billingId: mongoose.Types.ObjectId,
+  data: UpdateBillingArguments,
+  filters: any
+) => {
+  const billing = await Billing.findOne(
+    combineFilters({ _id: billingId }, filters),
+  );
+  if (!billing) {
+    const billingNoFilter = await Billing.findById(billingId);
+    if (billingNoFilter) {
+      throw new AppError(403, 'Forbidden: You do not have permission to update this billing.');
+    } else {
+      throw new AppError(404, 'Billing not found.');
+    }
+  }
+  billing.proofOfPayment = { file: '', isVerified: true };
+  //TODO set status of payment to relevant one
+  //TODO add notif
+  return await billing.save();
+};
+
+export const routeGetUserBillings = async (query: Partial<GetBillingArguments>, filters: any) => {
+  const billing = await Billing.findOne(
+    combineFilters(filters, { _id: id })
+  );
+  if (!billing) {
+    throw new AppError(404, 'Billing not found.');
+  }
+
+};
+
+export const routeGetUserBilling = async (query: Partial<GetBillingArguments>, filters: any) => { };

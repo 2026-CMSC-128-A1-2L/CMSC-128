@@ -38,9 +38,38 @@ export const GetBillingsFilterSchema = z.object({
   paymentType: z.string().optional(),
 });
 
-export const UpdateBillingBodySchema = CreateBillingBodySchema.omit({
-  studentId: true,
-  unitId: true,
-  managerId: true,
-}).partial();
+// export const UpdateBillingBodySchema = CreateBillingBodySchema.omit({
+//   studentId: true,
+//   unitId: true,
+//   managerId: true,
+// }).partial();
+
 export const GetBillingsQuerySchema = QuerySchema;
+
+export const UpdateBillingBodySchema = z.object({
+  dueDate: z.iso
+    .datetime()
+    .transform((x) => new Date(x))
+    .optional(),
+
+  paymentDate: z.iso
+    .datetime()
+    .transform((x) => new Date(x))
+    .optional(),
+
+  amount: z.number().optional(),
+  paidAmount: z.number().optional(),
+
+  paymentStatus: z
+    .enum(['unpaid', 'paid', 'overdue', 'partially_paid'])
+    .optional(),
+
+  proofOfPayment: z
+    .object({
+      file: z.string().optional(),
+      isVerified: z.boolean().optional(),
+    })
+    .optional(),
+
+  paymentType: z.string().optional(),
+});
