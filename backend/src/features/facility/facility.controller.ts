@@ -71,7 +71,7 @@ export const routeGetFacility: RequestHandler = async (req, res, next) => {
     applicationCloseDate: facility.applicationCloseDate,
   };
 
-  res.status(200).json({ data: facility });
+  res.status(200).json(facilityResponse);
 };
 
 // PATCH /facilities/:facilityId: routeUpdateFacility
