@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ContactUs from "./pages/ContactUs";
 import PageLayout from "./pages/PageLayout";
 import TestPage from "./pages/TestPage";
+import BookmarksNewUsers from "./pages/BookmarksNewUsers";
 
 import Login from './pages/Login';
 import Upload from './pages/Upload';
@@ -15,6 +16,10 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/upload" element={<Upload />} />
           <Route path="/test" element={<TestPage />} />
+
+          <Route path="/bookmark" element={<BookmarksNewUsers />} />
+
+
         </Routes>
       </PageLayout>
     </Router>
