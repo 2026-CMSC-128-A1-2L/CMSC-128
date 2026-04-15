@@ -16,10 +16,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/upload" element={<Upload />} />
           <Route path="/test" element={<TestPage />} />
-
           <Route path="/bookmark" element={<BookmarksNewUsers />} />
-
-
         </Routes>
       </PageLayout>
     </Router>
