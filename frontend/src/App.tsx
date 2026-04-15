@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ContactUs from "./pages/ContactUs";
 import PageLayout from "./pages/PageLayout";
 import TestPage from "./pages/TestPage";
+import BookmarksNewUsers from "./pages/BookmarksNewUsers";
 
 function App() {
 
@@ -11,6 +12,10 @@ function App() {
         <Routes>
           <Route path="/" element={<ContactUs />} />
           <Route path="/test" element={<TestPage />} />
+
+          <Route path="/bookmark" element={<BookmarksNewUsers />} />
+
+
         </Routes>
       </PageLayout>
     </Router>

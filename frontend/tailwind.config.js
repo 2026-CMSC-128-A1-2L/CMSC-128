@@ -1,66 +1,48 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
+  "content": [
     "./src/**/*.{js,jsx,ts,tsx}"
   ],
-  theme: {
-    extend: {
-      colors: {
-        darkslategray: {
-          DEFAULT: "#024338", // Combined from Config 2
-          100: "#2f3136",
-          200: "#024338"
+  "theme": {
+    "extend": {
+      "colors": {
+        "white": "#fff",
+        "whitesmoke": {
+          "100": "#f8fafc",
+          "200": "#f3f4f6",
+          "300": "#f0f0f0"
         },
-        aliceblue: "#f1f5f9",
-        dimgray: "#666",
-        teal: {
-          100: "#2f8677",
-          200: "#096c5b",
-          300: "rgba(9, 108, 91, 0.25)"
+        "darkslategray": {
+          "100": "#2f3136",
+          "200": "#024338"
         },
-        lightcyan: "#cbf6ed",
-        gray: "#001d18",
-        whitesmoke: {
-          DEFAULT: "#f0f0f0",
-          100: "#f8fafc",
-          200: "#f0f0f0"
-        },
-        white: "#fff",
-        silver: "#bdbdbd"
+        "aliceblue": "#f1f5f9",
+        "dimgray": "#666",
+        "black": "#000",
+        "teal": "#096c5b",
+        "gray": "#001d18",
+        "lightcyan": "rgba(203, 246, 237, 0.36)"
       },
-      spacing: {
-        "num-1": "1px solid #f0f0f0",
-        "num-180": "180px"
+      "spacing": {
+        "num-300": "300px",
+        "num-1": "1px solid #f0f0f0"
       },
-      fontFamily: {
+      "fontFamily": {
         "lora": "Lora",
-        "inter": "Inter",
-        "buhun-retro-two-free": "Buhun Retro Two FREE"
+        "inter": "Inter"
       },
-      borderRadius: {
-        "num-4": "4px",
-        "num-12": "12px"
-      },
-      padding: {
+      "padding": {
         "num-0": "0px",
         "num-10": "10px",
-        "num-16": "16px",
-        "num-20": "20px",
-        "num-32": "32px"
+        "num-20": "20px"
       }
     },
-    // Note: Placing these directly under 'theme' (instead of 'extend') 
-    // will overwrite Tailwind's default text sizing (text-sm, text-lg, etc.)
-    // Preserved here exactly as your Figma export generated them.
-    fontSize: {
+    "fontSize": {
       "num-14": "14px",
-      "num-18": "18px"
-    },
-    lineHeight: {
-      "num-24": "24px"
+      "num-16": "16px"
     }
   },
-  corePlugins: {
-    preflight: false
+  "corePlugins": {
+    "preflight": false
   }
 }
