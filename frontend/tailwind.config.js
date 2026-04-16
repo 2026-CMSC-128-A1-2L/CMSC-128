@@ -1,65 +1,138 @@
+/** @type {import('tailwindcss').Config} */
 export default {
-  content: ["./src/**/*.{js,jsx,ts,tsx}"],
+  content: [
+    "./src/**/*.{js,jsx,ts,tsx}"
+  ],
   theme: {
     extend: {
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+      },
+      animation: {
+        'fade-in': 'fadeIn 0.8s ease-in-out',
+      },
       colors: {
-        white: "#fff",
-        black: "#000",
-        gray: "#001d18",
-        aliceblue: "#f1f5f9",
-        dimgray: "#666",
-        silver: "#bdbdbd",
-        lightcyan: "#cbf6ed", // use solid; keep rgba variant as a separate token if needed
-        darkslategray: {
-          DEFAULT: "#024338",
-          100: "#2f3136",
-          200: "#024338",
+        "white": "#fff",
+        "gray": {
+          "100": "#757575",
+          "200": "#1e1e1e",
+          "300": "#001d18",
+          "400": "rgba(0, 0, 0, 0.38)",
+          "500": "rgba(255, 255, 255, 0.7)",
+          "600": "rgba(255, 255, 255, 0.75)",
+          "700": "rgba(255, 255, 255, 0.5)",
+          "800": "rgba(255, 255, 255, 0.25)",
+          "900": "rgba(0, 0, 0, 0)"
         },
-        teal: {
-          DEFAULT: "#096c5b", // Config 2's flat value becomes DEFAULT
-          100: "#2f8677",
-          200: "#096c5b",
-          300: "rgba(9, 108, 91, 0.25)",
+        "darkslategray": {
+          "100": "#2f3136",
+          "200": "#024338"
         },
-        whitesmoke: {
-          DEFAULT: "#f0f0f0",
-          100: "#f8fafc",
-          200: "#f3f4f6", // Config 2 wins — verify which shade your components use
-          300: "#f0f0f0",
+        "teal": {
+          "100": "#2f8677",
+          "200": "#096c5b"
         },
-      },
-      spacing: {
-        "num-1": "1px solid #f0f0f0",
-        "num-180": "180px",
-        "num-300": "300px",
-      },
-      fontFamily: {
-        lora: "Lora",
-        inter: "Inter",
-        "buhun-retro-two-free": "Buhun Retro Two FREE",
+        "whitesmoke": {
+          "100": "#f8fafc",
+          "200": "#f1f1f1",
+          "300": "#f0f0f0"
+        },
+        "dimgray": "#666",
+        "aliceblue": "#f1f5f9",
+        "black": "#000",
+        "silver": "#bdbdbd",
+        "lightcyan": "#cbf6ed",
+        "azure": "#d9ebe7",
+        "gainsboro": "#d9d9d9"
       },
       borderRadius: {
-        "num-4": "4px",
-        "num-12": "12px",
+        "num-50": "50%",
+        "num-0": "0px",
+        "num-16": "16px",
+        "num-10": "10px",
+        "num-3_87": "3.87px",
+        "num-4_34": "4.34px",
+        "num-5_57": "5.57px"
+      },
+      spacing: {
+        "num-1440": "1440px",
+        "num-27_8": "27.8px",
+        "num-112_6": "112.6px",
+        "num-65_1": "65.1px",
+        "num-126_6": "126.6px",
+        "num-108_4": "108.4px",
+        "num-199": "199px",
+        "num-1172": "1172px",
+        "num-48_7": "48.7px",
+        "num-914": "914px",
+        "num-27_9": "27.9px",
+        "num-19_1": "19.1px",
+        "num-29_3": "29.3px",
+        "num-18_6": "18.6px",
+        "num-21_3": "21.3px",
+        "num-20_8": "20.8px",
+        "num-6_4": "6.4px",
+        "num-138": "138px",
+        "num-37": "37px",
+        "num-55": "55px",
+        "num-28_4": "28.4px",
+        "num-1": "0.4px solid #f0f0f0",
+        "num-2": "0.4px solid #096c5b",
+        "num-3": "5px solid rgba(255, 255, 255, 0.7)",
+        "num-4": "0.7px solid #d9d9d9",
+        "num-11": "1px solid #096c5b"
+      },
+      fontFamily: {
+        "buhun-retro-two-free": "Buhun Retro Two FREE",
+        "inter": "Inter",
+        "lora": "Lora",
+        "poppins": "Poppins",
+        "geist": "Geist"
       },
       padding: {
-        "num-0": "0px",
-        "num-10": "10px",
-        "num-16": "16px",
-        "num-20": "20px",
+        "num-80": "80px",
         "num-32": "32px",
+        "num-13_9": "13.9px",
+        "num-4_3": "4.3px",
+        "num-8_7": "8.7px",
+        "num-11_1": "11.1px"
       },
+      opacity: {
+        "num-0_3": "0.3"
+      }
     },
     fontSize: {
-      "num-14": "14px",
-      "num-16": "16px",
       "num-18": "18px",
+      "num-6_08": "6.08px",
+      "num-4_64": "4.64px",
+      "num-6_19": "6.19px",
+      "num-12": "12px",
+      "num-7_81": "7.81px",
+      "num-5_21": "5.21px",
+      "num-6_95": "6.95px",
+      "num-24": "24px",
+      "num-36": "36px",
+      "num-28": "28px",
+      "num-14": "14px",
+      "num-8_36": "8.36px",
+      "num-11_15": "11.15px"
     },
     lineHeight: {
-      "num-24": "24px",
+      "num-13_89": "13.89px",
+      "num-32": "32px",
+      "num-25": "25px",
+      "num-13_94": "13.94px",
+      "num-16_83": "16.83px"
     },
+    letterSpacing: {
+      "num--0_01": "-0.01em",
+      "num-0_02": "0.02em"
+    }
   },
   corePlugins: {
-    preflight: false,
-  },
-};
+    preflight: false
+  }
+}
