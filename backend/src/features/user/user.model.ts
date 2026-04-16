@@ -4,7 +4,6 @@ import { documentSchema } from '../document/document.model';
 const userSchema = new mongoose.Schema(
   {
     // Obtained through Google automatically after login with a Google email address.
-    // TODO: change email check flow
     emails: { type: [String], required: true, default: [] },
     profilePicture: String,
     firstName: { type: String, required: true },
@@ -20,20 +19,24 @@ const userSchema = new mongoose.Schema(
         //
         // An account's email can change over time while this does not.
         google: { type: [String], required: true, default: [] },
-
-        // Currently unused
-        //
-        // TODO: remove if not needed
-        password: String,
       },
       required: true,
     },
 
-    // Allow soft deletion of accounts.
-    //
-    // A disabled account has the same access level as an unverified account, but cannot verify
-    // again as they are technically verified already.
-    isActive: { type: Boolean, default: true, required: true },
+    // `unverified` - never verified. Can only see public listings.
+    // `verified` - verified for the semester. Can see all listings and access
+    //   own data.
+    // `inactive` - did not verify for at least one semester. Can still access
+    //    own data, but otherwise has the same permission as unverified
+    //    accounts.
+    // `disabled` - similar permissions as `inactive` accounts, but cannot
+    //   verify again.
+    status: {
+      type: String,
+      enum: ['unverified', 'verified', 'inactive', 'disabled'],
+      default: 'unverified',
+      required: true,
+    },
 
     // Used to discriminate between different user types. This can be filled automatically by using
     // the discriminated models like:
@@ -51,17 +54,10 @@ const userSchema = new mongoose.Schema(
     // Make sure to fill up fields for the user type.
     userType: {
       type: String,
-      enum: [
-        'Admin',
-        'Landlord',
-        'Manager',
-        'Student',
-        'UnverifiedLandlord',
-        'UnverifiedManager',
-        'UnverifiedStudent',
-      ],
+      enum: ['Admin', 'Landlord', 'Manager', 'Student'],
       required: true,
     },
+
     documents: { type: [documentSchema], required: true, default: [] },
 
     // Currently, there are two sources of truth in verification,
@@ -69,7 +65,7 @@ const userSchema = new mongoose.Schema(
     // based on the isVerified function.
     //
     // TODO: use one source for verification status
-    status: {
+    verificationStatus: {
       type: String,
       enum: ['pending', 'submitted', 'rejected', 'approved'],
       required: 'true',
@@ -97,12 +93,4 @@ export const Student = User.discriminator(
   }),
 );
 
-export const UnverifiedLandlord = User.discriminator('UnverifiedLandlord', new mongoose.Schema({}));
-export const UnverifiedStudent = User.discriminator('UnverifiedStudent', new mongoose.Schema({}));
-
-// No verification is needed by managers. Being invited by a landlord as a manager and accepting it
-// will turn them the account verified.
-export const UnverifiedManager = User.discriminator('UnverifiedManager', new mongoose.Schema({}));
-
-export const isVerified = (userType: string) =>
-  userType == 'Admin' || userType == 'Landlord' || userType == 'Manager' || userType == 'Student';
+export const isVerified = (status: string) => status == 'verified';
