@@ -53,7 +53,19 @@ export const getUserById = async (userId: mongoose.Types.ObjectId) => {
 };
 
 export const deleteUser = async (userId: mongoose.Types.ObjectId, filters: QueryFilter<UserType>) => {
-  return await User.findOneAndUpdate(combineFilters(filters, { _id: userId }), { status: 'disabled' }).lean();
+  return await User.findOneAndUpdate(combineFilters(filters, { _id: userId }), {
+    $set: {
+      status: 'disabled',
+      'auth.google': [],
+      emails: [],
+      documents: []
+    },
+    $unset: {
+      address: '',
+      contact: '',
+      profilePicture: '',
+    }
+  }, { returnDocument: 'after' }).lean();
 };
 
 type GetUsersArguments = {
