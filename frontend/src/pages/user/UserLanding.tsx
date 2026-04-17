@@ -1,8 +1,7 @@
 import { FunctionComponent } from 'react';
-import atlas_logo from '../../../assets/sidebar_logo.svg';
 import landing_image from '../../../assets/landing_building.webp';
-import atlas_curious from '../../../assets/logo_curious.svg';
-import atlas_text from '../../../assets/logo_atlas_text.svg';
+import AtlasCurious from '../../../assets/logo_curious.svg?react';
+import AtlasText from '../../../assets/logo_atlas_text.svg?react';
 import map from '../../../assets/map.svg';
 import AutoImageSwitcher from '../../components/AutoImageSwitcher';
 import { Icon } from '@iconify/react';
@@ -13,21 +12,10 @@ const UserLanding: FunctionComponent = () => {
       <div className="flex flex-col items-start z-[1] shrink-0">
         <div className="self-stretch h-[1244px] flex flex-col items-start text-num-18 text-darkslategray-200">
           <div className="bg-gray-900 flex flex-col items-start py-px px-0">
-            <div className="w-screen flex items-center py-3 px-[62px] box-border gap-[71px]">
-              <div className="flex-1 flex flex-col items-start justify-center text-[33.97px] font-buhun-retro-two-free">
-                <div className="flex items-center gap-2.5">
-                  <div className="h-16 w-[136.5px] overflow-hidden shrink-0 flex flex-col items-center justify-center">
-                    <div className="self-stretch h-[59.7px] relative">
-                      <div className="absolute top-[19.69px] left-[52.02px] flex items-center w-[84.5px] h-[28.9px]">
-                        TLAS
-                      </div>
-                      <img
-                        className="absolute top-[0.14px] left-[0px] w-[62.1px] h-[59.4px] object-cover"
-                        alt=""
-                        src={atlas_logo}
-                      />
-                    </div>
-                  </div>
+            <div className="w-screen flex items-center py-4 px-8 lg:px-16 box-border">
+              <div className="flex-1 flex flex-col items-start justify-center">
+                <div className="flex items-center gap-2">
+                  <AtlasText className="w-32 h-auto fill-darkslategray" fill="#024338" />
                   <Icon icon="tabler:chevron-down-filled" className="h-6 w-6 relative" />
                 </div>
               </div>
@@ -167,7 +155,7 @@ const UserLanding: FunctionComponent = () => {
 
             <div className="self-stretch flex flex-row items-center bg-[#0c8873]">
               <div className="flex-1 flex items-center justify-center py-16 pl-20">
-                <img src={atlas_curious} alt="ATLAS illustration" className="w-70 h-70" />
+                <AtlasCurious className="w-70 h-70 fill-[#EBF9F6]" />
               </div>
               <div className="flex-1 flex flex-col items-end justify-center py-16 pr-20 gap-3 text-right text-white">
                 <b className="self-stretch relative">How does it help?</b>
@@ -477,7 +465,7 @@ const UserLanding: FunctionComponent = () => {
         <div className="w-screen h-[150px] relative shrink-0 z-[2] text-num-12 text-teal-100 font-poppins bg-[#001D18]">
           <img className="absolute top-[0px] left-[0px] w-screen h-[150px]" alt="" />
           <div className="absolute top-[0px] left-[8.89px] w-[1420.2px] h-[150px] flex items-center justify-center gap-[146px]">
-            <img className="w-[218.4px] relative max-h-full object-cover" alt="" src={atlas_text} />
+            {/* <img className="w-[218.4px] relative max-h-full object-cover" alt="" src={atlas_text} /> */}
             <div className="w-[127.9px] flex flex-col items-start">
               <b className="self-stretch h-[25.3px] relative text-[16px] flex text-white items-center shrink-0">
                 PLATFORM

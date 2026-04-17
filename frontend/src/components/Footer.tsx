@@ -1,6 +1,5 @@
 import { FunctionComponent } from 'react';
-import logo_footer from '../../assets/footer_logo.svg'
-
+import LogoFooter from '../../assets/footer_logo.svg?react';
 
 const Footer: FunctionComponent = () => {
   return (
@@ -12,7 +11,7 @@ const Footer: FunctionComponent = () => {
               <img className="w-12 relative max-h-full object-cover" alt="" />
               <div className="flex items-center gap-3">
                 <div className="flex items-center gap-1">
-                  <img className="h-9 w-9 relative" alt="" src={logo_footer} />
+                  <LogoFooter className="h-9 w-9 relative fill-[#173B2F]" />
                   <b className="relative">2026</b>
                 </div>
                 <div className="flex items-center justify-center">
@@ -40,7 +39,8 @@ const Footer: FunctionComponent = () => {
           </div>
         </div>
       </div>
-    </div>);
+    </div>
+  );
 };
 
 export default Footer;
