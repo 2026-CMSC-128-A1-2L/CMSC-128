@@ -23,7 +23,15 @@ export default {
           					"200": "#bdbdbd"
         				},
         				"lightcyan": "#cbf6ed",
-        				"teal": "#096c5b"
+        				"teal": "#096c5b",
+        				"darkolivegreen": "#224c25",
+        				"gray": "rgba(0, 0, 0, 0.38)"
+      			},
+      			"spacing": {
+        				"num-30_6": "30.6px",
+        				"num-30_8": "30.8px",
+        				"num-30": "30px",
+        				"num-30_2": "30.2px"
       			},
       			"fontFamily": {
         				"lora": "Lora",
@@ -31,8 +39,8 @@ export default {
         				"poppins": "Poppins"
       			},
       			"padding": {
-        				"num-0": "0px",
         				"num-32": "32px",
+        				"num-0": "0px",
         				"num-12": "12px"
       			}
     		},
