@@ -205,7 +205,6 @@ type UserType = {
     google: string;
     password: string;
   };
-  isActive: boolean;
   userType: typeof USER_TYPES;
   createdAt: Date;
   updatedAt: Date;
@@ -316,10 +315,7 @@ export const updateManagerPermissions = async (
   await Listing.updateMany({ facilityId: facilityId }, { $pull: { managers: { userId } } });
 };
 
-export const approveFacility = async (
-  facilityId: mongoose.Types.ObjectId,
-  filters: any,
-) => {
+export const approveFacility = async (facilityId: mongoose.Types.ObjectId, filters: any) => {
   const facility = await HousingFacility.findOne(combineFilters(filters, { _id: facilityId }));
   if (!facility) {
     throw new AppError(404, 'Facility not found.');
@@ -331,11 +327,7 @@ export const approveFacility = async (
   return await facility.save();
 };
 
-
-export const rejectFacility = async (
-  facilityId: mongoose.Types.ObjectId,
-  filters: any,
-) => {
+export const rejectFacility = async (facilityId: mongoose.Types.ObjectId, filters: any) => {
   const facility = await HousingFacility.findOne(combineFilters(filters, { _id: facilityId }));
   if (!facility) {
     throw new AppError(404, 'Facility not found.');

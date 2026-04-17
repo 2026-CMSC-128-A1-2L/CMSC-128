@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import 'vitest';
+import { DocumentType } from './features/document/document.model';
 
 declare global {
   namespace Express {
@@ -8,22 +9,16 @@ declare global {
       firstName: string;
       middleName?: string | null;
       lastName: string;
-      userType:
-        | 'Admin'
-        | 'Student'
-        | 'Manager'
-        | 'Landlord'
-        | 'UnverifiedStudent'
-        | 'UnverifiedManager'
-        | 'UnverifiedLandlord';
+      userType: 'Admin' | 'Student' | 'Manager' | 'Landlord';
       birthDate?: Date | null;
       emails: string[];
       auth: {
         google: string[];
-        password?: string | null;
       };
-      isActive: boolean;
       profilePicture?: string | null;
+      status: 'unverified' | 'verified' | 'inactive' | 'disabled';
+      documents: DocumentType[];
+      verificationStatus: 'pending' | 'submitted' | 'rejected' | 'approved';
     }
   }
 }

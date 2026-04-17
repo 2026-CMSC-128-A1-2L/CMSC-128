@@ -1,6 +1,6 @@
 import { FunctionComponent } from 'react';
 import search_icon from '../../assets/sidebar_search.svg';
-import atlas from '../../assets/sidebar_logo.svg';
+import atlas from '../../assets/sidebar_logo.svg'
 import dark_icon from '../../assets/sidebar_darkmode.svg';
 import { Icon } from '@iconify/react';
 
@@ -10,7 +10,8 @@ const SideBar: FunctionComponent = () => {
       <div className="w-32 h-[60px] overflow-hidden shrink-0 flex flex-col items-center justify-center">
         <div className="self-stretch h-14 relative">
           <div className="absolute top-[18.46px] left-[48.76px] flex items-center w-[79.2px] h-[27.1px]">TLAS</div>
-          <img className="absolute top-[0.13px] left-[0px] w-[58.2px] h-[55.7px] object-cover" alt="" src={atlas} />
+          <img className="absolute top-[0.13px] left-[0px] w-[58.2px] h-[55.7px]" alt="" src={atlas} />
+
         </div>
       </div>
       <div className="self-stretch h-[758px] flex flex-col items-start gap-8 shrink-0 text-num-14 text-gray font-inter">

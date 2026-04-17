@@ -13,22 +13,12 @@ const userType = {
     google: z.string().optional(),
   }),
   profilePicture: z.string().optional(),
+  documents: z.array(z.string()),
+  verificationStatus: z.enum(['pending', 'submitted', 'rejected', 'approved']),
 } as const;
-
-const verificationSchema = {
-  verification: z
-    .object({
-      documentUrls: z.array(z.string()),
-      status: z.enum(['pending', 'submitted', 'rejected', 'approved']),
-    })
-    .optional(),
-};
 
 const testRegisterSchema = z.discriminatedUnion('userType', [
   z.object({ userType: z.literal('Admin'), ...userType }),
-  z.object({ userType: z.literal('UnverifiedLandlord'), ...userType, ...verificationSchema }),
-  z.object({ userType: z.literal('UnverifiedManager'), ...userType }),
-  z.object({ userType: z.literal('UnverifiedStudent'), ...userType, ...verificationSchema }),
   z.object({ userType: z.literal('Landlord'), ...userType, contact: z.string() }),
   z.object({ userType: z.literal('Manager'), ...userType, contact: z.string() }),
   z.object({
