@@ -1,5 +1,5 @@
 import mongoose, { QueryFilter } from 'mongoose';
-import { Student, User } from './user.model';
+import { Student, User, UserType } from './user.model';
 import { AppError } from '../../error';
 import { sendNotification } from '../notification/notification.service';
 import { combineFilters } from '../../middleware';
@@ -45,15 +45,15 @@ export const createTestUser = async (params: unknown) => {
 };
 
 export const getUserByEmail = async (email: string) => {
-  return await User.findOne({ emails: email });
+  return await User.findOne({ emails: email }).lean();
 };
 
 export const getUserById = async (userId: mongoose.Types.ObjectId) => {
-  return await User.findById(userId);
+  return await User.findById(userId).lean();
 };
 
-export const deleteUser = async (userId: mongoose.Types.ObjectId) => {
-  return await User.updateOne({ _id: userId }, { status: 'disabled' });
+export const deleteUser = async (userId: mongoose.Types.ObjectId, filters: QueryFilter<UserType>) => {
+  return await User.findOneAndUpdate(combineFilters(filters, { _id: userId }), { status: 'disabled' }).lean();
 };
 
 type GetUsersArguments = {
@@ -70,7 +70,7 @@ export const getUsers = async (params: GetUsersArguments) => {
     filter.userType = params.userType;
   }
 
-  return await User.find(filter);
+  return await User.find(filter).lean();
 };
 
 export const approveUser = async (userId: mongoose.Types.ObjectId) => {
@@ -150,6 +150,6 @@ type UpdateUserParameters = Partial<{
   studentNumber: string,
 }>;
 
-export const updateUser = async (userId: mongoose.Types.ObjectId, params: UpdateUserParameters, filters: QueryFilter<any>) => {
-  return await User.findOneAndUpdate(combineFilters(filters, { _id: userId }), params);
+export const updateUser = async (userId: mongoose.Types.ObjectId, params: UpdateUserParameters, filters: QueryFilter<UserType>) => {
+  return await User.findOneAndUpdate(combineFilters(filters, { _id: userId }), params, { returnDocument: 'after' }).lean();
 }

@@ -1,16 +1,7 @@
 import '../../config.js';
 import { describe, it, expect } from 'vitest';
-import {
-  buildStudent,
-  buildUnverifiedLandlord,
-} from '../../test/factories.js';
-import {
-  student,
-  landlordAgent,
-  managerAgent,
-  guestAgent,
-  studentAgent,
-} from '../../test/setup.js';
+import { buildStudent, buildUnverifiedLandlord } from '../../test/factories.js';
+import { student, landlordAgent, adminAgent, guestAgent, studentAgent } from '../../test/setup.js';
 import mongoose from 'mongoose';
 
 describe('Users API', () => {
@@ -30,8 +21,8 @@ describe('Users API', () => {
       expect(response).statusToBe(403);
     });
 
-    it('should return 200 for managers', async () => {
-      const response = await managerAgent.get('/api/users');
+    it('should return 200 for admins', async () => {
+      const response = await adminAgent.get('/api/users');
       expect(response).statusToBe(200);
     });
   });
@@ -54,8 +45,8 @@ describe('Users API', () => {
       expect(response.body.data).toHaveProperty('firstName');
     });
 
-    it('should return 200 for authenticated managers', async () => {
-      const response = await managerAgent.get('/api/users/me');
+    it('should return 200 for authenticated admins', async () => {
+      const response = await adminAgent.get('/api/users/me');
       expect(response).statusToBe(200);
       expect(response.body.data).toHaveProperty('firstName');
     });
@@ -78,13 +69,13 @@ describe('Users API', () => {
     });
 
     it('should return 404 for non-existent user', async () => {
-      const response = await managerAgent.get(`/api/users/${new mongoose.Types.ObjectId()}`);
+      const response = await adminAgent.get(`/api/users/${new mongoose.Types.ObjectId()}`);
       expect(response).statusToBe(404);
     });
 
-    it('should return 200 for managers for existing user', async () => {
+    it('should return 200 for admins for existing user', async () => {
       const studentData = await buildStudent.create();
-      const response = await managerAgent.get(`/api/users/${studentData._id}`);
+      const response = await adminAgent.get(`/api/users/${studentData._id}`);
       expect(response).statusToBe(200);
       expect(response.body.data._id).toBe(studentData._id.toString());
     });
@@ -110,7 +101,7 @@ describe('Users API', () => {
       const response = await studentAgent
         .patch(`/api/users/${otherStudent._id}`)
         .send({ address: 'New Address' });
-      expect(response).statusToBe(403);
+      expect(response).statusToBe(404);
     });
   });
 
@@ -121,22 +112,20 @@ describe('Users API', () => {
     });
 
     it('should allow self deletion', async () => {
-      const newStudent = await buildStudent.create();
-      const response = await studentAgent.delete(`/api/users/${newStudent._id}`);
+      const response = await studentAgent.delete(`/api/users/${student._id}`);
       expect(response).statusToBe(200);
     });
 
-    it('should allow manager to delete users', async () => {
+    it('should allow admin to delete users', async () => {
       const newStudent = await buildStudent.create();
-      const response = await managerAgent.delete(`/api/users/${newStudent._id}`);
+      const response = await adminAgent.delete(`/api/users/${newStudent._id}`);
       expect(response).statusToBe(200);
     });
 
     it('should prevent students from deleting other users', async () => {
-      const newStudent = await buildStudent.create();
       const otherStudent = await buildStudent.create();
       const response = await studentAgent.delete(`/api/users/${otherStudent._id}`);
-      expect(response).statusToBe(403);
+      expect(response).statusToBe(404);
     });
   });
 
@@ -169,9 +158,7 @@ describe('Users API', () => {
     });
 
     it('should return 404 for non-existent user', async () => {
-      const response = await managerAgent.post(
-        `/api/users/${new mongoose.Types.ObjectId()}/approve`,
-      );
+      const response = await adminAgent.post(`/api/users/${new mongoose.Types.ObjectId()}/approve`);
       expect(response).statusToBe(404);
     });
 
@@ -180,7 +167,7 @@ describe('Users API', () => {
         verificationStatus: 'pending',
         status: 'unverified',
       });
-      const response = await managerAgent.post(`/api/users/${newStudent._id}/approve`);
+      const response = await adminAgent.post(`/api/users/${newStudent._id}/approve`);
       expect(response).statusToBe(422);
     });
 
@@ -189,7 +176,7 @@ describe('Users API', () => {
         verificationStatus: 'approved',
         status: 'verified',
       });
-      const response = await managerAgent.post(`/api/users/${newStudent._id}/approve`);
+      const response = await adminAgent.post(`/api/users/${newStudent._id}/approve`);
       expect(response).statusToBe(422);
     });
 
@@ -198,7 +185,7 @@ describe('Users API', () => {
         verificationStatus: 'submitted',
         status: 'disabled',
       });
-      const response = await managerAgent.post(`/api/users/${newStudent._id}/approve`);
+      const response = await adminAgent.post(`/api/users/${newStudent._id}/approve`);
       expect(response).statusToBe(422);
     });
 
@@ -211,7 +198,7 @@ describe('Users API', () => {
           { docId: 'id2', name: 'Enrollment Form', status: 'accepted', files: ['file2.pdf'] },
         ],
       });
-      const response = await managerAgent.post(`/api/users/${newStudent._id}/approve`);
+      const response = await adminAgent.post(`/api/users/${newStudent._id}/approve`);
       expect(response).statusToBe(204);
     });
 
@@ -224,7 +211,7 @@ describe('Users API', () => {
           { docId: 'id2', name: 'Enrollment Form', status: 'pending', files: ['file2.pdf'] },
         ],
       });
-      const response = await managerAgent.post(`/api/users/${newStudent._id}/approve`);
+      const response = await adminAgent.post(`/api/users/${newStudent._id}/approve`);
       expect(response).statusToBe(422);
     });
 
@@ -243,7 +230,7 @@ describe('Users API', () => {
           },
         ],
       });
-      const response = await managerAgent.post(`/api/users/${newStudent._id}/approve`);
+      const response = await adminAgent.post(`/api/users/${newStudent._id}/approve`);
       expect(response).statusToBe(422);
     });
   });
@@ -277,9 +264,7 @@ describe('Users API', () => {
     });
 
     it('should return 404 for non-existent user', async () => {
-      const response = await managerAgent.post(
-        `/api/users/${new mongoose.Types.ObjectId()}/reject`,
-      );
+      const response = await adminAgent.post(`/api/users/${new mongoose.Types.ObjectId()}/reject`);
       expect(response).statusToBe(404);
     });
 
@@ -288,7 +273,7 @@ describe('Users API', () => {
         verificationStatus: 'pending',
         status: 'unverified',
       });
-      const response = await managerAgent.post(`/api/users/${newStudent._id}/reject`);
+      const response = await adminAgent.post(`/api/users/${newStudent._id}/reject`);
       expect(response).statusToBe(422);
     });
 
@@ -297,7 +282,7 @@ describe('Users API', () => {
         verificationStatus: 'approved',
         status: 'verified',
       });
-      const response = await managerAgent.post(`/api/users/${newStudent._id}/reject`);
+      const response = await adminAgent.post(`/api/users/${newStudent._id}/reject`);
       expect(response).statusToBe(422);
     });
 
@@ -310,7 +295,7 @@ describe('Users API', () => {
           { docId: 'id2', name: 'Enrollment Form', status: 'accepted', files: ['file2.pdf'] },
         ],
       });
-      const response = await managerAgent.post(`/api/users/${newStudent._id}/reject`);
+      const response = await adminAgent.post(`/api/users/${newStudent._id}/reject`);
       expect(response).statusToBe(422);
     });
 
@@ -323,7 +308,7 @@ describe('Users API', () => {
           { docId: 'id2', name: 'Enrollment Form', status: 'pending', files: ['file2.pdf'] },
         ],
       });
-      const response = await managerAgent.post(`/api/users/${newStudent._id}/reject`);
+      const response = await adminAgent.post(`/api/users/${newStudent._id}/reject`);
       expect(response).statusToBe(204);
     });
 
@@ -342,7 +327,7 @@ describe('Users API', () => {
           },
         ],
       });
-      const response = await managerAgent.post(`/api/users/${newStudent._id}/reject`);
+      const response = await adminAgent.post(`/api/users/${newStudent._id}/reject`);
       expect(response).statusToBe(204);
     });
   });
@@ -357,7 +342,7 @@ describe('Users API', () => {
           { docId: 'id2', name: 'Business Permit', status: 'accepted', files: ['file2.pdf'] },
         ],
       });
-      const response = await managerAgent.post(`/api/users/${newLandlord._id}/approve`);
+      const response = await adminAgent.post(`/api/users/${newLandlord._id}/approve`);
       expect(response).statusToBe(204);
     });
 
@@ -370,7 +355,7 @@ describe('Users API', () => {
           { docId: 'id2', name: 'Business Permit', status: 'pending', files: ['file2.pdf'] },
         ],
       });
-      const response = await managerAgent.post(`/api/users/${newLandlord._id}/approve`);
+      const response = await adminAgent.post(`/api/users/${newLandlord._id}/approve`);
       expect(response).statusToBe(422);
     });
   });
@@ -385,7 +370,7 @@ describe('Users API', () => {
           { docId: 'id2', name: 'Business Permit', status: 'accepted', files: ['file2.pdf'] },
         ],
       });
-      const response = await managerAgent.post(`/api/users/${newLandlord._id}/reject`);
+      const response = await adminAgent.post(`/api/users/${newLandlord._id}/reject`);
       expect(response).statusToBe(422);
     });
 
@@ -404,7 +389,7 @@ describe('Users API', () => {
           },
         ],
       });
-      const response = await managerAgent.post(`/api/users/${newLandlord._id}/reject`);
+      const response = await adminAgent.post(`/api/users/${newLandlord._id}/reject`);
       expect(response).statusToBe(204);
     });
   });
