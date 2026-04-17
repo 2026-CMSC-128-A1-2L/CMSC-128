@@ -18,28 +18,25 @@ export default {
         				"aliceblue": "#f1f5f9",
         				"dimgray": "#666",
         				"black": "#000",
-        				"silver": {
-          					"100": "#b5c8c5",
-          					"200": "#bdbdbd"
-        				},
+        				"silver": "#bdbdbd",
         				"lightcyan": "#cbf6ed",
         				"teal": "#096c5b",
-        				"darkolivegreen": "#224c25",
-        				"gray": "rgba(0, 0, 0, 0.38)"
+        				"slategray": "#64748b"
       			},
       			"spacing": {
-        				"num-30_6": "30.6px",
-        				"num-30_8": "30.8px",
-        				"num-30": "30px",
-        				"num-30_2": "30.2px"
+        				"num-1": "1px solid #f0f0f0"
       			},
       			"fontFamily": {
         				"lora": "Lora",
         				"inter": "Inter",
         				"poppins": "Poppins"
       			},
+      			"borderRadius": {
+        				"num-16": "16px"
+      			},
       			"padding": {
         				"num-32": "32px",
+        				"num-10": "10px",
         				"num-0": "0px",
         				"num-12": "12px"
       			}

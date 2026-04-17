@@ -4,6 +4,7 @@ import PageLayout from "./pages/PageLayout";
 import TestPage from "./pages/TestPage";
 import RateAndReview from "./pages/RateAndReview";
 import RateAndReviewForm from "./pages/RateAndReviewWithForms";
+import RateAndReviewUpload from "./pages/RateAndReviewWithUploads";
 
 function App() {
 
@@ -15,6 +16,7 @@ function App() {
           <Route path="/test" element={<TestPage />} />
           <Route path="/ratereview" element={<RateAndReview />} />
           <Route path="/ratereviewform" element={<RateAndReviewForm />} />
+          <Route path="/ratereviewupload" element={<RateAndReviewUpload />} />
         </Routes>
       </PageLayout>
     </Router>
