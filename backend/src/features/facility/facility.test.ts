@@ -31,6 +31,7 @@ describe('Facilities API', () => {
       isAcceptingApplications: false,
       applicationCloseDate: new Date(2026, 3, 6, 18, 15, 10),
       applicationOpenDate: new Date(2026, 2, 6, 18, 15, 10),
+      status: 'pending',
     };
   });
 

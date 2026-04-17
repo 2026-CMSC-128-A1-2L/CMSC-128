@@ -6,14 +6,16 @@ import {
   getUserId,
   selfFilter,
   isVerifiedStudent,
+  hasAccount,
 } from '../../middleware';
 import {
   routeGetUsers,
-  routeGetUser,
   routeUpdateUser,
   routeDeleteUser,
   routeApproveUser,
   routeRejectUser,
+  routeGetSelf,
+  routeGetUser,
 } from './user.controller';
 import { User } from './user.model';
 import { routeGetApplicationsByStudent } from '../application/application.controller';
@@ -37,28 +39,27 @@ const router = Router();
 router.get('/', isSuperAdmin, routeGetUsers);
 
 // ============================================================================
+// GET /api/users/me
+//
+// Retrieves a user's own profile.
+// Can only be used by the user.
+// ============================================================================
+router.get('/me', hasAccount, routeGetSelf);
+
+// ============================================================================
 // GET /api/users/:userId
 //
 // Retrieves a user.
-// Can only be used by the user or the admin.
-//
-// TODO:
-//   Clarify if users should be able to see more details about landlords and
-//   managers.
-//
+// Can only be used by the admin.
 // ============================================================================
-router.get('/:userId', isSelfOrSuperAdmin, routeGetUser);
+router.get('/:userId', isSuperAdmin, routeGetUser);
 
 // ============================================================================
 // PATCH /api/users/:userId
 //
-// TODO:
-//   Clarify which fields can be edited by the user. This would be the only way
-//   birth date can be set so far if implemented. Clarify if admins should be
-//   able to edit a user's personal information.
-//
+// Can edit home address and contact number.
 // ============================================================================
-router.patch('/:userId', isSelfOrSuperAdmin, routeUpdateUser);
+router.patch('/:userId', selfFilter(true), routeUpdateUser);
 
 // ============================================================================
 // DELETE /api/users/:userId

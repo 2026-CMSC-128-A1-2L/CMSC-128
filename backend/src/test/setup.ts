@@ -17,7 +17,7 @@ export let otherManagerAgent: ReturnType<typeof agent>;
 export let studentAgent: ReturnType<typeof agent>;
 export let guestAgent: ReturnType<typeof agent>;
 
-export let landlordId: any;
+export let landlord: any;
 export let manager: any;
 export let otherManager: any;
 export let student: any;
@@ -30,16 +30,16 @@ async function createTestUsers() {
 
   const landlordResponse = await landlordAgent
     .post('/api/auth/test/login')
-    .send({ email: landlordData.email });
+    .send({ email: landlordData.emails[0] });
   const managerResponse = await managerAgent
     .post('/api/auth/test/login')
-    .send({ email: managerData.email });
+    .send({ email: managerData.emails[0] });
   const otherManagerResponse = await otherManagerAgent
     .post('/api/auth/test/login')
-    .send({ email: otherManagerData.email });
+    .send({ email: otherManagerData.emails[0] });
   const studentResponse = await studentAgent
     .post('/api/auth/test/login')
-    .send({ email: studentData.email });
+    .send({ email: studentData.emails[0] });
 
   landlord = landlordResponse.body;
   manager = managerResponse.body;

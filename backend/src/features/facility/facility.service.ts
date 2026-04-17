@@ -200,7 +200,6 @@ type UserType = {
   firstName: string;
   middleName?: string;
   lastName: string;
-  birthDate?: Date;
   auth: {
     google: string;
     password: string;

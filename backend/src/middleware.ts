@@ -181,7 +181,7 @@ export const isVerifiedStudent: RequestHandler = (req, res, next) => {
     return next(new AppError(401, 'Unauthenticated'));
   }
 
-  if (req.user.userType !== 'Student') {
+  if (req.user.userType !== 'Student' || req.user.status !== 'verified') {
     return next(new AppError(403, 'Forbidden'));
   }
 
@@ -212,4 +212,16 @@ export const isDevelopment: RequestHandler = (req, res, next) => {
 export const getUserId: RequestHandler = (req, res, next) => {
   res.locals.id = ObjectIdSchema.parse(req.params.userId);
   return next();
+};
+
+export const isVerifiedCheck: RequestHandler = (req, res, next) => {
+  if (!req.user) {
+    return next(new AppError(401, 'Unauthenticated'));
+  }
+
+  if (req.user.status !== 'verified') {
+    return next(new AppError(403, 'Forbidden'));
+  }
+
+  next();
 };

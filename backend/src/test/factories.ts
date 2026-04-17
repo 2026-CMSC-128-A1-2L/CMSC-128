@@ -9,23 +9,22 @@ type UserParams = {
   firstName: string;
   middleName?: string | null;
   lastName: string;
-  birthDate?: Date;
   emails: string[];
-  auth: { google: string[] };
   status: 'unverified' | 'verified' | 'inactive' | 'disabled';
   userType: 'Admin' | 'Manager' | 'Landlord' | 'Student';
   profilePicture?: string | null;
   contact?: string;
+  address?: string,
   studentNumber?: string;
   degreeProgram?: string;
   documents: DocumentType[];
   verificationStatus: 'pending' | 'submitted' | 'rejected' | 'approved';
+  verifiedAt?: Date | null,
 };
 
 export const buildUser = Factory.define<UserParams>(({ sequence }) => ({
   firstName: 'Juan',
   lastName: 'Dela Cruz',
-  birthDate: new Date('2000-01-01'),
   emails: [`user${sequence}@example.com`],
   auth: { google: [] },
   status: 'verified',
@@ -44,7 +43,7 @@ export const buildUser = Factory.define<UserParams>(({ sequence }) => ({
     case 'Student':
       return new Student({
         ...data,
-        studentNumber: data.studentNumber || '2023-00001',
+        studentNumber: data.studentNumber || '202300001',
       }).save() as any;
     default:
       return new User(data).save() as any;

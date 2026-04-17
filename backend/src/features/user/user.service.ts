@@ -2,6 +2,7 @@ import mongoose, { QueryFilter } from 'mongoose';
 import { Student, User } from './user.model';
 import { AppError } from '../../error';
 import { sendNotification } from '../notification/notification.service';
+import { combineFilters } from '../../middleware';
 
 export type CreateUserParams = {
   firstName: string;
@@ -128,7 +129,6 @@ export const rejectUser = async (userId: mongoose.Types.ObjectId) => {
   });
 
   if (documentsAccepted) {
-    // TODO: related to comment in router, this may be too restrictive.
     throw new AppError(422, 'Cannot reject a user with complete requirements.');
   }
 
@@ -141,3 +141,15 @@ export const rejectUser = async (userId: mongoose.Types.ObjectId) => {
   await user.save();
   await sendNotification(userId, 'Verification Rejected', 'Your account has been rejected.');
 };
+
+type UpdateUserParameters = Partial<{
+  profilePicture: string,
+  address: string,
+  contact: string,
+  degreeProgram: string,
+  studentNumber: string,
+}>;
+
+export const updateUser = async (userId: mongoose.Types.ObjectId, params: UpdateUserParameters, filters: QueryFilter<any>) => {
+  return await User.findOneAndUpdate(combineFilters(filters, { _id: userId }), params);
+}
