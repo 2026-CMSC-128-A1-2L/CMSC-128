@@ -1,20 +1,15 @@
 import { useState, useEffect } from 'react';
-import landing_listing from '../../assets/landing_listing.svg'
-import landing_contact from '../../assets/landing_contact.svg';
+import landing_listing from '../../assets/landing_listing.webp';
+import landing_contact from '../../assets/landing_contact.webp';
 
 const AutoImageSwitcher = () => {
-  const images = [
-    `${landing_listing}`,
-    `${landing_contact}`
-  ];
+  const images = [`${landing_listing}`, `${landing_contact}`];
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentIndex((prevIndex) =>
-        prevIndex === images.length - 1 ? 0 : prevIndex + 1
-      );
+      setCurrentIndex((prevIndex) => (prevIndex === images.length - 1 ? 0 : prevIndex + 1));
     }, 3000);
 
     return () => clearInterval(timer);
@@ -30,7 +25,8 @@ const AutoImageSwitcher = () => {
           className="w-full h-full object-cover animate-fade-in"
         />
       </div>
-    </div>);
+    </div>
+  );
 };
 
 export default AutoImageSwitcher;
