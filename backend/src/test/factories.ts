@@ -2,7 +2,7 @@
 import mongoose from 'mongoose';
 import { Factory } from 'fishery';
 import { HousingFacilityType, HousingFacility } from '../features/facility/facility.model';
-import { Landlord, Manager, Student, User, Admin } from '../features/user/user.model';
+import { Landlord, Manager, Student, Admin, UserType } from '../features/user/user.model';
 import { DocumentType } from '../features/document/document.model';
 
 type UserParams = {
@@ -22,31 +22,26 @@ type UserParams = {
   verifiedAt?: Date | null,
 };
 
-export const buildUser = Factory.define<UserParams>(({ sequence }) => ({
+export const buildUser = Factory.define<UserParams, any, UserType>(({ sequence }) => ({
   firstName: 'Juan',
   lastName: 'Dela Cruz',
   emails: [`user${sequence}@example.com`],
   auth: { google: [] },
   status: 'verified',
+  verificationStatus: 'approved',
   userType: 'Student',
   profilePicture: null,
   documents: [],
-  verificationStatus: 'approved',
-})).onCreate((data) => {
+})).onCreate(async (data) => {
   switch (data.userType) {
     case 'Admin':
-      return new Admin(data).save() as any;
+      return (await new Admin(data).save()).toObject();
     case 'Landlord':
-      return new Landlord({ ...data, contact: data.contact || '09991234567' }).save() as any;
+      return (await new Landlord({ ...data, contact: data.contact || '09991234567' }).save()).toObject();
     case 'Manager':
-      return new Manager({ ...data, contact: data.contact || '09991234567' }).save() as any;
+      return (await new Manager({ ...data, contact: data.contact || '09991234567' }).save()).toObject();
     case 'Student':
-      return new Student({
-        ...data,
-        studentNumber: data.studentNumber || '202300001',
-      }).save() as any;
-    default:
-      return new User(data).save() as any;
+      return (await new Student({ ...data, studentNumber: data.studentNumber || '202300001', }).save()).toObject();
   }
 });
 

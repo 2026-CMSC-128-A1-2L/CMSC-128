@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { documentSchema, DocumentType } from '../document/document.model';
 
-type UserType = {
+export type UserType = {
   _id: mongoose.Types.ObjectId,
   emails: string[],
 
@@ -41,8 +41,8 @@ const userSchema = new mongoose.Schema<UserType>(
     middleName: String,
     lastName: { type: String, required: true },
 
-    address: { type: String, required: true },
-    contact: { type: String, required: true },
+    address: String,
+    contact: String,
 
     auth: {
       type: {
