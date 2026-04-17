@@ -87,7 +87,7 @@ export const buildUnverifiedStudent = buildUser.params({
 
 export type HousingFacilityParams = Omit<HousingFacilityType, '_id' | 'createdAt' | 'updatedAt'>;
 
-export const buildHousingFacility = Factory.define<HousingFacilityParams>(({ sequence }) => ({
+export const buildHousingFacility = Factory.define<HousingFacilityParams, any, HousingFacilityType>(({ sequence }) => ({
   name: `Test Facility ${sequence}`,
   landlordId: new mongoose.Types.ObjectId(),
   managers: [],

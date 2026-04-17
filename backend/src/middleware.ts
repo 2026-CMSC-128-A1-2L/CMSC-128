@@ -37,15 +37,20 @@ export const managerFilter = (
 
     const userId = req.user._id;
 
-    if (includeSelf && req.user.userType === 'Student') {
-      // ignores filterType as it is for the manager
-      res.locals.filters = combineFilters(res.locals.filters, { userId });
-      return next();
+    if (req.user.userType === 'Student') {
+      if (includeSelf) {
+        // ignores filterType as it is for the manager
+        res.locals.filters = combineFilters(res.locals.filters, { userId });
+        return next();
+      } else {
+        // not a manager, return a 403
+        return next(new AppError(403, 'Forbidden'));
+      }
     }
 
     let newFilter: QueryFilter<{
       managers: {
-        user: mongoose.Types.ObjectId;
+        userId: mongoose.Types.ObjectId;
         permissions: {
           manageBillings: boolean;
           manageApplications: boolean;

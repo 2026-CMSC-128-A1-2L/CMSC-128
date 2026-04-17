@@ -13,15 +13,15 @@ export type HousingFacilityType = {
   name: string;
   landlordId: mongoose.Types.ObjectId;
   managers: {
-    user: mongoose.Types.ObjectId;
+    userId: mongoose.Types.ObjectId;
     permissions: ManagerPermissionType;
   }[];
-  location?: {
+  location: {
     coordinates?: {
       lat: number;
       long: number;
     };
-    text?: string;
+    text: string;
   };
   type: FacilityType;
   status: 'pending' | 'approved' | 'rejected' | 'submitted';
@@ -45,7 +45,7 @@ const HousingFacilitySchema = new mongoose.Schema<HousingFacilityType>(
     landlordId: { type: mongoose.Schema.Types.ObjectId, ref: 'Landlord', required: true },
     managers: [
       {
-        userId: { type: mongoose.Schema.Types.ObjectId, ref: 'Manager', required: true },
+        userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
         permissions: {
           type: {
             manageBillings: { type: Boolean, default: false },
@@ -58,11 +58,13 @@ const HousingFacilitySchema = new mongoose.Schema<HousingFacilityType>(
     ],
     location: {
       coordinates: {
-        lat: { type: Number, required: true },
-        long: { type: Number, required: true },
+        type: new mongoose.Schema({
+          lat: { type: Number, required: true },
+          long: { type: Number, required: true }
+        }, { _id: false }),
+        required: false // The object itself is optional...
       },
-      // TODO: cache distances
-      text: String, // location as text
+      text: { type: String, required: true }
     },
     type: { type: String, enum: ['on-campus', 'off-campus', 'partner housing'], required: true },
     status: { type: String, enum: ['pending', 'approved', 'rejected', 'submitted'], required: true, default: 'pending' },

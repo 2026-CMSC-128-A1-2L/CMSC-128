@@ -5,6 +5,7 @@ import { AppError } from '../../error';
 import { combineFilters } from '../../middleware';
 import { Listing } from '../listing/listing.model';
 import { HousingFacility, HousingFacilityType, ManagerPermissionType } from './facility.model';
+import { inviteManager } from '../invite/invite.service';
 
 type FacilityFilters = {
   name?: string;
@@ -132,9 +133,8 @@ export const getFacilities = async (filters: FacilityFilters) => {
 };
 
 export type CreateFacilityArguments = {
-  landlordId: mongoose.Types.ObjectId;
   managers?: {
-    userId: mongoose.Types.ObjectId;
+    email: string,
     permissions: { manageBillings: boolean; manageApplications: boolean; manageListings: boolean };
   }[];
 
@@ -166,7 +166,7 @@ export type UpdateFacilityArguments = {
   applicationOpenDate?: Date;
 };
 
-export const createFacility = async (data: CreateFacilityArguments) => {
+export const createFacility = async (landlordId: mongoose.Types.ObjectId, data: CreateFacilityArguments) => {
   if (
     data.applicationCloseDate &&
     data.applicationOpenDate &&
@@ -176,8 +176,15 @@ export const createFacility = async (data: CreateFacilityArguments) => {
   }
 
   const newFacility = new HousingFacility({
-    landlordId: data.landlordId,
-    managers: data.managers ?? [],
+    landlordId,
+    managers: [{
+      userId: landlordId,
+      permissions: {
+        manageApplications: true,
+        manageBillings: true,
+        manageListings: true,
+      }
+    }],
 
     name: data.name,
     type: data.type,
@@ -187,10 +194,22 @@ export const createFacility = async (data: CreateFacilityArguments) => {
     applicationOpenDate: data.applicationOpenDate,
 
     capacity: 0,
-    listings: [],
   });
 
-  return await newFacility.save();
+  const newFacilitySaved = await newFacility.save();
+
+  const invitePromises = Promise.all((data.managers ?? []).map(manager =>
+    inviteManager({
+      facilityId: newFacilitySaved._id,
+      landlordId,
+      permissions: manager.permissions,
+      email: manager.email,
+    })
+  ));
+
+  await invitePromises;
+
+  return newFacilitySaved;
 };
 
 type UserType = {
@@ -219,7 +238,8 @@ type ManagerType = UserWithContactType;
 type HousingFacilityWithManagersType = Omit<HousingFacilityType, 'landlord' | 'managers'> & {
   landlordId: LandlordType;
   managers: {
-    user: ManagerType;
+    _id: mongoose.Types.ObjectId,
+    userId: Omit<ManagerType, '_id'>;
     permissions: ManagerPermissionType;
   }[];
 };
@@ -281,7 +301,7 @@ export const removeManagerFromFacility = async (
     throw new AppError(404, 'Facility not found.');
   }
 
-  facility.managers = facility.managers.filter((m) => m.user.toString() !== userId.toString());
+  facility.managers = facility.managers.filter((m) => m.userId.toString() !== userId.toString());
   await facility.save();
 
   // cascade removal to all listings under this facility
@@ -299,11 +319,11 @@ export const updateManagerPermissions = async (
   }
 
   facility.managers = facility.managers.map((m) => {
-    if (m.user.toString() !== userId.toString()) {
+    if (m.userId.toString() !== userId.toString()) {
       return m;
     } else {
       return {
-        user: m.user,
+        userId: m.userId,
         permissions: newPermissions,
       };
     }
