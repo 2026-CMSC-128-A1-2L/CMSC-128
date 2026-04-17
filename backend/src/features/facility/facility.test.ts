@@ -1,4 +1,4 @@
-import '../../src/config.js';
+import '../../config.js';
 import { describe, it, expect, beforeAll } from 'vitest';
 import { HousingFacilityParams } from '../../test/factories.js';
 import {
