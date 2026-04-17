@@ -1,8 +1,8 @@
 import { FunctionComponent, useCallback } from 'react';
 import { Icon } from "@iconify/react";
-import OriginalImage from "../../assets/Original_Image.svg";
-import Location from "../../assets/Location.svg";
-import House from "../../assets/House.svg";
+import OriginalImage from "../../assets/one_sapphire_image.svg";
+import Location from "../../assets/pin_location_icon.svg";
+import House from "../../assets/house_icon.svg";
 import SideBar from "../components/SideBar";
 
 const RateAndReview: FunctionComponent = () => {
@@ -12,10 +12,9 @@ const RateAndReview: FunctionComponent = () => {
   	}, []);
   	
   	return (
-    		<div className="w-full h-[1024px] relative overflow-y-auto flex flex-col items-start isolate gap-2.5 text-left text-num-14 text-darkslategray-100 font-lora">
-      			<img className="w-[1440px] h-[1192px] absolute !!m-[0 important] top-[0px] left-[0px] shrink-0 z-[0]" alt=""/>
-                <Icon icon="mdi:arrow-left" className="w-6 h-6 absolute top-[32px] left-[32px] cursor-pointer" onClick={onUserProfileTextClick} />
-      			<div className="w-[1440px] h-[1192px] overflow-hidden shrink-0 flex flex-col items-start z-[1]">
+    		<div className="w-full h-screen relative overflow-y-auto flex flex-col items-start isolate gap-2.5 text-left text-num-14 text-darkslategray-100 font-lora">
+      			{/* <img className="w-[1440px] h-[1192px] absolute !!m-[0 important] top-[0px] left-[0px] shrink-0 z-[0]" alt=""/> */}
+      			<div className="w-full max-w-[1440px] min-h-screen overflow-hidden flex flex-col items-start z-[1] mx-auto">
         				<div className="self-stretch flex-1 overflow-hidden flex flex-col items-start py-num-0 pl-num-0 pr-20">
           					<div className="w-[1440px] flex-1 flex items-center shrink-0">
             						<div className="self-stretch w-[200px] flex items-start" />
@@ -54,7 +53,7 @@ const RateAndReview: FunctionComponent = () => {
                               															<div className="self-stretch flex items-center py-num-0 px-num-12 gap-2">
                                 																<img className="w-[9px] relative max-h-full" alt="" src={Location}/>
                                 																<div className="flex items-center justify-center">
-                                  																	<div className="relative font-medium">Batong Malake, Los Banos, Laguna</div>
+                                  																	<div className="relative font-medium text-[14px]">Batong Malake, Los Banos, Laguna</div>
                                 																</div>
                               															</div>
                               															<div className="self-stretch flex items-center py-num-0 px-num-12 gap-[7px]">
@@ -107,7 +106,7 @@ const RateAndReview: FunctionComponent = () => {
                           													<div className="absolute h-[37.91%] w-[4.57%] top-[13.8%] right-[91.01%] bottom-[48.29%] left-[4.43%] rounded-[50%] bg-darkslategray-200" />
                         												</div>
                       											</div>
-                      											<div className="self-stretch overflow-hidden flex items-center justify-center py-num-0 px-20 text-darkslategray-100 font-inter">
+                      											<div className="self-stretch overflow-hidden flex items-center justify-center py-num-0 px-20 text-darkslategray-100 font-inter font-medium text-[14px]">
                         												<div className="flex-1 relative font-medium">Your experience matters! Help future residents find their perfect home by sharing your honest thoughts. This quick three-step process ensures your review provides the most helpful insights for the community.</div>
                       											</div>
                     										</div>
@@ -159,7 +158,7 @@ const RateAndReview: FunctionComponent = () => {
                                                 																								</div>
                                                 																								</div>
                                                 																								</div>
-                                                																								<div className="self-stretch h-20 bg-white overflow-hidden shrink-0 flex flex-col items-center justify-center text-center text-dimgray font-inter">
+                                                																								{/* <div className="self-stretch h-20 bg-white overflow-hidden shrink-0 flex flex-col items-center justify-center text-center text-dimgray font-inter">
                                                   																									<div className="w-[1273px] bg-whitesmoke-100 overflow-hidden flex items-center py-[19px] pl-[200px] pr-20 box-border shrink-0">
                                                     																										<div className="flex-1 flex items-center gap-20">
                                                       																											<div className="flex items-center gap-4">
@@ -195,7 +194,7 @@ const RateAndReview: FunctionComponent = () => {
                                                       																											</div>
                                                     																										</div>
                                                   																									</div>
-                                                																								</div>
+                                                																								</div> */}
                                                 																								</div>
                                                 																								</div>
                                                 																								</div>
