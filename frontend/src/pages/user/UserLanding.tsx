@@ -3,12 +3,15 @@ import atlas_logo from "../../../assets/sidebar_logo.svg";
 import landing_image from "../../../assets/landing_building.svg";
 import atlas_curious from "../../../assets/logo_curious.svg";
 import atlas_text from "../../../assets/logo_atlas_text.svg";
-import listing_page from "../../../assets/landing_listing.svg";
 import map from "../../../assets/map.svg";
 import AutoImageSwitcher from '../../components/AutoImageSwitcher';
+import SignInPopUp from '../../components/SignInPopUp';
 import { Icon } from '@iconify/react';
+import { useState } from 'react';
 
 const UserLanding: FunctionComponent = () => {
+  const [showSignIn, setShowSignIn] = useState(false);
+
   return (
     <div className="w-full h-screen relative bg-white overflow-y-auto flex flex-col items-start isolate text-left text-[64px] text-teal-200 font-inter">
       <div className="flex flex-col items-start z-[1] shrink-0">
@@ -39,10 +42,18 @@ const UserLanding: FunctionComponent = () => {
                   <b className="relative tracking-num--0_01">Contact Us</b>
                 </div>
               </div>
-              <div className="rounded-[45px] [background:linear-gradient(99.18deg,_#5dc2a8_27.88%,_#0c8873_88.15%)] flex items-center justify-center py-3 px-4 gap-1 text-white">
-                <b className="relative">Login</b>
-                <Icon icon="si:arrow-right-duotone" className="w-7 h-7 relative" />
-              </div>
+              <button onClick={() => setShowSignIn(true)}>
+
+                <div className="rounded-[45px] [background:linear-gradient(99.18deg,_#5dc2a8_27.88%,_#0c8873_88.15%)] flex items-center justify-center py-3 px-4 gap-1 text-white cursor-pointer">
+                  Sign In
+                  <Icon icon="si:arrow-right-duotone" className="w-7 h-7 relative" />
+                </div>
+
+              </button>
+              {showSignIn && (
+                <SignInPopUp onClose={() => setShowSignIn(false)} />
+              )}
+
             </div>
           </div>
 
@@ -336,7 +347,7 @@ const UserLanding: FunctionComponent = () => {
         </div>
 
       </div>
-    </div>
+    </div >
   );
 };
 
