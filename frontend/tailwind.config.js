@@ -1,5 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-export default {
+module.exports = {
   	"content": [
     		"./src/**/*.{js,jsx,ts,tsx}"
   	],
@@ -37,6 +37,7 @@ export default {
       			},
       			"padding": {
         				"num-0": "0px",
+        				"num-80": "80px",
         				"num-32": "32px",
         				"num-10": "10px",
         				"num-24": "24px"

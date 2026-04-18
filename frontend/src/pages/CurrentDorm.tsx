@@ -299,7 +299,7 @@ const CurrentDorm: FunctionComponent = () => {
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div className="h-[168px] flex-1 relative rounded-lg border-whitesmoke-200 border-solid border-[1px] box-border overflow-hidden" />
+                                                <div className="h-[168px] w-[612px] rounded-lg border-whitesmoke-200 border-solid border-[1px] box-border overflow-hidden shrink-0 flex items-center px-8 text-left" />
                                             </div>
                                         </div>
                                     </div>
