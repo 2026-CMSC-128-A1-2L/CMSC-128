@@ -3,22 +3,21 @@ export default {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
-      // Combined Keyframes & Animations
+      // Animations & Keyframes
       keyframes: {
         fadeIn: {
-          '0%': { opacity: '0' },
-          '100%': { opacity: '1' },
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
         },
       },
       animation: {
-        'fade-in': 'fadeIn 0.8s ease-in-out',
+        "fade-in": "fadeIn 0.8s ease-in-out",
       },
 
-      // Merged Colors
+      // Colors
       colors: {
         white: "#fff",
         black: "#000",
-        // Merged Gray: Kept the scale but added the specific dark teal-gray from Config 2
         gray: {
           DEFAULT: "#001d18",
           100: "#757575",
@@ -29,7 +28,7 @@ export default {
           600: "rgba(255, 255, 255, 0.75)",
           700: "rgba(255, 255, 255, 0.5)",
           800: "rgba(255, 255, 255, 0.25)",
-          900: "rgba(0, 0, 0, 0)"
+          900: "rgba(0, 0, 0, 0)",
         },
         darkslategray: {
           DEFAULT: "#024338",
@@ -53,64 +52,64 @@ export default {
         silver: "#bdbdbd",
         lightcyan: "#cbf6ed",
         azure: "#d9ebe7",
-        gainsboro: "#d9d9d9"
+        gainsboro: "#d9d9d9",
       },
 
-      // Merged Spacing (Combined all num- values)
+      // Spacing (Includes custom border strings)
       spacing: {
         "num-1440": "1440px",
         "num-180": "180px",
         "num-300": "300px",
-        "num-1": "0.4px solid #f0f0f0", // Note: Spacing usually doesn't hold border strings, but kept for compatibility
+        "num-1": "0.4px solid #f0f0f0",
         "num-2": "0.4px solid #096c5b",
         "num-3": "5px solid rgba(255, 255, 255, 0.7)",
         "num-4": "0.7px solid #d9d9d9",
         "num-11": "1px solid #096c5b",
-        "num-27_8": "27.8px",
-        "num-112_6": "112.6px",
-        "num-65_1": "65.1px",
-        "num-126_6": "126.6px",
-        "num-108_4": "108.4px",
-        "num-199": "199px",
-        "num-1172": "1172px",
-        "num-48_7": "48.7px",
-        "num-914": "914px",
-        "num-27_9": "27.9px",
-        "num-19_1": "19.1px",
-        "num-29_3": "29.3px",
-        "num-18_6": "18.6px",
-        "num-21_3": "21.3px",
-        "num-20_8": "20.8px",
         "num-6_4": "6.4px",
-        "num-138": "138px",
-        "num-37": "37px",
-        "num-55": "55px",
+        "num-18_6": "18.6px",
+        "num-19_1": "19.1px",
+        "num-20_8": "20.8px",
+        "num-21_3": "21.3px",
+        "num-27_8": "27.8px",
+        "num-27_9": "27.9px",
         "num-28_4": "28.4px",
+        "num-29_3": "29.3px",
+        "num-37": "37px",
+        "num-48_7": "48.7px",
+        "num-55": "55px",
+        "num-65_1": "65.1px",
+        "num-108_4": "108.4px",
+        "num-112_6": "112.6px",
+        "num-126_6": "126.6px",
+        "num-138": "138px",
+        "num-199": "199px",
+        "num-914": "914px",
+        "num-1172": "1172px",
       },
 
-      // Merged Border Radius
+      // Border Radius
       borderRadius: {
-        "num-50": "50%",
         "num-0": "0px",
         "num-4": "4px",
         "num-10": "10px",
         "num-12": "12px",
         "num-16": "16px",
+        "num-50": "50%",
         "num-3_87": "3.87px",
         "num-4_34": "4.34px",
-        "num-5_57": "5.57px"
+        "num-5_57": "5.57px",
       },
 
-      // Merged Font Families
+      // Font Families
       fontFamily: {
         "buhun-retro-two-free": ["Buhun Retro Two FREE", "sans-serif"],
-        "inter": ["Inter", "sans-serif"],
-        "lora": ["Lora", "serif"],
-        "poppins": ["Poppins", "sans-serif"],
-        "geist": ["Geist", "sans-serif"]
+        inter: ["Inter", "sans-serif"],
+        lora: ["Lora", "serif"],
+        poppins: ["Poppins", "sans-serif"],
+        geist: ["Geist", "sans-serif"],
       },
 
-      // Merged Padding
+      // Padding
       padding: {
         "num-0": "0px",
         "num-4_3": "4.3px",
@@ -125,11 +124,11 @@ export default {
       },
 
       opacity: {
-        "num-0_3": "0.3"
-      }
+        "num-0_3": "0.3",
+      },
     },
 
-    // Merged Font Size
+    // Top-level Theme Overrides
     fontSize: {
       "num-4_64": "4.64px",
       "num-5_21": "5.21px",
@@ -148,7 +147,6 @@ export default {
       "num-36": "36px",
     },
 
-    // Merged Line Height
     lineHeight: {
       "num-13_89": "13.89px",
       "num-13_94": "13.94px",
@@ -160,10 +158,10 @@ export default {
 
     letterSpacing: {
       "num--0_01": "-0.01em",
-      "num-0_02": "0.02em"
-    }
+      "num-0_02": "0.02em",
+    },
   },
   corePlugins: {
-    preflight: false
-  }
-}
+    preflight: false,
+  },
+};
