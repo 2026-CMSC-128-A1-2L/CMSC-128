@@ -6,6 +6,7 @@ import BookmarksNewUsers from './pages/user/BookmarksNewUsers';
 import UserLanding from './pages/user/UserLanding';
 import SettingsNotifications from './pages/user/SettingsNotifications';
 import LandingMap from './components/LandingMap';
+import CurrentDorm from './pages/CurrentDorm';
 
 import Login from './pages/utilities/Login';
 import Upload from './pages/utilities/Upload';
@@ -26,6 +27,7 @@ function App() {
           <Route path="/bookmark" element={<BookmarksNewUsers />} />
           <Route path="/settings-notifications" element={<SettingsNotifications />} />
           <Route path="/dms-landing" element={<DmsLanding />} />
+          <Route path="/current-dorm" element={<CurrentDorm />} />
         </Route>
       </Routes>
     </Router>
