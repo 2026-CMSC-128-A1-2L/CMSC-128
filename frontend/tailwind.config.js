@@ -1,5 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
   	"content": [
     		"./src/**/*.{js,jsx,ts,tsx}"
   	],
@@ -32,12 +32,13 @@ module.exports = {
         				"inter": "Inter"
       			},
       			"borderRadius": {
-        				"num-12": "12px"
+        				"num-12": "12px",
+        				"num-16": "16px"
       			},
       			"padding": {
+        				"num-0": "0px",
         				"num-32": "32px",
         				"num-10": "10px",
-        				"num-0": "0px",
         				"num-24": "24px"
       			}
     		},

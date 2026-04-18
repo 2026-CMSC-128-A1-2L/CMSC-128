@@ -7,6 +7,7 @@ import UserLanding from './pages/user/UserLanding';
 import SettingsNotifications from './pages/user/SettingsNotifications';
 import LandingMap from './components/LandingMap';
 import CurrentDorm from './pages/CurrentDorm';
+import ContractInformation from './pages/ContractInformation';
 
 import Login from './pages/utilities/Login';
 import Upload from './pages/utilities/Upload';
@@ -28,6 +29,7 @@ function App() {
           <Route path="/settings-notifications" element={<SettingsNotifications />} />
           <Route path="/dms-landing" element={<DmsLanding />} />
           <Route path="/current-dorm" element={<CurrentDorm />} />
+          <Route path="/contract-information" element={<ContractInformation />} />
         </Route>
       </Routes>
     </Router>
