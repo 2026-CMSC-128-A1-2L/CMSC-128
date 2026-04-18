@@ -69,4 +69,3 @@ export const routeUpdateListingTags: RequestHandler = async (req, res, next) => 
   if (!updatedListing) return next(new AppError(404, "Listing not found."))
   res.status(200).json({ data: updatedListing });
 };
-

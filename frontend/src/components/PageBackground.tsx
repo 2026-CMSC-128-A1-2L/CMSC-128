@@ -1,15 +1,14 @@
+import BgUpper from '../../assets/bg-upper.svg?react';
+import BgLower from '../../assets/bg-lower.svg?react';
+
 const PageBackground = () => {
   return (
     <div className="fixed inset-0 w-full h-full -z-10 overflow-hidden bg-white">
-
       {/* Top-right group */}
       <div className="opacity-50">
-        <div className="absolute -top-[250px] -right-[300px] w-[450px] h-[450px] rounded-full bg-[#096C5B]" />
-        <div className="absolute -top-[230px] -right-[280px] w-[400px] h-[400px] rounded-full bg-[#2F8677]" />
-        <div className="absolute -top-[210px] -right-[260px] w-[350px] h-[350px] rounded-full bg-[#7dbdaa]" />
+        <BgUpper className="absolute top-0 right-0 w-auto h-full" />
+        <BgLower className="absolute bottom-0 left-0 w-auto h-full" />
       </div>
-
-
     </div>
   );
 };

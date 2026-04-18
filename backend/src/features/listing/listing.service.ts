@@ -15,15 +15,6 @@ type TagFilter = {
   | { type: 'numeric'; value: { min?: number; max?: number } };
 };
 
-// TODO: refactor for values to not require type
-type TagValue = {
-  name: string;
-  value:
-  | { type: 'enum'; value: string }
-  | { type: 'boolean'; value: boolean }
-  | { type: 'numeric'; value: number };
-};
-
 export type CreateListingArguments = {
   facilityId: mongoose.Types.ObjectId;
   tags?: Record<string, string | number | boolean>;

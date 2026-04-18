@@ -1,13 +1,15 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import ContactUs from "./pages/user/ContactUs";
-import PageLayout from "./pages/utilities/PageLayout";
-import TestPage from "./pages/utilities/TestPage";
-import BookmarksNewUsers from "./pages/user/BookmarksNewUsers";
-import UserLanding from "./pages/user/UserLanding";
-import LandingMap from "./components/LandingMap";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import ContactUs from './pages/user/ContactUs';
+import PageLayout from './pages/utilities/PageLayout';
+import TestPage from './pages/utilities/TestPage';
+import BookmarksNewUsers from './pages/user/BookmarksNewUsers';
+import UserLanding from './pages/user/UserLanding';
+import SettingsNotifications from './pages/user/SettingsNotifications';
+import LandingMap from './components/LandingMap';
 
-import Login from "./pages/utilities/Login";
-import Upload from "./pages/utilities/Upload";
+import Login from './pages/utilities/Login';
+import Upload from './pages/utilities/Upload';
+import DmsLanding from './pages/user/DmsLanding';
 
 function App() {
   return (
@@ -22,7 +24,8 @@ function App() {
           <Route path="/upload" element={<Upload />} />
           <Route path="/test" element={<TestPage />} />
           <Route path="/bookmark" element={<BookmarksNewUsers />} />
-
+          <Route path="/settings-notifications" element={<SettingsNotifications />} />
+          <Route path="/dms-landing" element={<DmsLanding />} />
         </Route>
       </Routes>
     </Router>
