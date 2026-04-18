@@ -8,6 +8,7 @@ import SettingsNotifications from './pages/user/SettingsNotifications';
 import LandingMap from './components/LandingMap';
 
 import Login from './pages/utilities/Login';
+import DormCard from './components/DormCard';
 import Upload from './pages/utilities/Upload';
 import DmsLanding from './pages/user/DmsLanding';
 
@@ -17,6 +18,7 @@ function App() {
       <Routes>
         <Route path="/landing" element={<UserLanding />} />
         <Route path="/map" element={<LandingMap />} />
+        <Route path="/dormcard" element={<DormCard />} />
 
         <Route element={<PageLayout />}>
           <Route path="/" element={<ContactUs />} />
