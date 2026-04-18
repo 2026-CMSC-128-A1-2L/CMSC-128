@@ -1,10 +1,8 @@
-
 import { FunctionComponent } from 'react';
 import { Icon } from '@iconify/react';
 
 import SideBar from '../../components/SideBar';
-import Footer from '../../components/Footer'
-
+import Footer from '../../components/Footer';
 
 const BookmarksNewUsers: FunctionComponent = () => {
   return (
@@ -44,13 +42,11 @@ const BookmarksNewUsers: FunctionComponent = () => {
                       <Icon icon="radix-icons:arrow-top-right" className="h-6 w-6 relative" />
                     </div>
                   </div>
-
                 </div>
               </div>
               <footer>
                 <Footer />
               </footer>
-
             </div>
           </div>
         </div>

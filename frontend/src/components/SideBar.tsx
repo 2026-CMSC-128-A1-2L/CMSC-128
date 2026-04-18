@@ -14,11 +14,11 @@ const SidebarItem = ({
   children: React.ReactElement[];
 }) => {
   const textColor = active ? 'teal' : 'black';
-  const barColor = active ? 'teal' : 'white';
+  const bar = active ? 'bg-teal' : '';
 
   return (
-    <div className={`relative flex items-center gap-6 text-${textColor} -left-2`}>
-      <div className={`h-12 w-2 rounded-sm bg-${barColor}`} />
+    <div className={`relative flex items-center gap-6 text-${textColor} -left-6`}>
+      <div className={`h-12 w-2 rounded-sm ${bar}`} />
       <div className="h-11 flex-1 rounded-num-12 flex items-center">
         <div className="flex-1 flex items-center gap-2">
           {active ? children[0] : children[1]}
@@ -31,7 +31,7 @@ const SidebarItem = ({
 
 const SideBar: FunctionComponent = () => {
   return (
-    <div className="w-full bg-white border-whitesmoke border-solid border box-border flex flex-col items-center py-8 px-num-0 gap-8 text-left text-darkslategray font-buhun-retro-two-free">
+    <div className="w-50 border-whitesmoke border-solid border box-border flex flex-col items-center py-8 px-num-0 gap-8 text-left text-darkslategray font-buhun-retro-two-free">
       <AtlasLogoText className="fill-darkslategray w-32 h-auto" />
       <div className="mx-4 flex flex-col items-center gap-8 shrink-0 text-num-14 text-gray font-inter">
         <div className="w-full h-10 rounded-full bg-whitesmoke overflow-hidden shrink-0 flex items-center py-1 px-3 box-border text-[10px]">

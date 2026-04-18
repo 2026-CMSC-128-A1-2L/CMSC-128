@@ -60,9 +60,7 @@ export const UpdateBillingBodySchema = z.object({
   amount: z.number().optional(),
   paidAmount: z.number().optional(),
 
-  paymentStatus: z
-    .enum(['unpaid', 'paid', 'overdue', 'partially_paid'])
-    .optional(),
+  paymentStatus: z.enum(['unpaid', 'paid', 'overdue', 'partially_paid']).optional(),
 
   proofOfPayment: z
     .object({

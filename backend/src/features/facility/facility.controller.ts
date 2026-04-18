@@ -26,7 +26,7 @@ export const routeGetFacilities: RequestHandler = async (req, res, next) => {
 };
 
 // POST /facilities/search: routeSearchFacilities
-export const routeSearchFacilities: RequestHandler = async (req, res, next) => { };
+export const routeSearchFacilities: RequestHandler = async (req, res, next) => {};
 
 // POST /facilities: routeCreateFacility
 export const routeCreateFacility: RequestHandler = async (req, res, next) => {
