@@ -6,6 +6,7 @@ import BookmarksNewUsers from "./pages/BookmarksNewUsers";
 
 import Login from './pages/Login';
 import Upload from './pages/Upload';
+import Analytics from "./pages/admin/analytics";
 
 function App() {
   return (
@@ -17,6 +18,9 @@ function App() {
           <Route path="/upload" element={<Upload />} />
           <Route path="/test" element={<TestPage />} />
           <Route path="/bookmark" element={<BookmarksNewUsers />} />
+
+          {/* Admin Routes */}
+          <Route path="/admin/analytics" element={<Analytics />} />
         </Routes>
       </PageLayout>
     </Router>
