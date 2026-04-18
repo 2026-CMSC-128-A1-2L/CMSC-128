@@ -1,4 +1,5 @@
 import { useEffect, useState, type MouseEventHandler } from 'react';
+import { useNavigate } from 'react-router-dom';
 import SideBarAdminButton from './SideBarAdminButton';
 import { Icon } from '@iconify/react';
 
@@ -24,13 +25,44 @@ const navItems: Array<{
   key: SideBarAdminItemKey;
   label: string;
   iconName: string;
+  route: string;
 }> = [
-  { key: 'applications', label: 'Applications', iconName: 'solar:laptop-outline' },
-  { key: 'reports', label: 'Reports', iconName: 'material-symbols:report' },
-  { key: 'listings', label: 'Listings', iconName: 'roentgen:apartments-4-story' },
-  { key: 'analytics', label: 'Analytics', iconName: 'solar:chart-outline' },
-  { key: 'messages', label: 'Messages', iconName: 'solar:chat-round-dots-outline' },
-  { key: 'announce', label: 'Announce', iconName: 'grommet-icons:announce' },
+  {
+    key: 'applications',
+    label: 'Applications',
+    iconName: 'solar:laptop-outline',
+    route: '/admin/applications',
+  },
+  {
+    key: 'reports',
+    label: 'Reports',
+    iconName: 'material-symbols:report',
+    route: '/admin/reports',
+  },
+  {
+    key: 'listings',
+    label: 'Listings',
+    iconName: 'roentgen:apartments-4-story',
+    route: '/admin/listings',
+  },
+  {
+    key: 'analytics',
+    label: 'Analytics',
+    iconName: 'solar:chart-outline',
+    route: '/admin/analytics',
+  },
+  {
+    key: 'messages',
+    label: 'Messages',
+    iconName: 'solar:chat-round-dots-outline',
+    route: '/admin/messages',
+  },
+  {
+    key: 'announce',
+    label: 'Announce',
+    iconName: 'grommet-icons:announce',
+    route: '/admin/announce',
+  },
 ];
 
 const SideBarAdmin = ({
@@ -41,6 +73,7 @@ const SideBarAdmin = ({
   onSignOut,
   className = '',
 }: SideBarAdminProps) => {
+  const navigate = useNavigate();
   const [currentMode, setCurrentMode] = useState<SideBarAdminMode>(mode ?? 'expanded');
 
   useEffect(() => {
@@ -108,7 +141,10 @@ const SideBarAdmin = ({
                 label={item.label}
                 collapsed={collapsed}
                 state={state}
-                onClick={() => onItemClick?.(item.key)}
+                onClick={() => {
+                  onItemClick?.(item.key);
+                  navigate(item.route);
+                }}
               />
             );
           })}
