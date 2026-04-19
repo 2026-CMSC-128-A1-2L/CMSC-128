@@ -22,10 +22,10 @@ type UserParams = {
   verifiedAt?: Date | null;
 };
 
-export const buildUser = Factory.define<UserParams, any, UserType>(({ sequence }) => ({
+export const buildUser = Factory.define<UserParams, Partial<UserParams>, UserType>(({ sequence }) => ({
   firstName: 'Juan',
   lastName: 'Dela Cruz',
-  emails: [`user${sequence}@example.com`],
+  emails: [`user${sequence.toString()}@example.com`],
   auth: { google: [] },
   status: 'verified',
   verificationStatus: 'approved',
@@ -93,9 +93,9 @@ export const buildUnverifiedStudent = buildUser.params({
 
 export type HousingFacilityParams = Omit<HousingFacilityType, '_id' | 'createdAt' | 'updatedAt'>;
 
-export const buildHousingFacility = Factory.define<HousingFacilityParams, any, HousingFacilityType>(
+export const buildHousingFacility = Factory.define<HousingFacilityParams, Partial<HousingFacilityParams>, HousingFacilityType>(
   ({ sequence }) => ({
-    name: `Test Facility ${sequence}`,
+    name: `Test Facility ${sequence.toString()}`,
     landlordId: new mongoose.Types.ObjectId(),
     managers: [],
     location: {

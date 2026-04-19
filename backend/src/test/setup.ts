@@ -5,6 +5,7 @@ import { agent } from 'supertest';
 import { beforeAll, afterAll } from 'vitest';
 import { App } from 'supertest/types.js';
 import { buildAdmin, buildLandlord, buildManager, buildStudent } from './factories.js';
+import { UserType } from '../features/user/user.model.js';
 
 // Random run Id so that if tests run in parallel, they use different databases.
 const TEST_RUN_ID = Date.now().toString(36);
@@ -18,11 +19,11 @@ export let otherManagerAgent: ReturnType<typeof agent>;
 export let studentAgent: ReturnType<typeof agent>;
 export let guestAgent: ReturnType<typeof agent>;
 
-export let admin: any;
-export let landlord: any;
-export let manager: any;
-export let otherManager: any;
-export let student: any;
+export let admin: UserType;
+export let landlord: UserType;
+export let manager: UserType;
+export let otherManager: UserType;
+export let student: UserType;
 
 async function createTestUsers() {
   const adminData = await buildAdmin.create();
@@ -47,11 +48,11 @@ async function createTestUsers() {
     .post('/api/auth/test/login')
     .send({ email: studentData.emails[0] });
 
-  admin = adminResponse.body;
-  landlord = landlordResponse.body;
-  manager = managerResponse.body;
-  otherManager = otherManagerResponse.body;
-  student = studentResponse.body;
+  admin = adminResponse.body as UserType;
+  landlord = landlordResponse.body as UserType;
+  manager = managerResponse.body as UserType;
+  otherManager = otherManagerResponse.body as UserType;
+  student = studentResponse.body as UserType;
 }
 
 beforeAll(async () => {
