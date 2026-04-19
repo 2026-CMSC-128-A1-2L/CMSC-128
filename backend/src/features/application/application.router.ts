@@ -3,10 +3,10 @@ import {
   routeGetApplications,
   routeCreateApplication,
   routeGetApplication,
-  routeUpdateApplication,
   routeDeleteApplication,
-  routeUpdateApplicationStatus,
   routeAssignApplicationUnit,
+  routeApproveApplication,
+  routeRejectApplication,
 } from './application.controller';
 import { isSuperAdmin, isVerifiedStudent, managerFilter, selfFilter } from '../../middleware';
 
@@ -34,12 +34,12 @@ router.get(
   routeGetApplication,
 );
 
-// PATCH /api/applications/:applicationId
-router.patch(
-  '/:applicationId',
-  managerFilter('listing', 'manageApplications', true),
-  routeUpdateApplication,
-);
+// // PATCH /api/applications/:applicationId
+// router.patch(
+//   '/:applicationId',
+//   managerFilter('listing', 'manageApplications', true),
+//   routeUpdateApplication,
+// );
 
 // DELETE /api/applications/:applicationId
 router.delete('/:applicationId', selfFilter, routeDeleteApplication);
@@ -48,14 +48,14 @@ router.delete('/:applicationId', selfFilter, routeDeleteApplication);
 router.post(
   '/:applicationId/approve',
   managerFilter('listing', 'manageApplications'),
-  routeUpdateApplicationStatus,
+  routeApproveApplication,
 );
 
 // POST /api/applications/:applicationId/reject
 router.post(
   '/:applicationId/reject',
   managerFilter('listing', 'manageApplications'),
-  routeUpdateApplicationStatus,
+  routeRejectApplication,
 );
 
 // POST /api/applications/:applicationId/assign-unit
