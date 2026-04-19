@@ -20,6 +20,7 @@ import {
   listingViewFilter,
   managerFilter,
 } from '../../middleware';
+import { routeGetVisitBookingsByFacility } from '../booking/booking.controller';
 
 const router = Router();
 
@@ -116,4 +117,13 @@ router.post('/:facilityId/approve', isSuperAdmin, routeApproveFacility);
 //
 // admin only
 router.post('/:facilityId/reject', isSuperAdmin, routeRejectFacility);
+
+// ============================================================================
+// GET /api/facilities/:facilityId/bookings
+// ============================================================================
+router.get(
+  '/:facilityId/bookings',
+  managerFilter('direct', 'manageListings'),
+  routeGetVisitBookingsByFacility,
+);
 export default router;
