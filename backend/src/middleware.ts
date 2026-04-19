@@ -142,19 +142,19 @@ export const correctLandlordFilter: RequestHandler = async (req, res, next) => {
 
 export const selfFilter =
   (direct: boolean): RequestHandler =>
-  async (req, res, next) => {
-    if (!req.user) {
-      return next(new AppError(401, 'Unauthenticated'));
-    }
+    async (req, res, next) => {
+      if (!req.user) {
+        return next(new AppError(401, 'Unauthenticated'));
+      }
 
-    if (direct) {
-      res.locals.filters = combineFilters(res.locals.filters, { _id: req.user._id });
-    } else {
-      res.locals.filters = combineFilters(res.locals.filters, { userId: req.user._id });
-    }
+      if (direct) {
+        res.locals.filters = combineFilters(res.locals.filters, { _id: req.user._id });
+      } else {
+        res.locals.filters = combineFilters(res.locals.filters, { userId: req.user._id });
+      }
 
-    next();
-  };
+      next();
+    };
 
 export const isLoggedIn: RequestHandler = (req, res, next) => {
   if (!req.user) {
@@ -250,3 +250,14 @@ export const isVerifiedCheck: RequestHandler = (req, res, next) => {
 
   next();
 };
+
+export const setUserId: RequestHandler = (req, res, next) => {
+  if (!req.user) {
+    next(new AppError(401, 'Unauthenticated'));
+    return;
+  }
+
+  assert.ok(req.user);
+  req.params['userId'] = req.user._id.toString();
+  next();
+}

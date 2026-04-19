@@ -3,6 +3,7 @@ import { createDocumentRouter } from '../document/document.router';
 import {
   isSuperAdmin,
   isSelfOrSuperAdmin,
+  setUserId,
   getUserId,
   selfFilter,
   isVerifiedStudent,
@@ -69,12 +70,12 @@ router.delete('/me', isLoggedIn, routeDeleteSelf);
 // ============================================================================
 // GET /api/users/:userId/applications
 // ============================================================================
-router.get('/me/applications', routeGetApplicationsByStudent);
+router.get('/me/applications', setUserId, routeGetApplicationsByStudent);
 
 // ============================================================================
 // GET /api/users/:userId/rentals
 // ============================================================================
-router.get('/me/rentals', routeGetRentalsByUser);
+router.get('/me/rentals', setUserId, routeGetRentalsByUser);
 
 // ============================================================================
 // GET /api/users/:userId/billings
@@ -85,12 +86,12 @@ router.get('/me/rentals', routeGetRentalsByUser);
 //   Implement summary.
 //
 // ============================================================================
-router.get('/me/billings', routeGetUserBillings);
+router.get('/me/billings', setUserId, routeGetUserBillings);
 
 // ============================================================================
 // GET /api/users/:userId/bookings
 // ============================================================================
-router.get('/me/bookings', routeGetVisitBookingsByStudent);
+router.get('/me/bookings', setUserId, routeGetVisitBookingsByStudent);
 
 // ============================================================================
 // GET /api/users/:userId

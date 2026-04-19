@@ -39,7 +39,8 @@ export const routeGetUser: RequestHandler = async (req, res, next) => {
 };
 
 export const routeUpdateSelf: RequestHandler = async (req, res, next) => {
-  const userId = ObjectIdSchema.parse(req.params.userId);
+  assert.ok(req.user);
+  const userId = req.user._id;
   const body = UpdateUserRequestBodySchema.parse(req.body);
   const user = await updateSelf(userId, body);
   if (!user) {
@@ -51,7 +52,7 @@ export const routeUpdateSelf: RequestHandler = async (req, res, next) => {
 
 export const routeDeleteSelf: RequestHandler = async (req, res, next) => {
   assert.ok(req.user);
-  const userId = ObjectIdSchema.parse(req.user._id);
+  const userId = req.user._id;
   const user = await deleteUser(userId);
   if (!user) {
     next(new AppError(404, 'User not found.'));

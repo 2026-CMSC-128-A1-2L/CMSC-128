@@ -1,8 +1,8 @@
 import mongoose, { QueryFilter } from 'mongoose';
-import { Student, User, UserType } from './user.model';
+import { Student, User } from './user.model';
 import { AppError } from '../../error';
 import { sendNotification } from '../notification/notification.service';
-import { combineFilters } from '../../middleware';
+import assert from 'node:assert';
 
 export type CreateUserParams = {
   firstName: string;
