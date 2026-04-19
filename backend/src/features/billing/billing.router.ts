@@ -25,7 +25,7 @@ router.get('/:billingId', managerFilter('facility', 'manageBillings', true), rou
 router.patch('/:billingId', managerFilter('facility', 'manageBillings', true), routeUpdateBilling);
 
 // POST /api/billings/:billingId/pay
-router.post('/:billingId/pay', selfFilter(false), routeSubmitBillingPayment);
+router.post('/:billingId/pay', selfFilter, routeSubmitBillingPayment);
 
 // POST /api/billings/:billingId/verify
 router.post(

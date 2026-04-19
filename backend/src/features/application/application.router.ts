@@ -42,7 +42,7 @@ router.patch(
 );
 
 // DELETE /api/applications/:applicationId
-router.delete('/:applicationId', selfFilter(false), routeDeleteApplication);
+router.delete('/:applicationId', selfFilter, routeDeleteApplication);
 
 // POST /api/applications/:applicationId/approve
 router.post(

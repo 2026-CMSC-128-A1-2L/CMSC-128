@@ -1,6 +1,16 @@
 import mongoose from 'mongoose';
 
-const unitSchema = new mongoose.Schema({
+export type UnitType = {
+  _id: mongoose.Types.ObjectId,
+  listingId: mongoose.Types.ObjectId,
+  roomNumber: string,
+  currentRentals: mongoose.Types.ObjectId,
+  price: number,
+  location: string,
+  isAvailable: boolean,
+}
+
+const unitSchema = new mongoose.Schema<UnitType>({
   listingId: { type: mongoose.Schema.Types.ObjectId, ref: 'Listing', required: true },
   roomNumber: { type: String, unique: true, required: true },
 

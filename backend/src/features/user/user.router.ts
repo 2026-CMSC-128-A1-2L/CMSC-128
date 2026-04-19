@@ -121,7 +121,7 @@ router.delete('/:userId', isSuperAdmin, routeDeleteUser);
 router.use(
   '/:userId/documents',
   getUserId,
-  createDocumentRouter(selfFilter(false), isSuperAdmin, isSelfOrSuperAdmin, User),
+  createDocumentRouter(selfFilter, isSuperAdmin, isSelfOrSuperAdmin, User),
 );
 
 // ============================================================================
