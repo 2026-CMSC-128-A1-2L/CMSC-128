@@ -6,7 +6,7 @@ import { UserType } from '../user/user.model';
 
 export type ModelWithDocument = Model<{
   documents: {
-    docId: mongoose.Types.ObjectId;
+    docId: string;
     status: 'accepted' | 'rejected' | 'pending';
     message?: string;
     files: string[];
@@ -15,10 +15,8 @@ export type ModelWithDocument = Model<{
 
 export const createGetDocuments =
   (model: ModelWithDocument) =>
-  async (id: mongoose.Types.ObjectId, filters?: QueryFilter<UserType>) => {
-    const result = await model
-      .findOne(combineFilters(filters, { _id: id }), { documents: 1 })
-      .lean();
+  async (id: mongoose.Types.ObjectId, filters: QueryFilter<UserType>) => {
+    const result = await model.where(filters).findOne({ _id: id }, { documents: 1 }).lean();
     return result?.documents;
   };
 
@@ -28,14 +26,15 @@ export const createAddDocument =
     id: mongoose.Types.ObjectId,
     docId: string,
     fileKey: string,
-    filters?: QueryFilter<UserType>,
+    filters: QueryFilter<UserType>,
   ) => {
     const file = await File.findOne({ key: fileKey, userId: id });
     if (!file) throw new AppError(404, 'File not found.');
 
     const result = await model
+      .where(filters)
       .findOneAndUpdate(
-        combineFilters(filters, { _id: id, 'documents.docId': docId }),
+        { _id: id, 'documents.docId': docId },
         { $push: { 'documents.$.files': fileKey } },
         { returnDocument: 'after' },
       )
@@ -50,7 +49,7 @@ export const createDeleteDocument =
     id: mongoose.Types.ObjectId,
     docId: string,
     fileKey: string,
-    filters?: QueryFilter<UserType>,
+    filters: QueryFilter<UserType>,
   ) => {
     // check if file is owned by the current user
     // TODO: use reference counting to check if file is kept?
@@ -58,8 +57,9 @@ export const createDeleteDocument =
     if (!file) throw new AppError(404, 'File not found.');
 
     const result = await model
+      .where(filters)
       .findOneAndUpdate(
-        combineFilters(filters, { _id: id, 'documents.docId': docId }),
+        { _id: id, 'documents.docId': docId },
         { pull: { 'documents.$.files': fileKey } },
         { returnDocument: 'after' },
       )
@@ -70,10 +70,11 @@ export const createDeleteDocument =
 
 export const createAcceptDocument =
   (model: ModelWithDocument) =>
-  async (id: mongoose.Types.ObjectId, docId: string, filters?: QueryFilter<UserType>) => {
+  async (id: mongoose.Types.ObjectId, docId: string, filters: QueryFilter<UserType>) => {
     const result = await model
+      .where(filters)
       .findOneAndUpdate(
-        combineFilters(filters, { _id: id, 'documents.docId': docId }),
+        { _id: id, 'documents.docId': docId },
         { 'documents.$.status': 'accepted', message: null },
         { returnDocument: 'after' },
       )
@@ -88,11 +89,12 @@ export const createRejectDocument =
     id: mongoose.Types.ObjectId,
     docId: string,
     message: string,
-    filters?: QueryFilter<UserType>,
+    filters: QueryFilter<UserType>,
   ) => {
     const result = await model
+      .where(filters)
       .findOneAndUpdate(
-        combineFilters(filters, { _id: id, 'documents.docId': docId }),
+        { _id: id, 'documents.docId': docId },
         { 'documents.$.status': 'rejected', message },
         { returnDocument: 'after' },
       )
