@@ -14,8 +14,8 @@ import {
   approveApplication,
   rejectApplication,
 } from './application.service';
-import { QueryFilter } from 'mongoose';
-import { ApplicationType } from './application.model';
+import type { QueryFilter } from 'mongoose';
+import type { ApplicationType } from './application.model';
 import { AppError } from '../../error';
 
 export const routeCreateApplication: RequestHandler = async (req, res, _next) => {

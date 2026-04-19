@@ -2,10 +2,10 @@ import type mongoose from 'mongoose';
 import type { QueryFilter } from 'mongoose';
 import { AppError } from '../../error';
 import { combineFilters } from '../../middleware';
-import { HousingFacility, HousingFacilityType } from '../facility/facility.model';
-import { BookingType, VisitBooking } from './booking.model';
+import { HousingFacility, type HousingFacilityType } from '../facility/facility.model';
+import { type BookingType, VisitBooking } from './booking.model';
 import { buildQuery } from '../../utils';
-import { BookingStatusType } from 'shared';
+import type { BookingStatusType } from 'shared';
 
 export type CreateBookingArguments = {
   userId: mongoose.Types.ObjectId;

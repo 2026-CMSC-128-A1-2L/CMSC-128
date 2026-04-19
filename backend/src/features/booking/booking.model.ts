@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { BOOKING_STATUS, BookingStatusType } from 'shared';
+import { BOOKING_STATUS, type BookingStatusType } from 'shared';
 
 export type BookingType = {
   userId: mongoose.Types.ObjectId;

@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { documentSchema, DocumentType } from '../document/document.model';
+import { documentSchema, type DocumentType } from '../document/document.model';
 
 const APPLICATION_STATUS = [
   'pending',

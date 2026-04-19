@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { documentSchema, DocumentType } from '../document/document.model';
+import { documentSchema, type DocumentType } from '../document/document.model';
 
 const PAYMENT_STATUS = ['unpaid', 'paid', 'overdue', 'partially_paid'];
 type PaymentStatusType = (typeof PAYMENT_STATUS)[number];

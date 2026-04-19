@@ -1,7 +1,7 @@
 import type mongoose from 'mongoose';
 import type { QueryFilter } from 'mongoose';
 import { AppError } from '../../error';
-import { Unit, UnitType } from './unit.model';
+import { Unit, type UnitType } from './unit.model';
 import type { Listing } from '../listing/listing.model';
 import { getListingById } from '../listing/listing.service';
 

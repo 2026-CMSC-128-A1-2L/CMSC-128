@@ -1,4 +1,4 @@
-import mongoose, { QueryFilter } from 'mongoose';
+import mongoose, { type QueryFilter } from 'mongoose';
 
 type Range<T> = {
   min: T;

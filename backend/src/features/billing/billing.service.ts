@@ -1,8 +1,8 @@
-import mongoose from 'mongoose';
+import type mongoose from 'mongoose';
 import type { QueryFilter } from 'mongoose';
-import { Billing, BillingType } from './billing.model';
+import { Billing, type BillingType } from './billing.model';
 import { AppError } from '../../error';
-import { Rental, RentalType } from '../rental/rental.model';
+import { Rental, type RentalType } from '../rental/rental.model';
 import { sendNotification } from '../notification/notification.service';
 import { buildQuery } from '../../utils';
 
