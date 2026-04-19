@@ -6,7 +6,7 @@ export type DocumentType = {
   name: string;
   status: DocumentStatusType;
   message?: string;
-  files?: string[];
+  files: string[];
 };
 
 export const documentSchema = new mongoose.Schema<DocumentType>({
@@ -14,5 +14,5 @@ export const documentSchema = new mongoose.Schema<DocumentType>({
   name: { type: String, required: true },
   status: { type: String, enum: DOCUMENT_STATUS, default: 'pending', required: true },
   message: String,
-  files: [String],
+  files: { type: [String], required: true, default: [] },
 });
