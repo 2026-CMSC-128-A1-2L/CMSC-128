@@ -2,33 +2,33 @@ import mongoose from 'mongoose';
 import { documentSchema, DocumentType } from '../document/document.model';
 
 export type UserType = {
-  _id: mongoose.Types.ObjectId,
-  emails: string[],
+  _id: mongoose.Types.ObjectId;
+  emails: string[];
 
-  firstName: string,
-  middleName?: string | null,
-  lastName: string,
+  firstName: string;
+  middleName?: string | null;
+  lastName: string;
 
-  profilePicture?: string | null,
-  address?: string,
-  contact?: string,
+  profilePicture?: string | null;
+  address?: string;
+  contact?: string;
 
   auth: {
-    google: string[]
-  },
-  status: 'unverified' | 'verified' | 'inactive' | 'disabled',
-  userType: 'Admin' | 'Landlord' | 'Manager' | 'Student',
+    google: string[];
+  };
+  status: 'unverified' | 'verified' | 'inactive' | 'disabled';
+  userType: 'Admin' | 'Landlord' | 'Manager' | 'Student';
 
-  documents: DocumentType[],
-  verificationStatus: 'pending' | 'submitted' | 'rejected' | 'approved',
-  verifiedAt?: Date | null,
+  documents: DocumentType[];
+  verificationStatus: 'pending' | 'submitted' | 'rejected' | 'approved';
+  verifiedAt?: Date | null;
 
-  updatedAt: Date
-  createdAt: Date
+  updatedAt: Date;
+  createdAt: Date;
 };
 
 export type ManagerType = UserType & {
-  userType: 'Landlord' | 'Manager',
+  userType: 'Landlord' | 'Manager';
 };
 
 const userSchema = new mongoose.Schema<UserType>(
@@ -105,7 +105,8 @@ export const User = mongoose.model('User', userSchema);
 export const Admin = User.discriminator('Admin', new mongoose.Schema());
 export const Landlord = User.discriminator('Landlord', new mongoose.Schema());
 export const Manager = User.discriminator('Manager', new mongoose.Schema());
-export const Student = User.discriminator('Student',
+export const Student = User.discriminator(
+  'Student',
   new mongoose.Schema({
     studentNumber: { type: String, required: true },
     degreeProgram: String,

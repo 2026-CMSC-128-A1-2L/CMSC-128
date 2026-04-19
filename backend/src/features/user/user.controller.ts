@@ -1,6 +1,13 @@
 import { RequestHandler } from 'express';
 import { GetUsersQuerySchema, UpdateUserRequestBodySchema, ObjectIdSchema } from 'shared';
-import { getUsers, getUserById, deleteUser, approveUser, updateUser, rejectUser } from './user.service';
+import {
+  getUsers,
+  getUserById,
+  deleteUser,
+  approveUser,
+  updateUser,
+  rejectUser,
+} from './user.service';
 import { AppError } from '../../error';
 
 export const routeGetUsers: RequestHandler = async (req, res, next) => {

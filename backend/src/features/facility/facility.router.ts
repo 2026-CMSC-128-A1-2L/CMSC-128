@@ -58,7 +58,11 @@ router.get('/:facilityId', routeGetFacility);
 // Edits a facility.
 //
 // manager with manageListings permission only
-router.patch('/:facilityId', managerFilter('facility-direct', 'manageListings'), routeUpdateFacility);
+router.patch(
+  '/:facilityId',
+  managerFilter('facility-direct', 'manageListings'),
+  routeUpdateFacility,
+);
 
 // DELETE /api/facilities/:facilityId
 //

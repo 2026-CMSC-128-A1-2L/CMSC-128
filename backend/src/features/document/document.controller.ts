@@ -15,7 +15,9 @@ export const routeGetDocuments = (model: ModelWithDocument): RequestHandler => {
   const getDocuments = createGetDocuments(model);
   return async (req, res, next) => {
     assert.ok(res.locals.id);
-    res.send({ data: await getDocuments(res.locals.id as mongoose.Types.ObjectId, res.locals.filters) });
+    res.send({
+      data: await getDocuments(res.locals.id as mongoose.Types.ObjectId, res.locals.filters),
+    });
   };
 };
 
@@ -80,7 +82,11 @@ export const routeAcceptDocument = (model: ModelWithDocument): RequestHandler =>
 
     assert.ok(res.locals.id);
     res.send({
-      data: await acceptDocument(res.locals.id as mongoose.Types.ObjectId, params.docId, res.locals.filters),
+      data: await acceptDocument(
+        res.locals.id as mongoose.Types.ObjectId,
+        params.docId,
+        res.locals.filters,
+      ),
     });
   };
 };
@@ -94,10 +100,18 @@ const RejectDocumentBodySchema = z.object({
   message: z.string(),
 });
 
-export const routeRejectDocument = (model: ModelWithDocument): RequestHandler<any, any, any, any, {
-  id: mongoose.Types.ObjectId,
-  filters?: QueryFilter<ModelWithDocument>,
-}> => {
+export const routeRejectDocument = (
+  model: ModelWithDocument,
+): RequestHandler<
+  any,
+  any,
+  any,
+  any,
+  {
+    id: mongoose.Types.ObjectId;
+    filters?: QueryFilter<ModelWithDocument>;
+  }
+> => {
   const rejectDocument = createRejectDocument(model);
   return async (req, res, next) => {
     const params = RejectDocumentParamsSchema.parse(req.params);

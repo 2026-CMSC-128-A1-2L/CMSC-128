@@ -28,7 +28,7 @@ describe('Facilities API', () => {
         },
       ],
       location: {
-        text: "diyan lang"
+        text: 'diyan lang',
       },
       type: 'on-campus',
       capacity: 100,
@@ -45,8 +45,8 @@ describe('Facilities API', () => {
           userId: manager._id,
           permissions: { manageBillings: true, manageApplications: true, manageListings: true },
         },
-      ]
-    })
+      ],
+    });
   });
 
   describe('POST /api/facilities', () => {

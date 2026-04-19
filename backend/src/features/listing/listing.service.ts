@@ -10,9 +10,9 @@ import { Listing, ListingType } from './listing.model';
 type TagFilter = {
   name: string;
   value:
-  | { type: 'enum'; value: string }
-  | { type: 'boolean'; value: boolean }
-  | { type: 'numeric'; value: { min?: number; max?: number } };
+    | { type: 'enum'; value: string }
+    | { type: 'boolean'; value: boolean }
+    | { type: 'numeric'; value: { min?: number; max?: number } };
 };
 
 export type CreateListingArguments = {
@@ -41,56 +41,57 @@ export type GetListingArguments = {
 
 type TagSpec =
   | {
-    name: 'enum';
-    values: string[];
-  }
+      name: 'enum';
+      values: string[];
+    }
   | {
-    name: 'numeric';
-    min: number;
-    max: number;
-  }
+      name: 'numeric';
+      min: number;
+      max: number;
+    }
   | {
-    name: 'boolean';
-    value: boolean;
-  };
+      name: 'boolean';
+      value: boolean;
+    };
 
 const typeMap = {
-  'number': 'numeric',
-  'boolean': 'boolean',
-  'string': 'enum',
+  number: 'numeric',
+  boolean: 'boolean',
+  string: 'enum',
 } as const;
 
 const verifyTags = async (tagMap: Record<string, string | number | boolean>) => {
   const namesToFind = [...Object.keys(tagMap)];
   const tags = await Tag.find({ name: { $in: namesToFind } }).lean();
-  return tags.map((tag) => {
-    const typename = typeof tagMap[tag.name] as ('string' | 'number' | 'boolean');
-    if (tag.dataType.name != (typeMap[typename])) return { error: 'Incorrect tag data type' };
+  return tags
+    .map((tag) => {
+      const typename = typeof tagMap[tag.name] as 'string' | 'number' | 'boolean';
+      if (tag.dataType.name != typeMap[typename]) return { error: 'Incorrect tag data type' };
 
-    const value = tagMap[tag.name];
+      const value = tagMap[tag.name];
 
-    const tagDoc = tag.dataType as TagSpec;
+      const tagDoc = tag.dataType as TagSpec;
 
-    if (tagDoc.name == 'enum') {
-      assert(typeof value === 'string');
-      if (!tagDoc.values.includes(value)) {
-        return { error: `Invalid value '${value}' for tag '${tag.name}'` };
+      if (tagDoc.name == 'enum') {
+        assert(typeof value === 'string');
+        if (!tagDoc.values.includes(value)) {
+          return { error: `Invalid value '${value}' for tag '${tag.name}'` };
+        }
+      } else if (tagDoc.name == 'numeric') {
+        assert(typeof value === 'number');
+        if (tagDoc.min && tagDoc.min > value) {
+          return {
+            error: `Invalid value '${value}' for tag '${tag.name}', minimum is set at ${tagDoc.min}`,
+          };
+        }
+        if (tagDoc.max && tagDoc.max < value) {
+          return {
+            error: `Invalid value '${value}' for tag '${tag.name}', maximum is set at ${tagDoc.max}`,
+          };
+        }
       }
-    } else if (tagDoc.name == 'numeric') {
-      assert(typeof value === 'number');
-      if (tagDoc.min && tagDoc.min > value) {
-        return {
-          error: `Invalid value '${value}' for tag '${tag.name}', minimum is set at ${tagDoc.min}`,
-        };
-      }
-      if (tagDoc.max && tagDoc.max < value) {
-        return {
-          error: `Invalid value '${value}' for tag '${tag.name}', maximum is set at ${tagDoc.max}`,
-        };
-      }
-    }
-    // no checks for boolean, zod already validated it in the controller
-  })
+      // no checks for boolean, zod already validated it in the controller
+    })
     .filter((x) => x);
 };
 

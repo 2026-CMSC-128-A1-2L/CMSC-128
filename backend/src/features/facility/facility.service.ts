@@ -134,7 +134,7 @@ export const getFacilities = async (filters: FacilityFilters) => {
 
 export type CreateFacilityArguments = {
   managers?: {
-    email: string,
+    email: string;
     permissions: { manageBillings: boolean; manageApplications: boolean; manageListings: boolean };
   }[];
 
@@ -166,7 +166,10 @@ export type UpdateFacilityArguments = {
   applicationOpenDate?: Date;
 };
 
-export const createFacility = async (landlordId: mongoose.Types.ObjectId, data: CreateFacilityArguments) => {
+export const createFacility = async (
+  landlordId: mongoose.Types.ObjectId,
+  data: CreateFacilityArguments,
+) => {
   if (
     data.applicationCloseDate &&
     data.applicationOpenDate &&
@@ -177,14 +180,16 @@ export const createFacility = async (landlordId: mongoose.Types.ObjectId, data: 
 
   const newFacility = new HousingFacility({
     landlordId,
-    managers: [{
-      userId: landlordId,
-      permissions: {
-        manageApplications: true,
-        manageBillings: true,
-        manageListings: true,
-      }
-    }],
+    managers: [
+      {
+        userId: landlordId,
+        permissions: {
+          manageApplications: true,
+          manageBillings: true,
+          manageListings: true,
+        },
+      },
+    ],
 
     name: data.name,
     type: data.type,
@@ -198,14 +203,16 @@ export const createFacility = async (landlordId: mongoose.Types.ObjectId, data: 
 
   const newFacilitySaved = await newFacility.save();
 
-  const invitePromises = Promise.all((data.managers ?? []).map(manager =>
-    inviteManager({
-      facilityId: newFacilitySaved._id,
-      landlordId,
-      permissions: manager.permissions,
-      email: manager.email,
-    })
-  ));
+  const invitePromises = Promise.all(
+    (data.managers ?? []).map((manager) =>
+      inviteManager({
+        facilityId: newFacilitySaved._id,
+        landlordId,
+        permissions: manager.permissions,
+        email: manager.email,
+      }),
+    ),
+  );
 
   await invitePromises;
 
@@ -238,7 +245,7 @@ type ManagerType = UserWithContactType;
 type HousingFacilityWithManagersType = Omit<HousingFacilityType, 'landlord' | 'managers'> & {
   landlordId: LandlordType;
   managers: {
-    _id: mongoose.Types.ObjectId,
+    _id: mongoose.Types.ObjectId;
     userId: Omit<ManagerType, '_id'>;
     permissions: ManagerPermissionType;
   }[];

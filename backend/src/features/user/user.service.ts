@@ -52,20 +52,27 @@ export const getUserById = async (userId: mongoose.Types.ObjectId) => {
   return await User.findById(userId).lean();
 };
 
-export const deleteUser = async (userId: mongoose.Types.ObjectId, filters: QueryFilter<UserType>) => {
-  return await User.findOneAndUpdate(combineFilters(filters, { _id: userId }), {
-    $set: {
-      status: 'disabled',
-      'auth.google': [],
-      emails: [],
-      documents: []
+export const deleteUser = async (
+  userId: mongoose.Types.ObjectId,
+  filters: QueryFilter<UserType>,
+) => {
+  return await User.findOneAndUpdate(
+    combineFilters(filters, { _id: userId }),
+    {
+      $set: {
+        status: 'disabled',
+        'auth.google': [],
+        emails: [],
+        documents: [],
+      },
+      $unset: {
+        address: '',
+        contact: '',
+        profilePicture: '',
+      },
     },
-    $unset: {
-      address: '',
-      contact: '',
-      profilePicture: '',
-    }
-  }, { returnDocument: 'after' }).lean();
+    { returnDocument: 'after' },
+  ).lean();
 };
 
 type GetUsersArguments = {
@@ -155,13 +162,19 @@ export const rejectUser = async (userId: mongoose.Types.ObjectId) => {
 };
 
 type UpdateUserParameters = Partial<{
-  profilePicture: string,
-  address: string,
-  contact: string,
-  degreeProgram: string,
-  studentNumber: string,
+  profilePicture: string;
+  address: string;
+  contact: string;
+  degreeProgram: string;
+  studentNumber: string;
 }>;
 
-export const updateUser = async (userId: mongoose.Types.ObjectId, params: UpdateUserParameters, filters: QueryFilter<UserType>) => {
-  return await User.findOneAndUpdate(combineFilters(filters, { _id: userId }), params, { returnDocument: 'after' }).lean();
-}
+export const updateUser = async (
+  userId: mongoose.Types.ObjectId,
+  params: UpdateUserParameters,
+  filters: QueryFilter<UserType>,
+) => {
+  return await User.findOneAndUpdate(combineFilters(filters, { _id: userId }), params, {
+    returnDocument: 'after',
+  }).lean();
+};

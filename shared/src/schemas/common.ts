@@ -14,7 +14,10 @@ export const ObjectIdSchema = z
 export const QuerySchema = <T extends z.ZodRawShape>(schema: z.ZodObject<T>) =>
   z
     .object({
-      q: z.string().optional().transform((x): z.infer<z.ZodObject<T>> => schema.parse(x ? JSON.parse(x) : {})),
+      q: z
+        .string()
+        .optional()
+        .transform((x): z.infer<z.ZodObject<T>> => schema.parse(x ? JSON.parse(x) : {})),
     })
     .transform((x) => x.q);
 

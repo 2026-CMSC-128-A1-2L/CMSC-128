@@ -14,12 +14,12 @@ type UserParams = {
   userType: 'Admin' | 'Manager' | 'Landlord' | 'Student';
   profilePicture?: string | null;
   contact?: string;
-  address?: string,
+  address?: string;
   studentNumber?: string;
   degreeProgram?: string;
   documents: DocumentType[];
   verificationStatus: 'pending' | 'submitted' | 'rejected' | 'approved';
-  verifiedAt?: Date | null,
+  verifiedAt?: Date | null;
 };
 
 export const buildUser = Factory.define<UserParams, any, UserType>(({ sequence }) => ({
@@ -37,11 +37,17 @@ export const buildUser = Factory.define<UserParams, any, UserType>(({ sequence }
     case 'Admin':
       return (await new Admin(data).save()).toObject();
     case 'Landlord':
-      return (await new Landlord({ ...data, contact: data.contact || '09991234567' }).save()).toObject();
+      return (
+        await new Landlord({ ...data, contact: data.contact || '09991234567' }).save()
+      ).toObject();
     case 'Manager':
-      return (await new Manager({ ...data, contact: data.contact || '09991234567' }).save()).toObject();
+      return (
+        await new Manager({ ...data, contact: data.contact || '09991234567' }).save()
+      ).toObject();
     case 'Student':
-      return (await new Student({ ...data, studentNumber: data.studentNumber || '202300001', }).save()).toObject();
+      return (
+        await new Student({ ...data, studentNumber: data.studentNumber || '202300001' }).save()
+      ).toObject();
   }
 });
 
@@ -87,19 +93,21 @@ export const buildUnverifiedStudent = buildUser.params({
 
 export type HousingFacilityParams = Omit<HousingFacilityType, '_id' | 'createdAt' | 'updatedAt'>;
 
-export const buildHousingFacility = Factory.define<HousingFacilityParams, any, HousingFacilityType>(({ sequence }) => ({
-  name: `Test Facility ${sequence}`,
-  landlordId: new mongoose.Types.ObjectId(),
-  managers: [],
-  location: {
-    coordinates: { lat: 14.0, long: 121.0 },
-    text: 'Test Location',
-  },
-  status: 'approved',
-  type: 'on-campus',
-  capacity: 100,
-  documents: [],
-  isAcceptingApplications: false,
-})).onCreate(async (data) => {
+export const buildHousingFacility = Factory.define<HousingFacilityParams, any, HousingFacilityType>(
+  ({ sequence }) => ({
+    name: `Test Facility ${sequence}`,
+    landlordId: new mongoose.Types.ObjectId(),
+    managers: [],
+    location: {
+      coordinates: { lat: 14.0, long: 121.0 },
+      text: 'Test Location',
+    },
+    status: 'approved',
+    type: 'on-campus',
+    capacity: 100,
+    documents: [],
+    isAcceptingApplications: false,
+  }),
+).onCreate(async (data) => {
   return (await new HousingFacility(data).save()) as HousingFacilityType;
 });
