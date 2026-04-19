@@ -10,9 +10,9 @@ import {
   studentAgent,
   otherManagerAgent,
 } from '../../test/setup.js';
-import { HousingFacilityType } from './facility.model.js';
-import z from 'zod';
-import { CreateFacilityRequestBodySchema } from 'shared';
+import type { HousingFacilityType } from './facility.model.js';
+import type z from 'zod';
+import type { CreateFacilityRequestBodySchema } from 'shared';
 
 describe('Facilities API', () => {
   let facilityId: string;

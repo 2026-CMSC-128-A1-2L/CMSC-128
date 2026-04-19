@@ -1,4 +1,5 @@
-import mongoose, { QueryFilter } from 'mongoose';
+import type mongoose from 'mongoose';
+import type { QueryFilter } from 'mongoose';
 import { Student, User } from './user.model';
 import { AppError } from '../../error';
 import { sendNotification } from '../notification/notification.service';

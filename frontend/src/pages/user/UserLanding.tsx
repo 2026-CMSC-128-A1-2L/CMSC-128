@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import type { FunctionComponent } from 'react';
 import landing_image from '../../../assets/landing_building.webp';
 import AtlasCurious from '../../../assets/logo_curious.svg?react';
 import AtlasText from '../../../assets/logo_atlas_text.svg?react';

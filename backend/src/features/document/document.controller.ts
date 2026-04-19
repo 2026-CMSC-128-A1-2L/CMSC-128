@@ -1,14 +1,15 @@
-import { RequestHandler } from 'express';
+import type { RequestHandler } from 'express';
 import z from 'zod';
 import {
-  ModelWithDocument,
+  type ModelWithDocument,
   createGetDocuments,
   createAddDocument,
   createDeleteDocument,
   createAcceptDocument,
   createRejectDocument,
 } from './document.service';
-import mongoose, { QueryFilter } from 'mongoose';
+import type mongoose from 'mongoose';
+import type { QueryFilter } from 'mongoose';
 
 // GET ../documents
 export const routeGetDocuments = (model: ModelWithDocument): RequestHandler => {

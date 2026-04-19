@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
-import { FacilityType } from 'shared';
-import { documentSchema, DocumentType } from '../document/document.model';
+import type { FacilityType } from 'shared';
+import { documentSchema, type DocumentType } from '../document/document.model';
 
 export type ManagerPermissionType = {
   manageBillings: boolean;

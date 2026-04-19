@@ -8,6 +8,7 @@
   "scripts": {
     "lint": "biome check .",
     "format": "biome format --write .",
+    "fix": "biome lint --write .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

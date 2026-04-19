@@ -1,5 +1,5 @@
-import { RequestHandler } from 'express';
-import { QueryFilter } from 'mongoose';
+import type { RequestHandler } from 'express';
+import type { QueryFilter } from 'mongoose';
 import {
   GetListingsQuerySchema,
   ObjectIdSchema,
@@ -7,7 +7,7 @@ import {
   UpdateListingBodySchema,
   UpdateListingTagsResponseBodySchema,
 } from 'shared';
-import { Listing } from './listing.model';
+import type { Listing } from './listing.model';
 import {
   getListings,
   createListing,

@@ -1,9 +1,9 @@
-import mongoose from 'mongoose';
-import { ManagerType, User } from '../user/user.model';
-import { HousingFacility, HousingFacilityType } from '../facility/facility.model';
+import type mongoose from 'mongoose';
+import { type ManagerType, User } from '../user/user.model';
+import { HousingFacility, type HousingFacilityType } from '../facility/facility.model';
 import { AppError } from '../../error';
-import { ProfileSchema } from 'shared';
-import z from 'zod';
+import type { ProfileSchema } from 'shared';
+import type z from 'zod';
 
 type ProfileType = z.infer<typeof ProfileSchema>;
 

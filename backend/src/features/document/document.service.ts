@@ -1,8 +1,9 @@
-import mongoose, { Model, QueryFilter } from 'mongoose';
+import type mongoose from 'mongoose';
+import type { Model, QueryFilter } from 'mongoose';
 import { File } from '../file/file.model';
 import { AppError } from '../../error';
 import { combineFilters } from '../../middleware';
-import { UserType } from '../user/user.model';
+import type { UserType } from '../user/user.model';
 
 export type ModelWithDocument = Model<{
   documents: {

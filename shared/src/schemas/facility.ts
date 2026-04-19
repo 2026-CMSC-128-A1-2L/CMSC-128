@@ -1,6 +1,6 @@
 import z from 'zod';
 import { ObjectIdSchema, QuerySchema, RangeSchema } from './common';
-import { DOCUMENT_STATUS, FACILITY_TYPES, FacilityType, ROOM_TYPES } from '../constants';
+import { DOCUMENT_STATUS, FACILITY_TYPES, type FacilityType, ROOM_TYPES } from '../constants';
 
 const DateTimeSchema = z.iso.datetime().transform((x) => new Date(x));
 

@@ -32,23 +32,7 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true,
-      "correctness": {
-        "noUnusedVariables": "off",
-        "noConstAssign": "off",
-        "noGlobalObjectCalls": "off",
-        "noUndeclaredVariables": "off",
-        "noUnreachable": "off"
-      },
-      "suspicious": {
-        "noExplicitAny": "off",
-        "noConsole": "off"
-      },
-      "style": {
-        "noNonNullAssertion": "off",
-        "useImportType": "off",
-        "useConst": "off"
-      }
+      "recommended": true
     }
   },
   "overrides": [
@@ -88,7 +72,7 @@
     "enabled": true,
     "actions": {
       "source": {
-        "organizeImports": "on"
+        "organizeImports": "off"
       }
     }
   }

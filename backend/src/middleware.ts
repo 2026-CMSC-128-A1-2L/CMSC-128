@@ -1,12 +1,13 @@
-import { RequestHandler } from 'express';
-import mongoose, { QueryFilter } from 'mongoose';
+import type { RequestHandler } from 'express';
+import type mongoose from 'mongoose';
+import type { QueryFilter } from 'mongoose';
 import { AppError } from './error';
 import { ObjectIdSchema } from 'shared';
-import { HousingFacility, HousingFacilityType } from './features/facility/facility.model';
+import { HousingFacility, type HousingFacilityType } from './features/facility/facility.model';
 import { Listing } from './features/listing/listing.model';
 import { Rental } from './features/rental/rental.model';
 import { isVerified, UserType } from './features/user/user.model';
-import { UnitType } from './features/unit/unit.model';
+import type { UnitType } from './features/unit/unit.model';
 
 export type ManagerPermission = 'manageBillings' | 'manageApplications' | 'manageListings';
 

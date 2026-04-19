@@ -32,5 +32,3 @@ declare module 'vitest' {
   /* eslint-disable @typescript-eslint/no-empty-object-type */
   interface AsymmetricMatchersContaining extends CustomMatchers {}
 }
-
-export {};

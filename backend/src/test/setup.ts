@@ -3,9 +3,9 @@ import mongoose from 'mongoose';
 import { getApp } from '../../src/app';
 import { agent } from 'supertest';
 import { beforeAll, afterAll } from 'vitest';
-import { App } from 'supertest/types.js';
+import type { App } from 'supertest/types.js';
 import { buildAdmin, buildLandlord, buildManager, buildStudent } from './factories.js';
-import { UserType } from '../features/user/user.model.js';
+import type { UserType } from '../features/user/user.model.js';
 
 // Random run Id so that if tests run in parallel, they use different databases.
 const TEST_RUN_ID = Date.now().toString(36);

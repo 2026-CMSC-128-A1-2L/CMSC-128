@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import mongoose from 'mongoose';
 import { Factory } from 'fishery';
-import { HousingFacilityType, HousingFacility } from '../features/facility/facility.model';
-import { Landlord, Manager, Student, Admin, UserType } from '../features/user/user.model';
-import { DocumentType } from '../features/document/document.model';
+import { type HousingFacilityType, HousingFacility } from '../features/facility/facility.model';
+import { Landlord, Manager, Student, Admin, type UserType } from '../features/user/user.model';
+import type { DocumentType } from '../features/document/document.model';
 
 type UserParams = {
   firstName: string;

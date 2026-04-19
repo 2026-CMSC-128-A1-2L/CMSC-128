@@ -17,6 +17,7 @@
   "scripts": {
     "lint": "npm run lint -ws --if-present",
     "format": "npm run format -ws --if-present",
+    "fix": "npm run fix -ws --if-present",
     "dev": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm run dev\"",
     "lock": "node secure.js encrypt",
     "unlock": "node secure.js decrypt"

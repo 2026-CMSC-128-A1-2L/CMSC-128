@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { DOCUMENT_STATUS, DocumentStatusType } from 'shared/src/constants';
+import { DOCUMENT_STATUS, type DocumentStatusType } from 'shared/src/constants';
 
 export type DocumentType = {
   docId: string;

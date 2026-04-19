@@ -1,8 +1,9 @@
-import mongoose, { QueryFilter } from 'mongoose';
+import type mongoose from 'mongoose';
+import type { QueryFilter } from 'mongoose';
 import { AppError } from '../../error';
 import { combineFilters } from '../../middleware';
 import { Unit } from './unit.model';
-import { Listing } from '../listing/listing.model';
+import type { Listing } from '../listing/listing.model';
 import { getListingById } from '../listing/listing.service';
 
 export type CreateUnitArguments = {

@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { documentSchema, DocumentType } from '../document/document.model';
+import { documentSchema, type DocumentType } from '../document/document.model';
 
 export type UserType = {
   _id: mongoose.Types.ObjectId;

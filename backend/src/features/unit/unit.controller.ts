@@ -1,4 +1,4 @@
-import { RequestHandler } from 'express';
+import type { RequestHandler } from 'express';
 import {
   CreateUnitBodySchema,
   GetUnitsRequestQuerySchema,
@@ -7,7 +7,7 @@ import {
 } from 'shared';
 import {
   getUnits,
-  CreateUnitArguments,
+  type CreateUnitArguments,
   createUnit,
   getUnitById,
   updateUnit,

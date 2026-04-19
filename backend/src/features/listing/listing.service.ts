@@ -1,11 +1,12 @@
-import mongoose, { QueryFilter } from 'mongoose';
+import type mongoose from 'mongoose';
+import type { QueryFilter } from 'mongoose';
 import assert from 'node:assert';
-import { ROOM_TYPES } from 'shared';
+import type { ROOM_TYPES } from 'shared';
 import { AppError } from '../../error';
 import { combineFilters } from '../../middleware';
 import { HousingFacility } from '../facility/facility.model';
 import { Tag } from '../tag/tag.model';
-import { Listing, ListingType } from './listing.model';
+import { Listing, type ListingType } from './listing.model';
 
 type TagFilter = {
   name: string;

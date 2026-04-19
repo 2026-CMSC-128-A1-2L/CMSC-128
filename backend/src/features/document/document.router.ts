@@ -6,7 +6,7 @@
  *   POST ../documents/:docId/reject
  */
 
-import { RequestHandler, Router } from 'express';
+import { type RequestHandler, Router } from 'express';
 import {
   routeGetDocuments,
   routeAddDocument,
@@ -14,7 +14,7 @@ import {
   routeAcceptDocument,
   routeRejectDocument,
 } from './document.controller';
-import { ModelWithDocument } from './document.service';
+import type { ModelWithDocument } from './document.service';
 
 // The model this handles should have a documents array.
 // Middleware preceding this router should be added which includes the id of the parent.

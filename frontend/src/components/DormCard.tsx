@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import type { FunctionComponent } from 'react';
 import { Icon } from '@iconify/react';
 import pic from '../../assets/sapphire.jpg';
 
