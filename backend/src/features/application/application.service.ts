@@ -96,7 +96,7 @@ export const updateApplicationStatus = async (
 ) => {
   const application = await ApplicationForm.where(filters).findOneAndUpdate(
     { _id: applicationId },
-    { status },
+    { $set: { status } },
     { returnDocument: 'after' },
   );
   if (!application) return null;

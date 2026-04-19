@@ -179,7 +179,11 @@ type UpdateUserParameters = Partial<{
 }>;
 
 export const updateSelf = async (userId: mongoose.Types.ObjectId, params: UpdateUserParameters) => {
-  return await User.findOneAndUpdate({ _id: userId }, params, {
-    returnDocument: 'after',
-  }).lean();
+  return await User.findOneAndUpdate(
+    { _id: userId },
+    { $set: params },
+    {
+      returnDocument: 'after',
+    },
+  ).lean();
 };

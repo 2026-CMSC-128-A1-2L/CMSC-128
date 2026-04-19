@@ -62,7 +62,7 @@ export const updateUnit = async (
   data: UpdateUnitArguments,
   filters: QueryFilter<typeof Unit>,
 ) => {
-  const unit = await Unit.where(filters).findOneAndUpdate(unitId, data);
+  const unit = await Unit.where(filters).findOneAndUpdate(unitId, { $set: data });
   if (!unit) throw new AppError(404, 'Unit not found.');
   return await unit.save();
 };
