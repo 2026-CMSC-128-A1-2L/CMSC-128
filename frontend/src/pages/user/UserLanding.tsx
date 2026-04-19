@@ -6,8 +6,10 @@ import atlas_text from "../../../assets/logo_atlas_text.svg";
 import map from "../../../assets/map.svg";
 import AutoImageSwitcher from '../../components/AutoImageSwitcher';
 import SignInPopUp from '../../components/SignInPopUp';
+
 import { Icon } from '@iconify/react';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const UserLanding: FunctionComponent = () => {
   const [showSignIn, setShowSignIn] = useState(false);
@@ -39,7 +41,9 @@ const UserLanding: FunctionComponent = () => {
                   <b className="h-[35px] w-[76px] relative tracking-num--0_01 flex items-center justify-center shrink-0">About</b>
                 </div>
                 <div className="self-stretch flex items-center justify-center py-0 px-1">
-                  <b className="relative tracking-num--0_01">Contact Us</b>
+                  <Link to="/contact">
+                    <b className="relative tracking-num--0_01">Contact Us</b>
+                  </Link>
                 </div>
               </div>
               <button onClick={() => setShowSignIn(true)}>
@@ -100,28 +104,28 @@ const UserLanding: FunctionComponent = () => {
             </div>
 
             <div className="self-stretch bg-white flex items-center justify-center py-10 px-0 gap-[89px] text-center text-num-24 text-gray-300">
-              <div className="h-[233px] w-[200px] relative">
+              <div className="h-[233px] w-[200px] relative transition-transform duration-300 ease-in-out hover:scale-110">
                 <div className="absolute top-[-11px] left-[-20px] w-[239px] h-60 flex flex-col items-center p-2.5 box-border gap-3.5 shrink-0">
                   <Icon icon="tabler:search" color="#2F8677" className="w-20 h-20" />
                   <b className="w-[177px] relative leading-num-32 flex items-center justify-center">DISCOVER</b>
                   <b className="w-num-199 relative text-num-18 flex font-lora items-center justify-center">Browse and filter available dorms near campus with accurate, up-to-date listings.</b>
                 </div>
               </div>
-              <div className="h-[247px] w-num-199 relative">
+              <div className="h-[247px] w-num-199 relative transition-transform duration-300 ease-in-out hover:scale-110">
                 <div className="absolute top-[-2px] left-[-19px] w-[234px] h-[249px] flex flex-col items-center p-2.5 box-border gap-3.5 shrink-0">
                   <Icon icon="emojione-monotone:clipboard" color="#2F8677" className="w-15 h-15" />
                   <b className="w-[177px] relative leading-num-32 flex items-center justify-center">APPLY</b>
                   <b className="w-num-199 relative text-num-18 flex font-lora items-center justify-center">Submit dorm applications digitally, no more paper forms or in-person queuing.</b>
                 </div>
               </div>
-              <div className="h-[251px] w-num-199 relative">
+              <div className="h-[251px] w-num-199 relative transition-transform duration-300 ease-in-out hover:scale-110">
                 <div className="absolute top-[-2px] left-[-18px] w-[234px] h-[249px] flex flex-col items-center p-2.5 box-border gap-3.5 shrink-0">
                   <Icon icon="mdi:home" color="#2F8677" className="w-17 h-17" />
                   <b className="self-stretch relative leading-num-32">MANAGE</b>
                   <b className="self-stretch relative text-num-18 font-lora">Landlords can monitor listings, tenants, and documents in one place.</b>
                 </div>
               </div>
-              <div className="h-[247px] w-num-199 relative">
+              <div className="h-[247px] w-num-199 relative transition-transform duration-300 ease-in-out hover:scale-110">
                 <div className="absolute top-[-2px] left-[-18px] w-[234px] h-[249px] flex flex-col items-center p-2.5 box-border gap-3.5 shrink-0">
                   <Icon icon="mdi:security" color="#2F8677" className="w-15 h-15" />
                   <b className="w-[177px] relative leading-num-32 flex items-center justify-center">STAY SAFE</b>
