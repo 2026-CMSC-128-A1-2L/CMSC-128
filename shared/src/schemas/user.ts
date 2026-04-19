@@ -12,10 +12,12 @@ export const UpdateUserRequestBodySchema = z
   .partial();
 
 // POST /users/:userId/approve
-export const ApproveUserRequestBodySchema = z.object({
-  degreeProgram: z.string(),
-  studentNumber: z.string().regex(/^[0-9]{9}$/, 'Must be exactly 9 digits'),
-}).optional();
+export const ApproveUserRequestBodySchema = z
+  .object({
+    degreeProgram: z.string(),
+    studentNumber: z.string().regex(/^[0-9]{9}$/, 'Must be exactly 9 digits'),
+  })
+  .optional();
 
 // GET /users
 export const UserFilterSchema = z.object({
