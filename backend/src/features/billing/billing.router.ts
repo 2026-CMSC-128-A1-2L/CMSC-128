@@ -15,6 +15,13 @@ const router = Router();
 // ============================================================================
 // Billings
 //
+// Billings are created by the manager, to be attached to a rental.
+// At the minimum, it only contains the breakdown of the cost.
+//
+// The tenant then uploads a file showing proof of their payment.
+// The manager then verifies the uploaded file, and sets the payment
+// amount.
+//
 // TODO: clarify how partial payment works. This makes one payment have
 // multiple documents, which might need to be verified separately.
 //
