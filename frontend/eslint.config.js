@@ -14,10 +14,6 @@ const tsRules = {
     },
   ],
   '@typescript-eslint/no-unused-vars': 'off',
-  '@typescript-eslint/no-explicit-any': 'off',
-  '@typescript-eslint/no-unsafe-assignment': 'off',
-  '@typescript-eslint/no-unsafe-member-access': 'off',
-  '@typescript-eslint/require-await': 'off',
 };
 
 export default defineConfig([
@@ -33,7 +29,7 @@ export default defineConfig([
     },
   },
   {
-    files: ['frontend/**/*.{ts,tsx}'],
+    files: ['**/*.{ts,tsx}'],
     extends: [
       js.configs.recommended,
       tseslint.configs.recommendedTypeChecked,
@@ -44,28 +40,6 @@ export default defineConfig([
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
-    },
-  },
-  {
-    files: ['backend/**/*.{ts,tsx}'],
-    extends: [js.configs.recommended, tseslint.configs.recommendedTypeChecked],
-    rules: {
-      camelcase: ['warn', { properties: 'always' }],
-      ...tsRules,
-    },
-    languageOptions: {
-      globals: globals.node,
-    },
-  },
-  {
-    files: ['shared/**/*.{ts,tsx}'],
-    extends: [js.configs.recommended, tseslint.configs.recommendedTypeChecked],
-    rules: {
-      camelcase: ['warn', { properties: 'always' }],
-      ...tsRules,
-    },
-    languageOptions: {
-      globals: globals.node,
     },
   },
   prettierConfig,
