@@ -52,7 +52,7 @@ export const managerFilter = (
   unknown,
   unknown,
   unknown,
-  Record<string, unknown> & { filters: QueryFilter<unknown> }
+  Record<string, unknown> & { filters?: QueryFilter<unknown> }
 > => {
   return async (req, res, next) => {
     if (!req.user) {
@@ -266,6 +266,12 @@ export const isDevelopment: RequestHandler = (req, res, next) => {
 
 export const getUserId: RequestHandler = (req, res, next) => {
   res.locals.id = ObjectIdSchema.parse(req.params.userId);
+  next();
+  return;
+};
+
+export const getBillingId: RequestHandler = (req, res, next) => {
+  res.locals.id = ObjectIdSchema.parse(req.params.billingId);
   next();
   return;
 };
