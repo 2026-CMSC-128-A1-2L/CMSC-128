@@ -1,6 +1,8 @@
 import { FunctionComponent, useState, useCallback } from 'react';
 import EventPopout from "../components/EventPopout";
 import PortalPopup from "../components/PortalPopup";
+import Footer from "../components/Footer";
+import SideBar from "../components/SideBar";
 import dotIcon from "../assets/dot.svg";
 import downIcon from "../assets/down.svg";
 import leftIcon from "../assets/left.svg";
@@ -25,20 +27,16 @@ const MyCalendar: FunctionComponent = () => {
   	}, []);
   	
   	return (<>
-    		<div className="w-full h-[1024px] relative overflow-y-auto flex flex-col items-start isolate gap-2.5 text-left text-num-14 text-darkslategray font-lora">
-      			<div className="w-[1440px] h-[1192px] overflow-hidden shrink-0 flex flex-col items-start z-[1]">
-        				<div className="self-stretch flex-1 flex flex-col items-start py-num-0 pl-num-0 pr-20">
-          					<div className="w-[1440px] flex-1 flex items-center shrink-0">
-            						<div className="h-[1192px] w-[200px] hidden items-start">
-              							<div className="h-[884px] w-[200px] bg-white border-whitesmoke-200 border-solid border-[1px] box-border flex flex-col items-center py-num-32 px-num-0" />
-            						</div>
-            						<div className="h-[1112px] hidden flex-col items-center">
-              							<div className="w-[106px] h-[924px] bg-white border-whitesmoke-200 border-solid border-[1px] box-border overflow-hidden shrink-0 flex flex-col items-center py-num-32 pl-num-32 pr-num-10" />
-            						</div>
-            						<div className="self-stretch flex-1 overflow-hidden flex flex-col items-start justify-between gap-0">
-              							<div className="self-stretch h-[924px] flex flex-col items-start pt-16 pb-num-0 pl-num-32 pr-20 box-border">
-                								<div className="self-stretch h-[1012px] flex flex-col items-start gap-3 shrink-0">
-                  									<div className="w-[1128px] h-16 overflow-hidden shrink-0 hidden items-center p-num-10 box-border gap-2.5">
+    		<div className="w-full h-screen relative overflow-hidden flex flex-col items-start text-left text-num-14 text-darkslategray font-lora">
+      			<div className="w-full flex-1 overflow-hidden flex flex-row items-start z-[1]">
+        				<div className="w-56 flex-shrink-0 h-full bg-white overflow-y-auto border-r border-gray-200">
+							<SideBar />
+          				</div>
+          				<div className="flex-1 flex flex-col items-start h-full overflow-y-auto bg-white">
+            						<div className="w-full flex flex-col items-start">
+              							<div className="w-full flex flex-col items-start pt-8 pb-0 pl-8 pr-5">
+                								<div className="w-full flex flex-col items-start gap-3">
+                  									<div className="w-full h-16 overflow-hidden shrink-0 hidden items-center p-num-10 box-border gap-2.5">
                     										<div className="h-6 w-[89px] hidden items-center gap-1.5">
                       											<div className="relative font-medium hidden shrink-0">View Tenants</div>
                        													
@@ -49,45 +47,45 @@ const MyCalendar: FunctionComponent = () => {
                       											<b className="relative">Search for Dorms, Apartments, or Locations (e.g. UPLB, Umali Subdivision)</b>
                     										</div>
                   									</div>
-                  									<div className="self-stretch h-[948px] flex flex-col items-center gap-8 text-[24px] text-black font-inter">
-                    										<div className="self-stretch flex flex-col items-start justify-center gap-3">
-                      											<div className="self-stretch flex items-center justify-between gap-5">
-                        												<div className="h-8 w-[258px] flex flex-col items-center justify-end">
-                          													<div className="w-[246px] flex items-center gap-10">
-                            														<b className="relative leading-8 shrink-0">Calendar</b>
-                            														<div className="h-12 w-[300px] rounded-2xl bg-aliceblue overflow-hidden shrink-0 hidden items-center py-2 px-3 box-border" />
+                  									<div className="w-full flex flex-col items-center gap-8 text-[24px] text-black font-inter">
+                    										<div className="self-stretch flex flex-col items-start justify-center gap-2 sm:gap-3">
+                      											<div className="self-stretch flex items-center justify-between gap-2 sm:gap-4 md:gap-5">
+                        												<div className="h-6 sm:h-8 flex-1 sm:flex-none flex flex-col items-start sm:items-center justify-end">
+                          													<div className="flex items-center gap-4 sm:gap-6 md:gap-10">
+                            														<b className="relative leading-8 text-sm sm:text-base md:text-lg shrink-0">Calendar</b>
+                            														<div className="h-10 sm:h-12 w-48 sm:w-[300px] rounded-2xl bg-aliceblue overflow-hidden shrink-0 hidden items-center py-2 px-3 box-border" />
                           													</div>
                         												</div>
-                        												<div className="h-12 w-20 overflow-hidden shrink-0 flex items-end justify-end">
-                          													<div className="h-12 w-12 rounded-[100px] bg-whitesmoke-100 overflow-hidden shrink-0 hidden items-center justify-end py-2 px-3 box-border" />
+                        												<div className="h-10 sm:h-12 w-16 sm:w-20 overflow-hidden shrink-0 flex items-end justify-end">
+                          													<div className="h-10 sm:h-12 w-10 sm:w-12 rounded-[100px] bg-whitesmoke-100 overflow-hidden shrink-0 hidden items-center justify-end py-2 px-3 box-border" />
                         												</div>
                       											</div>
                       											<div className="self-stretch h-0.5 rounded-[100px] bg-whitesmoke-200 overflow-hidden shrink-0 flex flex-col items-start pt-1 px-num-0 pb-num-0 box-border" />
                     										</div>
-                    										<div className="self-stretch flex-1 flex items-start text-num-15_45">
-                      											<div className="flex items-start justify-center gap-2.5">
-                        												<div className="h-[756.4px] w-[309px] flex flex-col items-start pt-num-0 px-num-0 pb-[9.7px] box-border gap-[23.3px]">
-                          													<div className="rounded-[15.45px] bg-white border-silver border-solid border-[1px] flex flex-col items-center p-num-15_4 isolate">
-                            														<div className="self-stretch flex items-center gap-[15.4px] z-[1]">
-                              															<div className="rounded-[30.9px] overflow-hidden flex items-center justify-center p-[7.7px] cursor-pointer" onClick={onIconButtonContainerClick}>
-																								<img src={leftIcon} className="h-[19.3px] w-[19.3px] relative" alt="left" />
+                    										<div className="self-stretch flex-1 flex items-start text-num-15_45 overflow-x-auto">
+                      											<div className="flex items-start justify-center gap-1.5 sm:gap-2 md:gap-2.5 min-w-max md:min-w-0">
+                        												<div className="h-[450px] sm:h-[600px] md:h-[756px] w-64 sm:w-72 md:w-[309px] flex flex-col items-start pt-num-0 px-num-0 pb-[9.7px] box-border gap-[15px] sm:gap-[20px] md:gap-[23.3px]">
+                          													<div className="rounded-xl sm:rounded-[15.45px] bg-white border-silver border-solid border-[1px] flex flex-col items-center p-2 sm:p-num-15_4 isolate">
+                            														<div className="self-stretch flex items-center gap-2 sm:gap-3 md:gap-[15.4px] z-[1]">
+                              															<div className="rounded-full overflow-hidden flex items-center justify-center p-1.5 sm:p-[7.7px] cursor-pointer" onClick={onIconButtonContainerClick}>
+																								<img src={leftIcon} className="h-4 sm:h-5 md:h-[19.3px] w-4 sm:w-5 md:w-[19.3px] relative" alt="left" />
                               															</div>
-                              															<div className="flex-1 flex items-start isolate gap-[7.7px]">
+                              															<div className="flex-1 flex items-start isolate gap-1.5 sm:gap-2 md:gap-[7.7px]">
                                 																<div className="flex-1 flex flex-col items-start z-[1]">
-                                  																	<div className="self-stretch rounded-num-7_72 bg-white border-gainsboro border-solid border-[1px] flex items-center p-[5.8px] gap-[7.7px]">
+                                  																	<div className="self-stretch rounded-md sm:rounded-num-7_72 bg-white border-gainsboro border-solid border-[1px] flex items-center p-1 sm:p-[5.8px] gap-1.5 sm:gap-[7.7px] text-xs sm:text-sm">
                                     																		<div className="flex-1 relative leading-[100%]">Apr</div>
-																											<img src={downIcon} className="h-[15.5px] w-[15.5px] relative" alt="down" />
+																											<img src={downIcon} className="h-3 sm:h-4 md:h-[15.5px] w-3 sm:w-4 md:w-[15.5px] relative" alt="down" />
                                   																	</div>
                                 																</div>
                                 																<div className="flex-1 flex flex-col items-start z-[0]">
-                                  																	<div className="self-stretch rounded-num-7_72 bg-white border-gainsboro border-solid border-[1px] flex items-center p-[5.8px] gap-[7.7px]">
+                                  																	<div className="self-stretch rounded-md sm:rounded-num-7_72 bg-white border-gainsboro border-solid border-[1px] flex items-center p-1 sm:p-[5.8px] gap-1.5 sm:gap-[7.7px] text-xs sm:text-sm">
                                     																		<div className="flex-1 relative leading-[100%]">2026</div>
-																											<img src={downIcon} className="h-[15.5px] w-[15.5px] relative" alt="down" />
+																											<img src={downIcon} className="h-3 sm:h-4 md:h-[15.5px] w-3 sm:w-4 md:w-[15.5px] relative" alt="down" />
                                   																	</div>
                                 																</div>
                               															</div>
-                              															<div className="rounded-[30.9px] overflow-hidden flex items-center justify-center p-[7.7px] cursor-pointer" onClick={onIconButtonContainerClick}>
-																								<img src={rightIcon} className="h-[19.3px] w-[50.3px] relative" alt="right" />
+                              															<div className="rounded-full overflow-hidden flex items-center justify-center p-1.5 sm:p-[7.7px] cursor-pointer" onClick={onIconButtonContainerClick}>
+																								<img src={rightIcon} className="h-4 sm:h-5 md:h-[19.3px] w-10 sm:w-12 md:w-[50.3px] relative" alt="right" />
                               															</div>
                             														</div>
                             														<div className="flex flex-col items-center pt-num-15_4 px-num-0 pb-num-0 z-[0] text-center text-num-11_59 text-gray font-geist">
@@ -235,7 +233,7 @@ const MyCalendar: FunctionComponent = () => {
                           													</div>
                         												</div>
                         												<div className="self-stretch w-0.5 rounded-[100px] border-whitesmoke-200 border-solid border-[1px] box-border overflow-hidden shrink-0 flex flex-col items-start py-num-10 pl-num-10 pr-num-0" />
-                        												<div className="w-[738.3px] rounded-[14.11px] overflow-hidden shrink-0 flex flex-col items-start py-[9.4px] px-num-0 box-border text-[23.09px]">
+                        												<div className="w-full sm:w-96 md:w-full lg:w-[738px] rounded-lg sm:rounded-[14.11px] overflow-hidden shrink-0 flex flex-col items-start py-2 sm:py-[9.4px] px-num-0 box-border text-xs sm:text-sm md:text-base lg:text-[23.09px] h-[450px] sm:h-[600px] md:h-[756px] bg-gray-50">
                           													<div className="self-stretch [filter:drop-shadow(0px_0.568566083908081px_0.57px_rgba(0,_0,_0,_0.12))] flex flex-col items-center justify-center">
                             														<div className="w-[726.5px] flex items-center py-[18.8px] px-[9.4px] box-border">
                               															<div className="relative tracking-[-0.01em] font-semibold">April 2026</div>
@@ -263,7 +261,7 @@ const MyCalendar: FunctionComponent = () => {
                                 																<div className="relative font-medium">SAT</div>
                               															</div>
                             														</div>
-                            														<div className="w-[726.5px] flex items-start justify-center flex-wrap content-start gap-0 text-num-16_46">
+                            														<div className="w-full flex items-start justify-center flex-wrap content-start gap-0 text-[10px] sm:text-[12px] md:text-num-16_46]">
                               															<div className="h-num-108_7 w-num-104 bg-whitesmoke-200 border-whitesmoke-200 border-solid border-[0.6px] box-border flex flex-col items-start justify-between p-num-4_7 gap-[5.7px] text-dimgray">
                                 																<b className="relative">29</b>
                                 																<div className="self-stretch flex-1 flex flex-col items-start p-num-4_7" />
@@ -416,63 +414,22 @@ const MyCalendar: FunctionComponent = () => {
                   									</div>
                 								</div>
               							</div>
-              							<div className="self-stretch h-20 overflow-hidden shrink-0 flex flex-col items-center justify-center text-center text-dimgray font-inter">
-                								<div className="w-[1273px] bg-whitesmoke-100 overflow-hidden flex items-center py-[19px] pl-[200px] pr-20 box-border">
-                  									<div className="flex-1 flex items-center gap-20">
-                    										<div className="flex items-center gap-4">
-                      											<div className="flex items-center gap-2">
-																	
-                        												<div className="flex items-center gap-3">
-                          													<div className="flex items-center gap-1">
-																					
-                            														<b className="relative">2026</b>
-                          													</div>
-                          													<div className="flex items-center justify-center">
-                            														<b className="relative">ATLAS Team</b>
-                          													</div>
-                        												</div>
-                      											</div>
-                      											<div className="flex items-center justify-center">
-                        												<b className="relative">{`All Rights Reserved `}</b>
-                      											</div>
-                    										</div>
-                    										<div className="flex items-center justify-center">
-                      											<div className="flex flex-col items-center justify-center gap-2.5">
-                        												<b className="relative">Browse Dorms</b>
-                        												<b className="relative">List your property</b>
-                      											</div>
-                    										</div>
-                    										<div className="flex flex-col items-center justify-center gap-2.5">
-                      											<b className="relative">About</b>
-                      											<b className="relative">Contact Us</b>
-                    										</div>
-                    										<div className="flex flex-col items-center justify-center gap-2.5">
-                      											<b className="relative">Privacy Policy</b>
-                      											<b className="relative">Terms of Use</b>
-                    										</div>
-                  									</div>
-                								</div>
-              							</div>
             						</div>
-          					</div>
+            						<Footer />
+          				</div>
         				</div>
       			</div>
-    		</div>
     		{isEventPopoutOpen && (
       			<PortalPopup
         				overlayColor="rgba(0, 0, 0, 0.25)"
         				placement="Centered"
-        				
-        				
-        				
-        				
-        				
         				onOutsideClick={closeEventPopout}
         				>
         				<EventPopout onClose={closeEventPopout}/>
-          					</PortalPopup>
-          					)}</>);
-          					};
+          				</PortalPopup>
+        			)}
+      		</>);
+  	};
           					
           					export default MyCalendar ;
           					
