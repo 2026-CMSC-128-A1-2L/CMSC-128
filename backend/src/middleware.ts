@@ -204,7 +204,7 @@ export const isLandlord: RequestHandler = (req, res, next) => {
     return;
   }
 
-  if (!(req.user.userType == 'Landlord' || req.user.userType == 'Admin')) {
+  if (!(req.user.userType === 'Landlord' || req.user.userType === 'Admin')) {
     next(new AppError(403, 'Forbidden'));
     return;
   }
@@ -256,7 +256,7 @@ export const isSelfOrSuperAdmin: RequestHandler = async (req, res, next) => {
 };
 
 export const isDevelopment: RequestHandler = (req, res, next) => {
-  if (process.env.NODE_ENV == 'development' || process.env.NODE_ENV == 'test') {
+  if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
     next();
     return;
   }
