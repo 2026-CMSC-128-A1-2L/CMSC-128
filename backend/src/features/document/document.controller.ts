@@ -8,14 +8,14 @@ import {
   createAcceptDocument,
   createRejectDocument,
 } from './document.service';
-import mongoose from 'mongoose';
+import mongoose, { QueryFilter } from 'mongoose';
 
 // GET ../documents
 export const routeGetDocuments = (model: ModelWithDocument): RequestHandler => {
   const getDocuments = createGetDocuments(model);
   return async (req, res, next) => {
     assert.ok(res.locals.id);
-    res.send({ data: await getDocuments(res.locals.id as mongoose.Types.ObjectId) });
+    res.send({ data: await getDocuments(res.locals.id as mongoose.Types.ObjectId, res.locals.filters) });
   };
 };
 
@@ -40,7 +40,7 @@ export const routeAddDocument = (model: ModelWithDocument): RequestHandler => {
         res.locals.id as mongoose.Types.ObjectId,
         params.docId,
         body.fileId,
-        req.user!._id,
+        res.locals.filters,
       ),
     });
   };
@@ -62,7 +62,7 @@ export const routeDeleteDocument = (model: ModelWithDocument): RequestHandler =>
         res.locals.id as mongoose.Types.ObjectId,
         params.docId,
         params.fileId,
-        req.user!._id,
+        res.locals.filters,
       ),
     });
   };
@@ -80,7 +80,7 @@ export const routeAcceptDocument = (model: ModelWithDocument): RequestHandler =>
 
     assert.ok(res.locals.id);
     res.send({
-      data: await acceptDocument(res.locals.id as mongoose.Types.ObjectId, params.docId),
+      data: await acceptDocument(res.locals.id as mongoose.Types.ObjectId, params.docId, res.locals.filters),
     });
   };
 };
@@ -94,7 +94,10 @@ const RejectDocumentBodySchema = z.object({
   message: z.string(),
 });
 
-export const routeRejectDocument = (model: ModelWithDocument): RequestHandler => {
+export const routeRejectDocument = (model: ModelWithDocument): RequestHandler<any, any, any, any, {
+  id: mongoose.Types.ObjectId,
+  filters?: QueryFilter<ModelWithDocument>,
+}> => {
   const rejectDocument = createRejectDocument(model);
   return async (req, res, next) => {
     const params = RejectDocumentParamsSchema.parse(req.params);
@@ -106,6 +109,7 @@ export const routeRejectDocument = (model: ModelWithDocument): RequestHandler =>
         res.locals.id as mongoose.Types.ObjectId,
         params.docId,
         body.message,
+        res.locals.filters,
       ),
     });
   };

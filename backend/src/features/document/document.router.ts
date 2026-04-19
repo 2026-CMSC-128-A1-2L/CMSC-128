@@ -16,17 +16,19 @@ import {
 } from './document.controller';
 import { ModelWithDocument } from './document.service';
 
-// The model this handles should have a documents array
+// The model this handles should have a documents array.
 // Middleware preceding this router should be added which includes the id of the parent.
+//
+// Assumes a filter middleware, but using a middleware that does an early response also works.
 export const createDocumentRouter = (
   ownerMiddleware: RequestHandler,
   verifierMiddleware: RequestHandler,
+  ownerOrVerifierMiddleware: RequestHandler,
   model: ModelWithDocument,
 ) => {
   const documentRouter = Router({ mergeParams: true });
 
-  // TODO: verify if this should use a filter middleware or a response
-  documentRouter.get('/', ownerMiddleware, routeGetDocuments(model));
+  documentRouter.get('/', ownerOrVerifierMiddleware, routeGetDocuments(model));
   documentRouter.post('/:documentId', ownerMiddleware, routeAddDocument(model));
   documentRouter.delete('/:documentId', ownerMiddleware, routeDeleteDocument(model));
   documentRouter.post('/:documentId/accept', verifierMiddleware, routeAcceptDocument(model));
