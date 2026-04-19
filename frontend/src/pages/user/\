@@ -1,22 +1,13 @@
-import { FunctionComponent, useCallback, useState } from 'react';
+import { FunctionComponent, useCallback } from 'react';
 import SideBar from '../../components/SideBar';
 import { Icon } from '@iconify/react';
 import PropertyTabs from '../../components/unitdetails/PropertyTabs';
-import ImageCarousel from '../../components/ImageCarousel';
-import pic from "../../../assets/landing_contact.svg";
-import pic2 from "../../../assets/landing_listing.svg";
-import pic3 from "../../../assets/landing_contact.svg";
 
 
 
 
 
 const UnitDetails: FunctionComponent = () => {
-  const gallery = [
-    `${pic}`,
-    `${pic2}`,
-    `${pic3}`
-  ];
 
   const onArrowUpClick = useCallback(() => {
     const anchor = document.querySelector("[data-scroll-to='searchBarContainer']");
@@ -55,7 +46,23 @@ const UnitDetails: FunctionComponent = () => {
                   <div className="self-stretch flex flex-col items-center gap-[28.5px] text-[32px] text-black font-inter">
                     <div className="self-stretch flex items-center gap-[25px]">
                       <div className="flex-1 flex flex-col items-start gap-[25px]">
-                        <ImageCarousel images={gallery} />
+                        <div className="self-stretch h-[427.9px] relative">
+                          <img className="absolute h-[83.34%] w-[83.37%] top-[8.33%] right-[0%] bottom-[8.33%] left-[16.64%] shadow-[0px_3.5659639835357666px_17.83px_rgba(0,_0,_0,_0.25)] rounded-[18.57px] max-w-full overflow-hidden max-h-full object-cover" alt="" />
+                          <img className="absolute h-[83.34%] w-[83.37%] top-[8.33%] right-[16.63%] bottom-[8.33%] left-[0%] shadow-[0px_3.5659639835357666px_17.83px_rgba(0,_0,_0,_0.25)] rounded-[18.57px] max-w-full overflow-hidden max-h-full object-cover" alt="" />
+                          <img className="absolute h-full w-[91.66%] top-[0%] right-[4.2%] bottom-[0%] left-[4.13%] shadow-[0px_3.5659639835357666px_17.83px_rgba(0,_0,_0,_0.25)] rounded-[20.43px] max-w-full overflow-hidden max-h-full object-cover" alt="" />
+                          <div className="absolute h-[12.5%] w-[6.53%] top-[44.58%] right-[7.24%] bottom-[42.91%] left-[86.23%]">
+                            <div className="absolute h-full w-full top-0 right-0 bottom-0 left-0 shadow-[0px_0px_3.57px_rgba(0,_0,_0,_0.25)] rounded-full bg-white flex items-center justify-center">
+                              <Icon icon="material-symbols:chevron-right-rounded" className="w-[60%] h-[60%]" />
+                            </div>
+                          </div>
+
+                          <div className="absolute h-[12.5%] w-[6.53%] top-[44.79%] right-[79.77%] bottom-[42.7%] left-[7.7%]">
+                            <div className="absolute h-full w-full top-0 right-0 bottom-0 left-0 shadow-[0px_0px_3.57px_rgba(0,_0,_0,_0.25)] rounded-full bg-white flex items-center justify-center">
+                              <Icon icon="material-symbols:chevron-left-rounded" className="w-[60%] h-[60%]" />
+                            </div>
+                          </div>
+
+                        </div>
                         <div className="self-stretch flex flex-col items-center">
                           <div className="w-[820.2px] flex items-start justify-between py-0 px-2 box-border gap-5 shrink-0">
                             <div className="flex items-center gap-[5.3px]">
@@ -83,8 +90,8 @@ const UnitDetails: FunctionComponent = () => {
                           </b>
                         </div>
                       </div>
-                      <div className="h-[615px] w-full relative bg-white border-whitesmoke-300 border-solid border-[1px] box-border flex flex-col items-center justify-center py-0 pl-5 pr-2 gap-[25px] text-left text-[14.26px] text-black font-inter">
-                        <div className="w-[259.4px] flex items-center justify-between pr-3 shrink-0 text-[21.4px]">
+                      <div className="h-[615px] w-full relative bg-white border-whitesmoke-300 border-solid border-[1px] box-border flex flex-col items-start justify-center py-0 px-[17.8px] gap-[25px] text-left text-[14.26px] text-black font-inter">
+                        <div className="w-[259.4px] flex items-end justify-between gap-5 shrink-0 text-[21.4px]">
                           <div className="flex items-center gap-[11px]">
                             <Icon icon="ri:grid-fill" className="h-6 w-6" />
                             <b className="h-[16.9px] w-[90.3px] relative leading-[28.53px] flex items-center shrink-0">Apply</b>
@@ -109,7 +116,7 @@ const UnitDetails: FunctionComponent = () => {
                             <div className="w-[151.1px] h-[13.4px] relative font-medium flex items-center shrink-0">Lease Duration</div>
                             <div className="w-num-259_3 h-[28.5px] relative text-num-10_7 text-silver">
                               <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] shadow-[0px_0px_3.57px_rgba(0,_0,_0,_0.25)] rounded-num-8_91 bg-white" />
-                              <Icon icon="mdi:chevron-down" className="absolute h-[80.6%] w-[50.13%] top-[7.66%] right-[3.8%] bottom-[35.74%] left-[68.08%] overflow-hidden" />
+                              <Icon icon="mdi:home" className="absolute h-[80.6%] w-[50.13%] top-[40.66%] right-[3.8%] bottom-[40.74%] left-[92.08%] overflow-hidden" />
                               <div className="absolute h-[62.46%] w-[50.02%] top-[18.77%] left-[4.14%] tracking-num-0_02 font-semibold flex items-center">Choose lease duration</div>
                             </div>
                           </div>
@@ -118,7 +125,7 @@ const UnitDetails: FunctionComponent = () => {
                             <div className="w-num-259_3 h-[29.4px] relative text-num-10_7 text-silver">
                               <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] shadow-[0px_0px_3.57px_rgba(0,_0,_0,_0.25)] rounded-num-8_91 bg-white" />
                               <div className="absolute h-[60.54%] w-[50.02%] top-[21.23%] left-[4.14%] tracking-num-0_02 font-semibold flex items-center">Choose date</div>
-                              <Icon icon="mdi:calendar" className="absolute h-[80.6%] w-[50.13%] top-[7.66%] right-[3.8%] bottom-[35.74%] left-[68.08%] overflow-hidden" />
+                              <img className="absolute h-[48.64%] w-[5.51%] top-[27.29%] right-[2.75%] bottom-[24.07%] left-[91.73%] max-w-full overflow-hidden max-h-full" alt="" />
                             </div>
                           </div>
                           <div className="flex flex-col items-start gap-[7px] shrink-0 text-[14.3px]">
@@ -131,8 +138,6 @@ const UnitDetails: FunctionComponent = () => {
                             <div className="w-num-259_3 h-[57.1px] relative text-num-10_7 text-silver">
                               <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] shadow-[0px_0px_3.57px_rgba(0,_0,_0,_0.25)] rounded-num-8_91 bg-white" />
                               <img className="absolute h-[10.86%] w-[2.08%] top-[79.63%] right-[2.39%] bottom-[9.52%] left-[95.53%] rounded-[0.89px] max-w-full overflow-hidden max-h-full" alt="" />
-
-
                               <div className="absolute h-[31.17%] w-[86.54%] top-[10.93%] left-[4.14%] tracking-num-0_02 font-semibold flex items-center">Introduce yourself or ask a question..</div>
                             </div>
                           </div>
@@ -159,10 +164,11 @@ const UnitDetails: FunctionComponent = () => {
                           </div>
                         </div>
                         <div className="w-num-259_3 flex flex-col items-center gap-[8.9px] shrink-0 text-white font-poppins">
-                          <div className="w-full h-[42.8px] relative rounded-[8.91px] bg-darkslategray-200 flex items-center py-[0.9px] pl-[46.4px] pr-[55.3px] box-border gap-[2.7px] text-left text-[14.26px] text-white font-poppins">
+                          <div className="w-num-259_3 h-[42.8px] rounded-num-8_91 bg-darkslategray flex items-center py-[0.9px] pl-[46.4px] pr-[55.3px] box-border gap-[2.7px]">
                             <div className="h-[41px] w-[140px] relative font-medium flex items-center shrink-0">{`Submit Application `}</div>
-                            <Icon icon="formkit:arrowright" className="h-6 w-6" />
-                          </div>                          <div className="self-stretch h-[26.7px] relative text-num-10_7 font-lora text-dimgray text-center flex items-center justify-center shrink-0">Landlord will respond within 24–48 hrs.<br />Your info is kept private until approved.</div>
+                            <img className="h-[8.9px] w-[14.3px] relative" alt="" />
+                          </div>
+                          <div className="self-stretch h-[26.7px] relative text-num-10_7 font-lora text-dimgray text-center flex items-center justify-center shrink-0">Landlord will respond within 24–48 hrs.<br />Your info is kept private until approved.</div>
                         </div>
                       </div>                    </div>
                     <div className="self-stretch flex items-start gap-[23.2px] text-center text-num-14_26 text-darkslategray-200 font-lora">
@@ -221,7 +227,7 @@ const UnitDetails: FunctionComponent = () => {
                               </div>
                               <div className="absolute h-[49.84%] w-[51.74%] top-[25%] right-[24.31%] bottom-[25.16%] left-[23.95%]">
                                 <div className="absolute h-full w-[81.19%] top-[0%] left-[18.79%] font-medium flex items-center justify-center">Send Message</div>
-                                <Icon icon="material-symbols:mail-outline" className="absolute h-[95.38%] w-[13.44%] top-[11.15%] right-[86.56%] bottom-[-0.52%] left-[0%] max-w-full overflow-hidden max-h-full" />
+                                <img className="absolute h-[89.38%] w-[13.44%] top-[11.15%] right-[86.56%] bottom-[-0.52%] left-[0%] max-w-full overflow-hidden max-h-full" alt="" />
                               </div>
                             </div>
                             <div className="w-[256.7px] h-[32.1px] relative">
@@ -229,8 +235,7 @@ const UnitDetails: FunctionComponent = () => {
                               <div className="absolute h-[69.47%] w-[50.02%] top-[13.89%] right-[19.77%] bottom-[16.64%] left-[30.21%]">
                                 <div className="absolute h-full w-full top-[0%] left-[0%] font-medium flex items-center justify-center">Contact Details</div>
                               </div>
-
-                              <Icon icon="ic:outline-phone" className="absolute h-[44.55%] w-[5.92%] top-[27.77%] right-[69.77%] bottom-[27.68%] left-[24.31%] max-w-full overflow-hidden max-h-full" />
+                              <img className="absolute h-[44.55%] w-[5.92%] top-[27.77%] right-[69.77%] bottom-[27.68%] left-[24.31%] max-w-full overflow-hidden max-h-full" alt="" />
                             </div>
                           </div>
                           <div className="absolute top-[126.59px] left-[0px] w-num-291_5 flex items-center justify-center py-0 px-[8.9px] box-border gap-[7.1px] text-[16.05px] text-teal-100">
@@ -257,7 +262,7 @@ const UnitDetails: FunctionComponent = () => {
                             </div>
                           </div>
                           <div className="absolute top-[16.94px] left-[0px] w-num-291_5 flex items-center py-0 px-[17.8px] box-border gap-[11.6px] text-left text-[21.4px]">
-                            <Icon icon="material-symbols:wifi-home-outline-rounded" className="h-6 w-6" />
+                            <img className="h-[21.4px] w-[21.4px] relative" alt="" />
                             <b className="h-[14.3px] w-[118.6px] relative leading-[28.53px] flex items-center shrink-0">LANDLORD</b>
                           </div>
                         </div>
@@ -266,9 +271,9 @@ const UnitDetails: FunctionComponent = () => {
                             <div className="w-[191.7px] flex items-center justify-center">
                               <b className="relative leading-[28.53px]">You may also like</b>
                             </div>
-                            <div className="h-[28.5px] w-[28.5px] relative flex items-center justify-center">
+                            <div className="h-[28.5px] w-[28.5px] relative">
                               <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] shadow-[0px_0px_3.57px_rgba(0,_0,_0,_0.25)] rounded-[50%] bg-white" />
-                              <Icon icon="iconamoon:arrow-right-2" className="h-6 w-6 relative z-10" />
+                              <img className="absolute h-[26.67%] w-1/5 top-[38.37%] right-[39.96%] bottom-[34.96%] left-[40.04%] max-w-full overflow-hidden max-h-full" alt="" />
                             </div>
                           </div>
                           <div className="self-stretch flex flex-col items-center justify-center gap-[10.7px] text-num-10_7 font-lora">

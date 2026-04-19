@@ -14,7 +14,8 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-router-dom": "^7.14.0",
-    "tailwindcss": "^4.2.2"
+    "tailwindcss": "^4.2.2",
+    "yet-another-react-lightbox": "^3.31.0"
   },
   "devDependencies": {
     "@iconify/react": "^6.0.2",
