@@ -12,7 +12,7 @@ import Login from './pages/utilities/Login';
 import DormCard from './components/DormCard';
 import Upload from './pages/utilities/Upload';
 import DmsLanding from './pages/user/DmsLanding';
-
+import MyCalendar from './pages/MyCalendar';
 function App() {
   return (
     <Router>
@@ -30,6 +30,7 @@ function App() {
           <Route path="/bookmark" element={<BookmarksNewUsers />} />
           <Route path="/settings-notifications" element={<SettingsNotifications />} />
           <Route path="/dms-landing" element={<DmsLanding />} />
+          <Route path="/calendar" element={<MyCalendar />} />
         </Route>
       </Routes>
     </Router>
