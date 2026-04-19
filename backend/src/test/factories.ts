@@ -22,17 +22,19 @@ type UserParams = {
   verifiedAt?: Date | null;
 };
 
-export const buildUser = Factory.define<UserParams, Partial<UserParams>, UserType>(({ sequence }) => ({
-  firstName: 'Juan',
-  lastName: 'Dela Cruz',
-  emails: [`user${sequence.toString()}@example.com`],
-  auth: { google: [] },
-  status: 'verified',
-  verificationStatus: 'approved',
-  userType: 'Student',
-  profilePicture: null,
-  documents: [],
-})).onCreate(async (data) => {
+export const buildUser = Factory.define<UserParams, Partial<UserParams>, UserType>(
+  ({ sequence }) => ({
+    firstName: 'Juan',
+    lastName: 'Dela Cruz',
+    emails: [`user${sequence.toString()}@example.com`],
+    auth: { google: [] },
+    status: 'verified',
+    verificationStatus: 'approved',
+    userType: 'Student',
+    profilePicture: null,
+    documents: [],
+  }),
+).onCreate(async (data) => {
   switch (data.userType) {
     case 'Admin':
       return (await new Admin(data).save()).toObject();
@@ -93,21 +95,23 @@ export const buildUnverifiedStudent = buildUser.params({
 
 export type HousingFacilityParams = Omit<HousingFacilityType, '_id' | 'createdAt' | 'updatedAt'>;
 
-export const buildHousingFacility = Factory.define<HousingFacilityParams, Partial<HousingFacilityParams>, HousingFacilityType>(
-  ({ sequence }) => ({
-    name: `Test Facility ${sequence.toString()}`,
-    landlordId: new mongoose.Types.ObjectId(),
-    managers: [],
-    location: {
-      coordinates: { lat: 14.0, long: 121.0 },
-      text: 'Test Location',
-    },
-    status: 'approved',
-    type: 'on-campus',
-    capacity: 100,
-    documents: [],
-    isAcceptingApplications: false,
-  }),
-).onCreate(async (data) => {
+export const buildHousingFacility = Factory.define<
+  HousingFacilityParams,
+  Partial<HousingFacilityParams>,
+  HousingFacilityType
+>(({ sequence }) => ({
+  name: `Test Facility ${sequence.toString()}`,
+  landlordId: new mongoose.Types.ObjectId(),
+  managers: [],
+  location: {
+    coordinates: { lat: 14.0, long: 121.0 },
+    text: 'Test Location',
+  },
+  status: 'approved',
+  type: 'on-campus',
+  capacity: 100,
+  documents: [],
+  isAcceptingApplications: false,
+})).onCreate(async (data) => {
   return (await new HousingFacility(data).save()) as HousingFacilityType;
 });

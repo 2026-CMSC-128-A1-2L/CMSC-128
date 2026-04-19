@@ -121,7 +121,7 @@ describe('Users API', () => {
       expect(response).statusToBe(200);
     });
 
-    it.skip('should delete the authenticated user when using self-delete endpoint', async () => { });
+    it.skip('should delete the authenticated user when using self-delete endpoint', async () => {});
   });
 
   describe('DELETE /api/users/:userId', () => {
