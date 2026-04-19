@@ -6,11 +6,12 @@ import {
   getUserId,
   selfFilter,
   isVerifiedStudent,
-  hasAccount,
+  isLoggedIn,
 } from '../../middleware';
 import {
   routeGetUsers,
-  routeUpdateUser,
+  routeUpdateSelf,
+  routeDeleteSelf,
   routeDeleteUser,
   routeApproveUser,
   routeRejectUser,
@@ -44,7 +45,52 @@ router.get('/', isSuperAdmin, routeGetUsers);
 // Retrieves a user's own profile.
 // Can only be used by the user.
 // ============================================================================
-router.get('/me', hasAccount, routeGetSelf);
+router.get('/me', isLoggedIn, routeGetSelf);
+
+// ============================================================================
+// PATCH /api/users/me
+//
+// Can edit home address and contact number.
+// ============================================================================
+router.patch('/me', isLoggedIn, routeUpdateSelf);
+
+// ============================================================================
+// DELETE /api/users/me
+//
+// The user should not be able to log-in and have all sessions invalidated.
+// If the user tries to log-in again, they go through the whole register flow
+// again.
+//
+//  TODO: invalidate all sessions
+//
+// ============================================================================
+router.delete('/me', isLoggedIn, routeDeleteSelf);
+
+// ============================================================================
+// GET /api/users/:userId/applications
+// ============================================================================
+router.get('/me/applications', routeGetApplicationsByStudent);
+
+// ============================================================================
+// GET /api/users/:userId/rentals
+// ============================================================================
+router.get('/me/rentals', routeGetRentalsByUser);
+
+// ============================================================================
+// GET /api/users/:userId/billings
+//
+// Returns a user's billings with a summary.
+//
+// TODO:
+//   Implement summary.
+//
+// ============================================================================
+router.get('/me/billings', routeGetUserBillings);
+
+// ============================================================================
+// GET /api/users/:userId/bookings
+// ============================================================================
+router.get('/me/bookings', routeGetVisitBookingsByStudent);
 
 // ============================================================================
 // GET /api/users/:userId
@@ -53,13 +99,6 @@ router.get('/me', hasAccount, routeGetSelf);
 // Can only be used by the admin.
 // ============================================================================
 router.get('/:userId', isSuperAdmin, routeGetUser);
-
-// ============================================================================
-// PATCH /api/users/:userId
-//
-// Can edit home address and contact number.
-// ============================================================================
-router.patch('/:userId', selfFilter(true), routeUpdateUser);
 
 // ============================================================================
 // DELETE /api/users/:userId
@@ -71,7 +110,7 @@ router.patch('/:userId', selfFilter(true), routeUpdateUser);
 //  TODO: invalidate all sessions
 //
 // ============================================================================
-router.delete('/:userId', isSelfOrSuperAdmin, routeDeleteUser);
+router.delete('/:userId', isSuperAdmin, routeDeleteUser);
 
 // ============================================================================
 // GET /api/users/:userId/documents
@@ -81,19 +120,8 @@ router.delete('/:userId', isSelfOrSuperAdmin, routeDeleteUser);
 router.use(
   '/:userId/documents',
   getUserId,
-  createDocumentRouter(selfFilter(false), isSuperAdmin, isSelfOrSuperAdmin, User as any),
+  createDocumentRouter(selfFilter(false), isSuperAdmin, isSelfOrSuperAdmin, User),
 );
-
-// ============================================================================
-// GET /api/users/:userId/billings
-//
-// Returns a user's billings with a summary.
-//
-// TODO:
-//   Implement summary.
-//
-// ============================================================================
-router.get('/:userId/billings', selfFilter(false), routeGetUserBillings);
 
 // ============================================================================
 // POST /api/users/:userId/report
@@ -108,26 +136,6 @@ router.post('/:userId/report', isVerifiedStudent, routeReportUser);
 // These endpoints might be redundant.
 // ============================================================================
 
-// GET /api/users/:userId/applications
-// Input:
-// - userId (ObjectId)
-//
-// Output:
-// - Array of ApplicationForm objects
-//
-// Considerations:
-// - Returns only applications of current user
-router.get('/:userId/applications', selfFilter(false), routeGetApplicationsByStudent);
-
-// GET /api/users/:userId/rentals
-router.get('/:userId/rentals', selfFilter(false), routeGetRentalsByUser);
-
-// GET /api/users/:userId/billings
-router.get('/:userId/billings', selfFilter(false), routeGetUserBillings);
-
-// GET /api/users/:userId/bookings
-router.get('/:userId/bookings', selfFilter(false), routeGetVisitBookingsByStudent);
-
 // ============================================================================
 // User Verification
 //
@@ -139,16 +147,13 @@ router.get('/:userId/bookings', selfFilter(false), routeGetVisitBookingsByStuden
 // The admin can only reject a user if at least one of the requirements are not
 // met.
 //
-// TODO:
-//   Clarify if a verification can only be accepted if all documents are
-//   verified, and if a verification can only be rejected if there is at least
-//   one document that is not verified.
-//
 // Verifying and rejecting can only be done by the admin.
 // ============================================================================
 
 // ============================================================================
 // POST /api/users/:userId/approve
+//
+// Requires the verified Student Number and Degree Program for students.
 // ============================================================================
 router.post('/:userId/approve', isSuperAdmin, routeApproveUser);
 

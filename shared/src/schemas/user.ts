@@ -8,10 +8,14 @@ export const UpdateUserRequestBodySchema = z
     profilePicture: z.url(),
     address: z.string(),
     contact: z.string(),
-    degreeProgram: z.string(),
-    studentNumber: z.string().regex(/^[0-9]{9}$/, 'Must be exactly 9 digits'),
   })
   .partial();
+
+// POST /users/:userId/approve
+export const ApproveUserRequestBodySchema = z.object({
+  degreeProgram: z.string(),
+  studentNumber: z.string().regex(/^[0-9]{9}$/, 'Must be exactly 9 digits'),
+}).optional();
 
 // GET /users
 export const UserFilterSchema = z.object({

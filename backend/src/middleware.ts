@@ -20,9 +20,16 @@ export const listingViewFilter: RequestHandler = (req, res, next) => {
   next();
 };
 
-export const combineFilters = (oldFilter: any, newFilter: any) => ({
-  $and: [...(oldFilter?.$and ?? (oldFilter ? [oldFilter] : [])), newFilter],
-});
+export function combineFilters<T>(
+  oldFilter: QueryFilter<T> | undefined,
+  newFilter: QueryFilter<T>,
+) {
+  const baseFilters = oldFilter?.$and ?? (oldFilter ? [oldFilter] : []);
+
+  return {
+    $and: [...baseFilters, newFilter],
+  } as QueryFilter<T>;
+}
 
 // Used for queries on documents which have the managers array, which are `HousingFacility` and `Listing`.
 export const managerFilter = (
@@ -149,9 +156,10 @@ export const selfFilter =
     next();
   };
 
-export const hasAccount: RequestHandler = (req, res, next) => {
+export const isLoggedIn: RequestHandler = (req, res, next) => {
   if (!req.user) {
-    return next(new AppError(401, 'Unauthenticated'));
+    next(new AppError(401, 'Unauthenticated'));
+    return;
   }
 
   next();
@@ -159,11 +167,13 @@ export const hasAccount: RequestHandler = (req, res, next) => {
 
 export const isLandlord: RequestHandler = (req, res, next) => {
   if (!req.user) {
-    return next(new AppError(401, 'Unauthenticated'));
+    next(new AppError(401, 'Unauthenticated'));
+    return;
   }
 
   if (!(req.user.userType == 'Landlord' || req.user.userType == 'Admin')) {
-    return next(new AppError(403, 'Forbidden'));
+    next(new AppError(403, 'Forbidden'));
+    return;
   }
 
   next();
@@ -171,11 +181,13 @@ export const isLandlord: RequestHandler = (req, res, next) => {
 
 export const isSuperAdmin: RequestHandler = (req, res, next) => {
   if (!req.user) {
-    return next(new AppError(401, 'Unauthenticated'));
+    next(new AppError(401, 'Unauthenticated'));
+    return;
   }
 
   if (req.user.userType !== 'Admin') {
-    return next(new AppError(403, 'Forbidden'));
+    next(new AppError(403, 'Forbidden'));
+    return;
   }
 
   next();
@@ -183,11 +195,13 @@ export const isSuperAdmin: RequestHandler = (req, res, next) => {
 
 export const isVerifiedStudent: RequestHandler = (req, res, next) => {
   if (!req.user) {
-    return next(new AppError(401, 'Unauthenticated'));
+    next(new AppError(401, 'Unauthenticated'));
+    return;
   }
 
   if (req.user.userType !== 'Student' || req.user.status !== 'verified') {
-    return next(new AppError(403, 'Forbidden'));
+    next(new AppError(403, 'Forbidden'));
+    return;
   }
 
   next();
@@ -195,11 +209,13 @@ export const isVerifiedStudent: RequestHandler = (req, res, next) => {
 
 export const isSelfOrSuperAdmin: RequestHandler = async (req, res, next) => {
   if (!req.user) {
-    return next(new AppError(401, 'Unauthenticated'));
+    next(new AppError(401, 'Unauthenticated'));
+    return;
   }
 
   if (req.user.userType === 'Admin') {
-    return next();
+    next();
+    return;
   }
 
   res.locals.filters = combineFilters(res.locals.filters, { _id: req.user._id });
@@ -208,7 +224,8 @@ export const isSelfOrSuperAdmin: RequestHandler = async (req, res, next) => {
 
 export const isDevelopment: RequestHandler = (req, res, next) => {
   if (process.env.NODE_ENV == 'development' || process.env.NODE_ENV == 'test') {
-    return next();
+    next();
+    return;
   }
 
   res.status(401).send();
@@ -216,16 +233,19 @@ export const isDevelopment: RequestHandler = (req, res, next) => {
 
 export const getUserId: RequestHandler = (req, res, next) => {
   res.locals.id = ObjectIdSchema.parse(req.params.userId);
-  return next();
+  next();
+  return;
 };
 
 export const isVerifiedCheck: RequestHandler = (req, res, next) => {
   if (!req.user) {
-    return next(new AppError(401, 'Unauthenticated'));
+    next(new AppError(401, 'Unauthenticated'));
+    return;
   }
 
   if (req.user.status !== 'verified') {
-    return next(new AppError(403, 'Forbidden'));
+    next(new AppError(403, 'Forbidden'));
+    return;
   }
 
   next();

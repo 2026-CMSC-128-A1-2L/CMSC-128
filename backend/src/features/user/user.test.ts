@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import '../../config.js';
 import { describe, it, expect } from 'vitest';
 import { buildStudent, buildUnverifiedLandlord } from '../../test/factories.js';
