@@ -6,6 +6,7 @@ import BookmarksNewUsers from './pages/user/BookmarksNewUsers';
 import UserLanding from './pages/user/UserLanding';
 import SettingsNotifications from './pages/user/SettingsNotifications';
 import LandingMap from './components/LandingMap';
+import HomePage from './pages/user/HomePage';
 
 import Login from './pages/utilities/Login';
 import DormCard from './components/DormCard';
@@ -21,6 +22,7 @@ function App() {
         <Route path="/dormcard" element={<DormCard />} />
 
         <Route element={<PageLayout />}>
+          <Route path="/home" element={<HomePage />} />
           <Route path="/" element={<ContactUs />} />
           <Route path="/login" element={<Login />} />
           <Route path="/upload" element={<Upload />} />
