@@ -30,7 +30,7 @@ function App() {
           <Route path="/bookmark" element={<BookmarksNewUsers />} />
           <Route path="/settings-notifications" element={<SettingsNotifications />} />
           <Route path="/dms-landing" element={<DmsLanding />} />
-          <Route path="/calendar" element={<MyCalendar />} />
+          <Route path="/mycalendar" element={<MyCalendar />} />
         </Route>
       </Routes>
     </Router>

@@ -1,6 +1,10 @@
 import { FunctionComponent, useState, useCallback } from 'react';
 import EventPopout from "../components/EventPopout";
 import PortalPopup from "../components/PortalPopup";
+import dotIcon from "../assets/dot.svg";
+import downIcon from "../assets/down.svg";
+import leftIcon from "../assets/left.svg";
+import rightIcon from "../assets/right.svg";
 
 
 
@@ -22,7 +26,6 @@ const MyCalendar: FunctionComponent = () => {
   	
   	return (<>
     		<div className="w-full h-[1024px] relative overflow-y-auto flex flex-col items-start isolate gap-2.5 text-left text-num-14 text-darkslategray font-lora">
-      			<img className="w-[1440px] h-[1024px] absolute !!m-[0 important] top-[0px] left-[0px] shrink-0 z-[0]" alt="" />
       			<div className="w-[1440px] h-[1192px] overflow-hidden shrink-0 flex flex-col items-start z-[1]">
         				<div className="self-stretch flex-1 flex flex-col items-start py-num-0 pl-num-0 pr-20">
           					<div className="w-[1440px] flex-1 flex items-center shrink-0">
@@ -38,11 +41,11 @@ const MyCalendar: FunctionComponent = () => {
                   									<div className="w-[1128px] h-16 overflow-hidden shrink-0 hidden items-center p-num-10 box-border gap-2.5">
                     										<div className="h-6 w-[89px] hidden items-center gap-1.5">
                       											<div className="relative font-medium hidden shrink-0">View Tenants</div>
-                      											<img className="h-6 w-6 relative hidden shrink-0" alt="" />
+                       													
                       											<div className="relative font-medium hidden shrink-0">All</div>
                     										</div>
                     										<div className="w-[704px] rounded-xl bg-aliceblue overflow-hidden shrink-0 flex items-center py-num-10 px-6 box-border gap-2.5 text-dimgray font-inter">
-                      											<img className="h-6 w-6 relative" alt="" />
+                       													
                       											<b className="relative">Search for Dorms, Apartments, or Locations (e.g. UPLB, Umali Subdivision)</b>
                     										</div>
                   									</div>
@@ -67,24 +70,24 @@ const MyCalendar: FunctionComponent = () => {
                           													<div className="rounded-[15.45px] bg-white border-silver border-solid border-[1px] flex flex-col items-center p-num-15_4 isolate">
                             														<div className="self-stretch flex items-center gap-[15.4px] z-[1]">
                               															<div className="rounded-[30.9px] overflow-hidden flex items-center justify-center p-[7.7px] cursor-pointer" onClick={onIconButtonContainerClick}>
-                                																<img className="h-[19.3px] w-[19.3px] relative" alt="" />
+																								<img src={leftIcon} className="h-[19.3px] w-[19.3px] relative" alt="left" />
                               															</div>
                               															<div className="flex-1 flex items-start isolate gap-[7.7px]">
                                 																<div className="flex-1 flex flex-col items-start z-[1]">
                                   																	<div className="self-stretch rounded-num-7_72 bg-white border-gainsboro border-solid border-[1px] flex items-center p-[5.8px] gap-[7.7px]">
                                     																		<div className="flex-1 relative leading-[100%]">Apr</div>
-                                    																		<img className="h-[15.5px] w-[15.5px] relative" alt="" />
+																											<img src={downIcon} className="h-[15.5px] w-[15.5px] relative" alt="down" />
                                   																	</div>
                                 																</div>
                                 																<div className="flex-1 flex flex-col items-start z-[0]">
                                   																	<div className="self-stretch rounded-num-7_72 bg-white border-gainsboro border-solid border-[1px] flex items-center p-[5.8px] gap-[7.7px]">
                                     																		<div className="flex-1 relative leading-[100%]">2026</div>
-                                    																		<img className="h-[15.5px] w-[15.5px] relative" alt="" />
+																											<img src={downIcon} className="h-[15.5px] w-[15.5px] relative" alt="down" />
                                   																	</div>
                                 																</div>
                               															</div>
                               															<div className="rounded-[30.9px] overflow-hidden flex items-center justify-center p-[7.7px] cursor-pointer" onClick={onIconButtonContainerClick}>
-                                																<img className="h-[19.3px] w-[19.3px] relative" alt="" />
+																								<img src={rightIcon} className="h-[19.3px] w-[50.3px] relative" alt="right" />
                               															</div>
                             														</div>
                             														<div className="flex flex-col items-center pt-num-15_4 px-num-0 pb-num-0 z-[0] text-center text-num-11_59 text-gray font-geist">
@@ -223,7 +226,7 @@ const MyCalendar: FunctionComponent = () => {
                           													<div className="self-stretch overflow-hidden flex flex-col items-start py-[9.7px] px-num-0 gap-[9.7px] text-center text-[13.52px]">
                             														<b className="self-stretch relative">Upcoming Events</b>
                             														<div className="self-stretch h-[46.3px] rounded-[15.45px] border-whitesmoke-200 border-solid border-[1px] box-border overflow-hidden shrink-0 flex items-center p-num-15_4 gap-[9.7px] text-[13.99px]">
-                              															<img className="h-[23.2px] w-[23.2px] relative shrink-0" alt="" />
+																						<img src={dotIcon} className="h-[23.2px] w-[23.2px] relative shrink-0" alt="dot" />
                               															<div className="flex flex-col items-start justify-center gap-[3.9px] shrink-0">
                                 																<div className="relative font-medium">Ocular Visit</div>
                                 																<div className="relative text-num-11_59 tracking-[0.04em] font-medium font-lora text-dimgray">April 7, 2026</div>
@@ -418,10 +421,10 @@ const MyCalendar: FunctionComponent = () => {
                   									<div className="flex-1 flex items-center gap-20">
                     										<div className="flex items-center gap-4">
                       											<div className="flex items-center gap-2">
-                        												<img className="w-12 relative max-h-full object-cover" alt="" />
+																	
                         												<div className="flex items-center gap-3">
                           													<div className="flex items-center gap-1">
-                            														<img className="h-5 w-5 relative" alt="" />
+																					
                             														<b className="relative">2026</b>
                           													</div>
                           													<div className="flex items-center justify-center">
