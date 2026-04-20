@@ -1,8 +1,9 @@
-import { FunctionComponent, useCallback } from 'react';
+import { useCallback } from 'react';
+import type { FunctionComponent } from 'react';
 
 
 
-const Upload: FunctionComponent = () => {
+const UserVerif: FunctionComponent = () => {
   	
   	const onArrowUpClick = useCallback(() => {
     		const anchor = document.querySelector("[data-scroll-to='searchBarContainer']");
@@ -230,8 +231,8 @@ const Upload: FunctionComponent = () => {
       			</div>
       			<div className="w-[60px] h-[60px] !!m-[0 important] absolute top-[916px] left-[1318px] rounded-[30px] [background:linear-gradient(183.48deg,_#096c5b,_#16917c)] shrink-0 flex items-start p-[16.2px] box-border cursor-pointer z-[2]" onClick={onArrowUpClick}>
         				<img className="h-[27.7px] w-[27.7px] relative" alt="" />
-      			</div>
+      		</div>
     		</div>);
 };
 
-export default Upload ;
+export default UserVerif;

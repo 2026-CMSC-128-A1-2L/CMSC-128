@@ -12,7 +12,7 @@ import Login from './pages/utilities/Login';
 import DormCard from './components/DormCard';
 import Upload from './pages/utilities/Upload';
 import DmsLanding from './pages/user/DmsLanding';
-import UserProfile from './pages/user/UserProfile'
+import UserVerif from './pages/user/UserVerif';
 function App() {
   return (
     <Router>
@@ -30,7 +30,7 @@ function App() {
           <Route path="/bookmark" element={<BookmarksNewUsers />} />
           <Route path="/settings-notifications" element={<SettingsNotifications />} />
           <Route path="/dms-landing" element={<DmsLanding />} />
-          <Route path="/user-profile" element={<UserProfile />} />
+          <Route path="/user-verif" element={<UserVerif />} />
         </Route>
       </Routes>
     </Router>
