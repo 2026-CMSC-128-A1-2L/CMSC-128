@@ -98,15 +98,6 @@ const LandlordVerif: FunctionComponent = () => {
                       											</div>
                     										</div>
                     										<div className="self-stretch flex flex-col items-start gap-12 shrink-0 text-white">
-                      											<div className="self-stretch flex flex-col items-center justify-center">
-                        												<div className="w-[530px] h-12 relative">
-                          													<div className="absolute h-[99.38%] w-[99.87%] top-[0%] right-[-0.25%] bottom-[0.62%] left-[0.38%] rounded-[99.72px] bg-aliceblue flex items-center justify-center p-1 box-border gap-1 shrink-0">
-                            														<div className="h-[39.9px] w-[235.3px] rounded-[99.72px] bg-darkslategray-200 flex items-center justify-center py-[11px] px-[74.8px] box-border">
-                              															<div className="relative font-semibold text-white shrink-0">VERIFICATION STATUS</div>
-                            														</div>
-                          													</div>
-                        												</div>
-                      											</div>
                       											<div className="self-stretch flex flex-col items-center justify-center text-darkslategray-200 font-poppins">
                         												<div className="w-[723px] h-[87px] relative">
                           													<div className="absolute h-[9.2%] w-[32.64%] top-[29.89%] right-[56.29%] bottom-[60.92%] left-[11.07%] rounded-[34.55px] [background:linear-gradient(90deg,_rgba(2,_67,_56,_0.8),_#b5c8c5_99.99%)]" />
