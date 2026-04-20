@@ -6,6 +6,11 @@
 @import "tailwindcss/utilities.css" layer(utilities);
 @config "../tailwind.config.js";
 
+@theme {
+  --font-inter: "Inter", sans-serif;
+  --font-lora: "Lora", serif;
+  --font-poppins: "Poppins", sans-serif;
+}
 
 body {
   	@apply leading-[normal] m-0;

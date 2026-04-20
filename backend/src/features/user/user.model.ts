@@ -1,18 +1,48 @@
 import mongoose from 'mongoose';
-import { documentSchema } from '../document/document.model';
+import { documentSchema, DocumentType } from '../document/document.model';
 
-const userSchema = new mongoose.Schema(
+export type UserType = {
+  _id: mongoose.Types.ObjectId,
+  emails: string[],
+
+  firstName: string,
+  middleName?: string | null,
+  lastName: string,
+
+  profilePicture?: string | null,
+  address?: string,
+  contact?: string,
+
+  auth: {
+    google: string[]
+  },
+  status: 'unverified' | 'verified' | 'inactive' | 'disabled',
+  userType: 'Admin' | 'Landlord' | 'Manager' | 'Student',
+
+  documents: DocumentType[],
+  verificationStatus: 'pending' | 'submitted' | 'rejected' | 'approved',
+  verifiedAt?: Date | null,
+
+  updatedAt: Date
+  createdAt: Date
+};
+
+export type ManagerType = UserType & {
+  userType: 'Landlord' | 'Manager',
+};
+
+const userSchema = new mongoose.Schema<UserType>(
   {
     // Obtained through Google automatically after login with a Google email address.
-    // TODO: change email check flow
     emails: { type: [String], required: true, default: [] },
     profilePicture: String,
+
     firstName: { type: String, required: true },
     middleName: String,
     lastName: { type: String, required: true },
 
-    // Manually filled up
-    birthDate: Date,
+    address: String,
+    contact: String,
 
     auth: {
       type: {
@@ -20,20 +50,24 @@ const userSchema = new mongoose.Schema(
         //
         // An account's email can change over time while this does not.
         google: { type: [String], required: true, default: [] },
-
-        // Currently unused
-        //
-        // TODO: remove if not needed
-        password: String,
       },
       required: true,
     },
 
-    // Allow soft deletion of accounts.
-    //
-    // A disabled account has the same access level as an unverified account, but cannot verify
-    // again as they are technically verified already.
-    isActive: { type: Boolean, default: true, required: true },
+    // `unverified` - never verified. Can only see public listings.
+    // `verified` - verified for the semester. Can see all listings and access
+    //   own data.
+    // `inactive` - did not verify for at least one semester. Can still access
+    //    own data, but otherwise has the same permission as unverified
+    //    accounts.
+    // `disabled` - similar permissions as `inactive` accounts, but cannot
+    //   verify again.
+    status: {
+      type: String,
+      enum: ['unverified', 'verified', 'inactive', 'disabled'],
+      default: 'unverified',
+      required: true,
+    },
 
     // Used to discriminate between different user types. This can be filled automatically by using
     // the discriminated models like:
@@ -51,58 +85,31 @@ const userSchema = new mongoose.Schema(
     // Make sure to fill up fields for the user type.
     userType: {
       type: String,
-      enum: [
-        'Admin',
-        'Landlord',
-        'Manager',
-        'Student',
-        'UnverifiedLandlord',
-        'UnverifiedManager',
-        'UnverifiedStudent',
-      ],
+      enum: ['Admin', 'Landlord', 'Manager', 'Student'],
       required: true,
     },
     documents: { type: [documentSchema], required: true, default: [] },
-
-    // Currently, there are two sources of truth in verification,
-    // status being 'approved', and the userType being ones that are verified
-    // based on the isVerified function.
-    //
-    // TODO: use one source for verification status
-    status: {
+    verificationStatus: {
       type: String,
       enum: ['pending', 'submitted', 'rejected', 'approved'],
-      required: 'true',
+      required: true,
       default: 'pending',
     },
+    verifiedAt: Date,
   },
   { timestamps: true, discriminatorKey: 'userType' },
 );
 
 export const User = mongoose.model('User', userSchema);
+
 export const Admin = User.discriminator('Admin', new mongoose.Schema());
-export const Landlord = User.discriminator(
-  'Landlord',
-  new mongoose.Schema({ contact: { type: String, required: true } }),
-);
-export const Manager = User.discriminator(
-  'Manager',
-  new mongoose.Schema({ contact: { type: String, required: true } }),
-);
-export const Student = User.discriminator(
-  'Student',
+export const Landlord = User.discriminator('Landlord', new mongoose.Schema());
+export const Manager = User.discriminator('Manager', new mongoose.Schema());
+export const Student = User.discriminator('Student',
   new mongoose.Schema({
     studentNumber: { type: String, required: true },
     degreeProgram: String,
   }),
 );
 
-export const UnverifiedLandlord = User.discriminator('UnverifiedLandlord', new mongoose.Schema({}));
-export const UnverifiedStudent = User.discriminator('UnverifiedStudent', new mongoose.Schema({}));
-
-// No verification is needed by managers. Being invited by a landlord as a manager and accepting it
-// will turn them the account verified.
-export const UnverifiedManager = User.discriminator('UnverifiedManager', new mongoose.Schema({}));
-
-export const isVerified = (userType: string) =>
-  userType == 'Admin' || userType == 'Landlord' || userType == 'Manager' || userType == 'Student';
+export const isVerified = (status: string) => status == 'verified';

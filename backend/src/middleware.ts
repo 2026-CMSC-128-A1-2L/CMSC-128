@@ -37,15 +37,20 @@ export const managerFilter = (
 
     const userId = req.user._id;
 
-    if (includeSelf && req.user.userType === 'Student') {
-      // ignores filterType as it is for the manager
-      res.locals.filters = combineFilters(res.locals.filters, { userId });
-      return next();
+    if (req.user.userType === 'Student') {
+      if (includeSelf) {
+        // ignores filterType as it is for the manager
+        res.locals.filters = combineFilters(res.locals.filters, { userId });
+        return next();
+      } else {
+        // not a manager, return a 403
+        return next(new AppError(403, 'Forbidden'));
+      }
     }
 
     let newFilter: QueryFilter<{
       managers: {
-        user: mongoose.Types.ObjectId;
+        userId: mongoose.Types.ObjectId;
         permissions: {
           manageBillings: boolean;
           manageApplications: boolean;
@@ -123,26 +128,26 @@ export const correctLandlordFilter: RequestHandler = async (req, res, next) => {
     return next(new AppError(401, 'Unauthenticated'));
   }
 
-  res.locals.filters = combineFilters(res.locals.filters, { landlord: req.user._id });
+  res.locals.filters = combineFilters(res.locals.filters, { landlordId: req.user._id });
 
   next();
 };
 
 export const selfFilter =
   (direct: boolean): RequestHandler =>
-    async (req, res, next) => {
-      if (!req.user) {
-        return next(new AppError(401, 'Unauthenticated'));
-      }
+  async (req, res, next) => {
+    if (!req.user) {
+      return next(new AppError(401, 'Unauthenticated'));
+    }
 
-      if (direct) {
-        res.locals.filters = combineFilters(res.locals.filters, { _id: req.user._id });
-      } else {
-        res.locals.filters = combineFilters(res.locals.filters, { userId: req.user._id });
-      }
+    if (direct) {
+      res.locals.filters = combineFilters(res.locals.filters, { _id: req.user._id });
+    } else {
+      res.locals.filters = combineFilters(res.locals.filters, { userId: req.user._id });
+    }
 
-      next();
-    };
+    next();
+  };
 
 export const hasAccount: RequestHandler = (req, res, next) => {
   if (!req.user) {
@@ -181,7 +186,7 @@ export const isVerifiedStudent: RequestHandler = (req, res, next) => {
     return next(new AppError(401, 'Unauthenticated'));
   }
 
-  if (req.user.userType !== 'Student') {
+  if (req.user.userType !== 'Student' || req.user.status !== 'verified') {
     return next(new AppError(403, 'Forbidden'));
   }
 
@@ -212,4 +217,16 @@ export const isDevelopment: RequestHandler = (req, res, next) => {
 export const getUserId: RequestHandler = (req, res, next) => {
   res.locals.id = ObjectIdSchema.parse(req.params.userId);
   return next();
+};
+
+export const isVerifiedCheck: RequestHandler = (req, res, next) => {
+  if (!req.user) {
+    return next(new AppError(401, 'Unauthenticated'));
+  }
+
+  if (req.user.status !== 'verified') {
+    return next(new AppError(403, 'Forbidden'));
+  }
+
+  next();
 };

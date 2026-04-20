@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import 'vitest';
+import { DocumentType } from './features/document/document.model';
 
 declare global {
   namespace Express {
@@ -8,22 +9,15 @@ declare global {
       firstName: string;
       middleName?: string | null;
       lastName: string;
-      userType:
-        | 'Admin'
-        | 'Student'
-        | 'Manager'
-        | 'Landlord'
-        | 'UnverifiedStudent'
-        | 'UnverifiedManager'
-        | 'UnverifiedLandlord';
-      birthDate?: Date | null;
+      userType: 'Admin' | 'Student' | 'Manager' | 'Landlord';
       emails: string[];
       auth: {
         google: string[];
-        password?: string | null;
       };
-      isActive: boolean;
       profilePicture?: string | null;
+      status: 'unverified' | 'verified' | 'inactive' | 'disabled';
+      documents: DocumentType[];
+      verificationStatus: 'pending' | 'submitted' | 'rejected' | 'approved';
     }
   }
 }
@@ -34,9 +28,9 @@ interface CustomMatchers<R = unknown> {
 
 declare module 'vitest' {
   /* eslint-disable @typescript-eslint/no-empty-object-type */
-  interface Assertion<T = any> extends CustomMatchers<T> {}
+  interface Assertion<T = any> extends CustomMatchers<T> { }
   /* eslint-disable @typescript-eslint/no-empty-object-type */
-  interface AsymmetricMatchersContaining extends CustomMatchers {}
+  interface AsymmetricMatchersContaining extends CustomMatchers { }
 }
 
-export {};
+export { };

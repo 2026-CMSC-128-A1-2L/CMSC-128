@@ -1,7 +1,8 @@
 import mongoose, { QueryFilter } from 'mongoose';
-import { UnverifiedStudent, User } from './user.model';
+import { Student, User, UserType } from './user.model';
 import { AppError } from '../../error';
 import { sendNotification } from '../notification/notification.service';
+import { combineFilters } from '../../middleware';
 
 export type CreateUserParams = {
   firstName: string;
@@ -20,7 +21,7 @@ export const createUnverifiedStudent = async (params: CreateUserParams) => {
     throw new AppError(409, 'User with this email already exists.');
   }
 
-  const newUser = new UnverifiedStudent({
+  const newUser = new Student({
     firstName: params.firstName,
     middleName: params.middleName,
     lastName: params.lastName,
@@ -28,10 +29,11 @@ export const createUnverifiedStudent = async (params: CreateUserParams) => {
     auth: {
       google: [params.auth.google],
     },
+    // TODO: fill with required documents
+    documents: [],
     profilePicture: params.profilePicture,
   });
 
-  // TODO: check for conflicts
   return await newUser.save();
 };
 
@@ -39,31 +41,36 @@ export const createTestUser = async (params: unknown) => {
   const user = new User(params);
   const userResult = await user.save();
 
-  return user;
+  return userResult;
 };
 
 export const getUserByEmail = async (email: string) => {
-  return await User.findOne({ emails: email });
+  return await User.findOne({ emails: email }).lean();
 };
 
 export const getUserById = async (userId: mongoose.Types.ObjectId) => {
-  return await User.findById(userId);
+  return await User.findById(userId).lean();
 };
 
-export const deleteUser = async (userId: mongoose.Types.ObjectId) => {
-  return await User.updateOne({ _id: userId }, { isActive: false });
+export const deleteUser = async (userId: mongoose.Types.ObjectId, filters: QueryFilter<UserType>) => {
+  return await User.findOneAndUpdate(combineFilters(filters, { _id: userId }), {
+    $set: {
+      status: 'disabled',
+      'auth.google': [],
+      emails: [],
+      documents: []
+    },
+    $unset: {
+      address: '',
+      contact: '',
+      profilePicture: '',
+    }
+  }, { returnDocument: 'after' }).lean();
 };
 
 type GetUsersArguments = {
   userID?: mongoose.Types.ObjectId | null;
-  userType?:
-    | 'Admin'
-    | 'Student'
-    | 'Manager'
-    | 'Landlord'
-    | 'UnverifiedStudent'
-    | 'UnverifiedManager'
-    | 'UnverifiedLandlord';
+  userType?: 'Admin' | 'Student' | 'Manager' | 'Landlord';
 };
 
 export const getUsers = async (params: GetUsersArguments) => {
@@ -75,18 +82,19 @@ export const getUsers = async (params: GetUsersArguments) => {
     filter.userType = params.userType;
   }
 
-  return await User.find(filter);
+  return await User.find(filter).lean();
 };
 
 export const approveUser = async (userId: mongoose.Types.ObjectId) => {
   const user = await User.findById(userId);
   if (!user) throw new AppError(404, 'User not found.');
+  if (user.status === 'disabled') throw new AppError(422, 'User cannot be approved.');
 
-  if (user.status === 'approved') {
+  if (user.verificationStatus === 'approved') {
     throw new AppError(422, 'User is already verified.');
   }
 
-  if (user.status !== 'submitted') {
+  if (user.verificationStatus !== 'submitted') {
     throw new AppError(422, 'Verification not submitted yet.');
   }
 
@@ -102,12 +110,9 @@ export const approveUser = async (userId: mongoose.Types.ObjectId) => {
   }
 
   // all documents must be accepted first
-  if (user.userType === 'UnverifiedStudent') {
-    user.status = 'approved';
-    user.userType = 'Student';
-  } else if (user.userType === 'UnverifiedLandlord') {
-    user.status = 'approved';
-    user.userType = 'Landlord';
+  if (user.userType === 'Student' || user.userType === 'Landlord') {
+    user.verificationStatus = 'approved';
+    user.status = 'verified';
   } else {
     throw new AppError(422, `User of type '${user.userType}' cannot be verified.`);
   }
@@ -120,11 +125,11 @@ export const rejectUser = async (userId: mongoose.Types.ObjectId) => {
   const user = await User.findById(userId);
   if (!user) throw new AppError(404, 'User not found.');
 
-  if (user.status === 'approved') {
+  if (user.verificationStatus === 'approved') {
     throw new AppError(422, 'User is already verified.');
   }
 
-  if (user.status !== 'submitted') {
+  if (user.verificationStatus !== 'submitted') {
     throw new AppError(422, 'Verification not submitted yet.');
   }
 
@@ -136,12 +141,11 @@ export const rejectUser = async (userId: mongoose.Types.ObjectId) => {
   });
 
   if (documentsAccepted) {
-    // TODO: related to comment in router, this may be too restrictive.
     throw new AppError(422, 'Cannot reject a user with complete requirements.');
   }
 
-  if (user.userType === 'UnverifiedStudent' || user.userType === 'UnverifiedLandlord') {
-    user.status = 'rejected';
+  if (user.userType === 'Student' || user.userType === 'Landlord') {
+    user.verificationStatus = 'rejected';
   } else {
     throw new AppError(422, `User of type '${user.userType}' cannot be rejected.`);
   }
@@ -149,3 +153,15 @@ export const rejectUser = async (userId: mongoose.Types.ObjectId) => {
   await user.save();
   await sendNotification(userId, 'Verification Rejected', 'Your account has been rejected.');
 };
+
+type UpdateUserParameters = Partial<{
+  profilePicture: string,
+  address: string,
+  contact: string,
+  degreeProgram: string,
+  studentNumber: string,
+}>;
+
+export const updateUser = async (userId: mongoose.Types.ObjectId, params: UpdateUserParameters, filters: QueryFilter<UserType>) => {
+  return await User.findOneAndUpdate(combineFilters(filters, { _id: userId }), params, { returnDocument: 'after' }).lean();
+}

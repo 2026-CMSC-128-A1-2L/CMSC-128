@@ -49,9 +49,9 @@ export type UpdateBillingArguments = {
   proofOfPayment?: {
     file?: string;
     isVerified?: boolean;
-  }
+  };
   paymentType?: string;
-}
+};
 
 export const createBilling = async (data: CreateBillingArguments) => {
   const newBilling = new Billing({
@@ -124,22 +124,22 @@ export const getBilling = async (billingId: mongoose.Types.ObjectId, filters: an
   return await Billing.findOne(combineFilters({ _id: billingId }, filters));
 };
 
-export const updateBilling = async (billingId: mongoose.Types.ObjectId, data: UpdateBillingArguments, filters: any) => {
-  return await Billing.findOneAndUpdate(
-    combineFilters({ _id: billingId }, filters),
-    { $set: data },
-  );
+export const updateBilling = async (
+  billingId: mongoose.Types.ObjectId,
+  data: UpdateBillingArguments,
+  filters: any,
+) => {
+  return await Billing.findOneAndUpdate(combineFilters({ _id: billingId }, filters), {
+    $set: data,
+  });
 };
 
 export const submitBillingPayment = async (
   billingId: mongoose.Types.ObjectId,
   data: UpdateBillingArguments,
-  filters: any
+  filters: any,
 ) => {
-
-  const billing = await Billing.findOne(
-    combineFilters({ _id: billingId }, filters),
-  );
+  const billing = await Billing.findOne(combineFilters({ _id: billingId }, filters));
 
   if (!billing) {
     throw new AppError(404, 'Billing not found.');
@@ -148,7 +148,7 @@ export const submitBillingPayment = async (
   // send proof of payment
   billing.proofOfPayment = {
     file: data.proofOfPayment?.file || '',
-    isVerified: false
+    isVerified: false,
   };
   // set payment amount
   billing.paidAmount = data.paidAmount;
@@ -166,11 +166,9 @@ export const submitBillingPayment = async (
 export const verifyBillingPayment = async (
   billingId: mongoose.Types.ObjectId,
   data: UpdateBillingArguments,
-  filters: any
+  filters: any,
 ) => {
-  const billing = await Billing.findOne(
-    combineFilters({ _id: billingId }, filters),
-  );
+  const billing = await Billing.findOne(combineFilters({ _id: billingId }, filters));
   if (!billing) {
     const billingNoFilter = await Billing.findById(billingId);
     if (billingNoFilter) {
@@ -186,13 +184,10 @@ export const verifyBillingPayment = async (
 };
 
 export const routeGetUserBillings = async (query: Partial<GetBillingArguments>, filters: any) => {
-  const billing = await Billing.findOne(
-    combineFilters(filters, { _id: id })
-  );
+  const billing = await Billing.findOne(combineFilters(filters, { _id: id }));
   if (!billing) {
     throw new AppError(404, 'Billing not found.');
   }
-
 };
 
-export const routeGetUserBilling = async (query: Partial<GetBillingArguments>, filters: any) => { };
+export const routeGetUserBilling = async (query: Partial<GetBillingArguments>, filters: any) => {};

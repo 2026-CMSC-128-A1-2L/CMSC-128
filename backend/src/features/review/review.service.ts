@@ -80,21 +80,18 @@ import { Review } from './review.model';
 //   });
 // };
 
-
-
-
 export type createReviewArguments = {
-  studentId: mongoose.Types.ObjectId,
+  studentId: mongoose.Types.ObjectId;
   listingId: mongoose.Types.ObjectId;
   rating: number;
   description?: String;
-}
+};
 
 export type updateReviewArguments = {
-  reviewId: mongoose.Types.ObjectId,
+  reviewId: mongoose.Types.ObjectId;
   rating?: number;
   description?: String;
-}
+};
 
 export const createReview = async (
   listingId: mongoose.Types.ObjectId,
@@ -113,7 +110,7 @@ export const createReview = async (
     studentId: data.studentId,
     listingId: data.listingId,
     rating: data.rating,
-    description: data.description
+    description: data.description,
   });
 
   await newReview.save();
@@ -129,13 +126,8 @@ export const getReviews = async (filters: any) => {
   });
 };
 
-export const getListingReviews = async (
-  listingID: mongoose.Types.ObjectId,
-  filters: any,
-) => {
-  const listing = await Listing.findOne(
-    combineFilters({ _id: listingID }, filters),
-  );
+export const getListingReviews = async (listingID: mongoose.Types.ObjectId, filters: any) => {
+  const listing = await Listing.findOne(combineFilters({ _id: listingID }, filters));
 
   if (!listing) {
     const listingNoFilter = await Listing.findById(listingID);
@@ -150,10 +142,7 @@ export const getListingReviews = async (
   return await Review.find({ listingID });
 };
 
-export const getFacilityReviews = async (
-  facilityID: mongoose.Types.ObjectId,
-  filters: any,
-) => {
+export const getFacilityReviews = async (facilityID: mongoose.Types.ObjectId, filters: any) => {
   const facility = await HousingFacility.findById(facilityID);
 
   if (!facility) {
@@ -180,7 +169,7 @@ export const updateReview = async (data: updateReviewArguments) => {
   const review = await Review.findById(data.reviewId);
   if (!review) {
     throw new AppError(404, 'Review not found.');
-  };
+  }
 
   review.set(data);
 

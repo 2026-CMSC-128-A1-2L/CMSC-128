@@ -9,6 +9,7 @@ export * from './schemas/facility';
 export * from './schemas/invite';
 export * from './schemas/listing';
 export * from './schemas/notification';
+export * from './schemas/profile';
 export * from './schemas/rental';
 export * from './schemas/report';
 export * from './schemas/review';
