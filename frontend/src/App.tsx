@@ -13,6 +13,7 @@ import HomePage from './pages/user/HomePage';
 import RateAndReview from "./pages/RateAndReview";
 import RateAndReviewForm from "./pages/RateAndReviewWithForms";
 import RateAndReviewUpload from "./pages/RateAndReviewWithUploads";
+import LandlordHomepage from "./pages/LandlordHomePage";
 
 import Login from './pages/utilities/Login';
 import DmsSidebar from './components/DmsSidebar';
@@ -43,6 +44,7 @@ function App() {
           <Route path="/ratereview" element={<RateAndReview />} />
           <Route path="/ratereviewform" element={<RateAndReviewForm />} />
           <Route path="/ratereviewupload" element={<RateAndReviewUpload />} />
+          <Route path="/landlord-homepage" element={<LandlordHomepage />} />
         </Route>
       </Routes>
     </Router>
