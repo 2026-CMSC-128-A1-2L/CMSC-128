@@ -20,6 +20,7 @@ import Login from './pages/utilities/Login';
 import DmsSidebar from './components/DmsSidebar';
 import Upload from './pages/utilities/Upload';
 import DmsLanding from './pages/user/DmsLanding';
+import SettingsPreferences from './pages/user/SettingsPreferences';
 import SubmitReceipt from './components/SubmitReceipt';
 import PaymentMethods from './components/PaymentMethods';
 import FinancePopup from './components/FinancePopup';
@@ -72,6 +73,7 @@ function App() {
           <Route path="/admin/listings" element={<Listings />} />
           <Route path="/admin/messages" element={<Messages />} />
         </Route>
+        <Route path="/settings/preferences" element={<SettingsPreferences />} />
       </Routes>
     </Router>
   );
