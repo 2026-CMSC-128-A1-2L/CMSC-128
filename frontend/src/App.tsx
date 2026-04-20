@@ -12,6 +12,7 @@ import Login from './pages/utilities/Login';
 import DmsSidebar from './components/DmsSidebar';
 import Upload from './pages/utilities/Upload';
 import DmsLanding from './pages/user/DmsLanding';
+import Banner from './components/Banner';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/landing" element={<UserLanding />} />
         <Route path="/map" element={<LandingMap />} />
         <Route path="/dmssidebar" element={<DmsSidebar />} />
+        <Route path="/banner" element={<Banner />} />
 
         <Route element={<PageLayout />}>
           <Route path="/home" element={<HomePage />} />

@@ -149,6 +149,7 @@ export default {
       'num-18': '18px',
       'num-24': '24px',
       'num-28': '28px',
+      'num-32': '32px',
       'num-36': '36px',
     },
 
