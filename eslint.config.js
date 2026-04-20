@@ -57,5 +57,16 @@ export default defineConfig([
       globals: globals.node,
     },
   },
+  {
+    files: ['shared/**/*.{ts,tsx}'],
+    extends: [js.configs.recommended, tseslint.configs.recommendedTypeChecked],
+    rules: {
+      camelcase: ['warn', { properties: 'always' }],
+      ...tsRules,
+    },
+    languageOptions: {
+      globals: globals.node,
+    },
+  },
   prettierConfig,
 ]);
