@@ -15,12 +15,15 @@ import RateAndReviewForm from './pages/RateAndReviewWithForms';
 import RateAndReviewUpload from './pages/RateAndReviewWithUploads';
 import TermsOfUse from './pages/TermsOfUse';
 import Finance from './pages/user/Finance';
+import PendingApplication1b from './pages/user/PendingApplication1b';
 
 import Login from './pages/utilities/Login';
 import SideBar from './components/SideBar';
 import Upload from './pages/utilities/Upload';
 import DmsLanding from './pages/user/DmsLanding';
-        
+import DmsSidebar from './components/DmsSidebar';
+import DormCard from './components/DormCard';
+
 import SettingsPreferences from './pages/user/SettingsPreferences';
 import SubmitReceipt from './components/SubmitReceipt';
 import PaymentMethods from './components/PaymentMethods';
@@ -65,7 +68,8 @@ function App() {
           <Route path="/ratereviewupload" element={<RateAndReviewUpload />} />
           <Route path="/terms-of-use" element={<TermsOfUse />} />
           <Route path="/finance" element={<Finance />} />
-          
+          <Route path="/pendingapplication1b" element = {<PendingApplication1b />} />
+
           {/* Admin Routes */}
           <Route path="/admin/analytics" element={<Analytics />} />
           <Route path="/admin/reports" element={<Reports />} />
