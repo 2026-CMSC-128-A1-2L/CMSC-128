@@ -1,7 +1,38 @@
 import { FunctionComponent, useCallback } from 'react';
 import SideBar from '../../components/SideBar';
+import ArrowDown from '../../assets/Arrow down.svg';
 
+import ArrowUp from '../../assets/Arrow up.svg';
 
+import AtlasLogo1 from '../../assets/atlas logo (for white bg) 1.png';
+
+import AtlasLogo from '../../assets/atlas logo (for white bg).png';
+
+import AtlasSharp from '../../assets/atlas_sharp_white 1.png';
+
+import bgRemoval from '../../assets/bg_removal [Background removed].png';
+
+import Checkpoint1 from '../../assets/checkpoint-1.svg';
+
+import Checkpoint from '../../assets/checkpoint.svg';
+
+import GG from '../../assets/gg_dark-mode.svg';
+
+import ICOutlineMail from '../../assets/ic_outline-mail.svg'
+import ICOutlineSearch from '../../assets/ic_outline-search.svg'
+import Icon0 from '../../assets/icon.svg'
+import Icon1 from '../../assets/Icon.svg'
+import Icon31 from '../../assets/Icon3-1.svg';
+import Icon32 from '../../assets/Icon3-2.svg';
+import Icon3 from '../../assets/Icon3.svg';
+import Icon5 from '../../assets/Icon5.svg';
+import IconAMoonArrowRight from '../../assets/iconamoon_arrow-right-2.svg'
+import Image from '../../assets/image.png'
+import Pfp from '../../assets/istockphoto-1214428300-612x612.jpg'
+import Bookmark from '../../assets/material-symbols_bookmark-outline-rounded.svg'
+import Verified from '../../assets/material-symbols_verified.svg'
+import Trash from '../../assets/Trash.svg'
+import Vector from '../../assets/Vector.svg'
 const LeaseTransfer: FunctionComponent = () => {
   	
   	const onMessagesContainerClick = useCallback(() => {
