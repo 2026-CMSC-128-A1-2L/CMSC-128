@@ -1,3 +1,4 @@
+/** @type {import('tailwindcss').Config} */
 export default {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
   theme: {
@@ -14,15 +15,15 @@ export default {
       colors: {
         white: '#fff',
         black: '#000',
-        silver: '#bdbdbd',
-        lightcyan: '#cbf6ed',
         aliceblue: '#f1f5f9',
         dimgray: '#666',
+        lightcyan: '#cbf6ed',
         azure: '#d9ebe7',
         gainsboro: '#d9d9d9',
         unavailable_action: '#f1f5f9',
         unselected: '#647483',
         darkgreen: '#0B251C',
+        darkolivegreen: '#224c25',
         preview: '#666666',
         teal: {
           DEFAULT: '#096c5b',
@@ -30,8 +31,13 @@ export default {
           200: '#096c5b',
           300: 'rgba(9, 108, 91, 0.25)',
         },
+        silver: {
+          DEFAULT: '#bdbdbd',
+          100: '#b5c8c5',
+          200: '#bdbdbd',
+        },
         gray: {
-          DEFAULT: '#001d18',
+          DEFAULT: 'rgba(0, 0, 0, 0.38)',
           100: '#757575',
           200: '#1e1e1e',
           300: '#001d18',
@@ -50,7 +56,7 @@ export default {
         whitesmoke: {
           DEFAULT: '#f0f0f0',
           100: '#f8fafc',
-          200: '#f3f4f6',
+          200: '#f0f0f0',
           300: '#f0f0f0',
         },
       },
@@ -77,6 +83,10 @@ export default {
         'num-48_7': '48.7px',
         'num-42_8': '42.8px',
         'num-37': '37px',
+        'num-30_6': '30.6px',
+        'num-30_8': '30.8px',
+        'num-30': '30px',
+        'num-30_2': '30.2px',
         'num-29_3': '29.3px',
         'num-28_4': '28.4px',
         'num-27_9': '27.9px',
@@ -120,6 +130,7 @@ export default {
         'num-8_7': '8.7px',
         'num-10': '10px',
         'num-11_1': '11.1px',
+        'num-12': '12px',
         'num-13_9': '13.9px',
         'num-16': '16px',
         'num-20': '20px',
