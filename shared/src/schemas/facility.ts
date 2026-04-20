@@ -62,7 +62,7 @@ const LandlordSchema = z.object({
 const UserFacilitySchema = z.object({
   id: ObjectIdSchema,
   name: z.string(),
-  landlord: LandlordSchema,
+  landlordId: LandlordSchema,
   managers: z.array(ManagerSchema),
   location: FacilityLocationSchema.optional(),
   type: FacilityTypeSchema,
@@ -89,7 +89,7 @@ const ManagerFacilitySchema = UserFacilitySchema.extend({
 });
 
 const ManagerEntrySchema = z.object({
-  userId: ObjectIdSchema,
+  email: z.email(),
   permissions: ManagerPermissionsSchema,
 });
 
@@ -140,7 +140,7 @@ export const GetFacilitiesResponseBodySchema = z.array(
 // ============================================================================
 export const CreateFacilityRequestBodySchema = z.object({
   // This automatically creates an invite to the listed managers.
-  managers: z.array(ManagerEntrySchema).optional(),
+  managers: z.array(ManagerEntrySchema).default([]),
   name: z.string(),
   type: FacilityTypeSchema,
   location: FacilityLocationSchema.optional(),

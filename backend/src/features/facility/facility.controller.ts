@@ -26,7 +26,7 @@ export const routeGetFacilities: RequestHandler = async (req, res, next) => {
 };
 
 // POST /facilities/search: routeSearchFacilities
-export const routeSearchFacilities: RequestHandler = async (req, res, next) => { };
+export const routeSearchFacilities: RequestHandler = async (req, res, next) => {};
 
 // POST /facilities: routeCreateFacility
 export const routeCreateFacility: RequestHandler = async (req, res, next) => {
@@ -34,9 +34,9 @@ export const routeCreateFacility: RequestHandler = async (req, res, next) => {
   const userId = req.user!._id;
   const params = CreateFacilityRequestBodySchema.parse(req.body);
 
-  const newFacility = await createFacility({ ...params, landlordId: userId });
+  const newFacility = await createFacility(userId, params);
 
-  res.status(201).json({ id: newFacility.id });
+  res.status(201).json({ data: newFacility });
 };
 
 // GET /facilities/:facilityId: routeGetFacility
@@ -46,23 +46,23 @@ export const routeGetFacility: RequestHandler = async (req, res, next) => {
   const facilityResponse: z.infer<typeof GetFacilityResponseBodySchema> = {
     id: facility._id,
     name: facility.name,
-    landlord: {
-      id: facility.landlord._id,
-      profilePicture: facility.landlord.profilePicture,
-      firstName: facility.landlord.firstName,
-      middleName: facility.landlord.middleName,
-      lastName: facility.landlord.lastName,
+    landlordId: {
+      id: facility.landlordId._id,
+      profilePicture: facility.landlordId.profilePicture,
+      firstName: facility.landlordId.firstName,
+      middleName: facility.landlordId.middleName,
+      lastName: facility.landlordId.lastName,
 
       // TODO:  fetch actual number of units
       numUnits: 0,
-      createdAt: facility.landlord.createdAt,
+      createdAt: facility.landlordId.createdAt,
     },
     managers: facility.managers.map((x) => ({
-      id: x.user._id,
-      profilePicture: x.user.profilePicture,
-      firstName: x.user.firstName,
-      middleName: x.user.middleName,
-      lastName: x.user.lastName,
+      id: x._id,
+      profilePicture: x.userId.profilePicture,
+      firstName: x.userId.firstName,
+      middleName: x.userId.middleName,
+      lastName: x.userId.lastName,
     })),
     location: facility.location,
     type: facility.type,
@@ -71,17 +71,14 @@ export const routeGetFacility: RequestHandler = async (req, res, next) => {
     applicationCloseDate: facility.applicationCloseDate,
   };
 
-  res.status(200).json({ data: facility });
+  res.status(200).json({ data: facilityResponse });
 };
 
 // PATCH /facilities/:facilityId: routeUpdateFacility
 export const routeUpdateFacility: RequestHandler = async (req, res, next) => {
   const facilityId = ObjectIdSchema.parse(req.params.facilityId);
   const updateData = UpdateFacilityRequestBodySchema.parse(req.body);
-
-  await updateFacility(facilityId, updateData, res.locals.filters ?? {});
-
-  res.sendStatus(204);
+  res.status(200).send({ data: await updateFacility(facilityId, updateData, res.locals.filters) });
 };
 
 // DELETE /facilities/:facilityId: routeDeleteFacility

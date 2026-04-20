@@ -1,7 +1,8 @@
 import mongoose, { QueryFilter } from 'mongoose';
-import { Student, User } from './user.model';
+import { Student, User, UserType } from './user.model';
 import { AppError } from '../../error';
 import { sendNotification } from '../notification/notification.service';
+import { combineFilters } from '../../middleware';
 
 export type CreateUserParams = {
   firstName: string;
@@ -44,15 +45,27 @@ export const createTestUser = async (params: unknown) => {
 };
 
 export const getUserByEmail = async (email: string) => {
-  return await User.findOne({ emails: email });
+  return await User.findOne({ emails: email }).lean();
 };
 
 export const getUserById = async (userId: mongoose.Types.ObjectId) => {
-  return await User.findById(userId);
+  return await User.findById(userId).lean();
 };
 
-export const deleteUser = async (userId: mongoose.Types.ObjectId) => {
-  return await User.updateOne({ _id: userId }, { status: 'disabled' });
+export const deleteUser = async (userId: mongoose.Types.ObjectId, filters: QueryFilter<UserType>) => {
+  return await User.findOneAndUpdate(combineFilters(filters, { _id: userId }), {
+    $set: {
+      status: 'disabled',
+      'auth.google': [],
+      emails: [],
+      documents: []
+    },
+    $unset: {
+      address: '',
+      contact: '',
+      profilePicture: '',
+    }
+  }, { returnDocument: 'after' }).lean();
 };
 
 type GetUsersArguments = {
@@ -69,7 +82,7 @@ export const getUsers = async (params: GetUsersArguments) => {
     filter.userType = params.userType;
   }
 
-  return await User.find(filter);
+  return await User.find(filter).lean();
 };
 
 export const approveUser = async (userId: mongoose.Types.ObjectId) => {
@@ -128,7 +141,6 @@ export const rejectUser = async (userId: mongoose.Types.ObjectId) => {
   });
 
   if (documentsAccepted) {
-    // TODO: related to comment in router, this may be too restrictive.
     throw new AppError(422, 'Cannot reject a user with complete requirements.');
   }
 
@@ -141,3 +153,15 @@ export const rejectUser = async (userId: mongoose.Types.ObjectId) => {
   await user.save();
   await sendNotification(userId, 'Verification Rejected', 'Your account has been rejected.');
 };
+
+type UpdateUserParameters = Partial<{
+  profilePicture: string,
+  address: string,
+  contact: string,
+  degreeProgram: string,
+  studentNumber: string,
+}>;
+
+export const updateUser = async (userId: mongoose.Types.ObjectId, params: UpdateUserParameters, filters: QueryFilter<UserType>) => {
+  return await User.findOneAndUpdate(combineFilters(filters, { _id: userId }), params, { returnDocument: 'after' }).lean();
+}

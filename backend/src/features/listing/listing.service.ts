@@ -5,7 +5,7 @@ import { AppError } from '../../error';
 import { combineFilters } from '../../middleware';
 import { HousingFacility } from '../facility/facility.model';
 import { Tag } from '../tag/tag.model';
-import { Listing } from './listing.model';
+import { Listing, ListingType } from './listing.model';
 
 type TagFilter = {
   name: string;
@@ -15,18 +15,9 @@ type TagFilter = {
   | { type: 'numeric'; value: { min?: number; max?: number } };
 };
 
-// TODO: refactor for values to not require type
-type TagValue = {
-  name: string;
-  value:
-  | { type: 'enum'; value: string }
-  | { type: 'boolean'; value: boolean }
-  | { type: 'numeric'; value: number };
-};
-
 export type CreateListingArguments = {
   facilityId: mongoose.Types.ObjectId;
-  tags?: TagValue[];
+  tags?: Record<string, string | number | boolean>;
 
   roomType: (typeof ROOM_TYPES)[number];
   capacity: number;
@@ -63,68 +54,61 @@ type TagSpec =
     value: boolean;
   };
 
-const verifyTags = async (tagList: TagValue[]) => {
-  const tagMap = Object.fromEntries(tagList.map((tag) => [tag.name, tag.value]));
-  const namesToFind = tagList.map((tag) => tag.name);
-  const tags = await Tag.find({ name: { $in: namesToFind } });
-  return tags
-    .map((tag) => {
-      if (tag.dataType.name != tagMap[tag.name].type) {
-        return { error: 'Incorrect tag data type' };
+const typeMap = {
+  'number': 'numeric',
+  'boolean': 'boolean',
+  'string': 'enum',
+} as const;
+
+const verifyTags = async (tagMap: Record<string, string | number | boolean>) => {
+  const namesToFind = [...Object.keys(tagMap)];
+  const tags = await Tag.find({ name: { $in: namesToFind } }).lean();
+  return tags.map((tag) => {
+    const typename = typeof tagMap[tag.name] as ('string' | 'number' | 'boolean');
+    if (tag.dataType.name != (typeMap[typename])) return { error: 'Incorrect tag data type' };
+
+    const value = tagMap[tag.name];
+
+    const tagDoc = tag.dataType as TagSpec;
+
+    if (tagDoc.name == 'enum') {
+      assert(typeof value === 'string');
+      if (!tagDoc.values.includes(value)) {
+        return { error: `Invalid value '${value}' for tag '${tag.name}'` };
       }
-
-      const value = tagMap[tag.name].value;
-
-      const tagDoc = tag.dataType as unknown as TagSpec;
-
-      if (tagDoc.name == 'enum') {
-        assert(typeof value === 'string');
-        if (!tagDoc.values.includes(value)) {
-          return { error: `Invalid value '${value}' for tag '${tag.name}'` };
-        }
-      } else if (tagDoc.name == 'numeric') {
-        assert(typeof value === 'number');
-        if (tagDoc.min && tagDoc.min > value) {
-          return {
-            error: `Invalid value '${value}' for tag '${tag.name}', minimum is set at ${tagDoc.min}`,
-          };
-        }
-        if (tagDoc.max && tagDoc.max < value) {
-          return {
-            error: `Invalid value '${value}' for tag '${tag.name}', maximum is set at ${tagDoc.max}`,
-          };
-        }
+    } else if (tagDoc.name == 'numeric') {
+      assert(typeof value === 'number');
+      if (tagDoc.min && tagDoc.min > value) {
+        return {
+          error: `Invalid value '${value}' for tag '${tag.name}', minimum is set at ${tagDoc.min}`,
+        };
       }
-      // no checks for boolean, zod already validated it in the controller
-    })
+      if (tagDoc.max && tagDoc.max < value) {
+        return {
+          error: `Invalid value '${value}' for tag '${tag.name}', maximum is set at ${tagDoc.max}`,
+        };
+      }
+    }
+    // no checks for boolean, zod already validated it in the controller
+  })
     .filter((x) => x);
 };
 
 export const createListing = async (data: CreateListingArguments, filters: any) => {
   const facility = await HousingFacility.findOne(combineFilters(filters, { _id: data.facilityId }));
-  if (!facility) {
-    const facilityNoFilter = await HousingFacility.findById(data.facilityId);
-    if (facilityNoFilter) {
-      throw new AppError(403, 'You are not allowed to create a listing for this facility.');
-    } else {
-      throw new AppError(404, 'Facility not found.');
-    }
-  }
+  if (!facility) throw new AppError(404, 'Facility not found.');
 
   if (data.tags) {
     const errorList = await verifyTags(data.tags);
-
-    if (errorList) {
-      throw new AppError(400, 'Invalid tags', errorList);
-    }
+    if (errorList) throw new AppError(400, 'Invalid tags', errorList);
   }
 
   // There can be a race condition here.
   const newListing = new Listing({
-    landlordId: facility.landlord,
+    landlordId: facility.landlordId,
     managers: facility.managers ?? [],
     facilityId: data.facilityId,
-    tags: data.tags ?? [], // returns empty array if no tags are given
+    tags: data.tags ?? {},
 
     roomType: data.roomType,
     capacity: data.capacity,
@@ -206,7 +190,7 @@ export const getListingById = async (
 // };
 
 export type UpdateListingArguments = {
-  tags?: TagValue[];
+  tags?: Record<string, string | number | boolean>;
   roomType?: string;
   capacity?: number;
   isPrivate?: boolean;
@@ -262,26 +246,17 @@ export const getListingsByFacility = async (facilityId: mongoose.Types.ObjectId,
   return listings;
 };
 
-export type UpdateListingTagsArguments = {
-  tags: TagValue[];
-};
-
 export const updateListingTags = async (
   listingID: mongoose.Types.ObjectId,
-  data: UpdateListingTagsArguments,
-  filters: any,
+  data: Record<string, string | number | boolean>,
+  filters: QueryFilter<ListingType>,
 ) => {
   const listing = await Listing.findOne(combineFilters(filters, { _id: listingID }));
   if (!listing) {
-    const listingNoFilter = await Listing.findById(listingID);
-    if (listingNoFilter) {
-      throw new AppError(403, 'Forbidden: You are not the owner of this listing.');
-    } else {
-      throw new AppError(404, 'Listing not found.');
-    }
+    throw new AppError(404, 'Listing not found.');
   }
 
-  const errorList = await verifyTags(data.tags);
+  const errorList = await verifyTags(data);
   if (errorList.length > 0) {
     throw new AppError(400, 'Invalid tags', errorList);
   }

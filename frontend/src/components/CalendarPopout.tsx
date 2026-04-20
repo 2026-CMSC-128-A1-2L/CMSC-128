@@ -1,20 +1,16 @@
-
 import { FunctionComponent, useCallback } from 'react';
-
 
 export type CalendarPopoutType = {
   className?: string;
-}
+};
 
-
-
-const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({ className = "" }) => {
-
-  const onStatusContainerClick = useCallback(() => {
-  }, []);
+const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({ className = '' }) => {
+  const onStatusContainerClick = useCallback(() => {}, []);
 
   return (
-    <div className={`w-[687px] relative rounded-num-10 bg-white flex flex-col items-center justify-center py-6 px-0 box-border gap-3 max-w-full max-h-full overflow-auto text-center text-num-14 text-dimgray font-inter ${className}`}>
+    <div
+      className={`w-[687px] relative rounded-num-10 bg-white flex flex-col items-center justify-center py-6 px-0 box-border gap-3 max-w-full max-h-full overflow-auto text-center text-num-14 text-dimgray font-inter ${className}`}
+    >
       <div className="self-stretch flex flex-col items-start gap-2">
         <div className="self-stretch h-[103px] flex flex-col items-center justify-center gap-1">
           <div className="self-stretch flex items-center justify-center">
@@ -22,7 +18,9 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({ className = "" 
           </div>
           <div className="self-stretch flex flex-col items-center justify-center gap-1 text-num-24 text-darkslategray-200">
             <b className="relative leading-num-32">Two Sapphire Place</b>
-            <div className="w-[299px] relative text-num-12 tracking-num-0_02 font-semibold font-lora text-black flex items-center justify-center">Sapphire Street, Umali Subdivision, Batong Malake, Los Banos, Laguna</div>
+            <div className="w-[299px] relative text-num-12 tracking-num-0_02 font-semibold font-lora text-black flex items-center justify-center">
+              Sapphire Street, Umali Subdivision, Batong Malake, Los Banos, Laguna
+            </div>
           </div>
         </div>
         <div className="self-stretch flex flex-col items-start py-0 px-12">
@@ -38,21 +36,27 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({ className = "" 
                 <b className="relative">First name</b>
                 <div className="w-[297px] h-[39px] relative text-left text-gray-400">
                   <div className="absolute h-[761.54%] w-[13.13%] top-[100%] right-[86.87%] bottom-[-761.54%] left-[0%] shadow-[0px_0px_4px_rgba(0,_0,_0,_0.25)] rounded-num-16 bg-white [transform:_rotate(-90deg)] [transform-origin:0_0]" />
-                  <div className="absolute h-[88.72%] w-[95.89%] top-[6.34%] left-[2.43%] leading-6 font-medium flex items-center">First name</div>
+                  <div className="absolute h-[88.72%] w-[95.89%] top-[6.34%] left-[2.43%] leading-6 font-medium flex items-center">
+                    First name
+                  </div>
                 </div>
               </div>
               <div className="flex flex-col items-start gap-[5px]">
                 <b className="relative">Last name</b>
                 <div className="w-[297px] h-[39px] relative text-left text-gray-400">
                   <div className="absolute h-[761.54%] w-[13.13%] top-[100%] right-[86.87%] bottom-[-761.54%] left-[0%] shadow-[0px_0px_4px_rgba(0,_0,_0,_0.25)] rounded-num-16 bg-white [transform:_rotate(-90deg)] [transform-origin:0_0]" />
-                  <div className="absolute h-[88.72%] w-[95.89%] top-[6.34%] left-[2.43%] leading-6 font-medium flex items-center">Last name</div>
+                  <div className="absolute h-[88.72%] w-[95.89%] top-[6.34%] left-[2.43%] leading-6 font-medium flex items-center">
+                    Last name
+                  </div>
                 </div>
               </div>
               <div className="flex flex-col items-start gap-[5px]">
                 <b className="relative">Email address</b>
                 <div className="w-[297px] h-[39px] relative text-left text-gray-400">
                   <div className="absolute h-[761.54%] w-[13.13%] top-[100%] right-[86.87%] bottom-[-761.54%] left-[0%] shadow-[0px_0px_4px_rgba(0,_0,_0,_0.25)] rounded-num-16 bg-white [transform:_rotate(-90deg)] [transform-origin:0_0]" />
-                  <div className="absolute h-[88.72%] w-[95.89%] top-[6.34%] left-[2.43%] leading-6 font-medium flex items-center">Email addr.</div>
+                  <div className="absolute h-[88.72%] w-[95.89%] top-[6.34%] left-[2.43%] leading-6 font-medium flex items-center">
+                    Email addr.
+                  </div>
                 </div>
               </div>
             </div>
@@ -257,8 +261,13 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({ className = "" 
               <div className="flex flex-col items-start">
                 <div className="w-[108px] h-num-37 relative">
                   <div className="absolute top-[0px] left-[0px] rounded-[7.66px] bg-white border-whitesmoke-300 border-solid border-[0.8px] box-border w-[108px] h-[36.8px]" />
-                  <img className="absolute w-[9.44%] top-[calc(50%_-_2.16px)] right-[5.89%] left-[84.67%] max-w-full overflow-hidden h-[4.1px]" alt="" />
-                  <div className="absolute top-[0px] left-[5.29px] font-medium flex items-center w-[80.7px] h-num-37">9 am - 10 am</div>
+                  <img
+                    className="absolute w-[9.44%] top-[calc(50%_-_2.16px)] right-[5.89%] left-[84.67%] max-w-full overflow-hidden h-[4.1px]"
+                    alt=""
+                  />
+                  <div className="absolute top-[0px] left-[5.29px] font-medium flex items-center w-[80.7px] h-num-37">
+                    9 am - 10 am
+                  </div>
                 </div>
               </div>
             </div>
@@ -268,14 +277,20 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({ className = "" 
       <div className="self-stretch flex items-center justify-center gap-[43px] text-teal-200">
         <div className="h-8 w-[67px] rounded-num-16 flex items-center justify-center py-0 px-4 box-border">
           <div className="h-8 w-[67px] rounded-num-16 flex items-center justify-center py-0 px-4 box-border shrink-0">
-            <div className="relative font-medium text-transparent !bg-clip-text [background:linear-gradient(180deg,_#c00f0f,_#e44f4f)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] shrink-0">Cancel</div>
+            <div className="relative font-medium text-transparent !bg-clip-text [background:linear-gradient(180deg,_#c00f0f,_#e44f4f)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] shrink-0">
+              Cancel
+            </div>
           </div>
         </div>
-        <div className="h-8 rounded-num-16 bg-aliceblue flex items-center justify-center py-0 px-4 box-border cursor-pointer" onClick={onStatusContainerClick}>
+        <div
+          className="h-8 rounded-num-16 bg-aliceblue flex items-center justify-center py-0 px-4 box-border cursor-pointer"
+          onClick={onStatusContainerClick}
+        >
           <b className="relative">Book</b>
         </div>
       </div>
-    </div>);
+    </div>
+  );
 };
 
 export default CalendarPopout;
