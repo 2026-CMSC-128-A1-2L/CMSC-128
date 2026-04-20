@@ -13,6 +13,8 @@ import DormCard from './components/DormCard';
 import Upload from './pages/utilities/Upload';
 import DmsLanding from './pages/user/DmsLanding';
 import UserVerif from './pages/user/UserVerif';
+import LandlordVerif from './pages/LandlordVerif';
+
 function App() {
   return (
     <Router>
@@ -31,6 +33,7 @@ function App() {
           <Route path="/settings-notifications" element={<SettingsNotifications />} />
           <Route path="/dms-landing" element={<DmsLanding />} />
           <Route path="/user-verif" element={<UserVerif />} />
+          <Route path="/ll-verif" element={<LandlordVerif />} />
         </Route>
       </Routes>
     </Router>
