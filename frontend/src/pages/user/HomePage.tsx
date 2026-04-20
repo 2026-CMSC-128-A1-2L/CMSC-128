@@ -2,6 +2,9 @@ import { FunctionComponent, useCallback } from 'react';
 import { Icon } from '@iconify/react';
 import SideBar from '../../components/SideBar';
 import DormCard from '../../components/DormCard';
+import pic1 from '../../../assets/promotion-1.jpg';
+import pic2 from '../../../assets/promotion-2.jpg';
+import pic3 from '../../../assets/accent.svg';
 import Footer from '../../components/Footer';
 
 const HomePage: FunctionComponent = () => {
@@ -200,62 +203,62 @@ const HomePage: FunctionComponent = () => {
                 </div>
 
                 {/* promotional card */}
-                <div className="self-stretch overflow-hidden flex flex-col items-start text-[2rem] text-darkslategray">
-                  <div className="w-[70.5rem] overflow-hidden flex flex-col items-start relative isolate gap-[0.625rem] shrink-0">
-                    <img
-                      className="w-[37.625rem] h-[36.688rem] absolute !!m-[0 important] top-[-6.899rem] left-[0rem] opacity-[0.7] z-[0] shrink-0"
-                      alt=""
-                    />
-                    <div className="self-stretch rounded-num-12 bg-teal-200 overflow-hidden flex items-center py-[2rem] px-[4.5rem] gap-[0.625rem] z-[1] shrink-0">
-                      <div className="h-[18.125rem] flex-1 relative">
+                <div className="w-full overflow-hidden flex flex-col items-start text-darkslategray font-inter">
+                  <div className="w-full overflow-hidden flex flex-col items-start relative isolate">
+                    {/* main bg*/}
+                    <div className="w-full h-96 rounded-num-12 bg-teal-200/25 flex flex-col md:flex-row items-center py-20 px-10 md:px-20 gap-30">
+                      <img
+                        className="absolute top-1/2 left-40 opacity-70 -translate-y-1/2 -translate-x-1/4 w-[550px] h-[550px] object-contain z-0 pointer-events-none"
+                        src={pic3}
+                        alt="background accent"
+                      />
+
+                      {/* left frame */}
+                      <div className="w-full flex-1 relative h-[25rem] z-10">
                         <img
-                          className="absolute top-[2.914rem] left-[-1.5rem] rounded-num-12 w-[20.094rem] h-[18.513rem] object-contain shrink-0"
-                          alt=""
+                          className="absolute top-30 -left-5 w-120 -rotate-5 rounded-num-12 shadow-lg z-10"
+                          src={pic2}
+                          alt="promotion-2"
                         />
                         <img
-                          className="absolute top-[-0.375rem] left-[2.75rem] shadow-[0px_4px_20px_rgba(0,_0,_0,_0.25)] rounded-num-12 w-[28.406rem] h-[26.75rem] object-contain shrink-0"
-                          alt=""
+                          className="absolute top-15 left-20 w-120 rotate-4 shadow-[0px_10px_30px_rgba(0,0,0,0.2)] rounded-num-12 z-20 object-contain"
+                          src={pic1}
+                          alt="promotion-1"
                         />
                       </div>
-                      <div className="self-stretch w-[27rem] overflow-hidden shrink-0 flex flex-col items-center justify-center p-[0.625rem] box-border gap-[2rem]">
-                        <div className="self-stretch flex flex-col items-start justify-center gap-[0.75rem]">
-                          <div className="self-stretch relative font-extrabold">
-                            Finding your future home shouldn't be hard.
+
+                      {/* right frame */}
+                      <div className="w-full md:w-[45%] flex flex-col items-start gap-8 z-10">
+                        <div className="flex flex-col gap-4">
+                          <div className="w-full relative flex items-center text-left text-[3rem] text-darkslategray font-inter">
+                            <b className="flex-1 relative">{`Built for students, by students. `}</b>
                           </div>
-                          <b className="self-stretch relative text-[1.125rem] text-teal-100">{`Find your future home with a clear vision. `}</b>
+                          <b className="w-full relative text-[1.125rem] inline-block font-inter text-teal text-left">
+                            {`Discover a community-backed way to find your next home in Los Baños with transparency and ease. `}
+                          </b>
                         </div>
-                        <div className="self-stretch flex-1 flex flex-col items-center justify-center gap-[1rem] text-[0.75rem] text-teal-100 font-lora">
-                          <div className="self-stretch flex-1 flex flex-col items-center justify-center">
-                            <div className="flex items-center gap-[1.187rem]">
-                              <div className="w-[2.631rem] flex flex-col items-end">
-                                <img className="w-[2.631rem] relative max-h-full" alt="" />
-                                <div className="self-stretch h-[0.938rem] relative tracking-num-0_02 font-semibold inline-block shrink-0">
-                                  Search
-                                </div>
-                              </div>
-                              <img className="h-[1.5rem] w-[1.506rem] relative" alt="" />
-                              <div className="w-[2.5rem] flex flex-col items-center justify-center gap-[0.312rem] text-center">
-                                <img className="w-[2.5rem] relative max-h-full" alt="" />
-                                <div className="self-stretch relative tracking-num-0_02 font-semibold">
-                                  Book
-                                </div>
-                              </div>
-                              <img className="h-[1.5rem] w-[1.506rem] relative" alt="" />
-                              <div className="w-[2.95rem] flex flex-col items-center gap-[0.437rem]">
-                                <div className="self-stretch overflow-hidden flex flex-col items-center justify-center p-[0.187rem]">
-                                  <img className="w-[2.088rem] h-[1.981rem] relative" alt="" />
-                                </div>
-                                <div className="self-stretch relative tracking-num-0_02 font-semibold">
-                                  Move In
-                                </div>
-                              </div>
-                            </div>
+
+                        <div className="flex items-center gap-6 text-teal-100 font-lora">
+                          {/* Search */}
+                          <div className="flex flex-col items-center gap-2">
+                            {/* <img src={searchIcon} className="w-10 h-10" alt="" /> */}
+                            <span className="text-[1rem] font-semibold">Search</span>
                           </div>
-                          <div className="self-stretch flex flex-col items-center justify-center text-[1.125rem] text-white font-inter">
-                            <div className="rounded-[45px] [background:linear-gradient(99.18deg,_#5dc2a8_27.88%,_#0c8873_88.15%)] flex items-center justify-center py-[0.75rem] px-[1rem] gap-[0.25rem]">
-                              <b className="relative">Find my spot</b>
-                              <img className="w-[1.75rem] relative max-h-full" alt="" />
-                            </div>
+
+                          {/* <img src={arrowIcon} className="w-6 h-4 opacity-60" alt="" /> */}
+
+                          {/* Book */}
+                          <div className="flex flex-col items-center gap-2">
+                            {/* <img src={bookIcon} className="w-10 h-10" alt="" /> */}
+                            <span className="text-[1rem] font-semibold">Book</span>
+                          </div>
+
+                          {/* <img src={arrowIcon} className="w-6 h-4 opacity-60" alt="" /> */}
+
+                          {/* Move In */}
+                          <div className="flex flex-col items-center gap-2">
+                            {/* <img src={moveInIcon} className="w-10 h-10" alt="" /> */}
+                            <span className="text-[1rem] font-semibold">Move In</span>
                           </div>
                         </div>
                       </div>
