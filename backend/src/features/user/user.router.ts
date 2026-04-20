@@ -64,11 +64,11 @@ router.patch('/:userId', selfFilter(true), routeUpdateUser);
 // ============================================================================
 // DELETE /api/users/:userId
 //
-// Soft deletes a user by setting `isActive` false. The user should not be able
-// to log-in and have all sessions invalidated.
+// The user should not be able to log-in and have all sessions invalidated.
+// If the user tries to log-in again, they go through the whole register flow
+// again.
 //
-// TODO:
-//   Clarify what happens if the user tries to log-in again.
+//  TODO: invalidate all sessions
 //
 // ============================================================================
 router.delete('/:userId', isSelfOrSuperAdmin, routeDeleteUser);

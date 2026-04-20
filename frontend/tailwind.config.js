@@ -98,7 +98,7 @@ export default {
         "num-18_6": "18.6px",
         "num-14_7": "14.7px",
         "num-6_4": "6.4px",
-        "num-1": "1px solid #f0f0f0", // Favored the explicit border definition from Config 1
+        "num-1": "1px solid #f0f0f0",
         "num-2": "0.4px solid #096c5b",
         "num-3": "5px solid rgba(255, 255, 255, 0.7)",
         "num-4": "0.7px solid #d9d9d9",

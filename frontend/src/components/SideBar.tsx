@@ -13,12 +13,12 @@ const SidebarItem = ({
   active: boolean;
   children: React.ReactElement[];
 }) => {
-  const textColor = active ? 'teal' : 'black';
+  const textColor = active ? 'teal' : 'gray';
   const bar = active ? 'bg-teal' : '';
 
   return (
     <div className={`relative flex items-center gap-6 text-${textColor} -left-6`}>
-      <div className={`h-12 w-2 rounded-sm ${bar}`} />
+      <div className={`h-12 w-1.25 rounded-sm ${bar}`} />
       <div className="h-11 flex-1 rounded-num-12 flex items-center">
         <div className="flex-1 flex items-center gap-2">
           {active ? children[0] : children[1]}

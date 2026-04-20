@@ -1,12 +1,19 @@
 import { FunctionComponent } from 'react';
-import landing_image from '../../../assets/landing_building.webp';
+import landing_image from "../../../assets/landing_building.webp";
 import AtlasCurious from '../../../assets/logo_curious.svg?react';
 import AtlasText from '../../../assets/logo_atlas_text.svg?react';
 import map from '../../../assets/map.svg';
 import AutoImageSwitcher from '../../components/AutoImageSwitcher';
+import SignInPopUp from '../../components/SignInPopUp';
+
+
 import { Icon } from '@iconify/react';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const UserLanding: FunctionComponent = () => {
+  const [showSignIn, setShowSignIn] = useState(false);
+
   return (
     <div className="w-full h-screen relative bg-white overflow-y-auto flex flex-col items-start isolate text-left text-[64px] text-teal-200 font-inter">
       <div className="flex flex-col items-start z-[1] shrink-0">
@@ -31,13 +38,23 @@ const UserLanding: FunctionComponent = () => {
                   </b>
                 </div>
                 <div className="self-stretch flex items-center justify-center py-0 px-1">
-                  <b className="relative tracking-num--0_01">Contact Us</b>
+                  <Link to="/contact">
+                    <b className="relative tracking-num--0_01">Contact Us</b>
+                  </Link>
                 </div>
               </div>
-              <div className="rounded-[45px] [background:linear-gradient(99.18deg,_#5dc2a8_27.88%,_#0c8873_88.15%)] flex items-center justify-center py-3 px-4 gap-1 text-white">
-                <b className="relative">Login</b>
-                <Icon icon="si:arrow-right-duotone" className="w-7 h-7 relative" />
-              </div>
+              <button onClick={() => setShowSignIn(true)}>
+
+                <div className="rounded-[45px] [background:linear-gradient(99.18deg,_#5dc2a8_27.88%,_#0c8873_88.15%)] flex items-center justify-center py-3 px-4 gap-1 text-white cursor-pointer">
+                  Sign In
+                  <Icon icon="si:arrow-right-duotone" className="w-7 h-7 relative" />
+                </div>
+
+              </button>
+              {showSignIn && (
+                <SignInPopUp onClose={() => setShowSignIn(false)} />
+              )}
+
             </div>
           </div>
 
@@ -107,7 +124,7 @@ const UserLanding: FunctionComponent = () => {
             </div>
 
             <div className="self-stretch bg-white flex items-center justify-center py-10 px-0 gap-[89px] text-center text-num-24 text-gray-300">
-              <div className="h-[233px] w-[200px] relative">
+              <div className="h-[233px] w-[200px] relative transition-transform duration-300 ease-in-out hover:scale-110">
                 <div className="absolute top-[-11px] left-[-20px] w-[239px] h-60 flex flex-col items-center p-2.5 box-border gap-3.5 shrink-0">
                   <Icon icon="tabler:search" color="#2F8677" className="w-20 h-20" />
                   <b className="w-[177px] relative leading-num-32 flex items-center justify-center">
@@ -119,7 +136,7 @@ const UserLanding: FunctionComponent = () => {
                   </b>
                 </div>
               </div>
-              <div className="h-[247px] w-num-199 relative">
+              <div className="h-[247px] w-num-199 relative transition-transform duration-300 ease-in-out hover:scale-110">
                 <div className="absolute top-[-2px] left-[-19px] w-[234px] h-[249px] flex flex-col items-center p-2.5 box-border gap-3.5 shrink-0">
                   <Icon icon="emojione-monotone:clipboard" color="#2F8677" className="w-15 h-15" />
                   <b className="w-[177px] relative leading-num-32 flex items-center justify-center">
@@ -130,7 +147,7 @@ const UserLanding: FunctionComponent = () => {
                   </b>
                 </div>
               </div>
-              <div className="h-[251px] w-num-199 relative">
+              <div className="h-[251px] w-num-199 relative transition-transform duration-300 ease-in-out hover:scale-110">
                 <div className="absolute top-[-2px] left-[-18px] w-[234px] h-[249px] flex flex-col items-center p-2.5 box-border gap-3.5 shrink-0">
                   <Icon icon="mdi:home" color="#2F8677" className="w-17 h-17" />
                   <b className="self-stretch relative leading-num-32">MANAGE</b>
@@ -139,7 +156,7 @@ const UserLanding: FunctionComponent = () => {
                   </b>
                 </div>
               </div>
-              <div className="h-[247px] w-num-199 relative">
+              <div className="h-[247px] w-num-199 relative transition-transform duration-300 ease-in-out hover:scale-110">
                 <div className="absolute top-[-2px] left-[-18px] w-[234px] h-[249px] flex flex-col items-center p-2.5 box-border gap-3.5 shrink-0">
                   <Icon icon="mdi:security" color="#2F8677" className="w-15 h-15" />
                   <b className="w-[177px] relative leading-num-32 flex items-center justify-center">
@@ -502,7 +519,7 @@ const UserLanding: FunctionComponent = () => {
           </div>
         </div>
       </div>
-    </div>
+    </div >
   );
 };
 
