@@ -9,6 +9,7 @@ import SettingsNotifications from './pages/user/SettingsNotifications';
 import HomePage from './pages/user/HomePage';
 import RateAndReview from "./pages/RateAndReview";
 import RateAndReviewForm from "./pages/RateAndReviewWithForms";
+import RateAndReviewUpload from "./pages/RateAndReviewWithUploads";
 
 import Login from './pages/utilities/Login';
 import DmsSidebar from './components/DmsSidebar';
@@ -36,6 +37,7 @@ function App() {
           <Route path="/dms-landing" element={<DmsLanding />} />
           <Route path="/ratereview" element={<RateAndReview />} />
           <Route path="/ratereviewform" element={<RateAndReviewForm />} />
+          <Route path="/ratereviewupload" element={<RateAndReviewUpload />} />
         </Route>
       </Routes>
     </Router>
