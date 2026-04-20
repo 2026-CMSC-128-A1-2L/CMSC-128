@@ -9,7 +9,7 @@ import LandingMap from './components/LandingMap';
 import HomePage from './pages/user/HomePage';
 
 import Login from './pages/utilities/Login';
-import DmsSidebar from './components/DmsSidebar';
+import SideBar from './components/SideBar';
 import Upload from './pages/utilities/Upload';
 import DmsLanding from './pages/user/DmsLanding';
 import Banner from './components/Banner';
@@ -20,8 +20,8 @@ function App() {
       <Routes>
         <Route path="/landing" element={<UserLanding />} />
         <Route path="/map" element={<LandingMap />} />
-        <Route path="/dmssidebar" element={<DmsSidebar />} />
-        <Route path="/banner" element={<Banner />} />
+        <Route path="/sidebar" element={<SideBar />} />
+        <Route path="/sidebar" element={<Banner />} />
 
         <Route element={<PageLayout />}>
           <Route path="/home" element={<HomePage />} />
