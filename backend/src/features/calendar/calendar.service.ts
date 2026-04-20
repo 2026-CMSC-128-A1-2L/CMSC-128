@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import type mongoose from 'mongoose';
 import { Billing } from '../billing/billing.model';
 import { VisitBooking } from '../booking/booking.model';
 import { HousingFacility } from '../facility/facility.model';

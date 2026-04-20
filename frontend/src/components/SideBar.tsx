@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import type { FunctionComponent } from 'react';
 import search_icon from '../../assets/sidebar_search.svg';
 import AtlasLogoText from '../../assets/logo_atlas_text.svg?react';
 import dark_icon from '../../assets/sidebar_darkmode.svg';
