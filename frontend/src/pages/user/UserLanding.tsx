@@ -23,7 +23,7 @@ const UserLanding: FunctionComponent = () => {
               <div className="flex-1 flex flex-col items-start justify-center">
                 <div className="flex items-center gap-2">
                   <AtlasText className="w-32 h-auto fill-darkslategray" fill="#024338" />
-                  <Icon icon="tabler:chevron-down-filled" className="h-6 w-6 relative" />
+                  <Icon icon="mdi-light:chevron-down" className="h-6 w-6 relative" />
                 </div>
               </div>
               <div className="self-stretch flex items-center gap-12 text-center text-teal-200">

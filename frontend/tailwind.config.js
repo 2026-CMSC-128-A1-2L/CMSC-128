@@ -19,6 +19,8 @@ export default {
         dimgray: "#666",
         lightcyan: {
           DEFAULT: "#cbf6ed",
+          100: "#cbf6ed", // From Finance
+          200: "rgba(203, 246, 237, 0.4)", // From Finance
           legacy: "rgba(203, 246, 237, 0.4)",
         },
         azure: "#d9ebe7",
@@ -45,7 +47,7 @@ export default {
           DEFAULT: "rgba(0, 0, 0, 0.38)",
           100: "#757575",
           200: "#1e1e1e",
-          300: "#001d18",
+          300: "#001d18", // Merged unique hex from Finance
           400: "rgba(0, 0, 0, 0.38)",
           500: "rgba(255, 255, 255, 0.7)",
           600: "rgba(255, 255, 255, 0.75)",
@@ -60,13 +62,12 @@ export default {
         },
         whitesmoke: {
           DEFAULT: "#f0f0f0",
-          100: "#f1f1f1",
+          100: "#f8fafc", // From Finance
           200: "#f0f0f0",
           300: "#f0f0f0",
         },
       },
       spacing: {
-        // Combined unique values from both branches
         "num-1440": "1440px",
         "num-1172": "1172px",
         "num-914": "914px",
@@ -110,7 +111,8 @@ export default {
         "num-6_4": "6.4px",
         "num-3": "3px",
         "num-1": "1px solid #f0f0f0",
-        "num-2": "0.4px solid #096c5b",
+        "num-2": "2px solid #f0f0f0", // Finance version (stronger border)
+        "num-0_4-teal": "0.4px solid #096c5b",
         "num-3-white": "5px solid rgba(255, 255, 255, 0.7)",
         "num-4": "0.7px solid #d9d9d9",
         "num-11": "1px solid #096c5b",
@@ -119,11 +121,13 @@ export default {
       borderRadius: {
         "num-0": "0px",
         "num-4": "4px",
+        "num-5": "5px", // From Finance
         "num-8": "8px",
         "num-10": "10px",
         "num-12": "12px",
         "num-16": "16px",
         "num-50": "50%",
+        "num-100": "100px", // From Finance
         "num-8_91": "8.91px",
         "num-3_87": "3.87px",
         "num-4_34": "4.34px",
@@ -165,6 +169,7 @@ export default {
       "num-6_19": "6.19px",
       "num-6_95": "6.95px",
       "num-7_81": "7.81px",
+      "num-8": "8px", // From Finance
       "num-8_36": "8.36px",
       "num-10": "12px",
       "num-10_7": "10.7px",
@@ -190,6 +195,7 @@ export default {
     letterSpacing: {
       "num--0_01": "-0.01em",
       "num-0_02": "0.02em",
+      "num-0_04": "0.04em", // From Finance
     },
   },
   corePlugins: {

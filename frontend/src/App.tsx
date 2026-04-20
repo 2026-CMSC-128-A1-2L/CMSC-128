@@ -14,11 +14,15 @@ import RateAndReview from './pages/RateAndReview';
 import RateAndReviewForm from './pages/RateAndReviewWithForms';
 import RateAndReviewUpload from './pages/RateAndReviewWithUploads';
 import TermsOfUse from './pages/TermsOfUse';
+import Finance from './pages/user/Finance';
 
 import Login from './pages/utilities/Login';
 import DmsSidebar from './components/DmsSidebar';
 import Upload from './pages/utilities/Upload';
 import DmsLanding from './pages/user/DmsLanding';
+import SubmitReceipt from './components/SubmitReceipt';
+import PaymentMethods from './components/PaymentMethods';
+import FinancePopup from './components/FinancePopup';
 
 // Admin Side
 import Analytics from './pages/admin/analytics';
@@ -32,6 +36,12 @@ function App() {
   return (
     <Router>
       <Routes>
+        <Route path="/landing" element={<UserLanding />} />
+        <Route path="/map" element={<LandingMap />} />
+        <Route path="/dormcard" element={<DormCard />} />
+        <Route path="/submit-receipt" element={<SubmitReceipt />} />
+        <Route path="/paymentmethods" element={<PaymentMethods />} />
+        <Route path="/financepopup" element={<FinancePopup children={undefined} />} />
         <Route path="/" element={<UserLanding />} />
 
         <Route element={<PageLayout />}>
@@ -52,6 +62,7 @@ function App() {
           <Route path="/ratereviewform" element={<RateAndReviewForm />} />
           <Route path="/ratereviewupload" element={<RateAndReviewUpload />} />
           <Route path="/terms-of-use" element={<TermsOfUse />} />
+          <Route path="/finance" element={<Finance />} />
           
           {/* Admin Routes */}
           <Route path="/admin/analytics" element={<Analytics />} />
