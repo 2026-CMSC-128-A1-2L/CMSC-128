@@ -17,9 +17,10 @@ import TermsOfUse from './pages/TermsOfUse';
 import Finance from './pages/user/Finance';
 
 import Login from './pages/utilities/Login';
-import DmsSidebar from './components/DmsSidebar';
+import SideBar from './components/SideBar';
 import Upload from './pages/utilities/Upload';
 import DmsLanding from './pages/user/DmsLanding';
+        
 import SettingsPreferences from './pages/user/SettingsPreferences';
 import SubmitReceipt from './components/SubmitReceipt';
 import PaymentMethods from './components/PaymentMethods';
