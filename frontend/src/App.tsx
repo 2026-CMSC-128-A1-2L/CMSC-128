@@ -12,7 +12,7 @@ import Login from './pages/utilities/Login';
 import DormCard from './components/DormCard';
 import Upload from './pages/utilities/Upload';
 import DmsLanding from './pages/user/DmsLanding';
-import SettingsPreferences from "./pages/SettingsPreferences";
+import SettingsPreferences from './pages/user/SettingsPreferences';
 
 function App() {
   return (
@@ -32,8 +32,7 @@ function App() {
           <Route path="/settings-notifications" element={<SettingsNotifications />} />
           <Route path="/dms-landing" element={<DmsLanding />} />
         </Route>
-          <Route path="/settings/preferences" element={<SettingsPreferences />} />
-
+        <Route path="/settings/preferences" element={<SettingsPreferences />} />
       </Routes>
     </Router>
   );
