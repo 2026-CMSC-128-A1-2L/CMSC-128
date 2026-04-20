@@ -6,6 +6,9 @@ import BookmarksNewUsers from "./pages/user/BookmarksNewUsers";
 import UserLanding from "./pages/user/UserLanding";
 import UnitDetails from "./pages/user/UnitDetails";
 import SettingsNotifications from './pages/user/SettingsNotifications';
+import LandingMap from './components/LandingMap';
+import CurrentDorm from './pages/CurrentDorm';
+import ContractInformation from './pages/ContractInformation';
 import HomePage from './pages/user/HomePage';
 import RateAndReview from "./pages/RateAndReview";
 import RateAndReviewForm from "./pages/RateAndReviewWithForms";
@@ -35,6 +38,8 @@ function App() {
           <Route path="/unit" element={<UnitDetails />} />
           <Route path="/settings-notifications" element={<SettingsNotifications />} />
           <Route path="/dms-landing" element={<DmsLanding />} />
+          <Route path="/current-dorm" element={<CurrentDorm />} />
+          <Route path="/contract-information" element={<ContractInformation />} />
           <Route path="/ratereview" element={<RateAndReview />} />
           <Route path="/ratereviewform" element={<RateAndReviewForm />} />
           <Route path="/ratereviewupload" element={<RateAndReviewUpload />} />
