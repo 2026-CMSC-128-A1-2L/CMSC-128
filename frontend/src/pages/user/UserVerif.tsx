@@ -2,6 +2,8 @@ import { useCallback } from 'react';
 import type { FunctionComponent } from 'react';
 import SideBar from '../../components/SideBar';
 import Footer from '../../components/Footer';
+import { Icon } from '@iconify/react';
+import VerifiedBadge from '../../../assets/verified_badge.svg';
 
 
 
@@ -36,11 +38,11 @@ const UserVerif: FunctionComponent = () => {
                   									<div className="self-stretch h-16 overflow-hidden shrink-0 flex items-end p-num-10 box-border gap-2.5" data-scroll-to="searchBarContainer">
                     										<div className="h-6 flex items-center gap-1.5">
                       											<div className="relative font-semibold">User Profile</div>
-                      											<img className="h-6 w-6 relative" alt="" /> //breadcrumbs
+                      											<Icon icon="iconamoon:arrow-right-2" className="w-6 h-6" />
                       											<div className="relative font-semibold">Verification Status</div>
                     										</div>
                     										<div className="w-[704px] rounded-xl bg-aliceblue overflow-hidden shrink-0 hidden items-center py-num-10 px-6 box-border gap-2.5 text-dimgray font-inter">
-                      											<img className="h-6 w-6 relative" alt="" />
+                      										<Icon icon="mdi:magnify" className="w-6 h-6" />
                       											<b className="relative">Search for Dorms, Apartments, or Locations (e.g. UPLB, Umali Subdivision)</b>
                     										</div>
                   									</div>
@@ -51,13 +53,13 @@ const UserVerif: FunctionComponent = () => {
                           													<b className="relative">Student Profile</b>
                           													<div className="flex items-center justify-center gap-[10.2px] text-[24.57px] text-darkslategray-200">
                             														<b className="relative leading-[32.77px]">Daphne Dayne</b>
-                            														<img className="h-[24.6px] w-[24.6px] relative" alt="" /> // verification icon
+                            														<img src={VerifiedBadge} alt="verified" className="w-[24.6px] h-[24.6px]" />
                           													</div>
                           													<b className="relative text-teal">dcanape@up.edu.ph</b>
                         												</div>
                       											</div>
                       											<div className="self-stretch overflow-hidden flex items-start justify-between py-1 px-num-32 gap-5 text-num-14">
-                        												<img className="w-[200px] relative max-h-full object-cover" alt="" /> // prof pic
+                        												<Icon icon="mdi:account-circle" className="w-[200px] h-[200px] text-gray-400" />
                         												<div className="overflow-hidden flex flex-col items-start p-num-10 gap-4">
                           													<div className="flex flex-col items-start gap-1">
                             														<b className="relative">Name</b>
@@ -66,14 +68,14 @@ const UserVerif: FunctionComponent = () => {
                           													<div className="flex flex-col items-start gap-1">
                             														<div className="flex items-start gap-2">
                               															<b className="relative">Contact number</b>
-                              															<img className="w-5 relative max-h-full" alt="" />
+                              															<Icon icon="mdi:information-outline" className="w-5 h-5" />
                             														</div>
                             														<b className="relative text-black">- - - - -</b>
                           													</div>
                           													<div className="flex flex-col items-start gap-1">
                             														<div className="flex items-start gap-2">
                               															<b className="relative">Home Address</b>
-                              															<img className="w-5 relative max-h-full" alt="" />
+                              															<Icon icon="mdi:information-outline" className="w-5 h-5" />
                             														</div>
                             														<b className="relative text-black">{`- - - - - `}</b>
                           													</div>
@@ -139,8 +141,8 @@ const UserVerif: FunctionComponent = () => {
                     										<div className="self-stretch flex items-center py-num-0 px-num-32 gap-6 shrink-0 text-[24px]">
                       											<div className="flex-1 flex items-center">
                         												<div className="flex items-center gap-2">
-                          													<img className="h-6 w-6 relative" alt="" />
-                          													<b className="relative leading-8">Submit Documents</b> // i
+                          													<Icon icon="mdi:file-document-multiple" className="w-6 h-6" />
+                          													<b className="relative leading-8">Submit Documents</b> 
                           													<b className="relative text-num-14 text-dimgray">0 out of 3 Documents Uploaded</b>
                         												</div>
                       											</div>
@@ -161,15 +163,15 @@ const UserVerif: FunctionComponent = () => {
                             														</div>
                           													</div>
                           													<div className="w-[72px] flex items-center gap-6">
-                            														<img className="h-6 w-6 relative" alt="" />
-                            														<img className="h-6 w-6 relative" alt="" />
+                            											<Icon icon="mdi:pencil" className="w-6 h-6" />
+                            											<Icon icon="mdi:delete" className="w-6 h-6" />
                           													</div>
                         												</div>
                         												<div className="w-[852px] rounded-num-16 border-dimgray border-dashed border-[1px] box-border overflow-hidden flex items-center py-num-12 px-4 text-black">
                           													<div className="h-16 flex items-center gap-6">
-                            														<img className="h-16 w-16 relative" alt="" />
+                            														<Icon icon="mdi:cloud-upload" className="w-16 h-16" />
                             														<div className="flex flex-col items-start justify-center gap-2">
-                              															<b className="relative">Upload the document</b>
+                              															<b className="relative">Upload the document</b> 
                               															<div className="relative text-[12px] tracking-[0.02em] font-semibold font-lora text-slategray">.jpg or .png less than 500KB</div>
                             														</div>
                           													</div>
@@ -187,13 +189,13 @@ const UserVerif: FunctionComponent = () => {
                             														</div>
                           													</div>
                           													<div className="w-[72px] flex items-center gap-6">
-                            														<img className="h-6 w-6 relative" alt="" />
-                            														<img className="h-6 w-6 relative" alt="" />
+                            														<Icon icon="mdi:pencil" className="w-6 h-6" />
+                            														<Icon icon="mdi:delete" className="w-6 h-6" />
                           													</div>
                         												</div>
                         												<div className="w-[852px] h-[88px] rounded-num-16 border-dimgray border-dashed border-[1px] box-border overflow-hidden shrink-0 flex items-center py-num-12 px-4 text-black">
                           													<div className="h-16 flex items-center gap-6">
-                            														<img className="h-16 w-16 relative" alt="" />
+                            														<Icon icon="mdi:cloud-upload" className="w-16 h-16" />
                             														<div className="flex flex-col items-start justify-center gap-2">
                               															<b className="relative">Upload the document</b>
                               															<div className="relative text-[12px] tracking-[0.02em] font-semibold font-lora text-slategray">.pdf less than 500KB</div>
@@ -202,7 +204,7 @@ const UserVerif: FunctionComponent = () => {
                         												</div>
                       											</div>
                     										</div>
-                    										<div className="self-stretch flex flex-col items-center justify-center py-num-0 px-num-32 shrink-0 text-left">
+                    										<div className="self-stretch flex flex-col items-center justify-center py-num-0 px-num_32 shrink-0 text-left">
                       											<div className="w-[916px] rounded-num-16 bg-white border-whitesmoke-200 border-solid border-[1px] box-border overflow-hidden flex flex-col items-start justify-center py-num-10 px-num-32 gap-2.5">
                         												<div className="self-stretch flex items-center justify-between py-num-0 pl-num-0 pr-6 gap-0">
                           													<div className="flex-1 flex items-center gap-4">
@@ -213,13 +215,13 @@ const UserVerif: FunctionComponent = () => {
                             														</div>
                           													</div>
                           													<div className="w-[72px] flex items-center gap-6">
-                            														<img className="h-6 w-6 relative" alt="" />
-                            														<img className="h-6 w-6 relative" alt="" />
+                            														<Icon icon="mdi:pencil" className="w-6 h-6" />
+                            														<Icon icon="mdi:delete" className="w-6 h-6" />
                           													</div>
                         												</div>
                         												<div className="w-[852px] h-[88px] rounded-num-16 border-dimgray border-dashed border-[1px] box-border overflow-hidden shrink-0 flex items-center py-num-12 px-4 text-black">
                           													<div className="h-16 flex items-center gap-6">
-                            														<img className="h-16 w-16 relative" alt="" />
+                            														<Icon icon="mdi:cloud-upload" className="w-16 h-16" />
                             														<div className="flex flex-col items-start justify-center gap-2">
                               															<b className="relative">Upload the document</b>
                               															<div className="relative text-[12px] tracking-[0.02em] font-semibold font-lora text-slategray">.pdf less than 500KB</div>
@@ -233,21 +235,21 @@ const UserVerif: FunctionComponent = () => {
                                             </div>
                                         </div>
                                     </div>
+                                    <footer>
+                                        <Footer />
+                                    </footer>
                                     <div className="w-[1440px] h-20 bg-white overflow-hidden shrink-0 hidden flex-col items-center justify-center">
                                         <div className="w-[1273px] h-[82px] bg-whitesmoke-100 overflow-hidden shrink-0 flex items-center py-[19px] pl-[200px] pr-20 box-border" />
                                     </div>
                                 </div>
                             </div>
                             <div className="w-[60px] h-[60px] !!m-[0 important] absolute top-[916px] left-[1318px] rounded-[30px] [background:linear-gradient(183.48deg,_#096c5b,_#16917c)] shrink-0 flex items-start p-[16.2px] box-border cursor-pointer z-[2]" onClick={onArrowUpClick}>
-                                <img className="h-[27.7px] w-[27.7px] relative" alt="" />
+                                <Icon icon="mdi:arrow-up" className="w-[27.7px] h-[27.7px] text-white" />
             </div>
                         </div>
                     </div>
                 </div>
             </div>
-				 <footer>
-                	<Footer />
-              	 </footer>
         </div>
     );
 }
