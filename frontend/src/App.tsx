@@ -9,17 +9,17 @@ import LandingMap from './components/LandingMap';
 import HomePage from './pages/user/HomePage';
 
 import Login from './pages/utilities/Login';
-import DmsSidebar from './components/DmsSidebar';
+import DormCard from './components/DormCard';
 import Upload from './pages/utilities/Upload';
 import DmsLanding from './pages/user/DmsLanding';
-
+import UserProfile from './pages/user/UserProfile'
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/landing" element={<UserLanding />} />
         <Route path="/map" element={<LandingMap />} />
-        <Route path="/dmssidebar" element={<DmsSidebar />} />
+        <Route path="/dormcard" element={<DormCard />} />
 
         <Route element={<PageLayout />}>
           <Route path="/home" element={<HomePage />} />
@@ -30,6 +30,7 @@ function App() {
           <Route path="/bookmark" element={<BookmarksNewUsers />} />
           <Route path="/settings-notifications" element={<SettingsNotifications />} />
           <Route path="/dms-landing" element={<DmsLanding />} />
+          <Route path="/user-profile" element={<UserProfile />} />
         </Route>
       </Routes>
     </Router>
