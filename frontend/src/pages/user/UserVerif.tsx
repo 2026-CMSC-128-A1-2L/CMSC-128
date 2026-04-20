@@ -1,5 +1,7 @@
 import { useCallback } from 'react';
 import type { FunctionComponent } from 'react';
+import SideBar from '../../components/SideBar';
+import Footer from '../../components/Footer';
 
 
 
@@ -13,8 +15,15 @@ const UserVerif: FunctionComponent = () => {
   	}, []);
   	
   	return (
-    		<div className="w-full h-[1024px] relative overflow-y-auto flex flex-col items-start isolate gap-2.5 text-left text-num-14 text-darkslategray-100 font-lora">
-      			<img className="w-[1440px] h-[1192px] absolute !!m-[0 important] top-[0px] left-[0px] shrink-0 z-[0]" alt="" />
+    		<div className="w-full h-screen flex flex-col font-lora text-darkslategray-100 overflow-hidden">
+      			<div className="flex flex-1 overflow-hidden">
+        				<div className="fixed top-0 left-0 h-full w-[200px] hidden md:block z-10">
+          					<SideBar />
+        				</div>
+        				<div className="w-[200px] shrink-0 hidden md:block" />
+        				<div className="flex-1 flex flex-col overflow-hidden">
+          					<div className="flex-1 overflow-y-auto">
+            					<div className="w-full h-[1024px] relative flex flex-col items-start isolate gap-2.5 text-left text-num-14">
       			<div className="w-[1440px] h-[1512px] overflow-hidden shrink-0 flex flex-col items-start z-[1]">
         				<div className="self-stretch flex-1 overflow-hidden flex flex-col items-start py-num-0 pl-num-0 pr-20">
           					<div className="self-stretch flex-1 flex items-center gap-8 shrink-0">
@@ -27,7 +36,7 @@ const UserVerif: FunctionComponent = () => {
                   									<div className="self-stretch h-16 overflow-hidden shrink-0 flex items-end p-num-10 box-border gap-2.5" data-scroll-to="searchBarContainer">
                     										<div className="h-6 flex items-center gap-1.5">
                       											<div className="relative font-semibold">User Profile</div>
-                      											<img className="h-6 w-6 relative" alt="" />
+                      											<img className="h-6 w-6 relative" alt="" /> //breadcrumbs
                       											<div className="relative font-semibold">Verification Status</div>
                     										</div>
                     										<div className="w-[704px] rounded-xl bg-aliceblue overflow-hidden shrink-0 hidden items-center py-num-10 px-6 box-border gap-2.5 text-dimgray font-inter">
@@ -35,20 +44,20 @@ const UserVerif: FunctionComponent = () => {
                       											<b className="relative">Search for Dorms, Apartments, or Locations (e.g. UPLB, Umali Subdivision)</b>
                     										</div>
                   									</div>
-                  									<div className="self-stretch h-[948px] rounded-num-16 bg-gray flex flex-col items-start gap-3 text-center font-inter">
+                  									<div className="self-stretch h-[948px] rounded-num-16 flex flex-col items-start gap-3 text-center font-inter">
                     										<div className="w-[980px] h-[382px] rounded-num-16 flex flex-col items-start gap-3 shrink-0 text-[14.34px] text-dimgray">
                       											<div className="self-stretch rounded-[16.38px] overflow-hidden flex flex-col items-start p-[32.8px]">
                         												<div className="self-stretch flex flex-col items-start gap-[10.2px]">
                           													<b className="relative">Student Profile</b>
                           													<div className="flex items-center justify-center gap-[10.2px] text-[24.57px] text-darkslategray-200">
                             														<b className="relative leading-[32.77px]">Daphne Dayne</b>
-                            														<img className="h-[24.6px] w-[24.6px] relative" alt="" />
+                            														<img className="h-[24.6px] w-[24.6px] relative" alt="" /> // verification icon
                           													</div>
                           													<b className="relative text-teal">dcanape@up.edu.ph</b>
                         												</div>
                       											</div>
                       											<div className="self-stretch overflow-hidden flex items-start justify-between py-1 px-num-32 gap-5 text-num-14">
-                        												<img className="w-[200px] relative max-h-full object-cover" alt="" />
+                        												<img className="w-[200px] relative max-h-full object-cover" alt="" /> // prof pic
                         												<div className="overflow-hidden flex flex-col items-start p-num-10 gap-4">
                           													<div className="flex flex-col items-start gap-1">
                             														<b className="relative">Name</b>
@@ -131,7 +140,7 @@ const UserVerif: FunctionComponent = () => {
                       											<div className="flex-1 flex items-center">
                         												<div className="flex items-center gap-2">
                           													<img className="h-6 w-6 relative" alt="" />
-                          													<b className="relative leading-8">Submit Documents</b>
+                          													<b className="relative leading-8">Submit Documents</b> // i
                           													<b className="relative text-num-14 text-dimgray">0 out of 3 Documents Uploaded</b>
                         												</div>
                       											</div>
@@ -219,20 +228,28 @@ const UserVerif: FunctionComponent = () => {
                         												</div>
                       											</div>
                     										</div>
-                  									</div>
-                								</div>
-              							</div>
-            						</div>
-          					</div>
-          					<div className="w-[1440px] h-20 bg-white overflow-hidden shrink-0 hidden flex-col items-center justify-center">
-            						<div className="w-[1273px] h-[82px] bg-whitesmoke-100 overflow-hidden shrink-0 flex items-center py-[19px] pl-[200px] pr-20 box-border" />
-          					</div>
-        				</div>
-      			</div>
-      			<div className="w-[60px] h-[60px] !!m-[0 important] absolute top-[916px] left-[1318px] rounded-[30px] [background:linear-gradient(183.48deg,_#096c5b,_#16917c)] shrink-0 flex items-start p-[16.2px] box-border cursor-pointer z-[2]" onClick={onArrowUpClick}>
-        				<img className="h-[27.7px] w-[27.7px] relative" alt="" />
-      		</div>
-    		</div>);
-};
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="w-[1440px] h-20 bg-white overflow-hidden shrink-0 hidden flex-col items-center justify-center">
+                                        <div className="w-[1273px] h-[82px] bg-whitesmoke-100 overflow-hidden shrink-0 flex items-center py-[19px] pl-[200px] pr-20 box-border" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="w-[60px] h-[60px] !!m-[0 important] absolute top-[916px] left-[1318px] rounded-[30px] [background:linear-gradient(183.48deg,_#096c5b,_#16917c)] shrink-0 flex items-start p-[16.2px] box-border cursor-pointer z-[2]" onClick={onArrowUpClick}>
+                                <img className="h-[27.7px] w-[27.7px] relative" alt="" />
+            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+				 <footer>
+                	<Footer />
+              	 </footer>
+        </div>
+    );
+}
 
 export default UserVerif;

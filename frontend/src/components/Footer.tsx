@@ -4,7 +4,7 @@ import { Icon } from '@iconify/react';
 
 const Footer: FunctionComponent = () => {
   return (
-    <div className="w-full bg-whitesmoke overflow-hidden flex items-center py-4 px-10 box-border text-num-14 text-dimgray font-inter max-w-full">
+    <div className="bg-whitesmoke overflow-hidden flex items-center justify-center py-4 px-4 sm:px-8 box-border text-num-14 text-dimgray font-inter">
       <div className="flex-1 flex items-center gap-20">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
