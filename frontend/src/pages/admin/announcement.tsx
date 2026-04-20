@@ -1,9 +1,11 @@
 import NavBarAdmin from '../../components/NavBarAdmin';
 import SideBarAdmin from '../../components/SideBarAdmin';
+import AdminPageTransition from '../../components/AdminPageTransition';
 import { Icon } from '@iconify/react';
 
 function Announcement() {
   return (
+    <AdminPageTransition>
     <div className="relative -mx-[calc((100vw-100%)/2)] flex w-screen flex-col min-h-screen">
       <NavBarAdmin />
       <div className="flex flex-1">
@@ -45,6 +47,7 @@ function Announcement() {
         </div>
       </div>
     </div>
+    </AdminPageTransition>
   );
 }
 
