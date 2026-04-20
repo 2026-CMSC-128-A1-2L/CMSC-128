@@ -28,7 +28,9 @@ const RateAndReview: FunctionComponent = () => {
       <div className="w-full max-w-[1440px] min-h-screen overflow-hidden flex flex-col items-start z-[1] mx-auto">
         <div className="self-stretch flex-1 overflow-hidden flex flex-col items-start py-num-0 pl-num-0 pr-20">
           <div className="self-stretch flex-1 flex items-center gap-8 shrink-0">
-            <div className="self-stretch w-[200px] flex items-start shrink-0" />
+            <div className="self-stretch w-[200px] flex items-start shrink-0">
+              <SideBar />
+            </div>
             <div className="h-[1112px] hidden flex-col items-center shrink-0">
               <div className="w-[106px] h-[924px] bg-white border-whitesmoke-200 border-solid border-[1px] box-border overflow-hidden shrink-0 flex flex-col items-center py-num-32 pl-num-32 pr-2.5" />
             </div>
