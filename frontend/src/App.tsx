@@ -13,6 +13,7 @@ import HomePage from './pages/user/HomePage';
 import RateAndReview from './pages/RateAndReview';
 import RateAndReviewForm from './pages/RateAndReviewWithForms';
 import RateAndReviewUpload from './pages/RateAndReviewWithUploads';
+import TermsOfUse from './pages/TermsOfUse';
 
 import Login from './pages/utilities/Login';
 import DmsSidebar from './components/DmsSidebar';
@@ -50,7 +51,8 @@ function App() {
           <Route path="/ratereview" element={<RateAndReview />} />
           <Route path="/ratereviewform" element={<RateAndReviewForm />} />
           <Route path="/ratereviewupload" element={<RateAndReviewUpload />} />
-
+          <Route path="/terms-of-use" element={<TermsOfUse />} />
+          
           {/* Admin Routes */}
           <Route path="/admin/analytics" element={<Analytics />} />
           <Route path="/admin/reports" element={<Reports />} />
