@@ -1,3 +1,19 @@
+<<<<<<< admin
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import ContactUs from './pages/ContactUs';
+import PageLayout from './pages/PageLayout';
+import TestPage from './pages/TestPage';
+import BookmarksNewUsers from './pages/BookmarksNewUsers';
+
+import Login from './pages/Login';
+import Upload from './pages/Upload';
+import Analytics from './pages/admin/analytics';
+import Reports from './pages/admin/reports';
+import Announcement from './pages/admin/announcement';
+import Applications from './pages/admin/applications';
+import Listings from './pages/admin/listings';
+import Messages from './pages/admin/messages';
+=======
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ContactUs from "./pages/user/ContactUs";
 import PageLayout from "./pages/utilities/PageLayout";
@@ -18,6 +34,7 @@ import Login from './pages/utilities/Login';
 import DmsSidebar from './components/DmsSidebar';
 import Upload from './pages/utilities/Upload';
 import DmsLanding from './pages/user/DmsLanding';
+>>>>>>> develop
 
 function App() {
   return (
@@ -35,6 +52,18 @@ function App() {
           <Route path="/upload" element={<Upload />} />
           <Route path="/test" element={<TestPage />} />
           <Route path="/bookmark" element={<BookmarksNewUsers />} />
+<<<<<<< admin
+
+          {/* Admin Routes */}
+          <Route path="/admin/analytics" element={<Analytics />} />
+          <Route path="/admin/reports" element={<Reports />} />
+          <Route path="/admin/announce" element={<Announcement />} />
+          <Route path="/admin/applications" element={<Applications />} />
+          <Route path="/admin/listings" element={<Listings />} />
+          <Route path="/admin/messages" element={<Messages />} />
+        </Routes>
+      </PageLayout>
+=======
           <Route path="/unit" element={<UnitDetails />} />
           <Route path="/settings-notifications" element={<SettingsNotifications />} />
           <Route path="/dms-landing" element={<DmsLanding />} />
@@ -45,6 +74,7 @@ function App() {
           <Route path="/ratereviewupload" element={<RateAndReviewUpload />} />
         </Route>
       </Routes>
+>>>>>>> develop
     </Router>
   );
 }
