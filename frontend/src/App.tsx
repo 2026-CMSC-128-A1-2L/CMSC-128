@@ -34,21 +34,22 @@ import Applications from './pages/admin/applications';
 import Listings from './pages/admin/listings';
 import Messages from './pages/admin/messages';
 
+import LeaseTransfer from './pages/user/LeaseTransfer';
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/landing" element={<UserLanding />} />
         <Route path="/map" element={<LandingMap />} />
-        <Route path="/dormcard" element={<DormCard />} />
+        {/* <Route path="/dormcard" element={<DormCard />} /> */}
         <Route path="/submit-receipt" element={<SubmitReceipt />} />
         <Route path="/paymentmethods" element={<PaymentMethods />} />
         <Route path="/financepopup" element={<FinancePopup children={undefined} />} />
         <Route path="/" element={<UserLanding />} />
-
+        <Route path="/lease-transfer" element={<LeaseTransfer />}/>
         <Route element={<PageLayout />}>
           <Route path="/contact" element={<ContactUs />} />
-          <Route path="/dmssidebar" element={<DmsSidebar />} />
+          {/* <Route path="/dmssidebar" element={<DmsSidebar />} /> */}
           <Route path="/home" element={<HomePage />} />
           <Route path="/contact" element={<ContactUs />} />
           <Route path="/login" element={<Login />} />

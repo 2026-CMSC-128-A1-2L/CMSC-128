@@ -5,7 +5,7 @@ import DefaultAvatar from '../../assets/default_avatar.svg';
 import { useState, useRef } from 'react';
 import Footer from '../components/Footer';
 import Switch from '../components/CurrentDormToVerificationSwitch';
-import Sidebar from '../components/Sidebar';
+import Sidebar from '../components/SideBar';
 import placeholder from "../../assets/logo_atlas_text.svg"
 
 
