@@ -3,9 +3,9 @@ import SideBar from '../../components/SideBar';
 import { Icon } from '@iconify/react';
 import PropertyTabs from '../../components/unitdetails/PropertyTabs';
 import ImageCarousel from '../../components/ImageCarousel';
-import pic from "../../../assets/landing_contact.svg";
-import pic2 from "../../../assets/landing_listing.svg";
-import pic3 from "../../../assets/landing_contact.svg";
+import pic from "../../../assets/landing_contact.webp";
+import pic2 from "../../../assets/landing_listing.webp";
+import pic3 from "../../../assets/landing_contact.webp";
 
 
 

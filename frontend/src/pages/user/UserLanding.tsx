@@ -1,11 +1,11 @@
 import { FunctionComponent } from 'react';
-import atlas_logo from "../../../assets/sidebar_logo.svg";
-import landing_image from "../../../assets/landing_building.svg";
-import atlas_curious from "../../../assets/logo_curious.svg";
-import atlas_text from "../../../assets/logo_atlas_text.svg";
+import landing_image from "../../../assets/landing_building.webp";
+import AtlasCurious from '../../../assets/logo_curious.svg?react';
+import AtlasText from '../../../assets/logo_atlas_text.svg?react';
 import map from '../../../assets/map.svg';
 import AutoImageSwitcher from '../../components/AutoImageSwitcher';
 import SignInPopUp from '../../components/SignInPopUp';
+
 
 import { Icon } from '@iconify/react';
 import { useState } from 'react';

@@ -4,9 +4,7 @@ import PageLayout from "./pages/utilities/PageLayout";
 import TestPage from "./pages/utilities/TestPage";
 import BookmarksNewUsers from "./pages/user/BookmarksNewUsers";
 import UserLanding from "./pages/user/UserLanding";
-import LandingMap from "./components/LandingMap";
 import UnitDetails from "./pages/user/UnitDetails";
-import PropertyTabs from "./components/unitdetails/PropertyTabs";
 import SettingsNotifications from './pages/user/SettingsNotifications';
 import HomePage from './pages/user/HomePage';
 
