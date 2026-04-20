@@ -15,6 +15,7 @@ import RateAndReviewForm from './pages/RateAndReviewWithForms';
 import RateAndReviewUpload from './pages/RateAndReviewWithUploads';
 import TermsOfUse from './pages/TermsOfUse';
 import Finance from './pages/user/Finance';
+import LandlordManagerSpecific from './pages/LandlordManagerSpecific';
 
 import Login from './pages/utilities/Login';
 import DmsSidebar from './components/DmsSidebar';
@@ -39,7 +40,6 @@ function App() {
       <Routes>
         <Route path="/landing" element={<UserLanding />} />
         <Route path="/map" element={<LandingMap />} />
-        <Route path="/dormcard" element={<DormCard />} />
         <Route path="/submit-receipt" element={<SubmitReceipt />} />
         <Route path="/paymentmethods" element={<PaymentMethods />} />
         <Route path="/financepopup" element={<FinancePopup children={undefined} />} />
@@ -64,6 +64,7 @@ function App() {
           <Route path="/ratereviewupload" element={<RateAndReviewUpload />} />
           <Route path="/terms-of-use" element={<TermsOfUse />} />
           <Route path="/finance" element={<Finance />} />
+          <Route path="/landlord-managerspecific" element={<LandlordManagerSpecific />} />
           
           {/* Admin Routes */}
           <Route path="/admin/analytics" element={<Analytics />} />
