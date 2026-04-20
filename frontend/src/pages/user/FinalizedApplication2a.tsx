@@ -2,7 +2,6 @@ import { FunctionComponent, useCallback } from 'react';
 import {Icon} from '@iconify/react';
 import Verified from "../../../assets/verified_badge.svg";
 import Photo from "../../assets/photo.svg";
-import Arrow from "../../../assets/Arrow up.svg";
 import Sidebar from '../../components/SideBar';
 import Footer from '../../components/Footer'; 
 
@@ -169,7 +168,7 @@ const FinalizedApplication2a: FunctionComponent = () => {
                             														</div>
                           													</div>
                           													<div className="w-[852px] overflow-hidden flex items-center py-num-12 px-num-0 box-border gap-2.5 text-black">
-                            														<Icon icon = "mingcute:pdf-line" className="w-16 relative max-h-full"  />
+                            														<Icon icon = "mingcute:pdf-line" className="h-16 w-16 relative "  />
                             														<div className="flex flex-col items-start justify-center gap-2">
                               															<b className="relative">id.png</b>
                               															<div className="relative text-[12px] tracking-[0.02em] font-semibold font-lora text-slategray">Submitted: 02 April 2026</div>
@@ -196,7 +195,7 @@ const FinalizedApplication2a: FunctionComponent = () => {
                             														</div>
                           													</div>
                           													<div className="w-[852px] overflow-hidden flex items-center py-num-12 px-num-0 box-border gap-2.5 text-left text-black">
-                            														<Icon icon = "mingcute:pdf-line" className="w-16 relative max-h-full"  />
+                            														<Icon icon = "mingcute:pdf-line" className="h-16 w-16 relative "  />
                             														<div className="flex flex-col items-start justify-center gap-2">
                               															<b className="relative">requirement.pdf</b>
                               															<div className="relative text-[12px] tracking-[0.02em] font-semibold font-lora text-slategray">Submitted: 02 April 2026</div>
@@ -223,7 +222,7 @@ const FinalizedApplication2a: FunctionComponent = () => {
                             														</div>
                           													</div>
                           													<div className="w-[852px] overflow-hidden flex items-center py-num-12 px-num-0 box-border gap-2.5 text-left text-black">
-                            														<Icon icon = "mingcute:pdf-line" className="w-16 relative max-h-full"  />
+                            														<Icon icon = "mingcute:pdf-line" className="h-16 w-16 relative "  />
                             														<div className="flex flex-col items-start justify-center gap-2">
                               															<b className="relative">contract.pdf</b>
                               															<div className="relative text-[12px] tracking-[0.02em] font-semibold font-lora text-slategray">Submitted: 02 April 2026</div>
