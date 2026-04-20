@@ -33,6 +33,10 @@ import Bookmark from '../../assets/material-symbols_bookmark-outline-rounded.svg
 import Verified from '../../assets/material-symbols_verified.svg'
 import Trash from '../../assets/Trash.svg'
 import Vector from '../../assets/Vector.svg'
+import { Icon } from '@iconify/react';
+
+
+
 const LeaseTransfer: FunctionComponent = () => {
   	
   	const onMessagesContainerClick = useCallback(() => {
@@ -64,21 +68,21 @@ const LeaseTransfer: FunctionComponent = () => {
                 								<div className="self-stretch h-16 overflow-hidden shrink-0 flex items-end p-num-10 box-border gap-2.5" data-scroll-to="searchBarContainer">
                   									<div className="h-6 flex items-center gap-1.5">
                     										<div className="relative font-semibold">User Profile</div>
-                    										<img className="h-6 w-6 relative" alt="" />
+                    										<img className="h-6 w-6 relative" alt="" src={IconAMoonArrowRight}/>
                     										<div className="relative font-semibold">Current Dorm</div>
                   									</div>
                   									<div className="w-[704px] rounded-num-12 bg-aliceblue overflow-hidden shrink-0 hidden items-center py-num-10 px-6 box-border gap-2.5 text-dimgray font-inter">
-                    										<img className="h-6 w-6 relative" alt="" />
+                    										<img className="h-6 w-6 relative" alt="" src={IconAMoonArrowRight}/>
                     										<b className="relative">Search for Dorms, Apartments, or Locations (e.g. UPLB, Umali Subdivision)</b>
                   									</div>
-                  									<img className="h-6 w-6 relative" alt="" />
+                  									<img className="h-6 w-6 relative" alt="" src={IconAMoonArrowRight}/>
                   									<div className="relative font-semibold">Pasalo Unit</div>
                 								</div>
                 								<div className="self-stretch h-[1599px] rounded-2xl bg-white border-whitesmoke-200 border-solid border-[1px] box-border flex flex-col items-start py-num-32 px-num-0 gap-[21px] shrink-0 text-black">
                   									<div className="self-stretch h-[349px] flex flex-col items-start gap-3">
                     										<div className="w-[1128px] h-[196px] flex items-center justify-center py-num-0 px-[100px] box-border">
                       											<div className="h-[195px] w-[928px] rounded-num-12 border-whitesmoke-200 border-solid border-[1px] box-border flex items-center gap-2.5">
-                        												<img className="h-[195px] w-[305px] rounded-tl-num-12 rounded-tr-num-0 rounded-br-num-0 rounded-bl-num-12 object-cover" alt="" />
+                        												<img className="h-[195px] w-[305px] rounded-tl-num-12 rounded-tr-num-0 rounded-br-num-0 rounded-bl-num-12 object-cover" alt="" src={Image}/>
                         												<div className="h-[195px] flex-1 rounded-2xl flex flex-col items-center py-num-0 px-num-12 box-border">
                           													<div className="w-full h-[195px] flex flex-col items-center justify-center gap-0.5 max-w-full">
                             														<div className="self-stretch flex flex-col items-start py-num-12 px-num-0 gap-0.5">
@@ -92,13 +96,13 @@ const LeaseTransfer: FunctionComponent = () => {
                                 																</b>
                               															</div>
                               															<div className="self-stretch flex items-center py-num-0 px-num-12 gap-2">
-                                																<img className="w-[9px] relative max-h-full" alt="" />
+                                																<img className="w-[9px] relative max-h-full" alt="" src={Icon0}/>
                                 																<div className="flex items-center justify-center">
                                   																	<div className="relative font-medium">Batong Malake, Los Banos, Laguna</div>
                                 																</div>
                               															</div>
                               															<div className="self-stretch flex items-center py-num-0 px-num-12 gap-[7px]">
-                                																<img className="h-[9px] w-[9px] relative" alt="" />
+                                																<img className="h-[9px] w-[9px] relative" alt="" src={Vector}/>
                                 																<div className="flex items-center justify-center">
                                   																	<div className="relative">
                                     																		<span className="font-medium">{`Quevin Custodio `}</span>
@@ -107,7 +111,7 @@ const LeaseTransfer: FunctionComponent = () => {
                                 																</div>
                               															</div>
                               															<div className="self-stretch flex items-center py-num-0 px-num-12 gap-[7px]">
-                                																<img className="h-[9px] w-[9px] relative" alt="" />
+                                																<img className="h-[9px] w-[9px] relative" alt="" src={Vector}/>
                                 																<div className="flex items-center justify-center">
                                   																	<div className="relative">
                                     																		<span className="font-medium">{`Nathaniel Cunanan `}</span>
