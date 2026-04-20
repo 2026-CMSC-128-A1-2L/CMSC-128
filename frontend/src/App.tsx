@@ -15,7 +15,7 @@ import Login from './pages/utilities/Login';
 import DmsSidebar from './components/DmsSidebar';
 import Upload from './pages/utilities/Upload';
 import DmsLanding from './pages/user/DmsLanding';
-
+import Report from "./pages/user/Report";
 function App() {
   return (
     <Router>
@@ -38,6 +38,9 @@ function App() {
           <Route path="/ratereview" element={<RateAndReview />} />
           <Route path="/ratereviewform" element={<RateAndReviewForm />} />
           <Route path="/ratereviewupload" element={<RateAndReviewUpload />} />
+
+          
+          <Route path="/report" element={<Report />}/>
         </Route>
       </Routes>
     </Router>
