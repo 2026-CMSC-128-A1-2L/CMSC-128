@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import type { FunctionComponent } from 'react';
 import { Icon } from '@iconify/react';
 import pic from '../../assets/sapphire.jpg';
 
@@ -23,16 +23,14 @@ const DormCard: FunctionComponent = () => {
         <div className="w-full relative flex flex-col items-start">
           <div className="w-full relative flex items-center gap-[0.237rem] text-left text-[0.5rem] text-dimgray font-lora">
             <Icon icon="material-symbols-light:location-on" className="w-3 h-3"></Icon>
-            <div className="flex-1 relative tracking-[0.04em] font-semibold">
-              Sapphire St., Los Banos
-            </div>
+            <div className="flex-1 relative text-num-10 font-semibold">Sapphire St., Los Banos</div>
           </div>
           <div className="w-full relative flex items-center gap-1 text-left text-[0.5rem] text-teal font-lora">
-            <div className="relative font-semibold">{`Offers: `}</div>
+            {/* <div className="relative font-semibold">{`Offers: `}</div> */}
             <div className="flex-1 flex items-center gap-1 text-[0.479rem]">
               <div className="flex-1 flex items-center gap-1">
-                <div className="relative rounded w-fit h-full overflow-hidden flex items-center py-0.75 pl-1 pr-1.5 border-whitesmoke border-solid border-[1px] box-border gap-0.75 text-left text-[0.5rem] text-teal font-lora">
-                  <Icon icon="heroicons:wifi-16-solid" className="w-2.5 h-2.5" />
+                <div className="relative rounded w-fit h-full overflow-hidden flex items-center py-0.75 pl-1 pr-1.5 border-whitesmoke border-solid border-[1px] box-border gap-0.75 text-left text-num-8 text-teal font-lora">
+                  <Icon icon="heroicons:wifi-16-solid" className="w-3 h-3" />
                   <div className="relative font-semibold">Free Wi-Fi</div>
                 </div>
 

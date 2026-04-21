@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import type mongoose from 'mongoose';
 import { AppError } from '../../error';
 import { combineFilters } from '../../middleware';
 import { HousingFacility } from '../facility/facility.model';
@@ -84,13 +84,13 @@ export type createReviewArguments = {
   studentId: mongoose.Types.ObjectId;
   listingId: mongoose.Types.ObjectId;
   rating: number;
-  description?: String;
+  description?: string;
 };
 
 export type updateReviewArguments = {
   reviewId: mongoose.Types.ObjectId;
   rating?: number;
-  description?: String;
+  description?: string;
 };
 
 export const createReview = async (

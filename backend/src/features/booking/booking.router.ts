@@ -2,10 +2,8 @@ import { Router } from 'express';
 import {
   routeGetBookings,
   routeCreateBooking,
-  routeUpdateBooking,
   routeCancelBooking,
-  routeApproveBooking,
-  routeRejectBooking,
+  routeUpdateBookingStatus,
 } from './booking.controller';
 import { isSuperAdmin, isVerifiedStudent, managerFilter } from '../../middleware';
 
@@ -16,16 +14,12 @@ router.get('/', isSuperAdmin, routeGetBookings);
 // POST /api/bookings
 router.post('/', isVerifiedStudent, routeCreateBooking);
 // PATCH /api/bookings/:bookingId
-router.patch('/:bookingId', managerFilter('facility', 'manageListings', true), routeUpdateBooking);
+router.patch(
+  '/:bookingId',
+  managerFilter('facility', 'manageListings', true),
+  routeUpdateBookingStatus,
+);
 // DELETE /api/bookings/:bookingId
 router.delete('/:bookingId', managerFilter('facility', 'manageListings', true), routeCancelBooking);
-// POST /api/bookings/:bookingId/approve
-router.post(
-  '/:bookingId/approve',
-  managerFilter('facility', 'manageListings'),
-  routeApproveBooking,
-);
-// POST /api/bookings/:bookingId/reject
-router.post('/:bookingId/reject', managerFilter('facility', 'manageListings'), routeRejectBooking);
 
 export default router;
