@@ -1,8 +1,8 @@
 import { FunctionComponent, useCallback } from 'react';
 import { Icon } from '@iconify/react';
-import info_icon from '../../assets/infoicon_icon.svg';
-import SideBar from '../components/SideBar';
-import Footer from '../components/Footer';
+import info_icon from '../../../assets/infoicon_icon.svg';
+import SideBar from '../../components/SideBar';
+import Footer from '../../components/Footer';
 
 const SettingsGen: FunctionComponent = () => {
 

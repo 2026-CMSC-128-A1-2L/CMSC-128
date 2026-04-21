@@ -1,6 +1,6 @@
 import { FunctionComponent, useCallback } from 'react';
-import footer_logo from '../../assets/footer_logo.svg'
-import SideBar from '../components/SideBar';
+import footer_logo from '../../../assets/footer_logo.svg'
+import SideBar from '../../components/SideBar';
 import { Icon } from '@iconify/react';
 
 const SettingsSecurity: FunctionComponent = () => {
