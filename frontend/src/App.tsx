@@ -20,7 +20,7 @@ import MyCalendar from './pages/MyCalendar';
 import SettingsSecurity from "./pages/SettingsSecurity";
 import LandlordHomepage from "./pages/LandlordHomePage";
 import LandlordManagerList from "./pages/LandlordManagersList";
-
+import FinalizedApplicationPage1a from './pages/user/FinalizedApplicationPage1a';
 
 
 
@@ -31,6 +31,8 @@ import Upload from './pages/utilities/Upload';
 import DmsLanding from './pages/user/DmsLanding';
 import UserVerif from './pages/user/UserVerif';
 import LandlordVerif from './pages/LandlordVerif';
+import DormCard from './components/DormCard';
+import DmsSidebar from './components/DmsSidebar';
 
 import SettingsPreferences from './pages/user/SettingsPreferences';
 import SubmitReceipt from './components/SubmitReceipt';
@@ -85,7 +87,7 @@ function App() {
           <Route path="/user-verif" element={<UserVerif />} />
           <Route path="/ll-verif" element={<LandlordVerif />} />
           <Route path="/landlord-managerslist" element={<LandlordManagerList />} />
-
+          <Route path ="/finalizedapplication1a" element= {<FinalizedApplicationPage1a />} />
 
 
 
