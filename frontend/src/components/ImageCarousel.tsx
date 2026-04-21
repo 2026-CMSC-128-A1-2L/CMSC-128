@@ -1,14 +1,14 @@
 import React, { useState, useCallback, useMemo, memo } from 'react';
 import { Icon } from '@iconify/react';
 
-import Lightbox from "yet-another-react-lightbox";
-import "yet-another-react-lightbox/styles.css";
+import Lightbox from 'yet-another-react-lightbox';
+import 'yet-another-react-lightbox/styles.css';
 
-import Counter from "yet-another-react-lightbox/plugins/counter";
-import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
+import Counter from 'yet-another-react-lightbox/plugins/counter';
+import Thumbnails from 'yet-another-react-lightbox/plugins/thumbnails';
 
-import "yet-another-react-lightbox/plugins/counter.css";
-import "yet-another-react-lightbox/plugins/thumbnails.css";
+import 'yet-another-react-lightbox/plugins/counter.css';
+import 'yet-another-react-lightbox/plugins/thumbnails.css';
 
 interface Props {
   images: string[];
@@ -24,36 +24,37 @@ const ImageCarousel: React.FC<Props> = ({ images }) => {
 
   const len = images.length;
 
-  const navigate = useCallback((dir: 'left' | 'right') => {
-    if (isAnimating || len <= 1) return;
+  const navigate = useCallback(
+    (dir: 'left' | 'right') => {
+      if (isAnimating || len <= 1) return;
 
-    setIsAnimating(true);
-    setDirection(dir);
+      setIsAnimating(true);
+      setDirection(dir);
 
-    setCurrent((prev) =>
-      dir === 'right'
-        ? (prev + 1) % len
-        : (prev - 1 + len) % len
-    );
+      setCurrent((prev) => (dir === 'right' ? (prev + 1) % len : (prev - 1 + len) % len));
 
-    setTimeout(() => {
-      setIsAnimating(false);
-      setDirection(null);
-    }, 400);
-  }, [isAnimating, len]);
+      setTimeout(() => {
+        setIsAnimating(false);
+        setDirection(null);
+      }, 400);
+    },
+    [isAnimating, len],
+  );
 
-  const indices = useMemo(() => ({
-    prev: (current - 1 + len) % len,
-    next: (current + 1) % len,
-  }), [current, len]);
+  const indices = useMemo(
+    () => ({
+      prev: (current - 1 + len) % len,
+      next: (current + 1) % len,
+    }),
+    [current, len],
+  );
 
-  const transitionClass = "transition-all duration-400 ease-out transform-gpu";
+  const transitionClass = 'transition-all duration-400 ease-out transform-gpu';
 
-  const slides = useMemo(() => images.map(src => ({ src })), [images]);
+  const slides = useMemo(() => images.map((src) => ({ src })), [images]);
 
   return (
     <div className="self-stretch h-[427.9px] relative overflow-hidden select-none">
-
       <img
         className={`absolute h-[83.34%] w-[83.37%] top-[8.33%] left-[-16.63%]
           shadow-lg rounded-[18.57px] object-cover 
@@ -103,7 +104,7 @@ const ImageCarousel: React.FC<Props> = ({ images }) => {
         slides={slides}
         plugins={[Counter, Thumbnails]}
         thumbnails={{
-          position: "bottom",
+          position: 'bottom',
           width: 80,
           height: 60,
           gap: 12,
@@ -113,16 +114,18 @@ const ImageCarousel: React.FC<Props> = ({ images }) => {
   );
 };
 
-const NavButton = memo(({ icon, onClick, disabled }: { icon: string, onClick: () => void, disabled: boolean }) => (
-  <button
-    onClick={onClick}
-    disabled={disabled}
-    className={`pointer-events-auto h-12 w-12 shadow-md rounded-full bg-white/90 backdrop-blur-sm 
+const NavButton = memo(
+  ({ icon, onClick, disabled }: { icon: string; onClick: () => void; disabled: boolean }) => (
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      className={`pointer-events-auto h-12 w-12 shadow-md rounded-full bg-white/90 backdrop-blur-sm 
     flex items-center justify-center hover:bg-white active:scale-90 transition-transform
     ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
-  >
-    <Icon icon={icon} className="w-8 h-8 text-slate-800" />
-  </button>
-));
+    >
+      <Icon icon={icon} className="w-8 h-8 text-slate-800" />
+    </button>
+  ),
+);
 
 export default memo(ImageCarousel);

@@ -23,17 +23,25 @@ const ReviewCard: FunctionComponent<ReviewCardProps> = ({ initials, name, date, 
               </div>
             </div>
             <div className="w-[215px] flex flex-col items-start text-left text-[14px] text-black font-inter">
-              <div className="self-stretch h-3.5 relative leading-6 font-medium flex items-center shrink-0">{name}</div>
-              <div className="self-stretch h-3.5 relative text-[8px] text-darkslategray flex items-center shrink-0">{date}</div>
+              <div className="self-stretch h-3.5 relative leading-6 font-medium flex items-center shrink-0">
+                {name}
+              </div>
+              <div className="self-stretch h-3.5 relative text-[8px] text-darkslategray flex items-center shrink-0">
+                {date}
+              </div>
             </div>
           </div>
           <div className="w-[82px] flex flex-col items-end shrink-0 text-left text-num-18 text-teal-200 font-inter">
             <Icon icon="material-symbols:star-rounded" className="w-[13px] h-[13px]" />
-            <b className="self-stretch h-3.5 relative tracking-num--0_01 flex items-center shrink-0">{rating}</b>
+            <b className="self-stretch h-3.5 relative tracking-num--0_01 flex items-center shrink-0">
+              {rating}
+            </b>
           </div>
         </div>
         <div className="w-[766px] flex items-start py-2.5 px-num-20 box-border text-left text-black">
-          <div className="w-[763px] relative tracking-num-0_02 font-semibold inline-block shrink-0">{text}</div>
+          <div className="w-[763px] relative tracking-num-0_02 font-semibold inline-block shrink-0">
+            {text}
+          </div>
         </div>
       </div>
     </div>
