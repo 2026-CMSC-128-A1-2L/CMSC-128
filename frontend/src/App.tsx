@@ -32,6 +32,8 @@ import Upload from './pages/utilities/Upload';
 import DmsLanding from './pages/user/DmsLanding';
 import UserVerif from './pages/user/UserVerif';
 import LandlordVerif from './pages/LandlordVerif';
+import Report from "./pages/user/Report";
+
 
 import SettingsPreferences from './pages/user/SettingsPreferences';
 import SubmitReceipt from './components/SubmitReceipt';
@@ -85,7 +87,9 @@ function App() {
           <Route path="/ll-verif" element={<LandlordVerif />} />
           <Route path="/landlord-managerslist" element={<LandlordManagerList />} />
           <Route path="/finalizedapplication1a" element={<FinalizedApplicationPage1a />} />
-          <Route path="/landlord-managerspecific" element={<LandlordManagerSpecific />} />
+          <Route path="/landlord-managerspecific" element={<LandlordManagerSpecific />} 
+          <Route path="/report" element={<Report />}/>
+
 
 
 
