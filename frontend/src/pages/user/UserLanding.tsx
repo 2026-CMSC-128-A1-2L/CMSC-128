@@ -1,11 +1,10 @@
-import { FunctionComponent } from 'react';
-import landing_image from "../../../assets/landing_building.webp";
+import type { FunctionComponent } from 'react';
+import landing_image from '../../../assets/landing_building.webp';
 import AtlasCurious from '../../../assets/logo_curious.svg?react';
 import AtlasText from '../../../assets/logo_atlas_text.svg?react';
 import map from '../../../assets/map.svg';
 import AutoImageSwitcher from '../../components/AutoImageSwitcher';
 import SignInPopUp from '../../components/SignInPopUp';
-
 
 import { Icon } from '@iconify/react';
 import { useState } from 'react';
@@ -23,7 +22,7 @@ const UserLanding: FunctionComponent = () => {
               <div className="flex-1 flex flex-col items-start justify-center">
                 <div className="flex items-center gap-2">
                   <AtlasText className="w-32 h-auto fill-darkslategray" fill="#024338" />
-                  <Icon icon="tabler:chevron-down-filled" className="h-6 w-6 relative" />
+                  <Icon icon="mdi-light:chevron-down" className="h-6 w-6 relative" />
                 </div>
               </div>
               <div className="self-stretch flex items-center gap-12 text-center text-teal-200">
@@ -44,17 +43,12 @@ const UserLanding: FunctionComponent = () => {
                 </div>
               </div>
               <button onClick={() => setShowSignIn(true)}>
-
                 <div className="rounded-[45px] [background:linear-gradient(99.18deg,_#5dc2a8_27.88%,_#0c8873_88.15%)] flex items-center justify-center py-3 px-4 gap-1 text-white cursor-pointer">
                   Sign In
                   <Icon icon="si:arrow-right-duotone" className="w-7 h-7 relative" />
                 </div>
-
               </button>
-              {showSignIn && (
-                <SignInPopUp onClose={() => setShowSignIn(false)} />
-              )}
-
+              {showSignIn && <SignInPopUp onClose={() => setShowSignIn(false)} />}
             </div>
           </div>
 
@@ -519,7 +513,7 @@ const UserLanding: FunctionComponent = () => {
           </div>
         </div>
       </div>
-    </div >
+    </div>
   );
 };
 

@@ -62,6 +62,6 @@ router.post(
   routeRejectTransferRequest,
 );
 // DELETE /api/transfers/:transferId
-router.delete('/:transferId', selfFilter(false), routeCancelTransferRequest); // TODO: check if transfer is already processed, cannot delete
+router.delete('/:transferId', selfFilter, routeCancelTransferRequest); // TODO: check if transfer is already processed, cannot delete
 
 export default router;

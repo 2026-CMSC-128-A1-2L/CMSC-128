@@ -1,15 +1,15 @@
 import { Icon } from '@iconify/react';
-import { FunctionComponent } from 'react';
+import type { FunctionComponent } from 'react';
 
 const InboxMessage: FunctionComponent = () => {
   return (
     <div className="w-[180px] relative rounded-xl bg-white border-whitesmoke border-solid border-[1px] box-border flex items-start pt-[0.5rem] px-[0.75rem] pb-[1rem] gap-[0.5rem] text-right text-[0.5rem] text-slategray font-lora">
-      {/* <div className="self-stretch flex items-center">
-        				<img className="w-[0.313rem] relative max-h-full" alt="" />
-      			</div> */}
+      <div className="self-stretch flex items-center">
+        <img className="w-[0.313rem] relative max-h-full" alt="" />
+      </div>
       <div className="flex-1 flex flex-col items-start gap-[0.125rem]">
         <div className="self-stretch overflow-hidden flex items-start justify-end">
-          <div className="flex-1 relative font-semibold text-num-10 text-preview">2m ago</div>
+          <div className="flex-1 relative tracking-[0.04em] font-semibold">2m ago</div>
         </div>
         <div className="self-stretch flex items-start gap-[0.25rem] text-left text-[0.813rem] text-darkslategray font-inter">
           <div className="self-stretch overflow-hidden flex items-start py-[0.25rem] px-[0.187rem]">
