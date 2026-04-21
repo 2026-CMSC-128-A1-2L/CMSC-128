@@ -1,7 +1,15 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import '../../config.js';
 import { describe, it, expect } from 'vitest';
-import { buildStudent, buildUnverifiedLandlord } from '../../test/factories.js';
-import { student, landlordAgent, adminAgent, guestAgent, studentAgent } from '../../test/setup.js';
+import { buildStudent, buildUnverifiedLandlord } from '../../../src/test/factories.js';
+import {
+  student,
+  landlordAgent,
+  adminAgent,
+  guestAgent,
+  studentAgent,
+} from '../../../src/test/setup.js';
 import mongoose from 'mongoose';
 
 describe('Users API', () => {
@@ -81,28 +89,39 @@ describe('Users API', () => {
     });
   });
 
-  describe('PATCH /api/users/:userId', () => {
+  describe('PATCH /api/users/me', () => {
     it('should return 401 for unauthenticated users', async () => {
-      const response = await guestAgent
-        .patch(`/api/users/${student._id}`)
-        .send({ address: 'New Address' });
+      const response = await guestAgent.patch(`/api/users/me`).send({ address: 'New Address' });
       expect(response).statusToBe(401);
     });
 
     it('should update own profile', async () => {
-      const response = await studentAgent
-        .patch(`/api/users/${student._id}`)
-        .send({ address: 'New Address' });
+      const response = await studentAgent.patch(`/api/users/me`).send({ address: 'New Address' });
       expect(response).statusToBe(200);
     });
 
-    it('should prevent updating other users profile', async () => {
+    // no api for this
+    it.skip('should prevent updating other users profile via direct userId', async () => {
       const otherStudent = await buildStudent.create();
       const response = await studentAgent
         .patch(`/api/users/${otherStudent._id}`)
         .send({ address: 'New Address' });
-      expect(response).statusToBe(404);
+      expect(response).statusToBe(403);
     });
+  });
+
+  describe('DELETE /api/users/me', () => {
+    it('should return 401 for unauthenticated users', async () => {
+      const response = await guestAgent.delete(`/api/users/me`);
+      expect(response).statusToBe(401);
+    });
+
+    it('should allow self deletion', async () => {
+      const response = await studentAgent.delete(`/api/users/me`);
+      expect(response).statusToBe(200);
+    });
+
+    it.skip('should delete the authenticated user when using self-delete endpoint', async () => {});
   });
 
   describe('DELETE /api/users/:userId', () => {
@@ -111,21 +130,16 @@ describe('Users API', () => {
       expect(response).statusToBe(401);
     });
 
-    it('should allow self deletion', async () => {
-      const response = await studentAgent.delete(`/api/users/${student._id}`);
-      expect(response).statusToBe(200);
+    it('should prevent students from deleting other users', async () => {
+      const otherStudent = await buildStudent.create();
+      const response = await studentAgent.delete(`/api/users/${otherStudent._id}`);
+      expect(response).statusToBe(403);
     });
 
     it('should allow admin to delete users', async () => {
       const newStudent = await buildStudent.create();
       const response = await adminAgent.delete(`/api/users/${newStudent._id}`);
       expect(response).statusToBe(200);
-    });
-
-    it('should prevent students from deleting other users', async () => {
-      const otherStudent = await buildStudent.create();
-      const response = await studentAgent.delete(`/api/users/${otherStudent._id}`);
-      expect(response).statusToBe(404);
     });
   });
 
@@ -135,7 +149,10 @@ describe('Users API', () => {
         verificationStatus: 'submitted',
         status: 'unverified',
       });
-      const response = await guestAgent.post(`/api/users/${newStudent._id}/approve`);
+      const response = await guestAgent.post(`/api/users/${newStudent._id}/approve`).send({
+        degreeProgram: 'BS Computer Science',
+        studentNumber: '202314402',
+      });
       expect(response).statusToBe(401);
     });
 
@@ -198,7 +215,10 @@ describe('Users API', () => {
           { docId: 'id2', name: 'Enrollment Form', status: 'accepted', files: ['file2.pdf'] },
         ],
       });
-      const response = await adminAgent.post(`/api/users/${newStudent._id}/approve`);
+      const response = await adminAgent.post(`/api/users/${newStudent._id}/approve`).send({
+        degreeProgram: 'BS Computer Science',
+        studentNumber: '202314402',
+      });
       expect(response).statusToBe(204);
     });
 

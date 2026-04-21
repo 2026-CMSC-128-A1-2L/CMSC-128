@@ -18,8 +18,8 @@ const router = Router();
 // - Prevents leaking private listing reviews
 router.get('/', listingViewFilter, routeGetReviews);
 // PATCH /api/reviews/:reviewId
-router.patch('/:reviewId', selfFilter(false), routeUpdateReview);
+router.patch('/:reviewId', selfFilter, routeUpdateReview);
 // DELETE /api/reviews/:reviewId
-router.delete('/:reviewId', selfFilter(false), routeDeleteReview);
+router.delete('/:reviewId', selfFilter, routeDeleteReview);
 
 export default router;
