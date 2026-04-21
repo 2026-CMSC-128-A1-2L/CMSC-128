@@ -22,7 +22,7 @@ import LandlordHomepage from "./pages/LandlordHomePage";
 import LandlordManagerList from "./pages/LandlordManagersList";
 import FinalizedApplicationPage1a from './pages/user/FinalizedApplicationPage1a';
 import LandlordManagerSpecific from './pages/LandlordManagerSpecific';
-
+import ReviewReportFinal from './pages/user/ReportReviewFinal';
 
 
 
@@ -30,9 +30,6 @@ import LandlordManagerSpecific from './pages/LandlordManagerSpecific';
 import Login from './pages/utilities/Login';
 import Upload from './pages/utilities/Upload';
 import DmsLanding from './pages/user/DmsLanding';
-<<<<<<< HEAD
-import ReviewReportFinal from './pages/user/ReportReviewFinal';
-=======
 import UserVerif from './pages/user/UserVerif';
 import LandlordVerif from './pages/LandlordVerif';
 import Report from "./pages/user/Report";
@@ -52,7 +49,6 @@ import Listings from './pages/admin/listings';
 import Messages from './pages/admin/messages';
 import DmsSidebar from './components/DmsSidebar';
 
->>>>>>> develop
 function App() {
   return (
     <Router>
@@ -81,11 +77,7 @@ function App() {
           <Route path="/ratereview" element={<RateAndReview />} />
           <Route path="/ratereviewform" element={<RateAndReviewForm />} />
           <Route path="/ratereviewupload" element={<RateAndReviewUpload />} />
-<<<<<<< HEAD
-
           <Route path="/reportreviewfinal" element={<ReviewReportFinal />} />
-
-=======
           <Route path="/terms-of-use" element={<TermsOfUse />} />
           <Route path="/finance" element={<Finance />} />
           <Route path="/mycalendar" element={<MyCalendar />} />
@@ -110,11 +102,10 @@ function App() {
           <Route path="/admin/applications" element={<Applications />} />
           <Route path="/admin/listings" element={<Listings />} />
           <Route path="/admin/messages" element={<Messages />} />
->>>>>>> develop
-        </Route>
+        </Route >
         <Route path="/settings/preferences" element={<SettingsPreferences />} />
-      </Routes>
-    </Router>
+      </Routes >
+    </Router >
   );
 }
 

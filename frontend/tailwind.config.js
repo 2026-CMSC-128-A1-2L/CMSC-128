@@ -1,56 +1,4 @@
 /** @type {import('tailwindcss').Config} */
-<<<<<<< HEAD
-module.exports = {
-  	"content": [
-    		"./src/**/*.{js,jsx,ts,tsx}"
-  	],
-  	"theme": {
-    		"extend": {
-      			"colors": {
-        				"white": "#fff",
-        				"whitesmoke": {
-          					"100": "#f8fafc",
-          					"200": "#f0f0f0"
-        				},
-        				"darkslategray": {
-          					"100": "#2f3136",
-          					"200": "#024338"
-        				},
-        				"aliceblue": "#f1f5f9",
-        				"dimgray": "#666",
-        				"black": "#000",
-        				"silver": "#bdbdbd",
-        				"lightcyan": "#cbf6ed",
-        				"teal": "#096c5b",
-        				"slategray": "#64748b"
-      			},
-      			"spacing": {
-        				"num-1": "1px solid #f0f0f0"
-      			},
-      			"fontFamily": {
-        				"lora": "Lora",
-        				"inter": "Inter",
-        				"poppins": "Poppins"
-      			},
-      			"borderRadius": {
-        				"num-16": "16px"
-      			},
-      			"padding": {
-        				"num-32": "32px",
-        				"num-0": "0px",
-        				"num-10": "10px",
-        				"num-12": "12px"
-      			}
-    		},
-    		"fontSize": {
-      			"num-14": "14px"
-    		}
-  	},
-  	"corePlugins": {
-    		"preflight": false
-  	}
-}
-=======
 export default {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
@@ -275,4 +223,3 @@ export default {
     preflight: false,
   },
 };
->>>>>>> develop
