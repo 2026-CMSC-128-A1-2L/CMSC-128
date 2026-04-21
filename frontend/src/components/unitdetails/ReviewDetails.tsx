@@ -30,20 +30,13 @@ const reviews = [
 const ReviewDetails: FunctionComponent = () => {
   return (
     <div className="w-full relative flex flex-col items-start gap-[29px] text-center text-num-18 text-gray font-inter">
-
-
       <div className="self-stretch flex flex-col items-center gap-[26px] text-black">
-
         <div className="self-stretch flex flex-col items-start text-left">
           <div className="self-stretch h-[52px] flex items-center py-2.5 px-num-20 box-border">
             <b className="relative tracking-num--0_01">Reviews</b>
           </div>
           <div className="self-stretch flex flex-col items-start py-[9px] px-[46px] text-center text-[48px] text-darkslategray font-lora">
-            <RatingBreakdown
-              overallScore={4.7}
-              totalReviews={12}
-              rows={ratingRows}
-            />
+            <RatingBreakdown overallScore={4.7} totalReviews={12} rows={ratingRows} />
           </div>
         </div>
 
@@ -61,22 +54,9 @@ const ReviewDetails: FunctionComponent = () => {
             </div>
           </div>
         </div>
-
       </div>
     </div>
   );
 };
 
 export default ReviewDetails;
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import type mongoose from 'mongoose';
 import { AppError } from '../../error';
 import { HousingFacility } from '../facility/facility.model';
 import { Listing } from '../listing/listing.model';

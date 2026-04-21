@@ -1,33 +1,63 @@
 import mongoose from 'mongoose';
+import { documentSchema, type DocumentType } from '../document/document.model';
 
-const billingSchema = new mongoose.Schema({
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'Student', required: true },
-  unitId: { type: mongoose.Schema.Types.ObjectId, ref: 'Unit', required: true },
+const PAYMENT_STATUS = ['unpaid', 'paid', 'overdue', 'partially_paid'];
+type PaymentStatusType = (typeof PAYMENT_STATUS)[number];
 
-  // Which facility this billing belongs to (for permission checks)
-  facilityId: { type: mongoose.Schema.Types.ObjectId, ref: 'HousingFacility', required: true },
+export type BillingType = {
+  userId: mongoose.Types.ObjectId;
+  unitId: mongoose.Types.ObjectId;
+  facilityId: mongoose.Types.ObjectId;
+  dueDate?: Date | null;
+  paymentDate?: Date | null;
+  paidAmount?: number | null;
+  totalAmount: number;
+  paymentStatus: PaymentStatusType;
+  documents: DocumentType[];
+  breakdown: {
+    name: string;
+    amount: number;
+  }[];
+};
 
-  dueDate: { type: Date },
-  paymentDate: { type: Date },
-  paidAmount: { type: Number },
-  amount: { type: Number },
+const billingSchema = new mongoose.Schema<BillingType>(
+  {
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'Student', required: true },
+    unitId: { type: mongoose.Schema.Types.ObjectId, ref: 'Unit', required: true },
 
-  // 'Unpaid' is when `paymentDate` is undefined
-  // 'paid' is when `paymentDate` <= `dueDate`
-  // 'overdue' is when `paymentDate` <= `dueDate`
-  // 'partially_paid' is when `paidAmount` <= `amount`
-  paymentStatus: {
-    type: String,
-    enum: ['unpaid', 'paid', 'overdue', 'partially_paid'],
-    default: 'unpaid',
+    // Which facility this billing belongs to (for permission checks)
+    facilityId: { type: mongoose.Schema.Types.ObjectId, ref: 'HousingFacility', required: true },
+
+    dueDate: { type: Date },
+    paymentDate: { type: Date },
+    paidAmount: { type: Number },
+    totalAmount: { type: Number, required: true },
+
+    // 'Unpaid' is when `paymentDate` is undefined
+    // 'paid' is when `paymentDate` <= `dueDate`
+    // 'overdue' is when `paymentDate` <= `dueDate`
+    // 'partially_paid' is when `paidAmount` <= `amount`
+    paymentStatus: {
+      type: String,
+      enum: PAYMENT_STATUS,
+      default: 'unpaid',
+    },
+
+    // URL or file path to the proof of payment
+    documents: { type: [documentSchema], required: true, default: [] },
+
+    breakdown: {
+      type: [
+        {
+          name: { type: String, required: true },
+          amount: { type: Number, required: true },
+        },
+      ],
+      required: true,
+      default: [],
+    },
   },
-
-  // URL or file path to the proof of payment
-  proofOfPayment: {
-    file: { type: String, ref: 'File', required: true },
-    isVerified: { type: Boolean, default: false },
-  },
-  paymentType: { type: String }, // e.g., 'rent', 'deposit', 'utility'
-});
+  { timestamps: true },
+);
 
 export const Billing = mongoose.model('Billing', billingSchema);
