@@ -30,7 +30,7 @@ export const getApp = (envOverride: Record<string, string>) => {
     collection: 'sessions',
   });
 
-  store.on('error', function (error) {
+  store.on('error', (error) => {
     console.error(error);
   });
 
