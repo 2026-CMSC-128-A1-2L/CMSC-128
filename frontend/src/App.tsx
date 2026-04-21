@@ -22,7 +22,9 @@ import LandlordHomepage from "./pages/LandlordHomePage";
 import LandlordManagerList from "./pages/LandlordManagersList";
 import FinalizedApplicationPage1a from './pages/user/FinalizedApplicationPage1a';
 import LandlordManagerSpecific from './pages/LandlordManagerSpecific';
+import PendingApplication1a from './pages/user/PendingApplication1a';
 import ReviewReportFinal from './pages/user/ReportReviewFinal';
+
 
 
 
@@ -90,6 +92,7 @@ function App() {
           <Route path="/finalizedapplication1a" element={<FinalizedApplicationPage1a />} />
           <Route path="/landlord-managerspecific" element={<LandlordManagerSpecific />} />
           <Route path="/report" element={<Report />} />
+          <Route path="/pendingapplication1a" element={<PendingApplication1a />} />
 
 
 
