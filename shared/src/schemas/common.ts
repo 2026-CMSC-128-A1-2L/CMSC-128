@@ -26,3 +26,15 @@ export const RangeSchema = <T extends z.ZodType>(schema: T) =>
     min: schema,
     max: schema,
   });
+
+export const DateTimeSchema = z.iso.datetime().transform((x) => new Date(x));
+
+export const PaginationRequestSchema = (maxLimit: number) =>
+  z.object({
+    cursor: z.string(),
+    limit: z.int().min(0).max(maxLimit),
+  });
+
+export const PaginationResponseSchema = z.object({
+  cursor: z.string(),
+});
