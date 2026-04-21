@@ -17,31 +17,25 @@ const PendingApplication1a: FunctionComponent = () => {
       			<img className="w-[1440px] h-[1024px] absolute !!m-[0 important] top-[0px] left-[0px] shrink-0 z-[0]" alt="" />
       			<div className="w-[1440px] h-[1312px] overflow-hidden shrink-0 flex flex-col items-start z-[1]">
         				<div className="self-stretch flex-1 overflow-hidden flex flex-col items-start py-num-0 pl-num-0 pr-20">
-          					<div className="w-[1440px] flex-1 flex items-center shrink-0">
+          					<div className="w-[1440px] flex-1 flex items-center shrink-0 pr-20 gap-8">
             						<div className="self-stretch w-[200px] flex items-start" >
                                         <Sidebar></Sidebar>
                                     </div>
-            						<div className="h-[1112px] hidden flex-col items-center">
-              							<div className="w-[106px] h-[924px] bg-white border-whitesmoke border-solid border-[1px] box-border overflow-hidden shrink-0 flex flex-col items-center py-num-32 pl-num-32 pr-num-10" />
-            						</div>
+            						
             						<div className="self-stretch flex-1 overflow-hidden flex flex-col items-start justify-between gap-0">
-              							<div className="self-stretch flex-1 flex flex-col items-start py-num-0 pl-num-32 pr-20">
-                								<div className="self-stretch h-[1012px] flex flex-col items-start">
+
+                								<div className="w-full h-fit flex flex-col items-start">
                   									<div className="self-stretch h-16 overflow-hidden shrink-0 flex items-end p-num-10 box-border gap-2.5">
                     										<div className="h-6 flex items-center gap-1.5">
                       											<div className="relative font-semibold">User Profile</div>
                       											<Icon icon = "iconamoon:arrow-right-2" className="h-6 w-6 relative" />
                       											<div className="relative font-semibold">Current Dorm</div>
                     										</div>
-                    										<div className="w-[704px] rounded-xl bg-aliceblue overflow-hidden shrink-0 hidden items-center py-num-10 px-6 box-border gap-2.5 text-dimgray font-inter">
-                      											<img className="h-6 w-6 relative" alt="" />
-                      											<b className="relative">Search for Dorms, Apartments, or Locations (e.g. UPLB, Umali Subdivision)</b>
-                    										</div>
                   									</div>
-                  									<div className="w-[1155px] h-[970.7px] rounded-num-16_38 bg-white flex flex-col items-start gap-[12.3px] shrink-0 text-center text-dimgray font-inter">
-                    										<div className="w-[980px] h-[382px] rounded-2xl flex flex-col items-start gap-3">
-                      											<div className="self-stretch rounded-2xl overflow-hidden flex flex-col items-start p-num-32">
-                        												<div className="self-stretch flex flex-col items-start gap-2.5">
+                  									<div className="w-full h-fit rounded-num-16 bg-white/45 flex flex-col items-start gap-[12.3px] shrink-0 text-center text-dimgray font-inter">
+                    										<div className="w-full h-fit rounded-2xl flex flex-col items-start gap-3">
+                      											<div className="w-full rounded-2xl flex items-start p-num-32">
+                        												<div className="w-full flex flex-col items-start gap-2.5">
                           													<b className="relative">Student Profile</b>
                           													<b className="relative text-[24px] leading-8 text-darkslategray-200">Daphne Dayne</b>
                           													<b className="relative text-teal">dcanape@up.edu.ph</b>
@@ -119,23 +113,23 @@ const PendingApplication1a: FunctionComponent = () => {
                       											<div className="self-stretch flex flex-col items-start text-[24.57px] text-darkslategray-100">
                         												<div className="self-stretch flex items-center py-num-0 px-[32.8px]">
                           													<div className="flex-1 flex items-center gap-[24.6px]">
-                            														<b className="relative leading-[32.77px]">Your Pending Applications</b>
-                            														<b className="relative text-num-14_34 text-dimgray">0 out of 5 Dorm Applications</b>
+                            														<b className="relative text-num-18">Your Pending Applications</b>
+                            														<b className="relative text-num-18 text-dimgray">0 out of 5 Dorm Applications</b>
                           													</div>
                         												</div>
                         												<div className="self-stretch rounded-num-16_38 overflow-hidden flex flex-col items-start py-[24.6px] px-[32.8px] text-num-14_34 text-white">
-                          													<div className="self-stretch rounded-num-16_38 bg-white border-whitesmoke border-solid border-[1px] flex flex-col items-start">
-                            														<div className="self-stretch h-12 rounded-t-num-16_38 rounded-b-none bg-darkslategray-200 border-black border-solid border-[1px] box-border overflow-hidden shrink-0 flex flex-col items-start justify-center py-num-0 px-[24.6px]">
-                              															<div className="w-[1041px] flex items-center py-[4.1px] px-num-0 box-border gap-[38px] shrink-0">
-                                																<div className="h-num-65_5 w-[81.9px] relative font-medium flex items-center justify-center shrink-0">No.</div>
-                                																<div className="h-num-65_5 w-[225.3px] relative font-medium flex items-center justify-center shrink-0">Listing</div>
-                                																<div className="h-num-65_5 w-[253.9px] relative font-medium flex items-center justify-center shrink-0">Address</div>
-                                																<div className="h-num-65_5 w-[122.9px] relative font-medium flex items-center justify-center shrink-0">Status</div>
-                                																<div className="h-num-65_5 w-[204.8px] relative font-medium flex items-center justify-center shrink-0">Actions</div>
+                          													<div className="rounded-num-16 border-whitesmoke border-solid overflow-hidden w-full rounded-num-16_38 border-solid border-[1px] flex flex-col items-start">
+                            														<div className="w-full h-12 bg-darkslategray-200 border-black border-solid border-[1px] box-border overflow-hidden shrink-0 flex flex-col items-start justify-center py-num-0 px-[24.6px]">
+                              															<div className="w-full flex justify-between py-[4.1px] px-num-0 box-border ">
+                                																<div className="text-num-16 w-20 relative font-medium flex items-center justify-center shrink-0"><b>No.</b></div>
+                                																<div className="text-num-16 w-55 relative font-medium flex items-center justify-center shrink-0"><b>Listing</b></div>
+                                																<div className="text-num-16 w-60 relative font-medium flex items-center justify-center shrink-0"><b>Address</b></div>
+                                																<div className="text-num-16 w-30 relative font-medium flex items-center justify-center shrink-0"><b>Status</b></div>
+                                																<div className="text-num-16 w-51 relative font-medium flex items-center justify-center shrink-0"><b>Actions</b></div>
                               															</div>
                             														</div>
                             														<div className="self-stretch h-20 rounded-num-16_38 overflow-hidden shrink-0 flex flex-col items-center justify-center py-num-0 px-[24.6px] box-border text-[18.55px] text-teal">
-                              															<div className="w-full overflow-hidden flex items-center justify-center py-[3.1px] px-[27.6px] box-border gap-[10.2px] max-w-full">
+                              															<div className="w-full overflow-hidden flex items-center justify-center py-1 box-border text-num-18">
                                 																<b className="relative cursor-pointer" onClick={onVERIFICATIONSTATUSContainerClick}>Browse Listings</b>
                                 																<Icon icon = "mdi:arrow-top-right" className="w-[31.8px] relative max-h-full"  />
                               															</div>
@@ -146,7 +140,7 @@ const PendingApplication1a: FunctionComponent = () => {
                     										</div>
                   									</div>
                 								</div>
-              							</div>
+              							
               							<div className="self-stretch h-20 bg-white overflow-hidden shrink-0 flex flex-col items-center justify-center" >
                                             <Footer />
                                         </div>
