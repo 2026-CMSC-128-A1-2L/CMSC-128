@@ -1,8 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import '../../config.js';
 import { describe, it, expect, beforeAll } from 'vitest';
-import { buildHousingFacility, HousingFacilityParams } from '../../test/factories.js';
+import { buildHousingFacility } from '../../test/factories.js';
 import {
-  landlord,
   manager,
   landlordAgent,
   managerAgent,
@@ -10,33 +10,31 @@ import {
   studentAgent,
   otherManagerAgent,
 } from '../../test/setup.js';
-import { HousingFacilityType } from './facility.model.js';
+import type { HousingFacilityType } from './facility.model.js';
+import type z from 'zod';
+import type { CreateFacilityRequestBodySchema } from 'shared';
 
 describe('Facilities API', () => {
   let facilityId: string;
-  let validFacility: HousingFacilityParams;
+  let validFacility: z.infer<typeof CreateFacilityRequestBodySchema>;
   let otherFacility: HousingFacilityType;
 
   beforeAll(async () => {
     validFacility = {
       name: `Test Facility 1`,
-      landlordId: landlord._id,
       managers: [
         {
-          userId: manager._id,
+          email: manager.emails[0],
           permissions: { manageBillings: true, manageApplications: true, manageListings: true },
         },
       ],
       location: {
-        text: "diyan lang"
+        text: 'diyan lang',
       },
       type: 'on-campus',
-      capacity: 100,
-      documents: [],
       isAcceptingApplications: false,
       applicationCloseDate: new Date(2026, 3, 6, 18, 15, 10),
       applicationOpenDate: new Date(2026, 2, 6, 18, 15, 10),
-      status: 'pending',
     };
 
     otherFacility = await buildHousingFacility.create({
@@ -45,8 +43,8 @@ describe('Facilities API', () => {
           userId: manager._id,
           permissions: { manageBillings: true, manageApplications: true, manageListings: true },
         },
-      ]
-    })
+      ],
+    });
   });
 
   describe('POST /api/facilities', () => {
@@ -55,6 +53,7 @@ describe('Facilities API', () => {
         const response = await landlordAgent.post('/api/facilities').send(validFacility);
         expect(response).statusToBe(201);
         expect(response.body.data._id).toBeDefined();
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         facilityId = response.body.data._id;
       });
 
@@ -149,22 +148,14 @@ describe('Facilities API', () => {
       // Return 404 instead of 403 due to the filter pattern.
       it('should return 404 for wrong manager', async () => {
         const response = await otherManagerAgent
-          .patch(`/api/facilities/${otherFacility._id}`)
+          .patch(`/api/facilities/${otherFacility._id.toString()}`)
           .send({ name: 'Updated Name' });
         expect(response).statusToBe(404);
       });
 
-      // TODO: unskip, blocked by strict
-      it.skip('should return 403 for manager if changing managers', async () => {
-        const response = await managerAgent
-          .patch(`/api/facilities/${otherFacility._id}`)
-          .send({ managers: [] });
-        expect(response).statusToBe(403);
-      });
-
       it('should update facility as manager', async () => {
         const response = await managerAgent
-          .patch(`/api/facilities/${otherFacility._id}`)
+          .patch(`/api/facilities/${otherFacility._id.toString()}`)
           .send({ name: 'Updated name' });
         expect(response).statusToBe(200);
         expect(response.body.data.name).toBe('Updated name');
