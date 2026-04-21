@@ -21,6 +21,8 @@ import SettingsSecurity from "./pages/SettingsSecurity";
 import LandlordHomepage from "./pages/LandlordHomePage";
 import LandlordManagerList from "./pages/LandlordManagersList";
 import FinalizedApplicationPage1a from './pages/user/FinalizedApplicationPage1a';
+import LandlordManagerSpecific from './pages/LandlordManagerSpecific';
+
 
 
 
@@ -55,7 +57,6 @@ function App() {
       <Routes>
         <Route path="/landing" element={<UserLanding />} />
         <Route path="/map" element={<LandingMap />} />
-        <Route path="/dormcard" element={<DormCard />} />
         <Route path="/submit-receipt" element={<SubmitReceipt />} />
         <Route path="/paymentmethods" element={<PaymentMethods />} />
         <Route path="/financepopup" element={<FinancePopup children={undefined} />} />
@@ -88,6 +89,8 @@ function App() {
           <Route path="/ll-verif" element={<LandlordVerif />} />
           <Route path="/landlord-managerslist" element={<LandlordManagerList />} />
           <Route path ="/finalizedapplication1a" element= {<FinalizedApplicationPage1a />} />
+          <Route path="/landlord-managerspecific" element={<LandlordManagerSpecific />} />
+
 
 
 
