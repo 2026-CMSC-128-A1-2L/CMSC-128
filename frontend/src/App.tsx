@@ -24,8 +24,11 @@ import LandlordHomepage from "./pages/LandlordHomePage";
 
 
 import Login from './pages/utilities/Login';
+import DormCard from './components/DormCard';
 import Upload from './pages/utilities/Upload';
 import DmsLanding from './pages/user/DmsLanding';
+import UserVerif from './pages/user/UserVerif';
+import LandlordVerif from './pages/LandlordVerif';
 
 import SettingsPreferences from './pages/user/SettingsPreferences';
 import SubmitReceipt from './components/SubmitReceipt';
@@ -77,6 +80,8 @@ function App() {
           <Route path="/settings" element={<SettingsGen />} />
           <Route path="/settingsSecurity" element={<SettingsSecurity />} />
           <Route path="/landlord-homepage" element={<LandlordHomepage />} />
+          <Route path="/user-verif" element={<UserVerif />} />
+          <Route path="/ll-verif" element={<LandlordVerif />} />
 
 
 

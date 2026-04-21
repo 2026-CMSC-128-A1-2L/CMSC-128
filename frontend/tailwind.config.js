@@ -44,7 +44,7 @@ export default {
           200: "#bdbdbd",
         },
         gray: {
-          DEFAULT: "rgba(0, 0, 0, 0.38)",
+          DEFAULT: "#001d18", // Prioritizing the hex from verification for the default
           100: "#757575",
           200: "#1e1e1e",
           300: "#001d18",
@@ -63,7 +63,7 @@ export default {
         whitesmoke: {
           DEFAULT: "#f0f0f0",
           100: "#f8fafc",
-          200: "#f0f0f0",
+          200: "#f3f4f6", // From verification-page
           300: "#f0f0f0",
         },
       },
@@ -89,6 +89,7 @@ export default {
         "num-104": "104px",
         "num-67_5": "67.5px",
         "num-65_1": "65.1px",
+        "num-60": "60px",
         "num-55": "55px",
         "num-49": "49px",
         "num-48_7": "48.7px",
@@ -111,11 +112,19 @@ export default {
         "num-12_8": "12.8px",
         "num-6_4": "6.4px",
         "num-1": "1px solid #f0f0f0",
+        "num-1-thin": "0.4px solid #f0f0f0", // From verification branch
         "num-2": "0.4px solid #096c5b",
         "num-3": "5px solid rgba(255, 255, 255, 0.7)",
         "num-4": "0.7px solid #d9d9d9",
         "num-11": "1px solid #096c5b",
         "num-1-teal": "0.9px solid #096c5b",
+      },
+      maxWidth: {
+        "num-980": "980px",
+        "num-916": "916px",
+        "num-852": "852px",
+        "num-723": "723px",
+        "num-530": "530px",
       },
       borderRadius: {
         "num-0": "0px",
