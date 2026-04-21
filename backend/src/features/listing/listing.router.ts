@@ -15,7 +15,6 @@ import {
 import { routeCreateUnit, routeGetUnitsByListing } from '../unit/unit.controller';
 import { routeGetRentalsByListing } from '../rental/rental.controller';
 import { routeGetListingReviews, routeCreateReview } from '../review/review.controller';
-import { routeGetVisitBookingsByListing } from '../booking/booking.controller';
 import { routeReportListing } from '../report/report.controller';
 import { routeGetApplicationsByListing } from '../application/application.controller';
 
@@ -125,15 +124,6 @@ router.get('/:listingId/reviews', listingViewFilter, routeGetListingReviews);
 // POST /api/listings/:listingId/reviews
 // ============================================================================
 router.post('/:listingId/reviews', listingViewFilter, routeCreateReview);
-
-// ============================================================================
-// GET /api/listings/:listingId/bookings
-// ============================================================================
-router.get(
-  '/:listingId/bookings',
-  managerFilter('facility', 'manageListings'),
-  routeGetVisitBookingsByListing,
-);
 
 // ============================================================================
 // POST /api/listings/:listingId/report

@@ -1,13 +1,13 @@
-import { RequestHandler } from 'express';
+import type { RequestHandler } from 'express';
 import {
   CreateFacilityRequestBodySchema,
-  GetFacilityResponseBodySchema,
+  type GetFacilityResponseBodySchema,
   GetFacilitiesRequestQuerySchema,
   ObjectIdSchema,
   UpdateFacilityRequestBodySchema,
   UpdateManagerPermissionsRequestBodySchema,
 } from 'shared';
-import z from 'zod';
+import type z from 'zod';
 import {
   getFacilities,
   createFacility,

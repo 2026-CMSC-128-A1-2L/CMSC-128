@@ -2,21 +2,24 @@ import mongoose from 'mongoose';
 import { ROOM_TYPES } from 'shared';
 
 export type ListingType = {
-  _id: mongoose.Types.ObjectId,
-  facilityId: mongoose.Types.ObjectId,
-  landlordId: mongoose.Types.ObjectId,
-  managers: { userId: mongoose.Types.ObjectId, permissions: { manageBillings: boolean, manageApplications: boolean, manageListings: boolean } }[],
-  tags: Record<string, any>,
-  roomType: (typeof ROOM_TYPES)[number],
-  capacity: number,
-  isPrivate: boolean,
-  allowVisit: boolean,
-  allowTransfer: boolean,
-  description?: string | null,
+  _id: mongoose.Types.ObjectId;
+  facilityId: mongoose.Types.ObjectId;
+  landlordId: mongoose.Types.ObjectId;
+  managers: {
+    userId: mongoose.Types.ObjectId;
+    permissions: { manageBillings: boolean; manageApplications: boolean; manageListings: boolean };
+  }[];
+  tags: Record<string, any>;
+  roomType: (typeof ROOM_TYPES)[number];
+  capacity: number;
+  isPrivate: boolean;
+  allowVisit: boolean;
+  allowTransfer: boolean;
+  description?: string | null;
   media: {
-    sourceType: 'local' | 'external',
-    value: string,
-  }[]
+    sourceType: 'local' | 'external';
+    value: string;
+  }[];
 };
 
 const ListingSchema = new mongoose.Schema<ListingType>({

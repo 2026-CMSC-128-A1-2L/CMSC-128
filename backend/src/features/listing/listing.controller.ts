@@ -1,5 +1,5 @@
-import { RequestHandler } from 'express';
-import { QueryFilter } from 'mongoose';
+import type { RequestHandler } from 'express';
+import type { QueryFilter } from 'mongoose';
 import {
   GetListingsQuerySchema,
   ObjectIdSchema,
@@ -7,7 +7,7 @@ import {
   UpdateListingBodySchema,
   UpdateListingTagsResponseBodySchema,
 } from 'shared';
-import { Listing } from './listing.model';
+import type { Listing } from './listing.model';
 import {
   getListings,
   createListing,
@@ -38,7 +38,7 @@ export const routeGetListing: RequestHandler = async (req, res, next) => {
     listingId,
     res.locals.filters as QueryFilter<typeof Listing>,
   );
-  if (!listing) return next(new AppError(404, "Listing not found."))
+  if (!listing) return next(new AppError(404, 'Listing not found.'));
   res.status(200).json({ data: listing });
 };
 
@@ -52,7 +52,7 @@ export const routeUpdateListing: RequestHandler = async (req, res, next) => {
   const listingId = ObjectIdSchema.parse(req.params.listingId);
   const updateData = UpdateListingBodySchema.parse(req.body);
   const updatedListing = await updateListing(listingId, updateData, res.locals.filters);
-  if (!updatedListing) return next(new AppError(404, "Listing not found."))
+  if (!updatedListing) return next(new AppError(404, 'Listing not found.'));
   res.status(200).json({ data: updatedListing });
 };
 
@@ -66,6 +66,6 @@ export const routeUpdateListingTags: RequestHandler = async (req, res, next) => 
   const listingID = ObjectIdSchema.parse(req.params.listingId);
   const updateData = UpdateListingTagsResponseBodySchema.parse(req.body);
   const updatedListing = await updateListingTags(listingID, updateData, res.locals.filters ?? {});
-  if (!updatedListing) return next(new AppError(404, "Listing not found."))
+  if (!updatedListing) return next(new AppError(404, 'Listing not found.'));
   res.status(200).json({ data: updatedListing });
 };
