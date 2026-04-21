@@ -18,6 +18,8 @@ import TermsOfUse from './pages/TermsOfUse';
 import Finance from './pages/user/Finance';
 import MyCalendar from './pages/MyCalendar';
 import SettingsSecurity from "./pages/SettingsSecurity";
+import LandlordHomepage from "./pages/LandlordHomePage";
+
 
 
 
@@ -74,7 +76,7 @@ function App() {
           <Route path="/mycalendar" element={<MyCalendar />} />
           <Route path="/settings" element={<SettingsGen />} />
           <Route path="/settingsSecurity" element={<SettingsSecurity />} />
-
+          <Route path="/landlord-homepage" element={<LandlordHomepage />} />
 
 
 
