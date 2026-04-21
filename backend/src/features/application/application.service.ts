@@ -9,12 +9,24 @@ import {
 } from './application.model';
 import { sendNotification } from '../notification/notification.service';
 import { Unit } from '../unit/unit.model';
+import { buildQuery, type NullablePartial } from '../../utils';
+import z from 'zod';
+import { DateTimeSchema } from 'shared';
 
-export type GetApplicationsArguments = {
+export type GetApplicationsArguments = NullablePartial<{
   userId: mongoose.Types.ObjectId;
-  listingId: mongoose.Types.ObjectId;
-  status: ApplicationStatusType;
   unitId: mongoose.Types.ObjectId;
+  listingId: mongoose.Types.ObjectId;
+  facilityId: mongoose.Types.ObjectId;
+  status: ApplicationStatusType;
+  leaseDuration: '6-months' | '12-months';
+  moveInDate?: {
+    min?: Date | null;
+    max?: Date | null;
+  };
+}> & {
+  cursor?: string;
+  limit: number;
 };
 
 export const createApplication = async (
@@ -25,18 +37,27 @@ export const createApplication = async (
   return await newApplication.save();
 };
 
-export function buildApplicationQuery(
-  args: Partial<GetApplicationsArguments>,
-): QueryFilter<ApplicationType> {
-  return args;
-}
+const GetApplicationsCursorSchema = CursorSchema(
+  z.object({
+    createdAt: DateTimeSchema,
+  }),
+);
 
-export const getApplications = async (query: Partial<GetApplicationsArguments>, filters: any) => {
-  const queryFilter = buildApplicationQuery(query);
+export const getApplications = async (
+  query: GetApplicationsArguments,
+  filters: QueryFilter<ApplicationType>,
+) => {
+  const queryFilter = buildQuery<ApplicationType>(query);
+  if (query.cursor) {
+    const v = GetApplicationsCursorSchema.parse(query.cursor);
+  }
   return await ApplicationForm.where(filters).find(queryFilter).lean();
 };
 
-export const getApplicationById = async (applicationId: mongoose.Types.ObjectId, filters: any) => {
+export const getApplicationById = async (
+  applicationId: mongoose.Types.ObjectId,
+  filters: QueryFilter<ApplicationType>,
+) => {
   return await ApplicationForm.where(filters).findById(applicationId);
 };
 
@@ -50,20 +71,11 @@ export const getApplicationsByStudent = async (userId: mongoose.Types.ObjectId) 
   return await ApplicationForm.find({ userId });
 };
 
-export const deleteApplication = async (applicationId: mongoose.Types.ObjectId, filters: any) => {
-  const application = await ApplicationForm.findOne(
-    combineFilters({ _id: applicationId }, filters),
-  );
-  if (!application) {
-    const applicationNoFilter = await ApplicationForm.findById(applicationId);
-    if (applicationNoFilter) {
-      throw new AppError(403, 'Forbidden: You do not have permission to delete this application.');
-    } else {
-      throw new AppError(404, 'Application not found.');
-    }
-  }
-
-  return await application.deleteOne();
+export const deleteApplication = async (
+  applicationId: mongoose.Types.ObjectId,
+  filters: QueryFilter<ApplicationType>,
+) => {
+  return await ApplicationForm.where(filters).findOneAndDelete({ _id: applicationId });
 };
 
 const statusMessages: Record<string, { subject: string; content: string }> = {

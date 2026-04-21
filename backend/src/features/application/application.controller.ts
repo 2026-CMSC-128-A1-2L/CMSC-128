@@ -1,8 +1,10 @@
 import type { RequestHandler } from 'express';
 import {
+  ApplicationFilterSchema,
   CreateApplicationBodySchema,
   GetApplicationsQuerySchema,
   ObjectIdSchema,
+  QuerySchema,
   UpdateApplicationBodySchema,
 } from 'shared';
 import {
@@ -26,7 +28,13 @@ export const routeCreateApplication: RequestHandler = async (req, res, _next) =>
   res.status(201).json({ id: newApplication.id });
 };
 
-type LocalHandler<T> = RequestHandler<any, unknown, unknown, unknown, Record<string, unknown> & T>;
+type LocalHandler<T> = RequestHandler<
+  Record<string, unknown>,
+  unknown,
+  unknown,
+  unknown,
+  Record<string, unknown> & T
+>;
 
 type ApplicationHandler = LocalHandler<{ filters: QueryFilter<ApplicationType> }>;
 
@@ -44,14 +52,16 @@ export const routeGetApplication: ApplicationHandler = async (req, res, _next) =
 };
 
 export const routeGetApplicationsByListing: ApplicationHandler = async (req, res, _next) => {
+  const query = QuerySchema(ApplicationFilterSchema.omit({ listingId: true })).parse(req.query);
   const listingId = ObjectIdSchema.parse(req.params.listingId);
-  const applications = await getApplications({ listingId }, res.locals.filters);
+  const applications = await getApplications({ ...query, listingId }, res.locals.filters);
   res.status(200).json({ data: applications });
 };
 
 export const routeGetApplicationsByStudent: ApplicationHandler = async (req, res, _next) => {
+  const query = QuerySchema(ApplicationFilterSchema.omit({ userId: true })).parse(req.query);
   const userId = ObjectIdSchema.parse(req.params.userId);
-  const applications = await getApplications({ userId }, res.locals.filters);
+  const applications = await getApplications({ ...query, userId }, res.locals.filters);
   res.status(200).json({ data: applications });
 };
 
