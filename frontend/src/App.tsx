@@ -19,6 +19,8 @@ import Finance from './pages/user/Finance';
 import MyCalendar from './pages/MyCalendar';
 import SettingsSecurity from "./pages/SettingsSecurity";
 import LandlordHomepage from "./pages/LandlordHomePage";
+import LandlordManagerList from "./pages/LandlordManagersList";
+
 
 
 
@@ -82,6 +84,8 @@ function App() {
           <Route path="/landlord-homepage" element={<LandlordHomepage />} />
           <Route path="/user-verif" element={<UserVerif />} />
           <Route path="/ll-verif" element={<LandlordVerif />} />
+          <Route path="/landlord-managerslist" element={<LandlordManagerList />} />
+
 
 
 

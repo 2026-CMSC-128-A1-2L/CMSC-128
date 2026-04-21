@@ -17,6 +17,7 @@ export default {
         black: "#000",
         aliceblue: "#f1f5f9",
         dimgray: "#666",
+        crimson: "#ef4444",
         lightcyan: {
           DEFAULT: "#cbf6ed",
           100: "#cbf6ed",
@@ -44,7 +45,7 @@ export default {
           200: "#bdbdbd",
         },
         gray: {
-          DEFAULT: "#001d18", // Prioritizing the hex from verification for the default
+          DEFAULT: "#001d18",
           100: "#757575",
           200: "#1e1e1e",
           300: "#001d18",
@@ -63,7 +64,7 @@ export default {
         whitesmoke: {
           DEFAULT: "#f0f0f0",
           100: "#f8fafc",
-          200: "#f3f4f6", // From verification-page
+          200: "#f3f4f6",
           300: "#f0f0f0",
         },
       },
@@ -87,6 +88,7 @@ export default {
         "num-108_4": "108.4px",
         "num-108_7": "108.7px",
         "num-104": "104px",
+        "num-78": "78px",
         "num-67_5": "67.5px",
         "num-65_1": "65.1px",
         "num-60": "60px",
@@ -112,7 +114,7 @@ export default {
         "num-12_8": "12.8px",
         "num-6_4": "6.4px",
         "num-1": "1px solid #f0f0f0",
-        "num-1-thin": "0.4px solid #f0f0f0", // From verification branch
+        "num-1-thin": "0.4px solid #f0f0f0",
         "num-2": "0.4px solid #096c5b",
         "num-3": "5px solid rgba(255, 255, 255, 0.7)",
         "num-4": "0.7px solid #d9d9d9",
@@ -166,6 +168,7 @@ export default {
         "num-16": "16px",
         "num-19": "19px",
         "num-20": "20px",
+        "num-22": "22px",
         "num-24": "24px",
         "num-32": "32px",
         "num-80": "80px",
