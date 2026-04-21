@@ -1,16 +1,14 @@
 import { FunctionComponent, useCallback } from 'react';
-import { Icon } from "@iconify/react";
+import { Icon } from '@iconify/react';
 import VerifiedBadge from '../../assets/verified_badge.svg';
 import DefaultAvatar from '../../assets/default_avatar.svg';
 import { useState, useRef } from 'react';
 import Footer from '../components/Footer';
 import Switch from '../components/CurrentDormToVerificationSwitch';
-import Sidebar from "../components/SideBar";
-import placeholder from "../../assets/logo_atlas_text.svg"
-
+import Sidebar from '../components/SideBar';
+import placeholder from '../../assets/logo_atlas_text.svg';
 
 const CurrentDorm: FunctionComponent = () => {
-
   const onContractInformationContainerClick = useCallback(() => {
     // Add your code here
   }, []);
@@ -29,11 +27,11 @@ const CurrentDorm: FunctionComponent = () => {
 
   // contact number editing state
   const [isEditing, setIsEditing] = useState(false);
-  const [contactNumber, setContactNumber] = useState("09*********");
+  const [contactNumber, setContactNumber] = useState('09*********');
 
   // home address editing state
   const [isEditingAddress, setIsEditingAddress] = useState(false);
-  const [homeAddress, setHomeAddress] = useState("Brgy. Batong Malake, Los Banos, Laguna");
+  const [homeAddress, setHomeAddress] = useState('Brgy. Batong Malake, Los Banos, Laguna');
 
   const handleSaveAddress = () => {
     setIsEditingAddress(false);
@@ -42,13 +40,13 @@ const CurrentDorm: FunctionComponent = () => {
   // save changes and exit editing mode
   const handleSave = () => {
     setIsEditing(false);
-  }
+  };
 
   // redact contact number except for first 2 digits
   const redactContact = (number: string) => {
     if (number.length < 2) return number;
     return number.substring(0, 2) + '*'.repeat(number.length - 2);
-  }
+  };
 
   return (
     <div className="w-full h-screen relative overflow-y-auto flex flex-col items-start isolate gap-2.5 text-left text-num-14 text-darkslategray-100 font-lora">
@@ -74,7 +72,9 @@ const CurrentDorm: FunctionComponent = () => {
                   </div>
                   <div className="w-[704px] rounded-num-12 bg-aliceblue overflow-hidden shrink-0 hidden items-center py-num-10 px-num-24 box-border gap-2.5 text-dimgray font-inter">
                     <img className="h-6 w-6 relative" alt="" />
-                    <b className="relative">Search for Dorms, Apartments, or Locations (e.g. UPLB, Umali Subdivision)</b>
+                    <b className="relative">
+                      Search for Dorms, Apartments, or Locations (e.g. UPLB, Umali Subdivision)
+                    </b>
                   </div>
                 </div>
                 <div className="self-stretch h-[1280px] rounded-2xl bg-white flex flex-col items-start gap-3 text-center text-dimgray font-inter">
@@ -90,7 +90,10 @@ const CurrentDorm: FunctionComponent = () => {
                       </div>
                     </div>
                     <div className="self-stretch overflow-hidden flex items-start justify-between py-1 px-num-32 gap-5">
-                      <div className="relative cursor-pointer group w-[200px] h-[200px]" onClick={() => fileInputRef.current?.click()}>
+                      <div
+                        className="relative cursor-pointer group w-[200px] h-[200px]"
+                        onClick={() => fileInputRef.current?.click()}
+                      >
                         {/* profile image*/}
                         <img
                           className="w-full h-full rounded-full object-cover transition-all duration-300 group-hover:blur-sm"
@@ -104,7 +107,6 @@ const CurrentDorm: FunctionComponent = () => {
                             icon="iconamoon:edit"
                             className="opacity-0 group-hover:opacity-100 h-10 w-10 drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]"
                             color="#096C5B"
-
                           />
                         </div>
 
@@ -127,11 +129,11 @@ const CurrentDorm: FunctionComponent = () => {
                             <b className="relative">Contact number</b>
 
                             <button
-                              onClick={() => isEditing ? handleSave() : setIsEditing(true)}
+                              onClick={() => (isEditing ? handleSave() : setIsEditing(true))}
                               className="focus:outline-none hover:opacity-80 transition-opacity"
                             >
                               <Icon
-                                icon={isEditing ? "solar:check-read-linear" : "iconamoon:edit"}
+                                icon={isEditing ? 'solar:check-read-linear' : 'iconamoon:edit'}
                                 className="h-6 w-6 relative"
                                 color="#096C5B"
                               />
@@ -159,11 +161,15 @@ const CurrentDorm: FunctionComponent = () => {
                             <b className="relative">Home Address</b>
 
                             <button
-                              onClick={() => isEditingAddress ? handleSaveAddress() : setIsEditingAddress(true)}
+                              onClick={() =>
+                                isEditingAddress ? handleSaveAddress() : setIsEditingAddress(true)
+                              }
                               className="focus:outline-none hover:opacity-80 transition-opacity"
                             >
                               <Icon
-                                icon={isEditingAddress ? "solar:check-read-linear" : "iconamoon:edit"}
+                                icon={
+                                  isEditingAddress ? 'solar:check-read-linear' : 'iconamoon:edit'
+                                }
                                 className="h-6 w-6 relative"
                                 color="#096C5B"
                               />
@@ -180,9 +186,7 @@ const CurrentDorm: FunctionComponent = () => {
                                 onKeyDown={(e) => e.key === 'Enter' && handleSaveAddress()}
                               />
                             ) : (
-                              <b className="relative text-black py-1 text-left">
-                                {homeAddress}
-                              </b>
+                              <b className="relative text-black py-1 text-left">{homeAddress}</b>
                             )}
                           </div>
                         </div>
@@ -198,7 +202,9 @@ const CurrentDorm: FunctionComponent = () => {
                         </div>
                         <div className="flex flex-col items-start gap-1">
                           <b className="relative">Verification Status</b>
-                          <b className="relative text-transparent !bg-clip-text [background:linear-gradient(180deg,_#5dc2a8_27.88%,_#0c8873_84.13%)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">Verified</b>
+                          <b className="relative text-transparent !bg-clip-text [background:linear-gradient(180deg,_#5dc2a8_27.88%,_#0c8873_84.13%)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">
+                            Verified
+                          </b>
                         </div>
                       </div>
                       <div className="overflow-hidden flex flex-col items-start p-num-10 gap-4">
@@ -218,7 +224,10 @@ const CurrentDorm: FunctionComponent = () => {
                               className="flex items-center gap-1 text-[12px] text-teal-100 cursor-pointer hover:underline"
                             >
                               <div className="relative font-medium">See Finance</div>
-                              <Icon icon="solar:arrow-right-up-linear" className="h-4 w-4 relative" />
+                              <Icon
+                                icon="solar:arrow-right-up-linear"
+                                className="h-4 w-4 relative"
+                              />
                             </a>
                           </div>
                         </div>
@@ -234,7 +243,11 @@ const CurrentDorm: FunctionComponent = () => {
                     <div className="self-stretch flex flex-col items-start gap-3 shrink-0 text-[24px] text-teal-200">
                       <div className="w-[1128px] h-[520px] bg-white flex flex-col items-center justify-center">
                         <div className="w-[916px] h-[520px] rounded-num-12 border-whitesmoke-200 border-solid border-[1px] box-border flex flex-col items-start">
-                          <img className="w-[916px] relative rounded-t-num-12 rounded-b-none max-h-full object-cover" alt="" src={placeholder} />
+                          <img
+                            className="w-[916px] relative rounded-t-num-12 rounded-b-none max-h-full object-cover"
+                            alt=""
+                            src={placeholder}
+                          />
                           <div className="self-stretch h-40 flex flex-col items-start">
                             <div className="w-[916px] h-16 flex flex-col items-center justify-center py-5 px-[27px] box-border shrink-0 text-left text-black">
                               <b className="relative leading-8 shrink-0">One Sapphire Place</b>
@@ -245,7 +258,9 @@ const CurrentDorm: FunctionComponent = () => {
                                   <b className="relative tracking-[-0.01em]">Room 31</b>
                                 </div>
                                 <div className="flex items-center justify-center p-num-10 mt-[-32px] relative text-[8px] text-black font-lora">
-                                  <div className="relative tracking-[0.04em] font-semibold">UNIT</div>
+                                  <div className="relative tracking-[0.04em] font-semibold">
+                                    UNIT
+                                  </div>
                                 </div>
                               </div>
                               <div className="h-20 w-[280px] rounded-num-12 bg-white border-whitesmoke-200 border-solid border-[1px] box-border flex flex-col items-center">
@@ -253,7 +268,9 @@ const CurrentDorm: FunctionComponent = () => {
                                   <b className="relative tracking-[-0.01em]">1 Year</b>
                                 </div>
                                 <div className="flex items-center justify-center p-num-10 mt-[-32px] relative text-[8px] text-black font-lora">
-                                  <div className="relative tracking-[0.04em] font-semibold">Contract</div>
+                                  <div className="relative tracking-[0.04em] font-semibold">
+                                    Contract
+                                  </div>
                                 </div>
                               </div>
                               <div className="h-20 w-[280px] rounded-num-12 bg-white border-whitesmoke-200 border-solid border-[1px] box-border flex flex-col items-center">
@@ -261,7 +278,9 @@ const CurrentDorm: FunctionComponent = () => {
                                   <b className="relative tracking-[-0.01em]">May 18, 2026</b>
                                 </div>
                                 <div className="flex items-center justify-center p-num-10 mt-[-32px] relative text-[8px] text-black font-lora">
-                                  <div className="relative tracking-[0.04em] font-semibold">Lease End</div>
+                                  <div className="relative tracking-[0.04em] font-semibold">
+                                    Lease End
+                                  </div>
                                 </div>
                               </div>
                             </div>
@@ -273,7 +292,10 @@ const CurrentDorm: FunctionComponent = () => {
                                   className="flex items-center gap-1 text-[12px] text-teal-100 cursor-pointer hover:underline"
                                 >
                                   <div className="relative font-medium">View Details</div>
-                                  <Icon icon="solar:arrow-right-up-linear" className="h-6 w-6 relative" />
+                                  <Icon
+                                    icon="solar:arrow-right-up-linear"
+                                    className="h-6 w-6 relative"
+                                  />
                                 </a>
                               </div>
                             </div>
@@ -283,19 +305,31 @@ const CurrentDorm: FunctionComponent = () => {
                       <div className="self-stretch flex items-start justify-center pt-num-24 px-num-32 pb-20 gap-6 text-num-14 text-black">
                         <div className="w-[280px] rounded-2xl border-whitesmoke-200 border-solid border-[1px] box-border overflow-hidden shrink-0 flex flex-col items-start py-3 px-4">
                           <div className="self-stretch flex flex-col items-end py-3 px-num-0 gap-2">
-                            <div className="flex items-center justify-center gap-2 cursor-pointer" onClick={onContractInformationContainerClick}>
+                            <div
+                              className="flex items-center justify-center gap-2 cursor-pointer"
+                              onClick={onContractInformationContainerClick}
+                            >
                               <div className="relative font-semibold">Contract Information</div>
                               <Icon icon="iconamoon:arrow-right-2" className="h-6 w-6 relative" />
                             </div>
-                            <div className="flex items-center justify-center gap-2 cursor-pointer" onClick={onContractInformationContainerClick}>
+                            <div
+                              className="flex items-center justify-center gap-2 cursor-pointer"
+                              onClick={onContractInformationContainerClick}
+                            >
                               <div className="relative font-semibold">Rate and Review</div>
                               <Icon icon="iconamoon:arrow-right-2" className="h-6 w-6 relative" />
                             </div>
-                            <div className="flex items-center justify-center gap-2 cursor-pointer" onClick={onContractInformationContainerClick}>
+                            <div
+                              className="flex items-center justify-center gap-2 cursor-pointer"
+                              onClick={onContractInformationContainerClick}
+                            >
                               <div className="relative font-semibold">Report Listing</div>
                               <Icon icon="iconamoon:arrow-right-2" className="h-6 w-6 relative" />
                             </div>
-                            <div className="flex items-center justify-center gap-2 cursor-pointer" onClick={onContractInformationContainerClick}>
+                            <div
+                              className="flex items-center justify-center gap-2 cursor-pointer"
+                              onClick={onContractInformationContainerClick}
+                            >
                               <div className="relative font-semibold">Pasalo Unit</div>
                               <Icon icon="iconamoon:arrow-right-2" className="h-6 w-6 relative" />
                             </div>
@@ -312,7 +346,8 @@ const CurrentDorm: FunctionComponent = () => {
           </div>
         </div>
       </div>
-    </div>);
+    </div>
+  );
 };
 
 export default CurrentDorm;

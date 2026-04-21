@@ -1,4 +1,4 @@
-import { RequestHandler } from 'express';
+import type { RequestHandler } from 'express';
 import { CreateReviewBodySchema, ObjectIdSchema, UpdateReviewBodySchema } from 'shared';
 import {
   getReviews,

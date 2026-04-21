@@ -1,5 +1,5 @@
 import { Icon } from '@iconify/react';
-import { FunctionComponent, useCallback } from 'react';
+import { type FunctionComponent, useCallback } from 'react';
 import SideBar from '../../components/SideBar';
 import Footer from '../../components/Footer';
 

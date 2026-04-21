@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import type mongoose from 'mongoose';
 import { AppError } from '../../error';
 import { combineFilters } from '../../middleware';
 import { ApplicationForm } from '../application/application.model';

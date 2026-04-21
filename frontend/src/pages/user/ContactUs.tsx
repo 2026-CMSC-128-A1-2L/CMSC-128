@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import type { FunctionComponent } from 'react';
 import LogoLike from '../../../assets/logo_like.svg?react';
 import SideBar from '../../components/SideBar';
 import { Icon } from '@iconify/react';

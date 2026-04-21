@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+<<<<<<< landlord
 import ContactUs from './pages/user/ContactUs';
 import PageLayout from './pages/utilities/PageLayout';
 import TestPage from './pages/utilities/TestPage';
@@ -33,11 +34,20 @@ import LandlordVisits from './pages/landlord/LandlordVisits';
 import LandlordFinance from './pages/landlord/LandlordFinance';
 import LandlordSettings from './pages/landlord/LandlordSettings';
 import LandlordNewListing from './pages/landlord/LandlordNewListing';
+=======
+import PageLayout from './pages/utilities/PageLayout';
+import UserLanding from './pages/user/UserLanding';
+
+import userRoutes from './routes/userRoutes';
+import adminRoutes from './routes/adminRoutes';
+import landlordRoutes from './routes/landlordRoutes';
+>>>>>>> develop
 
 function App() {
   return (
     <Router>
       <Routes>
+<<<<<<< landlord
         <Route path="/" element={<UserLanding />} />
         <Route path="/landlord/profile" element={<LandlordProfile />} />
         <Route path="/landlord/profile/verification" element={<LandlordProfileVerification />} />
@@ -72,6 +82,16 @@ function App() {
           <Route path="/ratereview" element={<RateAndReview />} />
           <Route path="/ratereviewform" element={<RateAndReviewForm />} />
           <Route path="/ratereviewupload" element={<RateAndReviewUpload />} />
+=======
+        {/* under page layout??? */}
+        <Route path="/"               element={<UserLanding />} />
+        <Route path="/landing"        element={<UserLanding />} />
+
+        <Route element={<PageLayout />}>
+          {userRoutes}
+          {adminRoutes}
+          {landlordRoutes}
+>>>>>>> develop
         </Route>
       </Routes>
     </Router>

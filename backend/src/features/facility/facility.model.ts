@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
-import { FacilityType } from 'shared';
-import { documentSchema, DocumentType } from '../document/document.model';
+import type { FacilityType } from 'shared';
+import { documentSchema, type DocumentType } from '../document/document.model';
 
 export type ManagerPermissionType = {
   manageBillings: boolean;
@@ -58,13 +58,16 @@ const HousingFacilitySchema = new mongoose.Schema<HousingFacilityType>(
     ],
     location: {
       coordinates: {
-        type: new mongoose.Schema({
-          lat: { type: Number, required: true },
-          long: { type: Number, required: true }
-        }, { _id: false }),
-        required: false // The object itself is optional...
+        type: new mongoose.Schema(
+          {
+            lat: { type: Number, required: true },
+            long: { type: Number, required: true },
+          },
+          { _id: false },
+        ),
+        required: false, // The object itself is optional...
       },
-      text: { type: String, required: true }
+      text: { type: String, required: true },
     },
     type: { type: String, enum: ['on-campus', 'off-campus', 'partner housing'], required: true },
     status: {
