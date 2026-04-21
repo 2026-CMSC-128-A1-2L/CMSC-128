@@ -1,8 +1,8 @@
-import { RequestHandler } from 'express';
-import z from 'zod';
-import { QueryFilter } from 'mongoose';
-import { NotificationFilterSchema, GetNotificationQuerySchema, ObjectIdSchema } from 'shared';
-import { Notification } from './notification.model';
+import type { RequestHandler } from 'express';
+import type z from 'zod';
+import type { QueryFilter } from 'mongoose';
+import { type NotificationFilterSchema, GetNotificationQuerySchema, ObjectIdSchema } from 'shared';
+import type { Notification } from './notification.model';
 import { getNotifications, getNotification, readNotification } from './notification.service';
 
 const buildNotificationQuery = (args: z.infer<typeof NotificationFilterSchema>) => {

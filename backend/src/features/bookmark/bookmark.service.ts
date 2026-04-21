@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import type mongoose from 'mongoose';
 import { Bookmark } from './bookmark.model';
 
 export const createBookmark = async (

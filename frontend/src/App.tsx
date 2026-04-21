@@ -6,6 +6,7 @@ import BookmarksNewUsers from './pages/user/BookmarksNewUsers';
 import UserLanding from './pages/user/UserLanding';
 import UnitDetails from './pages/user/UnitDetails';
 import SettingsNotifications from './pages/user/SettingsNotifications';
+import SettingsGen from "./pages/SettingsGen";
 import LandingMap from './components/LandingMap';
 import CurrentDorm from './pages/CurrentDorm';
 import ContractInformation from './pages/ContractInformation';
@@ -15,12 +16,26 @@ import RateAndReviewForm from './pages/RateAndReviewWithForms';
 import RateAndReviewUpload from './pages/RateAndReviewWithUploads';
 import TermsOfUse from './pages/TermsOfUse';
 import Finance from './pages/user/Finance';
+import MyCalendar from './pages/MyCalendar';
+import SettingsSecurity from "./pages/SettingsSecurity";
+import LandlordHomepage from "./pages/LandlordHomePage";
+import LandlordManagerList from "./pages/LandlordManagersList";
+import FinalizedApplicationPage1a from './pages/user/FinalizedApplicationPage1a';
 import LandlordManagerSpecific from './pages/LandlordManagerSpecific';
 
+
+
+
+
 import Login from './pages/utilities/Login';
-import DmsSidebar from './components/DmsSidebar';
+import DormCard from './components/DormCard';
 import Upload from './pages/utilities/Upload';
 import DmsLanding from './pages/user/DmsLanding';
+import UserVerif from './pages/user/UserVerif';
+import LandlordVerif from './pages/LandlordVerif';
+import DormCard from './components/DormCard';
+import DmsSidebar from './components/DmsSidebar';
+
 import SettingsPreferences from './pages/user/SettingsPreferences';
 import SubmitReceipt from './components/SubmitReceipt';
 import PaymentMethods from './components/PaymentMethods';
@@ -33,6 +48,8 @@ import Announcement from './pages/admin/announcement';
 import Applications from './pages/admin/applications';
 import Listings from './pages/admin/listings';
 import Messages from './pages/admin/messages';
+import DormCard from './components/DormCard';
+import DmsSidebar from './components/DmsSidebar';
 
 function App() {
   return (
@@ -64,8 +81,19 @@ function App() {
           <Route path="/ratereviewupload" element={<RateAndReviewUpload />} />
           <Route path="/terms-of-use" element={<TermsOfUse />} />
           <Route path="/finance" element={<Finance />} />
+          <Route path="/mycalendar" element={<MyCalendar />} />
+          <Route path="/settings" element={<SettingsGen />} />
+          <Route path="/settingsSecurity" element={<SettingsSecurity />} />
+          <Route path="/landlord-homepage" element={<LandlordHomepage />} />
+          <Route path="/user-verif" element={<UserVerif />} />
+          <Route path="/ll-verif" element={<LandlordVerif />} />
+          <Route path="/landlord-managerslist" element={<LandlordManagerList />} />
+          <Route path ="/finalizedapplication1a" element= {<FinalizedApplicationPage1a />} />
           <Route path="/landlord-managerspecific" element={<LandlordManagerSpecific />} />
-          
+
+
+
+
           {/* Admin Routes */}
           <Route path="/admin/analytics" element={<Analytics />} />
           <Route path="/admin/reports" element={<Reports />} />
