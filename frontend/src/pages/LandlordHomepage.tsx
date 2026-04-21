@@ -37,7 +37,7 @@ const LandlordHomepage: FunctionComponent = () => {
                 <div className="h-[924px] flex-1 border-whitesmoke border-solid border-[1px] box-border flex flex-col items-start" />
               </div>
               <div className="h-[1112px] w-[106px] bg-white border-whitesmoke border-solid border-[1px] box-border overflow-hidden shrink-0 hidden flex-col items-center pt-num-24 pb-[30px] pl-num-32 pr-2.5" />
-              <div className="self-stretch flex-1 overflow-hidden flex items-start pt-0 px-0 pb-[140px]">
+              <div className="self-stretch flex-1 overflow-hidden flex items-start pt-0 px-0 pb-20">
                 <div className="flex-1 flex flex-col items-start shrink-0">
                   <div className="self-stretch h-[100px] overflow-hidden shrink-0 flex items-center">
                     <div className="w-[704px] rounded-xl bg-aliceblue overflow-hidden shrink-0 flex items-center py-2.5 px-num-24 box-border gap-2.5">
@@ -341,8 +341,9 @@ const LandlordHomepage: FunctionComponent = () => {
                 </div>
               </div>
             </div>
-            <div className="self-stretch h-20 bg-white overflow-hidden shrink-0 flex flex-col items-start z-[1]"> <Footer /></div>
-            <img icon='streamline-sharp:help-chat-2' className="w-[57px] h-[57px] absolute !!m-[0 important] top-[1008px] left-[1093px] z-[2]" alt="" src={help} />
+            <div className="self-stretch h-20 overflow-hidden shrink-0 flex flex-col items-start z-[1] pl-50">
+              <Footer />
+            </div>
           </div>
         </div>
       </div>
