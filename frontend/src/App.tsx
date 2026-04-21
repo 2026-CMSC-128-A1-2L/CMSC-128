@@ -17,10 +17,9 @@ import TermsOfUse from './pages/TermsOfUse';
 import Finance from './pages/user/Finance';
 
 import Login from './pages/utilities/Login';
-import SideBar from './components/SideBar';
 import Upload from './pages/utilities/Upload';
 import DmsLanding from './pages/user/DmsLanding';
-        
+
 import SettingsPreferences from './pages/user/SettingsPreferences';
 import SubmitReceipt from './components/SubmitReceipt';
 import PaymentMethods from './components/PaymentMethods';
@@ -33,6 +32,8 @@ import Announcement from './pages/admin/announcement';
 import Applications from './pages/admin/applications';
 import Listings from './pages/admin/listings';
 import Messages from './pages/admin/messages';
+import DormCard from './components/DormCard';
+import DmsSidebar from './components/DmsSidebar';
 
 function App() {
   return (
@@ -65,7 +66,7 @@ function App() {
           <Route path="/ratereviewupload" element={<RateAndReviewUpload />} />
           <Route path="/terms-of-use" element={<TermsOfUse />} />
           <Route path="/finance" element={<Finance />} />
-          
+
           {/* Admin Routes */}
           <Route path="/admin/analytics" element={<Analytics />} />
           <Route path="/admin/reports" element={<Reports />} />
