@@ -4,7 +4,11 @@ import type { QueryFilter } from 'mongoose';
 import { AppError } from '../../error';
 import { combineFilters } from '../../middleware';
 import { Listing } from '../listing/listing.model';
-import { HousingFacility, type HousingFacilityType, type ManagerPermissionType } from './facility.model';
+import {
+  HousingFacility,
+  type HousingFacilityType,
+  type ManagerPermissionType,
+} from './facility.model';
 import { inviteManager } from '../invite/invite.service';
 
 type FacilityFilters = {

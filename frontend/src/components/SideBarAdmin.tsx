@@ -2,9 +2,7 @@ import { useEffect, useState, type MouseEventHandler } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import SideBarAdminButton from './SideBarAdminButton';
-import SideBarAdminMessagesView, {
-  type MessageItem,
-} from './SideBarAdminMessagesView';
+import SideBarAdminMessagesView, { type MessageItem } from './SideBarAdminMessagesView';
 
 export type SideBarAdminMode = 'expanded' | 'minimized';
 export type SideBarAdminView = 'nav' | 'messages_tab';
@@ -251,11 +249,7 @@ const SideBarAdmin = ({
                   <SideBarAdminButton
                     key={item.key}
                     icon={
-                      <Icon
-                        icon={item.iconName}
-                        className="h-[34px] w-[34px]"
-                        aria-hidden="true"
-                      />
+                      <Icon icon={item.iconName} className="h-[34px] w-[34px]" aria-hidden="true" />
                     }
                     label={item.label}
                     collapsed={collapsed}

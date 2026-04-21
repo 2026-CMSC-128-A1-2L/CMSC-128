@@ -1,4 +1,4 @@
-import type { FunctionComponent } from 'react';
+import type { FunctionComponent, ReactElement } from 'react';
 import search_icon from '../../assets/sidebar_search.svg';
 import AtlasLogoText from '../../assets/logo_atlas_text.svg?react';
 import dark_icon from '../../assets/sidebar_darkmode.svg';
@@ -11,7 +11,7 @@ const SidebarItem = ({
 }: {
   value: string;
   active: boolean;
-  children: React.ReactElement[];
+  children: ReactElement[];
 }) => {
   const textColor = active ? 'teal' : 'gray';
   const bar = active ? 'bg-teal' : '';

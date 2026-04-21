@@ -2,7 +2,11 @@ import type mongoose from 'mongoose';
 import type { QueryFilter } from 'mongoose';
 import { AppError } from '../../error';
 import { combineFilters } from '../../middleware';
-import { ApplicationForm, type ApplicationStatusType, type ApplicationType } from './application.model';
+import {
+  ApplicationForm,
+  type ApplicationStatusType,
+  type ApplicationType,
+} from './application.model';
 import { sendNotification } from '../notification/notification.service';
 import { Unit } from '../unit/unit.model';
 
