@@ -6,6 +6,7 @@ import BookmarksNewUsers from './pages/user/BookmarksNewUsers';
 import UserLanding from './pages/user/UserLanding';
 import UnitDetails from './pages/user/UnitDetails';
 import SettingsNotifications from './pages/user/SettingsNotifications';
+import SettingsGen from "./pages/SettingsGen";
 import LandingMap from './components/LandingMap';
 import CurrentDorm from './pages/CurrentDorm';
 import ContractInformation from './pages/ContractInformation';
@@ -69,6 +70,8 @@ function App() {
           <Route path="/terms-of-use" element={<TermsOfUse />} />
           <Route path="/finance" element={<Finance />} />
           <Route path="/mycalendar" element={<MyCalendar />} />
+          <Route path="/settings" element={<SettingsGen />} />
+
 
 
           {/* Admin Routes */}
