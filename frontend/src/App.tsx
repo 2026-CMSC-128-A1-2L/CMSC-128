@@ -87,8 +87,8 @@ function App() {
           <Route path="/ll-verif" element={<LandlordVerif />} />
           <Route path="/landlord-managerslist" element={<LandlordManagerList />} />
           <Route path="/finalizedapplication1a" element={<FinalizedApplicationPage1a />} />
-          <Route path="/landlord-managerspecific" element={<LandlordManagerSpecific />} 
-          <Route path="/report" element={<Report />}/>
+          <Route path="/landlord-managerspecific" element={<LandlordManagerSpecific />} />
+          <Route path="/report" element={<Report />} />
 
 
 
