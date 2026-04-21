@@ -1,8 +1,8 @@
-import { FunctionComponent } from 'react';
+import { type FunctionComponent } from 'react';
 import CheckIcon from '../assets/game-icons_confirmed.svg';
-import GreenEllipse from '../assets/Ellipse 71.svg';
 export type FinalizationConfirmationType = {
   	className?: string;
+	onClose: () => void;
 }
 
 
