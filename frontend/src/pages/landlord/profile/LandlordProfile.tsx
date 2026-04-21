@@ -4,9 +4,9 @@ import LandlordLayout from '../../../components/landlord/LandlordLayout';
 import LandlordInfoCard, {
   type LandlordInfo,
 } from '../../../components/landlord/LandlordInfoCard';
-import dorm1 from '../../../../assets/landlord/dorm1.png';
-import dorm2 from '../../../../assets/landlord/dorm2.png';
-import dorm3 from '../../../../assets/landlord/dorm3.png';
+import dorm1 from '../../../../assets/landing_contact.webp';
+import dorm2 from '../../../../assets/landing_listing.webp';
+import dorm3 from '../../../../assets/landing_contact.webp';
 
 const landlord: LandlordInfo = {
   displayName: 'Quevin Custodio',
@@ -161,7 +161,7 @@ const LandlordProfile = () => {
         <div className="h-px w-full bg-[#e5e7eb]/70" />
 
         <section className="flex flex-col gap-[16px] px-[32px]">
-          <SectionHeader title="Managed Properties" onEdit={() => {}} />
+          <SectionHeader title="Managed Properties" onEdit={() => { }} />
           <div className="grid grid-cols-1 gap-[16px] sm:grid-cols-2 lg:grid-cols-3">
             {properties.map((p) => (
               <PropertyCard key={p.name} property={p} />
