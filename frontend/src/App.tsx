@@ -17,6 +17,8 @@ import RateAndReviewUpload from './pages/RateAndReviewWithUploads';
 import TermsOfUse from './pages/TermsOfUse';
 import Finance from './pages/user/Finance';
 import MyCalendar from './pages/MyCalendar';
+import SettingsSecurity from "./pages/SettingsSecurity";
+
 
 
 import Login from './pages/utilities/Login';
@@ -71,6 +73,8 @@ function App() {
           <Route path="/finance" element={<Finance />} />
           <Route path="/mycalendar" element={<MyCalendar />} />
           <Route path="/settings" element={<SettingsGen />} />
+          <Route path="/settingsSecurity" element={<SettingsSecurity />} />
+
 
 
 
