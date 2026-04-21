@@ -23,6 +23,8 @@ import LandlordManagerList from "./pages/LandlordManagersList";
 import FinalizedApplicationPage1a from './pages/user/FinalizedApplicationPage1a';
 import LandlordManagerSpecific from './pages/LandlordManagerSpecific';
 import PendingApplication1a from './pages/user/PendingApplication1a';
+import ReviewReportFinal from './pages/user/ReportReviewFinal';
+
 
 
 
@@ -77,6 +79,7 @@ function App() {
           <Route path="/ratereview" element={<RateAndReview />} />
           <Route path="/ratereviewform" element={<RateAndReviewForm />} />
           <Route path="/ratereviewupload" element={<RateAndReviewUpload />} />
+          <Route path="/reportreviewfinal" element={<ReviewReportFinal />} />
           <Route path="/terms-of-use" element={<TermsOfUse />} />
           <Route path="/finance" element={<Finance />} />
           <Route path="/mycalendar" element={<MyCalendar />} />
@@ -102,10 +105,10 @@ function App() {
           <Route path="/admin/applications" element={<Applications />} />
           <Route path="/admin/listings" element={<Listings />} />
           <Route path="/admin/messages" element={<Messages />} />
-        </Route>
+        </Route >
         <Route path="/settings/preferences" element={<SettingsPreferences />} />
-      </Routes>
-    </Router>
+      </Routes >
+    </Router >
   );
 }
 
