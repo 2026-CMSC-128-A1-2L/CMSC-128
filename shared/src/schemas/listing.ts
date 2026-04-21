@@ -87,5 +87,7 @@ export const UpdateListingBodySchema = z.object({
   units: z.array(z.string()).optional(),
 });
 
-export const UpdateListingTagsResponseBodySchema = z.record(z.string(), z.union([z.string(), z.number(), z.boolean()]));
-
+export const UpdateListingTagsResponseBodySchema = z.record(
+  z.string(),
+  z.union([z.string(), z.number(), z.boolean()]),
+);

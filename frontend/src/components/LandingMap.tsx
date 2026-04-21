@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import type { FunctionComponent } from 'react';
 import map from '../../assets/map.svg';
 
 const LandingMap: FunctionComponent = () => {

@@ -1,4 +1,4 @@
-import { RequestHandler } from 'express';
+import type { RequestHandler } from 'express';
 import { File } from './file.model';
 import assert from 'node:assert';
 

@@ -7,15 +7,18 @@ interface RatingBreakdownProps {
   rows: { star: number; width: string; count: number }[];
 }
 
-const RatingBreakdown: FunctionComponent<RatingBreakdownProps> = ({ overallScore, totalReviews, rows }) => {
+const RatingBreakdown: FunctionComponent<RatingBreakdownProps> = ({
+  overallScore,
+  totalReviews,
+  rows,
+}) => {
   return (
     <div className="self-stretch flex items-center justify-between gap-0">
       <div className="w-[95.3px] flex flex-col items-start gap-1.5 shrink-0">
         <b className="self-stretch h-[35px] relative flex text-transparent !bg-clip-text [background:linear-gradient(180deg,_#5dc2a8_27.88%,_#0c8873_84.13%)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] items-center justify-center shrink-0">
           {overallScore}
         </b>
-        <div className="self-stretch flex items-center">
-        </div>
+        <div className="self-stretch flex items-center"></div>
         <div className="self-stretch h-[15px] relative text-num-12 tracking-num-0_02 font-semibold flex items-center justify-center shrink-0">
           {totalReviews} reviews
         </div>
