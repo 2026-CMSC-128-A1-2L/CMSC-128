@@ -2,7 +2,7 @@ import { FunctionComponent, useCallback } from 'react';
 import {Icon} from '@iconify/react';
 import Verified from "../../../assets/verified_badge.svg";
 import Photo from "../../assets/photo.svg";
-import Arrow from "../../../assets/Arrow up.svg";
+// import Arrow from "../../../assets/Arrow up.svg";		
 import Sidebar from '../../components/SideBar';
 import Footer from '../../components/Footer'; 
 
@@ -46,7 +46,7 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
                       											<b className="relative">Search for Dorms, Apartments, or Locations (e.g. UPLB, Umali Subdivision)</b>
                     										</div>
                   									</div>
-                  									<div className="self-stretch h-[1236px] rounded-num-16 bg-white flex flex-col items-start gap-3 shrink-0 text-center text-dimgray font-inter">
+                  									<div className="self-stretch h-[1236px] rounded-num-16 bg-white/45 flex flex-col items-start gap-3 shrink-0 text-center text-dimgray font-inter">
                     										<div className="self-stretch h-[382px] rounded-num-16 flex flex-col items-start gap-3">
                       											<div className="self-stretch rounded-num-16 overflow-hidden flex flex-col items-start p-num-32">
                         												<div className="self-stretch flex flex-col items-start gap-2.5">
@@ -256,7 +256,7 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
         				</div>
       			</div>
       			<div className="w-[60px] h-[60px] !!m-[0 important] absolute top-[890px] left-[1281px] rounded-[30px] [background:linear-gradient(183.48deg,_#096c5b,_#16917c)] shrink-0 flex items-start p-[16.2px] box-border cursor-pointer z-[2]" onClick={onArrowUpClick}>
-        				<img className="h-[27.7px] w-[27.7px] relative" src={Arrow} />
+        				<img className="h-[27.7px] w-[27.7px] relative" />
       			</div>
     		</div>);
 };
