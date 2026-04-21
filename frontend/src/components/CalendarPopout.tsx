@@ -1,4 +1,4 @@
-import { FunctionComponent, useCallback } from 'react';
+import { type FunctionComponent, useCallback } from 'react';
 
 export type CalendarPopoutType = {
   className?: string;

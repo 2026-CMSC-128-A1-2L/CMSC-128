@@ -1,4 +1,5 @@
-import mongoose, { QueryFilter } from 'mongoose';
+import type mongoose from 'mongoose';
+import type { QueryFilter } from 'mongoose';
 import { combineFilters } from '../../middleware';
 import { Notification } from './notification.model';
 

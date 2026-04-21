@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import type mongoose from 'mongoose';
 import { AppError } from '../../error';
 import { Listing } from '../listing/listing.model';
 import { User } from '../user/user.model';

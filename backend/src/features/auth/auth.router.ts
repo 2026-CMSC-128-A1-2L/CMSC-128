@@ -1,4 +1,4 @@
-import { RequestHandler, Router } from 'express';
+import { type RequestHandler, Router } from 'express';
 import passportGoogle from './google';
 import { isDevelopment } from '../../middleware';
 import { routeTestRegister, routeTestLogin } from './auth.controller';
