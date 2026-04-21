@@ -5,7 +5,7 @@ import {
   GetApplicationsQuerySchema,
   ObjectIdSchema,
   QuerySchema,
-  UpdateApplicationBodySchema,
+  UpdateApplicationBodySchema as AssignApplicationRequestBodySchema,
 } from 'shared';
 import {
   createApplication,
@@ -100,7 +100,7 @@ export const routeRejectApplication: ApplicationHandler = async (req, res, _next
 
 export const routeAssignApplicationUnit: RequestHandler = async (req, res, _next) => {
   const applicationId = ObjectIdSchema.parse(req.params.applicationId);
-  const params = UpdateApplicationBodySchema.parse(req.body);
+  const params = AssignApplicationRequestBodySchema.parse(req.body);
   const updatedApplication = await assignApplicationUnit(
     applicationId,
     params.unitId,
