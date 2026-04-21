@@ -28,13 +28,10 @@ import LandlordManagerSpecific from './pages/LandlordManagerSpecific';
 
 
 import Login from './pages/utilities/Login';
-import DormCard from './components/DormCard';
 import Upload from './pages/utilities/Upload';
 import DmsLanding from './pages/user/DmsLanding';
 import UserVerif from './pages/user/UserVerif';
 import LandlordVerif from './pages/LandlordVerif';
-import DormCard from './components/DormCard';
-import DmsSidebar from './components/DmsSidebar';
 
 import SettingsPreferences from './pages/user/SettingsPreferences';
 import SubmitReceipt from './components/SubmitReceipt';
@@ -48,7 +45,6 @@ import Announcement from './pages/admin/announcement';
 import Applications from './pages/admin/applications';
 import Listings from './pages/admin/listings';
 import Messages from './pages/admin/messages';
-import DormCard from './components/DormCard';
 import DmsSidebar from './components/DmsSidebar';
 
 function App() {
@@ -88,7 +84,7 @@ function App() {
           <Route path="/user-verif" element={<UserVerif />} />
           <Route path="/ll-verif" element={<LandlordVerif />} />
           <Route path="/landlord-managerslist" element={<LandlordManagerList />} />
-          <Route path ="/finalizedapplication1a" element= {<FinalizedApplicationPage1a />} />
+          <Route path="/finalizedapplication1a" element={<FinalizedApplicationPage1a />} />
           <Route path="/landlord-managerspecific" element={<LandlordManagerSpecific />} />
 
 
