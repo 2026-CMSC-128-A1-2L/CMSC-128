@@ -15,6 +15,8 @@ import RateAndReviewForm from './pages/RateAndReviewWithForms';
 import RateAndReviewUpload from './pages/RateAndReviewWithUploads';
 import TermsOfUse from './pages/TermsOfUse';
 import Finance from './pages/user/Finance';
+import MyCalendar from './pages/MyCalendar';
+
 
 import Login from './pages/utilities/Login';
 import Upload from './pages/utilities/Upload';
@@ -66,6 +68,8 @@ function App() {
           <Route path="/ratereviewupload" element={<RateAndReviewUpload />} />
           <Route path="/terms-of-use" element={<TermsOfUse />} />
           <Route path="/finance" element={<Finance />} />
+          <Route path="/mycalendar" element={<MyCalendar />} />
+
 
           {/* Admin Routes */}
           <Route path="/admin/analytics" element={<Analytics />} />
