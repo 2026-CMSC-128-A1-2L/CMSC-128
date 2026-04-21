@@ -1,13 +1,9 @@
 {
   "devDependencies": {
-    "eslint-config-prettier": "^10.1.8",
-    "@eslint/js": "^9.39.1",
+    "@biomejs/biome": "^2.4.12",
     "concurrently": "^9.2.1",
-    "eslint": "^9.39.1",
-    "eslint-plugin-react-hooks": "^7.0.1",
-    "eslint-plugin-react-refresh": "^0.4.24",
     "prettier": "^3.8.1",
-    "typescript-eslint": "^8.48.0"
+    "typescript": "^6.0.3"
   },
   "name": "cmsc-128",
   "version": "1.0.0",
@@ -15,11 +11,13 @@
   "main": "index.js",
   "workspaces": [
     "frontend",
-    "backend"
+    "backend",
+    "shared"
   ],
   "scripts": {
-    "lint": "eslint .",
-    "format": "prettier --write .",
+    "lint": "npm run lint -ws --if-present",
+    "format": "npm run format -ws --if-present",
+    "fix": "npm run fix -ws --if-present",
     "dev": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm run dev\"",
     "lock": "node secure.js encrypt",
     "unlock": "node secure.js decrypt"
@@ -34,5 +32,10 @@
   "bugs": {
     "url": "https://github.com/2026-CMSC-128-A1-2L/CMSC-128/issues"
   },
-  "homepage": "https://github.com/2026-CMSC-128-A1-2L/CMSC-128"
+  "homepage": "https://github.com/2026-CMSC-128-A1-2L/CMSC-128",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.1020.0",
+    "multer": "^2.1.1",
+    "multer-s3": "^3.0.1"
+  }
 }
