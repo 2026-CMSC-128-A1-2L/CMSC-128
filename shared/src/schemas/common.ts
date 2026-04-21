@@ -31,10 +31,10 @@ export const DateTimeSchema = z.iso.datetime().transform((x) => new Date(x));
 
 export const PaginationRequestSchema = (maxLimit: number) =>
   z.object({
-    cursor: z.string(),
+    cursor: z.string().optional(),
     limit: z.int().min(0).max(maxLimit),
   });
 
 export const PaginationResponseSchema = z.object({
-  cursor: z.string(),
+  cursor: z.string().optional(),
 });
