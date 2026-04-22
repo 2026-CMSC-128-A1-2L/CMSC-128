@@ -1,7 +1,7 @@
-import { FunctionComponent, useState } from "react";
-import AddManager1 from "./LandlordManagerAddForms/LandlordManagerAdd1";
-import AddManager2 from "./LandlordManagerAddForms/LandlordManagerAdd2";
-import PortalPopup from "./LandlordManagerPortal";
+import { FunctionComponent, useState } from 'react';
+import AddManager1 from './LandlordManagerAddForms/LandlordManagerAdd1';
+import AddManager2 from './LandlordManagerAddForms/LandlordManagerAdd2';
+import PortalPopup from './LandlordManagerPortal';
 
 type Props = {
   isOpen: boolean;
@@ -24,18 +24,9 @@ const ReportManagerModal: FunctionComponent<Props> = ({ isOpen, onClose }) => {
       placement="Centered"
       onOutsideClick={handleClose}
     >
-      {step === 1 && (
-        <AddManager1
-          onSend={() => setStep(2)}
-          onCancel={handleClose}
-        />
-      )}
+      {step === 1 && <AddManager1 onSend={() => setStep(2)} onCancel={handleClose} />}
 
-      {step === 2 && (
-        <AddManager2
-          onClose={handleClose}
-        />
-      )}
+      {step === 2 && <AddManager2 onClose={handleClose} />}
     </PortalPopup>
   );
 };

@@ -16,11 +16,7 @@ type LandlordLayoutProps = {
   children: ReactNode;
 };
 
-const LandlordLayout = ({
-  activeSidebarItem,
-  breadcrumbs = [],
-  children,
-}: LandlordLayoutProps) => {
+const LandlordLayout = ({ activeSidebarItem, breadcrumbs = [], children }: LandlordLayoutProps) => {
   const navigate = useNavigate();
 
   return (
@@ -38,15 +34,12 @@ const LandlordLayout = ({
         <div className="flex min-w-0 flex-1 flex-col">
           <div className="flex flex-1 flex-col px-[32px] pr-[80px] pb-[32px]">
             {breadcrumbs.length > 0 && (
-              <nav
-                aria-label="Breadcrumb"
-                className="flex h-[64px] items-end gap-[10px] p-[10px]"
-              >
+              <nav aria-label="Breadcrumb" className="flex h-[64px] items-end gap-[10px] p-[10px]">
                 <ol className="flex h-[24px] items-center gap-[6px]">
                   {breadcrumbs.map((item, idx) => {
                     const isLast = idx === breadcrumbs.length - 1;
                     const labelClass =
-                      'font-[\'Lora\',serif] text-[14px] font-semibold whitespace-nowrap';
+                      "font-['Lora',serif] text-[14px] font-semibold whitespace-nowrap";
                     return (
                       <li key={`${item.label}-${idx}`} className="flex items-center gap-[6px]">
                         {item.to ? (

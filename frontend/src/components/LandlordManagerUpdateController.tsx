@@ -1,7 +1,7 @@
-import { FunctionComponent, useState } from "react";
-import UpdateManager1 from "./LandlordManagerUpdateForms/LandlordManagerUpdate1";
-import UpdateManager2 from "./LandlordManagerUpdateForms/LandlordManagerUpdate2";
-import PortalPopup from "./LandlordManagerPortal.tsx";
+import { FunctionComponent, useState } from 'react';
+import UpdateManager1 from './LandlordManagerUpdateForms/LandlordManagerUpdate1';
+import UpdateManager2 from './LandlordManagerUpdateForms/LandlordManagerUpdate2';
+import PortalPopup from './LandlordManagerPortal.tsx';
 
 type Props = {
   isOpen: boolean;
@@ -24,18 +24,9 @@ const UpdateManager: FunctionComponent<Props> = ({ isOpen, onClose }) => {
       placement="Centered"
       onOutsideClick={handleClose}
     >
-      {step === 1 && (
-        <UpdateManager1
-          onSave={() => setStep(2)}
-          onCancel={handleClose}
-        />
-      )}
+      {step === 1 && <UpdateManager1 onSave={() => setStep(2)} onCancel={handleClose} />}
 
-      {step === 2 && (
-        <UpdateManager2
-          onClose={handleClose}
-        />
-      )}
+      {step === 2 && <UpdateManager2 onClose={handleClose} />}
     </PortalPopup>
   );
 };

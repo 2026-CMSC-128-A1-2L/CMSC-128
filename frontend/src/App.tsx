@@ -43,7 +43,6 @@ function App() {
           <Route path="/landlord/visits" element={<LandlordVisits />} />
           <Route path="/landlord/finance" element={<LandlordFinance />} />
           <Route path="/landlord/settings" element={<LandlordSettings />} />
-
         </Route>
       </Routes>
     </Router>

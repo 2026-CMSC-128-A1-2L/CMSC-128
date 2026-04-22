@@ -1,9 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Icon } from '@iconify/react';
 import LandlordLayout from '../../../components/landlord/LandlordLayout';
-import LandlordInfoCard, {
-  type LandlordInfo,
-} from '../../../components/landlord/LandlordInfoCard';
+import LandlordInfoCard, { type LandlordInfo } from '../../../components/landlord/LandlordInfoCard';
 import VerificationProgress, {
   type VerificationStep,
 } from '../../../components/landlord/VerificationProgress';
@@ -47,10 +45,7 @@ const LandlordProfileVerification = () => {
 
   const step: VerificationStep = 'submit';
 
-  const uploadedCount = useMemo(
-    () => Object.values(uploads).filter(Boolean).length,
-    [uploads],
-  );
+  const uploadedCount = useMemo(() => Object.values(uploads).filter(Boolean).length, [uploads]);
 
   const canSubmit = uploadedCount === documents.length;
 
@@ -58,8 +53,7 @@ const LandlordProfileVerification = () => {
     setUploads((prev) => ({ ...prev, [id]: file }));
   };
 
-  const getStatus = (id: string): DocumentStatus =>
-    uploads[id] ? 'uploaded' : 'missing';
+  const getStatus = (id: string): DocumentStatus => (uploads[id] ? 'uploaded' : 'missing');
 
   return (
     <LandlordLayout
@@ -107,10 +101,7 @@ const LandlordProfileVerification = () => {
         </div>
 
         {documents.map((doc) => (
-          <div
-            key={doc.id}
-            className="flex w-full flex-col items-center justify-center px-[32px]"
-          >
+          <div key={doc.id} className="flex w-full flex-col items-center justify-center px-[32px]">
             <DocumentUploadCard
               title={doc.title}
               acceptedHint={doc.acceptedHint}

@@ -37,14 +37,29 @@ const navItems: Array<{
   icon: string;
   route: string;
 }> = [
-  { key: 'dashboard', label: 'Dashboard', icon: 'solar:home-2-outline', route: '/landlord/dashboard' },
+  {
+    key: 'dashboard',
+    label: 'Dashboard',
+    icon: 'solar:home-2-outline',
+    route: '/landlord/dashboard',
+  },
   { key: 'messages', label: 'Messages', icon: 'ic:outline-mail', route: '/landlord/messages' },
-  { key: 'properties', label: 'Properties', icon: 'fluent:pen-16-regular', route: '/landlord/properties' },
+  {
+    key: 'properties',
+    label: 'Properties',
+    icon: 'fluent:pen-16-regular',
+    route: '/landlord/properties',
+  },
   { key: 'managers', label: 'Managers', icon: 'hugeicons:id', route: '/landlord/managers' },
   { key: 'tenants', label: 'My Tenants', icon: 'tabler:user-search', route: '/landlord/tenants' },
   { key: 'visits', label: 'Visits', icon: 'solar:calendar-outline', route: '/landlord/visits' },
   { key: 'finance', label: 'Finance', icon: 'solar:card-outline', route: '/landlord/finance' },
-  { key: 'settings', label: 'Settings', icon: 'solar:settings-outline', route: '/landlord/settings' },
+  {
+    key: 'settings',
+    label: 'Settings',
+    icon: 'solar:settings-outline',
+    route: '/landlord/settings',
+  },
 ];
 
 const defaultUser: UserInfo = {
@@ -97,7 +112,11 @@ const SideBarLandlord = ({
               </span>
             </span>
             <span className="flex h-[32px] w-[32px] items-center justify-center rounded-[100px] bg-[#096c5b] text-white transition-colors duration-200 ease-in-out">
-              <Icon icon="material-symbols:add-rounded" className="h-[24px] w-[24px]" aria-hidden="true" />
+              <Icon
+                icon="material-symbols:add-rounded"
+                className="h-[24px] w-[24px]"
+                aria-hidden="true"
+              />
             </span>
           </button>
         </div>
@@ -162,11 +181,7 @@ const SideBarLandlord = ({
         >
           <span className="flex h-[48px] w-[44px] shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#e5e7eb] text-[#9ca3af]">
             {user.avatarUrl ? (
-              <img
-                src={user.avatarUrl}
-                alt=""
-                className="h-full w-full object-cover"
-              />
+              <img src={user.avatarUrl} alt="" className="h-full w-full object-cover" />
             ) : (
               <Icon icon="solar:user-bold" className="h-[28px] w-[28px]" aria-hidden="true" />
             )}

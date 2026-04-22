@@ -95,7 +95,11 @@ const DocumentUploadCard = ({
             aria-label={`More options for ${title}`}
             className="flex h-[24px] w-[24px] cursor-pointer items-center justify-center text-[#2f3136]"
           >
-            <Icon icon="qlementine-icons:menu-dots-16" className="h-[24px] w-[24px]" aria-hidden="true" />
+            <Icon
+              icon="qlementine-icons:menu-dots-16"
+              className="h-[24px] w-[24px]"
+              aria-hidden="true"
+            />
           </button>
         </div>
       </div>
