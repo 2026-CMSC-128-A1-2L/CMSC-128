@@ -1,4 +1,4 @@
-import { FunctionComponent, useState } from 'react';
+import { FunctionComponent, useEffect, useRef, useState } from 'react';
 
 const PropertyTabs: FunctionComponent<{ children: React.ReactElement[] }> = (props: {
   children: React.ReactElement[];
@@ -8,20 +8,35 @@ const PropertyTabs: FunctionComponent<{ children: React.ReactElement[] }> = (pro
   const [activeTab, setActiveTab] = useState<string>(tabs[0]);
   const activeIndex = tabs.indexOf(activeTab);
 
+  const [width, setWidth] = useState(0);
+  const tabContainer = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!tabContainer.current) return;
+
+    const observer = new ResizeObserver(() => {
+      if (!tabContainer.current) return;
+      setWidth(tabContainer.current.clientWidth / tabs.length);
+    });
+
+    observer.observe(tabContainer.current);
+  }, [tabContainer]);
+
   return (
     <div className="w-full relative flex flex-col items-start gap-[29px] font-inter">
-      <div className="flex flex-row">
-        <div className="flex flex-1 flex-col items-start relative text-center">
-          <div className="flex items-start py-4 z-[1]">
+      <div className="flex w-full flex-1">
+        <div className="flex flex-col w-full text-center">
+          <div ref={tabContainer} className="flex w-full items-start z-[1]">
             {tabs.map((tab) => (
-              <div
+              <button
                 key={tab}
+                type="button"
                 onClick={() => setActiveTab(tab)}
-                className={`flex-1 w-num-150 relative tracking-num--0_01 flex items-center justify-center cursor-pointer transition-colors duration-200
+                className={`py-4 flex-1 relative tracking-num--0_01 flex items-center justify-center cursor-pointer transition-colors duration-200
                 ${activeTab === tab ? 'text-teal-600' : 'text-gray hover:text-teal-600'}`}
               >
                 <b>{tab}</b>
-              </div>
+              </button>
             ))}
           </div>
 
@@ -29,8 +44,8 @@ const PropertyTabs: FunctionComponent<{ children: React.ReactElement[] }> = (pro
             <div
               className="absolute top-0 h-full bg-teal-600 transition-all duration-300 ease-in-out"
               style={{
-                width: '150px',
-                transform: `translateX(${activeIndex * 150}px)`,
+                width: `${width}px`,
+                transform: `translateX(${activeIndex * width}px)`,
               }}
             />
           </div>
