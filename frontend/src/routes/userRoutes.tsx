@@ -42,7 +42,7 @@ const userRoutes = [
   <Route key="finance" path="/finance" element={<Finance />} />,
   <Route key="mycalendar" path="/my-calendar" element={<MyCalendar />} />,
   <Route key="profile-switcher" path="/profile-switcher" element={<ProfileSwitcher />} />,
-  <Route key="verification" path="/verification" element={<UserVerif />} />
+  // <Route key="verification" path="/verification" element={<UserVerif />} />
 
 ];
 

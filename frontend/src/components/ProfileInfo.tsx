@@ -1,9 +1,8 @@
-//./components/ProfileInfo.tsx
+
 
 import React, { useState, useRef } from 'react';
 import { Icon } from '@iconify/react';
 import DefaultAvatar from '../../assets/default_avatar.svg';
-// Added this import so the code doesn't break
 import VerifiedBadge from '../../assets/verified_badge.svg'; 
 
 const ProfileInfo = () => {
