@@ -11,6 +11,11 @@ import LandlordVisits from './pages/landlord/LandlordVisits';
 import LandlordFinance from './pages/landlord/LandlordFinance';
 import LandlordSettings from './pages/landlord/LandlordSettings';
 import LandlordNewListing from './pages/landlord/LandlordNewListing';
+import Settings from './pages/user/setting/Settings';
+import General from './pages/user/setting/General';
+import Preferences from './pages/user/setting/Preferences';
+import Notification from './pages/user/setting/Notification';
+import Security from './pages/user/setting/Security';
 
 import PageLayout from './pages/utilities/PageLayout';
 import UserLanding from './pages/user/UserLanding';
@@ -31,6 +36,13 @@ function App() {
           {userRoutes}
           {adminRoutes}
           {landlordRoutes}
+
+
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/general" element={<General />} />
+          <Route path="/notification" element={<Notification />} />
+          <Route path="/preferences" element={<Preferences />} />
+          <Route path="/security" element={<Security />} />
 
           <Route path="/landlord/profile" element={<LandlordProfile />} />
           <Route path="/landlord/profile/verification" element={<LandlordProfileVerification />} />
