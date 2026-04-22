@@ -23,10 +23,13 @@ const userRoutes = [
   <Route key="contact" path="/contact-us" element={<ContactUs />} />,
   <Route key="bookmark" path="/bookmark" element={<BookmarksNewUsers />} />,
   <Route key="unit" path="/unit" element={<UnitDetails />} />,
-  <Route key="settings-notifs" path="/settings-notifications" element={<SettingsNotifications />} />,
-  <Route key="settings" path="/settings-general" element={<SettingsGen />} />,
-  <Route key="settings-security" path="/settings-security" element={<SettingsSecurity />} />,
-  <Route key="settings-preferences" path="/settings-preferences" element={<SettingsPreferences />} />,
+  // <Route key="settings" path="/settings" element={<Settings />} />,
+  // <Route key="settings" path="/settings">
+  //   <Route key="general" path="/settings/general" element={<SettingsGen />} />
+  //   <Route key="security" path="/settings/security" element={<SettingsSecurity />} />
+  //   <Route key="preferences" path="/settings/preferences" element={<SettingsPreferences />} />
+  //   <Route key="notifs" path="/settings/notifications" element={<SettingsNotifications />} />
+  // </Route>,
   <Route key="dms-landing" path="/direct-messages" element={<DmsLanding />} />,
   <Route key="current-dorm" path="/current-dorm" element={<CurrentDorm />} />,
   <Route key="contract" path="/contract-information" element={<ContractInformation />} />,

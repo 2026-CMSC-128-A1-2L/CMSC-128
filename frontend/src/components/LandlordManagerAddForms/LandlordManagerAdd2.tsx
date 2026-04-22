@@ -3,11 +3,9 @@ import success from '../../../assets/reportSuccess.svg';
 
 type Props = {
   onClose: () => void;
-}
+};
 
-const AddManager2: FunctionComponent<Props> = ({
-  onClose,
-}) => {
+const AddManager2: FunctionComponent<Props> = ({ onClose }) => {
   return (
     <div className="w-120 h-125 relative rounded-2xl bg-white overflow-hidden flex flex-col items-start p-8 box-border text-center text-2xl text-black font-inter">
       <div className="self-stretch h-[436px] overflow-hidden shrink-0 flex flex-col items-center pt-[65px] px-2.5 pb-6 box-border gap-6">
@@ -30,11 +28,14 @@ const AddManager2: FunctionComponent<Props> = ({
         </div>
         <div className="self-stretch flex-1 overflow-hidden flex flex-col items-center p-2.5 text-sm text-teal">
           <div className="rounded-xl bg-lightcyan overflow-hidden flex items-center justify-center py-3 px-8">
-            <button className="relative font-semibold cursor-pointer" onClick={onClose}>Close</button>
+            <button className="relative font-semibold cursor-pointer" onClick={onClose}>
+              Close
+            </button>
           </div>
         </div>
       </div>
-    </div>);
+    </div>
+  );
 };
 
 export default AddManager2;
