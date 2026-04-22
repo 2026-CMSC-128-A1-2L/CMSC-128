@@ -18,7 +18,6 @@ const getHighlightClasses = (state: SideBarLandlordButtonState): string => {
 };
 
 const getContentBgClasses = (state: SideBarLandlordButtonState): string => {
-  if (state === 'hovered') return 'bg-[#F0FAF6]';
   return 'bg-transparent';
 };
 
@@ -58,7 +57,6 @@ const SideBarLandlordButton = ({
         className={[
           'flex h-[44px] flex-1 items-center gap-[16px] rounded-[12px] px-[4px]',
           'transition-colors duration-200 ease-in-out',
-          getContentBgClasses(state),
           state === 'default' ? 'group-hover:bg-[#F0FAF6]' : '',
         ].join(' ')}
       >
