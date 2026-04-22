@@ -127,7 +127,7 @@ const UserVerif: FunctionComponent = () => {
                               </div>
                             </div>
                             <div className="self-stretch flex flex-col items-start gap-12 shrink-0 text-white">
-                              <div className="self-stretch flex flex-col items-center justify-center">
+                              {/* <div className="self-stretch flex flex-col items-center justify-center">
                                 <div className="w-[530px] h-12 relative">
                                   <div className="absolute h-[99.38%] w-[99.87%] top-[0%] right-[-0.25%] bottom-[0.62%] left-[0.38%] rounded-[99.72px] bg-aliceblue flex items-center justify-center p-1 box-border gap-1 shrink-0">
                                     <div className="h-[39.9px] w-[235.3px] rounded-[99.72px] flex items-center justify-center p-1 box-border">
@@ -142,7 +142,7 @@ const UserVerif: FunctionComponent = () => {
                                     </div>
                                   </div>
                                 </div>
-                              </div>
+                              </div> */}
                               <div className="self-stretch flex flex-col items-center justify-center text-darkslategray-200 font-poppins">
                                 <div className="w-[723px] h-[87px] relative">
                                   <div

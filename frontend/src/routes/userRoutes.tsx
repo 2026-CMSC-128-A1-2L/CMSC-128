@@ -9,13 +9,15 @@ import SettingsPreferences from '../pages/user/SettingsPreferences';
 import HomePage from '../pages/user/HomePage';
 import Finance from '../pages/user/Finance';
 import ContactUs from '../pages/user/ContactUs';
-import CurrentDorm from '../pages/CurrentDorm';
-import ContractInformation from '../pages/ContractInformation';
-import RateAndReview from '../pages/RateAndReview';
-import RateAndReviewForm from '../pages/RateAndReviewWithForms';
-import RateAndReviewUpload from '../pages/RateAndReviewWithUploads';
+import CurrentDorm from '../pages/user/ProfileSwitcher/CurrentDorm';
+import ContractInformation from '../pages/user/ProfileSwitcher/ContractInformation';
+import RateAndReview from '../pages/user/ProfileSwitcher/RateAndReview';
+import RateAndReviewForm from '../pages/user/ProfileSwitcher/RateAndReviewWithForms';
+import RateAndReviewUpload from '../pages/user/ProfileSwitcher/RateAndReviewWithUploads';
 import TermsOfUse from '../pages/TermsOfUse';
 import MyCalendar from '../pages/MyCalendar';
+import ProfileSwitcher from '../pages/user/ProfileSwitcher/ProfileSwitcher';
+import UserVerif from '../pages/user/ProfileSwitcher/UserVerif';
 import { Route } from 'react-router-dom';
 
 const userRoutes = [
@@ -39,6 +41,9 @@ const userRoutes = [
   <Route key="terms" path="/terms-of-use" element={<TermsOfUse />} />,
   <Route key="finance" path="/finance" element={<Finance />} />,
   <Route key="mycalendar" path="/my-calendar" element={<MyCalendar />} />,
+  <Route key="profile-switcher" path="/profile-switcher" element={<ProfileSwitcher />} />,
+  <Route key="verification" path="/verification" element={<UserVerif />} />
+
 ];
 
 export default userRoutes;
