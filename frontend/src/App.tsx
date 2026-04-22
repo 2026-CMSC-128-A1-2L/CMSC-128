@@ -11,6 +11,8 @@ import LandlordVisits from './pages/landlord/LandlordVisits';
 import LandlordFinance from './pages/landlord/LandlordFinance';
 import LandlordSettings from './pages/landlord/LandlordSettings';
 import LandlordNewListing from './pages/landlord/LandlordNewListing';
+import TestPage from './pages/utilities/TestPage';
+
 
 import PageLayout from './pages/utilities/PageLayout';
 import UserLanding from './pages/user/UserLanding';
@@ -43,6 +45,7 @@ function App() {
           <Route path="/landlord/visits" element={<LandlordVisits />} />
           <Route path="/landlord/finance" element={<LandlordFinance />} />
           <Route path="/landlord/settings" element={<LandlordSettings />} />
+          <Route path="/test" element={<TestPage />} />
 
         </Route>
       </Routes>
