@@ -6,6 +6,12 @@ import ImageCarousel from '../../components/ImageCarousel';
 import pic from '../../../assets/landing_contact.webp';
 import pic2 from '../../../assets/landing_listing.webp';
 import pic3 from '../../../assets/landing_contact.webp';
+import AboutDetails from '../../components/unitdetails/AboutDetails';
+import AmenetiesDetails from '../../components/unitdetails/AmenetiesDetails';
+import RulesDetails from '../../components/unitdetails/RulesDetails';
+import LocationDetails from '../../components/unitdetails/LocationDetails';
+import ReviewDetails from '../../components/unitdetails/ReviewDetails';
+import PropertyTab from '../../components/unitdetails/PropertyTab';
 
 const UnitDetails: FunctionComponent = () => {
   const gallery = [`${pic}`, `${pic2}`, `${pic3}`];
@@ -285,7 +291,13 @@ const UnitDetails: FunctionComponent = () => {
                           </div>
                         </div>
                         <div className="w-[816px] h-[697px] flex flex-col items-start shrink-0">
-                          <PropertyTabs />
+                          <PropertyTabs>
+                            <PropertyTab text="ABOUT" element={<AboutDetails />} />
+                            <PropertyTab text="AMENTITIES" element={<AmenetiesDetails />} />
+                            <PropertyTab text="RULES" element={<RulesDetails />} />
+                            <PropertyTab text="LOCATION" element={<LocationDetails />} />
+                            <PropertyTab text="REVIEWS" element={<ReviewDetails />} />
+                          </PropertyTabs>
                         </div>
                       </div>
                       <div className="flex flex-col items-start gap-[21.4px] text-black font-inter">
