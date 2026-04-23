@@ -131,13 +131,13 @@ export default {
       borderRadius: {
         "num-0": "0px",
         "num-4": "4px",
-        "num-5": "5px",
+        "num-5": "5px", // From Finance
         "num-8": "8px",
         "num-10": "10px",
         "num-12": "12px",
         "num-16": "16px",
         "num-50": "50%",
-        "num-100": "100px",
+        "num-100": "100px", // From Finance
         "num-8_91": "8.91px",
         "num-7_72": "7.72px",
         "num-3_87": "3.87px",

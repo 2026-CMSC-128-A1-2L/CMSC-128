@@ -1,15 +1,15 @@
 import { FunctionComponent, useCallback } from 'react';
 import { Icon } from '@iconify/react';
 import { useState } from 'react';
-import Location from '../../assets/pin_location_icon.svg';
-import House from '../../assets/house_icon.svg';
-import StarIcon from '../../assets/quality_star_icon.svg';
-import FilledStarIcon from '../../assets/quality_star_icon_filled.svg';
-import LeafIcon from '../../assets/comfort_leaf_icon.svg';
-import FilledLeafIcon from '../../assets/comfort_leaf_icon_filled.svg';
-import TreeIcon from '../../assets/environment_tree_icon.svg';
-import FilledTreeIcon from '../../assets/environment_tree_icon_filled.svg';
-import SideBar from '../components/SideBar';
+import Location from '../../../assets/pin_location_icon.svg';
+import House from '../../../assets/house_icon.svg';
+import StarIcon from '../../../assets/quality_star_icon.svg';
+import FilledStarIcon from '../../../assets/quality_star_icon_filled.svg';
+import LeafIcon from '../../../assets/comfort_leaf_icon.svg';
+import FilledLeafIcon from '../../../assets/comfort_leaf_icon_filled.svg';
+import TreeIcon from '../../../assets/environment_tree_icon.svg';
+import FilledTreeIcon from '../../../assets/environment_tree_icon_filled.svg';
+import SideBar from '../../../components/SideBar';
 
 const RateAndReview: FunctionComponent = () => {
   const onUserProfileTextClick = useCallback(() => {
