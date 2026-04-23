@@ -2,14 +2,15 @@ import mongoose from 'mongoose';
 
 const bookmarkSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'Student', required: true },
-  listingId: { type: mongoose.Schema.Types.ObjectId, ref: 'Listing', required: true },
-
-  // Sort field
-  bookmarkedAt: { type: Date, default: Date.now },
+  facilityId: { type: mongoose.Schema.Types.ObjectId, ref: 'HousingFacility', required: true },
 
   // Reason for bookmarking, optional
   notes: { type: String },
-});
+},
+{
+  timestamps: true,
+}
+);
 
 bookmarkSchema.index({ userId: 1, listingId: 1 }, { unique: true });
 
