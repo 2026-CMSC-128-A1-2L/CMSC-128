@@ -6,6 +6,7 @@ import SettingsNotifications from "../pages/user/setting/Notification";
 import SettingsGen from "../pages/user/setting/General";
 import SettingsSecurity from "../pages/user/setting/Security";
 import SettingsPreferences from "../pages/user/setting/Preferences";
+import Filter from "../components/user/FilterTab";
 import HomePage from "../pages/user/home/HomePage";
 import Finance from "../pages/user/finance/Finance";
 import ContactUs from "../pages/user/info/ContactUs";
@@ -22,6 +23,7 @@ import Settings from "../pages/user/setting/Settings";
 
 const userRoutes = [
   <Route key="home" path="/home" element={<HomePage />} />,
+  <Route key="filter" path="/filter" element={<Filter />} />,
   <Route key="contact" path="/contact-us" element={<ContactUs />} />,
   <Route key="bookmark" path="/bookmark" element={<BookmarksNewUsers />} />,
   <Route key="unit" path="/unit" element={<UnitDetails />} />,
