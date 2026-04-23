@@ -1,11 +1,11 @@
-import { FunctionComponent, useCallback } from 'react';
+import { type FunctionComponent, useCallback } from 'react';
 import SideBar from '../../components/SideBar';
 import ArrowRightIcon from '../../assets/iconamoon_arrow-right-2.svg';
 import SearchIcon from '../../assets/ic_outline-search.svg';
 import LocationIcon from '../../assets/icon.svg';
 import UserIcon from '../../assets/Icon3.svg';
 
-const Report: FunctionComponent = () => {
+const Report: FunctionComponent= () => {
   const onUserProfileTextClick = useCallback(() => {
     // Add your code here
   }, []);

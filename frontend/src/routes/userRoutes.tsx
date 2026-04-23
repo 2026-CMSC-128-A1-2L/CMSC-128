@@ -16,6 +16,8 @@ import RateAndReviewForm from '../pages/RateAndReviewWithForms';
 import RateAndReviewUpload from '../pages/RateAndReviewWithUploads';
 import TermsOfUse from '../pages/TermsOfUse';
 import MyCalendar from '../pages/MyCalendar';
+import Report from '../pages/user/Report';
+import Reportv2 from '../pages/user/Reportv2'
 import { Route } from 'react-router-dom';
 
 const userRoutes = [
@@ -39,6 +41,9 @@ const userRoutes = [
   <Route key="terms" path="/terms-of-use" element={<TermsOfUse />} />,
   <Route key="finance" path="/finance" element={<Finance />} />,
   <Route key="mycalendar" path="/my-calendar" element={<MyCalendar />} />,
+  <Route key="user-report" path="/report" element={<Report />} />,
+  <Route key="new-report" path="/new-report" element={<Reportv2 />} />
+  
 ];
 
 export default userRoutes;
