@@ -1,10 +1,10 @@
 import { FunctionComponent, useCallback } from 'react';
 import { Icon } from '@iconify/react';
-import Location from '../../assets/pin_location_icon.svg';
-import House from '../../assets/house_icon.svg';
-import UploadMedia from '../../assets/upload_media_icon.svg';
+import Location from '../../../assets/pin_location_icon.svg';
+import House from '../../../assets/house_icon.svg';
+import UploadMedia from '../../../assets/upload_media_icon.svg';
 import { useRef } from 'react';
-import SideBar from '../components/SideBar';
+import SideBar from '../../../components/SideBar';
 
 const RateAndReview: FunctionComponent = () => {
   const onUserProfileTextClick = useCallback(() => {

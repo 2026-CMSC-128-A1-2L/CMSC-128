@@ -1,12 +1,12 @@
 import { FunctionComponent, useCallback } from 'react';
 import { Icon } from '@iconify/react';
-import VerifiedBadge from '../../assets/verified_badge.svg';
-import DefaultAvatar from '../../assets/default_avatar.svg';
+import VerifiedBadge from '../../../assets/verified_badge.svg';
+import DefaultAvatar from '../../../assets/default_avatar.svg';
 import { useState, useRef } from 'react';
-import Footer from '../components/Footer';
-import Switch from '../components/CurrentDormToVerificationSwitch';
-import Sidebar from '../components/SideBar';
-import placeholder from '../../assets/logo_atlas_text.svg';
+import Footer from '../../../components/Footer';
+import Switch from '../../../components/CurrentDormToVerificationSwitch';
+import Sidebar from '../../../components/SideBar';
+import placeholder from '../../../assets/logo_atlas_text.svg';
 
 const CurrentDorm: FunctionComponent = () => {
   const onContractInformationContainerClick = useCallback(() => {
@@ -47,6 +47,8 @@ const CurrentDorm: FunctionComponent = () => {
     if (number.length < 2) return number;
     return number.substring(0, 2) + '*'.repeat(number.length - 2);
   };
+
+  const [activeTab, setActiveTab] = useState('Contract Information');
 
   return (
     <div className="w-full h-screen relative overflow-y-auto flex flex-col items-start isolate gap-2.5 text-left text-num-14 text-darkslategray-100 font-lora">
@@ -303,39 +305,109 @@ const CurrentDorm: FunctionComponent = () => {
                         </div>
                       </div>
                       <div className="self-stretch flex items-start justify-center pt-num-24 px-num-32 pb-20 gap-6 text-num-14 text-black">
-                        <div className="w-[280px] rounded-2xl border-whitesmoke-200 border-solid border-[1px] box-border overflow-hidden shrink-0 flex flex-col items-start py-3 px-4">
-                          <div className="self-stretch flex flex-col items-end py-3 px-num-0 gap-2">
+                        {/* left sidebar */}
+                        <div className="h-[168px] w-[280px] rounded-2xl border-whitesmoke-200 border-solid border-[1px] box-border overflow-hidden shrink-0 flex flex-col items-start py-3 px-4">
+                          <div className="self-stretch flex flex-col items-end py-1 px-0 gap-1">
+                            {/* contract info */}
                             <div
-                              className="flex items-center justify-center gap-2 cursor-pointer"
-                              onClick={onContractInformationContainerClick}
+                              className="self-stretch flex items-center justify-end py-1 px-3 cursor-pointer group"
+                              onClick={() => setActiveTab('Contract Information')}
                             >
-                              <div className="relative font-semibold">Contract Information</div>
-                              <Icon icon="iconamoon:arrow-right-2" className="h-6 w-6 relative" />
+                              <div className="flex items-center gap-2">
+                                <div
+                                  className={`relative font-semibold transition-colors ${activeTab === 'Contract Information' ? 'text-[#096C5B]' : 'text-black'}`}
+                                >
+                                  Contract Information
+                                </div>
+                                <Icon
+                                  icon="iconamoon:arrow-right-2"
+                                  className={`h-6 w-6 transition-colors ${activeTab === 'Contract Information' ? 'text-[#096C5B]' : 'text-black'}`}
+                                />
+                              </div>
                             </div>
+
+                            {/* rate and review */}
                             <div
-                              className="flex items-center justify-center gap-2 cursor-pointer"
-                              onClick={onContractInformationContainerClick}
+                              className="self-stretch flex items-center justify-end py-1 px-3 cursor-pointer group"
+                              onClick={() => setActiveTab('Rate and Review')}
                             >
-                              <div className="relative font-semibold">Rate and Review</div>
-                              <Icon icon="iconamoon:arrow-right-2" className="h-6 w-6 relative" />
+                              <div className="flex items-center gap-2">
+                                <div
+                                  className={`relative font-semibold transition-colors ${activeTab === 'Rate and Review' ? 'text-[#096C5B]' : 'text-black'}`}
+                                >
+                                  Rate and Review
+                                </div>
+                                <Icon
+                                  icon="iconamoon:arrow-right-2"
+                                  className={`h-6 w-6 transition-colors ${activeTab === 'Rate and Review' ? 'text-[#096C5B]' : 'text-black'}`}
+                                />
+                              </div>
                             </div>
+
+                            {/* report listing */}
                             <div
-                              className="flex items-center justify-center gap-2 cursor-pointer"
-                              onClick={onContractInformationContainerClick}
+                              className="self-stretch flex items-center justify-end py-1 px-3 cursor-pointer group"
+                              onClick={() => setActiveTab('Report Listing')}
                             >
-                              <div className="relative font-semibold">Report Listing</div>
-                              <Icon icon="iconamoon:arrow-right-2" className="h-6 w-6 relative" />
+                              <div className="flex items-center gap-2">
+                                <div
+                                  className={`relative font-semibold transition-colors ${activeTab === 'Report Listing' ? 'text-[#096C5B]' : 'text-black'}`}
+                                >
+                                  Report Listing
+                                </div>
+                                <Icon
+                                  icon="iconamoon:arrow-right-2"
+                                  className={`h-6 w-6 transition-colors ${activeTab === 'Report Listing' ? 'text-[#096C5B]' : 'text-black'}`}
+                                />
+                              </div>
                             </div>
+
+                            {/* pasalo unit */}
                             <div
-                              className="flex items-center justify-center gap-2 cursor-pointer"
-                              onClick={onContractInformationContainerClick}
+                              className="self-stretch flex items-center justify-end py-1 px-3 cursor-pointer group"
+                              onClick={() => setActiveTab('Pasalo Unit')}
                             >
-                              <div className="relative font-semibold">Pasalo Unit</div>
-                              <Icon icon="iconamoon:arrow-right-2" className="h-6 w-6 relative" />
+                              <div className="flex items-center gap-2">
+                                <div
+                                  className={`relative font-semibold transition-colors ${activeTab === 'Pasalo Unit' ? 'text-[#096C5B]' : 'text-black'}`}
+                                >
+                                  Pasalo Unit
+                                </div>
+                                <Icon
+                                  icon="iconamoon:arrow-right-2"
+                                  className={`h-6 w-6 transition-colors ${activeTab === 'Pasalo Unit' ? 'text-[#096C5B]' : 'text-black'}`}
+                                />
+                              </div>
                             </div>
                           </div>
                         </div>
-                        <div className="h-[168px] w-[612px] rounded-lg border-whitesmoke-200 border-solid border-[1px] box-border overflow-hidden shrink-0 flex items-center px-8 text-left" />
+
+                        {/* right sidebar: contents */}
+                        <div className="h-[168px] w-[612px] rounded-lg border-whitesmoke-200 border-solid border-[1px] box-border overflow-hidden shrink-0 flex items-center px-8 text-left">
+                          {activeTab === 'Contract Information' && (
+                            <div className="flex-1 flex items-center justify-between py-3">
+                              <div className="flex items-center gap-4">
+                                <Icon icon="line-md:file" className="h-10 w-10 text-black" />
+                                <div className="flex flex-col items-start justify-center">
+                                  <b className="text-[16px] text-black">tenancy_contract.pdf</b>
+                                  <div className="text-[12px] font-semibold text-slategray">
+                                    Submitted: 02 April 2026
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="flex items-center gap-1 cursor-pointer hover:opacity-80 transition-opacity">
+                                <b className="text-[14px] text-[#096C5B]">
+                                  Download Tenancy Contract
+                                </b>
+                                <Icon
+                                  icon="material-symbols:download-rounded"
+                                  className="h-6 w-6 text-[#096C5B]"
+                                />
+                              </div>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
