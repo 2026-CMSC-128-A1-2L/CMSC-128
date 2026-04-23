@@ -1,62 +1,225 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  	"content": [
-    		"./src/**/*.{js,jsx,ts,tsx}"
-  	],
-  	"theme": {
-    		"extend": {
-      			"colors": {
-        				"white": "#fff",
-        				"whitesmoke": {
-          					"100": "#f8fafc",
-          					"200": "#f0f0f0"
-        				},
-        				"darkslategray": {
-          					"100": "#2f3136",
-          					"200": "#024338"
-        				},
-        				"dimgray": "#666",
-        				"teal": "#096c5b",
-        				"black": "#000",
-        				"gray": {
-          					"100": "#001d18",
-          					"200": "rgba(255, 255, 255, 0.7)"
-        				},
-        				"silver": {
-          					"100": "#b5c8c5",
-          					"200": "#bdbdbd"
-        				},
-        				"aliceblue": "#f1f5f9",
-        				"slategray": "#64748b"
-      			},
-      			"spacing": {
-        				"num-180": "180px",
-        				"num-1": "1px solid #f0f0f0"
-      			},
-      			"fontFamily": {
-        				"buhun-retro-two-free": "Buhun Retro Two FREE",
-        				"lora": "Lora",
-        				"inter": "Inter",
-        				"poppins": "Poppins"
-      			},
-      			"borderRadius": {
-        				"num-4": "4px",
-        				"num-12": "12px",
-        				"num-16": "16px"
-      			},
-      			"padding": {
-        				"num-0": "0px",
-        				"num-32": "32px",
-        				"num-20": "20px",
-        				"num-12": "12px",
-        				"num-10": "10px"
-      			}
-    		},
-    		"fontSize": {
-      			"num-14": "14px"
-    		}
-  	},
-  	"corePlugins": {
-    		"preflight": false
-  	}
-}
+  content: ["./src/**/*.{js,jsx,ts,tsx}"],
+  theme: {
+    extend: {
+      keyframes: {
+        fadeIn: {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
+      },
+      animation: {
+        "fade-in": "fadeIn 0.8s ease-in-out",
+      },
+      colors: {
+        white: "#fff",
+        black: "#000",
+        aliceblue: "#f1f5f9",
+        dimgray: "#666",
+        crimson: "#ef4444",
+        lightcyan: {
+          DEFAULT: "#cbf6ed",
+          100: "#cbf6ed",
+          200: "rgba(203, 246, 237, 0.4)",
+          legacy: "rgba(203, 246, 237, 0.4)",
+        },
+        azure: "#d9ebe7",
+        gainsboro: "#d9d9d9",
+        unavailable_action: "#f1f5f9",
+        unselected: "#647483",
+        darkgreen: "#0B251C",
+        darkolivegreen: "#224c25",
+        preview: "#666666",
+        slategray: "#64748b",
+        dodgerblue: "#448aff",
+        teal: {
+          DEFAULT: "#096c5b",
+          100: "#2f8677",
+          200: "#096c5b",
+          300: "rgba(9, 108, 91, 0.25)",
+        },
+        silver: {
+          DEFAULT: "#bdbdbd",
+          100: "#b5c8c5",
+          200: "#bdbdbd",
+        },
+        gray: {
+          DEFAULT: "#001d18",
+          100: "#757575",
+          200: "#1e1e1e",
+          300: "#001d18",
+          400: "rgba(0, 0, 0, 0.38)",
+          500: "rgba(255, 255, 255, 0.7)",
+          600: "rgba(255, 255, 255, 0.75)",
+          700: "rgba(255, 255, 255, 0.5)",
+          800: "rgba(255, 255, 255, 0.25)",
+          900: "rgba(0, 0, 0, 0)",
+        },
+        darkslategray: {
+          DEFAULT: "#024338",
+          100: "#2f3136",
+          200: "#024338",
+        },
+        whitesmoke: {
+          DEFAULT: "#f0f0f0",
+          100: "#f8fafc",
+          200: "#f3f4f6",
+          300: "#f0f0f0",
+        },
+      },
+      spacing: {
+        "num-1440": "1440px",
+        "num-1172": "1172px",
+        "num-914": "914px",
+        "num-300": "300px",
+        "num-291_5": "291.5px",
+        "num-280": "280px",
+        "num-259_3": "259.3px",
+        "num-258": "258px",
+        "num-249_6": "249.6px",
+        "num-220": "220px",
+        "num-199": "199px",
+        "num-180": "180px",
+        "num-150": "150px",
+        "num-138": "138px",
+        "num-126_6": "126.6px",
+        "num-112_6": "112.6px",
+        "num-108_4": "108.4px",
+        "num-108_7": "108.7px",
+        "num-104": "104px",
+        "num-78": "78px",
+        "num-67_5": "67.5px",
+        "num-65_1": "65.1px",
+        "num-60": "60px",
+        "num-55": "55px",
+        "num-49": "49px",
+        "num-48_7": "48.7px",
+        "num-42_8": "42.8px",
+        "num-38_6": "38.6px",
+        "num-37": "37px",
+        "num-30_6": "30.6px",
+        "num-30_8": "30.8px",
+        "num-30": "30px",
+        "num-30_2": "30.2px",
+        "num-29_3": "29.3px",
+        "num-28_4": "28.4px",
+        "num-27_9": "27.9px",
+        "num-27_8": "27.8px",
+        "num-21_3": "21.3px",
+        "num-20_8": "20.8px",
+        "num-19_1": "19.1px",
+        "num-18_6": "18.6px",
+        "num-14_7": "14.7px",
+        "num-12_8": "12.8px",
+        "num-6_4": "6.4px",
+        "num-1": "1px solid #f0f0f0",
+        "num-1-thin": "0.4px solid #f0f0f0",
+        "num-2": "0.4px solid #096c5b",
+        "num-3": "5px solid rgba(255, 255, 255, 0.7)",
+        "num-4": "0.7px solid #d9d9d9",
+        "num-11": "1px solid #096c5b",
+        "num-1-teal": "0.9px solid #096c5b",
+      },
+      maxWidth: {
+        "num-980": "980px",
+        "num-916": "916px",
+        "num-852": "852px",
+        "num-723": "723px",
+        "num-530": "530px",
+      },
+      borderRadius: {
+        "num-0": "0px",
+        "num-4": "4px",
+        "num-5": "5px", // From Finance
+        "num-8": "8px",
+        "num-10": "10px",
+        "num-12": "12px",
+        "num-16": "16px",
+        "num-50": "50%",
+        "num-100": "100px", // From Finance
+        "num-8_91": "8.91px",
+        "num-7_72": "7.72px",
+        "num-3_87": "3.87px",
+        "num-4_34": "4.34px",
+        "num-5_57": "5.57px",
+      },
+      fontFamily: {
+        "buhun-retro-two-free": ["Buhun Retro Two FREE", "sans-serif"],
+        inter: ["Inter", "sans-serif"],
+        lora: ["Lora", "serif"],
+        poppins: ["Poppins", "sans-serif"],
+        geist: ["Geist", "sans-serif"],
+        inherit: "inherit",
+      },
+      padding: {
+        "num-0": "0px",
+        "num-4": "4px",
+        "num-4_3": "4.3px",
+        "num-4_7": "4.7px",
+        "num-6_8": "6.8px",
+        "num-8": "8px",
+        "num-8_7": "8.7px",
+        "num-10": "10px",
+        "num-11_1": "11.1px",
+        "num-12": "12px",
+        "num-13_9": "13.9px",
+        "num-15_4": "15.4px",
+        "num-16": "16px",
+        "num-19": "19px",
+        "num-20": "20px",
+        "num-22": "22px",
+        "num-24": "24px",
+        "num-32": "32px",
+        "num-80": "80px",
+      },
+      opacity: {
+        "num-0_3": "0.3",
+      },
+    },
+    fontSize: {
+      "num-4_64": "4.64px",
+      "num-5_21": "5.21px",
+      "num-6_08": "6.08px",
+      "num-6_19": "6.19px",
+      "num-6_95": "6.95px",
+      "num-7_81": "7.81px",
+      "num-8": "8px",
+      "num-8_36": "8.36px",
+      "num-9_1": "9.1px",
+      "num-10": "12px",
+      "num-10_7": "10.7px",
+      "num-11_15": "11.15px",
+      "num-11_59": "11.59px",
+      "num-12": "12px",
+      "num-14": "14px",
+      "num-14_26": "14.26px",
+      "num-15_11": "15.11px",
+      "num-15_45": "15.45px",
+      "num-16": "16px",
+      "num-16_46": "16.46px",
+      "num-18": "18px",
+      "num-24": "24px",
+      "num-28": "28px",
+      "num-36": "36px",
+      "num-inherit": "inherit",
+    },
+    lineHeight: {
+      "num-13_89": "13.89px",
+      "num-13_94": "13.94px",
+      "num-16_83": "16.83px",
+      "num-19_31": "19.31px",
+      "num-24": "24px",
+      "num-25": "25px",
+      "num-32": "32px",
+    },
+    letterSpacing: {
+      "num--0_01": "-0.01em",
+      "num-0_02": "0.02em",
+      "num-0_04": "0.04em",
+    },
+  },
+  corePlugins: {
+    preflight: false,
+  },
+};
