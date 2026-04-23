@@ -10,7 +10,7 @@ export type ListingType = {
     userId: mongoose.Types.ObjectId;
     permissions: { manageBillings: boolean; manageApplications: boolean; manageListings: boolean };
   }[];
-  tags: Record<string, any>;
+  tags: Record<string, number | string | boolean>;
   roomType: (typeof ROOM_TYPES)[number];
   capacity: number;
   isPrivate: boolean;
