@@ -1,7 +1,7 @@
 import { FunctionComponent, useState, useRef, useCallback } from "react";
-import PaymentMethods1 from "../../../components/PaymentMethods";
-import FinancePopup from "../../../components/FinancePopup";
-import PaymentMethods from "../../../components/SubmitReceipt";
+import PaymentMethods1 from "../../../components/user/PaymentMethods";
+import FinancePopup from "../../../components/user/FinancePopup";
+import PaymentMethods from "../../../components/user/SubmitReceipt";
 import { useNavigate } from "react-router-dom";
 import { Icon } from "@iconify/react";
 import SideBar from "../../../components/user/SideBar";

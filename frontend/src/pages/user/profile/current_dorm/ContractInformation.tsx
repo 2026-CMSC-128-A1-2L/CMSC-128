@@ -1,12 +1,12 @@
 import { FunctionComponent, useCallback } from "react";
 import { Icon } from "@iconify/react";
-import VerifiedBadge from "../../../assets/verified_badge.svg";
-import DefaultAvatar from "../../../assets/default_avatar.svg";
+import VerifiedBadge from "../../../../../assets/verified_badge.svg";
+import DefaultAvatar from "../../../../../assets/default_avatar.svg";
 import { useState, useRef } from "react";
 import Footer from "../../../../components/general/Footer";
 import Switch from "../../../../components/user/CurrentDormToVerificationSwitch";
 import Sidebar from "../../../../components/user/SideBar";
-import placeholder from "../../../assets/logo_atlas_text.svg";
+import placeholder from "../../../../../assets/logo_atlas_text.svg";
 
 const CurrentDorm: FunctionComponent = () => {
   const onContractInformationContainerClick = useCallback(() => {

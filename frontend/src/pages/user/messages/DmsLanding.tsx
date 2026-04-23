@@ -1,6 +1,6 @@
 import { FunctionComponent } from "react";
 import DmsSidebar from "../../../components/general/DmsSidebar";
-import oswald from "../../../assets/owl_inbox.png";
+import oswald from "../../../../assets/owl_inbox.png";
 
 const DmsLanding: FunctionComponent = () => {
   return (

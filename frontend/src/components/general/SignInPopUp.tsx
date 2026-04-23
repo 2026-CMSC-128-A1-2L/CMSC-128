@@ -1,13 +1,13 @@
 import { FunctionComponent, useCallback } from 'react';
 import { useEffect } from 'react';
-import logo from '../../assets/footer_logo.svg';
+import logo from '../../../assets/footer_logo.svg';
 
 interface SignInPopUpProps {
   onClose: () => void;
 }
 
 const SignInPopUp: FunctionComponent<SignInPopUpProps> = ({ onClose }) => {
-  const onGoogleContainerClick = useCallback(() => {}, []);
+  const onGoogleContainerClick = useCallback(() => { }, []);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {

@@ -1,8 +1,8 @@
 import type { FunctionComponent } from "react";
-import landing_image from "../../../../../assets/landing_building.webp";
-import AtlasCurious from "../../../assets/logo_curious.svg?react";
-import AtlasText from "../../../assets/logo_atlas_text.svg?react";
-import map from "../../../assets/map.svg";
+import landing_image from "../../assets/landing_building.webp";
+import AtlasCurious from "../../assets/logo_curious.svg?react";
+import AtlasText from "../../assets/logo_atlas_text.svg?react";
+import map from "../../assets/map.svg";
 import AutoImageSwitcher from "../components/general/AutoImageSwitcher";
 import SignInPopUp from "../components/general/SignInPopUp";
 

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import landing_listing from '../../assets/landing_listing.webp';
-import landing_contact from '../../assets/landing_contact.webp';
+import landing_listing from '../../../assets/landing_listing.webp';
+import landing_contact from '../../../assets/landing_contact.webp';
 
 const AutoImageSwitcher = () => {
   const images = [`${landing_listing}`, `${landing_contact}`];

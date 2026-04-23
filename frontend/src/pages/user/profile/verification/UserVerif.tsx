@@ -1,9 +1,8 @@
 import { FunctionComponent, useState, useCallback } from "react";
 import { Icon } from "@iconify/react";
-import ProgressBar from "../../../../components/ProgressBar";
-import TutorialBubble from "../../../../components/Tutorials";
-import TutorialIcon from "../../../assets/help-chat.svg";
-import Footer from "../../../../components/general/Footer";
+import ProgressBar from "../../../../components/user/ProgressBar";
+import TutorialBubble from "../../../../components/user/Tutorials";
+import TutorialIcon from "../../../../../assets/help-chat.svg";
 
 interface UserVerifProps {
   verificationStep: number;

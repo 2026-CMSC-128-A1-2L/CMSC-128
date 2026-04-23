@@ -1,5 +1,5 @@
 import { FunctionComponent } from "react";
-import Message from "../InboxMessage";
+import Message from "../general/InboxMessage";
 import { Icon } from "@iconify/react";
 
 const DmsSidebar: FunctionComponent = () => {

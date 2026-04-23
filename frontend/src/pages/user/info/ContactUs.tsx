@@ -1,5 +1,5 @@
 import type { FunctionComponent } from "react";
-import LogoLike from "../../../assets/logo_like.svg?react";
+import LogoLike from "../../../../assets/logo_like.svg?react";
 import SideBar from "../../../components/user/SideBar";
 import { Icon } from "@iconify/react";
 import Footer from "../../../components/general/Footer";

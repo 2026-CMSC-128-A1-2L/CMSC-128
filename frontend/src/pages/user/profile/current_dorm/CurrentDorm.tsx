@@ -1,6 +1,6 @@
 import { FunctionComponent, useCallback } from 'react';
 import { Icon } from '@iconify/react';
-import placeholder from '../../../assets/logo_atlas_text.svg';
+import placeholder from '../../../../../assets/logo_atlas_text.svg';
 
 const CurrentDorm: FunctionComponent = () => {
   const onContractInformationContainerClick = useCallback(() => {
