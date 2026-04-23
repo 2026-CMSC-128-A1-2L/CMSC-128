@@ -8,6 +8,12 @@ export type ManagerPermissionType = {
   manageListings: boolean;
 };
 
+export const managerPermissionSchema = new mongoose.Schema<ManagerPermissionType>({
+  manageBillings: { type: Boolean, default: false },
+  manageApplications: { type: Boolean, default: false },
+  manageListings: { type: Boolean, default: false },
+});
+
 export type HousingFacilityType = {
   _id: mongoose.Types.ObjectId;
   name: string;

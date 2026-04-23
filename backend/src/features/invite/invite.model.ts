@@ -1,23 +1,26 @@
 import mongoose from 'mongoose';
-import crypto from 'crypto';
+import crypto from 'node:crypto';
+import { managerPermissionSchema, type ManagerPermissionType } from '../facility/facility.model';
 
-const inviteSchema = new mongoose.Schema({
-  // manager id
-  //
-  // userId is used when the account exists already, email if not
-  // after a manager creates an account with this email, the userId is set.
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  email: String,
+export type InviteType = {
+  email: string;
+  landlordId: mongoose.Types.ObjectId;
+  facilityId: mongoose.Types.ObjectId;
+  permissions: ManagerPermissionType;
+  token: string;
+  status: 'pending' | 'accepted' | 'declined';
+  dateInvited: Date;
+  dateAccepted?: Date;
+  dateDeclined?: Date;
+};
 
+const inviteSchema = new mongoose.Schema<InviteType>({
+  email: { type: String, required: true },
   landlordId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   facilityId: { type: mongoose.Schema.Types.ObjectId, ref: 'HousingFacility', required: true },
 
   // permissions granted to the manager upon acceptance
-  permissions: {
-    manageBillings: { type: Boolean, default: false },
-    manageApplications: { type: Boolean, default: false },
-    manageListings: { type: Boolean, default: false },
-  },
+  permissions: { type: managerPermissionSchema, required: true },
 
   // unique token for accepting the invite
   token: {
@@ -30,9 +33,10 @@ const inviteSchema = new mongoose.Schema({
     type: String,
     enum: ['pending', 'accepted', 'declined'],
     default: 'pending',
+    required: true,
   },
 
-  dateInvited: { type: Date, default: Date.now },
+  dateInvited: { type: Date, default: Date.now, required: true },
   dateAccepted: { type: Date },
   dateDeclined: { type: Date },
 });
