@@ -1,8 +1,8 @@
-import { FunctionComponent } from 'react';
-import { Icon } from '@iconify/react'; // Ensure this is imported
-import pic1 from '../../assets/promotion-1.jpg';
-import pic2 from '../../assets/promotion-2.jpg';
-import pic3 from '../../assets/accent.svg';
+import { FunctionComponent } from "react";
+import { Icon } from "@iconify/react"; // Ensure this is imported
+import pic1 from "../../../assets/promotion-1.jpg";
+import pic2 from "../../../assets/promotion-2.jpg";
+import pic3 from "../../../assets/accent.svg";
 
 const Banner: FunctionComponent = () => {
   return (

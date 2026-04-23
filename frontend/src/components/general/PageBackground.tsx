@@ -1,5 +1,5 @@
-import BgUpper from '../../assets/bg-upper.svg?react';
-import BgLower from '../../assets/bg-lower.svg?react';
+import BgUpper from "../../../assets/bg-upper.svg?react";
+import BgLower from "../../../assets/bg-lower.svg?react";
 
 const PageBackground = () => {
   return (
