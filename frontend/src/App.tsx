@@ -29,6 +29,9 @@ import LandlordMessages from './pages/landlord/LandlordMessages';
 import LandlordProperties from './pages/landlord/LandlordProperties';
 import LandlordManagers from './pages/landlord/LandlordManagers';
 import LandlordTenants from './pages/landlord/LandlordTenants';
+import LandlordTenantDetail from './pages/landlord/LandlordTenantDetail';
+import LandlordUnvalidatedApplications from './pages/landlord/LandlordUnvalidatedApplications';
+import LandlordUnvalidatedTenantDetail from './pages/landlord/LandlordUnvalidatedTenantDetail';
 import LandlordVisits from './pages/landlord/LandlordVisits';
 import LandlordFinance from './pages/landlord/LandlordFinance';
 import LandlordSettings from './pages/landlord/LandlordSettings';
@@ -47,6 +50,15 @@ function App() {
         <Route path="/landlord/properties/new" element={<LandlordNewListing />} />
         <Route path="/landlord/managers" element={<LandlordManagers />} />
         <Route path="/landlord/tenants" element={<LandlordTenants />} />
+        <Route
+          path="/landlord/tenants/unvalidated"
+          element={<LandlordUnvalidatedApplications />}
+        />
+        <Route
+          path="/landlord/tenants/unvalidated/:tenantId"
+          element={<LandlordUnvalidatedTenantDetail />}
+        />
+        <Route path="/landlord/tenants/:tenantId" element={<LandlordTenantDetail />} />
         <Route path="/landlord/visits" element={<LandlordVisits />} />
         <Route path="/landlord/finance" element={<LandlordFinance />} />
         <Route path="/landlord/settings" element={<LandlordSettings />} />
