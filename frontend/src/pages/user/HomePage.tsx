@@ -1,9 +1,10 @@
-import { FunctionComponent, useCallback } from 'react';
-import { Icon } from '@iconify/react';
-import SideBar from '../../components/SideBar';
-import DormCard from '../../components/DormCard';
-import Banner from '../../components/Banner';
-import Footer from '../../components/Footer';
+import { type FunctionComponent, useCallback } from "react";
+import { Icon } from "@iconify/react";
+import SideBar from "../../components/SideBar";
+import DormCard from "../../components/DormCard";
+import { dormData } from "../../data/dorms";
+import Banner from "../../components/Banner";
+import Footer from "../../components/Footer";
 
 const HomePage: FunctionComponent = () => {
   const onViewMoreContainerClick = useCallback(() => {
@@ -26,7 +27,8 @@ const HomePage: FunctionComponent = () => {
               <div className="w-full rounded-num-12 bg-unavailable_action flex items-center py-3 pl-3 pr-6 box-border gap-2">
                 <Icon icon="ic:outline-search" className="w-5 h-5"></Icon>
                 <b className="relative text-unselected">
-                  Search for Dorms, Apartments, or Locations (e.g. UPLB, Umali Subdivision)
+                  Search for Dorms, Apartments, or Locations (e.g. UPLB, Umali
+                  Subdivision)
                 </b>
               </div>
             </div>
@@ -35,7 +37,9 @@ const HomePage: FunctionComponent = () => {
               {/* greeting/filter button*/}
               <div className="w-full flex items-center justify-between box-border">
                 <div className="w-full h-[2rem] flex-1 flex flex-col items-start justify-center">
-                  <b className="relative leading-[2rem] text-teal">Mabuhay, iskolar!</b>
+                  <b className="relative leading-[2rem] text-teal">
+                    Mabuhay, iskolar!
+                  </b>
                 </div>
                 <div className="w-fit h-fit flex    items-center">
                   <div className="h-10 w-10 rounded-num-100 bg-whitesmoke-100 flex items-center box-border">
@@ -57,7 +61,9 @@ const HomePage: FunctionComponent = () => {
                             className="w-5 h-5"
                           ></Icon>
                         </div>
-                        <b className="w-fit relative flex items-start">Pasalo Units</b>
+                        <b className="w-fit relative flex items-start">
+                          Pasalo Units
+                        </b>
                       </div>
                       <div
                         className="w-fit h-fit flex items-end justify-center gap-[0.25rem] pt-4 cursor-pointer text-center text-[0.75rem] text-teal-100 font-lora"
@@ -66,12 +72,18 @@ const HomePage: FunctionComponent = () => {
                         <div className="relative [text-decoration:underline] tracking-num-0_02 font-semibold">
                           View All
                         </div>
-                        <Icon icon="radix-icons:arrow-top-right" className="w-3 h-3"></Icon>
+                        <Icon
+                          icon="radix-icons:arrow-top-right"
+                          className="w-3 h-3"
+                        ></Icon>
                       </div>
                     </div>
                     <div className="self-stretch w-fit flex items-center gap-1">
                       <div className="rounded-num-100 bg-lightcyan-100 overflow-hidden flex items-center py-[0.437rem] px-[0.562rem]">
-                        <Icon icon="material-symbols-light:chevron-left" className="w-5 h-5"></Icon>
+                        <Icon
+                          icon="material-symbols-light:chevron-left"
+                          className="w-5 h-5"
+                        ></Icon>
                       </div>
                       <div className="rounded-num-100 bg-lightcyan-100 overflow-hidden flex items-center py-[0.437rem] px-[0.562rem]">
                         <Icon
@@ -81,11 +93,20 @@ const HomePage: FunctionComponent = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="h-full w-full overflow-x-auto flex justify-between py-1 box-border ">
-                    <DormCard></DormCard>
-                    <DormCard></DormCard>
-                    <DormCard></DormCard>
-                    <DormCard></DormCard>
+                  <div className="h-full w-full overflow-x-auto flex py-1 box-border gap-3">
+                    <div className="flex flex-wrap gap-6">
+                      {dormData.map((dorm) => (
+                        <DormCard
+                          key={dorm.id}
+                          name={dorm.name}
+                          rating={dorm.rating}
+                          price={dorm.price}
+                          location={dorm.location}
+                          image={dorm.image}
+                          room_types={dorm.room_types}
+                        />
+                      ))}
+                    </div>
                   </div>
                 </div>
 
@@ -94,7 +115,9 @@ const HomePage: FunctionComponent = () => {
                   <div className="w-full h-10 flex items-center justify-between">
                     <div className="h-full flex items-center gap-6">
                       <div className="w-fit h-full flex items-center">
-                        <b className="w-fit flex items-center">Popular Listings</b>
+                        <b className="w-fit flex items-center">
+                          Popular Listings
+                        </b>
                       </div>
                       <div
                         className="w-fit h-fit flex items-end justify-center gap-[0.25rem] cursor-pointer text-center text-[0.75rem] text-teal-100 font-lora"
@@ -103,12 +126,18 @@ const HomePage: FunctionComponent = () => {
                         <div className="relative [text-decoration:underline] tracking-num-0_02 font-semibold">
                           View All
                         </div>
-                        <Icon icon="radix-icons:arrow-top-right" className="w-3 h-3"></Icon>
+                        <Icon
+                          icon="radix-icons:arrow-top-right"
+                          className="w-3 h-3"
+                        ></Icon>
                       </div>
                     </div>
                     <div className="self-stretch w-fit flex items-center gap-1">
                       <div className="rounded-num-100 bg-lightcyan-100 overflow-hidden flex items-center py-[0.437rem] px-[0.562rem]">
-                        <Icon icon="material-symbols-light:chevron-left" className="w-5 h-5"></Icon>
+                        <Icon
+                          icon="material-symbols-light:chevron-left"
+                          className="w-5 h-5"
+                        ></Icon>
                       </div>
                       <div className="rounded-num-100 bg-lightcyan-100 overflow-hidden flex items-center py-[0.437rem] px-[0.562rem]">
                         <Icon
@@ -118,11 +147,20 @@ const HomePage: FunctionComponent = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="h-full w-full overflow-x-auto flex justify-between py-1 box-border">
-                    <DormCard></DormCard>
-                    <DormCard></DormCard>
-                    <DormCard></DormCard>
-                    <DormCard></DormCard>
+                  <div className="h-full w-full overflow-x-auto flex py-1 box-border gap-3">
+                    <div className="flex flex-wrap gap-6">
+                      {dormData.map((dorm) => (
+                        <DormCard
+                          key={dorm.id}
+                          name={dorm.name}
+                          rating={dorm.rating}
+                          price={dorm.price}
+                          location={dorm.location}
+                          image={dorm.image}
+                          room_types={dorm.room_types}
+                        />
+                      ))}
+                    </div>
                   </div>
                 </div>
 
@@ -140,12 +178,18 @@ const HomePage: FunctionComponent = () => {
                         <div className="relative [text-decoration:underline] tracking-num-0_02 font-semibold">
                           View All
                         </div>
-                        <Icon icon="radix-icons:arrow-top-right" className="w-3 h-3"></Icon>
+                        <Icon
+                          icon="radix-icons:arrow-top-right"
+                          className="w-3 h-3"
+                        ></Icon>
                       </div>
                     </div>
                     <div className="self-stretch w-fit flex items-center gap-1">
                       <div className="rounded-num-100 bg-lightcyan-100 overflow-hidden flex items-center py-[0.437rem] px-[0.562rem]">
-                        <Icon icon="material-symbols-light:chevron-left" className="w-5 h-5"></Icon>
+                        <Icon
+                          icon="material-symbols-light:chevron-left"
+                          className="w-5 h-5"
+                        ></Icon>
                       </div>
                       <div className="rounded-num-100 bg-lightcyan-100 overflow-hidden flex items-center py-[0.437rem] px-[0.562rem]">
                         <Icon
@@ -155,11 +199,20 @@ const HomePage: FunctionComponent = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="h-full w-full overflow-x-auto flex justify-between py-1 box-border ">
-                    <DormCard></DormCard>
-                    <DormCard></DormCard>
-                    <DormCard></DormCard>
-                    <DormCard></DormCard>
+                  <div className="h-full w-full overflow-x-auto flex py-1 box-border gap-3">
+                    <div className="flex flex-wrap gap-6">
+                      {dormData.map((dorm) => (
+                        <DormCard
+                          key={dorm.id}
+                          name={dorm.name}
+                          rating={dorm.rating}
+                          price={dorm.price}
+                          location={dorm.location}
+                          image={dorm.image}
+                          room_types={dorm.room_types}
+                        />
+                      ))}
+                    </div>
                   </div>
                 </div>
 
@@ -168,7 +221,9 @@ const HomePage: FunctionComponent = () => {
                   <div className="w-full h-10 flex items-center justify-between">
                     <div className="h-full flex items-center gap-6">
                       <div className="w-fit h-full flex items-center">
-                        <b className="w-fit flex items-center">Listings You May Like</b>
+                        <b className="w-fit flex items-center">
+                          Listings You May Like
+                        </b>
                       </div>
                       <div
                         className="w-fit h-fit flex items-end justify-center gap-[0.25rem] cursor-pointer text-center text-[0.75rem] text-teal-100 font-lora"
@@ -177,12 +232,18 @@ const HomePage: FunctionComponent = () => {
                         <div className="relative [text-decoration:underline] tracking-num-0_02 font-semibold">
                           View All
                         </div>
-                        <Icon icon="radix-icons:arrow-top-right" className="w-3 h-3"></Icon>
+                        <Icon
+                          icon="radix-icons:arrow-top-right"
+                          className="w-3 h-3"
+                        ></Icon>
                       </div>
                     </div>
                     <div className="self-stretch w-fit flex items-center gap-1">
                       <div className="rounded-num-100 bg-lightcyan-100 overflow-hidden flex items-center py-[0.437rem] px-[0.562rem]">
-                        <Icon icon="material-symbols-light:chevron-left" className="w-5 h-5"></Icon>
+                        <Icon
+                          icon="material-symbols-light:chevron-left"
+                          className="w-5 h-5"
+                        ></Icon>
                       </div>
                       <div className="rounded-num-100 bg-lightcyan-100 overflow-hidden flex items-center py-[0.437rem] px-[0.562rem]">
                         <Icon
@@ -192,11 +253,20 @@ const HomePage: FunctionComponent = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="h-full w-full overflow-x-auto flex justify-between py-1 box-border ">
-                    <DormCard></DormCard>
-                    <DormCard></DormCard>
-                    <DormCard></DormCard>
-                    <DormCard></DormCard>
+                  <div className="h-full w-full overflow-x-auto flex py-1 box-border gap-3">
+                    <div className="flex flex-wrap gap-6">
+                      {dormData.map((dorm) => (
+                        <DormCard
+                          key={dorm.id}
+                          name={dorm.name}
+                          rating={dorm.rating}
+                          price={dorm.price}
+                          location={dorm.location}
+                          image={dorm.image}
+                          room_types={dorm.room_types}
+                        />
+                      ))}
+                    </div>
                   </div>
                 </div>
 
@@ -211,11 +281,20 @@ const HomePage: FunctionComponent = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="h-full w-full overflow-x-auto flex justify-between py-1 box-border ">
-                    <DormCard></DormCard>
-                    <DormCard></DormCard>
-                    <DormCard></DormCard>
-                    <DormCard></DormCard>
+                  <div className="h-full w-full overflow-x-auto flex py-1 box-border gap-3">
+                    <div className="flex flex-wrap gap-6">
+                      {dormData.map((dorm) => (
+                        <DormCard
+                          key={dorm.id}
+                          name={dorm.name}
+                          rating={dorm.rating}
+                          price={dorm.price}
+                          location={dorm.location}
+                          image={dorm.image}
+                          room_types={dorm.room_types}
+                        />
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
