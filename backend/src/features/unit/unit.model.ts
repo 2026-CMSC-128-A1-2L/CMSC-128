@@ -3,8 +3,10 @@ import mongoose from 'mongoose';
 export type UnitType = {
   _id: mongoose.Types.ObjectId;
   listingId: mongoose.Types.ObjectId;
+  facilityId: mongoose.Types.ObjectId;
   roomNumber: string;
-  currentRentals: mongoose.Types.ObjectId;
+  currentRentals: mongoose.Types.ObjectId[];
+  capacity: number;
   price: number;
   location: string;
   isAvailable: boolean;
@@ -16,6 +18,7 @@ const unitSchema = new mongoose.Schema<UnitType>({
 
   // NOTE: Always keep consistent everytime a user gets accepted or moves out.
   currentRentals: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Rental' }],
+  capacity: { type: Number, required: true, default: 0, min: 0},
   price: { type: Number, required: true },
 
   // Location inside the building
