@@ -27,6 +27,16 @@ export type HousingFacilityType = {
   status: 'pending' | 'approved' | 'rejected' | 'submitted';
   capacity: number;
   documents: DocumentType[];
+  
+  // For reviews
+  
+  qualitySum: Number;
+  comfortSum: Number;
+  environmentSum: Number;
+
+  qualityCount: Number;
+  comfortCount: Number;
+  environmentCount: Number;
 
   // Overrides dates if specified
   isAcceptingApplications?: boolean;
@@ -78,6 +88,16 @@ const HousingFacilitySchema = new mongoose.Schema<HousingFacilityType>(
     },
     capacity: { type: Number, required: true },
     documents: [documentSchema],
+
+
+    // For review
+    qualitySum:  { type: Number, default: 0 },
+    comfortSum:  { type: Number,  default: 0 },
+    environmentSum:  { type: Number,  default: 0 },
+
+    qualityCount:{ type: Number,  default: 0 },
+    comfortCount: { type: Number,  default: 0 },
+    environmentCount: { type: Number,  default: 0 },
 
     // Overrides dates if specified
     isAcceptingApplications: { type: Boolean, default: false },
