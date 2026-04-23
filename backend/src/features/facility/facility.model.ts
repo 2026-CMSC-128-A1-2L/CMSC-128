@@ -43,6 +43,16 @@ export type HousingFacilityType = {
 
   createdAt: Date;
   updatedAt: Date;
+
+  isPrivate: boolean;
+  allowVisit: boolean;
+  allowTransfer: boolean;
+
+  description: string;
+  media: {
+    sourceType: 'local' | 'external';
+    value: string;
+  }[];
 };
 
 const HousingFacilitySchema = new mongoose.Schema<HousingFacilityType>(
@@ -84,12 +94,25 @@ const HousingFacilitySchema = new mongoose.Schema<HousingFacilityType>(
     capacity: { type: Number, required: true },
     documents: [documentSchema],
 
+    isPrivate: { type: Boolean, default: false },
+    allowVisit: { type: Boolean, default: false },
+    allowTransfer: { type: Boolean, default: false },
     // Overrides dates if specified
     isAcceptingApplications: { type: Boolean, default: false },
 
     // Range of allowed application period. Can be overridden by `isAcceptingApplications`
     applicationOpenDate: { type: Date, required: false },
     applicationCloseDate: { type: Date, required: false },
+
+    description: { type: String, required: true },
+    media: [
+      {
+        // Local source type is used for ones that are uploaded to the object store
+        // while external source type is used for ones that are via URL.
+        sourceType: { type: String, enum: ['local', 'external'], required: true },
+        value: { type: String, required: true },
+      },
+    ],
   },
   { timestamps: true },
 );
