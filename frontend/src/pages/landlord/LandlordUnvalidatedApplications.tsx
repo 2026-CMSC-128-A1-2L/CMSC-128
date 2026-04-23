@@ -1,10 +1,18 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import LandlordLayout from '../../components/landlord/LandlordLayout';
 import TenantsToolbar from '../../components/landlord/tenants/TenantsToolbar';
 import UnvalidatedTenantCard from '../../components/landlord/tenants/UnvalidatedTenantCard';
-import { pendingApplications } from '../../data/landlordTenants';
+import UnvalidatedCardActionsPopup from '../../components/landlord/tenants/popups/UnvalidatedCardActionsPopup';
+import {
+  pendingApplications,
+} from '../../data/landlordTenants';
 
 const LandlordUnvalidatedApplications = () => {
+  const navigate = useNavigate();
+  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+
   return (
     <LandlordLayout
       activeSidebarItem="tenants"
@@ -47,6 +55,20 @@ const LandlordUnvalidatedApplications = () => {
                 key={application.id}
                 application={application}
                 detailTo={`/landlord/tenants/unvalidated/${application.id}`}
+                onMoreOptions={(app) =>
+                  setOpenMenuId((prev) => (prev === app.id ? null : app.id))
+                }
+                actionMenu={
+                  <UnvalidatedCardActionsPopup
+                    isOpen={openMenuId === application.id}
+                    onMessage={() => {
+                      setOpenMenuId(null);
+                      navigate('/landlord/messages');
+                    }}
+                    onRequestInterview={() => setOpenMenuId(null)}
+                    onRemoveRequest={() => setOpenMenuId(null)}
+                  />
+                }
               />
             ))}
           </section>

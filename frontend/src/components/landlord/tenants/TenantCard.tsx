@@ -72,9 +72,9 @@ const TenantCard = ({ tenant, to, onMoreOptions }: TenantCardProps) => {
           type="button"
           onClick={handleMore}
           aria-label={`More options for ${tenant.displayName}`}
-          className="flex h-[24px] w-[12px] shrink-0 cursor-pointer items-center justify-center text-[#2f3136] transition-colors hover:text-[#096c5b]"
+          className="flex h-[32px] w-[28px] shrink-0 cursor-pointer items-center justify-center text-[#2f3136] transition-colors hover:text-[#096c5b]"
         >
-          <Icon icon="iconamoon:menu-kebab-vertical" className="h-[24px] w-[24px]" aria-hidden="true" />
+          <Icon icon="iconamoon:menu-kebab-vertical" className="h-[28px] w-[28px]" aria-hidden="true" />
         </button>
       </div>
 

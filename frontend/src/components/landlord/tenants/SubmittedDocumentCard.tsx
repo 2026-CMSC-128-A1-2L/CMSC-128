@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { Icon } from '@iconify/react';
 import type { SubmittedDocument } from '../../../data/landlordTenants';
 
@@ -5,6 +6,7 @@ type SubmittedDocumentCardProps = {
   document: SubmittedDocument;
   onView?: (document: SubmittedDocument) => void;
   onMoreOptions?: (document: SubmittedDocument) => void;
+  actionMenu?: ReactNode;
 };
 
 const kindIcon: Record<SubmittedDocument['kind'], string> = {
@@ -13,9 +15,14 @@ const kindIcon: Record<SubmittedDocument['kind'], string> = {
   other: 'mdi:file-outline',
 };
 
-const SubmittedDocumentCard = ({ document, onView, onMoreOptions }: SubmittedDocumentCardProps) => {
+const SubmittedDocumentCard = ({
+  document,
+  onView,
+  onMoreOptions,
+  actionMenu,
+}: SubmittedDocumentCardProps) => {
   return (
-    <div className="flex w-full flex-col items-start justify-center gap-[10px] overflow-hidden rounded-[16px] border border-solid border-[#f0f0f0] bg-white px-[32px] py-[10px]">
+    <div className="relative flex w-full flex-col items-start justify-center gap-[10px] overflow-hidden rounded-[16px] border border-solid border-[#f0f0f0] bg-white px-[32px] py-[10px]">
       <div className="flex w-full items-center justify-between pr-[24px]">
         <div className="flex min-w-0 flex-1 items-center gap-[16px]">
           <h3 className="font-['Inter',sans-serif] text-[14px] font-bold whitespace-nowrap text-[#2f3136]">
@@ -69,6 +76,7 @@ const SubmittedDocumentCard = ({ document, onView, onMoreOptions }: SubmittedDoc
           </span>
         </span>
       </button>
+      {actionMenu}
     </div>
   );
 };

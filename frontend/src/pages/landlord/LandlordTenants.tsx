@@ -1,12 +1,20 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import LandlordLayout from '../../components/landlord/LandlordLayout';
 import TenantsToolbar from '../../components/landlord/tenants/TenantsToolbar';
 import TenantCard from '../../components/landlord/tenants/TenantCard';
-import { TENANT_COUNT, pendingApplications, tenants } from '../../data/landlordTenants';
+import RemoveTenantPopup from '../../components/landlord/tenants/popups/RemoveTenantPopup';
+import {
+  TENANT_COUNT,
+  pendingApplications,
+  tenants,
+  type Tenant,
+} from '../../data/landlordTenants';
 
 const LandlordTenants = () => {
   const pendingCount = pendingApplications.length;
+  const [removeTarget, setRemoveTarget] = useState<Tenant | null>(null);
 
   return (
     <LandlordLayout activeSidebarItem="tenants" breadcrumbs={[{ label: 'My Tenants' }]}>
@@ -64,11 +72,17 @@ const LandlordTenants = () => {
                 key={tenant.id}
                 tenant={tenant}
                 to={`/landlord/tenants/${tenant.id}`}
+                onMoreOptions={setRemoveTarget}
               />
             ))}
           </section>
         )}
       </div>
+      <RemoveTenantPopup
+        targetName={removeTarget?.displayName ?? null}
+        isOpen={Boolean(removeTarget)}
+        onClose={() => setRemoveTarget(null)}
+      />
     </LandlordLayout>
   );
 };

@@ -1,15 +1,23 @@
+import { useState } from 'react';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import LandlordLayout from '../../components/landlord/LandlordLayout';
 import TenantAvatar from '../../components/landlord/tenants/TenantAvatar';
 import TenantInfoField from '../../components/landlord/tenants/TenantInfoField';
 import TenantProfileHeader from '../../components/landlord/tenants/TenantProfileHeader';
 import SubmittedDocumentCard from '../../components/landlord/tenants/SubmittedDocumentCard';
-import { getPendingApplicationById } from '../../data/landlordTenants';
+import FileActionPopup from '../../components/landlord/tenants/popups/FileActionPopup';
+import RejectDocumentPopup from '../../components/landlord/tenants/popups/RejectDocumentPopup';
+import {
+  getPendingApplicationById,
+  type SubmittedDocument,
+} from '../../data/landlordTenants';
 
 const LandlordUnvalidatedTenantDetail = () => {
   const { tenantId } = useParams<{ tenantId: string }>();
   const navigate = useNavigate();
   const application = tenantId ? getPendingApplicationById(tenantId) : undefined;
+  const [openFileMenuId, setOpenFileMenuId] = useState<string | null>(null);
+  const [rejectTarget, setRejectTarget] = useState<SubmittedDocument | null>(null);
 
   if (!application) {
     return <Navigate to="/landlord/tenants/unvalidated" replace />;
@@ -88,7 +96,26 @@ const LandlordUnvalidatedTenantDetail = () => {
               <>
                 <div className="flex flex-col gap-[12px]">
                   {application.documents.map((document) => (
-                    <SubmittedDocumentCard key={document.id} document={document} />
+                    <SubmittedDocumentCard
+                      key={document.id}
+                      document={document}
+                      onMoreOptions={() =>
+                        setOpenFileMenuId((prev) => (prev === document.id ? null : document.id))
+                      }
+                      actionMenu={
+                        <FileActionPopup
+                          isOpen={openFileMenuId === document.id}
+                          onApprove={() => {
+                            setOpenFileMenuId(null);
+                            handleApprove();
+                          }}
+                          onReject={() => {
+                            setOpenFileMenuId(null);
+                            setRejectTarget(document);
+                          }}
+                        />
+                      }
+                    />
                   ))}
                 </div>
 
@@ -115,6 +142,13 @@ const LandlordUnvalidatedTenantDetail = () => {
           </section>
         </div>
       </div>
+
+      <RejectDocumentPopup
+        document={rejectTarget}
+        isOpen={Boolean(rejectTarget)}
+        onClose={() => setRejectTarget(null)}
+        onConfirm={() => navigate('/landlord/tenants/unvalidated')}
+      />
     </LandlordLayout>
   );
 };

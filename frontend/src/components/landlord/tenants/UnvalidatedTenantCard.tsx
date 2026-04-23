@@ -1,4 +1,4 @@
-import { type MouseEvent } from 'react';
+import { type KeyboardEvent, type MouseEvent, type ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import type { PendingApplication } from '../../../data/landlordTenants';
@@ -9,6 +9,7 @@ type UnvalidatedTenantCardProps = {
   detailTo: string;
   onValidate?: (application: PendingApplication) => void;
   onMoreOptions?: (application: PendingApplication) => void;
+  actionMenu?: ReactNode;
 };
 
 const UnvalidatedTenantCard = ({
@@ -16,6 +17,7 @@ const UnvalidatedTenantCard = ({
   detailTo,
   onValidate,
   onMoreOptions,
+  actionMenu,
 }: UnvalidatedTenantCardProps) => {
   const navigate = useNavigate();
 
@@ -23,7 +25,7 @@ const UnvalidatedTenantCard = ({
     navigate(detailTo);
   };
 
-  const handleCardKey = (event: React.KeyboardEvent<HTMLDivElement>) => {
+  const handleCardKey = (event: KeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
       navigate(detailTo);
@@ -53,7 +55,7 @@ const UnvalidatedTenantCard = ({
       onClick={handleCardClick}
       onKeyDown={handleCardKey}
       aria-label={`Review application from ${application.displayName}`}
-      className="group flex w-full cursor-pointer flex-col rounded-[16px] border border-solid border-[#f0f0f0] bg-white px-[12px] pt-[12px] pb-[24px] transition-shadow duration-200 hover:shadow-[0_4px_12px_0_rgba(0,0,0,0.08)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#096c5b]/40"
+      className="group relative flex w-full cursor-pointer flex-col rounded-[16px] border border-solid border-[#f0f0f0] bg-white px-[12px] pt-[12px] pb-[24px] transition-shadow duration-200 hover:shadow-[0_4px_12px_0_rgba(0,0,0,0.08)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#096c5b]/40"
     >
       <div className="flex h-[32px] w-full items-center gap-[8px] px-[10px] py-[4px]">
         {application.reviewedByManager && (
@@ -100,6 +102,7 @@ const UnvalidatedTenantCard = ({
           Validate
         </button>
       </div>
+      {actionMenu}
     </div>
   );
 };
