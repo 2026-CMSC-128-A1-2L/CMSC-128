@@ -1,32 +1,35 @@
-import { FunctionComponent, useState } from 'react';
-import { Icon } from '@iconify/react';
+import { FunctionComponent, useState } from "react";
+import { Icon } from "@iconify/react";
 
 interface TutorialBubbleProps {
   show: boolean;
   onClose: () => void;
 }
 
-const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose }) => {
+const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({
+  show,
+  onClose,
+}) => {
   const [step, setStep] = useState(1);
 
   const helpContent = [
     {
       title: "Submit Documents",
-      text: "Upload your official University ID. Your name, photo, and college must be clear.",
+      text: "(For Old UP Students - Option 1) Upload your official University ID. Your name, photo, and college must be clear.",
       position: "top-[55px] left-[150px]",
       total: 3,
       currentStep: 1,
     },
     {
       title: "Submit Documents",
-      text: "Upload your official Form 5 which can be downloaded from your AMIS portal.",
+      text: "(For Old UP Students - Option 2) Upload your official Form 5 which can be downloaded from your AMIS portal.",
       position: "top-[55px] left-[150px]",
       total: 3,
       currentStep: 2,
     },
     {
       title: "Submit Documents",
-      text: "Upload your Notice of Admission that was sent to you via your UP mail.",
+      text: "(For Incoming Freshman Students) Upload your Notice of Admission that was sent to you via your UP mail.",
       position: "top-[55px] left-[150px]",
       total: 3,
       currentStep: 3,
@@ -78,7 +81,7 @@ const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose 
       setStep(step + 1);
     } else {
       onClose();
-      setStep(1); 
+      setStep(1);
     }
   };
 
@@ -87,19 +90,28 @@ const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose 
   };
 
   return (
-    <div className={`absolute ${current.position} z-[999] flex flex-col items-start animate-in fade-in zoom-in duration-200 transition-all`}>
+    <div
+      className={`absolute ${current.position} z-[999] flex flex-col items-start animate-in fade-in zoom-in duration-200 transition-all`}
+    >
       <div className="w-[232px] flex flex-col items-center">
-        <Icon icon="ph:caret-up-fill" className="text-aliceblue w-14 h-15 mb-[-23px] z-10" />
+        <Icon
+          icon="ph:caret-up-fill"
+          className="text-aliceblue w-14 h-15 mb-[-23px] z-10"
+        />
 
         <div className="w-[232px] rounded-2xl bg-aliceblue shadow-xl border border-whitesmoke-200 flex flex-col items-start overflow-hidden">
           <div className="self-stretch flex flex-col items-start py-4 px-4 gap-3">
-            
             {/* header*/}
             <div className="self-stretch flex items-center justify-between">
-              <b className="text-[14px] font-inter text-black">{current.title}</b>
-              <div 
+              <b className="text-[14px] font-inter text-black">
+                {current.title}
+              </b>
+              <div
                 className="h-5 w-5 rounded-full flex items-center justify-center cursor-pointer hover:bg-silver transition-colors"
-                onClick={() => { onClose(); setStep(1); }}
+                onClick={() => {
+                  onClose();
+                  setStep(1);
+                }}
               >
                 <Icon icon="mdi:close" className="w-3.5 h-3.5 text-slategray" />
               </div>
@@ -115,29 +127,26 @@ const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose 
               <div className="text-[12px] font-semibold font-lora text-darkslategray tracking-wide">
                 {current.currentStep}/{current.total}
               </div>
-              
+
               <div className="flex gap-2">
-                {step > 1 && (
-                  <button 
+                {step > 1 && step < totalSteps && (
+                  <button
                     onClick={handleBack}
                     className="w-[50px] rounded-lg bg-[#d0dbe3] py-1 text-[12px] text-[#2f3136] font-semibold font-lora text-center cursor-pointer hover:brightness-95 transition-all"
                   >
                     Back
                   </button>
                 )}
-                
+
                 {/* last step*/}
-                {step < totalSteps && (
-                  <button 
-                    onClick={handleNext}
-                    className="w-[54px] rounded-lg bg-[#b0bdc6] py-1 text-[12px] text-[#2f3136] font-semibold font-lora text-center cursor-pointer hover:brightness-95 transition-all"
-                  >
-                    Next
-                  </button>
-                )}
+                <button
+                  onClick={handleNext}
+                  className="w-[54px] rounded-lg bg-[#b0bdc6] py-1 text-[12px] text-[#2f3136] font-semibold font-lora text-center cursor-pointer hover:brightness-95 transition-all"
+                >
+                  {step === totalSteps ? "Finish" : "Next"}
+                </button>
               </div>
             </div>
-
           </div>
         </div>
       </div>

@@ -1,9 +1,9 @@
-import { FunctionComponent, useState, useCallback } from 'react';
-import { Icon } from '@iconify/react';
-import ProgressBar from '../../../components/ProgressBar';
-import TutorialBubble from '../../../components/Tutorials';
-import TutorialIcon from '../../../assets/help-chat.svg';
-import Footer from '../../../components/Footer';
+import { FunctionComponent, useState, useCallback } from "react";
+import { Icon } from "@iconify/react";
+import ProgressBar from "../../../components/ProgressBar";
+import TutorialBubble from "../../../components/Tutorials";
+import TutorialIcon from "../../../assets/help-chat.svg";
+import Footer from "../../../components/Footer";
 
 interface UserVerifProps {
   verificationStep: number;
@@ -13,16 +13,15 @@ const UserVerif: FunctionComponent<UserVerifProps> = ({ verificationStep }) => {
   const [showHelp, setShowHelp] = useState(false);
 
   return (
-    <div className="relative self-stretch flex flex-col items-start gap-12 shrink-0" data-scroll-to="searchBarContainer">
-
+    <div
+      className="relative self-stretch flex flex-col items-start gap-12 shrink-0"
+      data-scroll-to="searchBarContainer"
+    >
       <div className="self-stretch flex flex-col items-center justify-center text-darkslategray-200 font-poppins">
         <ProgressBar currentStep={verificationStep} />
       </div>
 
-      <TutorialBubble
-        show={showHelp}
-        onClose={() => setShowHelp(false)}
-      />
+      <TutorialBubble show={showHelp} onClose={() => setShowHelp(false)} />
 
       {/* header */}
       <div className="self-stretch flex items-center py-num-0 px-num-32 gap-6 shrink-0 text-[24px]">
@@ -112,7 +111,9 @@ const UserVerif: FunctionComponent<UserVerifProps> = ({ verificationStep }) => {
           <div className="self-stretch flex items-center justify-between py-num-0 pl-num-0 pr-6 gap-0">
             <div className="flex-1 flex items-center gap-4">
               <b className="relative">Notice of Admission</b>
-              <b className="relative text-dimgray">(For Incoming Freshman UP Students)</b>
+              <b className="relative text-dimgray">
+                (For Incoming Freshman UP Students)
+              </b>
               <div className="h-8 w-24 rounded-num-16 bg-white flex items-center justify-center py-num-0 px-num-12 box-border text-center">
                 <b className="relative text-transparent !bg-clip-text [background:linear-gradient(180deg,_#c00f0f,_#e44f4f)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">
                   Missing
@@ -137,16 +138,18 @@ const UserVerif: FunctionComponent<UserVerifProps> = ({ verificationStep }) => {
           </div>
         </div>
       </div>
-      
+
       {/* ======= FLOATING ICON FOR TUTORIAL ======= */}
       <div
         className="fixed bottom-10 right-10 z-[1000] cursor-pointer transition-all hover:scale-110 active:scale-95"
         onClick={() => setShowHelp(!showHelp)}
       >
-        <img src={TutorialIcon} alt="Help" className="w-16 h-16 drop-shadow-lg" />
+        <img
+          src={TutorialIcon}
+          alt="Help"
+          className="w-16 h-16 drop-shadow-lg"
+        />
       </div>
-
-      <Footer />
     </div>
   );
 };
