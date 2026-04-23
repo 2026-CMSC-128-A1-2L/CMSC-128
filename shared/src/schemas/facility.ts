@@ -1,8 +1,6 @@
 import z from 'zod';
-import { ObjectIdSchema, QuerySchema, RangeSchema } from './common';
-import { DOCUMENT_STATUS, FACILITY_TYPES, FacilityType, ROOM_TYPES } from '../constants';
-
-const DateTimeSchema = z.iso.datetime().transform((x) => new Date(x));
+import { DateTimeSchema, ObjectIdSchema, QuerySchema, RangeSchema } from './common';
+import { DOCUMENT_STATUS, FACILITY_TYPES, type FacilityType, ROOM_TYPES } from '../constants';
 
 const FacilityTypeSchema: z.ZodType<FacilityType> = z.enum(FACILITY_TYPES);
 
@@ -62,7 +60,7 @@ const LandlordSchema = z.object({
 const UserFacilitySchema = z.object({
   id: ObjectIdSchema,
   name: z.string(),
-  landlord: LandlordSchema,
+  landlordId: LandlordSchema,
   managers: z.array(ManagerSchema),
   location: FacilityLocationSchema.optional(),
   type: FacilityTypeSchema,
@@ -89,7 +87,7 @@ const ManagerFacilitySchema = UserFacilitySchema.extend({
 });
 
 const ManagerEntrySchema = z.object({
-  userId: ObjectIdSchema,
+  email: z.email(),
   permissions: ManagerPermissionsSchema,
 });
 
@@ -140,7 +138,7 @@ export const GetFacilitiesResponseBodySchema = z.array(
 // ============================================================================
 export const CreateFacilityRequestBodySchema = z.object({
   // This automatically creates an invite to the listed managers.
-  managers: z.array(ManagerEntrySchema).optional(),
+  managers: z.array(ManagerEntrySchema).default([]),
   name: z.string(),
   type: FacilityTypeSchema,
   location: FacilityLocationSchema.optional(),

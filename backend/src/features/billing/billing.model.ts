@@ -1,10 +1,28 @@
-  import mongoose from 'mongoose';
-import { defineLazy } from 'zod/v4/core/util.cjs';
+import mongoose from 'mongoose';
+import { documentSchema, type DocumentType } from '../document/document.model';
 
-  const billingSchema = new mongoose.Schema({
-    
-    studentId: { type: mongoose.Schema.Types.ObjectId, ref: 'Student', required: true },
-    landLordId: { type: mongoose.Schema.Types.ObjectId, ref: 'Landlord', required: true },
+const PAYMENT_STATUS = ['unpaid', 'paid', 'overdue', 'partially_paid'];
+type PaymentStatusType = (typeof PAYMENT_STATUS)[number];
+
+export type BillingType = {
+  userId: mongoose.Types.ObjectId;
+  unitId: mongoose.Types.ObjectId;
+  facilityId: mongoose.Types.ObjectId;
+  dueDate?: Date | null;
+  paymentDate?: Date | null;
+  paidAmount?: number | null;
+  totalAmount: number;
+  paymentStatus: PaymentStatusType;
+  documents: DocumentType[];
+  breakdown: {
+    name: string;
+    amount: number;
+  }[];
+};
+
+const billingSchema = new mongoose.Schema<BillingType>(
+  {
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'Student', required: true },
     unitId: { type: mongoose.Schema.Types.ObjectId, ref: 'Unit', required: true },
 
     // Reference Ids

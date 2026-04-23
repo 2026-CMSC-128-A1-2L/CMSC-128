@@ -3,55 +3,64 @@ import {
   routeGetApplications,
   routeCreateApplication,
   routeGetApplication,
-  routeUpdateApplication,
   routeDeleteApplication,
-  routeUpdateApplicationStatus,
   routeAssignApplicationUnit,
+  routeApproveApplication,
+  routeRejectApplication,
 } from './application.controller';
 import { isSuperAdmin, isVerifiedStudent, managerFilter, selfFilter } from '../../middleware';
 
 const router = Router();
 
 // GET /api/applications
-router.get('/applications', isSuperAdmin, routeGetApplications);
+router.get('/', isSuperAdmin, routeGetApplications);
 
 // POST /api/applications
-router.post('/applications', isVerifiedStudent, routeCreateApplication);
+router.post('/', isVerifiedStudent, routeCreateApplication);
 
 // GET /api/applications/:applicationId
+// Input:
+// - applicationId (ObjectId)
+//
+// Output:
+// - ApplicationForm object
+//
+// Considerations:
+// - Returns 404 if not found
+// - Should enforce access control (student or authorized staff)
 router.get(
-  '/applications/:applicationId',
+  '/:applicationId',
   managerFilter('listing', 'manageApplications', true),
   routeGetApplication,
 );
 
-// PATCH /api/applications/:applicationId
-router.patch(
-  '/applications/:applicationId',
-  managerFilter('listing', 'manageApplications', true),
-  routeUpdateApplication,
-);
+// // PATCH /api/applications/:applicationId
+// router.patch(
+//   '/:applicationId',
+//   managerFilter('listing', 'manageApplications', true),
+//   routeUpdateApplication,
+// );
 
 // DELETE /api/applications/:applicationId
-router.delete('/applications/:applicationId', selfFilter(false), routeDeleteApplication);
+router.delete('/:applicationId', selfFilter, routeDeleteApplication);
 
 // POST /api/applications/:applicationId/approve
 router.post(
-  '/applications/:applicationId/approve',
+  '/:applicationId/approve',
   managerFilter('listing', 'manageApplications'),
-  routeUpdateApplicationStatus,
+  routeApproveApplication,
 );
 
 // POST /api/applications/:applicationId/reject
 router.post(
-  '/applications/:applicationId/reject',
+  '/:applicationId/reject',
   managerFilter('listing', 'manageApplications'),
-  routeUpdateApplicationStatus,
+  routeRejectApplication,
 );
 
 // POST /api/applications/:applicationId/assign-unit
 router.post(
-  '/applications/:applicationId/assign-unit',
+  '/:applicationId/assign-unit',
   managerFilter('listing', 'manageApplications'),
   routeAssignApplicationUnit,
 );

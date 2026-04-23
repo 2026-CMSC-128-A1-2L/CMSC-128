@@ -4,6 +4,6 @@ import { routeGetActivities } from './activity.controller';
 const router = Router();
 
 // GET /api/activities
-router.get('/activities', routeGetActivities);
+router.get('/', routeGetActivities);
 
 export default router;

@@ -1,12 +1,32 @@
 import mongoose from 'mongoose';
 import { ROOM_TYPES } from 'shared';
-import { documentSchema } from '../document/document.model';
 
-const ListingSchema = new mongoose.Schema({
-  facilityId: { type: mongoose.Schema.Types.ObjectId, ref: 'HousingFacility', required: true },
+export type ListingType = {
+  _id: mongoose.Types.ObjectId;
+  facilityId: mongoose.Types.ObjectId;
+  landlordId: mongoose.Types.ObjectId;
+  managers: {
+    userId: mongoose.Types.ObjectId;
+    permissions: { manageBillings: boolean; manageApplications: boolean; manageListings: boolean };
+  }[];
+  tags: Record<string, any>;
+  roomType: (typeof ROOM_TYPES)[number];
+  capacity: number;
+  isPrivate: boolean;
+  allowVisit: boolean;
+  allowTransfer: boolean;
+  description?: string | null;
+  media: {
+    sourceType: 'local' | 'external';
+    value: string;
+  }[];
+};
 
+const ListingSchema = new mongoose.Schema<ListingType>({
   // include both owners for easier checking of owner, changes to these fields should be rare in practice
+  facilityId: { type: mongoose.Schema.Types.ObjectId, ref: 'HousingFacility', required: true },
   landlordId: { type: mongoose.Schema.Types.ObjectId, ref: 'Landlord', required: true },
+
   managers: [
     {
       userId: { type: mongoose.Schema.Types.ObjectId, ref: 'Manager', required: true },
@@ -26,7 +46,7 @@ const ListingSchema = new mongoose.Schema({
     type: Map,
     of: mongoose.Schema.Types.Mixed,
   },
-  roomType: { type: ROOM_TYPES, required: true },
+  roomType: { type: String, enum: ROOM_TYPES, required: true },
   capacity: { type: Number, required: true },
   isPrivate: { type: Boolean, default: false },
   allowVisit: { type: Boolean, default: false },
@@ -40,7 +60,6 @@ const ListingSchema = new mongoose.Schema({
       value: { type: String, required: true },
     },
   ],
-  documents: [documentSchema],
 });
 
 export const Listing = mongoose.model('Listing', ListingSchema);

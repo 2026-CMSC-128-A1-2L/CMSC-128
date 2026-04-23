@@ -8,10 +8,10 @@ import {
 const router = Router();
 
 // GET /api/notifications
-router.get('/notifications', routeGetNotifications);
+router.get('/', routeGetNotifications);
 // POST /api/notifications/:notificationId
-router.get('/notifications/:notificationId', routeGetNotification);
+router.get('/:notificationId', routeGetNotification);
 // POST /api/notifications/:notificationId/read
-router.post('/notifications/:notificationId/read', routeReadNotification);
+router.post('/:notificationId/read', routeReadNotification);
 
 export default router;

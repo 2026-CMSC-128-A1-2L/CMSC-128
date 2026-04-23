@@ -5,10 +5,10 @@ const router = Router();
 
 // Messages
 // GET /api/messages
-router.get('/messages', routeGetMessages);
+router.get('/', routeGetMessages);
 // GET /api/messages/:userId
-router.get('/messages/:userId', routeGetUserMessages);
+router.get('/:userId', routeGetUserMessages);
 // POST /api/messages/:userId
-router.post('/messages/:userId', routeSendMessage);
+router.post('/:userId', routeSendMessage);
 
 export default router;

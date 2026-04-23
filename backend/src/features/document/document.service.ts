@@ -1,33 +1,47 @@
-import mongoose, { Model } from 'mongoose';
+import type mongoose from 'mongoose';
+import type { Model, QueryFilter } from 'mongoose';
 import { File } from '../file/file.model';
 import { AppError } from '../../error';
+import { combineFilters } from '../../middleware';
+import type { UserType } from '../user/user.model';
 
 export type ModelWithDocument = Model<{
   documents: {
-    docId: mongoose.Types.ObjectId;
+    docId: string;
     status: 'accepted' | 'rejected' | 'pending';
     message?: string;
     files: string[];
   }[];
 }>;
 
-export const createGetDocuments = (model: ModelWithDocument) => (id: mongoose.Types.ObjectId) =>
-  model.findById(id, { documents: 1 });
+export const createGetDocuments =
+  (model: ModelWithDocument) =>
+  async (id: mongoose.Types.ObjectId, filters: QueryFilter<UserType>) => {
+    const result = await model.where(filters).findOne({ _id: id }, { documents: 1 }).lean();
+    return result?.documents;
+  };
+
 export const createAddDocument =
   (model: ModelWithDocument) =>
   async (
     id: mongoose.Types.ObjectId,
     docId: string,
     fileKey: string,
-    userId: mongoose.Types.ObjectId,
+    filters: QueryFilter<UserType>,
   ) => {
-    const file = await File.findOne({ key: fileKey, userId });
+    const file = await File.findOne({ key: fileKey, userId: id });
     if (!file) throw new AppError(404, 'File not found.');
 
-    return await model.updateOne(
-      { _id: id, 'documents.docId': docId },
-      { $push: { 'documents.$.files': fileKey } },
-    );
+    const result = await model
+      .where(filters)
+      .findOneAndUpdate(
+        { _id: id, 'documents.docId': docId },
+        { $push: { 'documents.$.files': fileKey } },
+        { returnDocument: 'after' },
+      )
+      .lean();
+
+    return result?.documents;
   };
 
 export const createDeleteDocument =
@@ -36,32 +50,56 @@ export const createDeleteDocument =
     id: mongoose.Types.ObjectId,
     docId: string,
     fileKey: string,
-    userId: mongoose.Types.ObjectId,
+    filters: QueryFilter<UserType>,
   ) => {
     // check if file is owned by the current user
     // TODO: use reference counting to check if file is kept?
-    const file = await File.findOne({ key: fileKey, userId });
+    const file = await File.findOne({ key: fileKey, userId: id });
     if (!file) throw new AppError(404, 'File not found.');
 
-    return await model.updateOne(
-      { _id: id, 'documents.docId': docId },
-      { pull: { 'documents.$.files': fileKey } },
-    );
+    const result = await model
+      .where(filters)
+      .findOneAndUpdate(
+        { _id: id, 'documents.docId': docId },
+        { pull: { 'documents.$.files': fileKey } },
+        { returnDocument: 'after' },
+      )
+      .lean();
+
+    return result?.documents;
   };
 
 export const createAcceptDocument =
-  (model: ModelWithDocument) => async (id: mongoose.Types.ObjectId, docId: string) => {
-    return await model.updateOne(
-      { _id: id, 'documents.docId': docId },
-      { 'documents.$.status': 'accepted', message: null },
-    );
+  (model: ModelWithDocument) =>
+  async (id: mongoose.Types.ObjectId, docId: string, filters: QueryFilter<UserType>) => {
+    const result = await model
+      .where(filters)
+      .findOneAndUpdate(
+        { _id: id, 'documents.docId': docId },
+        { 'documents.$.status': 'accepted', message: null },
+        { returnDocument: 'after' },
+      )
+      .lean();
+
+    return result?.documents;
   };
 
 export const createRejectDocument =
   (model: ModelWithDocument) =>
-  async (id: mongoose.Types.ObjectId, docId: string, message: string) => {
-    return await model.updateOne(
-      { _id: id, 'documents.docId': docId },
-      { 'documents.$.status': 'rejected', message },
-    );
+  async (
+    id: mongoose.Types.ObjectId,
+    docId: string,
+    message: string,
+    filters: QueryFilter<UserType>,
+  ) => {
+    const result = await model
+      .where(filters)
+      .findOneAndUpdate(
+        { _id: id, 'documents.docId': docId },
+        { 'documents.$.status': 'rejected', message },
+        { returnDocument: 'after' },
+      )
+      .lean();
+
+    return result?.documents;
   };

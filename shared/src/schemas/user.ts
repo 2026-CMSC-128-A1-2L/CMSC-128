@@ -3,20 +3,21 @@ import { ObjectIdSchema, QuerySchema } from './common.js';
 import { USER_TYPES } from '../constants.js';
 
 // PATCH /users/:userId
-export const UpdateUserBodySchema = z.object({
-  firstName: z.string().optional(),
-  middleName: z.string().nullable().optional(),
-  lastName: z.string().optional(),
-  birthDate: z.iso
-    .date()
-    .transform((x) => new Date(x))
-    .optional(),
-  profilePicture: z.url().nullable().optional(),
-  contact: z.string().optional(),
-  studentNumber: z.string().optional(),
-  degreeProgram: z.string().optional(),
-  isActive: z.boolean().optional(),
-});
+export const UpdateUserRequestBodySchema = z
+  .object({
+    profilePicture: z.url(),
+    address: z.string(),
+    contact: z.string(),
+  })
+  .partial();
+
+// POST /users/:userId/approve
+export const ApproveUserRequestBodySchema = z
+  .object({
+    degreeProgram: z.string(),
+    studentNumber: z.string().regex(/^[0-9]{9}$/, 'Must be exactly 9 digits'),
+  })
+  .optional();
 
 // GET /users
 export const UserFilterSchema = z.object({

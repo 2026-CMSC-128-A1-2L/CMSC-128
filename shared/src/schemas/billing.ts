@@ -1,69 +1,58 @@
 import z from 'zod';
-import { ObjectIdSchema, QuerySchema } from './common';
+import { ObjectIdSchema, QuerySchema, RangeSchema } from './common';
 
-// POST /payments
+// POST /billings
 export const CreateBillingBodySchema = z.object({
-  userId: ObjectIdSchema,
-  unitId: ObjectIdSchema,
-  facilityId: ObjectIdSchema,
+  rentalId: ObjectIdSchema,
   dueDate: z.iso.datetime().transform((x) => new Date(x)),
-  paymentDate: z.iso
-    .datetime()
-    .transform((x) => new Date(x))
-    .optional(), // Done after creation
-  amount: z.number(),
-  paidAmount: z.number().optional(), // Done after creation
-  paymentStatus: z.enum(['unpaid', 'paid', 'overdue', 'partially_paid']).default('unpaid'),
-  proofOfPayment: z.string().optional(), // Done after creation
-  paymentType: z.string(), // 'rent', 'deposit', etc.
+  breakdown: z.array(
+    z.object({
+      name: z.string(),
+      amount: z.number(),
+    }),
+  ),
 });
 
 // GET /payments
-export const GetBillingsFilterSchema = z.object({
-  userId: ObjectIdSchema.optional(),
-  unitId: ObjectIdSchema.optional(),
-  facilityId: ObjectIdSchema.optional(),
-  dueDate: z.iso
-    .date()
-    .transform((x) => new Date(x))
-    .optional(),
-  paymentDate: z.iso
-    .date()
-    .transform((x) => new Date(x))
-    .optional(),
-  amount: z.number().optional(),
-  paidAmount: z.number().optional(),
-  paymentStatus: z.enum(['unpaid', 'paid', 'overdue', 'partially_paid']).optional(),
-  proofOfPayment: z.string().optional(),
-  paymentType: z.string().optional(),
+export const GetBillingsFilterSchema = z
+  .object({
+    userId: ObjectIdSchema,
+    unitId: ObjectIdSchema,
+    facilityId: ObjectIdSchema,
+    dueDate: RangeSchema(
+      z.iso
+        .date()
+        .transform((x) => new Date(x))
+        .optional(),
+    ),
+    paymentDate: RangeSchema(
+      z.iso
+        .date()
+        .transform((x) => new Date(x))
+        .optional(),
+    ),
+    paymentStatus: z.enum(['unpaid', 'paid', 'overdue', 'partially_paid']),
+  })
+  .partial();
+
+export const GetBillingsQuerySchema = QuerySchema(GetBillingsFilterSchema);
+
+export const UpdateBillingRequestBodySchema = z
+  .object({
+    dueDate: z.iso.datetime().transform((x) => new Date(x)),
+    breakdown: z.array(
+      z.object({
+        name: z.string(),
+        amount: z.number(),
+      }),
+    ),
+  })
+  .partial();
+
+export const UpdateBillingPaymentRequestBodySchema = z.object({
+  amount: z.number(),
 });
 
-export const GetBillingsQuerySchema = QuerySchema;
-
-export const UpdateBillingBodySchema = z.object({
-  dueDate: z.iso
-    .datetime()
-    .transform((x) => new Date(x))
-    .optional(),
-
-  paymentDate: z.iso
-    .datetime()
-    .transform((x) => new Date(x))
-    .optional(),
-
-  amount: z.number().optional(),
-  paidAmount: z.number().optional(),
-
-  paymentStatus: z
-    .enum(['unpaid', 'paid', 'overdue', 'partially_paid'])
-    .optional(),
-
-  proofOfPayment: z
-    .object({
-      file: z.string().optional(),
-      isVerified: z.boolean().optional(),
-    })
-    .optional(),
-
-  paymentType: z.string().optional(),
+export const VerifyBillingRequestBodySchema = z.object({
+  amount: z.number(),
 });

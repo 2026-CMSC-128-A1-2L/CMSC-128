@@ -1,7 +1,7 @@
-import { RequestHandler } from 'express';
+import type { RequestHandler } from 'express';
 import { CreateTagBodySchema, UpdateTagBodySchema } from 'shared';
 import z from 'zod';
-import { CreateTagArguments, createTag, getTags, updateTag, deleteTag } from './tag.service';
+import { type CreateTagArguments, createTag, getTags, updateTag, deleteTag } from './tag.service';
 
 export const routeCreateTag: RequestHandler = async (req, res, next) => {
   const params: CreateTagArguments = CreateTagBodySchema.parse(req.body);

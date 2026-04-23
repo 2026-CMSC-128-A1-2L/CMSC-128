@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import type mongoose from 'mongoose';
 import { AppError } from '../../error';
 import { HousingFacility } from '../facility/facility.model';
 import { Listing } from '../listing/listing.model';
@@ -55,10 +55,7 @@ export const acceptInvite = async (
     throw new AppError(403, 'This invite was not sent to your account.');
   }
 
-  // upgrade user from UnverifiedManager → Manager
-  await User.findByIdAndUpdate(userId, { userType: 'Manager' });
-
-  // add them as manager of the facility with the invite's permissions
+  await User.findByIdAndUpdate(userId, { status: 'verified' });
   await HousingFacility.findByIdAndUpdate(invite.facilityId, {
     $push: {
       managers: {
@@ -68,7 +65,6 @@ export const acceptInvite = async (
     },
   });
 
-  // cascade to all existing listings under this facility
   await Listing.updateMany(
     { facilityId: invite.facilityId },
     {

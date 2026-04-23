@@ -6,10 +6,20 @@ const router = Router();
 
 // Reviews
 // GET /api/reviews
-router.get('/reviews', listingViewFilter, routeGetReviews);
+// Input:
+// - None (filters via middleware)
+//
+// Output:
+// - Array of Review objects
+//
+// Considerations:
+// - Applies listingViewFilter
+// - Returns only reviews of visible listings
+// - Prevents leaking private listing reviews
+router.get('/', listingViewFilter, routeGetReviews);
 // PATCH /api/reviews/:reviewId
-router.patch('/reviews/:reviewId', selfFilter(false), routeUpdateReview);
+router.patch('/:reviewId', selfFilter, routeUpdateReview);
 // DELETE /api/reviews/:reviewId
-router.delete('/reviews/:reviewId', selfFilter(false), routeDeleteReview);
+router.delete('/:reviewId', selfFilter, routeDeleteReview);
 
 export default router;

@@ -14,7 +14,10 @@ export const ObjectIdSchema = z
 export const QuerySchema = <T extends z.ZodRawShape>(schema: z.ZodObject<T>) =>
   z
     .object({
-      q: z.string().transform((x): z.infer<z.ZodObject<T>> => schema.parse(x ? JSON.parse(x) : {})),
+      q: z
+        .string()
+        .optional()
+        .transform((x): z.infer<z.ZodObject<T>> => schema.parse(x ? JSON.parse(x) : {})),
     })
     .transform((x) => x.q);
 
@@ -23,3 +26,15 @@ export const RangeSchema = <T extends z.ZodType>(schema: T) =>
     min: schema,
     max: schema,
   });
+
+export const DateTimeSchema = z.iso.datetime().transform((x) => new Date(x));
+
+export const PaginationRequestSchema = (maxLimit: number) =>
+  z.object({
+    cursor: z.string().optional(),
+    limit: z.int().min(0).max(maxLimit),
+  });
+
+export const PaginationResponseSchema = z.object({
+  cursor: z.string().optional(),
+});

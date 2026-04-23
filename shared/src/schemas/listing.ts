@@ -60,9 +60,11 @@ export const ListingFilterSchema = z.object({
 
 export const GetListingsQuerySchema = QuerySchema(ListingFilterSchema);
 
+const TagsMapSchema = z.record(z.string(), z.union([z.string(), z.number(), z.boolean()]));
+
 // POST /facilities/:facilityId/listings
 export const CreateListingBodySchema = z.object({
-  tags: z.array(TagSchema).optional(),
+  tags: TagsMapSchema.default({}),
   roomType: z.enum(ROOM_TYPES),
   capacity: z.int().min(1),
   isPrivate: z.boolean(),
@@ -74,7 +76,7 @@ export const CreateListingBodySchema = z.object({
 
 // PATCH /listings/:listingId
 export const UpdateListingBodySchema = z.object({
-  tags: z.array(TagSchema).optional(),
+  tags: TagsMapSchema.default({}),
   roomType: z.enum(ROOM_TYPES).optional(),
   capacity: z.number().optional(),
   isPrivate: z.boolean().optional(),
@@ -84,3 +86,8 @@ export const UpdateListingBodySchema = z.object({
   mediaUrls: z.array(z.string()).optional(),
   units: z.array(z.string()).optional(),
 });
+
+export const UpdateListingTagsResponseBodySchema = z.record(
+  z.string(),
+  z.union([z.string(), z.number(), z.boolean()]),
+);

@@ -8,15 +8,19 @@ import {
   routeDeleteFacility,
   routeRemoveManager,
   routeUpdateManagerPermissions,
+  routeApproveFacility,
+  routeRejectFacility,
 } from './facility.controller';
 import { routeCreateListing } from '../listing/listing.controller';
 import { routeGetFacilityReviews } from '../review/review.controller';
 import {
   correctLandlordFilter,
   isLandlord,
+  isSuperAdmin,
   listingViewFilter,
   managerFilter,
 } from '../../middleware';
+import { routeGetVisitBookingsByFacility } from '../booking/booking.controller';
 
 const router = Router();
 
@@ -55,7 +59,11 @@ router.get('/:facilityId', routeGetFacility);
 // Edits a facility.
 //
 // manager with manageListings permission only
-router.patch('/:facilityId', managerFilter('direct', 'manageListings'), routeUpdateFacility);
+router.patch(
+  '/:facilityId',
+  managerFilter('facility-direct', 'manageListings'),
+  routeUpdateFacility,
+);
 
 // DELETE /api/facilities/:facilityId
 //
@@ -87,6 +95,35 @@ router.patch('/:facilityId/managers/:managerId', isLandlord, routeUpdateManagerP
 router.post('/:facilityId/listings', managerFilter('direct', 'manageListings'), routeCreateListing); // TODO: fix implementation, use parameter
 
 // GET /api/facilities/:facilityId/reviews
-router.get('/facilities/:facilityId/reviews', listingViewFilter, routeGetFacilityReviews);
+// Input:
+// - facilityId (ObjectId)
+//
+// Output:
+// - Array of Review objects, reviews of the listings within a facility
+//
+// Considerations:
+// - Applies listingViewFilter to listings under facility
+// - Returns 404 if facility not found
+// - Uses relation: Facility → Listings → Reviews
+// - Empty array is valid if no reviews
+router.get('/:facilityId/reviews', listingViewFilter, routeGetFacilityReviews);
 
+// POST /api/facilities/:facilityId/approve
+//
+// admin only
+router.post('/:facilityId/approve', isSuperAdmin, routeApproveFacility);
+
+// POST /api/facilities/:facilityId/reject
+//
+// admin only
+router.post('/:facilityId/reject', isSuperAdmin, routeRejectFacility);
+
+// ============================================================================
+// GET /api/facilities/:facilityId/bookings
+// ============================================================================
+router.get(
+  '/:facilityId/bookings',
+  managerFilter('direct', 'manageListings'),
+  routeGetVisitBookingsByFacility,
+);
 export default router;
