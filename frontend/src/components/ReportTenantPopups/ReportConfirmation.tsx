@@ -1,15 +1,20 @@
 import { FunctionComponent } from 'react';
 
-const ReportManagerPopUp: FunctionComponent = () => {
+interface StepProps {
+    onCancel: () => void;
+}
+
+const ReportConfirmation: FunctionComponent<StepProps> = ({onCancel}) => {
   
   const handleClose = () => {
     console.log("Success popup closed.");
-    // basta close
+    onCancel(); 
+    
   };
 
   return (
   
-    <div className="w-[480px] h-[500px] relative rounded-2xl bg-white overflow-hidden flex flex-col items-center p-8 box-border text-center font-inter border border-whitesmoke-200 shadow-lg">
+    <div className="mx-auto h-[500px] relative rounded-2xl bg-white overflow-hidden flex flex-col items-center p-8 box-border text-center font-inter border border-whitesmoke-200 shadow-lg">
       <div className="self-stretch h-full overflow-hidden shrink-0 flex flex-col items-center pt-[45px] px-2.5 pb-6 box-border gap-6">
         
         
@@ -62,4 +67,4 @@ const ReportManagerPopUp: FunctionComponent = () => {
   );
 };
 
-export default ReportManagerPopUp;
+export default ReportConfirmation;
