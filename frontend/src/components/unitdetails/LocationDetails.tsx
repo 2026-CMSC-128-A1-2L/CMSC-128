@@ -1,16 +1,25 @@
 import { FunctionComponent } from 'react';
+import DormMap from '../utilities/DormMap';
 
 const LocationDetails: FunctionComponent = () => {
+
+  //temp data
+  const dormData = { lat: 14.16670, lng: 121.23908, name: "UPLB" };
+
   return (
     <div className="w-full relative flex flex-col items-start gap-[29px] text-center text-num-18 text-gray font-inter">
       <div className="self-stretch flex flex-col items-start py-2.5 px-5 shrink-0">
-        <img
-          className="w-[796px] relative rounded-[25px] max-h-full object-cover shrink-0"
-          alt=""
-        />
+
+        <div className="h-[300px] w-full">
+          <DormMap
+            latitude={dormData.lat}
+            longitude={dormData.lng}
+            dormName={dormData.name}
+          />
+        </div>
       </div>
 
-      <div className="flex flex-col py-0 px-5 text-left text-num-14 w-[793px]">
+      <div className="flex flex-col pt-20 px-5 text-left text-num-14 w-[793px]">
         <div
           className="grid py-3 text-[16px] text-darkslategray font-lora"
           style={{ gridTemplateColumns: '2fr 1fr 1fr' }}
