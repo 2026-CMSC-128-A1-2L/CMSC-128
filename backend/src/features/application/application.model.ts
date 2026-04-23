@@ -28,7 +28,7 @@ const applicationFormSchema = new mongoose.Schema<ApplicationType>(
   {
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'Student', required: true },
     listingId: { type: mongoose.Schema.Types.ObjectId, ref: 'Listing', required: true },
-    prefferedMoveInDate: { type: Date, required:true},
+    prefferedMoveInDate: { type: Date, required: true },
     // TODO: check what preferred room type should do
     status: {
       type: String,

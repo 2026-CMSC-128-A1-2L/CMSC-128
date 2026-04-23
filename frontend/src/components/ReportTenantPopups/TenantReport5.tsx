@@ -8,13 +8,13 @@ const ReportTenant5: FunctionComponent = () => {
   };
 
   const handleCancel = () => {
-    console.log("Submission cancelled");
+    console.log('Submission cancelled');
     setIsDeclared(false);
   };
 
   const handleSubmit = () => {
     if (!isDeclared) return;
-    console.log("Report submitted successfully.");
+    console.log('Report submitted successfully.');
   };
 
   return (
@@ -30,22 +30,29 @@ const ReportTenant5: FunctionComponent = () => {
               </b>
             </div>
           </div>
-          
+
           {/* Declaration Content */}
           <div className="self-stretch flex flex-col items-start pt-8 px-12 pb-5 text-sm text-black font-inter">
-            <div 
+            <div
               className="self-stretch flex items-start justify-center py-0 px-2 gap-2.5 cursor-pointer select-none"
               onClick={handleToggleDeclaration}
             >
               <div className="flex items-start py-1 px-0">
                 <div className="h-[18px] w-[18px] relative overflow-hidden shrink-0">
-                  <div className={`absolute h-full w-full top-0 right-0 bottom-0 left-0 shadow-[0px_0px_2px_rgba(0,_0,_0,_0.25)] rounded transition-colors ${
-                    isDeclared ? 'bg-teal' : 'bg-whitesmoke-100 border border-whitesmoke-200'
-                  }`} />
+                  <div
+                    className={`absolute h-full w-full top-0 right-0 bottom-0 left-0 shadow-[0px_0px_2px_rgba(0,_0,_0,_0.25)] rounded transition-colors ${
+                      isDeclared ? 'bg-teal' : 'bg-whitesmoke-100 border border-whitesmoke-200'
+                    }`}
+                  />
                   {isDeclared && (
-                    <svg 
-                      className="absolute h-[83.33%] w-[83.33%] top-[12.5%] right-[8.33%] bottom-[4.17%] left-[8.33%]" 
-                      viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"
+                    <svg
+                      className="absolute h-[83.33%] w-[83.33%] top-[12.5%] right-[8.33%] bottom-[4.17%] left-[8.33%]"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="white"
+                      strokeWidth="4"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                     >
                       <polyline points="20 6 9 17 4 12" />
                     </svg>
@@ -60,7 +67,10 @@ const ReportTenant5: FunctionComponent = () => {
                 <span className="font-medium text-black">{`, and `}</span>
                 <span className="text-teal font-bold">based on verified facts</span>
                 <span className="font-medium text-black">
-                  {" "}to the best of my knowledge. I acknowledge that any false or misleading information may lead to consequences in accordance with applicable rules and regulations.
+                  {' '}
+                  to the best of my knowledge. I acknowledge that any false or misleading
+                  information may lead to consequences in accordance with applicable rules and
+                  regulations.
                 </span>
               </div>
             </div>
@@ -69,19 +79,19 @@ const ReportTenant5: FunctionComponent = () => {
 
         {/* Action Buttons */}
         <div className="flex items-center gap-4 text-sm font-inter">
-          <button 
+          <button
             onClick={handleCancel}
             className="rounded-xl border-none bg-transparent flex items-center justify-center py-2 px-6 cursor-pointer text-crimson hover:bg-crimson/5 transition-colors active:scale-95"
           >
             <div className="relative font-bold inline-block">Cancel</div>
           </button>
 
-          <button 
+          <button
             onClick={handleSubmit}
             disabled={!isDeclared}
             className={`rounded-xl border-none overflow-hidden flex items-center justify-center py-2 px-6 transition-all active:scale-95 ${
-              isDeclared 
-                ? 'bg-lightcyan text-teal cursor-pointer hover:bg-teal hover:text-white' 
+              isDeclared
+                ? 'bg-lightcyan text-teal cursor-pointer hover:bg-teal hover:text-white'
                 : 'bg-gray-100 text-gray-400 cursor-not-allowed'
             }`}
           >

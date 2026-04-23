@@ -1,11 +1,11 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-import PageLayout from "./pages/utilities/PageLayout";
-import UserLanding from "./pages/user/UserLanding";
+import PageLayout from './pages/utilities/PageLayout';
+import UserLanding from './pages/user/UserLanding';
 
-import userRoutes from "./routes/userRoutes";
-import adminRoutes from "./routes/adminRoutes";
-import landlordRoutes from "./routes/landlordRoutes";
+import userRoutes from './routes/userRoutes';
+import adminRoutes from './routes/adminRoutes';
+import landlordRoutes from './routes/landlordRoutes';
 
 function App() {
   return (

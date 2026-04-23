@@ -29,7 +29,7 @@ const billingSchema = new mongoose.Schema<BillingType>(
 
     // Which facility this billing belongs to (for permission checks)
     facilityId: { type: mongoose.Schema.Types.ObjectId, ref: 'HousingFacility', required: true },
-    rentalId:  { type: mongoose.Schema.Types.ObjectId, ref: 'Rental', required: true },
+    rentalId: { type: mongoose.Schema.Types.ObjectId, ref: 'Rental', required: true },
     dueDate: { type: Date },
     paymentDate: { type: Date },
     paidAmount: { type: Number },
@@ -47,7 +47,7 @@ const billingSchema = new mongoose.Schema<BillingType>(
 
     // URL or file path to the proof of payment
     documents: { type: [documentSchema], required: true, default: [] },
-    
+
     // Qr if using Gcash
     paymentQr: String,
 
