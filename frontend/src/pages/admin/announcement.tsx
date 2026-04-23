@@ -1,7 +1,7 @@
-import NavBarAdmin from '../../components/NavBarAdmin';
-import SideBarAdmin from '../../components/SideBarAdmin';
-import AdminPageTransition from '../../components/AdminPageTransition';
-import { Icon } from '@iconify/react';
+import NavBarAdmin from "../../components/admin/NavBarAdmin";
+import SideBarAdmin from "../../components/admin/SideBarAdmin";
+import AdminPageTransition from "../../components/admin/AdminPageTransition";
+import { Icon } from "@iconify/react";
 
 function Announcement() {
   return (
@@ -39,8 +39,13 @@ function Announcement() {
               {/* Submit */}
               <div className="flex justify-center">
                 <button className="flex cursor-pointer items-center gap-2 rounded-full bg-[#024338] px-6 py-2">
-                  <Icon icon="iconamoon:arrow-right-2-thin" className="h-5 w-5 text-white" />
-                  <span className="font-['Lora'] text-base font-medium text-white">Submit</span>
+                  <Icon
+                    icon="iconamoon:arrow-right-2-thin"
+                    className="h-5 w-5 text-white"
+                  />
+                  <span className="font-['Lora'] text-base font-medium text-white">
+                    Submit
+                  </span>
                 </button>
               </div>
             </div>
