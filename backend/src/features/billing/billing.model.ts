@@ -1,12 +1,13 @@
 import mongoose from 'mongoose';
 import { documentSchema, type DocumentType } from '../document/document.model';
 
-const PAYMENT_STATUS = ['unpaid', 'paid', 'overdue', 'partially_paid'];
+const PAYMENT_STATUS = ['unpaid', 'paid', 'overdue'];
 type PaymentStatusType = (typeof PAYMENT_STATUS)[number];
 
 export type BillingType = {
   userId: mongoose.Types.ObjectId;
   unitId: mongoose.Types.ObjectId;
+  rentalId: mongoose.Types.ObjectId;
   facilityId: mongoose.Types.ObjectId;
   dueDate?: Date | null;
   paymentDate?: Date | null;
@@ -14,6 +15,7 @@ export type BillingType = {
   totalAmount: number;
   paymentStatus: PaymentStatusType;
   documents: DocumentType[];
+  paymentQr: String;
   breakdown: {
     name: string;
     amount: number;
@@ -25,58 +27,42 @@ const billingSchema = new mongoose.Schema<BillingType>(
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'Student', required: true },
     unitId: { type: mongoose.Schema.Types.ObjectId, ref: 'Unit', required: true },
 
-    // Reference Ids
-    rentalId: { type: mongoose.Schema.Types.ObjectId, ref: 'Rental', required: true },
+    // Which facility this billing belongs to (for permission checks)
     facilityId: { type: mongoose.Schema.Types.ObjectId, ref: 'HousingFacility', required: true },
-    
-    // Date related
-    dueDate: { type: Date, required: true },
+    rentalId:  { type: mongoose.Schema.Types.ObjectId, ref: 'Rental', required: true },
+    dueDate: { type: Date },
     paymentDate: { type: Date },
-    
-    // For Totals
     paidAmount: { type: Number },
-    amount: { type: Number },
+    totalAmount: { type: Number, required: true },
 
-    // Cost break downs
-    breakdown:{
-      rent: {type: Number, default:0},
-      utilities: {type: Number, default:0},
-      misc: {type: Number, default:0},
-
-    },
-
+    // 'Unpaid' is when `paymentDate` is undefined
+    // 'paid' is when `paymentDate` <= `dueDate`
+    // 'overdue' is when `paymentDate` <= `dueDate`
+    // 'partially_paid' is when `paidAmount` <= `amount`
     paymentStatus: {
       type: String,
-      enum: ['unpaid', 'paid', 'overdue', 'partially_paid'],
+      enum: PAYMENT_STATUS,
       default: 'unpaid',
     },
 
-
-    // Payment QR
-    paymentQr: {
-      file: { type: mongoose.Schema.Types.ObjectId, ref: 'File', required: true },
-    },
-
     // URL or file path to the proof of payment
-    proofOfPayment: {
-      file: { type: mongoose.Schema.Types.ObjectId, ref: 'File', required: true },
-      referenceNumber: {type:String},
-      isVerified: { type: Boolean, default: false },
-    },
+    documents: { type: [documentSchema], required: true, default: [] },
     
-    paymentMethod: {
-      type: String,
-      // TODO: Clarify with front end what the types of payment are
-      enum:['bank_transfer','Gcash','in_person'],
-    },
+    // Qr if using Gcash
+    paymentQr: String,
 
-    //
-    paymentType: { type: String }, // e.g., 'rent', 'deposit', 'utility'
+    breakdown: {
+      type: [
+        {
+          name: { type: String, required: true },
+          amount: { type: Number, required: true },
+        },
+      ],
+      required: true,
+      default: [],
+    },
   },
-  {
-    // So that create and update are auto managed
-    timestamps: true,
-  }
+  { timestamps: true },
 );
 
-  export const Billing = mongoose.model('Billing', billingSchema);
+export const Billing = mongoose.model('Billing', billingSchema);
