@@ -1,11 +1,11 @@
 // pages/user/ProfileSwitcher.tsx
 import { useState, useCallback } from "react";
 import CurrentDorm from "./current_dorm/CurrentDorm";
-import UserVerif from "./UserVerif";
-import Sidebar from "../../../components/SideBar";
-import Footer from "../../../components/Footer";
-import Switch from "../../../components/CurrentDormToVerificationSwitch";
-import ProfileInfo from "../../../components/ProfileInfo";
+import UserVerif from "./verification/UserVerif";
+import Sidebar from "../../../components/user/SideBar";
+import Footer from "../../../components/general/Footer";
+import Switch from "../../../components/user/CurrentDormToVerificationSwitch";
+import ProfileInfo from "../../../components/user/ProfileInfo";
 import { Icon } from "@iconify/react";
 
 const ProfileSwitcher = () => {

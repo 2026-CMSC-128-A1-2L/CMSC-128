@@ -2,20 +2,20 @@ import { FunctionComponent, useCallback } from "react";
 import SideBar from "../../../components/user/SideBar";
 import Footer from "../../../components/general/Footer";
 import { Icon } from "@iconify/react";
-import send from "<div styleName={} />../../../assets/send.svg";
-import DefaultAvatar from "../../../assets/default_avatar.svg";
-import VerifiedBadge from "../../../assets/verified_badge.svg";
-import search from "../../../assets/search.svg";
-import left from "../../../assets/leftArrow.svg";
-import right from "../../../assets/rightArrow.svg";
-import house from "../../../assets/House.svg";
-import balance from "../../../assets/outstandingBalance.svg";
-import income from "../../../assets/incomeIcon.svg";
-import view from "../../../assets/View More.svg";
-import help from "../../../assets/helpChatIcon.svg";
-import sapphire1 from "../../../assets/sapphire1.jpg";
-import sapphire2 from "../../../assets/sapphire2.jpg";
-import sapphire3 from "../../../assets/sapphire3.png";
+import send from "../../../../assets/send.svg";
+import DefaultAvatar from "../../../../assets/default_avatar.svg";
+import VerifiedBadge from "../../../../assets/verified_badge.svg";
+import search from "../../../../assets/search.svg";
+import left from "../../../../assets/leftArrow.svg";
+import right from "../../../../assets/rightArrow.svg";
+import house from "../../../../assets/House.svg";
+import balance from "../../../../assets/outstandingBalance.svg";
+import income from "../../../../assets/incomeIcon.svg";
+import view from "../../../../assets/View More.svg";
+import help from "../../../../assets/helpChatIcon.svg";
+import sapphire1 from "../../../../assets/sapphire1.jpg";
+import sapphire2 from "../../../../assets/sapphire2.jpg";
+import sapphire3 from "../../../../assets/sapphire3.png";
 
 const LandlordHomepage: FunctionComponent = () => {
   const onHeaderContainerClick = useCallback(() => {

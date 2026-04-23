@@ -1,12 +1,12 @@
 import { FunctionComponent, useState, useCallback } from "react";
 import EventPopout from "../../../components/user/EventPopout";
-import PortalPopup from "../../../components/PortalPopup";
+import PortalPopup from "../../../components/general/PortalPopup";
 import Footer from "../../../components/general/Footer";
 import SideBar from "../../../components/user/SideBar";
-import dotIcon from "../assets/dot.svg";
-import downIcon from "../assets/down.svg";
-import leftIcon from "../assets/left.svg";
-import rightIcon from "../assets/right.svg";
+import dotIcon from "../../../../assets/dot.svg";
+import downIcon from "../../../../assets/down.svg";
+import leftIcon from "../../../../assets/left.svg";
+import rightIcon from "../../../../assets/right.svg";
 
 const MyCalendar: FunctionComponent = () => {
   const [isEventPopoutOpen, setEventPopoutOpen] = useState(false);
