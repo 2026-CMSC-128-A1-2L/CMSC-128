@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { ROOM_TYPES } from 'shared';
+import { managerPermissionSchema } from '../facility/facility.model';
 
 export type ListingType = {
   _id: mongoose.Types.ObjectId;
@@ -31,11 +32,7 @@ const ListingSchema = new mongoose.Schema<ListingType>({
     {
       userId: { type: mongoose.Schema.Types.ObjectId, ref: 'Manager', required: true },
       permissions: {
-        type: {
-          manageBillings: { type: Boolean, default: false },
-          manageApplications: { type: Boolean, default: false },
-          manageListings: { type: Boolean, default: false },
-        },
+        type: managerPermissionSchema,
         required: true,
       },
     },

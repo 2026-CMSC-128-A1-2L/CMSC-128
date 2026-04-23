@@ -49,19 +49,18 @@ const HousingFacilitySchema = new mongoose.Schema<HousingFacilityType>(
   {
     name: { type: String, required: true },
     landlordId: { type: mongoose.Schema.Types.ObjectId, ref: 'Landlord', required: true },
-    managers: [
-      {
-        userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-        permissions: {
-          type: {
-            manageBillings: { type: Boolean, default: false },
-            manageApplications: { type: Boolean, default: false },
-            manageListings: { type: Boolean, default: false },
+    managers: {
+      type: [
+        {
+          userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+          permissions: {
+            type: managerPermissionSchema,
+            required: true,
           },
-          required: true,
         },
-      },
-    ],
+      ],
+      required: true,
+    },
     location: {
       coordinates: {
         type: new mongoose.Schema(
