@@ -11,9 +11,7 @@ import {
 
 export const routeCreateReview: RequestHandler = async (req, res, next) => {
   const listingId = ObjectIdSchema.parse(req.params.listingId);
-
   const params = CreateReviewBodySchema.parse(req.body);
-
   const createdReview = await createReview(listingId, params, res.locals.filters ?? {});
 
   res.status(201).json({ data: createdReview });

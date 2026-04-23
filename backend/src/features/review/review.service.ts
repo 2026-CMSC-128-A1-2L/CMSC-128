@@ -34,6 +34,8 @@ export const createReview = async (
 ) => {
   // TODO: add admin create review eligibility checks for approval:
   // check for minimum tenancy, if reviewer is flagged, etc.
+  //
+  // check done inside service instead of middleware due to complexity
   const listing = await Listing.findOne(combineFilters({ _id: listingId }, filters));
 
   if (!listing) {
@@ -52,49 +54,26 @@ export const createReview = async (
 };
 
 export const getReviews = async (filters: any) => {
-  const visibleListings = await Listing.find(filters).select('_id');
-
-  const listingIds = visibleListings.map((listing) => listing._id);
-
-  return await Review.find({
-    listingId: { $in: listingIds },
-  });
+  const visibleListings = await Listing.find(filters).distinct('_id');
+  return await Review.find({ listingId: { $in: visibleListings } });
 };
 
 export const getListingReviews = async (listingId: mongoose.Types.ObjectId, filters: any) => {
   const listing = await Listing.findOne(combineFilters({ _id: listingId }, filters));
-
-  if (!listing) {
-    const listingNoFilter = await Listing.findById(listingId);
-
-    if (listingNoFilter) {
-      throw new AppError(403, 'Forbidden: Listing is private.');
-    } else {
-      throw new AppError(404, 'Listing not found.');
-    }
-  }
-
+  if (!listing) throw new AppError(404, 'Listing not found.');
   return await Review.find({ listingId });
 };
 
 export const getFacilityReviews = async (facilityId: mongoose.Types.ObjectId) => {
   const facility = await HousingFacility.findById(facilityId);
-
-  if (!facility) {
-    throw new AppError(404, 'Facility not found.');
-  }
-
+  if (!facility) throw new AppError(404, 'Facility not found.');
   return await Review.find({ facilityId });
 };
 
 export const updateReview = async (data: updateReviewArguments) => {
   const review = await Review.findOne({ _id: data.reviewId, userId: data.userId });
-  if (!review) {
-    throw new AppError(404, 'Review not found.');
-  }
-
+  if (!review) throw new AppError(404, 'Review not found.');
   review.set({ ratings: data.ratings, description: data.description });
-
   return await review.save();
 };
 
@@ -108,5 +87,5 @@ export const deleteReview = async (
     throw new AppError(404, 'Review not found.');
   }
 
-  return await Review.findByIdAndDelete(reviewId);
+  return await review.deleteOne();
 };
