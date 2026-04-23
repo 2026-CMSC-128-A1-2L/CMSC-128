@@ -1,4 +1,3 @@
-import type mongoose from 'mongoose';
 import type { FacilityType, USER_TYPES } from 'shared';
 import type { QueryFilter } from 'mongoose';
 import { AppError } from '../../error';
@@ -10,6 +9,7 @@ import {
   type ManagerPermissionType,
 } from './facility.model';
 import { inviteManager } from '../invite/invite.service';
+import type mongoose from 'mongoose';
 
 type FacilityFilters = {
   name?: string;
@@ -49,8 +49,8 @@ function buildRangeQueryFilter(range: { min?: number; max?: number }): {
 };
 function buildRangeQueryFilter(range: { min?: Date; max?: Date }): { $gte?: Date; $lte?: Date };
 
-function buildRangeQueryFilter(range: { min?: any; max?: any }) {
-  const queryFilter: any = {};
+function buildRangeQueryFilter(range: { min?: unknown; max?: unknown }) {
+  const queryFilter: QueryFilter<unknown> = {};
 
   if (range.min != null) {
     queryFilter.$gte = range.min;
@@ -122,7 +122,20 @@ const buildFacilityFilterQuery = (
   return queryFilter;
 };
 
-export const getFacilities = async (filters: FacilityFilters) => {
+export const getFacilities = async () => {
+  return await HousingFacility.find()
+    .populate([
+      {
+        path: 'landlordId',
+      },
+      {
+        path: 'managers.userId',
+      },
+    ])
+    .lean();
+};
+
+export const searchFacilities = async (filters: FacilityFilters) => {
   const queryFilter = buildFacilityFilterQuery(filters);
   return await HousingFacility.find(queryFilter)
     .populate([
@@ -209,17 +222,11 @@ export const createFacility = async (
 
   const invitePromises = Promise.all(
     (data.managers ?? []).map((manager) =>
-      inviteManager({
-        facilityId: newFacilitySaved._id,
-        landlordId,
-        permissions: manager.permissions,
-        email: manager.email,
-      }),
+      inviteManager(landlordId, newFacilitySaved._id, manager.email, manager.permissions),
     ),
   );
 
   await invitePromises;
-
   return newFacilitySaved;
 };
 
@@ -270,9 +277,11 @@ export const getFacilityById = async (facilityId: mongoose.Types.ObjectId) => {
 export const updateFacility = async (
   facilityId: mongoose.Types.ObjectId,
   data: UpdateFacilityArguments,
-  filters: QueryFilter<typeof HousingFacility>,
+  filters: QueryFilter<HousingFacilityType>,
 ) => {
-  const facility = await HousingFacility.findOne(combineFilters(filters, { _id: facilityId }));
+  const facility = await HousingFacility.findOne(
+    combineFilters<HousingFacilityType>(filters, { _id: facilityId }),
+  );
   if (!facility) {
     // Return 404 even if just forbidden
     throw new AppError(404, 'Facility not found.');
@@ -345,25 +354,31 @@ export const updateManagerPermissions = async (
   await Listing.updateMany({ facilityId: facilityId }, { $pull: { managers: { userId } } });
 };
 
-export const approveFacility = async (facilityId: mongoose.Types.ObjectId, filters: any) => {
-  const facility = await HousingFacility.findOne(combineFilters(filters, { _id: facilityId }));
-  if (!facility) {
-    throw new AppError(404, 'Facility not found.');
-  }
+export const approveFacility = async (
+  facilityId: mongoose.Types.ObjectId,
+  filters: QueryFilter<HousingFacilityType> | undefined,
+) => {
+  const facility = await HousingFacility.findOne(
+    combineFilters<HousingFacilityType>(filters, { _id: facilityId }),
+  );
+  if (!facility) throw new AppError(404, 'Facility not found.');
 
-  // TODO: use document status for approve
+  // TODO: check document status first
 
   facility.status = 'approved';
   return await facility.save();
 };
 
-export const rejectFacility = async (facilityId: mongoose.Types.ObjectId, filters: any) => {
-  const facility = await HousingFacility.findOne(combineFilters(filters, { _id: facilityId }));
-  if (!facility) {
-    throw new AppError(404, 'Facility not found.');
-  }
+export const rejectFacility = async (
+  facilityId: mongoose.Types.ObjectId,
+  filters: QueryFilter<HousingFacilityType> | undefined,
+) => {
+  const facility = await HousingFacility.findOne(
+    combineFilters<HousingFacilityType>(filters, { _id: facilityId }),
+  );
+  if (!facility) throw new AppError(404, 'Facility not found.');
 
-  // TODO: use document status for approve
+  // TODO: check document status first
 
   facility.status = 'rejected';
   return await facility.save();

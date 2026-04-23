@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { documentSchema, type DocumentType } from '../document/document.model';
+import { required } from 'zod/v4/core/util.cjs';
 
 const APPLICATION_STATUS = [
   'pending',
@@ -17,6 +18,7 @@ export type ApplicationStatusType = (typeof APPLICATION_STATUS)[number];
 export type ApplicationType = {
   userId: mongoose.Types.ObjectId;
   listingId: mongoose.Types.ObjectId;
+  prefferedMoveInDate: Date;
   status: ApplicationStatusType;
   documents: DocumentType[];
   unitId?: mongoose.Types.ObjectId | null;
@@ -26,6 +28,7 @@ const applicationFormSchema = new mongoose.Schema<ApplicationType>(
   {
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'Student', required: true },
     listingId: { type: mongoose.Schema.Types.ObjectId, ref: 'Listing', required: true },
+    prefferedMoveInDate: { type: Date, required: true },
     // TODO: check what preferred room type should do
     status: {
       type: String,

@@ -8,6 +8,12 @@ export type ManagerPermissionType = {
   manageListings: boolean;
 };
 
+export const managerPermissionSchema = new mongoose.Schema<ManagerPermissionType>({
+  manageBillings: { type: Boolean, default: false },
+  manageApplications: { type: Boolean, default: false },
+  manageListings: { type: Boolean, default: false },
+});
+
 export type HousingFacilityType = {
   _id: mongoose.Types.ObjectId;
   name: string;
@@ -28,6 +34,16 @@ export type HousingFacilityType = {
   capacity: number;
   documents: DocumentType[];
 
+  // For reviews
+
+  qualitySum: number;
+  comfortSum: number;
+  environmentSum: number;
+
+  qualityCount: number;
+  comfortCount: number;
+  environmentCount: number;
+
   // Overrides dates if specified
   isAcceptingApplications?: boolean;
 
@@ -37,25 +53,34 @@ export type HousingFacilityType = {
 
   createdAt: Date;
   updatedAt: Date;
+
+  isPrivate: boolean;
+  allowVisit: boolean;
+  allowTransfer: boolean;
+
+  description: string;
+  media: {
+    sourceType: 'local' | 'external';
+    value: string;
+  }[];
 };
 
 const HousingFacilitySchema = new mongoose.Schema<HousingFacilityType>(
   {
     name: { type: String, required: true },
     landlordId: { type: mongoose.Schema.Types.ObjectId, ref: 'Landlord', required: true },
-    managers: [
-      {
-        userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-        permissions: {
-          type: {
-            manageBillings: { type: Boolean, default: false },
-            manageApplications: { type: Boolean, default: false },
-            manageListings: { type: Boolean, default: false },
+    managers: {
+      type: [
+        {
+          userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+          permissions: {
+            type: managerPermissionSchema,
+            required: true,
           },
-          required: true,
         },
-      },
-    ],
+      ],
+      required: true,
+    },
     location: {
       coordinates: {
         type: new mongoose.Schema(
@@ -79,12 +104,34 @@ const HousingFacilitySchema = new mongoose.Schema<HousingFacilityType>(
     capacity: { type: Number, required: true },
     documents: [documentSchema],
 
+    // For review
+    qualitySum: { type: Number, default: 0 },
+    comfortSum: { type: Number, default: 0 },
+    environmentSum: { type: Number, default: 0 },
+
+    qualityCount: { type: Number, default: 0 },
+    comfortCount: { type: Number, default: 0 },
+    environmentCount: { type: Number, default: 0 },
+
+    isPrivate: { type: Boolean, default: false },
+    allowVisit: { type: Boolean, default: false },
+    allowTransfer: { type: Boolean, default: false },
     // Overrides dates if specified
     isAcceptingApplications: { type: Boolean, default: false },
 
     // Range of allowed application period. Can be overridden by `isAcceptingApplications`
     applicationOpenDate: { type: Date, required: false },
     applicationCloseDate: { type: Date, required: false },
+
+    description: { type: String, required: true },
+    media: [
+      {
+        // Local source type is used for ones that are uploaded to the object store
+        // while external source type is used for ones that are via URL.
+        sourceType: { type: String, enum: ['local', 'external'], required: true },
+        value: { type: String, required: true },
+      },
+    ],
   },
   { timestamps: true },
 );

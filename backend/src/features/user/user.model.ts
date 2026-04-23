@@ -113,4 +113,4 @@ export const Student = User.discriminator(
   }),
 );
 
-export const isVerified = (status: string) => status == 'verified';
+export const isVerified = (status: string) => status === 'verified';

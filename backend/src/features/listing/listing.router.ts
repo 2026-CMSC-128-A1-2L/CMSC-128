@@ -1,10 +1,5 @@
 import { Router } from 'express';
-import {
-  listingViewFilter,
-  managerFilter,
-  isSuperAdmin,
-  isVerifiedStudent,
-} from '../../middleware';
+import { listingViewFilter, isSuperAdmin, isVerifiedStudent } from '../../middleware';
 import {
   routeGetListings,
   routeGetListing,
@@ -17,6 +12,11 @@ import { routeGetRentalsByListing } from '../rental/rental.controller';
 import { routeGetListingReviews, routeCreateReview } from '../review/review.controller';
 import { routeReportListing } from '../report/report.controller';
 import { routeGetApplicationsByListing } from '../application/application.controller';
+import {
+  manageApplicationsFilter,
+  manageListingsFilter,
+  managerFilter,
+} from './listing.middleware';
 
 const router = Router();
 
@@ -39,14 +39,14 @@ router.get('/:listingId', listingViewFilter, routeGetListing);
 //
 // Manager with manageListings permission or landlord
 // ============================================================================
-router.patch('/:listingId', managerFilter('direct', 'manageListings'), routeUpdateListing);
+router.patch('/:listingId', manageListingsFilter, routeUpdateListing);
 
 // ============================================================================
 // DELETE /api/listings/:listingId
 //
 // Manager with manageListings permission or landlord
 // ============================================================================
-router.delete('/:listingId', managerFilter('direct', 'manageListings'), routeDeleteListing);
+router.delete('/:listingId', manageListingsFilter, routeDeleteListing);
 
 // ============================================================================
 // PATCH /listings/:listingId/tags
@@ -61,12 +61,12 @@ router.delete('/:listingId', managerFilter('direct', 'manageListings'), routeDel
 // }
 // Manager with manageListings permission or landlord
 // ============================================================================
-router.patch('/:listingId/tags', managerFilter('direct', 'manageListings'), routeUpdateListingTags);
+router.patch('/:listingId/tags', manageListingsFilter, routeUpdateListingTags);
 
 // ============================================================================
 // GET /api/listings/:listingId/units
 // ============================================================================
-router.get('/:listingId/units', managerFilter('listing', null), routeGetUnitsByListing);
+router.get('/:listingId/units', managerFilter, routeGetUnitsByListing);
 
 // ============================================================================
 // POST /api/listings/:listingId/units
@@ -74,11 +74,7 @@ router.get('/:listingId/units', managerFilter('listing', null), routeGetUnitsByL
 // Uses `listing-direct` filter because unit has not been created yet, compare
 // directly to provided `listingId`.
 // ============================================================================
-router.post(
-  '/:listingId/units',
-  managerFilter('listing-direct', 'manageListings'),
-  routeCreateUnit,
-); // TODO:
+router.post('/:listingId/units', manageListingsFilter, routeCreateUnit); // TODO:
 
 // ============================================================================
 // GET /listings/:listingId/applications
@@ -93,16 +89,12 @@ router.post(
 // - Returns all applications for a listing
 // - Should enforce ownership via listing
 // ============================================================================
-router.get(
-  '/:listingId/applications',
-  managerFilter('listing', 'manageApplications'),
-  routeGetApplicationsByListing,
-);
+router.get('/:listingId/applications', manageApplicationsFilter, routeGetApplicationsByListing);
 
 // ============================================================================
 // GET /api/listings/:listingId/rentals
 // ============================================================================
-router.get('/:listingId/rentals', isSuperAdmin, routeGetRentalsByListing);
+router.get('/:listingId/rentals', managerFilter, routeGetRentalsByListing);
 
 // ============================================================================
 // GET /api/listings/:listingId/reviews
@@ -123,7 +115,7 @@ router.get('/:listingId/reviews', listingViewFilter, routeGetListingReviews);
 // ============================================================================
 // POST /api/listings/:listingId/reviews
 // ============================================================================
-router.post('/:listingId/reviews', listingViewFilter, routeCreateReview);
+router.post('/:listingId/reviews', routeCreateReview);
 
 // ============================================================================
 // POST /api/listings/:listingId/report
