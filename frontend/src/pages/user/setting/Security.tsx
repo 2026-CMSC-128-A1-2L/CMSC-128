@@ -147,7 +147,7 @@ const Security: FunctionComponent = () => {
               <div className="self-stretch flex flex-col items-start">
                 <b className="relative">{`Authentication Method `}</b>
               </div>
-              <div className="rounded-lg bg-aliceblue border-whitesmoke-200 border-solid border-[1px] overflow-hidden flex items-start justify-center py-num-10 px-3 text-left text-teal">
+              <div className="self-stretch rounded-lg bg-aliceblue border-whitesmoke-200 border-solid border-[1px] overflow-hidden flex items-start py-num-10 px-3 text-left text-teal">
                 <div className="w-[534px] relative leading-6 font-medium inline-block shrink-0">
                   External OAuth (Google)
                 </div>
