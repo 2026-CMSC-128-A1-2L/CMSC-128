@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import PageLayout from "./pages/utilities/PageLayout";
-import UserLanding from "./pages/user/UserLanding";
+import UserLanding from "./pages/UserLanding";
 
 import userRoutes from "./routes/userRoutes";
 import adminRoutes from "./routes/adminRoutes";

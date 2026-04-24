@@ -37,30 +37,30 @@ const navItems: Array<{
   icon: string;
   route: string;
 }> = [
-    {
-      key: 'dashboard',
-      label: 'Dashboard',
-      icon: 'solar:home-2-outline',
-      route: '/landlord/dashboard',
-    },
-    { key: 'messages', label: 'Messages', icon: 'ic:outline-mail', route: '/landlord/messages' },
-    {
-      key: 'properties',
-      label: 'Properties',
-      icon: 'fluent:pen-16-regular',
-      route: '/landlord/properties',
-    },
-    { key: 'managers', label: 'Managers', icon: 'hugeicons:id', route: '/landlord/managers' },
-    { key: 'tenants', label: 'My Tenants', icon: 'tabler:user-search', route: '/landlord/tenants' },
-    { key: 'visits', label: 'Visits', icon: 'solar:calendar-outline', route: '/landlord/visits' },
-    { key: 'finance', label: 'Finance', icon: 'solar:card-outline', route: '/landlord/finance' },
-    {
-      key: 'settings',
-      label: 'Settings',
-      icon: 'solar:settings-outline',
-      route: '/landlord/settings',
-    },
-  ];
+  {
+    key: 'dashboard',
+    label: 'Dashboard',
+    icon: 'solar:home-2-outline',
+    route: '/landlord/dashboard',
+  },
+  { key: 'messages', label: 'Messages', icon: 'ic:outline-mail', route: '/landlord/messages' },
+  {
+    key: 'properties',
+    label: 'Properties',
+    icon: 'fluent:pen-16-regular',
+    route: '/landlord/properties',
+  },
+  { key: 'managers', label: 'Managers', icon: 'hugeicons:id', route: '/landlord/managers' },
+  { key: 'tenants', label: 'My Tenants', icon: 'tabler:user-search', route: '/landlord/tenants' },
+  { key: 'visits', label: 'Visits', icon: 'solar:calendar-outline', route: '/landlord/visits' },
+  { key: 'finance', label: 'Finance', icon: 'solar:card-outline', route: '/landlord/finance' },
+  {
+    key: 'settings',
+    label: 'Settings',
+    icon: 'solar:settings-outline',
+    route: '/landlord/settings',
+  },
+];
 
 const defaultUser: UserInfo = {
   name: 'Quevin',

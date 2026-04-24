@@ -101,7 +101,7 @@ const ManagerEntrySchema = z.object({
 // This may return a combination of facilities with extended information for
 // managers and ones with basic information for users.
 // ============================================================================
-export const GetFacilitiesFilterSchema = z.object({
+export const FacilityFilterSchema = z.object({
   // Lowercase, substring search
   name: z.string().optional(),
   landlordId: ObjectIdSchema.optional(),
@@ -126,7 +126,7 @@ export const GetFacilitiesFilterSchema = z.object({
   // Checks true state, not only the override
   isAcceptingApplications: z.boolean().optional(),
 });
-export const GetFacilitiesRequestQuerySchema = QuerySchema(GetFacilitiesFilterSchema);
+export const GetFacilitiesRequestQuerySchema = QuerySchema(FacilityFilterSchema);
 export const GetFacilitiesResponseBodySchema = z.array(
   z.union([ManagerFacilitySchema, UserFacilitySchema]),
 );
