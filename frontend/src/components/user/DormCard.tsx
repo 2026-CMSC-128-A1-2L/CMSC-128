@@ -77,9 +77,9 @@ const DormCard: FunctionComponent<DormCardProps> = ({
           <div className="w-full relative flex items-center gap-1 text-left text-dimgray font-lora">
             <Icon
               icon="material-symbols-light:location-on"
-              className="w-3 h-3"
+              className="w-5 h-5"
             />
-            <div className="flex-1 relative text-num-10 font-semibold">
+            <div className="flex w-full relative text-num-10 font-semibold">
               {location}
             </div>
           </div>

@@ -47,33 +47,23 @@ const HomePage: FunctionComponent = () => {
                 </div>
                 <div className="w-fit h-fit flex items-center">
                   <div
-                    onClick={toggleFilter}
-                    className="h-10 w-10 rounded-full bg-whitesmoke-100 flex items-center justify-center cursor-pointer hover:bg-lightcyan/45 transition-colors"
+                    onClick={() => setIsFilterOpen(true)}
+                    className="h-10 w-10 rounded-full bg-whitesmoke-100 flex items-center justify-center cursor-pointer hover:bg-lightcyan/45 transition-all active:scale-95"
                   >
-                    <Icon icon="mage:filter" className="w-6 h-6" />
+                    <Icon icon="mage:filter" className="w-6 h-6 text-teal" />
                   </div>
 
                   {isFilterOpen && (
-                    <div className="fixed inset-0 z-[100] flex justify-end">
+                    <div className="fixed w-full inset-0 z-[100] flex items-center justify-center p-4">
                       <div
-                        className="absolute inset-0 bg-preview/45 backdrop"
-                        onClick={toggleFilter}
+                        className="absolute inset-0 bg-black/30 backdrop-blur-1 transition-opacity"
+                        onClick={() => setIsFilterOpen(false)} // Close on clicking the "outside" area
                       />
 
-                      <div className="relative z-10 w-full max-w-[500px] h-full bg-white animate-in slide-in-from-right duration-500 overflow-y-auto">
-                        <div className="p-4 flex justify-between items-center border-b">
-                          <h2 className="text-xl font-bold">Filters</h2>
-                          <button
-                            onClick={toggleFilter}
-                            className="p-2 hover:bg-gray-100 rounded-full"
-                          >
-                            <Icon
-                              icon="material-symbols:close"
-                              className="w-6 h-6"
-                            />
-                          </button>
+                      <div className="relative z-10 max-w-130 max-h-[90vh] w-full bg-white rounded-[2rem] shadow-ms overflow-hidden flex flex-col animate-in fade-in zoom-in duration-200">
+                        <div className="w-fit h-fit overflow-y-auto custom-scrollbar">
+                          <FilterTab />
                         </div>
-                        <FilterTab />
                       </div>
                     </div>
                   )}

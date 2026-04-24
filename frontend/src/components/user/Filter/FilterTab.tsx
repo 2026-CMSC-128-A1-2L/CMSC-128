@@ -49,9 +49,7 @@ const Filter: FunctionComponent = () => {
           <div className="w-full flex flex-col items-start text-center text-dimgray">
             <div className="w-full overflow-hidden flex flex-col items-start py-[0.55rem] px-[0rem] gap-[0.55rem]">
               <div className="self-stretch flex items-center">
-                <b className="relative text-darkgreen text-num-14">
-                  Property Type
-                </b>
+                <b className="relative text-darkgreen text-num-14">Room Type</b>
               </div>
 
               <div className="w-full flex items-center justify-between gap-2">
