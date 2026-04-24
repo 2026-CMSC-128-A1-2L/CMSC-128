@@ -1,5 +1,3 @@
-//./components/ProfileInfo.tsx
-
 import React, { useState, useRef } from "react";
 import { Icon } from "@iconify/react";
 import DefaultAvatar from "../../../assets/default_avatar.svg";
