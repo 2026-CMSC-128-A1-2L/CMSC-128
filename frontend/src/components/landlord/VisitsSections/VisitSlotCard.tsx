@@ -11,10 +11,10 @@ export default function VisitSlotCard({
 }: VisitSlotCardProps) {
   return (
     <div
-      className={`rounded-lg ${backgroundColor} overflow-hidden flex flex-col items-center justify-center p-3 box-border text-center text-xs font-inter font-medium border border-whitesmoke-200 min-h-20`}
+      className={`rounded-lg ${backgroundColor} overflow-hidden flex flex-col items-center justify-center p-3 box-border text-center text-num-12 font-inter font-medium border border-whitesmoke-200 min-h-20`}
     >
-      <div className="font-semibold text-darkslategray-100 text-sm leading-tight">{time}</div>
-      <div className="text-dimgray text-xs leading-tight">{visitorName}</div>
+      <div className="font-semibold text-darkslategray-100 text-num-14 leading-tight">{time}</div>
+      <div className="text-dimgray text-num-12 leading-tight">{visitorName}</div>
     </div>
   );
 }

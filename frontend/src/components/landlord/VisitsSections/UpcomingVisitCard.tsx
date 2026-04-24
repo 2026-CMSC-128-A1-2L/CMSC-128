@@ -26,8 +26,8 @@ export default function UpcomingVisitCard({
         {icon}
       </div>
       <div className="flex-1 flex items-center justify-between min-w-0 gap-2">
-        <div className="text-sm font-medium text-dimgray truncate">{propertyName}</div>
-        <div className="text-sm font-semibold text-dimgray flex-shrink-0">
+        <div className="text-num-14 font-medium text-dimgray truncate">{propertyName}</div>
+        <div className="text-num-14 font-semibold text-dimgray flex-shrink-0">
           {visitCount}
         </div>
       </div>

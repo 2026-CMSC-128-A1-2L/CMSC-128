@@ -33,7 +33,7 @@ export default function UpcomingVisitsSection({
 }: UpcomingVisitsSectionProps) {
   return (
     <div className="w-full flex flex-col items-start gap-2">
-      <b className="text-sm font-bold text-darkslategray-100 font-inter">Upcoming Visits</b>
+      <b className="text-num-14 font-bold text-darkslategray-100 font-inter">Upcoming Visits</b>
       <div className="w-full flex flex-col gap-2">
         {visits.map((visit) => (
           <UpcomingVisitCard

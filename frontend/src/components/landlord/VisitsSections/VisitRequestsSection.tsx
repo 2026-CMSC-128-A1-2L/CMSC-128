@@ -46,7 +46,7 @@ export default function VisitRequestsSection({
 
   return (
     <div className="w-full rounded-num-8 bg-white border border-whitesmoke-200 overflow-hidden flex flex-col items-start py-4 px-6 gap-3 text-darkslategray-100 font-inter">
-      <div className="flex items-center gap-3 text-lg">
+      <div className="flex items-center gap-3 text-num-18">
         <b className="font-bold text-darkslategray-100">Visit Requests</b>
         <b className="font-bold text-teal">{requests.length}</b>
       </div>

@@ -38,7 +38,7 @@ const Visits: FunctionComponent = () => {
       <div className="flex flex-col w-full gap-6">
         {/* Header Section - Large Title with Divider */}
         <div className="flex flex-col gap-3">
-              <b className="relative text-[24px] leading-8 text-gray font-inter shrink-0">
+              <b className="relative text-num-24 leading-8 text-gray font-inter shrink-0">
                 My Calendar
               </b>
           <div className="h-0.5 bg-whitesmoke-200" />
@@ -65,10 +65,10 @@ const Visits: FunctionComponent = () => {
                   <Icon icon="ic:baseline-chevron-left" width={20} height={20} color="#2f3136" />
                 </button>
                 <div className="flex gap-2">
-                  <select className="px-2 py-1 border border-whitesmoke-200 rounded text-sm font-inter text-dimgray">
+                  <select className="px-2 py-1 border border-whitesmoke-200 rounded text-num-14 font-inter text-dimgray">
                     <option>Apr</option>
                   </select>
-                  <select className="px-2 py-1 border border-whitesmoke-200 rounded text-sm font-inter text-dimgray">
+                  <select className="px-2 py-1 border border-whitesmoke-200 rounded text-num-14 font-inter text-dimgray">
                     <option>2026</option>
                   </select>
                 </div>
@@ -78,7 +78,7 @@ const Visits: FunctionComponent = () => {
               </div>
 
               {/* Day Headers */}
-              <div className="grid grid-cols-7 gap-1 mb-2 text-center text-xs font-semibold text-dimgray font-inter">
+              <div className="grid grid-cols-7 gap-1 mb-2 text-center text-num-12 font-semibold text-dimgray font-inter">
                 <div>Su</div>
                 <div>Mo</div>
                 <div>Tu</div>
@@ -89,7 +89,7 @@ const Visits: FunctionComponent = () => {
               </div>
 
               {/* Calendar Days */}
-              <div className="grid grid-cols-7 gap-1 text-sm text-center font-inter">
+              <div className="grid grid-cols-7 gap-1 text-num-14 text-center font-inter">
                 {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30].map((day) => (
                   <div
                     key={day}
@@ -125,8 +125,8 @@ const Visits: FunctionComponent = () => {
               <div className="grid grid-cols-7 gap-4 flex-1">
                 {['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'].map((day, idx) => (
                   <div key={day} className="text-center font-inter">
-                    <div className="text-xs font-semibold text-dimgray mb-1">{day}</div>
-                    <div className={`text-lg font-bold ${idx === 0 ? 'text-silver-100' : 'text-teal'}`}>
+                    <div className="text-num-12 font-semibold text-dimgray mb-1">{day}</div>
+                    <div className={`text-num-18 font-bold ${idx === 0 ? 'text-silver-100' : 'text-teal'}`}>
                       {5 + idx}
                     </div>
                   </div>
