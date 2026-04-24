@@ -30,15 +30,15 @@ export default function VisitRequestCard({
       <div className="flex items-center gap-2 flex-shrink-0">
         <button
           onClick={onReject}
-          className="rounded-num-8 overflow-hidden flex items-center justify-center py-2 px-4 hover:bg-pink-50 transition-colors border border-crimson"
+          className="rounded-num-8 overflow-hidden flex items-center justify-center py-2 px-4"
         >
           <span className="text-sm font-semibold text-crimson">Reject</span>
         </button>
         <button
           onClick={onAccept}
-          className="rounded-num-8 bg-teal overflow-hidden flex items-center justify-center py-2 px-4 hover:opacity-90 transition-opacity border-none cursor-pointer"
+          className="rounded-num-8 bg-lightcyan overflow-hidden flex items-center justify-center py-2 px-4 hover:opacity-90 transition-opacity border-none cursor-pointer"
         >
-          <span className="text-sm font-semibold text-white">Accept</span>
+          <span className="text-sm font-semibold text-teal">Accept</span>
         </button>
       </div>
     </div>

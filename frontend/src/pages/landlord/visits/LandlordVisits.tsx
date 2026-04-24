@@ -52,7 +52,7 @@ const Visits: FunctionComponent = () => {
             <button
               type="button"
               onClick={openSetAvailableTime}
-              className="w-full rounded-lg bg-teal text-white font-semibold py-2 px-4 hover:opacity-90 transition-opacity border-none cursor-pointer font-inter"
+              className="w-full rounded-lg bg-lightcyan text-teal font-semibold py-2 px-4 hover:opacity-90 transition-opacity border-none cursor-pointer font-inter"
             >
               Set Available Time Slots
             </button>
@@ -95,7 +95,7 @@ const Visits: FunctionComponent = () => {
                     key={day}
                     className={`py-2 rounded ${
                       day === 5
-                        ? 'bg-teal text-white font-bold'
+                        ? 'bg-lightcyan text-teal font-bold'
                         : 'hover:bg-whitesmoke-200 cursor-pointer text-dimgray'
                     }`}
                   >
