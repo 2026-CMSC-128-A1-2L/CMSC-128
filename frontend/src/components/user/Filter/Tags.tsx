@@ -66,7 +66,7 @@ const Tags = ({ selected, onChange }: Props) => {
             key={tag}
             className={`flex items-center gap-2 px-4 py-2 rounded-num-12 border cursor-pointer transition-all border-solid ${
               selected.includes(tag)
-                ? "border-whitesmoke text-teal"
+                ? "border-teal text-teal"
                 : "border-whitesmoke text-unselected"
             }`}
           >

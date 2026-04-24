@@ -1,15 +1,19 @@
-import { type FunctionComponent, useCallback } from "react";
+import { type FunctionComponent, useCallback, useState } from "react";
 import { Icon } from "@iconify/react";
 import SideBar from "../../../components/user/SideBar";
 import DormCard from "../../../components/user/DormCard";
 import { dormData } from "../../../data/dorms";
 import Banner from "../../../components/general/Banner";
+import FilterTab from "../../../components/user/Filter/FilterTab";
 import Footer from "../../../components/general/Footer";
 
 const HomePage: FunctionComponent = () => {
   const onViewMoreContainerClick = useCallback(() => {
     // Add your code here
   }, []);
+
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const toggleFilter = () => setIsFilterOpen(!isFilterOpen);
 
   return (
     <div className="w-full flex items-start text-left text-[0.875rem] text-dimgray font-inter gap-8">
@@ -41,10 +45,38 @@ const HomePage: FunctionComponent = () => {
                     Mabuhay, iskolar!
                   </b>
                 </div>
-                <div className="w-fit h-fit flex    items-center">
-                  <div className="h-10 w-10 rounded-num-100 bg-whitesmoke-100 flex items-center box-border">
-                    <Icon icon="mage:filter" className="w-6 h-6"></Icon>
+                <div className="w-fit h-fit flex items-center">
+                  <div
+                    onClick={toggleFilter}
+                    className="h-10 w-10 rounded-full bg-whitesmoke-100 flex items-center justify-center cursor-pointer hover:bg-lightcyan/45 transition-colors"
+                  >
+                    <Icon icon="mage:filter" className="w-6 h-6" />
                   </div>
+
+                  {isFilterOpen && (
+                    <div className="fixed inset-0 z-[100] flex justify-end">
+                      <div
+                        className="absolute inset-0 bg-preview/45 backdrop"
+                        onClick={toggleFilter}
+                      />
+
+                      <div className="relative z-10 w-full max-w-[500px] h-full bg-white animate-in slide-in-from-right duration-500 overflow-y-auto">
+                        <div className="p-4 flex justify-between items-center border-b">
+                          <h2 className="text-xl font-bold">Filters</h2>
+                          <button
+                            onClick={toggleFilter}
+                            className="p-2 hover:bg-gray-100 rounded-full"
+                          >
+                            <Icon
+                              icon="material-symbols:close"
+                              className="w-6 h-6"
+                            />
+                          </button>
+                        </div>
+                        <FilterTab />
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 
