@@ -11,7 +11,7 @@ const Filter: FunctionComponent = () => {
 
   const handleReset = () => {
     setMinPrice(0);
-    setMaxPrice(30000);
+    setMaxPrice(1000);
     setPax("Any");
     setPropertyType("Dormitory");
     setSelectedEssentials([]);
@@ -47,7 +47,9 @@ const Filter: FunctionComponent = () => {
           <div className="w-full flex flex-col items-start text-center text-dimgray">
             <div className="w-full overflow-hidden flex flex-col items-start py-[0.55rem] px-[0rem] gap-[0.55rem]">
               <div className="self-stretch flex items-center">
-                <b className="relative text-darkgreen">Property Type</b>
+                <b className="relative text-darkgreen text-num-14">
+                  Property Type
+                </b>
               </div>
 
               <div className="w-full flex items-center justify-between gap-2">
@@ -113,7 +115,7 @@ const Filter: FunctionComponent = () => {
 
       {/* price */}
       <div className="self-stretch flex flex-col items-start gap-[0.662rem] w-full">
-        <div className="flex items-center py-[0.55rem] px-[0rem]">
+        <div className="flex items-center py-1 text-num-14">
           <b className="relative text-black">Price Range</b>
         </div>
 
@@ -131,19 +133,19 @@ const Filter: FunctionComponent = () => {
 
         <div className="self-stretch flex items-center justify-center gap-[0.881rem] text-[0.661rem] text-dimgray font-lora">
           <div className="flex-1 flex flex-col items-start py-[0.218rem] px-[0rem] gap-[0.218rem]">
-            <div className="self-stretch tracking-num-0_02 font-semibold">
+            <div className="self-stretch tracking-num-0_02 font-semibold text-num-12">
               Min Price
             </div>
-            <div className="w-full h-fit rounded-num-8 border-whitesmoke border-solid border box-border flex items-center py-2 px-2 bg-unavailable_action">
+            <div className="w-full h-fit text-num-12 font-inter rounded-num-8 border-whitesmoke border-solid border box-border flex items-center py-2 px-2 bg-unavailable_action">
               ₱{minPrice.toLocaleString()}
             </div>
           </div>
 
           <div className="flex-1 flex flex-col items-end justify-center py-[0.218rem] px-0 gap-[0.218rem] text-right">
-            <div className="self-stretch tracking-num-0_02 font-semibold">
+            <div className="self-stretch tracking-num-0_02 font-semibold text-num-12">
               Max Price
             </div>
-            <div className="w-full h-fit rounded-num-8 border-whitesmoke border-solid border box-border flex justify-end py-2 px-2 bg-unavailable_action">
+            <div className="w-full h-fit text-num-12 font-inter rounded-num-8 border-whitesmoke border-solid border box-border flex justify-end py-2 px-2 bg-unavailable_action">
               ₱{maxPrice.toLocaleString()}
             </div>
           </div>
@@ -151,12 +153,13 @@ const Filter: FunctionComponent = () => {
       </div>
 
       {/* essentials */}
-      <Tags selected={selectedEssentials} onChange={setSelectedEssentials} />
+      <div className="w-full h-fit flex flex-col py-1 text-num-14 gap-2">
+        <b className="text-darkgreen font-inter">Essentials</b>
+        <Tags selected={selectedEssentials} onChange={setSelectedEssentials} />
+      </div>
 
-      <div className="w-full relative overflow-hidden flex items-center py-[0.55rem] px-[0rem] box-border text-left text-[0.771rem] text-slategray font-inter">
-        <div className="flex items-center justify-center">
-          <b className="relative">Show More...</b>
-        </div>
+      <div className="w-full h-fit py-1 text-num-14">
+        <b className="text-darkgreen font-inter">Distance from Campus</b>
       </div>
 
       {/* apply */}

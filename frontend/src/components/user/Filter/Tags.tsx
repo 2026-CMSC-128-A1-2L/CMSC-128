@@ -10,19 +10,31 @@ interface Props {
 
 const Tags = ({ selected, onChange }: Props) => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const allTags = [
     "Wi-Fi",
     "With Aircon",
     "Bed Mattress",
     "Own CR",
-    "Cooking",
-    "Appliances Allowed",
+    "Curfew",
+    "Security Guard",
+    "CCTV",
+    "Study Lounge",
+    "Laundry",
+    "Gym",
+    "Parking",
+    "Near Restaurants",
+    "Near Grocery",
+    "Near Main Road",
   ];
 
   const filteredTags = allTags.filter((tag) =>
     tag.toLowerCase().includes(searchTerm.toLowerCase()),
   );
+
+  const displayTags =
+    searchTerm || isExpanded ? filteredTags : filteredTags.slice(0, 6);
 
   const toggleTag = (tag: string) => {
     if (selected.includes(tag)) {
@@ -34,7 +46,7 @@ const Tags = ({ selected, onChange }: Props) => {
 
   return (
     <div className="flex flex-col gap-4 w-full">
-      <b className="text-teal">Essentials</b>
+      {/* Search Input */}
       <div className="relative">
         <Icon
           icon="mynaui:search"
@@ -43,18 +55,19 @@ const Tags = ({ selected, onChange }: Props) => {
         <input
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Search tags..."
-          className="w-full bg-[#F1F3F4] rounded-num-12 py-3 pl-10 pr-4 border-none text-sm"
+          placeholder="Search tags (e.g. Study Lounge, Gym)"
+          className="w-full bg-unavailable_action rounded-2xl py-3 pl-10 pr-4 border-none text-medium text-num-14 focus:outline-none"
         />
       </div>
+
       <div className="flex flex-wrap gap-2">
-        {filteredTags.map((tag) => (
+        {displayTags.map((tag) => (
           <label
             key={tag}
-            className={`flex items-center gap-2 px-4 py-2 rounded-full border cursor-pointer transition-all border-solid ${
+            className={`flex items-center gap-2 px-4 py-2 rounded-num-12 border cursor-pointer transition-all border-solid ${
               selected.includes(tag)
-                ? "border-whitesmoke text-teal bg-white"
-                : "border-whitesmoke text-unselected bg-white"
+                ? "border-whitesmoke text-teal"
+                : "border-whitesmoke text-unselected"
             }`}
           >
             <input
@@ -65,15 +78,23 @@ const Tags = ({ selected, onChange }: Props) => {
             />
             <img
               src={selected.includes(tag) ? radio_check : radio}
-              alt="status"
-              className="w-6 h-6 object-contain"
+              className="w-5 h-5"
+              alt=""
             />
-            <span className="text-sm font-semibold whitespace-nowrap">
-              {tag}
-            </span>
+            <span className="text-sm font-semibold">{tag}</span>
           </label>
         ))}
       </div>
+
+      {/* show more/less*/}
+      {!searchTerm && filteredTags.length > 6 && (
+        <button
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="text-slategray font-bold text-left text-num-12 hover:text-teal transition-colors border-none bg-transparent cursor-pointer"
+        >
+          {isExpanded ? "Show Less..." : "Show More..."}
+        </button>
+      )}
     </div>
   );
 };
