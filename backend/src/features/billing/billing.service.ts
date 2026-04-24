@@ -7,6 +7,7 @@
   import { buildQuery } from '../../utils';
   import { HousingFacility } from '../facility/facility.model';
   import { Unit } from '../unit/unit.model';
+import { promise } from 'zod';
 
   export type CreateBillingArguments = {
     rentalId: mongoose.Types.ObjectId;
@@ -119,20 +120,31 @@
     // Get all bilings related to those facilities
 
     // Generates what occupancy per facility
-    const unitStatistics = await Unit.aggregate([
-      {
-        $match: {
-          facilityId: { $in: facilityIds },
-        },
-      },
-      {
-        $group: {
-          _id: '$facilityId',
-          totalUnits: { $sum: 1 },
-          occupiedUnits: { $sum: { $cond: [{ $gt: [{ $size: { $ifNull: ['$currentRentals',[]] } }, 0] }, 1, 0] }},
-        },
-      },
+    const [facilityUnitCount, facilityUnitsOccupied] = await Promise.all([
+      //total units by facility
+      Unit.aggregate([
+        {$match: {facilityId: {$in: facilityIds}}},
+        {$group: {_id:'$facilityId', totalUnits: {$sum:1}}}
+      ]),
+      Rental.find(
+        {facilityId:{$in: facilityIds}, status: 'active'},
+        { unitId: 1, facilityId: 1 }
+      )
     ]);
+
+    const unitStatistics = facilityUnitCount.map((u) =>{
+      const fId = u._id.toString();
+      const occupiedCount = new Set(
+        facilityUnitsOccupied
+        .filter((r) => r.facilityId.toString() === fId)
+        .map((r) => r.unitId.toString())
+      ).size;
+      return {
+        _id: u._id,
+        totalUnits: u.totalUnits,
+        occupiedUnits: occupiedCount
+      };
+    });
 
     // Generates monthly income and outstanding of facility per month
     const incomeStatistics = await Billing.aggregate([
@@ -189,9 +201,9 @@
       return {
         id: f._id,
         name: f.name,
-        thumbnail: f.media[0]?.value || null,
-        units: facilityUnits.totalUnits,
-        totalOccupied: facilityUnits.occupiedUnits,
+        thumbnail: f.media[0]?.value ?? null,
+        units: facilityUnits?.totalUnits,
+        totalOccupied: facilityUnits?.occupiedUnits,
         income: facilityTotalIncome,
         outstanding: facilityTotalOutstanding,
       };
@@ -221,20 +233,13 @@
     if (!facility) throw new AppError(404, 'Facility not found');
     
 
-    // Generates what occupancy per facility
-    const unitStatResults = await Unit.aggregate([
-      {$match:{ facilityId }},
-      {
-        $group: {
-          _id: '$facilityId', 
-          totalUnits: { $sum: 1 },
-          occupiedUnits: { $sum: { $cond: [{ $gt: [{ $size: { $ifNull: ['$currentRentals',[]] } }, 0] }, 1, 0] }},
-        },
-      },
-    ]);
-    
-    const unitStatistics = unitStatResults[0] || { _id:facilityId ,totalUnits: 0, occupiedUnits: 0 };
-    
+    // Generates occupancy per facility
+    const totalUnits = await Unit.countDocuments({facilityId});
+    const occupiedUnits = (await Rental.distinct('unitId',{
+      facilityId,
+      status: 'active'
+    })).length;
+
     // Generates Income statistics
     const facilityStatistics = await Billing.aggregate([
       {$match:{ facilityId }},
@@ -293,7 +298,7 @@
     
     // Rates
     const collectionRate = (totalIncome + totalOutstanding) > 0 ? (totalIncome / (totalIncome + totalOutstanding)) * 100 : 0;
-    const occupancyRate = unitStatistics.totalUnits > 0 ? (unitStatistics.occupiedUnits / unitStatistics.totalUnits) * 100 : 0;
+    const occupancyRate = totalUnits > 0 ? (occupiedUnits / totalUnits) * 100 : 0;
     return{
       facilityInfo:{
         name: facility.name,
@@ -304,8 +309,8 @@
         unpaid: totalUnpaidBills,
         totalBills: totalBillsGenerated,
         occupancy: {
-          occupied: unitStatistics.occupiedUnits,
-          total: unitStatistics.totalUnits,
+          occupied: occupiedUnits,
+          total: totalUnits,
         }
       },
       charts:{
