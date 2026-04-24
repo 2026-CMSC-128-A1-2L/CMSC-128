@@ -1,6 +1,7 @@
 import { FunctionComponent, useState } from "react";
-import Tags from "../Filter/Tags";
 import { Icon } from "@iconify/react";
+import Tags from "../Filter/Tags";
+import Distance from "../Filter/DistanceMap";
 
 const Filter: FunctionComponent = () => {
   const [minPrice, setMinPrice] = useState(0);
@@ -8,6 +9,7 @@ const Filter: FunctionComponent = () => {
   const [pax, setPax] = useState<number | "Any">("Any");
   const [propertyType, setPropertyType] = useState("Dormitory");
   const [selectedEssentials, setSelectedEssentials] = useState<string[]>([]);
+  const [distance, setDistance] = useState(1); // default 1km
 
   const handleReset = () => {
     setMinPrice(0);
@@ -158,8 +160,38 @@ const Filter: FunctionComponent = () => {
         <Tags selected={selectedEssentials} onChange={setSelectedEssentials} />
       </div>
 
-      <div className="w-full h-fit py-1 text-num-14">
-        <b className="text-darkgreen font-inter">Distance from Campus</b>
+      <div className="w-full flex flex-col gap-4">
+        <b className="text-teal text-lg">Distance from Campus</b>
+        <Distance distance={distance} />
+        <div className="w-full px-2">
+          <input
+            type="range"
+            min={0.1}
+            max={5}
+            step={0.1}
+            value={distance}
+            onChange={(e) => setDistance(parseFloat(e.target.value))}
+            className="w-full accent-teal cursor-pointer"
+          />
+        </div>
+        <div className="flex items-center justify-between">
+          <span className="font-bold text-gray-700">Kilometers</span>
+          <div className="flex items-center justify-center w-24 h-10 border border-gray-300 rounded-lg bg-white shadow-sm">
+            <span className="font-bold text-[#13634F]">
+              {distance.toFixed(1)}
+            </span>
+            <div className="flex flex-col ml-2 border-l border-gray-200 pl-1">
+              <Icon
+                icon="heroicons:chevron-up-20-solid"
+                className="w-3 h-3 text-gray-400"
+              />
+              <Icon
+                icon="heroicons:chevron-down-20-solid"
+                className="w-3 h-3 text-gray-400"
+              />
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* apply */}
@@ -169,6 +201,7 @@ const Filter: FunctionComponent = () => {
         </div>
       </button>
     </div>
+    // </div>
   );
 };
 
