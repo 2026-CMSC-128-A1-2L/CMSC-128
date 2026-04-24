@@ -29,13 +29,11 @@ const ManagerPermissionsSchema = z.object({
 });
 
 const FacilityLocationSchema = z.object({
-  coordinates: z
-    .object({
-      lat: z.number(),
-      long: z.number(),
-    })
-    .optional(),
-  text: z.string().optional(),
+  coordinates: z.object({
+    lat: z.number(),
+    long: z.number(),
+  }),
+  text: z.string(),
 });
 
 const ManagerSchema = z.object({
@@ -62,19 +60,37 @@ const UserFacilitySchema = z.object({
   name: z.string(),
   landlordId: LandlordSchema,
   managers: z.array(ManagerSchema),
-  location: FacilityLocationSchema.optional(),
+  location: FacilityLocationSchema,
   type: FacilityTypeSchema,
 
   // the value of the override
   isAcceptingApplications: z.boolean().optional(),
-  applicationOpenDate: Date,
-  applicationCloseDate: Date,
+  applicationOpenDate: DateTimeSchema,
+  applicationCloseDate: DateTimeSchema,
+
+  averageRating: z.number(),
+  image: z.string(),
+  price: {
+    min: z.number(),
+    max: z.number(),
+  },
+  allowVisit: z.boolean(),
+  allowTransfer: z.boolean(),
 });
 
 const UserListing = z.object({
   name: z.string(),
   price: RangeSchema(z.number()),
-  tags: z.record(z.string(), z.union([z.number(), z.boolean(), z.string()])),
+  pasalo: z
+    .array(
+      z.object({
+        duration: z.enum(['6-months', '12-months']),
+        movesOutOn: DateTimeSchema,
+        terms: z.string(),
+      }),
+    )
+    .optional(),
+  // tags: z.record(z.string(), z.union([z.number(), z.boolean(), z.string()])),
 });
 
 const UserFacilityWithListingsSchema = UserFacilitySchema.extend({
@@ -141,7 +157,7 @@ export const CreateFacilityRequestBodySchema = z.object({
   managers: z.array(ManagerEntrySchema).default([]),
   name: z.string(),
   type: FacilityTypeSchema,
-  location: FacilityLocationSchema.optional(),
+  location: FacilityLocationSchema,
 
   // Not accepting applications as default
   isAcceptingApplications: z.boolean().default(false),
@@ -173,14 +189,59 @@ export const SearchFacilitiesRequestBodySchema = z.object({
   allowVisit: z.boolean(),
   allowTransfer: z.boolean(),
 });
+
 export const SearchFacilitiesResponseBodySchema = z.array(UserFacilityWithListingsSchema);
+
+export const UserFacilityDetailedSchema = z.object({
+  name: z.string(),
+  location: FacilityLocationSchema,
+  id: ObjectIdSchema,
+  description: z.number(),
+  verifiedAt: z.number(),
+  price: {
+    min: z.number(),
+    max: z.number(),
+  },
+  media: z.array(
+    z.object({
+      sourceType: z.string(),
+      value: z.string(),
+    }),
+  ),
+  listings: z.array(
+    z.object({
+      description: z.string().optional(),
+      tags: z.map(z.string(), z.union([z.string(), z.number(), z.boolean()])),
+      cost: {
+        rent: z.number(),
+        estimatedUtilities: z.number(),
+        securityDeposit: z.number(),
+      },
+      media: z.array(
+        z.object({
+          sourceType: z.string(),
+          value: z.string(),
+        }),
+      ),
+    }),
+  ),
+  landlord: z.object({
+    id: ObjectIdSchema,
+    activeUnits: z.number(),
+    createdAt: DateTimeSchema,
+    contact: z.string(),
+  }),
+});
 
 // ============================================================================
 // GET /facilities/:facilityId: routeGetFacility
 //
 // Retrieves a specific facility by ID.
 // ============================================================================
-export const GetFacilityResponseBodySchema = z.union([ManagerFacilitySchema, UserFacilitySchema]);
+export const GetFacilityResponseBodySchema = z.union([
+  ManagerFacilitySchema,
+  UserFacilityDetailedSchema,
+]);
 
 // PATCH /facilities/:facilityId: routeUpdateFacility
 export const UpdateFacilityRequestBodySchema = z

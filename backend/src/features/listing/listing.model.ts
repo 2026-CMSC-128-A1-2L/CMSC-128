@@ -18,6 +18,11 @@ export type ListingType = {
     sourceType: 'local' | 'external';
     value: string;
   }[];
+
+  qualityAvg: number;
+  comfortAvg: number;
+  environmentAvg: number;
+  reviewCount: number;
 };
 
 const ListingSchema = new mongoose.Schema<ListingType>({
@@ -57,6 +62,12 @@ const ListingSchema = new mongoose.Schema<ListingType>({
       value: { type: String, required: true },
     },
   ],
+
+  qualityAvg: { type: Number, default: 0.0 },
+  comfortAvg: { type: Number, default: 0.0 },
+  environmentAvg: { type: Number, default: 0.0 },
+
+  reviewCount: { type: Number, default: 0 },
 });
 
 export const Listing = mongoose.model('Listing', ListingSchema);
