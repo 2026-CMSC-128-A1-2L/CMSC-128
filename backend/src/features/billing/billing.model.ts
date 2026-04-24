@@ -1,12 +1,13 @@
 import mongoose from 'mongoose';
 import { documentSchema, type DocumentType } from '../document/document.model';
 
-const PAYMENT_STATUS = ['unpaid', 'paid', 'overdue', 'partially_paid'];
+const PAYMENT_STATUS = ['unpaid', 'paid', 'overdue'];
 type PaymentStatusType = (typeof PAYMENT_STATUS)[number];
 
 export type BillingType = {
   userId: mongoose.Types.ObjectId;
   unitId: mongoose.Types.ObjectId;
+  rentalId: mongoose.Types.ObjectId;
   facilityId: mongoose.Types.ObjectId;
   dueDate?: Date | null;
   paymentDate?: Date | null;
@@ -14,6 +15,7 @@ export type BillingType = {
   totalAmount: number;
   paymentStatus: PaymentStatusType;
   documents: DocumentType[];
+  paymentQr: String;
   breakdown: {
     name: string;
     amount: number;
@@ -27,7 +29,7 @@ const billingSchema = new mongoose.Schema<BillingType>(
 
     // Which facility this billing belongs to (for permission checks)
     facilityId: { type: mongoose.Schema.Types.ObjectId, ref: 'HousingFacility', required: true },
-
+    rentalId: { type: mongoose.Schema.Types.ObjectId, ref: 'Rental', required: true },
     dueDate: { type: Date },
     paymentDate: { type: Date },
     paidAmount: { type: Number },
@@ -45,6 +47,9 @@ const billingSchema = new mongoose.Schema<BillingType>(
 
     // URL or file path to the proof of payment
     documents: { type: [documentSchema], required: true, default: [] },
+
+    // Qr if using Gcash
+    paymentQr: String,
 
     breakdown: {
       type: [

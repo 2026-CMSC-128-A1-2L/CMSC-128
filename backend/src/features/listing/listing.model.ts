@@ -13,9 +13,6 @@ export type ListingType = {
   tags: Record<string, number | string | boolean>;
   roomType: (typeof ROOM_TYPES)[number];
   capacity: number;
-  isPrivate: boolean;
-  allowVisit: boolean;
-  allowTransfer: boolean;
   description?: string | null;
   media: {
     sourceType: 'local' | 'external';
@@ -38,17 +35,20 @@ const ListingSchema = new mongoose.Schema<ListingType>({
     },
   ],
 
-  // Uses names
+  // A map of tag names to a string, number, or a boolean
   tags: {
     type: Map,
     of: mongoose.Schema.Types.Mixed,
   },
   roomType: { type: String, enum: ROOM_TYPES, required: true },
+
+  // Maximum number of tenants in one unit
   capacity: { type: Number, required: true },
-  isPrivate: { type: Boolean, default: false },
-  allowVisit: { type: Boolean, default: false },
-  allowTransfer: { type: Boolean, default: false },
-  description: { type: String },
+
+  // Optional description
+  description: String,
+
+  // List of images or video
   media: [
     {
       // Local source type is used for ones that are uploaded to the object store

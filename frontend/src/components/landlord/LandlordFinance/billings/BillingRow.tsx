@@ -99,27 +99,41 @@ const BillingRow: FunctionComponent<BillingRowProps> = ({
   return (
     <div 
       onClick={handleRowClick}
-      className="w-full flex items-center gap-3 sm:gap-5 px-[12px] sm:px-[19px] h-10 text-center text-[10px] sm:text-[11px] font-inter text-darkslategray-100 hover:bg-gray-50 transition-colors cursor-pointer"
+      className="w-full flex items-center gap-4 px-6 h-12 text-center text-[12px] sm:text-[13px] font-inter text-darkslategray-100 hover:bg-gray-50 transition-colors cursor-pointer"
     >
-      <div className="h-10 w-10 min-w-[40px] flex items-center justify-center shrink-0 font-medium text-[11px] sm:text-[12px]">{roomNumber}</div>
-      <div className="h-10 w-32 sm:w-40 min-w-[100px] flex items-center justify-center shrink-0 font-medium text-[11px] sm:text-[12px] truncate">{tenantName}</div>
-      <div className="h-10 w-[65px] sm:w-[72px] min-w-[60px] flex items-center justify-center shrink-0 text-[10px] sm:text-[11px]">{php(rentAmount)}</div>
-      <div className="h-10 w-[65px] sm:w-[72px] min-w-[60px] flex items-center justify-center shrink-0 text-[10px] sm:text-[11px]">{php(utilitiesAmount)}</div>
-      <div className="h-10 w-[65px] sm:w-[72px] min-w-[60px] flex items-center justify-center shrink-0 text-[10px] sm:text-[11px]">{php(miscAmount)}</div>
-      <div className="h-10 w-[65px] sm:w-[72px] min-w-[60px] flex items-center justify-center shrink-0 text-[10px] sm:text-[11px] font-medium">{php(billing.totalAmount)}</div>
-      <div className="h-10 w-[70px] sm:w-20 min-w-[70px] flex items-center justify-center shrink-0 text-[10px] sm:text-[11px]">{php(paidAmount)}</div>
-      <div className="w-[90px] sm:w-[100px] min-w-[90px] flex items-center justify-center py-2 px-0 shrink-0 relative" ref={dropdownRef}>
+      <div className="w-[8%] min-w-[60px] flex items-center justify-center shrink-0 font-medium">
+        {roomNumber}
+      </div>
+      <div className="w-[18%] min-w-[140px] flex items-center justify-center shrink-0 font-medium truncate">
+        {tenantName}
+      </div>
+      <div className="w-[9%] min-w-[80px] flex items-center justify-center shrink-0">
+        {php(rentAmount)}
+      </div>
+      <div className="w-[9%] min-w-[80px] flex items-center justify-center shrink-0">
+        {php(utilitiesAmount)}
+      </div>
+      <div className="w-[9%] min-w-[80px] flex items-center justify-center shrink-0">
+        {php(miscAmount)}
+      </div>
+      <div className="w-[9%] min-w-[80px] flex items-center justify-center shrink-0 font-medium">
+        {php(billing.totalAmount)}
+      </div>
+      <div className="w-[10%] min-w-[80px] flex items-center justify-center shrink-0">
+        {php(paidAmount)}
+      </div>
+      <div className="w-[18%] min-w-[120px] flex items-center justify-center py-2 px-0 shrink-0 relative" ref={dropdownRef}>
         <button
           onClick={handleToggle}
-          className={`w-[85px] sm:w-[92px] rounded-lg ${
+          className={`w-[100px] rounded-lg ${
             hasStatus && selectedStatus
               ? statusGradients[selectedStatus] + ' flex items-center justify-center'
               : 'bg-white border-whitesmoke-200 border-solid border-[1px]'
-          } py-[4.5px] px-0 font-inter cursor-pointer transition-all duration-300 hover:opacity-90 ${
+          } py-[4.5px] px-2 font-inter cursor-pointer transition-all duration-300 hover:opacity-90 ${
             isChanging ? 'scale-95' : 'scale-100'
           }`}
         >
-          <b className={`text-[10px] sm:text-[12px] font-medium transition-all duration-300 ${
+          <b className={`text-[10px] sm:text-[11px] font-medium transition-all duration-300 ${
             hasStatus && selectedStatus ? 'text-white' : 'text-darkslategray-100'
           } ${isChanging ? 'opacity-0' : 'opacity-100'}`}>
             {displayStatus}
@@ -132,7 +146,7 @@ const BillingRow: FunctionComponent<BillingRowProps> = ({
               className="fixed inset-0 z-10" 
               onClick={() => onToggle && onToggle(billing._id)}
             />
-            <div className="absolute top-full left-1/2 -translate-x-1/2 mt-1 w-[85px] sm:w-[92px] z-50 bg-white border border-whitesmoke-200 rounded-lg shadow-lg overflow-hidden">
+            <div className="absolute top-full left-1/2 -translate-x-1/2 mt-1 w-[100px] z-50 bg-white border border-whitesmoke-200 rounded-lg shadow-lg overflow-hidden">
               {statusOptions.map((status) => {
                 const isSelected = selectedStatus === status;
                 const statusDisplay = getStatusDisplay(status);
