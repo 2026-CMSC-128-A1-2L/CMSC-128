@@ -6,7 +6,7 @@ import SettingsNotifications from "../pages/user/setting/Notification";
 import SettingsGen from "../pages/user/setting/General";
 import SettingsSecurity from "../pages/user/setting/Security";
 import SettingsPreferences from "../pages/user/setting/Preferences";
-import Filter from "../components/user/FilterTab";
+import Filter from "../components/user/Filter/FilterTab";
 import HomePage from "../pages/user/home/HomePage";
 import Finance from "../pages/user/finance/Finance";
 import ContactUs from "../pages/user/info/ContactUs";

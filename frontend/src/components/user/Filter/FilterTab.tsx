@@ -1,4 +1,5 @@
 import { FunctionComponent, useState } from "react";
+import Tags from "../Filter/Tags";
 import { Icon } from "@iconify/react";
 
 const Filter: FunctionComponent = () => {
@@ -6,13 +7,14 @@ const Filter: FunctionComponent = () => {
   const [maxPrice, setMaxPrice] = useState(1000);
   const [pax, setPax] = useState<number | "Any">("Any");
   const [propertyType, setPropertyType] = useState("Dormitory");
+  const [selectedEssentials, setSelectedEssentials] = useState<string[]>([]);
 
-  // Reverts all state variables to their default values
   const handleReset = () => {
     setMinPrice(0);
-    setMaxPrice(1000);
+    setMaxPrice(30000);
     setPax("Any");
     setPropertyType("Dormitory");
+    setSelectedEssentials([]);
   };
 
   const handlePaxChange = (type: "add" | "minus") => {
@@ -119,7 +121,7 @@ const Filter: FunctionComponent = () => {
           <input
             type="range"
             min={0}
-            max={20000}
+            max={30000}
             step={500}
             value={maxPrice}
             onChange={(e) => setMaxPrice(Number(e.target.value))}
@@ -149,29 +151,11 @@ const Filter: FunctionComponent = () => {
       </div>
 
       {/* essentials */}
-      <div className="self-stretch overflow-hidden flex flex-col items-start py-[0.55rem] px-[0.218rem] gap-[0.55rem] w-full">
-        <div className="self-stretch flex items-start py-[0.55rem] px-[0rem] text-teal">
-          <b className="flex-1 relative">Essentials</b>
-        </div>
+      <Tags selected={selectedEssentials} onChange={setSelectedEssentials} />
 
-        <div className="w-full relative rounded-[10.57px] bg-aliceblue overflow-hidden flex items-center py-[0.662rem] px-[0.881rem] box-border gap-[0.55rem] text-left text-[0.661rem] text-slategray font-lora">
-          <Icon icon="ic:outline-search" className="w-5 h-5"></Icon>
-          <div className="flex-1 relative tracking-[0.02em] font-semibold text-num-10 whitespace-nowrap">
-            Search tags (ex. With Service, With Study Lounge)
-          </div>
-        </div>
-
-        <div className="self-stretch flex items-center flex-wrap content-center gap-[0.55rem] text-teal">
-          {["Wi-Fi", "With Aircon", "Bed Mattress", "Own CR", "Cooking"].map(
-            (tag) => (
-              <div
-                key={tag}
-                className="rounded-num-16 bg-white border-whitesmoke border-solid border-[0.9px] flex items-center justify-center py-1 px-2 gap-[0.331rem] cursor-pointer hover:bg-lightcyan-100 transition-colors"
-              >
-                <div className="relative font-semibold">{tag}</div>
-              </div>
-            ),
-          )}
+      <div className="w-full relative overflow-hidden flex items-center py-[0.55rem] px-[0rem] box-border text-left text-[0.771rem] text-slategray font-inter">
+        <div className="flex items-center justify-center">
+          <b className="relative">Show More...</b>
         </div>
       </div>
 
