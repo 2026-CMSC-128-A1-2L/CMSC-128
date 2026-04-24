@@ -1,4 +1,4 @@
-import RightArrow from '../../assets/iconamoon_arrow-right-2.svg'
+import RightArrow from '../../../assets/iconamoon_arrow-right-2.svg'
 
 export default function Header() {
   return (

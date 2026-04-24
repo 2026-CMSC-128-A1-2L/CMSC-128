@@ -18,8 +18,8 @@ import RateAndReviewUpload from "../pages/user/profile/current_dorm/RateAndRevie
 import TermsOfUse from "../pages/user/info/TermsOfUse";
 import MyCalendar from "../pages/user/calendar/MyCalendar";
 import ProfileSwitcher from "../pages/user/profile/ProfileSwitcher";
-import Report from '../pages/user/Report';
-import Reportv2 from '../pages/user/Reportv2'
+import Report from '../pages/user/profile/current_dorm/Report';
+import Reportv2 from '../pages/user/profile/current_dorm/Reportv2'
 import { Route } from "react-router-dom";
 import Settings from "../pages/user/setting/Settings";
 
@@ -37,6 +37,7 @@ const userRoutes = [
     element={<ContractInformation />}
   />,
   <Route key="ratereview" path="/rate-review" element={<RateAndReview />} />,
+  <Route key="reportv2" path="/report-dorm" element={<Reportv2 />} />,
   <Route
     key="ratereviewform"
     path="/rate-review-form"

@@ -176,8 +176,7 @@ export default {
       opacity: {
         "num-0_3": "0.3",
       },
-    },
-    fontSize: {
+      fontSize: {
       "num-4_64": "4.64px",
       "num-5_21": "5.21px",
       "num-6_08": "6.08px",
@@ -222,4 +221,6 @@ export default {
   corePlugins: {
     preflight: false,
   },
+    },
+    
 };
