@@ -1,5 +1,5 @@
-import { FunctionComponent, useState, useEffect } from 'react';
-import PortalPopup from '../../../../components/PortalPopup';
+import { FunctionComponent, useState, useEffect } from "react";
+import PortalPopup from "../../../general/PortalPopout";
 
 interface AddBillingPopupProps {
   isOpen: boolean;
@@ -15,26 +15,26 @@ interface AddBillingPopupProps {
   }) => void;
 }
 
-const AddBillingPopup: FunctionComponent<AddBillingPopupProps> = ({ 
-  isOpen, 
-  onClose, 
+const AddBillingPopup: FunctionComponent<AddBillingPopupProps> = ({
+  isOpen,
+  onClose,
   availableRooms = [],
-  selectedMonth = '',
-  onSubmit 
+  selectedMonth = "",
+  onSubmit,
 }) => {
-  const [selectedRoom, setSelectedRoom] = useState<string>('');
-  const [fullName, setFullName] = useState<string>('');
-  const [rent, setRent] = useState<string>('');
-  const [utilities, setUtilities] = useState<string>('');
-  const [miscFees, setMiscFees] = useState<string>('');
+  const [selectedRoom, setSelectedRoom] = useState<string>("");
+  const [fullName, setFullName] = useState<string>("");
+  const [rent, setRent] = useState<string>("");
+  const [utilities, setUtilities] = useState<string>("");
+  const [miscFees, setMiscFees] = useState<string>("");
 
   useEffect(() => {
     if (isOpen) {
-      setSelectedRoom('');
-      setFullName('');
-      setRent('');
-      setUtilities('');
-      setMiscFees('');
+      setSelectedRoom("");
+      setFullName("");
+      setRent("");
+      setUtilities("");
+      setMiscFees("");
     }
   }, [isOpen]);
 
@@ -42,10 +42,10 @@ const AddBillingPopup: FunctionComponent<AddBillingPopupProps> = ({
 
   const handleRoomChange = (roomNumber: string) => {
     setSelectedRoom(roomNumber);
-    setFullName('');
-    setRent('');
-    setUtilities('');
-    setMiscFees('');
+    setFullName("");
+    setRent("");
+    setUtilities("");
+    setMiscFees("");
   };
 
   const handleSubmit = () => {
@@ -62,28 +62,37 @@ const AddBillingPopup: FunctionComponent<AddBillingPopupProps> = ({
   };
 
   const handleCancel = () => {
-    setSelectedRoom('');
-    setFullName('');
-    setRent('');
-    setUtilities('');
-    setMiscFees('');
+    setSelectedRoom("");
+    setFullName("");
+    setRent("");
+    setUtilities("");
+    setMiscFees("");
     onClose();
   };
 
   return (
-    <PortalPopup overlayColor="rgba(0, 0, 0, 0.25)" placement="Centered" onOutsideClick={onClose} zIndex={100}>
+    <PortalPopup
+      overlayColor="rgba(0, 0, 0, 0.25)"
+      placement="Centered"
+      onOutsideClick={onClose}
+      zIndex={100}
+    >
       <div className="relative w-full max-w-[612px] bg-white rounded-[32px] shadow-[0px_4px_20px_rgba(0,_0,_0,_0.15)] overflow-hidden">
         <div className="bg-gradient-to-b from-[#096c5b] to-[#16917c] px-[40px] sm:px-[57px] pt-[30px] pb-[40px]">
-          <b className="block text-[24px] sm:text-[32px] text-white mb-2">Add Billing</b>
+          <b className="block text-[24px] sm:text-[32px] text-white mb-2">
+            Add Billing
+          </b>
           <b className="block text-[14px] sm:text-[18px] tracking-[-0.01em] font-inter text-white">
             Add a new billing for your tenant for {selectedMonth}!
           </b>
         </div>
-        
+
         <div className="px-[30px] sm:px-[60px] py-[30px]">
           {/* Room Field */}
           <div className="mb-5">
-            <b className="block text-[12px] sm:text-[14px] font-inter text-darkslategray-100 mb-2">Room</b>
+            <b className="block text-[12px] sm:text-[14px] font-inter text-darkslategray-100 mb-2">
+              Room
+            </b>
             <div className="shadow-[0px_0px_5px_rgba(0,_0,_0,_0.25)] rounded-md bg-white h-10 w-full border border-whitesmoke-200">
               <select
                 value={selectedRoom}
@@ -102,7 +111,9 @@ const AddBillingPopup: FunctionComponent<AddBillingPopupProps> = ({
 
           {/* Name Field */}
           <div className="mb-5">
-            <b className="block text-[12px] sm:text-[14px] font-inter text-darkslategray-100 mb-2">FULL NAME</b>
+            <b className="block text-[12px] sm:text-[14px] font-inter text-darkslategray-100 mb-2">
+              FULL NAME
+            </b>
             <div className="shadow-[0px_0px_5px_rgba(0,_0,_0,_0.25)] rounded-md bg-white h-10 w-full border border-whitesmoke-200">
               <input
                 type="text"
@@ -117,7 +128,9 @@ const AddBillingPopup: FunctionComponent<AddBillingPopupProps> = ({
           {/* Rent and Utilities*/}
           <div className="flex flex-col sm:flex-row gap-4 mb-5">
             <div className="flex-1">
-              <b className="block text-[12px] sm:text-[14px] font-inter text-darkslategray-100 mb-2">RENT</b>
+              <b className="block text-[12px] sm:text-[14px] font-inter text-darkslategray-100 mb-2">
+                RENT
+              </b>
               <div className="shadow-[0px_0px_5px_rgba(0,_0,_0,_0.25)] rounded-md bg-white h-10 w-full border border-whitesmoke-200">
                 <input
                   type="number"
@@ -129,7 +142,9 @@ const AddBillingPopup: FunctionComponent<AddBillingPopupProps> = ({
               </div>
             </div>
             <div className="flex-1">
-              <b className="block text-[12px] sm:text-[14px] font-inter text-darkslategray-100 mb-2">UTILITIES</b>
+              <b className="block text-[12px] sm:text-[14px] font-inter text-darkslategray-100 mb-2">
+                UTILITIES
+              </b>
               <div className="shadow-[0px_0px_5px_rgba(0,_0,_0,_0.25)] rounded-md bg-white h-10 w-full border border-whitesmoke-200">
                 <input
                   type="number"
@@ -144,7 +159,9 @@ const AddBillingPopup: FunctionComponent<AddBillingPopupProps> = ({
 
           {/* Misc Fees Field */}
           <div className="mb-8">
-            <b className="block text-[12px] sm:text-[14px] font-inter text-darkslategray-100 mb-2">MISC. FEES</b>
+            <b className="block text-[12px] sm:text-[14px] font-inter text-darkslategray-100 mb-2">
+              MISC. FEES
+            </b>
             <div className="shadow-[0px_0px_5px_rgba(0,_0,_0,_0.25)] rounded-md bg-white h-10 w-full border border-whitesmoke-200">
               <input
                 type="number"
