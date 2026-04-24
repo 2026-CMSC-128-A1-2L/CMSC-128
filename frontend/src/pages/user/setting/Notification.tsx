@@ -2,9 +2,7 @@ import { Icon } from '@iconify/react';
 import { type FunctionComponent, useCallback } from 'react';
 
 const Notification: FunctionComponent = () => {
-
   return (
-
     <div className="rounded-t-none rounded-b-2xl border-whitesmoke-200 border-solid border flex flex-col py-6 px-8 gap-12 text-center text-black">
       <div className="self-stretch flex flex-col items-start gap-6">
         <div className="text-[1.5rem] font-bold">System Notifications</div>
@@ -13,10 +11,9 @@ const Notification: FunctionComponent = () => {
             <div className="self-stretch flex flex-col items-start gap-[0.5rem]">
               <b className="relative">Default System Notifications Email</b>
               <div className="self-stretch relative leading-[1.5rem] font-medium text-darkslategray-100 text-left">
-                Decide where you want to receive your system updates. System notifications
-                may include account verification approval/rejection, maintenance updates,
-                and new login attempts. You can only choose emails already linked to your
-                ATLAS account.
+                Decide where you want to receive your system updates. System notifications may
+                include account verification approval/rejection, maintenance updates, and new login
+                attempts. You can only choose emails already linked to your ATLAS account.
               </div>
             </div>
             <div className="self-stretch overflow-hidden flex flex-col items-start py-[0.625rem] px-[0rem] text-left text-teal">
@@ -44,9 +41,7 @@ const Notification: FunctionComponent = () => {
           </div>
           <div className="self-stretch overflow-hidden flex flex-col items-start py-[0.625rem] px-[0rem] text-left text-teal">
             <div className="rounded-num-12 bg-aliceblue border-whitesmoke-200 border-solid border-[1px] flex items-center justify-center py-[0.5rem] px-[2rem] gap-[0.5rem]">
-              <div className="relative font-semibold">
-                New Login Attempts, Verification Updates
-              </div>
+              <div className="relative font-semibold">New Login Attempts, Verification Updates</div>
               <Icon icon="tabler:chevron-down-filled" className="w-5 h-5" />
             </div>
           </div>
@@ -63,11 +58,10 @@ const Notification: FunctionComponent = () => {
             <div className="self-stretch flex flex-col items-start gap-[0.5rem] text-center">
               <b className="relative">Default Listings Notifications Email</b>
               <div className="self-stretch relative leading-[1.5rem] font-medium text-darkslategray-100 text-left">
-                Decide where you want to receive your listing/dorm updates. Listing
-                notifications include direct messages from landlord/dorm manager, rent fee
-                reminders, your bookmarked listings that are posted as pasalo units, and
-                ocular visit reminders. You can only choose emails already linked to your
-                ATLAS account.
+                Decide where you want to receive your listing/dorm updates. Listing notifications
+                include direct messages from landlord/dorm manager, rent fee reminders, your
+                bookmarked listings that are posted as pasalo units, and ocular visit reminders. You
+                can only choose emails already linked to your ATLAS account.
               </div>
             </div>
             <div className="self-stretch overflow-hidden flex flex-col items-start py-[0.625rem] px-[0rem] text-teal">
@@ -98,9 +92,7 @@ const Notification: FunctionComponent = () => {
             </div>
             <div className="self-stretch overflow-hidden flex flex-col items-start py-[0.625rem] px-[0rem] text-left text-teal">
               <div className="rounded-num-12 bg-aliceblue border-whitesmoke-200 border-solid border-[1px] flex items-center justify-center py-[0.5rem] px-[2rem] gap-[0.5rem]">
-                <div className="relative font-semibold">
-                  Application Approval, Direct Messages
-                </div>
+                <div className="relative font-semibold">Application Approval, Direct Messages</div>
                 <Icon icon="tabler:chevron-down-filled" className="w-5 h-5" />
               </div>
             </div>
@@ -108,8 +100,7 @@ const Notification: FunctionComponent = () => {
         </div>
       </div>
     </div>
-
-  )
+  );
 };
 
-export default Notification
+export default Notification;

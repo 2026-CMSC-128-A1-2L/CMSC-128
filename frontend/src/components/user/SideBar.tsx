@@ -1,8 +1,8 @@
-import type { FunctionComponent, ReactElement } from "react";
-import search_icon from "../../../assets/sidebar_search.svg";
-import AtlasLogoText from "../../../assets/logo_atlas_text.svg?react";
-import dark_icon from "../../../assets/sidebar_darkmode.svg";
-import { Icon } from "@iconify/react";
+import type { FunctionComponent, ReactElement } from 'react';
+import search_icon from '../../../assets/sidebar_search.svg';
+import AtlasLogoText from '../../../assets/logo_atlas_text.svg?react';
+import dark_icon from '../../../assets/sidebar_darkmode.svg';
+import { Icon } from '@iconify/react';
 
 const SidebarItem = ({
   value,
@@ -13,13 +13,11 @@ const SidebarItem = ({
   active: boolean;
   children: ReactElement[];
 }) => {
-  const textColor = active ? "teal" : "gray";
-  const bar = active ? "bg-teal" : "";
+  const textColor = active ? 'teal' : 'gray';
+  const bar = active ? 'bg-teal' : '';
 
   return (
-    <div
-      className={`relative flex items-center gap-6 text-${textColor} -left-6`}
-    >
+    <div className={`relative flex items-center gap-6 text-${textColor} -left-6`}>
       <div className={`h-12 w-1.25 rounded-sm ${bar}`} />
       <div className="h-11 flex-1 rounded-num-12 flex items-center">
         <div className="flex-1 flex items-center gap-2">
@@ -40,11 +38,7 @@ const SideBar: FunctionComponent = () => {
           <div className="flex-1 overflow-hidden flex items-start">
             <div className="relative font-semibold">Search</div>
           </div>
-          <img
-            className="w-7 rounded-[100px] max-h-full"
-            alt=""
-            src={search_icon}
-          />
+          <img className="w-7 rounded-[100px] max-h-full" alt="" src={search_icon} />
         </div>
         <div className="h-[426px] flex flex-col items-start gap-3">
           <SidebarItem value="Home" active={true}>
@@ -57,10 +51,7 @@ const SideBar: FunctionComponent = () => {
           </SidebarItem>
           <SidebarItem value="Bookmarks" active={false}>
             <Icon icon="material-symbols:bookmark" className="w-7 h-7" />
-            <Icon
-              icon="material-symbols:bookmark-outline"
-              className="w-7 h-7"
-            />
+            <Icon icon="material-symbols:bookmark-outline" className="w-7 h-7" />
           </SidebarItem>
           <SidebarItem value="My Calendar" active={false}>
             <Icon icon="mdi:calendar" className="w-7 h-7" />

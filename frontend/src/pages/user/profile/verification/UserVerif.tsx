@@ -1,8 +1,8 @@
-import { FunctionComponent, useState, useCallback } from "react";
-import { Icon } from "@iconify/react";
-import ProgressBar from "../../../../components/user/ProgressBar";
-import TutorialBubble from "../../../../components/user/Tutorials";
-import TutorialIcon from "../../../../../assets/help-chat.svg";
+import { FunctionComponent, useState, useCallback } from 'react';
+import { Icon } from '@iconify/react';
+import ProgressBar from '../../../../components/user/ProgressBar';
+import TutorialBubble from '../../../../components/user/Tutorials';
+import TutorialIcon from '../../../../../assets/help-chat.svg';
 
 interface UserVerifProps {
   verificationStep: number;
@@ -28,9 +28,7 @@ const UserVerif: FunctionComponent<UserVerifProps> = ({ verificationStep }) => {
           <div className="flex items-center gap-2 text-[#2F3136]">
             <Icon icon="material-symbols:info-outline" className="w-6 h-6" />
             <b className="relative leading-8 ">Submit Documents</b>
-            <b className="relative text-num-14 text-dimgray">
-              0 out of 3 Documents Uploaded
-            </b>
+            <b className="relative text-num-14 text-dimgray">0 out of 3 Documents Uploaded</b>
           </div>
         </div>
         <div className="h-8 w-24 rounded-num-16 bg-aliceblue flex items-center justify-center py-num-0 px-num-12 box-border text-num-14 text-slategray">
@@ -110,9 +108,7 @@ const UserVerif: FunctionComponent<UserVerifProps> = ({ verificationStep }) => {
           <div className="self-stretch flex items-center justify-between py-num-0 pl-num-0 pr-6 gap-0">
             <div className="flex-1 flex items-center gap-4">
               <b className="relative">Notice of Admission</b>
-              <b className="relative text-dimgray">
-                (For Incoming Freshman UP Students)
-              </b>
+              <b className="relative text-dimgray">(For Incoming Freshman UP Students)</b>
               <div className="h-8 w-24 rounded-num-16 bg-white flex items-center justify-center py-num-0 px-num-12 box-border text-center">
                 <b className="relative text-transparent !bg-clip-text [background:linear-gradient(180deg,_#c00f0f,_#e44f4f)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">
                   Missing
@@ -143,11 +139,7 @@ const UserVerif: FunctionComponent<UserVerifProps> = ({ verificationStep }) => {
         className="fixed bottom-10 right-10 z-[1000] cursor-pointer transition-all hover:scale-110 active:scale-95"
         onClick={() => setShowHelp(!showHelp)}
       >
-        <img
-          src={TutorialIcon}
-          alt="Help"
-          className="w-16 h-16 drop-shadow-lg"
-        />
+        <img src={TutorialIcon} alt="Help" className="w-16 h-16 drop-shadow-lg" />
       </div>
     </div>
   );

@@ -9,13 +9,12 @@ const reviewSchema = new mongoose.Schema(
     ratings: {
       quality: { type: Number, required: true, min: 1, max: 5 },
       comfort: { type: Number, required: true, min: 1, max: 5 },
-      environment: { type: Number, required: true, min: 1, max: 5 }
+      environment: { type: Number, required: true, min: 1, max: 5 },
     },
 
     description: { type: String },
-
   },
-  
+
   { timestamps: true },
 );
 

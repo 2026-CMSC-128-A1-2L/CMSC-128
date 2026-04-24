@@ -10,10 +10,13 @@ import {
   createBilling,
   getBilling,
   getBillings,
+  getBillingsSummary,
   updateBilling,
   updateBillingPayment,
 } from './billing.service';
+
 import { AppError } from '../../error';
+import { receiveMessageOnPort } from 'node:worker_threads';
 
 export const routeCreateBilling: RequestHandler = async (req, res, _next) => {
   const params = CreateBillingBodySchema.parse(req.body);
@@ -60,4 +63,11 @@ export const routeGetUserBillings: RequestHandler = async (req, res, next) => {
 export const routeGetUnitBillings: RequestHandler = async (req, res, next) => {
   const unitId = ObjectIdSchema.parse(req.params.unitId);
   res.status(200).json({ data: await getBillings({ unitId }, res.locals.filters) });
+};
+
+export const routeGetBillingsSummary: RequestHandler = async (req, res, next) => {
+  const userId = ObjectIdSchema.parse(req.params.userId);
+  const params = GetBillingsQuerySchema.parse(req.query);
+  const billingsSummary = await getBillingsSummary(userId, params, res.locals.filters);
+  res.status(200).json({ data: billingsSummary });
 };

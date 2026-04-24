@@ -13,26 +13,26 @@ import type { QueryFilter } from 'mongoose';
 // be able to pass.
 const facilityManagerFilter =
   (permission: ManagerPermission | null): RequestHandler =>
-    async (req, res, _next) => {
-      assert.ok(req.user);
-      if (req.user.userType !== 'Manager' && req.user.userType !== 'Landlord')
-        throw new AppError(403, 'Forbidden.');
+  async (req, res, _next) => {
+    assert.ok(req.user);
+    if (req.user.userType !== 'Manager' && req.user.userType !== 'Landlord')
+      throw new AppError(403, 'Forbidden.');
 
-      const managerCriteria: QueryFilter<{
-        userId: mongoose.Types.ObjectId;
-        permissions: ManagerPermissionType;
-      }> = { userId: req.user._id };
-      if (permission) {
-        managerCriteria[`permissions.${permission}`] = true;
-      }
-      const facilityIds = await HousingFacility.find({
-        managers: { $elemMatch: managerCriteria },
-      }).distinct('_id');
+    const managerCriteria: QueryFilter<{
+      userId: mongoose.Types.ObjectId;
+      permissions: ManagerPermissionType;
+    }> = { userId: req.user._id };
+    if (permission) {
+      managerCriteria[`permissions.${permission}`] = true;
+    }
+    const facilityIds = await HousingFacility.find({
+      managers: { $elemMatch: managerCriteria },
+    }).distinct('_id');
 
-      res.locals.filters = {
-        facilityId: { $in: facilityIds },
-      };
+    res.locals.filters = {
+      facilityId: { $in: facilityIds },
     };
+  };
 
 export const manageListingsFilter = facilityManagerFilter('manageListings');
 export const manageApplicationsFilter = facilityManagerFilter('manageApplications');

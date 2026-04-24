@@ -5,6 +5,8 @@ import { AppError } from '../../error';
 import { Rental, type RentalType } from '../rental/rental.model';
 import { sendNotification } from '../notification/notification.service';
 import { buildQuery } from '../../utils';
+import { HousingFacility } from '../facility/facility.model';
+import { Unit } from '../unit/unit.model';
 
 export type CreateBillingArguments = {
   rentalId: mongoose.Types.ObjectId;
@@ -103,4 +105,110 @@ export const updateBillingPayment = async (
 
   billing.totalAmount = amount;
   return await billing.save();
+};
+
+export const getBillingsSummary = async (
+  userId: mongoose.Types.ObjectId,
+  query: Partial<GetBillingArguments>,
+  filters: QueryFilter<BillingType>,
+) => {
+  // Get Facilities owned by User
+  const facilities = await HousingFacility.find({ userId });
+  const facilityIds = facilities.map((f) => f._id);
+
+  // Get all bilings related to those facilities
+  const billings = await Billing.find({ facilityId: { $in: facilityIds } });
+
+  // Generates what occupancy per facility
+  const unitStatistics = await Unit.aggregate([
+    {
+      $match: {
+        facilityId: { $in: facilityIds },
+      },
+    },
+    {
+      $group: {
+        _id: {
+          facilityId: '$facilityId',
+          totalUnits: { $sum: 1 },
+          occupiedUnits: { $cond: [{ gt$: [{ $size: '$currentRentals' }, 0] }, 1, 0] },
+        },
+      },
+    },
+  ]);
+
+  // Generates monthly income and outstanding of facility per month
+  const incomeStatistics = await Billing.aggregate([
+    {
+      $match: {
+        facilityId: { $in: facilityIds },
+      },
+    },
+    {
+      $group: {
+        _id: {
+          facilityId: '$facilityId',
+          year: { $year: 'dueDate' },
+          month: { $month: 'dueDate' },
+        },
+        monthlyIncome: {
+          $sum: { $cond: [{ $eq: ['$paymentStatus', 'paid'] }, 'totalAmount', 0] },
+        },
+        outstanding: {
+          $sum: { $cond: [{ $ne: ['$paymentStatus', 'paid'] }, 'totalAmount', 0] },
+        },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        facilityId: '$_id.facilityId',
+        year: '$_id.year',
+        month: '$_id.month',
+        monthlyIncome: 1,
+        outstanding: 1,
+      },
+    },
+  ]);
+
+  // Calculate Totals
+  const totalIncome = incomeStatistics.reduce((a, c) => a + c.monthlyIncome, 0);
+  const totalOutstnading = incomeStatistics.reduce((a, c) => a + c.outstanding, 0);
+  const totalOccupied = unitStatistics.reduce((a, c) => a + c.occupiedUnits);
+  const totalUnits = unitStatistics.reduce((a, c) => a + c.totalUnits);
+
+  // For cards
+  const billingCards = facilities.map((f) => {
+    const idString = f._id.toString();
+
+    // Add unit data
+    const facilityUnits = unitStatistics.find((u) => idString == u._id.toString());
+
+    // Add total income and outstanding
+    const facilityStatistics = incomeStatistics.filter((u) => idString == u._id.toString());
+    const facilityTotalIncome = facilityStatistics.reduce((a, c) => a + c.monthlyIncome, 0);
+    const facilityTotalOutstanding = facilityStatistics.reduce((a, c) => a + c.outstanding, 0);
+
+    return {
+      id: f.id,
+      name: f.name,
+      thumbnail: f.media[0].value || null,
+      units: facilityUnits.totalUnits,
+      occupiedUnits: facilityUnits.totalOccupied,
+      income: facilityTotalIncome,
+      outstanding: facilityTotalOutstanding,
+    };
+  });
+
+  return {
+    // FOR DASHBOARD
+    dashboard: {
+      totalIncome,
+      totalOutstnading,
+      occupancyRate: Math.round((totalOccupied / totalUnits) * 100),
+      collectionRate: Math.round((totalIncome / (totalIncome + totalOutstnading)) * 100),
+      incomeStatistics,
+    },
+    billingCards,
+  };
 };

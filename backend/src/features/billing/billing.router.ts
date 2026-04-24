@@ -5,6 +5,7 @@ import {
   routeGetBilling,
   routeUpdateBilling,
   routeUpdateBillingPayment,
+  routeGetBillingsSummary,
 } from './billing.controller';
 import { getBillingId, isSuperAdmin, managerFilter, selfFilter } from '../../middleware';
 import { createDocumentRouter } from '../document/document.router';
@@ -82,3 +83,13 @@ router.use(
 );
 
 export default router;
+
+// ============================================================================
+// GET /api/billings/summary
+// Use this to get information for Landlord Finance page.
+// ============================================================================
+router.get(
+  '/:billingId',
+  managerFilter('facility', 'manageBillings', true),
+  routeGetBillingsSummary,
+);

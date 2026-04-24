@@ -1,10 +1,10 @@
-import { FunctionComponent, useState, useRef, useCallback } from "react";
-import PaymentMethods1 from "../../../components/user/PaymentMethods";
-import FinancePopup from "../../../components/user/FinancePopup";
-import PaymentMethods from "../../../components/user/SubmitReceipt";
-import { useNavigate } from "react-router-dom";
-import { Icon } from "@iconify/react";
-import SideBar from "../../../components/user/SideBar";
+import { FunctionComponent, useState, useRef, useCallback } from 'react';
+import PaymentMethods1 from '../../../components/user/PaymentMethods';
+import FinancePopup from '../../../components/user/FinancePopup';
+import PaymentMethods from '../../../components/user/SubmitReceipt';
+import { useNavigate } from 'react-router-dom';
+import { Icon } from '@iconify/react';
+import SideBar from '../../../components/user/SideBar';
 
 const FinanceforDev: FunctionComponent = () => {
   const buttonContainerRef = useRef<HTMLDivElement>(null);
@@ -33,7 +33,7 @@ const FinanceforDev: FunctionComponent = () => {
   }, []);
 
   const onFinanceContainerClick = useCallback(() => {
-    navigate("/");
+    navigate('/');
   }, [navigate]);
 
   return (
@@ -46,19 +46,14 @@ const FinanceforDev: FunctionComponent = () => {
               <div className="self-stretch h-[1012px] flex flex-col items-start gap-3 shrink-0">
                 <div className="w-[1128px] h-16 overflow-hidden shrink-0 hidden items-center p-num-10 box-border gap-2.5">
                   <div className="h-6 w-[89px] hidden items-center gap-1.5">
-                    <div className="relative font-medium hidden shrink-0">
-                      View Tenants
-                    </div>
+                    <div className="relative font-medium hidden shrink-0">View Tenants</div>
                     <img className="h-6 w-6 relative hidden shrink-0" alt="" />
-                    <div className="relative font-medium hidden shrink-0">
-                      All
-                    </div>
+                    <div className="relative font-medium hidden shrink-0">All</div>
                   </div>
                   <div className="w-[704px] rounded-num-12 bg-aliceblue overflow-hidden shrink-0 flex items-center py-num-10 px-6 box-border gap-2.5 text-dimgray font-inter">
                     <img className="h-6 w-6 relative" alt="" />
                     <b className="relative">
-                      Search for Dorms, Apartments, or Locations (e.g. UPLB,
-                      Umali Subdivision)
+                      Search for Dorms, Apartments, or Locations (e.g. UPLB, Umali Subdivision)
                     </b>
                   </div>
                 </div>
@@ -67,9 +62,7 @@ const FinanceforDev: FunctionComponent = () => {
                     <div className="self-stretch flex items-center justify-between gap-5">
                       <div className="h-8 w-[258px] flex flex-col items-center justify-end">
                         <div className="w-[246px] flex items-center gap-10">
-                          <b className="relative leading-num-32 shrink-0">
-                            Finance
-                          </b>
+                          <b className="relative leading-num-32 shrink-0">Finance</b>
                           <div className="h-12 w-[300px] rounded-num-16 bg-aliceblue overflow-hidden shrink-0 hidden items-center py-2 px-3 box-border" />
                         </div>
                       </div>
@@ -82,40 +75,26 @@ const FinanceforDev: FunctionComponent = () => {
                   <div className="self-stretch flex-1 flex flex-col items-start gap-8 text-num-14 font-lora">
                     <div className="self-stretch h-[120px] flex flex-col items-start justify-center py-num-0 px-3 box-border gap-1">
                       <div className="self-stretch flex items-start justify-between gap-5 text-num-24 font-inter">
-                        <b className="relative leading-num-32">
-                          One Sapphire Place
-                        </b>
+                        <b className="relative leading-num-32">One Sapphire Place</b>
                         <div
                           className="w-[200px] rounded-num-12 bg-lightcyan-100 overflow-hidden shrink-0 flex items-center justify-center p-num-10 box-border gap-2.5 cursor-pointer text-center text-num-14 text-teal"
                           ref={buttonContainerRef}
                           onClick={openSubmitReceipt}
                         >
                           <div className="overflow-hidden flex flex-col items-start">
-                            <Icon
-                              icon="tabler:currency-peso"
-                              className="h-5 w-5 relative"
-                            />
+                            <Icon icon="tabler:currency-peso" className="h-5 w-5 relative" />
                           </div>
-                          <div className="relative font-semibold">
-                            Payment Methods
-                          </div>
+                          <div className="relative font-semibold">Payment Methods</div>
                         </div>
                       </div>
                       <div className="self-stretch flex items-center py-num-0 px-[11px] gap-2">
-                        <Icon
-                          icon="mdi-light:map-marker"
-                          className="h-5 w-5 relative"
-                        />
+                        <Icon icon="mdi-light:map-marker" className="h-5 w-5 relative" />
                         <b className="flex-1 relative">
-                          Lot 3, Block 17, Sapphire St, Umali Subd, Los Baños,
-                          Philippines, 4030
+                          Lot 3, Block 17, Sapphire St, Umali Subd, Los Baños, Philippines, 4030
                         </b>
                       </div>
                       <div className="self-stretch flex items-center py-num-0 px-[11px] gap-2">
-                        <Icon
-                          icon="mdi-light:map-marker"
-                          className="h-5 w-5 relative"
-                        />
+                        <Icon icon="mdi-light:map-marker" className="h-5 w-5 relative" />
                         <b className="flex-1 relative">0969 014 8776</b>
                       </div>
                     </div>
@@ -287,10 +266,7 @@ const FinanceforDev: FunctionComponent = () => {
                                   <div className="self-stretch w-[62px] relative tracking-num-0_04 font-semibold flex items-center justify-center shrink-0">
                                     12 Months
                                   </div>
-                                  <Icon
-                                    icon="tabler:chevron-down-filled"
-                                    className="w-5 h-5"
-                                  />
+                                  <Icon icon="tabler:chevron-down-filled" className="w-5 h-5" />
                                 </div>
                               </div>
                             </div>
@@ -316,9 +292,7 @@ const FinanceforDev: FunctionComponent = () => {
                                 className="w-20 rounded-num-12 bg-lightcyan-100 overflow-hidden shrink-0 flex items-center justify-center p-num-10 box-border cursor-pointer text-center text-teal"
                                 onClick={openPaymentMethods}
                               >
-                                <div className="relative font-semibold">
-                                  Pay Now
-                                </div>
+                                <div className="relative font-semibold">Pay Now</div>
                               </div>
                             </div>
                             <div className="self-stretch rounded-num-8 border-whitesmoke-200 border-solid border-[1px] overflow-hidden flex items-center justify-between py-2 px-num-10 gap-5">
@@ -337,9 +311,7 @@ const FinanceforDev: FunctionComponent = () => {
                                 className="w-20 rounded-num-12 bg-lightcyan-100 overflow-hidden shrink-0 flex items-center justify-center p-num-10 box-border cursor-pointer text-center text-teal"
                                 onClick={openPaymentMethods}
                               >
-                                <div className="relative font-semibold">
-                                  Pay Now
-                                </div>
+                                <div className="relative font-semibold">Pay Now</div>
                               </div>
                             </div>
                           </div>
@@ -352,15 +324,11 @@ const FinanceforDev: FunctionComponent = () => {
                           </div>
                         </div>
                         <div className="self-stretch flex-1 overflow-hidden flex flex-col items-start py-1 px-num-0 gap-2.5 text-num-14 text-darkslategray-100">
-                          <b className="self-stretch relative">
-                            Billing History
-                          </b>
+                          <b className="self-stretch relative">Billing History</b>
                           <div className="self-stretch flex-1 overflow-hidden flex flex-col items-start py-num-0 px-3 gap-2 text-left text-num-12">
                             <div className="self-stretch rounded-num-8 border-whitesmoke-200 border-solid border-[1px] overflow-hidden flex items-center py-1 px-3">
                               <div className="self-stretch overflow-hidden flex flex-col items-start py-1 pl-num-0 pr-num-10 gap-1">
-                                <div className="relative font-semibold">
-                                  January 15, 2026
-                                </div>
+                                <div className="relative font-semibold">January 15, 2026</div>
                                 <div className="relative text-[10px] tracking-num-0_04 font-semibold font-lora text-dimgray">
                                   Php 4500.00
                                 </div>
@@ -368,9 +336,7 @@ const FinanceforDev: FunctionComponent = () => {
                             </div>
                             <div className="self-stretch rounded-num-8 border-whitesmoke-200 border-solid border-[1px] overflow-hidden flex items-center py-1 px-3">
                               <div className="self-stretch overflow-hidden flex flex-col items-start py-1 pl-num-0 pr-num-10 gap-1">
-                                <div className="relative font-semibold">
-                                  February 15, 2026
-                                </div>
+                                <div className="relative font-semibold">February 15, 2026</div>
                                 <div className="relative text-[10px] tracking-num-0_04 font-semibold font-lora text-dimgray">
                                   Php 4500.00
                                 </div>
@@ -378,9 +344,7 @@ const FinanceforDev: FunctionComponent = () => {
                             </div>
                             <div className="self-stretch rounded-num-8 border-whitesmoke-200 border-solid border-[1px] overflow-hidden flex items-center py-1 px-3">
                               <div className="self-stretch overflow-hidden flex flex-col items-start py-1 pl-num-0 pr-num-10 gap-1">
-                                <div className="relative font-semibold">
-                                  March 15, 2026
-                                </div>
+                                <div className="relative font-semibold">March 15, 2026</div>
                                 <div className="relative text-[10px] tracking-num-0_04 font-semibold font-lora text-dimgray">
                                   Php 4500.00
                                 </div>
@@ -399,16 +363,10 @@ const FinanceforDev: FunctionComponent = () => {
                 <div className="flex-1 flex items-center gap-20">
                   <div className="flex items-center gap-4">
                     <div className="flex items-center gap-2">
-                      <img
-                        className="w-12 relative max-h-full object-cover"
-                        alt=""
-                      />
+                      <img className="w-12 relative max-h-full object-cover" alt="" />
                       <div className="flex items-center gap-3">
                         <div className="flex items-center gap-1">
-                          <Icon
-                            icon="tabler:copyright"
-                            className="h-5 w-5 relative"
-                          />
+                          <Icon icon="tabler:copyright" className="h-5 w-5 relative" />
                           <b className="relative">2026</b>
                         </div>
                         <div className="flex items-center justify-center">

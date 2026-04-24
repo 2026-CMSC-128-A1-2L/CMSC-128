@@ -3,11 +3,8 @@ import { Icon } from '@iconify/react';
 import checked_radio_button from '../../../../assets/checked_button.svg';
 import unchecked_radio_button from '../../../../assets/unchecked_button.svg';
 
-
 const Preferences: FunctionComponent = () => {
-
   return (
-
     <div className="self-stretch rounded-t-num-0 rounded-b-num-16 border-whitesmoke-200 border-solid border-[1px] overflow-hidden flex flex-col items-start py-6 px-6 sm:px-num-32 gap-6 text-center text-[24px] text-black">
       <div className="self-stretch flex flex-col items-start">
         <b className="relative leading-8">Display</b>
@@ -17,8 +14,8 @@ const Preferences: FunctionComponent = () => {
           <div className="self-stretch flex flex-col items-start gap-2">
             <b className="relative">Theme Preferences</b>
             <div className="self-stretch relative leading-6 font-medium text-darkslategray-100 text-left">
-              Choose how ATLAS looks to you. Selections are applied immediately and
-              saved automatically.
+              Choose how ATLAS looks to you. Selections are applied immediately and saved
+              automatically.
             </div>
           </div>
         </div>
@@ -55,11 +52,7 @@ const Preferences: FunctionComponent = () => {
             <div className="self-stretch h-12 overflow-hidden shrink-0 flex flex-col items-start justify-center p-num-10 box-border">
               <div className="flex items-center shrink-0">
                 <div className="h-12 w-12 flex items-center justify-center">
-                  <img
-                    className="h-6 w-6 rounded-[100px]"
-                    alt=""
-                    src={checked_radio_button}
-                  />
+                  <img className="h-6 w-6 rounded-[100px]" alt="" src={checked_radio_button} />
                 </div>
                 <b className="relative">Light Mode</b>
               </div>
@@ -97,11 +90,7 @@ const Preferences: FunctionComponent = () => {
             <div className="self-stretch h-12 overflow-hidden shrink-0 flex flex-col items-start justify-center p-num-10 box-border">
               <div className="flex items-center shrink-0">
                 <div className="h-12 w-12 flex items-center justify-center">
-                  <img
-                    className="h-6 w-6 rounded-[100px]"
-                    alt=""
-                    src={unchecked_radio_button}
-                  />
+                  <img className="h-6 w-6 rounded-[100px]" alt="" src={unchecked_radio_button} />
                 </div>
                 <b className="relative">Dark Mode</b>
               </div>
@@ -110,10 +99,7 @@ const Preferences: FunctionComponent = () => {
         </div>
       </div>
     </div>
-
-  )
-
+  );
 };
 
 export default Preferences;
-
