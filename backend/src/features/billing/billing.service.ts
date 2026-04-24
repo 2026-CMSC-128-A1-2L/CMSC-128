@@ -216,31 +216,28 @@
     query: Partial<GetBillingArguments>,
     filters: QueryFilter<BillingType>,
   ) => {
+
     const facility = await HousingFacility.findById(facilityId);
     if (!facility) throw new AppError(404, 'Facility not found');
     
 
     // Generates what occupancy per facility
-      const unitStatistics = await Unit.aggregate([
-      {
-        $match:{ facilityId }
-      },
+    const unitStatResults = await Unit.aggregate([
+      {$match:{ facilityId }},
       {
         $group: {
-          _id: {
-            facilityId: '$facilityId',
-            totalUnits: { $sum: 1 },
-            occupiedUnits: { $cond: [{ $gt: [{ $size: '$currentRentals' }, 0] }, 1, 0] },
-          },
+          _id: '$facilityId', 
+          totalUnits: { $sum: 1 },
+          occupiedUnits: { $sum: { $cond: [{ $gt: [{ $size: { $ifNull: ['$currentRentals',[]] } }, 0] }, 1, 0] }},
         },
       },
     ]);
-
+    
+    const unitStatistics = unitStatResults[0] || { _id:facilityId ,totalUnits: 0, occupiedUnits: 0 };
+    
     // Generates Income statistics
     const facilityStatistics = await Billing.aggregate([
-      {
-        $match:{ facilityId }
-      },
+      {$match:{ facilityId }},
       {
         // allows for multiple aggregations
         $facet:{
@@ -271,11 +268,11 @@
           ],
           'breakdown':[
             {$match: {paymentStatus:'paid'}},
-            {$unwind:'$breakdown.type'},
+            {$unwind:'$breakdown'},
             {
               $group:{
-                _id: '$breakdown.type.name',
-                value: { $sum: '$breakdown.type.amount' }
+                _id: '$breakdown.name',
+                value: { $sum: '$breakdown.amount' }
               }
             },
             {
@@ -287,7 +284,36 @@
         }
       }
     ]);
-
-    return;
+    const {monthlyStatistics, breakdown} = facilityStatistics[0]  || { monthlyStatistics: [], breakdown: [] };
+    // Global totals
+    const totalIncome = monthlyStatistics.reduce((a:number,c:{monthlyIncome:number}) => a + c.monthlyIncome, 0);
+    const totalOutstanding = monthlyStatistics.reduce((a:number,c:{outstanding:number}) => a + c.outstanding, 0);
+    const totalUnpaidBills = monthlyStatistics.reduce((a:number,c:{unpaid:number}) => a + c.unpaid, 0);
+    const totalBillsGenerated = monthlyStatistics.reduce((a:number,c:{totalBills:number}) => a + c.totalBills, 0);
+    
+    // Rates
+    const collectionRate = (totalIncome + totalOutstanding) > 0 ? (totalIncome / (totalIncome + totalOutstanding)) * 100 : 0;
+    const occupancyRate = unitStatistics.totalUnits > 0 ? (unitStatistics.occupiedUnits / unitStatistics.totalUnits) * 100 : 0;
+    return{
+      facilityInfo:{
+        name: facility.name,
+        address: facility.location.text ?? null,
+      },
+      overview:{
+        income: totalIncome,
+        unpaid: totalUnpaidBills,
+        totalBills: totalBillsGenerated,
+        occupancy: {
+          occupied: unitStatistics.occupiedUnits,
+          total: unitStatistics.totalUnits,
+        }
+      },
+      charts:{
+        montlyIncome: monthlyStatistics,
+        incomeBreakdown: breakdown,
+        collectionRate,
+        occupancyRate
+      }
+    }
   }
 
