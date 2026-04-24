@@ -8,7 +8,6 @@ export default function Header() {
       <p>Current Dorm</p>
       <img src={RightArrow}></img>
       <p>Report</p>
-      <img src={RightArrow}></img>
       
     </div>
   )
