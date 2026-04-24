@@ -3,11 +3,12 @@ import { FunctionComponent } from 'react';
 
 export type SetAvailableTimeType = {
   	className?: string;
+  	onClose?: () => void;
 }
 
 
 
-const SetAvailableTime: FunctionComponent<SetAvailableTimeType> = ({ className="" }) => {
+const SetAvailableTime: FunctionComponent<SetAvailableTimeType> = ({ className="", onClose }) => {
   	return (
     		<div className={`relative rounded-2xl bg-white overflow-hidden flex flex-col items-start py-num-32 px-12 box-border gap-2.5 max-w-full max-h-full text-center text-[24px] text-teal font-inter ${className}`}>
       			<div className="self-stretch overflow-hidden flex flex-col items-start p-num-10 gap-2.5">
@@ -97,12 +98,20 @@ const SetAvailableTime: FunctionComponent<SetAvailableTimeType> = ({ className="
         				</div>
       			</div>
       			<div className="self-stretch flex items-center justify-center gap-4 text-left text-num-14 text-crimson">
-        				<div className="rounded-num-12 flex items-center justify-center py-2 px-num-24">
+        				<button
+          					type="button"
+          					onClick={onClose}
+          					className="rounded-num-12 flex items-center justify-center py-2 px-num-24 cursor-pointer hover:bg-red-50 transition-colors border-none bg-transparent"
+        				>
           					<div className="relative font-semibold inline-block max-w-[269.11px]">Cancel</div>
-        				</div>
-        				<div className="rounded-num-12 bg-lightcyan-200 overflow-hidden flex items-center justify-center py-2 px-num-24 text-teal">
+        				</button>
+        				<button
+          					type="button"
+          					onClick={onClose}
+          					className="rounded-num-12 bg-lightcyan-200 overflow-hidden flex items-center justify-center py-2 px-num-24 text-teal cursor-pointer hover:bg-teal-100 transition-colors border-none"
+        				>
           					<div className="relative font-semibold inline-block max-w-[269.11px]">Save</div>
-        				</div>
+        				</button>
       			</div>
     		</div>);
 };
