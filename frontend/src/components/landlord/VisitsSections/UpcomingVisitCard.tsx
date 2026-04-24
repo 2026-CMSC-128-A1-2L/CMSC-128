@@ -7,10 +7,10 @@ type UpcomingVisitCardProps = {
 };
 
 const getColorForProperty = (name: string): string => {
-  if (name.includes('One')) return 'bg-rose-300';
-  if (name.includes('Two')) return 'bg-amber-300';
-  if (name.includes('Three')) return 'bg-lightcyan';
-  return 'bg-gray-300';
+  if (name.includes('One')) return 'bg-pastel_pink';
+  if (name.includes('Two')) return 'bg-pastel_yellow';
+  if (name.includes('Three')) return 'bg-pastel_blue';
+  return 'bg-aliceblue';
 };
 
 export default function UpcomingVisitCard({

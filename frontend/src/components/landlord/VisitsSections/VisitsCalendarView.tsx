@@ -17,49 +17,49 @@ const defaultVisits: VisitSlot[] = [
     id: '1',
     time: '10:30 AM',
     visitorName: 'Espinocilla',
-    backgroundColor: 'bg-pink-200',
+    backgroundColor: 'bg-pastel_pink',
     dayOfWeek: 0, // Sunday
   },
   {
     id: '2',
     time: '9:00 AM',
     visitorName: 'Revilla',
-    backgroundColor: 'bg-cyan-300',
+    backgroundColor: 'bg-pastel_blue',
     dayOfWeek: 1, // Monday
   },
   {
     id: '3',
     time: '10:00 AM',
     visitorName: 'Caduyac',
-    backgroundColor: 'bg-yellow-400',
+    backgroundColor: 'bg-pastel_yellow',
     dayOfWeek: 2, // Tuesday
   },
   {
     id: '4',
     time: '3:30 PM',
     visitorName: 'Doroja',
-    backgroundColor: 'bg-yellow-400',
+    backgroundColor: 'bg-pastel_yellow',
     dayOfWeek: 2, // Tuesday
   },
   {
     id: '5',
     time: '11:00 AM',
     visitorName: 'Santos',
-    backgroundColor: 'bg-yellow-400',
+    backgroundColor: 'bg-pastel_pink',
     dayOfWeek: 5, // Friday
   },
   {
     id: '6',
     time: '11:00 AM',
     visitorName: 'Cunanan',
-    backgroundColor: 'bg-cyan-300',
+    backgroundColor: 'bg-pastel_blue',
     dayOfWeek: 4, // Thursday
   },
   {
     id: '7',
     time: '4:00 PM',
     visitorName: 'De Castro',
-    backgroundColor: 'bg-cyan-300',
+    backgroundColor: 'bg-pastel_blue',
     dayOfWeek: 1, // Monday
   },
 ];
