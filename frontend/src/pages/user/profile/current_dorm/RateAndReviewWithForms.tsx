@@ -1,4 +1,5 @@
 import { FunctionComponent, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
 import Location from "../../../../../assets/pin_location_icon.svg";
@@ -12,9 +13,11 @@ import FilledTreeIcon from "../../../../../assets/environment_tree_icon_filled.s
 import SideBar from "../../../../components/user/SideBar";
 
 const RateAndReview: FunctionComponent = () => {
+  const navigate = useNavigate();
+
   const onUserProfileTextClick = useCallback(() => {
-    // Add your code here
-  }, []);
+    navigate("/rate-review-upload");
+  }, [navigate]);
 
   const [qualityRating, setQualityRating] = useState(0);
   const [comfortRating, setComfortRating] = useState(0);
@@ -26,7 +29,7 @@ const RateAndReview: FunctionComponent = () => {
       <div className="w-full max-w-[1440px] min-h-screen overflow-hidden flex flex-col items-start z-[1] mx-auto">
         <div className="self-stretch flex-1 overflow-hidden flex flex-col items-start py-num-0 pl-num-0 pr-20">
           <div className="self-stretch flex-1 flex items-center gap-8 shrink-0">
-            <div className="self-stretch w-[200px] flex items-start shrink-0">
+            <div className="fixed top-0 left-0 h-full w-[200px] hidden md:block z-10">
               <SideBar />
             </div>
             <div className="h-[1112px] hidden flex-col items-center shrink-0">
@@ -271,7 +274,10 @@ const RateAndReview: FunctionComponent = () => {
                         className="absolute h-[88.75%] w-[95.89%] top-[6.34%] left-[2.43%] leading-6 font-medium flex items-center bg-transparent border-none outline-none focus:ring-0 placeholder-dimgray font-inter text-[14px] text-black"
                       />
                     </div>
-                    <button className="absolute top-[0px] left-[627.93px] w-[108px] h-8 text-center text-white font-lora border-none bg-transparent cursor-pointer p-0 group">
+                    <button
+                      className="absolute top-[0px] left-[627.93px] w-[108px] h-8 text-center text-white font-lora border-none bg-transparent cursor-pointer p-0 group"
+                      onClick={onUserProfileTextClick}
+                    >
                       <div className="absolute h-[337.5%] w-[29.63%] top-[100%] right-[70.37%] bottom-[-337.5%] left-[0%] shadow-[0px_0px_4px_rgba(0,_0,_0,_0.25)] rounded-[6.17px] bg-darkslategray-200 [transform:_rotate(-90deg)] [transform-origin:0_0] group-hover:brightness-125 transition-all" />
                       <div className="absolute h-[101.25%] w-[100.28%] top-[0%] left-[0%] font-medium flex items-center justify-center text-[14px]">
                         Submit

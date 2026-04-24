@@ -1,13 +1,16 @@
 import { FunctionComponent, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { Icon } from "@iconify/react";
 import Location from "../../../../../assets/pin_location_icon.svg";
 import House from "../../../../../assets/house_icon.svg";
 import SideBar from "../../../../components/user/SideBar";
 
 const RateAndReview: FunctionComponent = () => {
+  const navigate = useNavigate();
+
   const onUserProfileTextClick = useCallback(() => {
-    // Add your code here
-  }, []);
+    navigate("/rate-review-form");
+  }, [navigate]);
 
   return (
     <div className="w-full h-screen relative overflow-y-auto flex flex-col items-start isolate gap-2.5 text-left text-num-14 text-darkslategray-100 font-lora">
@@ -15,7 +18,7 @@ const RateAndReview: FunctionComponent = () => {
       <div className="w-full max-w-[1440px] min-h-screen overflow-hidden flex flex-col items-start z-[1] mx-auto">
         <div className="self-stretch flex-1 overflow-hidden flex flex-col items-start py-num-0 pl-num-0 pr-20">
           <div className="w-[1440px] flex-1 flex items-center shrink-0">
-            <div className="self-stretch w-[200px] flex items-start">
+            <div className="fixed top-0 left-0 h-full w-[200px] hidden md:block z-10">
               <SideBar />
             </div>
             {/* <SideBar /> */}
