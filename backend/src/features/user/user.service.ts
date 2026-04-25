@@ -4,6 +4,7 @@ import { Student, User } from './user.model';
 import { AppError } from '../../error';
 import { sendNotification } from '../notification/notification.service';
 import assert from 'node:assert';
+import { UserTypeType } from 'shared';
 
 export type CreateUserParams = {
   firstName: string;
@@ -85,7 +86,7 @@ export const deleteUser = async (userId: mongoose.Types.ObjectId) => {
 
 type GetUsersArguments = {
   userID?: mongoose.Types.ObjectId | null;
-  userType?: 'Admin' | 'Student' | 'Manager' | 'Landlord';
+  userType?: UserTypeType;
 };
 
 export const getUsers = async (params: GetUsersArguments) => {

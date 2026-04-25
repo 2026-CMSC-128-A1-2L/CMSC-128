@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { documentSchema, type DocumentType } from '../document/document.model';
+import { UserStatus, UserTypeType, USER_STATUS, USER_TYPE } from 'shared';
 
 export type UserType = {
   _id: mongoose.Types.ObjectId;
@@ -17,8 +18,8 @@ export type UserType = {
     google: string[];
   };
 
-  status: 'setup' | 'unverified' | 'verified' | 'inactive' | 'disabled';
-  userType: 'Admin' | 'Landlord' | 'Manager' | 'Student';
+  status: UserStatus;
+  userType: UserTypeType;
 
   documents: DocumentType[];
   verificationStatus: 'pending' | 'submitted' | 'rejected' | 'approved';
@@ -66,7 +67,7 @@ const userSchema = new mongoose.Schema<UserType>(
     //   verify again.
     status: {
       type: String,
-      enum: ['setup', 'unverified', 'verified', 'inactive', 'disabled'],
+      enum: USER_STATUS,
       default: 'setup',
       required: true,
     },
@@ -87,7 +88,7 @@ const userSchema = new mongoose.Schema<UserType>(
     // Make sure to fill up fields for the user type.
     userType: {
       type: String,
-      enum: ['Admin', 'Landlord', 'Manager', 'Student'],
+      enum: USER_TYPE,
       required: true,
     },
     documents: { type: [documentSchema], required: true, default: [] },
