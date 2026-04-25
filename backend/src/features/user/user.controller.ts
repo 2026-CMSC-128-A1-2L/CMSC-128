@@ -71,17 +71,12 @@ export const routeOnboardSelf: RequestHandler = async (req, res, _next) => {
 
 export const routeDeleteSelf: RequestHandler = async (req, res, _next) => {
   assert.ok(req.user);
-  const userId = req.user._id;
-  const user = await deleteUser(userId);
-  if (!user) throw new AppError(404, 'User not found.');
-  res.status(200).json({ data: user });
+  res.status(200).json({ data: await deleteUser(req.user._id) });
 };
 
 export const routeDeleteUser: RequestHandler = async (req, res, _next) => {
   const userId = ObjectIdSchema.parse(req.params.userId);
-  const user = await deleteUser(userId);
-  if (!user) throw new AppError(404, 'User not found.');
-  res.status(200).json({ data: user });
+  res.status(200).json({ data: await deleteUser(userId) });
 };
 
 export const routeApproveUser: RequestHandler = async (req, res, _next) => {

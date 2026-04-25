@@ -61,8 +61,9 @@ export const getUserById = async (userId: mongoose.Types.ObjectId) => {
 };
 
 export const deleteUser = async (userId: mongoose.Types.ObjectId) => {
-  return await User.findOneAndUpdate(
-    { _id: userId },
+  const user = await User.findOneAndUpdate(
+    // can only disabled accounts that are not disabled.
+    { _id: userId, status: { $ne: 'disabled' } },
     {
       $set: {
         status: 'disabled',
@@ -78,6 +79,8 @@ export const deleteUser = async (userId: mongoose.Types.ObjectId) => {
     },
     { returnDocument: 'after' },
   ).lean();
+  if (!user) throw new AppError(404, 'User not found.');
+  return user;
 };
 
 type GetUsersArguments = {
