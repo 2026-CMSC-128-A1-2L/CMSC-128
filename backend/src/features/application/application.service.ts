@@ -98,30 +98,23 @@ export const deleteApplication = async (
   return await ApplicationForm.where(filters).findOneAndDelete({ _id: applicationId });
 };
 
+// TODO: fix these messages
 const statusMessages: Record<string, { subject: string; content: string }> = {
-  'manager-approved': {
-    subject: 'Application Approved',
-    content: 'Your application has been approved by the manager.',
+  waitlisted: {
+    subject: 'Waitlisted',
+    content: 'Your application has been approved by the manager. You are now on the waitlist.',
   },
-  'manager-rejected': {
-    subject: 'Application Rejected',
-    content: 'Your application has been rejected by the manager.',
-  },
-  'manager-waitlisted': {
-    subject: 'Application Waitlisted',
-    content: 'Your application has been waitlisted by the manager.',
-  },
-  'landlord-approved': {
-    subject: 'Application Approved',
+  approved: {
+    subject: 'Approved',
     content: 'Your application has been approved by the landlord.',
   },
-  'landlord-rejected': {
+  rejected: {
     subject: 'Application Rejected',
     content: 'Your application has been rejected by the landlord.',
   },
-  'landlord-waitlisted': {
-    subject: 'Application Waitlisted',
-    content: 'Your application has been waitlisted by the landlord.',
+  'contract-signed': {
+    subject: 'Contract Signed',
+    content: 'Your contract has been signed.',
   },
 };
 
