@@ -12,7 +12,7 @@ import {
   routeRejectFacility,
 } from './facility.controller';
 import { routeCreateListing } from '../listing/listing.controller';
-import { routeGetFacilityReviews } from '../review/review.controller';
+import { routeGetFacilityReviews, routeGetAverageRatingsByFacility } from '../review/review.controller';
 import {
   correctLandlordFilter,
   isLandlord,
@@ -107,6 +107,14 @@ router.post('/:facilityId/listings', managerFilter('direct', 'manageListings'), 
 // - Uses relation: Facility → Listings → Reviews
 // - Empty array is valid if no reviews
 router.get('/:facilityId/reviews', listingViewFilter, routeGetFacilityReviews);
+
+// GET /api/facilities/:facilityId/average-ratings
+//
+// Returns average quality, comfort, environment, and overall ratings
+// across all reviews for all listings within the facility.
+//
+// Any user type
+router.get('/:facilityId/average-ratings', routeGetAverageRatingsByFacility);
 
 // POST /api/facilities/:facilityId/approve
 //
