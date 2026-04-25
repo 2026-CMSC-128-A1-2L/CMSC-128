@@ -63,7 +63,7 @@ export default function CurrentDormInfoCard(props: CurrentDormInfoCardProps) {
         <div className="flex overflow-x-auto gap-3 mt-auto">
           {DormitoryTags.map((tags,tagsIndex)=>{
             return(
-              <span className="px-5 py-2.5 rounded-lg bg-[#cbf6ed] border border-[#024338] text-[#024338] text-[15px] font-medium font-lora">
+              <span key={tagsIndex} className="px-5 py-2.5 rounded-lg bg-[#cbf6ed] border border-[#024338] text-[#024338] text-[15px] font-medium font-lora">
                 {tags}
               </span>
             )

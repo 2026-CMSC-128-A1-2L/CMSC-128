@@ -4,6 +4,8 @@ import DormitoryImg from '../../../../../assets/image.png'
 import SideBar from "../../../../components/user/SideBar"
 import Header from "../../../../components/user-report/Header"
 import InfoContent from "../../../../components/user-report/InfoContent"
+import ReviewContent from "../../../../components/user-report/ReviewContent"
+import FinalizeContent from "../../../../components/user-report/FinalizeContent"
 import { useState } from "react"
 export default function Reportv2() {
     const LandlordName="Quevin Custodio"
@@ -18,7 +20,8 @@ export default function Reportv2() {
     const StepIndicatorStages=["Information","Reviewing","Finalize"]
 
     const [reportStages,setReportStages]=useState(1)
-    const [currentStep,setCurrentStep]=useState(1)
+    const [reportJsonData,setReportJsonData]=useState('')
+
 
     return (
         <>
@@ -36,9 +39,11 @@ export default function Reportv2() {
                             DormitoryImage={DormitoryImage}
                             DormitoryTags={DormitoryTags}
                         />
-                        <StepIndicator currentStep={currentStep} steps={StepIndicatorStages}/>
+                        <StepIndicator currentStep={reportStages} steps={StepIndicatorStages}/>
                         
-                        <InfoContent reportStages={reportStages} />
+                        {reportStages===1 && <InfoContent reportStages={reportStages} setReportStages={setReportStages}/>}
+                        {reportStages===2 && <ReviewContent reportStages={reportStages} setReportStages={setReportStages} reportJsonData={reportJsonData} setReportJsonData={setReportJsonData}/>}
+                        {reportStages===3 && <FinalizeContent reportStages={reportStages} setReportStages={setReportStages} reportJsonData={reportJsonData}/>}
                     </div>
                 </div>
                 
