@@ -15,10 +15,10 @@ import { routeCreateListing } from '../listing/listing.controller';
 import { routeGetFacilityReviews } from '../review/review.controller';
 import {
   correctLandlordFilter,
+  directManagerFilter,
   isLandlord,
   isSuperAdmin,
   listingViewFilter,
-  managerFilter,
 } from '../../middleware';
 import { routeGetVisitBookingsByFacility } from '../booking/booking.controller';
 
@@ -59,11 +59,7 @@ router.get('/:facilityId', routeGetFacility);
 // Edits a facility.
 //
 // manager with manageListings permission only
-router.patch(
-  '/:facilityId',
-  managerFilter('facility-direct', 'manageListings'),
-  routeUpdateFacility,
-);
+router.patch('/:facilityId', directManagerFilter('manageListings'), routeUpdateFacility);
 
 // DELETE /api/facilities/:facilityId
 //
@@ -92,7 +88,7 @@ router.patch('/:facilityId/managers/:managerId', isLandlord, routeUpdateManagerP
 // POST /api/facilities/:facilityId/listings
 //
 // Manager with manageListings permission or landlord
-router.post('/:facilityId/listings', managerFilter('direct', 'manageListings'), routeCreateListing); // TODO: fix implementation, use parameter
+router.post('/:facilityId/listings', directManagerFilter('manageListings'), routeCreateListing); // TODO: fix implementation, use parameter
 
 // GET /api/facilities/:facilityId/reviews
 // Input:
@@ -123,7 +119,7 @@ router.post('/:facilityId/reject', isSuperAdmin, routeRejectFacility);
 // ============================================================================
 router.get(
   '/:facilityId/bookings',
-  managerFilter('direct', 'manageListings'),
+  directManagerFilter('manageListings'),
   routeGetVisitBookingsByFacility,
 );
 export default router;

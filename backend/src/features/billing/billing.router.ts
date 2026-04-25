@@ -7,7 +7,13 @@ import {
   routeUpdateBillingPayment,
   routeGetBillingsSummary,
 } from './billing.controller';
-import { getBillingId, isSuperAdmin, managerFilter, selfFilter } from '../../middleware';
+import {
+  getBillingId,
+  includeSelf,
+  isSuperAdmin,
+  manageBillingsFilter,
+  selfFilter,
+} from '../../middleware';
 import { createDocumentRouter } from '../document/document.router';
 import { Billing } from './billing.model';
 
@@ -36,12 +42,12 @@ router.get('/', isSuperAdmin, routeGetBillings);
 // ============================================================================
 // POST /api/billings
 // ============================================================================
-router.post('/', managerFilter('facility', 'manageBillings'), routeCreateBilling);
+router.post('/', manageBillingsFilter, routeCreateBilling);
 
 // ============================================================================
 // GET /api/billings/:billingId
 // ============================================================================
-router.get('/:billingId', managerFilter('facility', 'manageBillings', true), routeGetBilling);
+router.get('/:billingId', manageBillingsFilter, includeSelf, routeGetBilling);
 
 // ============================================================================
 // PATCH /api/billings/:billingId
@@ -49,7 +55,7 @@ router.get('/:billingId', managerFilter('facility', 'manageBillings', true), rou
 // Updates the breakdown (and the total amount) and the due date.
 // This should only apply when the billing is unpaid.
 // ============================================================================
-router.patch('/:billingId', managerFilter('facility', 'manageBillings'), routeUpdateBilling);
+router.patch('/:billingId', manageBillingsFilter, routeUpdateBilling);
 
 // ============================================================================
 // POST /api/billings/:billingId/verify
@@ -60,11 +66,7 @@ router.patch('/:billingId', managerFilter('facility', 'manageBillings'), routeUp
 //  should this be available even though not all documents are verified
 //
 // ============================================================================
-router.post(
-  '/:billingId/verify',
-  managerFilter('facility', 'manageBillings'),
-  routeUpdateBillingPayment,
-);
+router.post('/:billingId/verify', manageBillingsFilter, routeUpdateBillingPayment);
 
 // ============================================================================
 // GET /api/billings/:billingId/documents
@@ -76,8 +78,8 @@ router.use(
   getBillingId,
   createDocumentRouter(
     selfFilter,
-    managerFilter('facility', 'manageBillings'),
-    managerFilter('facility', 'manageBillings', true),
+    manageBillingsFilter,
+    [manageBillingsFilter, includeSelf],
     Billing,
   ),
 );
@@ -89,6 +91,6 @@ router.use(
 // .dashboard to get details for the main dashboard
 // .billingCards to get access to data for the cards.
 // ============================================================================
-router.get('/summary', managerFilter('facility', 'manageBillings', true), routeGetBillingsSummary);
+router.get('/summary', manageBillingsFilter, includeSelf, routeGetBillingsSummary);
 
 export default router;
