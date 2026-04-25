@@ -10,6 +10,8 @@ import LandlordVisits from '../pages/landlord/visits/LandlordVisits';
 import LandlordFinance from '../pages/landlord/finance/LandlordFinance';
 import LandlordSettings from '../pages/landlord/settings/LandlordSettings';
 import LandlordNewListing from '../pages/landlord/properties/LandlordNewListing';
+import BuildingInfo from '../pages/landlord/properties/BuildingInfo';
+
 import { Route } from 'react-router-dom';
 
 const landlordRoutes = [
@@ -27,6 +29,11 @@ const landlordRoutes = [
     key="landlord-properties-new"
     path="/landlord/properties/new"
     element={<LandlordNewListing />}
+  />,
+  <Route
+    key="landlord-properties-building-info"
+    path="/landlord/properties/building-info"
+    element={<BuildingInfo />}
   />,
   <Route key="landlord-managers" path="/landlord/managers" element={<LandlordManagers />} />,
   <Route key="landlord-tenants" path="/landlord/tenants" element={<LandlordTenants />} />,
