@@ -2,6 +2,7 @@ import { FunctionComponent, useCallback, useState } from 'react';
 import BuildingRequirements from '../../../components/landlord/addbuilding/BuildingRequirements';
 // Import your next component here once you create it
 import BuildingInformation from '../../../components/landlord/addbuilding/BuildingInformation';
+import BuildingSubmit from '../../../components/landlord/addbuilding/BuildingSubmit';
 import { Icon } from '@iconify/react';
 
 const AddBuilding: FunctionComponent = () => {
@@ -31,9 +32,9 @@ const AddBuilding: FunctionComponent = () => {
         // Pass onNextClick to the next component too if it has a next button
         return <BuildingInformation onNextClick={onNextClick} />;
       case 2:
-        return <div>Finalize Component Goes Here</div>;
+
+        return <BuildingSubmit />;
       default:
-        return <BuildingRequirements onNextClick={onNextClick} />;
     }
   };
 
