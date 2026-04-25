@@ -79,6 +79,35 @@ export const updateReview = async (data: updateReviewArguments) => {
   return await review.save();
 };
 
+// Computes the average quality, comfort, and environment ratings
+// for all reviews belonging to a specific facility (building),
+// across all listings and all users within that facility.
+// Also computes an overall average across all three categories.
+// Returns null if the facility has no reviews yet.
+export const getAverageRatingsByFacility = async (facilityId: mongoose.Types.ObjectId) => {
+  const facility = await HousingFacility.findById(facilityId);
+  if (!facility) throw new AppError(404, 'Facility not found.');
+
+  const result = await Review.aggregate([
+    { $match: { facilityId } },
+    {
+      $group: {
+        _id: null,
+        quality: { $avg: '$ratings.quality' },
+        comfort: { $avg: '$ratings.comfort' },
+        environment: { $avg: '$ratings.environment' },
+        total: { $sum: 1 },
+      },
+    },
+  ]);
+
+  if (result.length === 0) return null;
+
+  const { quality, comfort, environment, total } = result[0];
+  const overall = (quality + comfort + environment) / 3;
+  return { quality, comfort, environment, overall, total };
+};
+
 export const deleteReview = async (
   reviewId: mongoose.Types.ObjectId,
   userId: mongoose.Types.ObjectId,
