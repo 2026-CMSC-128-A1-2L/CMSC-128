@@ -1,9 +1,9 @@
 import { FunctionComponent } from 'react';
-import bill from '../../../assets/billings.png';
-import trash from '../../../assets/trash.svg';
-import report from '../../../assets/reportUser.svg';
-import calendar from '../../../assets/calendar.svg';
-import home from '../../../assets/Home.svg';
+import bill from '../../../../assets/billings.png';
+import trash from '../../../../assets/trash.svg';
+import report from '../../../../assets/reportUser.svg';
+import calendar from '../../../../assets/calendar.svg';
+import home from '../../../../assets/Home.svg';
 
 type Props = {
   onCancel: () => void;

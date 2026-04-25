@@ -1,5 +1,5 @@
 import { FunctionComponent } from 'react';
-import success from '../../../assets/reportSuccess.svg';
+import success from '../../../../assets/reportSuccess.svg';
 
 type Props = {
   onClose: () => void;
