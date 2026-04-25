@@ -3,6 +3,8 @@ import { AppError } from '../../error';
 import { combineFilters } from '../../middleware';
 import { HousingFacility } from '../facility/facility.model';
 import { Listing, ListingType } from '../listing/listing.model';
+import { Rental } from '../rental/rental.model';
+import { Unit } from '../unit/unit.model';
 import { Review } from './review.model';
 import { QueryFilter } from 'mongoose';
 
@@ -15,6 +17,7 @@ export type createReviewArguments = {
     environment: number;
   };
   description?: string;
+  mediaUrls?: string[];
 };
 
 export type updateReviewArguments = {
@@ -33,13 +36,16 @@ export const createReview = async (
   data: createReviewArguments,
   filters: QueryFilter<ListingType>,
 ) => {
-  // TODO: add admin create review eligibility checks for approval:
-  // check for minimum tenancy, if reviewer is flagged, etc.
-  //
-  // check done inside service instead of middleware due to complexity
   const listing = await Listing.findOne(combineFilters({ _id: listingId }, filters));
-
   if (!listing) throw new AppError(404, 'Listing not found.');
+
+  // Only active tenants of this listing may leave a review
+  const unitIds = await Unit.find({ listingId }).distinct('_id');
+  const activeRental = await Rental.findOne({ userId: data.userId, unitId: { $in: unitIds }, status: 'active' });
+  if (!activeRental) throw new AppError(422, 'Only active tenants can leave a review.');
+
+  const media =
+    data.mediaUrls?.map((url) => ({ sourceType: 'external' as const, value: url })) ?? [];
 
   const newReview = new Review({
     userId: data.userId,
@@ -47,6 +53,7 @@ export const createReview = async (
     facilityId: listing.facilityId,
     ratings: data.ratings,
     description: data.description,
+    media,
   });
 
   return await newReview.save();
