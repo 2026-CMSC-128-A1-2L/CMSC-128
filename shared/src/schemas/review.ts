@@ -7,12 +7,14 @@ const RatingsSchema = z.object({
   environment: z.number().int().min(1).max(5),
 });
 
-// POST /reviews
+// POST /listings/:listingId/reviews
+// userId is taken from the session; listingId is taken from the URL params
 export const CreateReviewBodySchema = z.object({
-  userId: ObjectIdSchema,
-  listingId: ObjectIdSchema,
+  userId: ObjectIdSchema.optional(),
+  listingId: ObjectIdSchema.optional(),
   ratings: RatingsSchema,
   description: z.string().optional(),
+  mediaUrls: z.array(z.string()).max(2).optional(),
 });
 
 // PATCH /reviews/:reviewId
