@@ -198,6 +198,7 @@ export const CreateFacilityRequestBodySchema = z.object({
   // This automatically creates an invite to the listed managers.
   managers: z.array(ManagerEntrySchema).default([]),
   name: z.string(),
+  description: z.string(),
   type: FacilityTypeSchema,
   location: FacilityLocationSchema,
 
