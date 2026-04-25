@@ -14,9 +14,9 @@ import {
   updateBilling,
   updateBillingPayment,
 } from './billing.service';
-
 import { AppError } from '../../error';
-import { receiveMessageOnPort } from 'node:worker_threads';
+
+import assert from 'node:assert';
 
 export const routeCreateBilling: RequestHandler = async (req, res, _next) => {
   const params = CreateBillingBodySchema.parse(req.body);
@@ -65,8 +65,10 @@ export const routeGetUnitBillings: RequestHandler = async (req, res, next) => {
   res.status(200).json({ data: await getBillings({ unitId }, res.locals.filters) });
 };
 
+// GET /billings/summary
 export const routeGetBillingsSummary: RequestHandler = async (req, res, next) => {
-  const userId = ObjectIdSchema.parse(req.params.userId);
+  assert.ok(req.user);
+  const userId = ObjectIdSchema.parse(req.user._id);
   const billingsSummary = await getBillingsSummary(userId, res.locals.filters);
   res.status(200).json({ data: billingsSummary });
 };

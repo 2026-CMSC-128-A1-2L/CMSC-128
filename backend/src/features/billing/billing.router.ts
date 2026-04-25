@@ -82,16 +82,13 @@ router.use(
   ),
 );
 
-export default router;
-
 // ============================================================================
 // GET /api/billings/summary
+//
 // Use this to get information for Landlord Finance page.
 // .dashboard to get details for the main dashboard
 // .billingCards to get access to data for the cards.
 // ============================================================================
-router.get(
-  '/:billingId',
-  managerFilter('facility', 'manageBillings', true),
-  routeGetBillingsSummary,
-);
+router.get('/summary', managerFilter('facility', 'manageBillings', true), routeGetBillingsSummary);
+
+export default router;
