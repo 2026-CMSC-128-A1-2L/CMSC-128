@@ -70,7 +70,7 @@ const LandlordLayout = ({ activeSidebarItem, breadcrumbs = [], children }: Landl
                 </ol>
               </nav>
             )}
-            <div className="flex-1">{children}</div>
+            <div className="pl-[10px] flex-1">{children}</div>
           </div>
 
           <LandlordFooter />
