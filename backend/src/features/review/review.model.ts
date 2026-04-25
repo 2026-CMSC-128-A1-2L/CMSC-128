@@ -13,6 +13,14 @@ const reviewSchema = new mongoose.Schema(
     },
 
     description: { type: String },
+
+    // Optional review photos uploaded by the student (max 2)
+    media: [
+      {
+        sourceType: { type: String, enum: ['local', 'external'], required: true },
+        value: { type: String, required: true },
+      },
+    ],
   },
 
   { timestamps: true },
