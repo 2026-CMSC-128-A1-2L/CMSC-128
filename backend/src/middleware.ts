@@ -13,7 +13,7 @@ export type ManagerPermission = 'manageBillings' | 'manageApplications' | 'manag
 
 // Adds filters for private/public listings for unverified/verified users. Used for read actions on listings.
 export const listingViewFilter: RequestHandler = (req, res, next) => {
-  if (!req.user || !isVerified(req.user.userType)) {
+  if (!req.user || !isVerified(req.user.status)) {
     res.locals.filters = { isPrivate: false };
   } else {
     res.locals.filters = {};

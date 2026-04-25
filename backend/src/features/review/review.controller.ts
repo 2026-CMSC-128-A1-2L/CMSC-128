@@ -49,7 +49,7 @@ export const routeGetFacilityReviews: RequestHandler = async (req, res, next) =>
 
 export const routeUpdateReview: RequestHandler = async (req, res, next) => {
   const params = UpdateReviewBodySchema.parse(req.body);
-  const userId = ObjectIdSchema.parse(req.user!._id);
+  const userId = req.user!._id;
 
   const updatedReview = await updateReview({ ...params, userId });
 
@@ -58,7 +58,7 @@ export const routeUpdateReview: RequestHandler = async (req, res, next) => {
 
 export const routeDeleteReview: RequestHandler = async (req, res, next) => {
   const reviewId = ObjectIdSchema.parse(req.params.reviewId);
-  const userId = ObjectIdSchema.parse(req.user!._id);
+  const userId = req.user!._id;
 
   await deleteReview(reviewId, userId);
 
