@@ -3,8 +3,7 @@ import { useForm } from 'react-hook-form';
 import { Icon } from '@iconify/react';
 import { useBuildingStore } from './useBuildingStore';
 import type { RoomTypeData } from './useBuildingStore';
-
-// ─── Types ────────────────────────────────────────────────────────────────────
+import AddRoom from './AddRoom';
 
 interface RoomTypeFormValues {
   roomType: string;
@@ -15,8 +14,6 @@ interface RoomTypeFormValues {
 interface RoomTypeItemProps {
   roomType: RoomTypeData;
 }
-
-// ─── Component ────────────────────────────────────────────────────────────────
 
 const RoomTypeItem: FunctionComponent<RoomTypeItemProps> = ({ roomType }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -35,10 +32,8 @@ const RoomTypeItem: FunctionComponent<RoomTypeItemProps> = ({ roomType }) => {
     mode: 'onChange',
   });
 
-  // Watch the roomType field so the header label updates as the user types
   const watchedRoomType = watch('roomType');
 
-  // Sync all form changes → zustand on every keystroke
   useEffect(() => {
     const subscription = watch((values) => {
       updateRoomType(roomType.id, {
@@ -50,22 +45,18 @@ const RoomTypeItem: FunctionComponent<RoomTypeItemProps> = ({ roomType }) => {
     return () => subscription.unsubscribe();
   }, [watch, roomType.id, updateRoomType]);
 
-  // The label shown in the collapsed header:
-  // prefers the typed room type value, falls back to the initial name prop
   const headerLabel = watchedRoomType || roomType.name || 'Room Type';
 
   return (
     <div className="w-full rounded-xl border border-whitesmoke overflow-hidden flex flex-col">
 
-      {/* Header — always visible */}
+      {/* Header */}
       <div className="flex items-center px-4 py-2">
-        {/* Hide the name label when expanded */}
         {!isExpanded && (
           <div className="flex-1 text-left">
             <b className="text-sm text-gray-700">{headerLabel}</b>
           </div>
         )}
-        {/* Push the button to the right when name is hidden */}
         {isExpanded && <div className="flex-1" />}
         <button
           type="button"
@@ -83,7 +74,6 @@ const RoomTypeItem: FunctionComponent<RoomTypeItemProps> = ({ roomType }) => {
 
           {/* Room Type + Capacity */}
           <div className="self-stretch flex items-start gap-10">
-            {/* Room Type */}
             <div className="flex-1 flex flex-col items-start gap-3">
               <b className="text-gray-700">Room Type</b>
               <div className="self-stretch flex flex-col gap-1">
@@ -100,7 +90,6 @@ const RoomTypeItem: FunctionComponent<RoomTypeItemProps> = ({ roomType }) => {
               </div>
             </div>
 
-            {/* Capacity */}
             <div className="flex-1 flex flex-col items-start gap-3">
               <b className="text-gray-700">Capacity</b>
               <div className="self-stretch flex flex-col gap-1">
@@ -121,7 +110,7 @@ const RoomTypeItem: FunctionComponent<RoomTypeItemProps> = ({ roomType }) => {
             </div>
           </div>
 
-          {/* About (optional) */}
+          {/* About */}
           <div className="self-stretch flex flex-col items-start gap-2.5">
             <div className="flex items-center gap-4">
               <b className="text-gray-700">About</b>
@@ -148,9 +137,7 @@ const RoomTypeItem: FunctionComponent<RoomTypeItemProps> = ({ roomType }) => {
           {/* Add Rooms */}
           <div className="self-stretch flex flex-col items-start gap-4">
             <b className="text-gray-700">Add Rooms</b>
-            <div className="w-full h-[100px] rounded-xl border border-whitesmoke overflow-hidden flex items-center justify-center cursor-pointer hover:bg-gray-50 transition-colors">
-              <Icon icon="material-symbols:add-home-outline" className="w-8 h-8" />
-            </div>
+            <AddRoom roomType={roomType} />
           </div>
 
           {/* Remove room type */}
@@ -161,6 +148,7 @@ const RoomTypeItem: FunctionComponent<RoomTypeItemProps> = ({ roomType }) => {
           >
             Remove this room type
           </button>
+
         </div>
       )}
     </div>
