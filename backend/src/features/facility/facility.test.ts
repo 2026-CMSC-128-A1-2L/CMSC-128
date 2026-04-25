@@ -29,6 +29,10 @@ describe('Facilities API', () => {
         },
       ],
       location: {
+        coordinates: {
+          lat: 14,
+          long: 21,
+        },
         text: 'diyan lang',
       },
       type: 'on-campus',

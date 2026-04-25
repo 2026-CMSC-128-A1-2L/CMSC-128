@@ -2,8 +2,9 @@ import type mongoose from 'mongoose';
 import { AppError } from '../../error';
 import { combineFilters } from '../../middleware';
 import { HousingFacility } from '../facility/facility.model';
-import { Listing } from '../listing/listing.model';
+import { Listing, ListingType } from '../listing/listing.model';
 import { Review } from './review.model';
+import { QueryFilter } from 'mongoose';
 
 export type createReviewArguments = {
   userId: mongoose.Types.ObjectId;
@@ -30,7 +31,7 @@ export type updateReviewArguments = {
 export const createReview = async (
   listingId: mongoose.Types.ObjectId,
   data: createReviewArguments,
-  filters: any,
+  filters: QueryFilter<ListingType>,
 ) => {
   // TODO: add admin create review eligibility checks for approval:
   // check for minimum tenancy, if reviewer is flagged, etc.
@@ -38,9 +39,7 @@ export const createReview = async (
   // check done inside service instead of middleware due to complexity
   const listing = await Listing.findOne(combineFilters({ _id: listingId }, filters));
 
-  if (!listing) {
-    throw new AppError(404, 'Listing not found.');
-  }
+  if (!listing) throw new AppError(404, 'Listing not found.');
 
   const newReview = new Review({
     userId: data.userId,
@@ -53,12 +52,15 @@ export const createReview = async (
   return await newReview.save();
 };
 
-export const getReviews = async (filters: any) => {
+export const getReviews = async (filters: QueryFilter<ListingType>) => {
   const visibleListings = await Listing.find(filters).distinct('_id');
   return await Review.find({ listingId: { $in: visibleListings } });
 };
 
-export const getListingReviews = async (listingId: mongoose.Types.ObjectId, filters: any) => {
+export const getListingReviews = async (
+  listingId: mongoose.Types.ObjectId,
+  filters: QueryFilter<ListingType>,
+) => {
   const listing = await Listing.findOne(combineFilters({ _id: listingId }, filters));
   if (!listing) throw new AppError(404, 'Listing not found.');
   return await Review.find({ listingId });

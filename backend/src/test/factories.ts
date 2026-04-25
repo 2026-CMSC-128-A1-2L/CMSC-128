@@ -93,12 +93,28 @@ export const buildUnverifiedStudent = buildUser.params({
   status: 'unverified',
 });
 
-export type HousingFacilityParams = Omit<HousingFacilityType, '_id' | 'createdAt' | 'updatedAt'>;
+export type HousingFacilityParams = Omit<
+  HousingFacilityType,
+  | '_id'
+  | 'createdAt'
+  | 'updatedAt'
+  | 'qualityAvg'
+  | 'reviewCount'
+  | 'verifiedAt'
+  | 'description'
+  | 'comfortAvg'
+  | 'environmentAvg'
+  | 'allowVisit'
+  | 'allowTransfer'
+  | 'isPrivate'
+  | 'media'
+>;
 
 export const buildHousingFacility = Factory.define<
   HousingFacilityParams,
   Partial<HousingFacilityParams>,
-  HousingFacilityType
+  HousingFacilityType,
+  Partial<HousingFacilityParams>
 >(({ sequence }) => ({
   name: `Test Facility ${sequence.toString()}`,
   landlordId: new mongoose.Types.ObjectId(),

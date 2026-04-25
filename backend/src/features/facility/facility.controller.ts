@@ -49,12 +49,17 @@ export const routeGetFacility: RequestHandler = async (req, res, _next) => {
   const facilityResponse: z.infer<typeof GetFacilityResponseBodySchema> = {
     id: facility._id,
     name: facility.name,
-    landlordId: {
+    location: facility.location,
+    description: facility.description,
+    verifiedAt: facility.verifiedAt,
+    media: facility.media,
+    landlord: {
       id: facility.landlordId._id,
       profilePicture: facility.landlordId.profilePicture,
       firstName: facility.landlordId.firstName,
       middleName: facility.landlordId.middleName,
       lastName: facility.landlordId.lastName,
+      contact: facility.landlordId.contact,
 
       // TODO:  fetch actual number of units
       numUnits: 0,
@@ -67,11 +72,13 @@ export const routeGetFacility: RequestHandler = async (req, res, _next) => {
       middleName: x.userId.middleName,
       lastName: x.userId.lastName,
     })),
-    location: facility.location,
     type: facility.type,
     isAcceptingApplications: facility.isAcceptingApplications,
     applicationOpenDate: facility.applicationOpenDate,
     applicationCloseDate: facility.applicationCloseDate,
+    allowVisit: facility.allowVisit,
+    allowTransfer: facility.allowTransfer,
+    listings: [],
   };
 
   res.status(200).json({ data: facilityResponse });

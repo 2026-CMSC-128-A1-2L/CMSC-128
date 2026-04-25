@@ -38,7 +38,7 @@ export const createApplication = async (
   return await newApplication.save();
 };
 
-const CursorSchema = (schema) =>
+const CursorSchema = <T extends z.ZodRawShape>(schema: z.ZodObject<T>) =>
   z.string().transform((x) => schema.parse(JSON.parse(Buffer.from(x, 'base64').toString())));
 
 const GetApplicationsCursorSchema = CursorSchema(
@@ -53,7 +53,7 @@ export const getApplications = async (
   filters: QueryFilter<ApplicationType>,
 ) => {
   const queryFilter = buildQuery<ApplicationType>(query);
-  const cursorQuery = {};
+  const cursorQuery: QueryFilter<ApplicationType> = {};
   if (query.cursor) {
     const cursor = GetApplicationsCursorSchema.parse(query.cursor);
     cursorQuery.$or = [
@@ -63,7 +63,10 @@ export const getApplications = async (
   }
 
   const queryExec = ApplicationForm.find(
-    combineFilters(combineFilters(filters, queryFilter), cursorQuery),
+    combineFilters<ApplicationType>(
+      combineFilters<ApplicationType>(filters, queryFilter),
+      cursorQuery,
+    ),
   )
     .sort({ createdAt: -1, _id: -1 })
     .limit(query.limit)
