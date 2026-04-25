@@ -185,12 +185,26 @@ type UpdateUserParameters = Partial<{
   contact: string;
 }>;
 
-// TODO: handle additional landlord and manager parameters
-type OnboardUserParameters = UpdateUserParameters & {
-  userType: 'Student' | 'Landlord' | 'Manager';
+type UpdateStudentParameters = UpdateUserParameters & {
+  preferences?: Record<string, string | number | boolean>;
 };
 
-export const updateSelf = async (userId: mongoose.Types.ObjectId, params: UpdateUserParameters) => {
+// TODO: handle additional landlord and manager parameters
+type UpdateManagerParameters = UpdateUserParameters;
+
+type OnboardStudentParameters = UpdateUserParameters & {
+  userType: 'Student';
+  preferences?: Record<string, string | number | boolean>;
+};
+
+type OnboardManagerParameters = UpdateUserParameters & {
+  userType: 'Manager' | 'Landlord';
+};
+
+export const updateSelf = async (
+  userId: mongoose.Types.ObjectId,
+  params: UpdateStudentParameters | UpdateManagerParameters,
+) => {
   return await User.findOneAndUpdate(
     { _id: userId },
     { $set: params },
@@ -202,7 +216,7 @@ export const updateSelf = async (userId: mongoose.Types.ObjectId, params: Update
 
 export const onboardSelf = async (
   userId: mongoose.Types.ObjectId,
-  params: OnboardUserParameters,
+  params: OnboardStudentParameters | OnboardManagerParameters,
 ) => {
   return await User.findOneAndUpdate(
     { _id: userId },

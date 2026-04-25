@@ -1,10 +1,11 @@
 import type { RequestHandler } from 'express';
 import {
   GetUsersQuerySchema,
-  UpdateUserRequestBodySchema,
+  UpdateStudentRequestBodySchema,
+  UpdateManagerRequestBodySchema,
+  OnboardSelfRequestBodySchema,
   ApproveUserRequestBodySchema,
   ObjectIdSchema,
-  OnboardSelfRequestBodySchema,
 } from 'shared';
 import {
   getUsers,
@@ -17,6 +18,7 @@ import {
 } from './user.service';
 import { AppError } from '../../error';
 import assert from 'node:assert';
+import { UserType } from './user.model';
 
 export const routeGetUsers: RequestHandler = async (req, res, _next) => {
   const params = GetUsersQuerySchema.parse(req.query);
@@ -40,8 +42,14 @@ export const routeGetUser: RequestHandler = async (req, res, _next) => {
 export const routeUpdateSelf: RequestHandler = async (req, res, _next) => {
   assert.ok(req.user);
   const userId = req.user._id;
-  const body = UpdateUserRequestBodySchema.parse(req.body);
-  const user = await updateSelf(userId, body);
+  let user: UserType | undefined | null;
+  if (req.user.userType === 'Student') {
+    const body = UpdateStudentRequestBodySchema.parse(req.body);
+    user = await updateSelf(userId, body);
+  } else {
+    const body = UpdateManagerRequestBodySchema.parse(req.body);
+    user = await updateSelf(userId, body);
+  }
   if (!user) throw new AppError(404, 'User not found.');
   res.status(200).json({ data: user });
 };
@@ -51,7 +59,12 @@ export const routeOnboardSelf: RequestHandler = async (req, res, _next) => {
   const userId = req.user._id;
   if (req.user.status !== 'setup') throw new AppError(422, 'Already done onboarding.');
   const body = OnboardSelfRequestBodySchema.parse(req.body);
-  const user = await onboardSelf(userId, body);
+  let user: UserType | undefined | null;
+  if (body.userType === 'Student') {
+    user = await onboardSelf(userId, body);
+  } else {
+    user = await onboardSelf(userId, body);
+  }
   if (!user) throw new AppError(404, 'User not found.');
   res.status(200).json({ data: user });
 };
