@@ -1,5 +1,5 @@
 import type mongoose from 'mongoose';
-import type { QueryFilter } from 'mongoose';
+import type { ClientSession, QueryFilter } from 'mongoose';
 import { Student, User } from './user.model';
 import { AppError } from '../../error';
 import { sendNotification } from '../notification/notification.service';
@@ -48,8 +48,12 @@ export const createTestUser = async (params: unknown) => {
   return userResult;
 };
 
-export const getUserByEmail = async (email: string) => {
-  return await User.findOne({ emails: email }).lean();
+export const getUserByEmail = async (email: string, session?: ClientSession) => {
+  if (session) {
+    return await User.findOne({ emails: email }).session(session).lean();
+  } else {
+    return await User.findOne({ emails: email }).lean();
+  }
 };
 
 export const getUserById = async (userId: mongoose.Types.ObjectId) => {
