@@ -137,13 +137,7 @@ export const correctLandlordFilter: RequestHandler<
   next();
 };
 
-export const selfFilter: RequestHandler<
-  unknown,
-  unknown,
-  unknown,
-  unknown,
-  Record<string, unknown> & QueryFilter<{ userId: mongoose.Types.ObjectId }>
-> = (req, res, next) => {
+export const selfFilter: RequestHandler = (req, res, next) => {
   if (!req.user) {
     next(new AppError(401, 'Unauthenticated'));
     return;
