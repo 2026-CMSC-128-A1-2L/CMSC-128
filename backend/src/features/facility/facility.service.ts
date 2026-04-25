@@ -383,3 +383,9 @@ export const rejectFacility = async (
   facility.status = 'rejected';
   return await facility.save();
 };
+
+export const getManagedFacilities = async (
+  userId: mongoose.Types.ObjectId,
+): Promise<mongoose.Types.ObjectId[]> => {
+  return await HousingFacility.find({ 'managers.userId': userId }).distinct('_id');
+};
