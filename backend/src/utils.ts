@@ -9,7 +9,7 @@ export function buildQuery<T>(
   args: Partial<
     Record<
       keyof T,
-      number | string | boolean | mongoose.Types.ObjectId | undefined | Partial<Range<any>>
+      number | string | boolean | mongoose.Types.ObjectId | undefined | null | Partial<Range<any>>
     >
   >,
 ): QueryFilter<T> {
@@ -39,3 +39,5 @@ export function buildQuery<T>(
 
   return query;
 }
+
+export type NullablePartial<T> = { [P in keyof T]?: T[P] | null };
