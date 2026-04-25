@@ -10,7 +10,7 @@ export const NotificationFilterSchema = z
   .object({
     status: z.enum(['unread', 'read', 'archived']).optional(),
   })
-  .extend(PaginationRequestSchema);
+  .extend(PaginationRequestSchema(50));
 
 export const GetNotificationQuerySchema = QuerySchema(NotificationFilterSchema);
 
@@ -25,4 +25,4 @@ export const GetNotificationsResponseBodySchema = z
       }),
     ),
   })
-  .extend(PaginationResponseSchema);
+  .extend(PaginationResponseSchema.shape);
