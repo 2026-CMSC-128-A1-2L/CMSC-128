@@ -10,16 +10,21 @@ import {
   student,
 } from '../../test/setup.js';
 import { Listing } from '../listing/listing.model.js';
+import { Unit } from '../unit/unit.model.js';
+import { Rental } from '../rental/rental.model.js';
 import mongoose from 'mongoose';
 
 describe('Reviews API', () => {
   let listingId: string;
+  let facilityId: string;
   let reviewId: string;
 
   beforeAll(async () => {
     const facility = await buildHousingFacility.create({
       landlordId: landlord._id,
     });
+
+    facilityId = facility._id.toString();
 
     const listing = await new Listing({
       facilityId: facility._id,
@@ -34,14 +39,28 @@ describe('Reviews API', () => {
     }).save();
 
     listingId = listing._id.toString();
+
+    // Create a unit under the listing, then an active rental for the student.
+    // createReview checks that the reviewer has an active rental in the listing.
+    const unit = await new Unit({
+      listingId: listing._id,
+      roomNumber: 'REVIEW-TEST-101',
+      capacity: 1,
+      price: 5000,
+    }).save();
+
+    await new Rental({
+      userId: student._id,
+      facilityId: facility._id,
+      unitId: unit._id,
+      status: 'active',
+    }).save();
   });
 
   describe('POST /api/listings/:listingId/reviews', () => {
     describe('Authentication', () => {
-      it('should create a review as a student', async () => {
+      it('should create a review as an active tenant student', async () => {
         const response = await studentAgent.post(`/api/listings/${listingId}/reviews`).send({
-          userId: student._id,
-          listingId,
           ratings: { quality: 4, comfort: 3, environment: 5 },
           description: 'Great place!',
         });
@@ -53,8 +72,6 @@ describe('Reviews API', () => {
 
       it('should return 400 for invalid listing id', async () => {
         const response = await studentAgent.post('/api/listings/invalid-id/reviews').send({
-          userId: student._id,
-          listingId: 'invalid-id',
           ratings: { quality: 4, comfort: 3, environment: 5 },
         });
         expect(response).statusToBe(400);
@@ -64,16 +81,24 @@ describe('Reviews API', () => {
     describe('Validation', () => {
       it('should return 400 for out-of-range ratings', async () => {
         const response = await studentAgent.post(`/api/listings/${listingId}/reviews`).send({
-          userId: student._id,
-          listingId,
           ratings: { quality: 6, comfort: 3, environment: 5 },
         });
         expect(response).statusToBe(400);
       });
 
       it('should return 400 for missing required fields', async () => {
+        const response = await studentAgent.post(`/api/listings/${listingId}/reviews`).send({});
+        expect(response).statusToBe(400);
+      });
+
+      it('should return 400 when mediaUrls exceeds 2 items', async () => {
         const response = await studentAgent.post(`/api/listings/${listingId}/reviews`).send({
-          userId: student._id,
+          ratings: { quality: 4, comfort: 3, environment: 5 },
+          mediaUrls: [
+            'https://example.com/a.jpg',
+            'https://example.com/b.jpg',
+            'https://example.com/c.jpg',
+          ],
         });
         expect(response).statusToBe(400);
       });
@@ -83,11 +108,27 @@ describe('Reviews API', () => {
       it('should return 404 for non-existent listing', async () => {
         const fakeId = new mongoose.Types.ObjectId().toString();
         const response = await studentAgent.post(`/api/listings/${fakeId}/reviews`).send({
-          userId: student._id,
-          listingId: fakeId,
           ratings: { quality: 4, comfort: 3, environment: 5 },
         });
         expect(response).statusToBe(404);
+      });
+
+      it('should return 422 when the user is not an active tenant', async () => {
+        const response = await landlordAgent.post(`/api/listings/${listingId}/reviews`).send({
+          ratings: { quality: 4, comfort: 3, environment: 5 },
+        });
+        expect(response).statusToBe(422);
+      });
+
+      it('should create a review with mediaUrls and store them as media', async () => {
+        const response = await studentAgent.post(`/api/listings/${listingId}/reviews`).send({
+          ratings: { quality: 3, comfort: 4, environment: 4 },
+          description: 'With photos',
+          mediaUrls: ['https://example.com/photo1.jpg', 'https://example.com/photo2.jpg'],
+        });
+        expect(response).statusToBe(201);
+        expect(response.body.data.media).toHaveLength(2);
+        expect(response.body.data.media[0].sourceType).toBe('external');
       });
     });
   });
@@ -139,6 +180,57 @@ describe('Reviews API', () => {
         const response = await guestAgent.get('/api/reviews');
         expect(response).statusToBe(200);
         expect(Array.isArray(response.body.data)).toBe(true);
+      });
+    });
+  });
+
+  describe('GET /api/facilities/:facilityId/reviews', () => {
+    describe('Authentication', () => {
+      it('should return reviews for a facility', async () => {
+        const response = await studentAgent.get(`/api/facilities/${facilityId}/reviews`);
+        expect(response).statusToBe(200);
+        expect(Array.isArray(response.body.data)).toBe(true);
+      });
+    });
+
+    describe('Logic', () => {
+      it('should return 404 for non-existent facility', async () => {
+        const response = await studentAgent.get(
+          `/api/facilities/${new mongoose.Types.ObjectId()}/reviews`,
+        );
+        expect(response).statusToBe(404);
+      });
+    });
+  });
+
+  describe('GET /api/facilities/:facilityId/average-ratings', () => {
+    describe('Logic', () => {
+      it('should return average ratings for a facility with reviews', async () => {
+        const response = await studentAgent.get(
+          `/api/facilities/${facilityId}/average-ratings`,
+        );
+        expect(response).statusToBe(200);
+        expect(response.body.data.quality).toBeDefined();
+        expect(response.body.data.comfort).toBeDefined();
+        expect(response.body.data.environment).toBeDefined();
+        expect(response.body.data.overall).toBeDefined();
+        expect(response.body.data.total).toBeGreaterThan(0);
+      });
+
+      it('should return a message when the facility has no reviews', async () => {
+        const emptyFacility = await buildHousingFacility.create({ landlordId: landlord._id });
+        const response = await studentAgent.get(
+          `/api/facilities/${emptyFacility._id.toString()}/average-ratings`,
+        );
+        expect(response).statusToBe(200);
+        expect(response.body.message).toBe('No reviews yet.');
+      });
+
+      it('should return 404 for non-existent facility', async () => {
+        const response = await studentAgent.get(
+          `/api/facilities/${new mongoose.Types.ObjectId()}/average-ratings`,
+        );
+        expect(response).statusToBe(404);
       });
     });
   });
