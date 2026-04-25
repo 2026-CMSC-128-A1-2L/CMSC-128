@@ -16,9 +16,11 @@
     "@tailwindcss/vite": "^4.2.2",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "react-hook-form": "^7.73.1",
     "react-router-dom": "^7.14.0",
     "tailwindcss": "^4.2.2",
-    "yet-another-react-lightbox": "^3.31.0"
+    "yet-another-react-lightbox": "^3.31.0",
+    "zustand": "^5.0.12"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.12",

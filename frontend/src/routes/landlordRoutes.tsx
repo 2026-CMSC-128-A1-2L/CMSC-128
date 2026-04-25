@@ -11,7 +11,6 @@ import LandlordFinance from "../pages/landlord/finance/LandlordFinance";
 import LandlordSettings from "../pages/landlord/settings/LandlordSettings";
 import LandlordNewListing from "../pages/landlord/properties/LandlordNewListing";
 import AddBuilding from "../pages/landlord/properties/AddBuilding";
-import BuildingInformation from "../components/landlord/BuildingInformation";
 import { Route } from "react-router-dom";
 
 const landlordRoutes = [
@@ -82,11 +81,6 @@ const landlordRoutes = [
     element={<AddBuilding />}
   />,
 
-  <Route
-    key="landlord-test"
-    path="/landlord/test"
-    element={<BuildingInformation />}
-  />,
 
 ];
 

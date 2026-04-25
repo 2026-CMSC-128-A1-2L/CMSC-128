@@ -1,7 +1,8 @@
 import { FunctionComponent, useCallback, useState } from 'react';
-import BuildingRequirements from '../../../components/landlord/BuildingRequirements';
+import BuildingRequirements from '../../../components/landlord/addbuilding/BuildingRequirements';
 // Import your next component here once you create it
-import BuildingInformation from '../../../components/landlord/BuildingInformation';
+import BuildingInformation from '../../../components/landlord/addbuilding/BuildingInformation';
+import { Icon } from '@iconify/react';
 
 const AddBuilding: FunctionComponent = () => {
   // 1. Track the current step (0 = Requirements, 1 = Information, 2 = Finalize)
@@ -46,8 +47,8 @@ const AddBuilding: FunctionComponent = () => {
   return (
     <div className="w-screen font-sans">
       <div className="px-20 pt-4 pb-12">
-        <div className="flex items-center gap-1.5 py-4 cursor-pointer w-fit" onClick={onCancelClick}>
-          <img src="" alt="back" className="w-4 h-4 icon-chevron-left" />
+        <div className="flex items-center gap-1.5 py-4 cursor-pointer w-full" onClick={onCancelClick}>
+          <Icon icon='material-symbols-light:chevron-left' className='w-7 h-7' />
           <span className="text-sm font-semibold text-gray-700">Cancel</span>
         </div>
 
