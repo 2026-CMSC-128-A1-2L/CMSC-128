@@ -1,6 +1,9 @@
-import { FunctionComponent, useState, useEffect } from 'react';
+import { FunctionComponent, useState, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { Icon } from '@iconify/react';
+import Lightbox from 'yet-another-react-lightbox';
+import 'yet-another-react-lightbox/styles.css';
+
 import { useBuildingStore } from './useBuildingStore';
 import type { RoomTypeData } from './useBuildingStore';
 import AddRoom from './AddRoom';
@@ -18,6 +21,11 @@ interface RoomTypeItemProps {
 const RoomTypeItem: FunctionComponent<RoomTypeItemProps> = ({ roomType }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const { updateRoomType, removeRoomType } = useBuildingStore();
+
+  // Local state for images & lightbox
+  const [images, setImages] = useState<string[]>(roomType.images || []);
+  const [lightboxIndex, setLightboxIndex] = useState(-1);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const {
     register,
@@ -40,12 +48,40 @@ const RoomTypeItem: FunctionComponent<RoomTypeItemProps> = ({ roomType }) => {
         roomType: values.roomType ?? '',
         capacity: values.capacity ?? '',
         about: values.about ?? '',
+        images: images, // Keep images synced
       });
     });
     return () => subscription.unsubscribe();
-  }, [watch, roomType.id, updateRoomType]);
+  }, [watch, roomType.id, updateRoomType, images]);
 
   const headerLabel = watchedRoomType || roomType.name || 'Room Type';
+
+  // ─── Image Upload Handlers ─────────────────────────────────────────────
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const newFiles = Array.from(e.target.files);
+      // Create temporary local URLs for the images
+      const newImageUrls = newFiles.map((file) => URL.createObjectURL(file));
+
+      const updatedImages = [...images, ...newImageUrls];
+      setImages(updatedImages);
+
+      // Update store immediately
+      updateRoomType(roomType.id, { images: updatedImages });
+
+      // Reset input so the same files can be selected again if needed
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  };
+
+  const handleRemoveImage = (indexToRemove: number) => {
+    const updatedImages = images.filter((_, idx) => idx !== indexToRemove);
+    setImages(updatedImages);
+    updateRoomType(roomType.id, { images: updatedImages });
+  };
 
   return (
     <div className="w-full rounded-xl border border-whitesmoke overflow-hidden flex flex-col">
@@ -128,9 +164,49 @@ const RoomTypeItem: FunctionComponent<RoomTypeItemProps> = ({ roomType }) => {
           <div className="self-stretch flex flex-col items-start gap-1">
             <b className="text-gray-700">Add Photos</b>
             <div className="flex items-start flex-wrap gap-2 py-2">
-              <div className="h-[100px] w-[100px] rounded-xl border border-whitesmoke overflow-hidden flex items-center justify-center cursor-pointer hover:bg-gray-50 transition-colors">
+
+              {/* Render Uploaded Images */}
+              {images.map((src, index) => (
+                <div
+                  key={index}
+                  className="relative group h-[100px] w-[100px] rounded-xl border border-whitesmoke overflow-hidden bg-gray-50"
+                >
+                  <img
+                    src={src}
+                    alt={`Room type preview ${index + 1}`}
+                    className="w-full h-full object-cover cursor-pointer hover:opacity-90 transition-opacity"
+                    onClick={() => setLightboxIndex(index)}
+                  />
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleRemoveImage(index);
+                    }}
+                    className="absolute top-1 right-1 bg-white/80 backdrop-blur-sm rounded-full p-1 shadow-sm opacity-0 group-hover:opacity-100 transition-opacity text-red-500 hover:text-red-700 hover:bg-white"
+                  >
+                    <Icon icon="material-symbols:close" className="w-4 h-4" />
+                  </button>
+                </div>
+              ))}
+
+              {/* Upload Button */}
+              <div
+                onClick={() => fileInputRef.current?.click()}
+                className="h-[100px] w-[100px] rounded-xl border border-whitesmoke overflow-hidden flex items-center justify-center cursor-pointer hover:bg-gray-50 transition-colors text-slategray"
+              >
                 <Icon icon="material-symbols:add-photo-alternate-outline" className="w-8 h-8" />
               </div>
+
+              {/* Hidden File Input */}
+              <input
+                type="file"
+                multiple
+                accept="image/*"
+                ref={fileInputRef}
+                onChange={handleFileChange}
+                className="hidden"
+              />
             </div>
           </div>
 
@@ -151,6 +227,15 @@ const RoomTypeItem: FunctionComponent<RoomTypeItemProps> = ({ roomType }) => {
 
         </div>
       )}
+
+      {/* Lightbox Viewer */}
+      <Lightbox
+        open={lightboxIndex >= 0}
+        index={lightboxIndex}
+        close={() => setLightboxIndex(-1)}
+        slides={images.map((src) => ({ src }))}
+      />
+
     </div>
   );
 };

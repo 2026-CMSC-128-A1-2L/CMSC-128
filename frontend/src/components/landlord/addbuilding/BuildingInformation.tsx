@@ -1,8 +1,11 @@
-import { FunctionComponent, useEffect } from 'react';
+import { FunctionComponent, useEffect, useState, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { Icon } from '@iconify/react';
+import Lightbox from 'yet-another-react-lightbox';
+import 'yet-another-react-lightbox/styles.css';
+
 import RoomTypeItem from './RoomTypeItem';
-import { useBuildingStore } from './useBuildingStore.ts';
+import { useBuildingStore } from './useBuildingStore';
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 
@@ -24,6 +27,11 @@ interface BuildingFormValues {
 
 const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNextClick, onPrevClick }) => {
   const { buildingInfo, setBuildingInfo, addRoomType } = useBuildingStore();
+
+  // ─── Image Local State ───
+  const [images, setImages] = useState<string[]>(buildingInfo.images || []);
+  const [lightboxIndex, setLightboxIndex] = useState(-1);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const {
     register,
@@ -48,10 +56,33 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
         typeOfBuilding: values.typeOfBuilding ?? '',
         location: values.location ?? '',
         about: values.about ?? '',
+        images: images, // Keep images synced during text updates
       });
     });
     return () => subscription.unsubscribe();
-  }, [watch, setBuildingInfo]);
+  }, [watch, setBuildingInfo, images]);
+
+  // ─── Image Handlers ───
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const newFiles = Array.from(e.target.files);
+      const newImageUrls = newFiles.map((file) => URL.createObjectURL(file));
+
+      const updatedImages = [...images, ...newImageUrls];
+      setImages(updatedImages);
+      setBuildingInfo({ images: updatedImages });
+
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  };
+
+  const handleRemoveImage = (indexToRemove: number) => {
+    const updatedImages = images.filter((_, idx) => idx !== indexToRemove);
+    setImages(updatedImages);
+    setBuildingInfo({ images: updatedImages });
+  };
 
   // Called when Next is clicked — validates, logs, then advances
   const onSubmit = (data: BuildingFormValues) => {
@@ -59,7 +90,7 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
       ...data,
       roomTypes: buildingInfo.roomTypes,
       managers: buildingInfo.managers,
-      photos: buildingInfo.photos,
+      images: images, // Grab the latest local images state
     };
     console.log('=== Building Information Form Data ===');
     console.log(JSON.stringify(fullData, null, 2));
@@ -164,10 +195,50 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
             <div className="self-stretch flex items-center">
               <b className="relative tracking-num--0_01">Add Photos</b>
             </div>
-            <div className="self-stretch overflow-hidden flex items-start flex-wrap content-start py-num-10 px-0">
-              <div className="h-[100px] w-[100px] rounded-num-12 border-whitesmoke border-solid border-[1px] box-border overflow-hidden shrink-0 flex flex-col items-center justify-center p-num-10 cursor-pointer hover:bg-gray-50 transition-colors">
-                <Icon icon="material-symbols:add-rounded" className="w-8 h-8" />
+            <div className="self-stretch overflow-hidden flex items-start flex-wrap content-start py-num-10 px-0 gap-2">
+
+              {/* Render Uploaded Images */}
+              {images.map((src, index) => (
+                <div
+                  key={index}
+                  className="relative group h-[100px] w-[100px] rounded-num-12 border-whitesmoke border-solid border-[1px] overflow-hidden bg-gray-50 shrink-0"
+                >
+                  <img
+                    src={src}
+                    alt={`Building preview ${index + 1}`}
+                    className="w-full h-full object-cover cursor-pointer hover:opacity-90 transition-opacity"
+                    onClick={() => setLightboxIndex(index)}
+                  />
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleRemoveImage(index);
+                    }}
+                    className="absolute top-1 right-1 bg-white/80 backdrop-blur-sm rounded-full p-1 shadow-sm opacity-0 group-hover:opacity-100 transition-opacity text-red-500 hover:text-red-700 hover:bg-white"
+                  >
+                    <Icon icon="material-symbols:close" className="w-4 h-4" />
+                  </button>
+                </div>
+              ))}
+
+              {/* Upload Button */}
+              <div
+                onClick={() => fileInputRef.current?.click()}
+                className="h-[100px] w-[100px] rounded-num-12 border-whitesmoke border-solid border-[1px] box-border overflow-hidden shrink-0 flex flex-col items-center justify-center p-num-10 cursor-pointer hover:bg-gray-50 transition-colors text-slategray"
+              >
+                <Icon icon="material-symbols:add-photo-alternate-outline" className="w-8 h-8" />
               </div>
+
+              {/* Hidden File Input */}
+              <input
+                type="file"
+                multiple
+                accept="image/*"
+                ref={fileInputRef}
+                onChange={handleFileChange}
+                className="hidden"
+              />
             </div>
           </div>
 
@@ -212,7 +283,6 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
         >
           <b className="relative">Back</b>
         </div>
-        {/* type="submit" triggers handleSubmit → validates → logs → onNextClick */}
         <button
           type="submit"
           className="rounded-[45px] flex items-center justify-center py-2 px-8 gap-2.5 text-white cursor-pointer"
@@ -222,6 +292,14 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
           <Icon icon="material-symbols-light:arrow-forward-rounded" className="w-6 h-6" />
         </button>
       </div>
+
+      {/* ── Lightbox Viewer ── */}
+      <Lightbox
+        open={lightboxIndex >= 0}
+        index={lightboxIndex}
+        close={() => setLightboxIndex(-1)}
+        slides={images.map((src) => ({ src }))}
+      />
     </form>
   );
 };

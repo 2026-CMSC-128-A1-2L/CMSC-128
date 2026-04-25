@@ -17,7 +17,7 @@ export interface RoomTypeData {
   capacity: string;
   tags: string[];
   about: string;
-  photos: File[];
+  images: string[];
   rooms: RoomData[]; // changed from string[] to RoomData[]
 }
 
@@ -27,7 +27,7 @@ export interface BuildingInformationData {
   typeOfBuilding: string;
   location: string;
   about: string;
-  photos: File[];
+  images: string[];
   roomTypes: RoomTypeData[];
   managers: string[];
 }
