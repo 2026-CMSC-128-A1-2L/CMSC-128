@@ -56,14 +56,12 @@ type ManagerEntry = {
 
 export const directManagerFilter =
   (permission: ManagerPermission | null): RequestHandler =>
-  async (req, res, _next) => {
+  async (req, res, next) => {
     if (!req.user) throw new AppError(401, 'Unauthenticated');
 
     const userId = req.user._id;
 
-    let newFilter: QueryFilter<{
-      managers: ManagerEntry[];
-    }>;
+    let newFilter: QueryFilter<{ managers: ManagerEntry[] }>;
     if (permission) {
       const innerFilter: QueryFilter<ManagerEntry> = { userId };
       innerFilter[`permissions.${permission}`] = true;
@@ -79,6 +77,7 @@ export const directManagerFilter =
     }
 
     res.locals.filters = combineFilters(res.locals.filters, newFilter);
+    next();
   };
 
 // Used when the object has a `facilityId`.
@@ -89,7 +88,7 @@ export const directManagerFilter =
 // be able to pass.
 const facilityManagerFilter =
   (permission: ManagerPermission | null): RequestHandler =>
-  async (req, res, _next) => {
+  async (req, res, next) => {
     assert.ok(req.user);
     if (req.user.userType !== 'Manager' && req.user.userType !== 'Landlord')
       throw new AppError(403, 'Forbidden.');
@@ -108,6 +107,7 @@ const facilityManagerFilter =
     res.locals.filters = {
       facilityId: { $in: facilityIds },
     };
+    next();
   };
 
 export const deleteListingsFilter = facilityManagerFilter('deleteListings');
