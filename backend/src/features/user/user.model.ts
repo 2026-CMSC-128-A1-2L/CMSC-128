@@ -16,7 +16,8 @@ export type UserType = {
   auth: {
     google: string[];
   };
-  status: 'unverified' | 'verified' | 'inactive' | 'disabled';
+
+  status: 'setup' | 'unverified' | 'verified' | 'inactive' | 'disabled';
   userType: 'Admin' | 'Landlord' | 'Manager' | 'Student';
 
   documents: DocumentType[];
@@ -54,6 +55,7 @@ const userSchema = new mongoose.Schema<UserType>(
       required: true,
     },
 
+    // `setup` - did not finish onboarding yet.
     // `unverified` - never verified. Can only see public listings.
     // `verified` - verified for the semester. Can see all listings and access
     //   own data.
@@ -64,8 +66,8 @@ const userSchema = new mongoose.Schema<UserType>(
     //   verify again.
     status: {
       type: String,
-      enum: ['unverified', 'verified', 'inactive', 'disabled'],
-      default: 'unverified',
+      enum: ['setup', 'unverified', 'verified', 'inactive', 'disabled'],
+      default: 'setup',
       required: true,
     },
 
@@ -103,8 +105,11 @@ const userSchema = new mongoose.Schema<UserType>(
 export const User = mongoose.model('User', userSchema);
 
 export const Admin = User.discriminator('Admin', new mongoose.Schema());
+
+// TODO: add availability schema
 export const Landlord = User.discriminator('Landlord', new mongoose.Schema());
 export const Manager = User.discriminator('Manager', new mongoose.Schema());
+
 export const Student = User.discriminator(
   'Student',
   new mongoose.Schema({

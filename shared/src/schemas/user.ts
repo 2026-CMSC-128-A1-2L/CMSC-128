@@ -11,6 +11,11 @@ export const UpdateUserRequestBodySchema = z
   })
   .partial();
 
+// POST /users/:userId/onboard
+export const OnboardSelfRequestBodySchema = UpdateUserRequestBodySchema.extend({
+  userType: z.enum(['Student', 'Manager', 'Landlord']),
+});
+
 // POST /users/:userId/approve
 export const ApproveUserRequestBodySchema = z
   .object({

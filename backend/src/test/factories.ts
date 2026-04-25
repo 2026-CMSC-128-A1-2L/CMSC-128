@@ -10,7 +10,7 @@ type UserParams = {
   middleName?: string | null;
   lastName: string;
   emails: string[];
-  status: 'unverified' | 'verified' | 'inactive' | 'disabled';
+  status: 'setup' | 'unverified' | 'verified' | 'inactive' | 'disabled';
   userType: 'Admin' | 'Manager' | 'Landlord' | 'Student';
   profilePicture?: string | null;
   contact?: string;

@@ -16,13 +16,17 @@ export type CreateUserParams = {
   profilePicture?: string;
 };
 
-export const createUnverifiedStudent = async (params: CreateUserParams) => {
-  const userResult = await User.findOne({ emails: params.email });
+export const createUser = async (params: CreateUserParams) => {
+  const userResult = await User.findOne({
+    emails: params.email,
+    status: { $in: ['setup', 'verified', 'unverified'] },
+  });
+
   if (userResult) {
     throw new AppError(409, 'User with this email already exists.');
   }
 
-  const newUser = new Student({
+  const newUser = new User({
     firstName: params.firstName,
     middleName: params.middleName,
     lastName: params.lastName,
@@ -30,7 +34,6 @@ export const createUnverifiedStudent = async (params: CreateUserParams) => {
     auth: {
       google: [params.auth.google],
     },
-    // TODO: fill with required documents
     documents: [],
     profilePicture: params.profilePicture,
   });
@@ -178,10 +181,28 @@ type UpdateUserParameters = Partial<{
   contact: string;
 }>;
 
+// TODO: handle additional landlord and manager parameters
+type OnboardUserParameters = UpdateUserParameters & {
+  userType: 'Student' | 'Landlord' | 'Manager';
+};
+
 export const updateSelf = async (userId: mongoose.Types.ObjectId, params: UpdateUserParameters) => {
   return await User.findOneAndUpdate(
     { _id: userId },
     { $set: params },
+    {
+      returnDocument: 'after',
+    },
+  ).lean();
+};
+
+export const onboardSelf = async (
+  userId: mongoose.Types.ObjectId,
+  params: OnboardUserParameters,
+) => {
+  return await User.findOneAndUpdate(
+    { _id: userId },
+    { $set: { ...params, status: 'unverified' } },
     {
       returnDocument: 'after',
     },

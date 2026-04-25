@@ -18,6 +18,7 @@ import {
   routeRejectUser,
   routeGetSelf,
   routeGetUser,
+  routeOnboardSelf,
 } from './user.controller';
 import { User } from './user.model';
 import { routeGetApplicationsByStudent } from '../application/application.controller';
@@ -66,6 +67,13 @@ router.patch('/me', isLoggedIn, routeUpdateSelf);
 //
 // ============================================================================
 router.delete('/me', isLoggedIn, routeDeleteSelf);
+
+// ============================================================================
+// POST /api/users/me/onboard
+//
+// The user sets their own user type, contact info, and address.
+// ============================================================================
+router.post('/me/onboard', isLoggedIn, routeOnboardSelf);
 
 // ============================================================================
 // GET /api/users/:userId/applications

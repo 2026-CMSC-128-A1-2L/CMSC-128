@@ -373,6 +373,9 @@ PATCH /users/me
 // Delete own account
 DELETE /users/me
 
+// Sets one's own user type
+POST /users/me/onboard
+
 // Get a student's own details
 GET /users/me/applications
 GET /users/me/rentals
