@@ -170,23 +170,21 @@ export const correctLandlordFilter: RequestHandler<
   next();
 };
 
-export const selfFilter = (): RequestHandler<
+export const selfFilter: RequestHandler<
   unknown,
   unknown,
   unknown,
   unknown,
   Record<string, unknown> & QueryFilter<{ userId: mongoose.Types.ObjectId }>
-> => {
-  return (req, res, next) => {
-    if (!req.user) {
-      next(new AppError(401, 'Unauthenticated'));
-      return;
-    }
+> = (req, res, next) => {
+  if (!req.user) {
+    next(new AppError(401, 'Unauthenticated'));
+    return;
+  }
 
-    res.locals.filters = combineFilters(res.locals.filters, { userId: req.user._id });
+  res.locals.filters = combineFilters(res.locals.filters, { userId: req.user._id });
 
-    next();
-  };
+  next();
 };
 
 export const isLoggedIn: RequestHandler = (req, res, next) => {
