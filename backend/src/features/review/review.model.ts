@@ -1,5 +1,22 @@
 import mongoose from 'mongoose';
 
+export type ReviewType = {
+  _id: mongoose.Types.ObjectId;
+  userId: mongoose.Types.ObjectId;
+  listingId: mongoose.Types.ObjectId;
+  facilityId: mongoose.Types.ObjectId;
+  ratings: {
+    quality: number;
+    comfort: number;
+    environment: number;
+  };
+  description?: string;
+  media: {
+    sourceType: 'local' | 'external';
+    value: string;
+  }[];
+};
+
 const reviewSchema = new mongoose.Schema(
   {
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'Student', required: true },

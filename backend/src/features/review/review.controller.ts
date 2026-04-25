@@ -8,6 +8,7 @@ import {
   createReview,
   deleteReview,
   updateReview,
+  updateReviewStatus,
 } from './review.service';
 import assert from 'node:assert';
 
@@ -69,6 +70,18 @@ export const routeUpdateReview: RequestHandler = async (req, res) => {
 
   const updatedReview = await updateReview({ ...params, userId });
 
+  res.status(200).json({ data: updatedReview });
+};
+
+export const routeApproveReview: RequestHandler = async (req, res) => {
+  const requestId = ObjectIdSchema.parse(req.params.reviewId);
+  const updatedReview = await updateReviewStatus(requestId, 'approved');
+  res.status(200).json({ data: updatedReview });
+};
+
+export const routeRejectReview: RequestHandler = async (req, res) => {
+  const requestId = ObjectIdSchema.parse(req.params.reviewId);
+  const updatedReview = await updateReviewStatus(requestId, 'rejected');
   res.status(200).json({ data: updatedReview });
 };
 
