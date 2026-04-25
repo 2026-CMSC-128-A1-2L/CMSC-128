@@ -2,18 +2,13 @@ import type { RequestHandler } from 'express';
 import type mongoose from 'mongoose';
 import type { QueryFilter } from 'mongoose';
 import { AppError } from './error';
-import { ObjectIdSchema } from 'shared';
+import { ManagerPermission, ObjectIdSchema } from 'shared';
 import {
   HousingFacility,
   ManagerPermissionType,
   type HousingFacilityType,
 } from './features/facility/facility.model';
-import { Listing } from './features/listing/listing.model';
-import { Rental } from './features/rental/rental.model';
 import { isVerified } from './features/user/user.model';
-import type { UnitType } from './features/unit/unit.model';
-
-export type ManagerPermission = 'manageBillings' | 'manageApplications' | 'manageListings';
 
 // Adds filters for private/public listings for unverified/verified users. Used for read actions on listings.
 export const listingViewFilter: RequestHandler = (req, res, next) => {
@@ -115,9 +110,12 @@ const facilityManagerFilter =
     };
   };
 
+export const deleteListingsFilter = facilityManagerFilter('deleteListings');
 export const manageListingsFilter = facilityManagerFilter('manageListings');
 export const manageApplicationsFilter = facilityManagerFilter('manageApplications');
 export const manageBillingsFilter = facilityManagerFilter('manageBillings');
+export const manageBookingsFilter = facilityManagerFilter('manageBookings');
+export const reportUsersFilter = facilityManagerFilter('reportUsers');
 export const managerFilter = facilityManagerFilter(null);
 
 export const correctLandlordFilter: RequestHandler<

@@ -10,7 +10,16 @@ export const APPLICATION_STATUS = [
   'approved',
   'contract-signed',
 ] as const;
+export const MANAGER_PERMISSIONS = [
+  'deleteListings',
+  'manageListings',
+  'manageBillings',
+  'manageBookings',
+  'manageApplications',
+  'reportUsers',
+] as const;
 
 export type FacilityType = (typeof FACILITY_TYPES)[number];
 export type DocumentStatusType = (typeof DOCUMENT_STATUS)[number];
 export type BookingStatusType = (typeof BOOKING_STATUS)[number];
+export type ManagerPermission = (typeof MANAGER_PERMISSIONS)[number];

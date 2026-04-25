@@ -152,7 +152,7 @@ export const searchFacilities = async (filters: FacilityFilters) => {
 export type CreateFacilityArguments = {
   managers?: {
     email: string;
-    permissions: { manageBillings: boolean; manageApplications: boolean; manageListings: boolean };
+    permissions: ManagerPermissionType;
   }[];
 
   name: string;

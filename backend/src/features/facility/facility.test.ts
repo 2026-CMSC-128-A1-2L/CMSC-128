@@ -25,7 +25,14 @@ describe('Facilities API', () => {
       managers: [
         {
           email: manager.emails[0],
-          permissions: { manageBillings: true, manageApplications: true, manageListings: true },
+          permissions: {
+            manageBillings: true,
+            manageApplications: true,
+            manageListings: true,
+            deleteListings: true,
+            reportUsers: true,
+            manageBookings: true,
+          },
         },
       ],
       location: {
@@ -45,7 +52,14 @@ describe('Facilities API', () => {
       managers: [
         {
           userId: manager._id,
-          permissions: { manageBillings: true, manageApplications: true, manageListings: true },
+          permissions: {
+            manageBillings: true,
+            manageApplications: true,
+            manageListings: true,
+            deleteListings: true,
+            reportUsers: true,
+            manageBookings: true,
+          },
         },
       ],
     });
