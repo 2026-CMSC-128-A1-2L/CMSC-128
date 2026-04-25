@@ -8,9 +8,8 @@ import { Unit } from '../unit/unit.model';
 import { Review } from './review.model';
 import { QueryFilter } from 'mongoose';
 
-export type createReviewArguments = {
+export type CreateReviewArguments = {
   userId: mongoose.Types.ObjectId;
-  listingId: mongoose.Types.ObjectId;
   ratings: {
     quality: number;
     comfort: number;
@@ -20,7 +19,7 @@ export type createReviewArguments = {
   mediaUrls?: string[];
 };
 
-export type updateReviewArguments = {
+export type UpdateReviewArguments = {
   reviewId: mongoose.Types.ObjectId;
   userId: mongoose.Types.ObjectId;
   ratings?: {
@@ -33,7 +32,7 @@ export type updateReviewArguments = {
 
 export const createReview = async (
   listingId: mongoose.Types.ObjectId,
-  data: createReviewArguments,
+  data: CreateReviewArguments,
   filters: QueryFilter<ListingType>,
 ) => {
   const listing = await Listing.findOne(combineFilters({ _id: listingId }, filters));
@@ -41,7 +40,11 @@ export const createReview = async (
 
   // Only active tenants of this listing may leave a review
   const unitIds = await Unit.find({ listingId }).distinct('_id');
-  const activeRental = await Rental.findOne({ userId: data.userId, unitId: { $in: unitIds }, status: 'active' });
+  const activeRental = await Rental.findOne({
+    userId: data.userId,
+    unitId: { $in: unitIds },
+    status: 'active',
+  });
   if (!activeRental) throw new AppError(422, 'Only active tenants can leave a review.');
 
   const media =
@@ -79,7 +82,7 @@ export const getFacilityReviews = async (facilityId: mongoose.Types.ObjectId) =>
   return await Review.find({ facilityId });
 };
 
-export const updateReview = async (data: updateReviewArguments) => {
+export const updateReview = async (data: UpdateReviewArguments) => {
   const review = await Review.findOne({ _id: data.reviewId, userId: data.userId });
   if (!review) throw new AppError(404, 'Review not found.');
   review.set({ ratings: data.ratings, description: data.description });
