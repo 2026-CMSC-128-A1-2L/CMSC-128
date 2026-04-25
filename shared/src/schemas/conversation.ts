@@ -26,7 +26,7 @@ export const GetMyConversationsResponseBody = z
       }),
     ),
   })
-  .extend(PaginationRequestSchema);
+  .extend(PaginationRequestSchema(20));
 
 // GET /messages/:userId
 export const GetMyConversationResponseBody = z
@@ -45,7 +45,7 @@ export const GetMyConversationResponseBody = z
     ),
     readAt: DateTimeSchema.nullish(),
   })
-  .extend(PaginationResponseSchema);
+  .extend(PaginationResponseSchema.shape);
 
 // POST /messages/:userId
 export const SendMessageRequestBody = z.object({
