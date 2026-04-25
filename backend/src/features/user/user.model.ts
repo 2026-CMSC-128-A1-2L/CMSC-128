@@ -19,7 +19,7 @@ export type UserType = {
   };
 
   status: UserStatus;
-  userType: UserTypeType;
+  userType?: UserTypeType;
 
   documents: DocumentType[];
   verificationStatus: 'pending' | 'submitted' | 'rejected' | 'approved';
@@ -89,7 +89,6 @@ const userSchema = new mongoose.Schema<UserType>(
     userType: {
       type: String,
       enum: USER_TYPE,
-      required: true,
     },
     documents: { type: [documentSchema], required: true, default: [] },
     verificationStatus: {

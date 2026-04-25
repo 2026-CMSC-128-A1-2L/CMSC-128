@@ -12,7 +12,7 @@ type UserParams = {
   lastName: string;
   emails: string[];
   status: UserStatus;
-  userType: UserTypeType;
+  userType?: UserTypeType;
   profilePicture?: string | null;
   contact?: string;
   address?: string;
