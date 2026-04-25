@@ -129,5 +129,5 @@ export const buildHousingFacility = Factory.define<
   documents: [],
   isAcceptingApplications: false,
 })).onCreate(async (data) => {
-  return (await new HousingFacility(data).save()) as HousingFacilityType;
+  return (await new HousingFacility({ description: 'Test facility description', ...data }).save()) as HousingFacilityType;
 });
