@@ -67,7 +67,6 @@ export const routeGetUnitBillings: RequestHandler = async (req, res, next) => {
 
 export const routeGetBillingsSummary: RequestHandler = async (req, res, next) => {
   const userId = ObjectIdSchema.parse(req.params.userId);
-  const params = GetBillingsQuerySchema.parse(req.query);
-  const billingsSummary = await getBillingsSummary(userId, params, res.locals.filters);
+  const billingsSummary = await getBillingsSummary(userId, res.locals.filters);
   res.status(200).json({ data: billingsSummary });
 };
