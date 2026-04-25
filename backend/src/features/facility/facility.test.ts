@@ -22,6 +22,7 @@ describe('Facilities API', () => {
   beforeAll(async () => {
     validFacility = {
       name: `Test Facility 1`,
+      description: 'hello',
       managers: [
         {
           email: manager.emails[0],
@@ -160,7 +161,7 @@ describe('Facilities API', () => {
         const response = await studentAgent
           .patch(`/api/facilities/${facilityId}`)
           .send({ name: 'Updated Name' });
-        expect(response).statusToBe(403);
+        expect(response).statusToBe(404);
       });
 
       // Return 404 instead of 403 due to the filter pattern.

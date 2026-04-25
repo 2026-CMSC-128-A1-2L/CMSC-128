@@ -2,7 +2,6 @@ import type { RequestHandler } from 'express';
 import {
   CreateFacilityRequestBodySchema,
   type GetFacilityResponseBodySchema,
-  GetFacilitiesRequestQuerySchema,
   ObjectIdSchema,
   UpdateFacilityRequestBodySchema,
   UpdateManagerPermissionsRequestBodySchema,
@@ -20,6 +19,7 @@ import {
   approveFacility,
   searchFacilities,
 } from './facility.service';
+import assert from 'node:assert';
 
 // GET /facilities: routeGetFacilities
 export const routeGetFacilities: RequestHandler = async (_req, res, _next) => {

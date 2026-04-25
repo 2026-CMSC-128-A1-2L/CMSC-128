@@ -156,6 +156,7 @@ export type CreateFacilityArguments = {
   }[];
 
   name: string;
+  description: string;
   type: string;
   location?: {
     coordinates?: {
@@ -209,6 +210,7 @@ export const createFacility = async (
     ],
 
     name: data.name,
+    description: data.description,
     type: data.type,
     location: data.location,
 
