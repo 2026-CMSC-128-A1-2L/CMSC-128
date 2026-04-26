@@ -1,5 +1,6 @@
 import type { RequestHandler } from 'express';
 import { CreateReviewBodySchema, ObjectIdSchema, UpdateReviewBodySchema } from 'shared';
+import { AppError } from '../../error';
 import {
   getReviews,
   getListingReviews,
@@ -13,7 +14,7 @@ import {
 import assert from 'node:assert';
 
 export const routeCreateReview: RequestHandler = async (req, res) => {
-  assert.ok(req.user);
+  if (!req.user) throw new AppError(401, 'Unauthenticated');
   const listingId = ObjectIdSchema.parse(req.params.listingId);
   const params = CreateReviewBodySchema.parse(req.body);
   const userId = req.user._id;
