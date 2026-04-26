@@ -5,15 +5,17 @@ interface CheckboxItemProps {
     label: string;
     isChecked: boolean;
     onToggle: () => void;
+    noBorder?:boolean
 }
 
-const CheckboxItem: React.FC<CheckboxItemProps> = ({ label, isChecked, onToggle }) => {
+const CheckboxItem: React.FC<CheckboxItemProps> = ({ label, isChecked, onToggle, noBorder }) => {
     return (
         <button
             onClick={onToggle}
-            className={`flex cursor-pointer items-center w-full px-[16px] py-[12px] bg-white border rounded-num-8 transition-colors text-left group ${
-                isChecked ? 'border-[#2f8677]' : 'border-gainsboro hover:border-[#2f8677]'
-            }`}
+            className={`flex cursor-pointer items-center w-full px-[16px] py-[12px] bg-white border rounded-num-8 transition-colors text-left group 
+                ${isChecked ? 'border-[#2f8677]' : 'border-gainsboro hover:border-[#2f8677]'}
+                ${noBorder ? 'border-0' :'border-2'}
+                `}
         >
         {/* Custom Checkbox Square */}
         <div 

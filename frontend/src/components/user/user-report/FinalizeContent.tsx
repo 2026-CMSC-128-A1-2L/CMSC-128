@@ -6,7 +6,7 @@ interface FinalizeContentProps{
 }
 
 
-import FileUploadCard from "./FileUploadCard"
+import FileUploadCard from "../../general/FileUploadCard"
 
 export default function FinalizeContent(props:FinalizeContentProps) {
 

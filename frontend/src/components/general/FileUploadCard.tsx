@@ -2,12 +2,17 @@ import React from 'react';
 import UploadIcon from '../../../assets/upload_media_icon.svg'
 import EyeIcon from '../../../assets/iconamoon_eye.svg'
 import MoreIcon from '../../../assets/qlementine-icons_menu-dots-16.svg'
+//USAGE
+//<FileUploadCard title="Current Lease Agreement" isRequired={true} desc=".jpg or .png less than 500KB"/>
+
+
 interface FileUploadCardProps {
     title: string;
     isRequired?: boolean;
+    desc?: string;
 }
 
-const FileUploadCard: React.FC<FileUploadCardProps> = ({ title, isRequired = false }) => {
+const FileUploadCard: React.FC<FileUploadCardProps> = ({ title, isRequired = false, desc=".jpg or .png" }) => {
     return (
         <div className="flex flex-col w-full border border-[#f0f0f0] rounded-[12px] p-[16px] bg-white shadow-sm mb-[16px] font-inter text-black">
             {/* Header Row */}
@@ -46,7 +51,7 @@ const FileUploadCard: React.FC<FileUploadCardProps> = ({ title, isRequired = fal
                 <img src={UploadIcon} alt="" />
                 <div className="flex flex-col">
                 <span className="font-bold text-[14px]">Upload the document</span>
-                <span className="text-[#64748b] text-[12px] font-medium">.jpg or .png</span>
+                <span className="text-[#64748b] text-[12px] font-medium">{desc}</span>
                 </div>
             </div>
         </div>

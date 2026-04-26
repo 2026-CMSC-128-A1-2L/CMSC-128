@@ -2,11 +2,12 @@ import CurrentDormInfoCard from "../../../../components/CurrentDormInfoCard";
 import StepIndicator from "../../../../components/StepIndicator";
 import DormitoryImg from "../../../../../assets/image.png";
 import SideBar from "../../../../components/user/SideBar";
-import Header from "../../../../components/user-report/Header";
-import InfoContent from "../../../../components/user-report/InfoContent";
-import ReviewContent from "../../../../components/user-report/ReviewContent";
-import FinalizeContent from "../../../../components/user-report/FinalizeContent";
+import BreadcrumbHeader from "../../../../components/general/Breadcrumb";
+import InfoContent from "../../../../components/user/user-report/InfoContent";
+import ReviewContent from "../../../../components/user/user-report/ReviewContent";
+import FinalizeContent from "../../../../components/user/user-report/FinalizeContent";
 import { useState } from "react";
+
 export default function Reportv2() {
   const LandlordName = "Quevin Custodio";
   const ManagerName = "Nathaniel Cunanan";
@@ -29,8 +30,14 @@ export default function Reportv2() {
     <>
       <div className="flex">
         <SideBar />
-        <div className="flex flex-col max-w-[1128px] md:ml-20 py-10">
-          <Header />
+        <div className="flex flex-col max-w-[1128px] ml-5 md:ml-10 py-10">
+          <BreadcrumbHeader
+            routes={[
+              { name: "User Profile", url: "/profile" },
+              { name: "Current Dorm", url: "/profile/dorm" },
+              { name: "Report" },
+            ]}
+          />
           <div className="flex flex-col items-center max-w-[1128px] bg-white border border-whitesmoke-200 rounded-2xl overflow-hidden shadow-sm">
             <CurrentDormInfoCard
               LandlordName={LandlordName}
