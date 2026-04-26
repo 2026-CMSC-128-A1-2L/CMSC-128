@@ -2,7 +2,7 @@
 import '../../config.js';
 import { describe, it, expect, beforeAll } from 'vitest';
 import { buildHousingFacility } from '../../test/factories.js';
-import { landlord, landlordAgent, studentAgent, guestAgent, student } from '../../test/setup.js';
+import { landlord, landlordAgent, studentAgent, guestAgent, student, adminAgent } from '../../test/setup.js';
 import { Listing } from '../listing/listing.model.js';
 import { Unit } from '../unit/unit.model.js';
 import { Rental } from '../rental/rental.model.js';
@@ -302,8 +302,10 @@ describe('Reviews API', () => {
   // ============================================================================
   describe('GET /api/facilities/:facilityId/average-ratings', () => {
     describe('Logic', () => {
-      // The facility has reviews from the POST tests above; all expected fields must be present.
+      // Approves the review first (admin action) so it counts toward the average,
+      // then checks that all expected fields are present in the response.
       it('should return average ratings for a facility with reviews', async () => {
+        await adminAgent.post(`/api/reviews/${reviewId}/approve`);
         const response = await studentAgent.get(`/api/facilities/${facilityId}/average-ratings`);
         expect(response).statusToBe(200);
         expect(response.body.data.quality).toBeDefined();
