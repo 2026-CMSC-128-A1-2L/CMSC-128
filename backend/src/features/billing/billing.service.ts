@@ -8,13 +8,17 @@ import { buildQuery } from '../../utils';
 import { HousingFacility } from '../facility/facility.model';
 import { Unit } from '../unit/unit.model';
 import { combineFilters } from '../../middleware';
-import { match } from 'node:assert';
-import { fa } from 'zod/v4/locales';
-import { DataTypeSchema } from 'shared';
+import { DocumentType } from '../document/document.model';
 
 export type CreateBillingArguments = {
   rentalId: mongoose.Types.ObjectId;
   dueDate: Date;
+
+  paymentMethod: {
+    method: 'gcash' | 'bank_transfer';
+    qr: DocumentType[];
+  }[];
+
   breakdown: {
     name: string;
     amount: number;
@@ -23,6 +27,11 @@ export type CreateBillingArguments = {
 
 export type UpdateBillingArguments = {
   dueDate?: Date;
+};
+
+export type submitBillingPaymentArguments = {
+  paymentMethod: 'gcash' | 'bank_transfer';
+  file: string;
 };
 
 export type GetBillingArguments = {
@@ -48,6 +57,7 @@ export const createBilling = async (
   if (!rental) throw new AppError(404, 'Rental not found.');
 
   const totalAmount = data.breakdown.map((x) => x.amount).reduce((x, y) => x + y);
+
   const billing = new Billing({
     userId: rental.userId,
     unitId: rental.unitId,
@@ -55,6 +65,7 @@ export const createBilling = async (
     dueDate: data.dueDate,
     totalAmount,
     breakdown: data.breakdown,
+    paymentMethod: data.paymentMethod,
   });
 
   const savedBilling = await billing.save();
@@ -527,4 +538,23 @@ export const getUserBillings = async (
     unpaidPayments: data.billList.filter((b: any) => b.paymentStatus !== 'paid'),
     billingHistory: data.billList.filter((b: any) => b.paymentStatus === 'paid'),
   };
+};
+
+export const sumbitBillingPayment = async (
+  billingId: mongoose.Types.ObjectId,
+  data: submitBillingPaymentArguments,
+  filters: QueryFilter<BillingType>,
+) => {
+  const billing = await Billing.findOne({ _id: billingId, filters });
+  if (!billing) throw new AppError(404, 'Billing not found.');
+
+  const receiptDocument: DocumentType = {
+    docId: new mongoose.Types.ObjectId().toString(),
+    name: `Recipt for ${billing._id}`,
+    status: 'pending',
+    files: [data.file],
+    message: `Payment method: ${data.paymentMethod}`,
+  };
+  billing.documents.push(receiptDocument);
+  return await billing.save();
 };

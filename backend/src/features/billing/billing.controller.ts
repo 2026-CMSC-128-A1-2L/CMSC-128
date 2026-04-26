@@ -3,6 +3,7 @@ import {
   CreateBillingBodySchema,
   GetBillingsQuerySchema,
   ObjectIdSchema,
+  submitBillingPaymentArgumentsSchema,
   UpdateBillingPaymentRequestBodySchema,
   UpdateBillingRequestBodySchema,
 } from 'shared';
@@ -15,6 +16,7 @@ import {
   getUserBillings,
   updateBilling,
   updateBillingPayment,
+  sumbitBillingPayment,
 } from './billing.service';
 
 import { AppError } from '../../error';
@@ -83,4 +85,11 @@ export const routeGetUserBillingDashboard: RequestHandler = async (req, res, nex
   const userId = ObjectIdSchema.parse(req.params.userId);
   const data = await getUserBillings(userId, req.query, res.locals.filters);
   res.status(200).json({ data });
+};
+
+export const routeSubmitBillingPayment: RequestHandler = async (req, res, next) => {
+  const billingId = ObjectIdSchema.parse(req.params.billingId);
+  const params = submitBillingPaymentArgumentsSchema.parse(req.body);
+  const billing = await sumbitBillingPayment(billingId, params, res.locals.filters);
+  res.status(200).json({ data: billing });
 };
