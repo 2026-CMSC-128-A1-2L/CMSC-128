@@ -92,17 +92,9 @@ router.use(
 // .dashboard to get details for the main dashboard
 // .billingCards to get access to data for the cards.
 // ============================================================================
-router.get(
-  '/landlord/summary',
-  managerFilter('facility', 'manageBillings', true),
-  routeGetBillingsSummary,
-);
+router.get('/landlord/summary', manageBillingsFilter, routeGetBillingsSummary);
 
-router.get(
-  '/facility/:facilityId/summary',
-  managerFilter('facility', 'manageBillings', true),
-  routeGetBillingsSummary,
-);
+router.get('/facility/:facilityId/summary', manageBillingsFilter, routeGetBillingsSummary);
 
 router.get('/users/:userId/dashboard', selfFilter, routeGetUserBillingDashboard);
 

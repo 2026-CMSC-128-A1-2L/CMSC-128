@@ -248,7 +248,7 @@ export const getfacilityBilling = async (
     Unit.countDocuments({ facilityId }), // total units
     Rental.distinct('unitId', { facilityId, status: 'active' }), // occupied units
     Billing.aggregate([
-      { $match: combineFilters<BillingType>(billingFilters, { facilityId }) },
+      { $match: combineFilters<BillingType>(filters, { facilityId }) },
       // Multople aggreations can be done in one query using $facet
       {
         $facet: {
