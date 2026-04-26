@@ -4,63 +4,93 @@ import {
   getReviews,
   getListingReviews,
   getFacilityReviews,
+  getAverageRatingsByFacility,
   createReview,
   deleteReview,
   updateReview,
+  updateReviewStatus,
 } from './review.service';
+import assert from 'node:assert';
 
-export const routeCreateReview: RequestHandler = async (req, res, next) => {
+export const routeCreateReview: RequestHandler = async (req, res) => {
+  assert.ok(req.user);
   const listingId = ObjectIdSchema.parse(req.params.listingId);
-
   const params = CreateReviewBodySchema.parse(req.body);
-
-  const createdReview = await createReview(listingId, params, res.locals.filters ?? {});
+  const userId = req.user._id;
+  const createdReview = await createReview(
+    listingId,
+    { ...params, userId },
+    res.locals.filters ?? {},
+  );
 
   res.status(201).json({ data: createdReview });
 };
 
-export const routeGetReviews: RequestHandler = async (req, res, next) => {
+export const routeGetReviews: RequestHandler = async (req, res) => {
   const reviews = await getReviews(res.locals.filters ?? {});
 
-  res.status(200).json({
-    data: reviews,
-  });
+  res.status(200).json({ data: reviews });
 };
 
-export const routeGetListingReviews: RequestHandler = async (req, res, next) => {
-  const rawListingID = req.params.listingId;
-
-  const listingID = ObjectIdSchema.parse(rawListingID);
-
+export const routeGetListingReviews: RequestHandler = async (req, res) => {
+  const listingID = ObjectIdSchema.parse(req.params.listingId);
   const reviews = await getListingReviews(listingID, res.locals.filters ?? {});
 
-  res.status(200).json({
-    data: reviews,
-  });
+  res.status(200).json({ data: reviews });
 };
 
-export const routeGetFacilityReviews: RequestHandler = async (req, res, next) => {
-  const facilityID = ObjectIdSchema.parse(req.params.facilityId);
+export const routeGetFacilityReviews: RequestHandler = async (req, res) => {
+  const facilityId = ObjectIdSchema.parse(req.params.facilityId);
+  const reviews = await getFacilityReviews(facilityId);
 
-  const reviews = await getFacilityReviews(facilityID, res.locals.filters ?? {});
-
-  res.status(200).json({
-    data: reviews,
-  });
+  res.status(200).json({ data: reviews });
 };
 
-export const routeUpdateReview: RequestHandler = async (req, res, next) => {
+// GET /api/facilities/:facilityId/average-ratings
+//
+// Returns the average quality, comfort, environment, and overall ratings
+// across all reviews for all listings within the given facility.
+// Returns a message if no reviews exist yet.
+export const routeGetAverageRatingsByFacility: RequestHandler = async (req, res) => {
+  const facilityId = ObjectIdSchema.parse(req.params.facilityId);
+  const averages = await getAverageRatingsByFacility(facilityId);
+
+  if (!averages) {
+    res.status(200).json({ message: 'No reviews yet.' });
+    return;
+  }
+
+  res.status(200).json({ data: averages });
+};
+
+export const routeUpdateReview: RequestHandler = async (req, res) => {
+  assert.ok(req.user);
   const params = UpdateReviewBodySchema.parse(req.body);
+  const userId = req.user._id;
 
-  const updatedReview = await updateReview(params);
+  const updatedReview = await updateReview({ ...params, userId });
 
   res.status(200).json({ data: updatedReview });
 };
 
-export const routeDeleteReview: RequestHandler = async (req, res, next) => {
-  const reviewId = ObjectIdSchema.parse(req.params.reviewId);
+export const routeApproveReview: RequestHandler = async (req, res) => {
+  const requestId = ObjectIdSchema.parse(req.params.reviewId);
+  const updatedReview = await updateReviewStatus(requestId, 'approved');
+  res.status(200).json({ data: updatedReview });
+};
 
-  await deleteReview(reviewId);
+export const routeRejectReview: RequestHandler = async (req, res) => {
+  const requestId = ObjectIdSchema.parse(req.params.reviewId);
+  const updatedReview = await updateReviewStatus(requestId, 'rejected');
+  res.status(200).json({ data: updatedReview });
+};
+
+export const routeDeleteReview: RequestHandler = async (req, res) => {
+  assert.ok(req.user);
+  const reviewId = ObjectIdSchema.parse(req.params.reviewId);
+  const userId = req.user._id;
+
+  await deleteReview(reviewId, userId);
 
   res.status(200).json({ message: 'Review deleted successfully.' });
 };

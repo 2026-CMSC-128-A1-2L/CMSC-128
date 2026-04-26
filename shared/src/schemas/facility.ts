@@ -1,8 +1,25 @@
 import z from 'zod';
 import { DateTimeSchema, ObjectIdSchema, QuerySchema, RangeSchema } from './common';
-import { DOCUMENT_STATUS, FACILITY_TYPES, type FacilityType, ROOM_TYPES } from '../constants';
+import {
+  DOCUMENT_STATUS,
+  FACILITY_TYPES,
+  MANAGER_PERMISSIONS,
+  type ManagerPermission,
+  type FacilityType,
+  ROOM_TYPES,
+} from '../constants';
 
 const FacilityTypeSchema: z.ZodType<FacilityType> = z.enum(FACILITY_TYPES);
+
+const permissionShape = MANAGER_PERMISSIONS.reduce(
+  (acc, permission) => {
+    acc[permission] = z.boolean().default(false);
+    return acc;
+  },
+  {} as { [K in ManagerPermission]: z.ZodDefault<z.ZodBoolean> },
+);
+
+export const ManagerPermissionSchema = z.object(permissionShape);
 
 const DocumentSchema = z.object({
   // Name of the document used as path segment in the URL.
@@ -22,20 +39,12 @@ const DocumentSchema = z.object({
   files: z.array(z.string()),
 });
 
-const ManagerPermissionsSchema = z.object({
-  manageBillings: z.boolean(),
-  manageApplications: z.boolean(),
-  manageListings: z.boolean(),
-});
-
 const FacilityLocationSchema = z.object({
-  coordinates: z
-    .object({
-      lat: z.number(),
-      long: z.number(),
-    })
-    .optional(),
-  text: z.string().optional(),
+  coordinates: z.object({
+    lat: z.number(),
+    long: z.number(),
+  }),
+  text: z.string(),
 });
 
 const ManagerSchema = z.object({
@@ -52,43 +61,92 @@ const LandlordSchema = z.object({
   firstName: z.string(),
   middleName: z.string().optional(),
   lastName: z.string(),
-
+  contact: z.string(),
   numUnits: z.int(),
   createdAt: DateTimeSchema,
 });
 
-const UserFacilitySchema = z.object({
+const BaseUserFacilitySchema = z.object({
   id: ObjectIdSchema,
   name: z.string(),
-  landlordId: LandlordSchema,
-  managers: z.array(ManagerSchema),
-  location: FacilityLocationSchema.optional(),
-  type: FacilityTypeSchema,
+  location: FacilityLocationSchema,
+});
 
-  // the value of the override
-  isAcceptingApplications: z.boolean().optional(),
-  applicationOpenDate: Date,
-  applicationCloseDate: Date,
+const UserFacilitySchema = BaseUserFacilitySchema.extend({
+  averageRating: z.number(),
+  image: z.string().optional(),
+  price: {
+    min: z.number(),
+    max: z.number(),
+  },
 });
 
 const UserListing = z.object({
   name: z.string(),
   price: RangeSchema(z.number()),
-  tags: z.record(z.string(), z.union([z.number(), z.boolean(), z.string()])),
+  pasalo: z
+    .array(
+      z.object({
+        duration: z.enum(['6-months', '12-months']),
+        movesOutOn: DateTimeSchema,
+        terms: z.string(),
+      }),
+    )
+    .optional(),
+  // tags: z.record(z.string(), z.union([z.number(), z.boolean(), z.string()])),
 });
 
 const UserFacilityWithListingsSchema = UserFacilitySchema.extend({
   listings: z.array(UserListing),
 });
 
-const ManagerFacilitySchema = UserFacilitySchema.extend({
+export const UserFacilityDetailedSchema = BaseUserFacilitySchema.extend({
+  description: z.string(),
+  verifiedAt: DateTimeSchema,
+  media: z.array(
+    z.object({
+      sourceType: z.string(),
+      value: z.string(),
+    }),
+  ),
+  listings: z.array(
+    z.object({
+      description: z.string().optional(),
+      tags: z.map(z.string(), z.union([z.string(), z.number(), z.boolean()])),
+      cost: {
+        rent: z.number(),
+        estimatedUtilities: z.number(),
+        securityDeposit: z.number(),
+      },
+      media: z.array(
+        z.object({
+          sourceType: z.string(),
+          value: z.string(),
+        }),
+      ),
+    }),
+  ),
+  landlord: LandlordSchema,
+  managers: z.array(ManagerSchema),
+  type: FacilityTypeSchema,
+
+  // the value of the override
+  isAcceptingApplications: z.boolean().optional(),
+  applicationOpenDate: DateTimeSchema.optional(),
+  applicationCloseDate: DateTimeSchema.optional(),
+
+  allowVisit: z.boolean(),
+  allowTransfer: z.boolean(),
+});
+
+const ManagerFacilitySchema = UserFacilityDetailedSchema.extend({
   capacity: z.int(),
   documents: z.array(DocumentSchema),
 });
 
 const ManagerEntrySchema = z.object({
   email: z.email(),
-  permissions: ManagerPermissionsSchema,
+  permissions: ManagerPermissionSchema,
 });
 
 // ============================================================================
@@ -101,7 +159,7 @@ const ManagerEntrySchema = z.object({
 // This may return a combination of facilities with extended information for
 // managers and ones with basic information for users.
 // ============================================================================
-export const GetFacilitiesFilterSchema = z.object({
+export const FacilityFilterSchema = z.object({
   // Lowercase, substring search
   name: z.string().optional(),
   landlordId: ObjectIdSchema.optional(),
@@ -126,7 +184,7 @@ export const GetFacilitiesFilterSchema = z.object({
   // Checks true state, not only the override
   isAcceptingApplications: z.boolean().optional(),
 });
-export const GetFacilitiesRequestQuerySchema = QuerySchema(GetFacilitiesFilterSchema);
+export const GetFacilitiesRequestQuerySchema = QuerySchema(FacilityFilterSchema);
 export const GetFacilitiesResponseBodySchema = z.array(
   z.union([ManagerFacilitySchema, UserFacilitySchema]),
 );
@@ -140,8 +198,9 @@ export const CreateFacilityRequestBodySchema = z.object({
   // This automatically creates an invite to the listed managers.
   managers: z.array(ManagerEntrySchema).default([]),
   name: z.string(),
+  description: z.string(),
   type: FacilityTypeSchema,
-  location: FacilityLocationSchema.optional(),
+  location: FacilityLocationSchema,
 
   // Not accepting applications as default
   isAcceptingApplications: z.boolean().default(false),
@@ -173,6 +232,7 @@ export const SearchFacilitiesRequestBodySchema = z.object({
   allowVisit: z.boolean(),
   allowTransfer: z.boolean(),
 });
+
 export const SearchFacilitiesResponseBodySchema = z.array(UserFacilityWithListingsSchema);
 
 // ============================================================================
@@ -180,7 +240,10 @@ export const SearchFacilitiesResponseBodySchema = z.array(UserFacilityWithListin
 //
 // Retrieves a specific facility by ID.
 // ============================================================================
-export const GetFacilityResponseBodySchema = z.union([ManagerFacilitySchema, UserFacilitySchema]);
+export const GetFacilityResponseBodySchema = z.union([
+  UserFacilityDetailedSchema,
+  ManagerFacilitySchema,
+]);
 
 // PATCH /facilities/:facilityId: routeUpdateFacility
 export const UpdateFacilityRequestBodySchema = z
@@ -209,4 +272,4 @@ export const UpdateFacilityRequestBodySchema = z
 // ============================================================================
 // PATCH /facilities/:facilityId/managers/:managerId: routeUpdateManagerPermissions
 // ============================================================================
-export const UpdateManagerPermissionsRequestBodySchema = ManagerPermissionsSchema;
+export const UpdateManagerPermissionsRequestBodySchema = ManagerPermissionSchema;

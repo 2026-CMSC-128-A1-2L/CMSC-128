@@ -1,6 +1,6 @@
-import NavBarAdmin from '../../components/NavBarAdmin';
-import SideBarAdmin from '../../components/SideBarAdmin';
-import AdminPageTransition from '../../components/AdminPageTransition';
+import NavBarAdmin from '../../components/admin/NavBarAdmin';
+import SideBarAdmin from '../../components/admin/SideBarAdmin';
+import AdminPageTransition from '../../components/admin/AdminPageTransition';
 import { Icon } from '@iconify/react';
 
 const tableHeaders = ['Property Name', 'Landlord', 'Date Submitted', 'Details'];

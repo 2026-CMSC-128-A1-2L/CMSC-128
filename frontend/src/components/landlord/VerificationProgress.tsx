@@ -17,7 +17,8 @@ type StepState = 'completed' | 'active' | 'upcoming';
 
 const getCircleClasses = (state: StepState): string => {
   if (state === 'completed') return 'bg-[#096c5b] text-white';
-  if (state === 'active') return 'bg-[#024338] text-white ring-2 ring-[#024338]/20 ring-offset-2 ring-offset-transparent';
+  if (state === 'active')
+    return 'bg-[#024338] text-white ring-2 ring-[#024338]/20 ring-offset-2 ring-offset-transparent';
   return 'bg-[#b5c8c5] text-transparent';
 };
 

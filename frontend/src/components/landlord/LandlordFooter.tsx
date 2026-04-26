@@ -24,16 +24,28 @@ const LandlordFooter = () => {
             </span>
           </div>
           <nav className="flex flex-col items-center justify-center gap-[10px] whitespace-nowrap font-['Inter',sans-serif] text-[14px] font-bold text-[#666]">
-            <a href="#" className="hover:underline">Browse Dorms</a>
-            <a href="#" className="hover:underline">List your property</a>
+            <a href="#" className="hover:underline">
+              Browse Dorms
+            </a>
+            <a href="#" className="hover:underline">
+              List your property
+            </a>
           </nav>
           <nav className="flex flex-col items-center justify-center gap-[10px] whitespace-nowrap font-['Inter',sans-serif] text-[14px] font-bold text-[#666]">
-            <a href="#" className="hover:underline">About</a>
-            <a href="#" className="hover:underline">Contact Us</a>
+            <a href="#" className="hover:underline">
+              About
+            </a>
+            <a href="#" className="hover:underline">
+              Contact Us
+            </a>
           </nav>
           <nav className="flex flex-col items-center justify-center gap-[10px] whitespace-nowrap font-['Inter',sans-serif] text-[14px] font-bold text-[#666]">
-            <a href="#" className="hover:underline">Privacy Policy</a>
-            <a href="#" className="hover:underline">Terms of Use</a>
+            <a href="#" className="hover:underline">
+              Privacy Policy
+            </a>
+            <a href="#" className="hover:underline">
+              Terms of Use
+            </a>
           </nav>
         </div>
       </div>

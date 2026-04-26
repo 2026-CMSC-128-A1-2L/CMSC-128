@@ -1,20 +1,74 @@
-import NavBarAdmin from '../../components/NavBarAdmin';
-import SideBarAdmin from '../../components/SideBarAdmin';
-import AdminPageTransition from '../../components/AdminPageTransition';
+import NavBarAdmin from '../../components/admin/NavBarAdmin';
+import SideBarAdmin from '../../components/admin/SideBarAdmin';
+import AdminPageTransition from '../../components/admin/AdminPageTransition';
 import { Icon } from '@iconify/react';
 
 const tableHeaders = ['Name', 'Age', 'Sex', 'Province', 'Classification', 'Details'];
 
 const tableData = [
-  { name: 'Vicencio, Erik', age: 22, sex: 'Male', province: 'Laguna', classification: 'Renter' },
-  { name: 'Vicencio, Erik', age: 22, sex: 'Male', province: 'Laguna', classification: 'Renter' },
-  { name: 'Vicencio, Erik', age: 22, sex: 'Male', province: 'Laguna', classification: 'Renter' },
-  { name: 'Vicencio, Erik', age: 22, sex: 'Male', province: 'Laguna', classification: 'Renter' },
-  { name: 'Vicencio, Erik', age: 22, sex: 'Male', province: 'Laguna', classification: 'Renter' },
-  { name: 'Vicencio, Erik', age: 22, sex: 'Male', province: 'Laguna', classification: 'Renter' },
-  { name: 'Vicencio, Erik', age: 22, sex: 'Male', province: 'Laguna', classification: 'Renter' },
-  { name: 'Vicencio, Erik', age: 22, sex: 'Male', province: 'Laguna', classification: 'Renter' },
-  { name: 'Vicencio, Erik', age: 22, sex: 'Male', province: 'Laguna', classification: 'Renter' },
+  {
+    name: 'Vicencio, Erik',
+    age: 22,
+    sex: 'Male',
+    province: 'Laguna',
+    classification: 'Renter',
+  },
+  {
+    name: 'Vicencio, Erik',
+    age: 22,
+    sex: 'Male',
+    province: 'Laguna',
+    classification: 'Renter',
+  },
+  {
+    name: 'Vicencio, Erik',
+    age: 22,
+    sex: 'Male',
+    province: 'Laguna',
+    classification: 'Renter',
+  },
+  {
+    name: 'Vicencio, Erik',
+    age: 22,
+    sex: 'Male',
+    province: 'Laguna',
+    classification: 'Renter',
+  },
+  {
+    name: 'Vicencio, Erik',
+    age: 22,
+    sex: 'Male',
+    province: 'Laguna',
+    classification: 'Renter',
+  },
+  {
+    name: 'Vicencio, Erik',
+    age: 22,
+    sex: 'Male',
+    province: 'Laguna',
+    classification: 'Renter',
+  },
+  {
+    name: 'Vicencio, Erik',
+    age: 22,
+    sex: 'Male',
+    province: 'Laguna',
+    classification: 'Renter',
+  },
+  {
+    name: 'Vicencio, Erik',
+    age: 22,
+    sex: 'Male',
+    province: 'Laguna',
+    classification: 'Renter',
+  },
+  {
+    name: 'Vicencio, Erik',
+    age: 22,
+    sex: 'Male',
+    province: 'Laguna',
+    classification: 'Renter',
+  },
 ];
 
 function Applications() {

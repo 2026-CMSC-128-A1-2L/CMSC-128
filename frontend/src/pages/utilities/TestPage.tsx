@@ -1,10 +1,10 @@
 // src/pages/TestPage.tsx
-import ReportFlow from "../../components/ReportTenantPopups/TenantReportController";
+import ManagerReportFlow from "../../components/landlord/LandlordManagerReportForms/ManagerReportController";
 
 const TestPage = () => {
   return (
     <div className="flex items-center justify-center min-h-screen">
-      <ReportFlow />
+      <ManagerReportFlow />
     </div>
   );
 };
