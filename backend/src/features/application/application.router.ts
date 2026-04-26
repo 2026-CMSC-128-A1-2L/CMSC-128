@@ -7,6 +7,7 @@ import {
   routeAssignApplicationUnit,
   routeApproveApplication,
   routeRejectApplication,
+  routeFinalizeApplication,
 } from './application.controller';
 import {
   includeSelf,
@@ -76,5 +77,11 @@ router.post('/:applicationId/reject', manageApplicationsFilter, routeRejectAppli
 // ============================================================================
 router.post('/:applicationId/assign-unit', manageApplicationsFilter, routeAssignApplicationUnit);
 
-// TODO: finalization
+// ============================================================================
+// POST /api/applications/:applicationId/finalize
+//
+// Finalizes an application.
+// ============================================================================
+router.post('/:applicationId/finalize', manageApplicationsFilter, routeFinalizeApplication);
+
 export default router;
