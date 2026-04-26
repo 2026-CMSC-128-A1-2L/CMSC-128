@@ -1,74 +1,97 @@
-import { RequestHandler } from 'express';
+import type { RequestHandler } from 'express';
 import {
   CreateBillingBodySchema,
-  GetBillingsFilterSchema,
+  GetBillingsQuerySchema,
   ObjectIdSchema,
-  UpdateBillingBodySchema,
+  submitBillingPaymentArgumentsSchema,
+  UpdateBillingPaymentRequestBodySchema,
+  UpdateBillingRequestBodySchema,
 } from 'shared';
-import { sendNotification } from '../notification/notification.service';
 import {
   createBilling,
   getBilling,
   getBillings,
-  submitBillingPayment,
+  getBillingsSummary,
+  getfacilityBilling,
+  getUserBillings,
   updateBilling,
-  verifyBillingPayment,
+  updateBillingPayment,
+  sumbitBillingPayment,
 } from './billing.service';
+import { AppError } from '../../error';
 
-export const routeCreateBilling: RequestHandler = async (req, res, next) => {
+import assert from 'node:assert';
+
+export const routeCreateBilling: RequestHandler = async (req, res, _next) => {
   const params = CreateBillingBodySchema.parse(req.body);
-  const newBilling = await createBilling(params);
-  await sendNotification(
-    params.userId,
-    'New Billing Created',
-    `A new billing of type ${params.paymentType} has been created. Due date: ${params.dueDate.toISOString().split('T')[0]}.`,
-  );
-  res.status(201).json({ id: newBilling.id });
+  const billing = await createBilling(params, res.locals.filters);
+  res.status(201).json({ data: billing });
 };
 
-export const routeGetBillings: RequestHandler = async (req, res, next) => {
-  const params = GetBillingsFilterSchema.parse(req.query);
+export const routeGetBillings: RequestHandler = async (req, res, _next) => {
+  const params = GetBillingsQuerySchema.parse(req.query);
   const billings = await getBillings(params, res.locals.filters);
   res.status(200).json({ data: billings });
 };
 
-export const routeGetBilling: RequestHandler = async (req, res, next) => {
+export const routeGetBilling: RequestHandler = async (req, res, _next) => {
   const billingId = ObjectIdSchema.parse(req.params.billingId);
-  const billing = getBilling(billingId, res.locals.filters);
-  if (!billing) {
-    res.status(404).json({ message: 'Billing not found' });
-    return;
-  }
+  const billing = await getBilling(billingId, res.locals.filters);
+  if (!billing) throw new AppError(404, 'Billing not found');
   res.status(200).json({ data: billing });
 };
 
-export const routeUpdateBilling: RequestHandler = async (req, res, next) => {
+export const routeUpdateBilling: RequestHandler = async (req, res, _next) => {
   const billingId = ObjectIdSchema.parse(req.params.billingId);
-  const body = UpdateBillingBodySchema.parse(req.body);
-  const billing = updateBilling(billingId, body, res.locals.filters);
-  if (!billing) {
-    res.status(404).json({ message: 'Billing not found' });
-    return;
-  }
+  const body = UpdateBillingRequestBodySchema.parse(req.body);
+  const billing = await updateBilling(billingId, body, res.locals.filters);
+  if (!billing) throw new AppError(404, 'Billing not found');
   res.status(200).json({ data: billing });
+};
+
+export const routeUpdateBillingPayment: RequestHandler = async (req, res, next) => {
+  const billingId = ObjectIdSchema.parse(req.params.billingId);
+  const params = UpdateBillingPaymentRequestBodySchema.parse(req.body);
+  const billing = await updateBillingPayment(billingId, params.amount, res.locals.filters);
+  res.status(200).json({ data: billing });
+};
+
+// GET /users/me/billings
+export const routeGetUserBillings: RequestHandler = async (req, res, next) => {
+  // using the setUserId middleware, the userId is in params.
+  const userId = ObjectIdSchema.parse(req.params.userId);
+  res.status(200).json({ data: await getBillings({ userId }, res.locals.filters) });
+};
+
+// GET /units/:unitId/billings
+export const routeGetUnitBillings: RequestHandler = async (req, res, next) => {
+  const unitId = ObjectIdSchema.parse(req.params.unitId);
+  res.status(200).json({ data: await getBillings({ unitId }, res.locals.filters) });
+};
+
+// GET /billings/summary
+export const routeGetBillingsSummary: RequestHandler = async (req, res, next) => {
+  assert.ok(req.user);
+  const userId = ObjectIdSchema.parse(req.user._id);
+  const billingsSummary = await getBillingsSummary(userId, res.locals.filters);
+  res.status(200).json({ data: billingsSummary });
+};
+
+export const routeGetFacilityBillingsSummary: RequestHandler = async (req, res, next) => {
+  const facilityId = ObjectIdSchema.parse(req.params.facilityId);
+  const billingsSummary = await getfacilityBilling(facilityId, req.query, res.locals.filters);
+  res.status(200).json({ data: billingsSummary });
+};
+
+export const routeGetUserBillingDashboard: RequestHandler = async (req, res, next) => {
+  const userId = ObjectIdSchema.parse(req.params.userId);
+  const data = await getUserBillings(userId, req.query, res.locals.filters);
+  res.status(200).json({ data });
 };
 
 export const routeSubmitBillingPayment: RequestHandler = async (req, res, next) => {
   const billingId = ObjectIdSchema.parse(req.params.billingId);
-  const params = UpdateBillingBodySchema.parse(req.body);
-
-  const updatedBilling = await submitBillingPayment(billingId, params, res.locals.filters);
-  res.status(200).json({ data: updatedBilling });
+  const params = submitBillingPaymentArgumentsSchema.parse(req.body);
+  const billing = await sumbitBillingPayment(billingId, params, res.locals.filters);
+  res.status(200).json({ data: billing });
 };
-
-export const routeVerifyBillingPayment: RequestHandler = async (req, res, next) => {
-  const billingId = ObjectIdSchema.parse(req.params.billingId);
-  const params = UpdateBillingBodySchema.parse(req.body);
-
-  const updatedBilling = await verifyBillingPayment(billingId, params, res.locals.filters);
-  // TODO notifs
-  res.status(200).json({ data: updatedBilling });
-};
-
-export const routeGetUserBillings: RequestHandler = async (req, res, next) => {};
-export const routeGetUnitBillings: RequestHandler = async (req, res, next) => {};

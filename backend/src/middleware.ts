@@ -1,17 +1,18 @@
-import { RequestHandler } from 'express';
-import mongoose, { QueryFilter } from 'mongoose';
+import type { RequestHandler } from 'express';
+import type mongoose from 'mongoose';
+import type { QueryFilter } from 'mongoose';
 import { AppError } from './error';
-import { ObjectIdSchema } from 'shared';
-import { HousingFacility } from './features/facility/facility.model';
-import { Listing } from './features/listing/listing.model';
-import { Rental } from './features/rental/rental.model';
+import { ManagerPermission, ObjectIdSchema } from 'shared';
+import {
+  HousingFacility,
+  ManagerPermissionType,
+  type HousingFacilityType,
+} from './features/facility/facility.model';
 import { isVerified } from './features/user/user.model';
-
-export type ManagerPermission = 'manageBillings' | 'manageApplications' | 'manageListings';
 
 // Adds filters for private/public listings for unverified/verified users. Used for read actions on listings.
 export const listingViewFilter: RequestHandler = (req, res, next) => {
-  if (!req.user || !isVerified(req.user.userType)) {
+  if (!req.user || !isVerified(req.user.status)) {
     res.locals.filters = { isPrivate: false };
   } else {
     res.locals.filters = {};
@@ -20,46 +21,49 @@ export const listingViewFilter: RequestHandler = (req, res, next) => {
   next();
 };
 
-export const combineFilters = (oldFilter: any, newFilter: any) => ({
-  $and: [...(oldFilter?.$and ?? (oldFilter ? [oldFilter] : [])), newFilter],
-});
+export function combineFilters<T>(
+  oldFilter: QueryFilter<T> | undefined,
+  newFilter: QueryFilter<T>,
+) {
+  const baseFilters = oldFilter?.$and ?? (oldFilter ? [oldFilter] : []);
 
-// Used for queries on documents which have the managers array, which are `HousingFacility` and `Listing`.
-export const managerFilter = (
-  filterType: 'direct' | 'facility' | 'listing' | 'facility-direct' | 'listing-direct',
-  permission: ManagerPermission | null,
-  includeSelf: boolean = false,
-): RequestHandler => {
-  return async (req, res, next) => {
-    if (!req.user) {
-      return next(new AppError(401, 'Unauthenticated'));
-    }
+  return {
+    $and: [...baseFilters, newFilter],
+  } as QueryFilter<T>;
+}
+
+export const includeSelf: RequestHandler = (req, res, next) => {
+  if (!req.user) {
+    next(new AppError(401, 'Unauthenticated'));
+    return;
+  }
+
+  // if there is no filter, doing an OR with it results still in no filter.
+  if (!res.locals.filters) {
+    next();
+    return;
+  }
+
+  res.locals.filters = {
+    $or: [res.locals.filters, { userId: req.user._id }],
+  };
+};
+
+type ManagerEntry = {
+  userId: mongoose.Types.ObjectId;
+  permissions: ManagerPermissionType;
+};
+
+export const directManagerFilter =
+  (permission: ManagerPermission | null): RequestHandler =>
+  async (req, res, next) => {
+    if (!req.user) throw new AppError(401, 'Unauthenticated');
 
     const userId = req.user._id;
 
-    if (req.user.userType === 'Student') {
-      if (includeSelf) {
-        // ignores filterType as it is for the manager
-        res.locals.filters = combineFilters(res.locals.filters, { userId });
-        return next();
-      } else {
-        // not a manager, return a 403
-        return next(new AppError(403, 'Forbidden'));
-      }
-    }
-
-    let newFilter: QueryFilter<{
-      managers: {
-        userId: mongoose.Types.ObjectId;
-        permissions: {
-          manageBillings: boolean;
-          manageApplications: boolean;
-          manageListings: boolean;
-        };
-      }[];
-    }>;
+    let newFilter: QueryFilter<{ managers: ManagerEntry[] }>;
     if (permission) {
-      const innerFilter: any = { userId };
+      const innerFilter: QueryFilter<ManagerEntry> = { userId };
       innerFilter[`permissions.${permission}`] = true;
       newFilter = {
         managers: {
@@ -72,86 +76,82 @@ export const managerFilter = (
       };
     }
 
-    if (filterType === 'direct') {
-      res.locals.filters = combineFilters(res.locals.filters, newFilter);
-    } else if (filterType === 'listing-direct') {
-      res.locals.filters = combineFilters(res.locals.filters, {
-        _id: { $in: await Listing.find(newFilter).distinct('_id') },
-      });
-    } else if (filterType === 'listing') {
-      res.locals.filters = combineFilters(res.locals.filters, {
-        listingId: { $in: await Listing.find(newFilter).distinct('_id') },
-      });
-    } else if (filterType === 'facility-direct') {
-      res.locals.filters = combineFilters(res.locals.filters, {
-        _id: { $in: await HousingFacility.find(newFilter).distinct('_id') },
-      });
-    } else if (filterType === 'facility') {
-      res.locals.filters = combineFilters(res.locals.filters, {
-        facilityId: { $in: await HousingFacility.find(newFilter).distinct('_id') },
-      });
-    }
-
+    res.locals.filters = combineFilters(res.locals.filters, newFilter);
     next();
   };
-};
 
-export const currentTenantManagerFilter: RequestHandler = async (req, res, next) => {
-  if (!req.user) {
-    return next(new AppError(401, 'Unauthenticated'));
-  }
-
-  const userId = req.user._id;
-
-  if (req.user.userType === 'Student') {
-    const currentRental = await Rental.findOne({ userId: req.user._id, status: 'active' });
-    if (!currentRental) {
-      throw new AppError(422, 'Student is not currently renting.');
-    }
-    res.locals.filters = combineFilters(res.locals.filters, { unitId: currentRental.unitId });
-    return next();
-  }
-
-  const newFilter = {
-    managers: {
-      $elemMatch: { userId, 'permissions.manageListings': true },
-    },
-  };
-  const listingFilter = { listingId: { $in: await Listing.find(newFilter).distinct('_id') } };
-  res.locals.filters = combineFilters(res.locals.filters, listingFilter);
-
-  next();
-};
-
-export const correctLandlordFilter: RequestHandler = async (req, res, next) => {
-  if (!req.user) {
-    return next(new AppError(401, 'Unauthenticated'));
-  }
-
-  res.locals.filters = combineFilters(res.locals.filters, { landlordId: req.user._id });
-
-  next();
-};
-
-export const selfFilter =
-  (direct: boolean): RequestHandler =>
+// Used when the object has a `facilityId`.
+//
+// Adding this filter ensures that the query will only return
+// listings such that the manager has the correct permission.
+// Passing null means that any manager of that listing should
+// be able to pass.
+const facilityManagerFilter =
+  (permission: ManagerPermission | null): RequestHandler =>
   async (req, res, next) => {
-    if (!req.user) {
-      return next(new AppError(401, 'Unauthenticated'));
-    }
+    assert.ok(req.user);
+    if (req.user.userType !== 'Manager' && req.user.userType !== 'Landlord')
+      throw new AppError(403, 'Forbidden.');
 
-    if (direct) {
-      res.locals.filters = combineFilters(res.locals.filters, { _id: req.user._id });
-    } else {
-      res.locals.filters = combineFilters(res.locals.filters, { userId: req.user._id });
+    const managerCriteria: QueryFilter<{
+      userId: mongoose.Types.ObjectId;
+      permissions: ManagerPermissionType;
+    }> = { userId: req.user._id };
+    if (permission) {
+      managerCriteria[`permissions.${permission}`] = true;
     }
+    const facilityIds = await HousingFacility.find({
+      managers: { $elemMatch: managerCriteria },
+    }).distinct('_id');
 
+    res.locals.filters = {
+      facilityId: { $in: facilityIds },
+    };
     next();
   };
 
-export const hasAccount: RequestHandler = (req, res, next) => {
+export const deleteListingsFilter = facilityManagerFilter('deleteListings');
+export const manageListingsFilter = facilityManagerFilter('manageListings');
+export const manageApplicationsFilter = facilityManagerFilter('manageApplications');
+export const manageBillingsFilter = facilityManagerFilter('manageBillings');
+export const manageBookingsFilter = facilityManagerFilter('manageBookings');
+export const reportUsersFilter = facilityManagerFilter('reportUsers');
+export const managerFilter = facilityManagerFilter(null);
+
+export const correctLandlordFilter: RequestHandler<
+  unknown,
+  unknown,
+  unknown,
+  unknown,
+  Record<string, unknown> & { filters: QueryFilter<HousingFacilityType> }
+> = (req, res, next) => {
   if (!req.user) {
-    return next(new AppError(401, 'Unauthenticated'));
+    next(new AppError(401, 'Unauthenticated'));
+    return;
+  }
+
+  res.locals.filters = combineFilters<HousingFacilityType>(res.locals.filters, {
+    landlordId: req.user._id,
+  });
+
+  next();
+};
+
+export const selfFilter: RequestHandler = (req, res, next) => {
+  if (!req.user) {
+    next(new AppError(401, 'Unauthenticated'));
+    return;
+  }
+
+  res.locals.filters = combineFilters(res.locals.filters, { userId: req.user._id });
+
+  next();
+};
+
+export const isLoggedIn: RequestHandler = (req, res, next) => {
+  if (!req.user) {
+    next(new AppError(401, 'Unauthenticated'));
+    return;
   }
 
   next();
@@ -159,11 +159,13 @@ export const hasAccount: RequestHandler = (req, res, next) => {
 
 export const isLandlord: RequestHandler = (req, res, next) => {
   if (!req.user) {
-    return next(new AppError(401, 'Unauthenticated'));
+    next(new AppError(401, 'Unauthenticated'));
+    return;
   }
 
-  if (!(req.user.userType == 'Landlord' || req.user.userType == 'Admin')) {
-    return next(new AppError(403, 'Forbidden'));
+  if (!(req.user.userType === 'Landlord' || req.user.userType === 'Admin')) {
+    next(new AppError(403, 'Forbidden'));
+    return;
   }
 
   next();
@@ -171,11 +173,13 @@ export const isLandlord: RequestHandler = (req, res, next) => {
 
 export const isSuperAdmin: RequestHandler = (req, res, next) => {
   if (!req.user) {
-    return next(new AppError(401, 'Unauthenticated'));
+    next(new AppError(401, 'Unauthenticated'));
+    return;
   }
 
   if (req.user.userType !== 'Admin') {
-    return next(new AppError(403, 'Forbidden'));
+    next(new AppError(403, 'Forbidden'));
+    return;
   }
 
   next();
@@ -183,11 +187,13 @@ export const isSuperAdmin: RequestHandler = (req, res, next) => {
 
 export const isVerifiedStudent: RequestHandler = (req, res, next) => {
   if (!req.user) {
-    return next(new AppError(401, 'Unauthenticated'));
+    next(new AppError(401, 'Unauthenticated'));
+    return;
   }
 
   if (req.user.userType !== 'Student' || req.user.status !== 'verified') {
-    return next(new AppError(403, 'Forbidden'));
+    next(new AppError(403, 'Forbidden'));
+    return;
   }
 
   next();
@@ -195,11 +201,13 @@ export const isVerifiedStudent: RequestHandler = (req, res, next) => {
 
 export const isSelfOrSuperAdmin: RequestHandler = async (req, res, next) => {
   if (!req.user) {
-    return next(new AppError(401, 'Unauthenticated'));
+    next(new AppError(401, 'Unauthenticated'));
+    return;
   }
 
   if (req.user.userType === 'Admin') {
-    return next();
+    next();
+    return;
   }
 
   res.locals.filters = combineFilters(res.locals.filters, { _id: req.user._id });
@@ -207,8 +215,9 @@ export const isSelfOrSuperAdmin: RequestHandler = async (req, res, next) => {
 };
 
 export const isDevelopment: RequestHandler = (req, res, next) => {
-  if (process.env.NODE_ENV == 'development' || process.env.NODE_ENV == 'test') {
-    return next();
+  if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
+    next();
+    return;
   }
 
   res.status(401).send();
@@ -216,17 +225,37 @@ export const isDevelopment: RequestHandler = (req, res, next) => {
 
 export const getUserId: RequestHandler = (req, res, next) => {
   res.locals.id = ObjectIdSchema.parse(req.params.userId);
-  return next();
+  next();
+  return;
+};
+
+export const getBillingId: RequestHandler = (req, res, next) => {
+  res.locals.id = ObjectIdSchema.parse(req.params.billingId);
+  next();
+  return;
 };
 
 export const isVerifiedCheck: RequestHandler = (req, res, next) => {
   if (!req.user) {
-    return next(new AppError(401, 'Unauthenticated'));
+    next(new AppError(401, 'Unauthenticated'));
+    return;
   }
 
   if (req.user.status !== 'verified') {
-    return next(new AppError(403, 'Forbidden'));
+    next(new AppError(403, 'Forbidden'));
+    return;
   }
 
+  next();
+};
+
+export const setUserId: RequestHandler = (req, res, next) => {
+  if (!req.user) {
+    next(new AppError(401, 'Unauthenticated'));
+    return;
+  }
+
+  assert.ok(req.user);
+  req.params['userId'] = req.user._id.toString();
   next();
 };

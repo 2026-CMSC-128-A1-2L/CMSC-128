@@ -54,6 +54,7 @@ export const ListingFilterSchema = z.object({
     })
     .optional(),
   isPrivate: z.boolean().optional(),
+  isAcceptingApplications: z.boolean().optional(),
   allowVisit: z.boolean().optional(),
   allowTransfer: z.boolean().optional(),
 });
@@ -87,5 +88,7 @@ export const UpdateListingBodySchema = z.object({
   units: z.array(z.string()).optional(),
 });
 
-export const UpdateListingTagsResponseBodySchema = z.record(z.string(), z.union([z.string(), z.number(), z.boolean()]));
-
+export const UpdateListingTagsResponseBodySchema = z.record(
+  z.string(),
+  z.union([z.string(), z.number(), z.boolean()]),
+);

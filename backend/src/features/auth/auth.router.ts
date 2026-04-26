@@ -1,4 +1,4 @@
-import { RequestHandler, Router } from 'express';
+import { type RequestHandler, Router } from 'express';
 import passportGoogle from './google';
 import { isDevelopment } from '../../middleware';
 import { routeTestRegister, routeTestLogin } from './auth.controller';
@@ -6,11 +6,11 @@ import { routeTestRegister, routeTestLogin } from './auth.controller';
 const router = Router();
 
 router.get(
-  '/google/student',
+  '/google',
   passportGoogle.authenticate('google', { scope: ['profile', 'email'] }) as RequestHandler,
 );
 router.get(
-  '/google/student/callback',
+  '/google/callback',
   passportGoogle.authenticate('google', {
     failureRedirect: '/login',
     successRedirect: '/',

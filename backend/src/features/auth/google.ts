@@ -2,10 +2,10 @@ import '../../config.js';
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { User } from '../user/user.model';
-import { CreateUserParams, createUnverifiedStudent } from '../user/user.service';
+import { createUser, type CreateUserParams } from '../user/user.service';
 
 if (!process.env.GOOGLE_CLIENT_ID) {
-  throw new Error('Missing GOOGLE_CLIENT_Id in environment variables.');
+  throw new Error('Missing GOOGLE_CLIENT_ID in environment variables.');
 }
 
 if (!process.env.GOOGLE_CLIENT_SECRET) {
@@ -17,10 +17,10 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: '/api/auth/google/student/callback',
+      callbackURL: '/api/auth/google/callback',
     },
     (accessToken, refreshToken, profile, done) => {
-      if (!profile.emails || !profile.name) {
+      if (!profile.emails || profile.emails.length === 0 || !profile.name) {
         done('No email or name');
         return;
       }
@@ -36,7 +36,7 @@ passport.use(
         profilePicture: profile.profileUrl,
       };
 
-      createUnverifiedStudent(params)
+      createUser(params)
         .then((user) => done(null, user as Express.User))
         .catch((err) => done(err));
     },

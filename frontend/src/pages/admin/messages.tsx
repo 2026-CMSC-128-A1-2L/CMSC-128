@@ -1,10 +1,10 @@
 import { useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Icon } from '@iconify/react';
-import NavBarAdmin from '../../components/NavBarAdmin';
-import SideBarAdmin from '../../components/SideBarAdmin';
-import AdminPageTransition from '../../components/AdminPageTransition';
-import type { MessageItem } from '../../components/SideBarAdminMessagesView';
+import NavBarAdmin from '../../components/admin/NavBarAdmin';
+import SideBarAdmin from '../../components/admin/SideBarAdmin';
+import AdminPageTransition from '../../components/admin/AdminPageTransition';
+import type { MessageItem } from '../../components/admin/SideBarAdminMessagesView';
 
 type ChatMessage = {
   id: string;

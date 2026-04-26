@@ -1,53 +1,40 @@
 import z from 'zod';
-import { ObjectIdSchema, QuerySchema } from './common';
+import { DateTimeSchema, ObjectIdSchema, PaginationRequestSchema, QuerySchema } from './common';
 
 // POST /api/applications
 export const CreateApplicationBodySchema = z.object({
-  userId: ObjectIdSchema,
   listingId: ObjectIdSchema,
-  preferredRoomType: z.enum(['single', 'double', 'shared']).optional(),
-  documentUrls: z.array(z.string()).optional(),
-  unitId: ObjectIdSchema.optional(),
-  accommodationNoticeUrl: z.string().optional(),
+  leaseDuration: z.enum(['6-months', '12-months']),
+  moveInDate: DateTimeSchema,
+  message: z.string().nullish(),
 });
 
 // GET /api/applications
-export const ApplicationFilterSchema = z.object({
-  userId: ObjectIdSchema.optional(),
-  listingId: ObjectIdSchema.optional(),
-  preferredRoomType: z.enum(['single', 'double', 'shared']).optional(),
-  status: z
-    .enum([
-      'pending',
-      'manager-approved',
-      'manager-rejected',
-      'manager-waitlisted',
-      'landlord-rejected',
-      'landlord-approved',
-      'landlord-waitlisted',
-      'contract-signed',
-    ])
-    .optional(),
-  unitId: ObjectIdSchema.optional(),
-});
+export const ApplicationFilterSchema = z
+  .object({
+    userId: ObjectIdSchema.nullish(),
+    listingId: ObjectIdSchema.nullish(),
+    facilityId: ObjectIdSchema.nullish(),
+    status: z.enum(['pending', 'rejected', 'waitlisted', 'approved', 'contract-signed']).nullish(),
+    leaseDuration: z.enum(['6-months', '12-months']).nullish(),
+    moveInDate: z
+      .object({
+        min: DateTimeSchema.nullish(),
+        max: DateTimeSchema.nullish(),
+      })
+      .nullish(),
+    unitId: ObjectIdSchema.nullish(),
+  })
+  .extend(PaginationRequestSchema(50));
 
 export const GetApplicationsQuerySchema = QuerySchema(ApplicationFilterSchema);
 
-// PATCH /api/applications
-export const UpdateApplicationBodySchema = z.object({
-  preferredRoomType: z.enum(['single', 'double', 'shared']).optional(),
-  status: z
-    .enum([
-      'pending',
-      'manager-approved',
-      'manager-rejected',
-      'manager-waitlisted',
-      'landlord-rejected',
-      'landlord-approved',
-      'landlord-waitlisted',
-      'contract-signed',
-    ])
-    .optional(),
-  documentUrls: z.array(z.string()).optional(),
-  unitId: ObjectIdSchema.optional(),
+// POST /api/applications/:applicationId/assign-unit
+export const AssignUnitRequestBodySchema = z.object({
+  unitId: ObjectIdSchema,
+});
+
+// POST /api/applications/:applicationId/approve
+export const ApproveApplicationRequestBodySchema = z.object({
+  unitId: ObjectIdSchema,
 });

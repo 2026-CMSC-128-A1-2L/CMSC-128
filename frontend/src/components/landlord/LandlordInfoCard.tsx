@@ -52,9 +52,7 @@ const Field = ({ label, onEdit, to, children }: FieldProps) => {
           </button>
         )}
       </div>
-      <div className="font-['Inter',sans-serif] text-[14px] font-bold text-black">
-        {children}
-      </div>
+      <div className="font-['Inter',sans-serif] text-[14px] font-bold text-black">{children}</div>
     </>
   );
 
@@ -98,11 +96,7 @@ const LandlordInfoCard = ({
       <div className="grid grid-cols-1 gap-x-[48px] gap-y-[24px] md:grid-cols-[200px_1fr_1fr] md:items-start">
         <div className="flex h-[200px] w-[200px] shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#e5e7eb] text-[#9ca3af]">
           {info.photoUrl ? (
-            <img
-              src={info.photoUrl}
-              alt={info.fullName}
-              className="h-full w-full object-cover"
-            />
+            <img src={info.photoUrl} alt={info.fullName} className="h-full w-full object-cover" />
           ) : (
             <Icon icon="solar:user-bold" className="h-[120px] w-[120px]" aria-hidden="true" />
           )}

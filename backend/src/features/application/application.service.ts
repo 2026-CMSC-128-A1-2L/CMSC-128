@@ -1,96 +1,84 @@
-import mongoose, { QueryFilter } from 'mongoose';
+import type mongoose from 'mongoose';
+import type { QueryFilter } from 'mongoose';
 import { AppError } from '../../error';
+import {
+  ApplicationForm,
+  type ApplicationStatusType,
+  type ApplicationType,
+} from './application.model';
+import { sendNotification } from '../notification/notification.service';
+import { buildQuery, type NullablePartial } from '../../utils';
+import z from 'zod';
+import { DateTimeSchema, ObjectIdSchema } from 'shared';
 import { combineFilters } from '../../middleware';
-import { ApplicationForm } from './application.model';
+import { isUnitFull } from '../unit/unit.service';
 
-export type CreateApplicationArguments = {
+export type GetApplicationsArguments = NullablePartial<{
   userId: mongoose.Types.ObjectId;
+  unitId: mongoose.Types.ObjectId;
   listingId: mongoose.Types.ObjectId;
-  preferredRoomType?: 'single' | 'double' | 'shared';
-  status?:
-    | 'pending'
-    | 'manager-approved'
-    | 'manager-rejected'
-    | 'manager-waitlisted'
-    | 'landlord-rejected'
-    | 'landlord-approved'
-    | 'landlord-waitlisted'
-    | 'contract-signed';
-  documentUrls?: string[];
-  unitId?: mongoose.Types.ObjectId; // Not required when created
-  accommodationNoticeUrl?: string; // Not required when created
+  facilityId: mongoose.Types.ObjectId;
+  status: ApplicationStatusType;
+  leaseDuration: '6-months' | '12-months';
+  moveInDate?: {
+    min?: Date | null;
+    max?: Date | null;
+  };
+}> & {
+  cursor?: string;
+  limit: number;
 };
 
-export type GetApplicationsArguments = {
-  userId: mongoose.Types.ObjectId;
-  listingId: mongoose.Types.ObjectId;
-  preferredRoomType?: 'single' | 'double' | 'shared';
-  status?:
-    | 'pending'
-    | 'manager-approved'
-    | 'manager-rejected'
-    | 'manager-waitlisted'
-    | 'landlord-rejected'
-    | 'landlord-approved'
-    | 'landlord-waitlisted'
-    | 'contract-signed';
-  unitId?: mongoose.Types.ObjectId;
-};
-
-export const createApplication = async (data: CreateApplicationArguments) => {
-  const newApplication = new ApplicationForm({
-    userId: data.userId,
-    listingId: data.listingId,
-    preferredRoomType: data.preferredRoomType,
-    documentUrls: data.documentUrls || [],
-    unitId: data.unitId,
-    accommodationNoticeUrl: data.accommodationNoticeUrl,
-  });
+export const createApplication = async (
+  userId: mongoose.Types.ObjectId,
+  listingId: mongoose.Types.ObjectId,
+) => {
+  const newApplication = new ApplicationForm({ userId, listingId });
   return await newApplication.save();
 };
 
-export function buildApplicationQuery(
-  args: Partial<GetApplicationsArguments>,
-): QueryFilter<typeof ApplicationForm> {
-  const query: QueryFilter<typeof ApplicationForm> = {};
+const CursorSchema = <T extends z.ZodRawShape>(schema: z.ZodObject<T>) =>
+  z.string().transform((x) => schema.parse(JSON.parse(Buffer.from(x, 'base64').toString())));
 
-  if (args.userId) {
-    query.userId = args.userId;
+const GetApplicationsCursorSchema = CursorSchema(
+  z.object({
+    createdAt: DateTimeSchema,
+    _id: ObjectIdSchema,
+  }),
+);
+
+export const getApplications = async (
+  query: GetApplicationsArguments,
+  filters: QueryFilter<ApplicationType>,
+) => {
+  const queryFilter = buildQuery<ApplicationType>(query);
+  const cursorQuery: QueryFilter<ApplicationType> = {};
+  if (query.cursor) {
+    const cursor = GetApplicationsCursorSchema.parse(query.cursor);
+    cursorQuery.$or = [
+      { createdAt: { $lt: cursor.createdAt } },
+      { createdAt: cursor.createdAt, _id: { $lt: cursor._id } },
+    ];
   }
 
-  if (args.listingId) {
-    query.listingId = args.listingId;
-  }
+  const queryExec = ApplicationForm.find(
+    combineFilters<ApplicationType>(
+      combineFilters<ApplicationType>(filters, queryFilter),
+      cursorQuery,
+    ),
+  )
+    .sort({ createdAt: -1, _id: -1 })
+    .limit(query.limit)
+    .lean();
 
-  if (args.preferredRoomType) {
-    query.preferredRoomType = args.preferredRoomType;
-  }
-
-  if (args.status) {
-    query.status = args.status;
-  }
-
-  if (args.unitId) {
-    query.unitId = args.unitId;
-  }
-
-  return query;
-}
-
-export const getApplications = async (query: Partial<GetApplicationsArguments>, filters: any) => {
-  const dbFilters = buildApplicationQuery(query);
-  return await ApplicationForm.find(combineFilters(filters, dbFilters));
+  return await queryExec;
 };
 
-// Service functions for application forms, which are the main way students apply to listings
-export const getApplicationById = async (applicationId: mongoose.Types.ObjectId) => {
-  const application = await ApplicationForm.findById(applicationId);
-
-  if (!application) {
-    throw new AppError(404, 'Application not found.');
-  }
-
-  return application;
+export const getApplicationById = async (
+  applicationId: mongoose.Types.ObjectId,
+  filters: QueryFilter<ApplicationType>,
+) => {
+  return await ApplicationForm.where(filters).findById(applicationId);
 };
 
 // no error because it can be empty, just return empty array
@@ -103,99 +91,186 @@ export const getApplicationsByStudent = async (userId: mongoose.Types.ObjectId) 
   return await ApplicationForm.find({ userId });
 };
 
-export type UpdateApplicationArguments = {
-  preferredRoomType?: 'single' | 'double' | 'shared';
-  status?:
-    | 'pending'
-    | 'manager-approved'
-    | 'manager-rejected'
-    | 'manager-waitlisted'
-    | 'landlord-rejected'
-    | 'landlord-approved'
-    | 'landlord-waitlisted'
-    | 'contract-signed';
-  documentUrls?: string[];
-  unitId?: mongoose.Types.ObjectId;
-};
-
-export const updateApplication = async (
+export const deleteApplication = async (
   applicationId: mongoose.Types.ObjectId,
-  data: UpdateApplicationArguments,
-  filters: any,
+  filters: QueryFilter<ApplicationType>,
 ) => {
-  const application = await ApplicationForm.findOne(
-    combineFilters({ _id: applicationId }, filters),
-  );
-  if (!application) {
-    const applicationNoFilter = await ApplicationForm.findById(applicationId);
-    if (applicationNoFilter) {
-      throw new AppError(403, 'Forbidden: You do not have permission to update this application.');
-    } else {
-      throw new AppError(404, 'Application not found.');
-    }
-  }
-
-  application.set(data);
-
-  return await application.save();
+  return await ApplicationForm.where(filters).findOneAndDelete({ _id: applicationId });
 };
 
-export const deleteApplication = async (applicationId: mongoose.Types.ObjectId, filters: any) => {
-  const application = await ApplicationForm.findOne(
-    combineFilters({ _id: applicationId }, filters),
-  );
-  if (!application) {
-    const applicationNoFilter = await ApplicationForm.findById(applicationId);
-    if (applicationNoFilter) {
-      throw new AppError(403, 'Forbidden: You do not have permission to delete this application.');
-    } else {
-      throw new AppError(404, 'Application not found.');
-    }
-  }
-
-  return await application.deleteOne();
+// TODO: fix these messages
+const statusMessages: Record<string, { subject: string; content: string }> = {
+  waitlisted: {
+    subject: 'Waitlisted',
+    content: 'Your application has been approved by the manager. You are now on the waitlist.',
+  },
+  approved: {
+    subject: 'Approved',
+    content: 'Your application has been approved by the landlord.',
+  },
+  rejected: {
+    subject: 'Application Rejected',
+    content: 'Your application has been rejected by the landlord.',
+  },
+  finalized: {
+    subject: 'Finalized',
+    content: 'Your application has been finalized.',
+  },
 };
 
 export const updateApplicationStatus = async (
   applicationId: mongoose.Types.ObjectId,
-  data: UpdateApplicationArguments,
-  filters: any,
+  status: ApplicationStatusType,
+  filters: QueryFilter<ApplicationType>,
 ) => {
-  const application = await ApplicationForm.findOne(
-    combineFilters({ _id: applicationId }, filters),
+  const application = await ApplicationForm.where(filters).findOneAndUpdate(
+    { _id: applicationId },
+    { $set: { status } },
+    { returnDocument: 'after' },
   );
-  if (!application) {
-    const applicationNoFilter = await ApplicationForm.findById(applicationId);
-    if (applicationNoFilter) {
-      throw new AppError(403, 'Forbidden: You do not have permission to update this application.');
-    } else {
-      throw new AppError(404, 'Application not found.');
-    }
+  if (!application) return null;
+  const { subject, content } = statusMessages[application.status];
+  return await sendNotification(application.userId, subject, content);
+};
+
+export const approveFinalApplication = async (
+  applicationId: mongoose.Types.ObjectId,
+  filters: QueryFilter<ApplicationType>,
+) => {
+  const application = await ApplicationForm.where(filters).findById(applicationId);
+  if (!application) return;
+
+  // The only legal states for final acceptance is from
+  // `manager-approved` and `manager-waitlisted`.
+  //
+  // TODO: clarify this case. Landlord should be able to override an application
+  // that is rejected by a manager. But this also means that the requirements are
+  // not met.
+  //
+  // throw new AppError(422, "Cannot accept an application rejected by a manager.");
+  if (application.status !== 'waitlisted') {
+    throw new AppError(422, `Applications that are '${application.status}' cannot be approved.`);
   }
 
-  application.set({ status: data.status });
+  application.status = 'approved';
+  const { subject, content } = statusMessages[application.status];
+  await sendNotification(application.userId, subject, content);
+  return await application.save();
+};
 
+export const approveInitialApplication = async (
+  applicationId: mongoose.Types.ObjectId,
+  unitId: mongoose.Types.ObjectId,
+  filters: QueryFilter<ApplicationType>,
+) => {
+  const application = await ApplicationForm.where(filters).findById(applicationId);
+  if (!application) return;
+
+  // The only legal states for initial acceptance is from `pending`
+  if (application.status !== 'pending')
+    throw new AppError(422, `Applications that are '${application.status}' cannot be approved.`);
+
+  if (await isUnitFull(unitId, { listingId: application.listingId }))
+    throw new AppError(422, 'Unit is already full.');
+
+  application.status = 'waitlisted';
+  application.unitId = unitId;
+  const { subject, content } = statusMessages[application.status];
+  await sendNotification(application.userId, subject, content);
+  return await application.save();
+};
+
+export const rejectFinalApplication = async (
+  applicationId: mongoose.Types.ObjectId,
+  filters: QueryFilter<ApplicationType>,
+) => {
+  const application = await ApplicationForm.where(filters).findById(applicationId);
+  if (!application) return;
+
+  // The only legal states for final rejection is from `manager-approved` and `manager-waitlisted`.
+  //
+  // throw new AppError(422, "Cannot accept an application rejected by a manager.");
+  if (application.status !== 'waitlisted' && application.status !== 'pending')
+    throw new AppError(422, `Applications that are '${application.status}' cannot be rejected.`);
+
+  application.status = 'rejected';
+  const { subject, content } = statusMessages[application.status];
+  await sendNotification(application.userId, subject, content);
+  return await application.save();
+};
+
+export const rejectInitialApplication = async (
+  applicationId: mongoose.Types.ObjectId,
+  filters: QueryFilter<ApplicationType>,
+) => {
+  const application = await ApplicationForm.where(filters).findById(applicationId);
+  if (!application) return;
+
+  // The only legal states for initial acceptance is from `pending`
+  if (application.status !== 'pending')
+    throw new AppError(422, `Applications that are '${application.status}' cannot be rejected.`);
+
+  application.status = 'rejected';
+  const { subject, content } = statusMessages[application.status];
+  await sendNotification(application.userId, subject, content);
   return await application.save();
 };
 
 export const assignApplicationUnit = async (
   applicationId: mongoose.Types.ObjectId,
-  data: UpdateApplicationArguments,
-  filters: any,
+  unitId: mongoose.Types.ObjectId,
+  filters: QueryFilter<ApplicationType>,
 ) => {
-  const application = await ApplicationForm.findOne(
-    combineFilters({ _id: applicationId }, filters),
-  );
-  if (!application) {
-    const applicationNoFilter = await ApplicationForm.findById(applicationId);
-    if (applicationNoFilter) {
-      throw new AppError(403, 'Forbidden: You do not have permission to update this application.');
-    } else {
-      throw new AppError(404, 'Application not found.');
-    }
+  const application = await ApplicationForm.where(filters).findOne(applicationId);
+  if (!application) throw new AppError(404, 'Application not found.');
+
+  if (application.status === 'pending' || application.status === 'rejected') {
+    throw new AppError(
+      422,
+      `Applications that are '${application.status}' cannot have an assigned unit.`,
+    );
   }
 
-  application.set({ unitId: data.unitId });
+  // TODO: check the correct status
+  // 'waitlisted',
+  // 'approved',
+  // 'finalized',
 
+  if (await isUnitFull(unitId, { listingId: application.listingId }))
+    throw new AppError(422, 'This unit is already full.');
+
+  application.unitId = unitId;
+  return await application.save();
+};
+
+export const getUnvalidatedApplications = async (listingId: mongoose.Types.ObjectId) => {
+  return await ApplicationForm.find({
+    listingId,
+    status: { $in: ['pending', 'waitlisted'] },
+  });
+};
+
+export const getPendingApplications = async (listingId: mongoose.Types.ObjectId) => {
+  return await ApplicationForm.find({
+    listingId,
+    status: 'pending',
+  });
+};
+
+// user side kapag approved ni manager/landlord
+export const finalizeApplication = async (
+  applicationId: mongoose.Types.ObjectId,
+  filters: QueryFilter<ApplicationType>,
+) => {
+  const application = await ApplicationForm.where(filters).findById(applicationId);
+  if (!application) return;
+
+  // The only legal states for initial acceptance is from `approved`
+  if (application.status !== 'approved')
+    throw new AppError(422, `Applications that are '${application.status}' cannot be finalized.`);
+
+  application.status = 'finalized';
+  const { subject, content } = statusMessages[application.status];
+  await sendNotification(application.userId, subject, content);
   return await application.save();
 };

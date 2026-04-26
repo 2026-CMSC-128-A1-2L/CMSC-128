@@ -1,9 +1,24 @@
 import mongoose from 'mongoose';
 
+const RENTAL_STATUS = ['active', 'ended', 'on_waitlist', 'inactive'] as const;
+type RentalStatusType = (typeof RENTAL_STATUS)[number];
+
+export type RentalType = {
+  userId: mongoose.Types.ObjectId;
+  facilityId: mongoose.Types.ObjectId;
+  unitId: mongoose.Types.ObjectId;
+  applicationId?: mongoose.Types.ObjectId | null;
+  status: RentalStatusType;
+  expectedMoveInDate?: Date | null;
+  expectedMoveOutDate?: Date | null;
+  actualMoveInDate?: Date | null;
+  actualMoveOutDate?: Date | null;
+};
+
 // Created after application is accepted by the landlord.
 // Rentals are created when an application becomes contract-signed.
 // NOTE: Existing tenants from the old system may have rentals without applications.
-const rentalSchema = new mongoose.Schema({
+const rentalSchema = new mongoose.Schema<RentalType>({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'Student', required: true },
 
   // for easier permission checks

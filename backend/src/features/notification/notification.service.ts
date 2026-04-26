@@ -1,6 +1,7 @@
-import mongoose, { QueryFilter } from 'mongoose';
+import type mongoose from 'mongoose';
+import type { QueryFilter } from 'mongoose';
 import { combineFilters } from '../../middleware';
-import { Notification } from './notification.model';
+import { Notification, NotificationType } from './notification.model';
 
 export const sendNotification = async (
   userId: mongoose.Types.ObjectId,
@@ -13,9 +14,9 @@ export const sendNotification = async (
 
 export const getNotifications = async (
   userId: mongoose.Types.ObjectId,
-  filter: QueryFilter<typeof Notification>,
+  filter: QueryFilter<NotificationType>,
 ) => {
-  return await Notification.find(combineFilters({ userId }, filter), { createdAt: -1 });
+  return await Notification.find(combineFilters(filter, { userId }), { createdAt: -1 });
 };
 
 export const getNotification = async (

@@ -1,12 +1,10 @@
 import type { ReactNode } from 'react';
 import { Icon } from '@iconify/react';
 import LandlordLayout from '../../../components/landlord/LandlordLayout';
-import LandlordInfoCard, {
-  type LandlordInfo,
-} from '../../../components/landlord/LandlordInfoCard';
-import dorm1 from '../../../../assets/landlord/dorm1.png';
-import dorm2 from '../../../../assets/landlord/dorm2.png';
-import dorm3 from '../../../../assets/landlord/dorm3.png';
+import LandlordInfoCard, { type LandlordInfo } from '../../../components/landlord/LandlordInfoCard';
+import dorm1 from '../../../../assets/landing_contact.webp';
+import dorm2 from '../../../../assets/landing_listing.webp';
+import dorm3 from '../../../../assets/landing_contact.webp';
 
 const landlord: LandlordInfo = {
   displayName: 'Quevin Custodio',
@@ -25,8 +23,18 @@ type Property = {
 };
 
 const properties: Property[] = [
-  { name: 'Tri-AD Hall Dormitory', location: 'Umali Subdivision, Los Baños', rating: 4.3, image: dorm1 },
-  { name: 'Two Sapphire Place', location: 'Umali Subdivision, Los Baños', rating: 3.7, image: dorm2 },
+  {
+    name: 'Tri-AD Hall Dormitory',
+    location: 'Umali Subdivision, Los Baños',
+    rating: 4.3,
+    image: dorm1,
+  },
+  {
+    name: 'Two Sapphire Place',
+    location: 'Umali Subdivision, Los Baños',
+    rating: 3.7,
+    image: dorm2,
+  },
   { name: "Women's Dormitory", location: 'Inside UPLB', rating: 3.7, image: dorm3 },
 ];
 
@@ -42,9 +50,7 @@ const AvailabilityItem = ({ icon, title, children }: AvailabilityItemProps) => (
       <Icon icon={icon} className="h-[22px] w-[22px]" aria-hidden="true" />
     </span>
     <div className="flex min-w-0 flex-col gap-[8px] text-[#096c5b]">
-      <p className="font-['Inter',sans-serif] text-[18px] font-bold tracking-[-0.18px]">
-        {title}
-      </p>
+      <p className="font-['Inter',sans-serif] text-[18px] font-bold tracking-[-0.18px]">{title}</p>
       <div className="flex flex-col gap-[4px] text-[14px]">{children}</div>
     </div>
   </div>
@@ -70,7 +76,11 @@ const PropertyCard = ({ property }: { property: Property }) => (
         aria-label={`Bookmark ${property.name}`}
         className="absolute right-[10px] top-[10px] flex h-[30px] w-[30px] cursor-pointer items-center justify-center rounded-full bg-white/95 text-[#096c5b] shadow-sm transition-colors hover:bg-white"
       >
-        <Icon icon="material-symbols:bookmark-outline" className="h-[18px] w-[18px]" aria-hidden="true" />
+        <Icon
+          icon="material-symbols:bookmark-outline"
+          className="h-[18px] w-[18px]"
+          aria-hidden="true"
+        />
       </button>
     </div>
 
@@ -102,7 +112,11 @@ const PropertyCard = ({ property }: { property: Property }) => (
           aria-label={`More info for ${property.name}`}
           className="flex h-[20px] w-[20px] shrink-0 cursor-pointer items-center justify-center text-[#2f3136] hover:text-[#096c5b]"
         >
-          <Icon icon="material-symbols:info-outline" className="h-[18px] w-[18px]" aria-hidden="true" />
+          <Icon
+            icon="material-symbols:info-outline"
+            className="h-[18px] w-[18px]"
+            aria-hidden="true"
+          />
         </button>
       </div>
     </div>

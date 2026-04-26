@@ -1,47 +1,56 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import mongoose from 'mongoose';
 import { Factory } from 'fishery';
-import { HousingFacilityType, HousingFacility } from '../features/facility/facility.model';
-import { Landlord, Manager, Student, Admin, UserType } from '../features/user/user.model';
-import { DocumentType } from '../features/document/document.model';
+import { type HousingFacilityType, HousingFacility } from '../features/facility/facility.model';
+import { Landlord, Manager, Student, Admin, type UserType } from '../features/user/user.model';
+import type { DocumentType } from '../features/document/document.model';
+import { UserStatus, UserTypeType } from 'shared';
 
 type UserParams = {
   firstName: string;
   middleName?: string | null;
   lastName: string;
   emails: string[];
-  status: 'unverified' | 'verified' | 'inactive' | 'disabled';
-  userType: 'Admin' | 'Manager' | 'Landlord' | 'Student';
+  status: UserStatus;
+  userType?: UserTypeType;
   profilePicture?: string | null;
   contact?: string;
-  address?: string,
+  address?: string;
   studentNumber?: string;
   degreeProgram?: string;
   documents: DocumentType[];
   verificationStatus: 'pending' | 'submitted' | 'rejected' | 'approved';
-  verifiedAt?: Date | null,
+  verifiedAt?: Date | null;
 };
 
-export const buildUser = Factory.define<UserParams, any, UserType>(({ sequence }) => ({
-  firstName: 'Juan',
-  lastName: 'Dela Cruz',
-  emails: [`user${sequence}@example.com`],
-  auth: { google: [] },
-  status: 'verified',
-  verificationStatus: 'approved',
-  userType: 'Student',
-  profilePicture: null,
-  documents: [],
-})).onCreate(async (data) => {
+export const buildUser = Factory.define<UserParams, Partial<UserParams>, UserType>(
+  ({ sequence }) => ({
+    firstName: 'Juan',
+    lastName: 'Dela Cruz',
+    emails: [`user${sequence.toString()}@example.com`],
+    auth: { google: [] },
+    status: 'verified',
+    verificationStatus: 'approved',
+    userType: 'Student',
+    profilePicture: null,
+    documents: [],
+  }),
+).onCreate(async (data) => {
   switch (data.userType) {
     case 'Admin':
       return (await new Admin(data).save()).toObject();
     case 'Landlord':
-      return (await new Landlord({ ...data, contact: data.contact || '09991234567' }).save()).toObject();
+      return (
+        await new Landlord({ ...data, contact: data.contact || '09991234567' }).save()
+      ).toObject();
     case 'Manager':
-      return (await new Manager({ ...data, contact: data.contact || '09991234567' }).save()).toObject();
+      return (
+        await new Manager({ ...data, contact: data.contact || '09991234567' }).save()
+      ).toObject();
     case 'Student':
-      return (await new Student({ ...data, studentNumber: data.studentNumber || '202300001', }).save()).toObject();
+      return (
+        await new Student({ ...data, studentNumber: data.studentNumber || '202300001' }).save()
+      ).toObject();
   }
 });
 
@@ -85,10 +94,30 @@ export const buildUnverifiedStudent = buildUser.params({
   status: 'unverified',
 });
 
-export type HousingFacilityParams = Omit<HousingFacilityType, '_id' | 'createdAt' | 'updatedAt'>;
+export type HousingFacilityParams = Omit<
+  HousingFacilityType,
+  | '_id'
+  | 'createdAt'
+  | 'updatedAt'
+  | 'qualityAvg'
+  | 'reviewCount'
+  | 'verifiedAt'
+  | 'description'
+  | 'comfortAvg'
+  | 'environmentAvg'
+  | 'allowVisit'
+  | 'allowTransfer'
+  | 'isPrivate'
+  | 'media'
+>;
 
-export const buildHousingFacility = Factory.define<HousingFacilityParams, any, HousingFacilityType>(({ sequence }) => ({
-  name: `Test Facility ${sequence}`,
+export const buildHousingFacility = Factory.define<
+  HousingFacilityParams,
+  Partial<HousingFacilityParams>,
+  HousingFacilityType,
+  Partial<HousingFacilityParams>
+>(({ sequence }) => ({
+  name: `Test Facility ${sequence.toString()}`,
   landlordId: new mongoose.Types.ObjectId(),
   managers: [],
   location: {
@@ -101,5 +130,8 @@ export const buildHousingFacility = Factory.define<HousingFacilityParams, any, H
   documents: [],
   isAcceptingApplications: false,
 })).onCreate(async (data) => {
-  return (await new HousingFacility(data).save()) as HousingFacilityType;
+  return (await new HousingFacility({
+    description: 'Test facility description',
+    ...data,
+  }).save()) as HousingFacilityType;
 });

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { isVerifiedStudent, managerFilter, selfFilter } from '../../middleware';
+import { isVerifiedStudent, manageListingsFilter, selfFilter } from '../../middleware';
 import {
   routeGetTransferRequests,
   routeCreateTransferRequest,
@@ -38,11 +38,7 @@ router.post('/', isVerifiedStudent, routeCreateTransferRequest);
 // - Returns 403 if not authorized
 // - Returns 404 if resource not found
 // - Sets status to 'approved'
-router.post(
-  '/:transferId/approve',
-  managerFilter('facility', 'manageListings'),
-  routeApproveTransferRequest,
-);
+router.post('/:transferId/approve', manageListingsFilter, routeApproveTransferRequest);
 // POST /api/transfers/:transferId/reject
 // Input:
 // - transferId (ObjectId)
@@ -56,12 +52,8 @@ router.post(
 // - Returns 403 if not authorized
 // - Returns 404 if resource not found
 // - Sets status to 'rejected'
-router.post(
-  '/:transferId/reject',
-  managerFilter('facility', 'manageListings'),
-  routeRejectTransferRequest,
-);
+router.post('/:transferId/reject', manageListingsFilter, routeRejectTransferRequest);
 // DELETE /api/transfers/:transferId
-router.delete('/:transferId', selfFilter(false), routeCancelTransferRequest); // TODO: check if transfer is already processed, cannot delete
+router.delete('/:transferId', selfFilter, routeCancelTransferRequest); // TODO: check if transfer is already processed, cannot delete
 
 export default router;

@@ -1,137 +1,138 @@
-import { RequestHandler } from 'express';
+import type { RequestHandler } from 'express';
 import {
+  ApplicationFilterSchema,
   CreateApplicationBodySchema,
   GetApplicationsQuerySchema,
   ObjectIdSchema,
-  UpdateApplicationBodySchema,
+  QuerySchema,
+  AssignUnitRequestBodySchema,
+  ApproveApplicationRequestBodySchema,
 } from 'shared';
-import { sendNotification } from '../notification/notification.service';
 import {
   createApplication,
   getApplications,
   getApplicationById,
-  getApplicationsByListing,
-  getApplicationsByStudent,
-  updateApplication,
   deleteApplication,
-  updateApplicationStatus,
   assignApplicationUnit,
+  approveFinalApplication,
+  approveInitialApplication,
+  rejectFinalApplication,
+  rejectInitialApplication,
+  finalizeApplication,
 } from './application.service';
+import type { QueryFilter } from 'mongoose';
+import type { ApplicationType } from './application.model';
+import { AppError } from '../../error';
 
-export const routeCreateApplication: RequestHandler = async (req, res, next) => {
+export const routeCreateApplication: RequestHandler = async (req, res, _next) => {
+  assert.ok(req.user);
   const params = CreateApplicationBodySchema.parse(req.body);
-  const newApplication = await createApplication(params);
+  const newApplication = await createApplication(req.user._id, params.listingId);
 
   res.status(201).json({ id: newApplication.id });
 };
 
-export const routeGetApplications: RequestHandler = async (req, res, next) => {
+type LocalHandler<T> = RequestHandler<
+  Record<string, unknown>,
+  unknown,
+  unknown,
+  unknown,
+  Record<string, unknown> & T
+>;
+
+type ApplicationHandler = LocalHandler<{ filters: QueryFilter<ApplicationType> }>;
+
+export const routeGetApplications: ApplicationHandler = async (req, res, _next) => {
   const query = GetApplicationsQuerySchema.parse(req.query);
   const applications = await getApplications(query, res.locals.filters);
-
   res.status(200).json({ data: applications });
 };
 
-export const routeGetApplication: RequestHandler = async (req, res, next) => {
+export const routeGetApplication: ApplicationHandler = async (req, res, _next) => {
   const applicationId = ObjectIdSchema.parse(req.params.applicationId);
-
-  const application = await getApplicationById(applicationId);
-
-  res.status(200).json({
-    data: application,
-  });
+  const application = await getApplicationById(applicationId, res.locals.filters);
+  if (!application) throw new AppError(404, 'Application not found.');
+  res.status(200).json({ data: application });
 };
 
-export const routeGetApplicationsByListing: RequestHandler = async (req, res, next) => {
+export const routeGetApplicationsByListing: ApplicationHandler = async (req, res, _next) => {
+  const query = QuerySchema(ApplicationFilterSchema.omit({ listingId: true })).parse(req.query);
   const listingId = ObjectIdSchema.parse(req.params.listingId);
-
-  const applications = await getApplicationsByListing(listingId);
-
-  res.status(200).json({
-    data: applications,
-  });
+  const applications = await getApplications({ ...query, listingId }, res.locals.filters);
+  res.status(200).json({ data: applications });
 };
 
-export const routeGetApplicationsByStudent: RequestHandler = async (req, res, next) => {
+export const routeGetApplicationsByStudent: ApplicationHandler = async (req, res, _next) => {
+  const query = QuerySchema(ApplicationFilterSchema.omit({ userId: true })).parse(req.query);
   const userId = ObjectIdSchema.parse(req.params.userId);
-
-  const applications = await getApplicationsByStudent(userId);
-
-  res.status(200).json({
-    data: applications,
-  });
+  const applications = await getApplications({ ...query, userId }, res.locals.filters);
+  res.status(200).json({ data: applications });
 };
 
-export const routeUpdateApplication: RequestHandler = async (req, res, next) => {
-  const applicationId = ObjectIdSchema.parse(req.params.applicationId);
-  const params = UpdateApplicationBodySchema.parse(req.body);
+// export const routeUpdateApplication: RequestHandler = async (req, res, next) => {
+//   const applicationId = ObjectIdSchema.parse(req.params.applicationId);
+//   const params = UpdateApplicationBodySchema.parse(req.body);
+//   const updatedApplication = await updateApplication(applicationId, params, res.locals.filters);
+//   res.status(200).json({ data: updatedApplication });
+// };
 
-  const updatedApplication = await updateApplication(applicationId, params, res.locals.filters);
-
-  res.status(200).json({ data: updatedApplication });
-};
-
-export const routeDeleteApplication: RequestHandler = async (req, res, next) => {
+export const routeDeleteApplication: RequestHandler = async (req, res, _next) => {
   const applicationId = ObjectIdSchema.parse(req.params.applicationId);
 
   await deleteApplication(applicationId, res.locals.filters);
 
-  res.status(204).send();
+  res.sendStatus(204);
 };
 
-export const routeUpdateApplicationStatus: RequestHandler = async (req, res, next) => {
+export const routeApproveApplication: ApplicationHandler = async (req, res, _next) => {
+  assert.ok(req.user);
   const applicationId = ObjectIdSchema.parse(req.params.applicationId);
-  const params = UpdateApplicationBodySchema.parse(req.body);
+  let updatedApplication: ApplicationType | undefined;
+  if (req.user.userType === 'Landlord') {
+    updatedApplication = await approveFinalApplication(applicationId, res.locals.filters);
+  } else {
+    const params = ApproveApplicationRequestBodySchema.parse(req.body);
+    updatedApplication = await approveInitialApplication(
+      applicationId,
+      params.unitId,
+      res.locals.filters,
+    );
+  }
+  if (!updatedApplication) throw new AppError(404, 'Application not found.');
+  res.status(200).send(updatedApplication);
+};
 
-  const updatedApplication = await updateApplicationStatus(
+export const routeRejectApplication: ApplicationHandler = async (req, res, _next) => {
+  assert.ok(req.user);
+  const applicationId = ObjectIdSchema.parse(req.params.applicationId);
+  let updatedApplication: ApplicationType | undefined;
+  if (req.user.userType === 'Landlord') {
+    updatedApplication = await rejectFinalApplication(applicationId, res.locals.filters);
+  } else {
+    updatedApplication = await rejectInitialApplication(applicationId, res.locals.filters);
+  }
+  if (!updatedApplication) throw new AppError(404, 'Application not found.');
+  res.status(200).send(updatedApplication);
+};
+
+export const routeAssignApplicationUnit: RequestHandler = async (req, res, _next) => {
+  const applicationId = ObjectIdSchema.parse(req.params.applicationId);
+  const params = AssignUnitRequestBodySchema.parse(req.body);
+  const updatedApplication = await assignApplicationUnit(
     applicationId,
-    params,
+    params.unitId,
     res.locals.filters,
   );
 
-  const statusMessages: Record<string, { subject: string; content: string }> = {
-    'manager-approved': {
-      subject: 'Application Approved',
-      content: 'Your application has been approved by the manager.',
-    },
-    'manager-rejected': {
-      subject: 'Application Rejected',
-      content: 'Your application has been rejected by the manager.',
-    },
-    'manager-waitlisted': {
-      subject: 'Application Waitlisted',
-      content: 'Your application has been waitlisted by the manager.',
-    },
-    'landlord-approved': {
-      subject: 'Application Approved',
-      content: 'Your application has been approved by the landlord.',
-    },
-    'landlord-rejected': {
-      subject: 'Application Rejected',
-      content: 'Your application has been rejected by the landlord.',
-    },
-    'landlord-waitlisted': {
-      subject: 'Application Waitlisted',
-      content: 'Your application has been waitlisted by the landlord.',
-    },
-  };
-
-  if (params.status && statusMessages[params.status]) {
-    await sendNotification(
-      updatedApplication.userId,
-      statusMessages[params.status].subject,
-      statusMessages[params.status].content,
-    );
-  }
-
   res.status(200).json({ data: updatedApplication });
 };
 
-export const routeAssignApplicationUnit: RequestHandler = async (req, res, next) => {
+export const routeFinalizeApplication: ApplicationHandler = async (req, res, _next) => {
+  assert.ok(req.user);
   const applicationId = ObjectIdSchema.parse(req.params.applicationId);
-  const params = UpdateApplicationBodySchema.parse(req.body);
-
-  const updatedApplication = await assignApplicationUnit(applicationId, params, res.locals.filters);
-
-  res.status(200).json({ data: updatedApplication });
+  let updatedApplication: ApplicationType | undefined;
+  updatedApplication = await finalizeApplication(applicationId, res.locals.filters);
+  
+  if (!updatedApplication) throw new AppError(404, 'Application not found.');
+  res.status(200).send(updatedApplication);
 };

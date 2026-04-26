@@ -5,6 +5,7 @@ export * from './schemas/billing';
 export * from './schemas/booking';
 export * from './schemas/bookmark';
 export * from './schemas/common';
+export * from './schemas/conversation';
 export * from './schemas/facility';
 export * from './schemas/invite';
 export * from './schemas/listing';

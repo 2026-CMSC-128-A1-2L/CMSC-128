@@ -15,7 +15,7 @@ declare global {
         google: string[];
       };
       profilePicture?: string | null;
-      status: 'unverified' | 'verified' | 'inactive' | 'disabled';
+      status: 'setup' | 'unverified' | 'verified' | 'inactive' | 'disabled';
       documents: DocumentType[];
       verificationStatus: 'pending' | 'submitted' | 'rejected' | 'approved';
     }
@@ -28,9 +28,7 @@ interface CustomMatchers<R = unknown> {
 
 declare module 'vitest' {
   /* eslint-disable @typescript-eslint/no-empty-object-type */
-  interface Assertion<T = any> extends CustomMatchers<T> { }
+  interface Assertion<T = any> extends CustomMatchers<T> {}
   /* eslint-disable @typescript-eslint/no-empty-object-type */
-  interface AsymmetricMatchersContaining extends CustomMatchers { }
+  interface AsymmetricMatchersContaining extends CustomMatchers {}
 }
-
-export { };

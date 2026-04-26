@@ -3,21 +3,37 @@ import {
   routeGetApplications,
   routeCreateApplication,
   routeGetApplication,
-  routeUpdateApplication,
   routeDeleteApplication,
-  routeUpdateApplicationStatus,
   routeAssignApplicationUnit,
+  routeApproveApplication,
+  routeRejectApplication,
+  routeFinalizeApplication,
 } from './application.controller';
-import { isSuperAdmin, isVerifiedStudent, managerFilter, selfFilter } from '../../middleware';
+import {
+  includeSelf,
+  isSuperAdmin,
+  isVerifiedStudent,
+  manageApplicationsFilter,
+  selfFilter,
+} from '../../middleware';
 
 const router = Router();
 
+// ============================================================================
 // GET /api/applications
+//
+// Should be the only endpoint used by any role.
+// ============================================================================
 router.get('/', isSuperAdmin, routeGetApplications);
 
+// ============================================================================
 // POST /api/applications
+//
+// Apply for a dorm.
+// ============================================================================
 router.post('/', isVerifiedStudent, routeCreateApplication);
 
+// ============================================================================
 // GET /api/applications/:applicationId
 // Input:
 // - applicationId (ObjectId)
@@ -28,41 +44,44 @@ router.post('/', isVerifiedStudent, routeCreateApplication);
 // Considerations:
 // - Returns 404 if not found
 // - Should enforce access control (student or authorized staff)
-router.get(
-  '/:applicationId',
-  managerFilter('listing', 'manageApplications', true),
-  routeGetApplication,
-);
+// ============================================================================
+router.get('/:applicationId', manageApplicationsFilter, includeSelf, routeGetApplication);
 
-// PATCH /api/applications/:applicationId
-router.patch(
-  '/:applicationId',
-  managerFilter('listing', 'manageApplications', true),
-  routeUpdateApplication,
-);
-
+// ============================================================================
 // DELETE /api/applications/:applicationId
-router.delete('/:applicationId', selfFilter(false), routeDeleteApplication);
+//
+// Cancel an application.
+// ============================================================================
+router.delete('/:applicationId', selfFilter, routeDeleteApplication);
 
+// ============================================================================
 // POST /api/applications/:applicationId/approve
-router.post(
-  '/:applicationId/approve',
-  managerFilter('listing', 'manageApplications'),
-  routeUpdateApplicationStatus,
-);
+//
+// Approves an application.
+//  - If a manager approves an application, it is made waitlisted
+//  - If a landlord approves an application, it is made approved
+// ============================================================================
+router.post('/:applicationId/approve', manageApplicationsFilter, routeApproveApplication);
 
+// ============================================================================
 // POST /api/applications/:applicationId/reject
-router.post(
-  '/:applicationId/reject',
-  managerFilter('listing', 'manageApplications'),
-  routeUpdateApplicationStatus,
-);
+//
+// Rejects an application.
+// ============================================================================
+router.post('/:applicationId/reject', manageApplicationsFilter, routeRejectApplication);
 
+// ============================================================================
 // POST /api/applications/:applicationId/assign-unit
-router.post(
-  '/:applicationId/assign-unit',
-  managerFilter('listing', 'manageApplications'),
-  routeAssignApplicationUnit,
-);
+//
+// Assigns a unit for the student with the application.
+// ============================================================================
+router.post('/:applicationId/assign-unit', manageApplicationsFilter, routeAssignApplicationUnit);
+
+// ============================================================================
+// POST /api/applications/:applicationId/finalize
+//
+// Finalizes an application.
+// ============================================================================
+router.post('/:applicationId/finalize', manageApplicationsFilter, routeFinalizeApplication);
 
 export default router;
