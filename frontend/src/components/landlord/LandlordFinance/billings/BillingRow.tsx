@@ -15,11 +15,16 @@ type PaymentStatus = 'unpaid' | 'paid' | 'overdue' | 'partially_paid';
 
 const getStatusDisplay = (status: PaymentStatus): string => {
   switch (status) {
-    case 'paid': return 'Paid';
-    case 'partially_paid': return 'Partial';
-    case 'overdue': return 'Overdue';
-    case 'unpaid': return 'Pending';
-    default: return 'Select';
+    case 'paid':
+      return 'Paid';
+    case 'partially_paid':
+      return 'Partial';
+    case 'overdue':
+      return 'Overdue';
+    case 'unpaid':
+      return 'Pending';
+    default:
+      return 'Select';
   }
 };
 
@@ -34,22 +39,22 @@ const statusGradients: Record<PaymentStatus, string> = {
 
 const statusOptions: PaymentStatus[] = ['paid', 'partially_paid', 'unpaid', 'overdue'];
 
-const BillingRow: FunctionComponent<BillingRowProps> = ({ 
+const BillingRow: FunctionComponent<BillingRowProps> = ({
   billing,
   roomNumber = 0,
   tenantName = '',
-  onStatusChange, 
+  onStatusChange,
   onEditClick,
-  isOpen = false, 
-  onToggle 
+  isOpen = false,
+  onToggle,
 }) => {
   const [selectedStatus, setSelectedStatus] = useState<PaymentStatus | null>(billing.paymentStatus);
   const [isChanging, setIsChanging] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  
-  const rentAmount = billing.breakdown.find(b => b.name === 'Rent')?.amount || 0;
-  const utilitiesAmount = billing.breakdown.find(b => b.name === 'Utilities')?.amount || 0;
-  const miscAmount = billing.breakdown.find(b => b.name === 'Misc. Fees')?.amount || 0;
+
+  const rentAmount = billing.breakdown.find((b) => b.name === 'Rent')?.amount || 0;
+  const utilitiesAmount = billing.breakdown.find((b) => b.name === 'Utilities')?.amount || 0;
+  const miscAmount = billing.breakdown.find((b) => b.name === 'Misc. Fees')?.amount || 0;
   const paidAmount = billing.paidAmount || 0;
 
   useEffect(() => {
@@ -74,7 +79,7 @@ const BillingRow: FunctionComponent<BillingRowProps> = ({
     if (onToggle) {
       onToggle(billing._id);
     }
-    
+
     setTimeout(() => {
       setIsChanging(false);
     }, 300);
@@ -97,7 +102,7 @@ const BillingRow: FunctionComponent<BillingRowProps> = ({
   const hasStatus = selectedStatus !== null;
 
   return (
-    <div 
+    <div
       onClick={handleRowClick}
       className="w-full flex items-center gap-4 px-6 h-12 text-center text-[12px] sm:text-[13px] font-inter text-darkslategray-100 hover:bg-gray-50 transition-colors cursor-pointer"
     >
@@ -122,7 +127,10 @@ const BillingRow: FunctionComponent<BillingRowProps> = ({
       <div className="w-[10%] min-w-[80px] flex items-center justify-center shrink-0">
         {php(paidAmount)}
       </div>
-      <div className="w-[18%] min-w-[120px] flex items-center justify-center py-2 px-0 shrink-0 relative" ref={dropdownRef}>
+      <div
+        className="w-[18%] min-w-[120px] flex items-center justify-center py-2 px-0 shrink-0 relative"
+        ref={dropdownRef}
+      >
         <button
           onClick={handleToggle}
           className={`w-[100px] rounded-lg ${
@@ -133,24 +141,23 @@ const BillingRow: FunctionComponent<BillingRowProps> = ({
             isChanging ? 'scale-95' : 'scale-100'
           }`}
         >
-          <b className={`text-[10px] sm:text-[11px] font-medium transition-all duration-300 ${
-            hasStatus && selectedStatus ? 'text-white' : 'text-darkslategray-100'
-          } ${isChanging ? 'opacity-0' : 'opacity-100'}`}>
+          <b
+            className={`text-[10px] sm:text-[11px] font-medium transition-all duration-300 ${
+              hasStatus && selectedStatus ? 'text-white' : 'text-darkslategray-100'
+            } ${isChanging ? 'opacity-0' : 'opacity-100'}`}
+          >
             {displayStatus}
           </b>
         </button>
 
         {isOpen && (
           <>
-            <div 
-              className="fixed inset-0 z-10" 
-              onClick={() => onToggle && onToggle(billing._id)}
-            />
+            <div className="fixed inset-0 z-10" onClick={() => onToggle && onToggle(billing._id)} />
             <div className="absolute top-full left-1/2 -translate-x-1/2 mt-1 w-[100px] z-50 bg-white border border-whitesmoke-200 rounded-lg shadow-lg overflow-hidden">
               {statusOptions.map((status) => {
                 const isSelected = selectedStatus === status;
                 const statusDisplay = getStatusDisplay(status);
-                
+
                 return (
                   <button
                     key={status}
@@ -165,18 +172,21 @@ const BillingRow: FunctionComponent<BillingRowProps> = ({
                     {isSelected ? (
                       <span className="text-white">{statusDisplay}</span>
                     ) : (
-                      <span 
+                      <span
                         className="bg-clip-text text-transparent"
                         style={{
                           backgroundImage: `linear-gradient(to bottom, ${
-                            status === 'paid' ? '#5dc2a8, #0c8873' :
-                            status === 'partially_paid' ? '#ffc273, #fa7900' :
-                            status === 'unpaid' ? '#c29722, #f6b709' :
-                            '#c00f0f, #e44f4f'
+                            status === 'paid'
+                              ? '#5dc2a8, #0c8873'
+                              : status === 'partially_paid'
+                                ? '#ffc273, #fa7900'
+                                : status === 'unpaid'
+                                  ? '#c29722, #f6b709'
+                                  : '#c00f0f, #e44f4f'
                           })`,
                           WebkitBackgroundClip: 'text',
                           WebkitTextFillColor: 'transparent',
-                          backgroundClip: 'text'
+                          backgroundClip: 'text',
                         }}
                       >
                         {statusDisplay}

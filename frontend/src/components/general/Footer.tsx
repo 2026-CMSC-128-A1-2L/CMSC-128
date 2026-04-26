@@ -1,6 +1,6 @@
-import type { FunctionComponent } from "react";
-import LogoFooter from "../../../assets/footer_logo.svg?react";
-import { Icon } from "@iconify/react";
+import type { FunctionComponent } from 'react';
+import LogoFooter from '../../../assets/footer_logo.svg?react';
+import { Icon } from '@iconify/react';
 
 const Footer: FunctionComponent = () => {
   return (

@@ -14,8 +14,10 @@ export const GetMyConversationsResponseBody = z
         user: z.object({
           id: ObjectIdSchema,
           profilePicture: z.string().nullish(),
-          name: z.string(),
-          role: z.string(),
+          firstName: z.string(),
+          middleName: z.string().nullish(),
+          lastName: z.string(),
+          userType: z.string(),
         }),
         message: z.object({
           userId: ObjectIdSchema,
@@ -26,7 +28,7 @@ export const GetMyConversationsResponseBody = z
       }),
     ),
   })
-  .extend(PaginationRequestSchema);
+  .extend(PaginationResponseSchema.shape);
 
 // GET /messages/:userId
 export const GetMyConversationResponseBody = z
@@ -34,8 +36,10 @@ export const GetMyConversationResponseBody = z
     user: z.object({
       id: ObjectIdSchema,
       profilePicture: z.string().nullish(),
-      name: z.string(),
-      role: z.string(),
+      firstName: z.string(),
+      middleName: z.string().nullish(),
+      lastName: z.string(),
+      userType: z.string(),
     }),
     messages: z.array(
       z.object({
@@ -45,7 +49,7 @@ export const GetMyConversationResponseBody = z
     ),
     readAt: DateTimeSchema.nullish(),
   })
-  .extend(PaginationResponseSchema);
+  .extend(PaginationResponseSchema.shape);
 
 // POST /messages/:userId
 export const SendMessageRequestBody = z.object({

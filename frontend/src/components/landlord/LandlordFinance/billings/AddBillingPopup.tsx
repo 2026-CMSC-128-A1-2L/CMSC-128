@@ -1,5 +1,5 @@
-import { FunctionComponent, useState, useEffect } from "react";
-import PortalPopup from "../../../general/PortalPopout";
+import { FunctionComponent, useState, useEffect } from 'react';
+import PortalPopup from '../../../general/PortalPopout';
 
 interface AddBillingPopupProps {
   isOpen: boolean;
@@ -19,22 +19,22 @@ const AddBillingPopup: FunctionComponent<AddBillingPopupProps> = ({
   isOpen,
   onClose,
   availableRooms = [],
-  selectedMonth = "",
+  selectedMonth = '',
   onSubmit,
 }) => {
-  const [selectedRoom, setSelectedRoom] = useState<string>("");
-  const [fullName, setFullName] = useState<string>("");
-  const [rent, setRent] = useState<string>("");
-  const [utilities, setUtilities] = useState<string>("");
-  const [miscFees, setMiscFees] = useState<string>("");
+  const [selectedRoom, setSelectedRoom] = useState<string>('');
+  const [fullName, setFullName] = useState<string>('');
+  const [rent, setRent] = useState<string>('');
+  const [utilities, setUtilities] = useState<string>('');
+  const [miscFees, setMiscFees] = useState<string>('');
 
   useEffect(() => {
     if (isOpen) {
-      setSelectedRoom("");
-      setFullName("");
-      setRent("");
-      setUtilities("");
-      setMiscFees("");
+      setSelectedRoom('');
+      setFullName('');
+      setRent('');
+      setUtilities('');
+      setMiscFees('');
     }
   }, [isOpen]);
 
@@ -42,10 +42,10 @@ const AddBillingPopup: FunctionComponent<AddBillingPopupProps> = ({
 
   const handleRoomChange = (roomNumber: string) => {
     setSelectedRoom(roomNumber);
-    setFullName("");
-    setRent("");
-    setUtilities("");
-    setMiscFees("");
+    setFullName('');
+    setRent('');
+    setUtilities('');
+    setMiscFees('');
   };
 
   const handleSubmit = () => {
@@ -62,11 +62,11 @@ const AddBillingPopup: FunctionComponent<AddBillingPopupProps> = ({
   };
 
   const handleCancel = () => {
-    setSelectedRoom("");
-    setFullName("");
-    setRent("");
-    setUtilities("");
-    setMiscFees("");
+    setSelectedRoom('');
+    setFullName('');
+    setRent('');
+    setUtilities('');
+    setMiscFees('');
     onClose();
   };
 
@@ -79,9 +79,7 @@ const AddBillingPopup: FunctionComponent<AddBillingPopupProps> = ({
     >
       <div className="relative w-full max-w-[612px] bg-white rounded-[32px] shadow-[0px_4px_20px_rgba(0,_0,_0,_0.15)] overflow-hidden">
         <div className="bg-gradient-to-b from-[#096c5b] to-[#16917c] px-[40px] sm:px-[57px] pt-[30px] pb-[40px]">
-          <b className="block text-[24px] sm:text-[32px] text-white mb-2">
-            Add Billing
-          </b>
+          <b className="block text-[24px] sm:text-[32px] text-white mb-2">Add Billing</b>
           <b className="block text-[14px] sm:text-[18px] tracking-[-0.01em] font-inter text-white">
             Add a new billing for your tenant for {selectedMonth}!
           </b>

@@ -4,6 +4,7 @@ import { HousingFacility, type ManagerPermissionType } from '../facility/facilit
 import { User } from '../user/user.model';
 import { Invite, type InviteType } from './invite.model';
 import type { QueryFilter } from 'mongoose';
+import { getUserByEmail } from '../user/user.service';
 
 export const getInvites = async (filters: QueryFilter<InviteType>) => {
   return await Invite.find(filters).lean();
@@ -26,6 +27,12 @@ export const inviteManager = async (
       session,
     );
     if (!facility) throw new AppError(404, 'Facility not found.');
+
+    // check if the email exists and does not belong to a manager account
+    const existingUser = await getUserByEmail(email, session);
+    if (existingUser && existingUser.userType !== 'Manager') {
+      throw new AppError(422, 'Can only invite manager accounts.');
+    }
 
     // check no pending invite already exists for this email + facility
     const existingInvite = await Invite.findOne({ email, facilityId, status: 'pending' }).session(
@@ -65,8 +72,13 @@ export const acceptInvite = async (token: string, emails: string[]) => {
     if (!emails.includes(invite.email))
       throw new AppError(403, 'This invite was not sent to your account.');
 
+    // User already exists at this point, but they could have made
+    // the account after getting invited, and set the account to
+    // not be a 'manager', so the `userType` check is still required.
+    // Status cannot be 'disabled', other status except 'setup' is allowed
+    // which is already covered by the `userType` check.
     const user = await User.findOneAndUpdate(
-      { emails: invite.email, status: { $ne: 'disabled' } },
+      { emails: invite.email, userType: 'Manager', status: { $ne: 'disabled' } },
       { status: 'verified' },
       { returnDocument: 'after' },
     ).session(session);

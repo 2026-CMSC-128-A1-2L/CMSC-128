@@ -18,7 +18,7 @@ import RateAndReviewUpload from "../pages/user/profile/current_dorm/RateAndRevie
 import TermsOfUse from "../pages/user/info/TermsOfUse";
 import MyCalendar from "../pages/user/calendar/MyCalendar";
 import ProfileSwitcher from "../pages/user/profile/ProfileSwitcher";
-import Report from '../pages/user/profile/current_dorm/Report'
+import Report from "../pages/user/profile/current_dorm/Report";
 import { Route } from "react-router-dom";
 import Settings from "../pages/user/setting/Settings";
 
