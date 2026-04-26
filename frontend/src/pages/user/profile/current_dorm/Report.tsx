@@ -1,9 +1,9 @@
-import { FunctionComponent, useCallback } from "react";
-import SideBar from "../../../../components/user/SideBar";
-import ArrowRightIcon from "../../assets/iconamoon_arrow-right-2.svg";
-import SearchIcon from "../../assets/ic_outline-search.svg";
-import LocationIcon from "../../assets/icon.svg";
-import UserIcon from "../../assets/Icon3.svg";
+import { FunctionComponent, useCallback } from 'react';
+import SideBar from '../../../../components/user/SideBar';
+import ArrowRightIcon from '../../assets/iconamoon_arrow-right-2.svg';
+import SearchIcon from '../../assets/ic_outline-search.svg';
+import LocationIcon from '../../assets/icon.svg';
+import UserIcon from '../../assets/Icon3.svg';
 
 const Report: FunctionComponent = () => {
   const onUserProfileTextClick = useCallback(() => {
@@ -31,29 +31,20 @@ const Report: FunctionComponent = () => {
                   >
                     User Profile
                   </div>
-                  <img
-                    className="h-6 w-6 relative"
-                    alt=""
-                    src={ArrowRightIcon}
-                  />
+                  <img className="h-6 w-6 relative" alt="" src={ArrowRightIcon} />
                   <div
                     className="relative font-semibold cursor-pointer"
                     onClick={onUserProfileTextClick}
                   >
                     Current Dorm
                   </div>
-                  <img
-                    className="h-6 w-6 relative"
-                    alt=""
-                    src={ArrowRightIcon}
-                  />
+                  <img className="h-6 w-6 relative" alt="" src={ArrowRightIcon} />
                   <div className="relative font-semibold">Report</div>
                 </div>
                 <div className="w-[704px] rounded-xl bg-aliceblue overflow-hidden shrink-0 hidden items-center py-2.5 px-6 box-border gap-2.5 text-dimgray font-inter">
                   <img className="h-6 w-6 relative" alt="" src={SearchIcon} />
                   <b className="relative">
-                    Search for Dorms, Apartments, or Locations (e.g. UPLB, Umali
-                    Subdivision)
+                    Search for Dorms, Apartments, or Locations (e.g. UPLB, Umali Subdivision)
                   </b>
                 </div>
               </div>
@@ -84,11 +75,7 @@ const Report: FunctionComponent = () => {
                               </div>
                             </div>
                             <div className="self-stretch flex items-center py-num-0 px-num-12 gap-[7px]">
-                              <img
-                                className="h-[9px] w-[9px] relative"
-                                alt=""
-                                src={UserIcon}
-                              />
+                              <img className="h-[9px] w-[9px] relative" alt="" src={UserIcon} />
                               <div className="flex items-center justify-center">
                                 <div className="relative">
                                   <span className="font-medium">{`Quevin Custodio `}</span>
@@ -99,11 +86,7 @@ const Report: FunctionComponent = () => {
                               </div>
                             </div>
                             <div className="self-stretch flex items-center py-num-0 px-num-12 gap-[7px]">
-                              <img
-                                className="h-[9px] w-[9px] relative"
-                                alt=""
-                                src={UserIcon}
-                              />
+                              <img className="h-[9px] w-[9px] relative" alt="" src={UserIcon} />
                               <div className="flex items-center justify-center">
                                 <div className="relative">
                                   <span className="font-medium">{`Nathaniel Cunanan `}</span>
@@ -159,11 +142,10 @@ const Report: FunctionComponent = () => {
                     </div>
                     <div className="self-stretch overflow-hidden flex items-center justify-center py-num-0 px-10 text-darkslategray-100 font-inter">
                       <div className="flex-1 relative font-medium">
-                        Your safety and comfort are our top priorities. If
-                        something isn't right, let us know. This simple
-                        three-step process helps us understand the issue clearly
-                        so we can take the necessary steps to resolve it quickly
-                        and keep our community secure.
+                        Your safety and comfort are our top priorities. If something isn't right,
+                        let us know. This simple three-step process helps us understand the issue
+                        clearly so we can take the necessary steps to resolve it quickly and keep
+                        our community secure.
                         <br />
                       </div>
                     </div>

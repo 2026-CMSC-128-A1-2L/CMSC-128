@@ -1,8 +1,8 @@
-import type { FunctionComponent } from "react";
-import LogoLike from "../../../../assets/logo_like.svg?react";
-import SideBar from "../../../components/user/SideBar";
-import { Icon } from "@iconify/react";
-import Footer from "../../../components/general/Footer";
+import type { FunctionComponent } from 'react';
+import LogoLike from '../../../../assets/logo_like.svg?react';
+import SideBar from '../../../components/user/SideBar';
+import { Icon } from '@iconify/react';
+import Footer from '../../../components/general/Footer';
 
 const ContactUs: FunctionComponent = () => {
   return (
@@ -20,17 +20,13 @@ const ContactUs: FunctionComponent = () => {
                   <div className="self-stretch h-16 overflow-hidden shrink-0 flex items-end p-num-10 box-border gap-2.5">
                     <div className="h-6 flex items-center gap-1.5">
                       <div className="relative font-semibold">Home</div>
-                      <Icon
-                        icon="iconamoon:arrow-right-2"
-                        className="w-6 h-6 rounded-[100px]"
-                      />
+                      <Icon icon="iconamoon:arrow-right-2" className="w-6 h-6 rounded-[100px]" />
                       <div className="relative font-semibold">Contact Us</div>
                     </div>
                     <div className="w-[704px] rounded-num-12 bg-aliceblue overflow-hidden shrink-0 hidden items-center py-num-10 px-6 box-border gap-2.5 text-dimgray font-inter">
                       <img className="h-6 w-6 relative" alt="" />
                       <b className="relative">
-                        Search for Dorms, Apartments, or Locations (e.g. UPLB,
-                        Umali Subdivision)
+                        Search for Dorms, Apartments, or Locations (e.g. UPLB, Umali Subdivision)
                       </b>
                     </div>
                   </div>
@@ -46,10 +42,7 @@ const ContactUs: FunctionComponent = () => {
                     <div className="self-stretch overflow-hidden flex items-start p-num-10 gap-8 text-teal-200">
                       <div className="self-stretch flex-1 rounded-num-12 bg-lightcyan overflow-hidden flex flex-col items-start py-num-16 px-num-32 gap-2.5">
                         <div className="flex items-center gap-2.5">
-                          <Icon
-                            icon="simple-line-icons:call-out"
-                            className="w-4 h-4 relative"
-                          />
+                          <Icon icon="simple-line-icons:call-out" className="w-4 h-4 relative" />
                           <div className="relative font-extrabold">Call Us</div>
                         </div>
                         <b className="relative text-num-18 tracking-[-0.01em] text-teal-100">
@@ -62,9 +55,7 @@ const ContactUs: FunctionComponent = () => {
                             icon="material-symbols-light:mail-outline"
                             className="w-4 h-4 relative"
                           />
-                          <div className="relative font-extrabold">
-                            Email Us
-                          </div>
+                          <div className="relative font-extrabold">Email Us</div>
                         </div>
                         <b className="relative text-num-18 tracking-[-0.01em] text-teal-100">
                           atlasteam@gmail.com
@@ -72,13 +63,8 @@ const ContactUs: FunctionComponent = () => {
                       </div>
                       <div className="self-stretch flex-1 rounded-num-12 bg-lightcyan overflow-hidden flex flex-col items-start pt-num-16 px-num-32 pb-5 gap-2.5">
                         <div className="flex items-center gap-2.5">
-                          <Icon
-                            icon="boxicons:location"
-                            className="w-4 h-4 relative"
-                          />
-                          <div className="relative font-extrabold">
-                            Where we're located
-                          </div>
+                          <Icon icon="boxicons:location" className="w-4 h-4 relative" />
+                          <div className="relative font-extrabold">Where we're located</div>
                         </div>
                         <b className="self-stretch relative text-num-18 tracking-[-0.01em] text-teal-100 text-left">
                           University of the Philippines Los Baños
@@ -99,20 +85,16 @@ const ContactUs: FunctionComponent = () => {
                               </b>
                             </div>
                             <div className="self-stretch flex items-center py-num-0 px-3 text-num-14 text-teal-200 font-inter">
-                              <b className="relative">
-                                Your feedback helps the whole community.
-                              </b>
+                              <b className="relative">Your feedback helps the whole community.</b>
                             </div>
                           </div>
                         </div>
                         <div className="self-stretch flex items-center justify-center py-num-0 px-3 text-left text-num-14 text-gray font-inter">
                           <div className="flex-1 relative leading-[25px] font-medium">
-                            At ATLAS, we're building more than just an app—we're
-                            building a community for UPLB students. Have a
-                            suggestion to make our portal better? Or maybe a
-                            question about securing your own spot? Speak up!
-                            Every message helps us make housing better for
-                            everyone in the woods.
+                            At ATLAS, we're building more than just an app—we're building a
+                            community for UPLB students. Have a suggestion to make our portal
+                            better? Or maybe a question about securing your own spot? Speak up!
+                            Every message helps us make housing better for everyone in the woods.
                           </div>
                         </div>
                       </div>
@@ -120,28 +102,20 @@ const ContactUs: FunctionComponent = () => {
                         <div className="self-stretch flex flex-col items-start">
                           <div className="self-stretch flex items-start p-num-10 gap-4">
                             <div className="flex-1 rounded-num-12 bg-aliceblue border-whitesmoke-200 border-solid border-[1px] overflow-hidden flex items-start py-num-10 px-3">
-                              <div className="relative leading-num-24 font-medium">
-                                First Name
-                              </div>
+                              <div className="relative leading-num-24 font-medium">First Name</div>
                             </div>
                             <div className="flex-1 rounded-num-12 bg-aliceblue border-whitesmoke-200 border-solid border-[1px] overflow-hidden flex items-start py-num-10 px-3">
-                              <div className="relative leading-num-24 font-medium">
-                                Last Name
-                              </div>
+                              <div className="relative leading-num-24 font-medium">Last Name</div>
                             </div>
                           </div>
                           <div className="self-stretch flex items-start p-num-10">
                             <div className="flex-1 rounded-num-12 bg-aliceblue border-whitesmoke-200 border-solid border-[1px] overflow-hidden flex items-start py-num-10 px-3">
-                              <div className="relative leading-num-24 font-medium">
-                                Email
-                              </div>
+                              <div className="relative leading-num-24 font-medium">Email</div>
                             </div>
                           </div>
                           <div className="self-stretch flex items-start p-num-10">
                             <div className="h-[120px] flex-1 rounded-num-12 bg-aliceblue border-whitesmoke-200 border-solid border-[1px] box-border overflow-hidden flex items-start py-num-10 px-3 gap-6">
-                              <div className="relative leading-num-24 font-medium">
-                                Message
-                              </div>
+                              <div className="relative leading-num-24 font-medium">Message</div>
                               <div className="relative leading-num-24 font-medium">
                                 (max. of 500 characters)
                               </div>
@@ -188,36 +162,21 @@ const ContactUs: FunctionComponent = () => {
                             <div className="self-stretch flex flex-col items-center justify-center">
                               <div className="flex items-center gap-[19px]">
                                 <div className="w-[42.1px] flex flex-col items-end">
-                                  <Icon
-                                    icon="ic:twotone-search"
-                                    className="w-11 h-11 relative"
-                                  />
+                                  <Icon icon="ic:twotone-search" className="w-11 h-11 relative" />
                                   <div className="self-stretch h-[15px] relative tracking-[0.02em] font-semibold inline-block shrink-0">
                                     Search
                                   </div>
                                 </div>
-                                <Icon
-                                  icon="gg:arrow-right"
-                                  className="w-6 h-6 relative"
-                                />
+                                <Icon icon="gg:arrow-right" className="w-6 h-6 relative" />
                                 <div className="w-10 flex flex-col items-center justify-center gap-[5px] text-center">
-                                  <Icon
-                                    icon="boxicons:calendar"
-                                    className="w-11 h-11 relative"
-                                  />
+                                  <Icon icon="boxicons:calendar" className="w-11 h-11 relative" />
                                   <div className="self-stretch relative tracking-[0.02em] font-semibold">
                                     Book
                                   </div>
                                 </div>
-                                <Icon
-                                  icon="gg:arrow-right"
-                                  className="w-6 h-6 relative"
-                                />
+                                <Icon icon="gg:arrow-right" className="w-6 h-6 relative" />
                                 <div className="w-[47.2px] flex flex-col items-center gap-[7px]">
-                                  <Icon
-                                    icon="solar:home-linear"
-                                    className="w-11 h-11 relative"
-                                  />
+                                  <Icon icon="solar:home-linear" className="w-11 h-11 relative" />
                                   <div className="self-stretch relative tracking-[0.02em] font-semibold">
                                     Move In
                                   </div>
@@ -227,10 +186,7 @@ const ContactUs: FunctionComponent = () => {
                             <div className="self-stretch flex flex-col items-center justify-center text-num-18 text-white font-inter">
                               <div className="rounded-[45px] [background:linear-gradient(99.18deg,_#5dc2a8_27.88%,_0c8873_88.15%)] flex items-center justify-center py-3 px-num-16 gap-1">
                                 <b className="relative">Find my spot</b>
-                                <Icon
-                                  icon="gg:arrow-right"
-                                  className="w-6 h-6 relative"
-                                />
+                                <Icon icon="gg:arrow-right" className="w-6 h-6 relative" />
                               </div>
                             </div>
                           </div>

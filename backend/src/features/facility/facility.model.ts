@@ -1,18 +1,26 @@
 import mongoose from 'mongoose';
-import type { FacilityType } from 'shared';
+import {
+  ManagerPermission,
+  ManagerPermissionSchema,
+  MANAGER_PERMISSIONS,
+  type FacilityType,
+} from 'shared';
 import { documentSchema, type DocumentType } from '../document/document.model';
+import z from 'zod';
 
-export type ManagerPermissionType = {
-  manageBillings: boolean;
-  manageApplications: boolean;
-  manageListings: boolean;
-};
+export type ManagerPermissionType = z.infer<typeof ManagerPermissionSchema>;
 
-export const managerPermissionSchema = new mongoose.Schema<ManagerPermissionType>({
-  manageBillings: { type: Boolean, default: false },
-  manageApplications: { type: Boolean, default: false },
-  manageListings: { type: Boolean, default: false },
-});
+const permissionDefinition = MANAGER_PERMISSIONS.reduce(
+  (acc, permission) => {
+    acc[permission] = { type: Boolean, default: false };
+    return acc;
+  },
+  {} as Record<ManagerPermission, { type: BooleanConstructor; default: boolean }>,
+);
+
+export const managerPermissionSchema = new mongoose.Schema<ManagerPermissionType>(
+  permissionDefinition,
+);
 
 export type HousingFacilityType = {
   _id: mongoose.Types.ObjectId;

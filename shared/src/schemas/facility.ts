@@ -1,8 +1,25 @@
 import z from 'zod';
 import { DateTimeSchema, ObjectIdSchema, QuerySchema, RangeSchema } from './common';
-import { DOCUMENT_STATUS, FACILITY_TYPES, type FacilityType, ROOM_TYPES } from '../constants';
+import {
+  DOCUMENT_STATUS,
+  FACILITY_TYPES,
+  MANAGER_PERMISSIONS,
+  type ManagerPermission,
+  type FacilityType,
+  ROOM_TYPES,
+} from '../constants';
 
 const FacilityTypeSchema: z.ZodType<FacilityType> = z.enum(FACILITY_TYPES);
+
+const permissionShape = MANAGER_PERMISSIONS.reduce(
+  (acc, permission) => {
+    acc[permission] = z.boolean().default(false);
+    return acc;
+  },
+  {} as { [K in ManagerPermission]: z.ZodDefault<z.ZodBoolean> },
+);
+
+export const ManagerPermissionSchema = z.object(permissionShape);
 
 const DocumentSchema = z.object({
   // Name of the document used as path segment in the URL.
@@ -20,12 +37,6 @@ const DocumentSchema = z.object({
   // no additional API calls, and can fetch the rest of the metadata with
   // one additional API call.
   files: z.array(z.string()),
-});
-
-const ManagerPermissionsSchema = z.object({
-  manageBillings: z.boolean(),
-  manageApplications: z.boolean(),
-  manageListings: z.boolean(),
 });
 
 const FacilityLocationSchema = z.object({
@@ -50,32 +61,24 @@ const LandlordSchema = z.object({
   firstName: z.string(),
   middleName: z.string().optional(),
   lastName: z.string(),
-
+  contact: z.string(),
   numUnits: z.int(),
   createdAt: DateTimeSchema,
 });
 
-const UserFacilitySchema = z.object({
+const BaseUserFacilitySchema = z.object({
   id: ObjectIdSchema,
   name: z.string(),
-  landlordId: LandlordSchema,
-  managers: z.array(ManagerSchema),
   location: FacilityLocationSchema,
-  type: FacilityTypeSchema,
+});
 
-  // the value of the override
-  isAcceptingApplications: z.boolean().optional(),
-  applicationOpenDate: DateTimeSchema,
-  applicationCloseDate: DateTimeSchema,
-
+const UserFacilitySchema = BaseUserFacilitySchema.extend({
   averageRating: z.number(),
-  image: z.string(),
+  image: z.string().optional(),
   price: {
     min: z.number(),
     max: z.number(),
   },
-  allowVisit: z.boolean(),
-  allowTransfer: z.boolean(),
 });
 
 const UserListing = z.object({
@@ -97,14 +100,53 @@ const UserFacilityWithListingsSchema = UserFacilitySchema.extend({
   listings: z.array(UserListing),
 });
 
-const ManagerFacilitySchema = UserFacilitySchema.extend({
+export const UserFacilityDetailedSchema = BaseUserFacilitySchema.extend({
+  description: z.string(),
+  verifiedAt: DateTimeSchema,
+  media: z.array(
+    z.object({
+      sourceType: z.string(),
+      value: z.string(),
+    }),
+  ),
+  listings: z.array(
+    z.object({
+      description: z.string().optional(),
+      tags: z.map(z.string(), z.union([z.string(), z.number(), z.boolean()])),
+      cost: {
+        rent: z.number(),
+        estimatedUtilities: z.number(),
+        securityDeposit: z.number(),
+      },
+      media: z.array(
+        z.object({
+          sourceType: z.string(),
+          value: z.string(),
+        }),
+      ),
+    }),
+  ),
+  landlord: LandlordSchema,
+  managers: z.array(ManagerSchema),
+  type: FacilityTypeSchema,
+
+  // the value of the override
+  isAcceptingApplications: z.boolean().optional(),
+  applicationOpenDate: DateTimeSchema.optional(),
+  applicationCloseDate: DateTimeSchema.optional(),
+
+  allowVisit: z.boolean(),
+  allowTransfer: z.boolean(),
+});
+
+const ManagerFacilitySchema = UserFacilityDetailedSchema.extend({
   capacity: z.int(),
   documents: z.array(DocumentSchema),
 });
 
 const ManagerEntrySchema = z.object({
   email: z.email(),
-  permissions: ManagerPermissionsSchema,
+  permissions: ManagerPermissionSchema,
 });
 
 // ============================================================================
@@ -156,6 +198,7 @@ export const CreateFacilityRequestBodySchema = z.object({
   // This automatically creates an invite to the listed managers.
   managers: z.array(ManagerEntrySchema).default([]),
   name: z.string(),
+  description: z.string(),
   type: FacilityTypeSchema,
   location: FacilityLocationSchema,
 
@@ -192,55 +235,14 @@ export const SearchFacilitiesRequestBodySchema = z.object({
 
 export const SearchFacilitiesResponseBodySchema = z.array(UserFacilityWithListingsSchema);
 
-export const UserFacilityDetailedSchema = z.object({
-  name: z.string(),
-  location: FacilityLocationSchema,
-  id: ObjectIdSchema,
-  description: z.number(),
-  verifiedAt: z.number(),
-  price: {
-    min: z.number(),
-    max: z.number(),
-  },
-  media: z.array(
-    z.object({
-      sourceType: z.string(),
-      value: z.string(),
-    }),
-  ),
-  listings: z.array(
-    z.object({
-      description: z.string().optional(),
-      tags: z.map(z.string(), z.union([z.string(), z.number(), z.boolean()])),
-      cost: {
-        rent: z.number(),
-        estimatedUtilities: z.number(),
-        securityDeposit: z.number(),
-      },
-      media: z.array(
-        z.object({
-          sourceType: z.string(),
-          value: z.string(),
-        }),
-      ),
-    }),
-  ),
-  landlord: z.object({
-    id: ObjectIdSchema,
-    activeUnits: z.number(),
-    createdAt: DateTimeSchema,
-    contact: z.string(),
-  }),
-});
-
 // ============================================================================
 // GET /facilities/:facilityId: routeGetFacility
 //
 // Retrieves a specific facility by ID.
 // ============================================================================
 export const GetFacilityResponseBodySchema = z.union([
-  ManagerFacilitySchema,
   UserFacilityDetailedSchema,
+  ManagerFacilitySchema,
 ]);
 
 // PATCH /facilities/:facilityId: routeUpdateFacility
@@ -270,4 +272,4 @@ export const UpdateFacilityRequestBodySchema = z
 // ============================================================================
 // PATCH /facilities/:facilityId/managers/:managerId: routeUpdateManagerPermissions
 // ============================================================================
-export const UpdateManagerPermissionsRequestBodySchema = ManagerPermissionsSchema;
+export const UpdateManagerPermissionsRequestBodySchema = ManagerPermissionSchema;

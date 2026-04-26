@@ -48,7 +48,7 @@ export const getCalendar = async (
         events.push({
           type: 'billing',
           date: b.dueDate,
-          title: `Billing due (${b.paymentType})`,
+          title: `Billing due`,
           referenceId: b._id,
         });
       }
@@ -154,7 +154,7 @@ export const getCalendar = async (
               events.push({
                 type: 'billing',
                 date: b.dueDate,
-                title: `Billing due (${b.paymentType})`,
+                title: `Billing due`,
                 referenceId: b._id,
               });
             }

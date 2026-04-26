@@ -1,10 +1,10 @@
-import LandlordUnderConstruction from "../../../components/landlord/LandlordUnderConstruction";
+import LandlordUnderConstruction from '../../../components/landlord/LandlordUnderConstruction';
 
 const LandlordDashboard = () => {
   return (
     <LandlordUnderConstruction
       activeSidebarItem="dashboard"
-      breadcrumbs={[{ label: "Dashboard" }]}
+      breadcrumbs={[{ label: 'Dashboard' }]}
       icon="solar:home-2-bold-duotone"
       title="Dashboard coming soon"
     />

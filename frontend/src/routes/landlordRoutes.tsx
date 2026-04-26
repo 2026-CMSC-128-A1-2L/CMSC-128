@@ -10,6 +10,11 @@ import LandlordVisits from "../pages/landlord/visits/LandlordVisits";
 import LandlordFinance from "../pages/landlord/finance/LandlordFinance";
 import LandlordSettings from "../pages/landlord/settings/LandlordSettings";
 import LandlordNewListing from "../pages/landlord/properties/LandlordNewListing";
+import BuildingInfo from "../pages/landlord/properties/BuildingInfo";
+import LandlordTenantDetail from "../pages/landlord/tenants/LandlordTenantDetail";
+import LandlordUnvalidatedApplications from "../pages/landlord/tenants/LandlordUnvalidatedApplications";
+import LandlordUnvalidatedTenantDetail from "../pages/landlord/tenants/LandlordUnvalidatedTenantDetail";
+
 import { Route } from "react-router-dom";
 
 const landlordRoutes = [
@@ -49,6 +54,11 @@ const landlordRoutes = [
     element={<LandlordNewListing />}
   />,
   <Route
+    key="landlord-properties-building-info"
+    path="/landlord/properties/building-info"
+    element={<BuildingInfo />}
+  />,
+  <Route
     key="landlord-managers"
     path="/landlord/managers"
     element={<LandlordManagers />}
@@ -72,6 +82,21 @@ const landlordRoutes = [
     key="landlord-settings"
     path="/landlord/settings"
     element={<LandlordSettings />}
+  />,
+  <Route
+    key="landlord-tenants-unvalidated"
+    path="/landlord/tenants/unvalidated"
+    element={<LandlordUnvalidatedApplications />}
+  />,
+  <Route
+    key="landlord-tenants-unvalidated-tenantId"
+    path="/landlord/tenants/unvalidated/:tenantId"
+    element={<LandlordUnvalidatedTenantDetail />}
+  />,
+  <Route
+    key="landlord-tenants-detail"
+    path="/landlord/tenants/:tenantId"
+    element={<LandlordTenantDetail />}
   />,
 ];
 

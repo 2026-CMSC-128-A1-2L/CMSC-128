@@ -23,7 +23,7 @@ import type { ModelWithDocument } from './document.service';
 export const createDocumentRouter = (
   ownerMiddleware: RequestHandler,
   verifierMiddleware: RequestHandler,
-  ownerOrVerifierMiddleware: RequestHandler,
+  ownerOrVerifierMiddleware: RequestHandler | RequestHandler[],
   model: ModelWithDocument,
 ) => {
   const documentRouter = Router({ mergeParams: true });

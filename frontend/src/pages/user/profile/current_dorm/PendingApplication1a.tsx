@@ -1,8 +1,8 @@
-import { FunctionComponent, useCallback } from "react";
-import { Icon } from "@iconify/react";
-import Photo from "../../assets/photo.svg";
-import Sidebar from "../../../../components/user/SideBar";
-import Footer from "../../../../components/general/Footer";
+import { FunctionComponent, useCallback } from 'react';
+import { Icon } from '@iconify/react';
+import Photo from '../../assets/photo.svg';
+import Sidebar from '../../../../components/user/SideBar';
+import Footer from '../../../../components/general/Footer';
 
 const PendingApplication1a: FunctionComponent = () => {
   const onVERIFICATIONSTATUSContainerClick = useCallback(() => {
@@ -27,10 +27,7 @@ const PendingApplication1a: FunctionComponent = () => {
                 <div className="self-stretch h-16 overflow-hidden shrink-0 flex items-end p-num-10 box-border gap-2.5">
                   <div className="h-6 flex items-center gap-1.5">
                     <div className="relative font-semibold">User Profile</div>
-                    <Icon
-                      icon="iconamoon:arrow-right-2"
-                      className="h-6 w-6 relative"
-                    />
+                    <Icon icon="iconamoon:arrow-right-2" className="h-6 w-6 relative" />
                     <div className="relative font-semibold">Current Dorm</div>
                   </div>
                 </div>
@@ -59,20 +56,14 @@ const PendingApplication1a: FunctionComponent = () => {
                         <div className="flex flex-col items-start gap-1">
                           <div className="flex items-start gap-2">
                             <b className="relative">Contact number</b>
-                            <Icon
-                              icon="iconamoon:edit"
-                              className="w-5 relative max-h-full"
-                            />
+                            <Icon icon="iconamoon:edit" className="w-5 relative max-h-full" />
                           </div>
                           <b className="relative text-black">- - - - -</b>
                         </div>
                         <div className="flex flex-col items-start gap-1">
                           <div className="flex items-start gap-2">
                             <b className="relative">Home Address</b>
-                            <Icon
-                              icon="iconamoon:edit"
-                              className="w-5 relative max-h-full"
-                            />
+                            <Icon icon="iconamoon:edit" className="w-5 relative max-h-full" />
                           </div>
                           <b className="relative text-black">{`- - - - - `}</b>
                         </div>
@@ -117,9 +108,7 @@ const PendingApplication1a: FunctionComponent = () => {
                         <div className="w-[532.4px] h-[49.1px] relative">
                           <div className="absolute h-[99.59%] w-[99.87%] top-[0%] right-[-0.25%] bottom-[0.41%] left-[0.38%] rounded-[102.11px] bg-white flex items-center justify-center p-[4.1px] box-border gap-[4.1px] shrink-0">
                             <div className="h-[40.8px] w-[241px] rounded-[102.11px] bg-darkslategray-200 flex items-center justify-center p-[4.1px] box-border">
-                              <div className="relative font-semibold">
-                                CURRENT DORM
-                              </div>
+                              <div className="relative font-semibold">CURRENT DORM</div>
                             </div>
                             <div
                               className="h-[40.8px] w-[241px] rounded-[102.11px] flex items-center justify-center py-[11.2px] px-[76.6px] box-border cursor-pointer text-slategray"
@@ -136,9 +125,7 @@ const PendingApplication1a: FunctionComponent = () => {
                     <div className="self-stretch flex flex-col items-start text-[24.57px] text-darkslategray-100">
                       <div className="self-stretch flex items-center py-num-0 px-[32.8px]">
                         <div className="flex-1 flex items-center gap-[24.6px]">
-                          <b className="relative text-num-18">
-                            Your Pending Applications
-                          </b>
+                          <b className="relative text-num-18">Your Pending Applications</b>
                           <b className="relative text-num-18 text-dimgray">
                             0 out of 5 Dorm Applications
                           </b>

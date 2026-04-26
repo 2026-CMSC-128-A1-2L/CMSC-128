@@ -8,8 +8,8 @@ interface SideNavProps {
 }
 
 const tabs: { id: TabType; label: string; width: string }[] = [
-  { id: 'overview',  label: 'Overview',        width: 'w-[78px]'  },
-  { id: 'billings',  label: 'Tenant Billings',  width: 'w-[123px]' },
+  { id: 'overview', label: 'Overview', width: 'w-[78px]' },
+  { id: 'billings', label: 'Tenant Billings', width: 'w-[123px]' },
 ];
 
 const SideNav: FunctionComponent<SideNavProps> = ({ activeTab, onTabChange }) => (
@@ -26,9 +26,11 @@ const SideNav: FunctionComponent<SideNavProps> = ({ activeTab, onTabChange }) =>
         }`}
         onClick={() => onTabChange(id)}
       >
-        <div className={`h-[23px] ${width} relative font-medium flex items-center justify-center shrink-0 transition-transform duration-200 ${
-          activeTab === id ? 'scale-105' : 'scale-100'
-        }`}>
+        <div
+          className={`h-[23px] ${width} relative font-medium flex items-center justify-center shrink-0 transition-transform duration-200 ${
+            activeTab === id ? 'scale-105' : 'scale-100'
+          }`}
+        >
           {label}
         </div>
       </div>

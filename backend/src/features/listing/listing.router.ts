@@ -1,5 +1,11 @@
 import { Router } from 'express';
-import { listingViewFilter, isSuperAdmin, isVerifiedStudent } from '../../middleware';
+import {
+  listingViewFilter,
+  isVerifiedStudent,
+  manageApplicationsFilter,
+  manageListingsFilter,
+  managerFilter,
+} from '../../middleware';
 import {
   routeGetListings,
   routeGetListing,
@@ -12,11 +18,6 @@ import { routeGetRentalsByListing } from '../rental/rental.controller';
 import { routeGetListingReviews, routeCreateReview } from '../review/review.controller';
 import { routeReportListing } from '../report/report.controller';
 import { routeGetApplicationsByListing } from '../application/application.controller';
-import {
-  manageApplicationsFilter,
-  manageListingsFilter,
-  managerFilter,
-} from './listing.middleware';
 
 const router = Router();
 

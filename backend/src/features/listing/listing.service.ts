@@ -52,14 +52,13 @@ type TagSpec =
 
 type UpdateListingArguments = Partial<{
   tags: Record<string, string | number | boolean>;
-  roomType: string;
+  roomType: (typeof ROOM_TYPES)[number];
   capacity: number;
-  isPrivate: boolean;
-  allowVisit: boolean;
-  allowTransfer: boolean;
   description: string;
-  mediaUrls: string[];
-  units: string[];
+  media?: {
+    sourceType: 'local' | 'external';
+    value: string;
+  }[];
 }>;
 
 const typeMap = {
@@ -120,7 +119,6 @@ export const createListing = async (
   // There can be a race condition here.
   const newListing = new Listing({
     landlordId: facility.landlordId,
-    managers: facility.managers,
     facilityId: data.facilityId,
     tags: data.tags,
 
