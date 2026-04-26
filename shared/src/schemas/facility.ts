@@ -1,8 +1,25 @@
 import z from 'zod';
 import { DateTimeSchema, ObjectIdSchema, QuerySchema, RangeSchema } from './common';
-import { DOCUMENT_STATUS, FACILITY_TYPES, type FacilityType, ROOM_TYPES } from '../constants';
+import {
+  DOCUMENT_STATUS,
+  FACILITY_TYPES,
+  MANAGER_PERMISSIONS,
+  type ManagerPermission,
+  type FacilityType,
+  ROOM_TYPES,
+} from '../constants';
 
 const FacilityTypeSchema: z.ZodType<FacilityType> = z.enum(FACILITY_TYPES);
+
+const permissionShape = MANAGER_PERMISSIONS.reduce(
+  (acc, permission) => {
+    acc[permission] = z.boolean().default(false);
+    return acc;
+  },
+  {} as { [K in ManagerPermission]: z.ZodDefault<z.ZodBoolean> },
+);
+
+export const ManagerPermissionSchema = z.object(permissionShape);
 
 const DocumentSchema = z.object({
   // Name of the document used as path segment in the URL.
@@ -20,12 +37,6 @@ const DocumentSchema = z.object({
   // no additional API calls, and can fetch the rest of the metadata with
   // one additional API call.
   files: z.array(z.string()),
-});
-
-const ManagerPermissionsSchema = z.object({
-  manageBillings: z.boolean(),
-  manageApplications: z.boolean(),
-  manageListings: z.boolean(),
 });
 
 const FacilityLocationSchema = z.object({
@@ -135,7 +146,7 @@ const ManagerFacilitySchema = UserFacilityDetailedSchema.extend({
 
 const ManagerEntrySchema = z.object({
   email: z.email(),
-  permissions: ManagerPermissionsSchema,
+  permissions: ManagerPermissionSchema,
 });
 
 // ============================================================================
@@ -187,6 +198,7 @@ export const CreateFacilityRequestBodySchema = z.object({
   // This automatically creates an invite to the listed managers.
   managers: z.array(ManagerEntrySchema).default([]),
   name: z.string(),
+  description: z.string(),
   type: FacilityTypeSchema,
   location: FacilityLocationSchema,
 
@@ -260,4 +272,4 @@ export const UpdateFacilityRequestBodySchema = z
 // ============================================================================
 // PATCH /facilities/:facilityId/managers/:managerId: routeUpdateManagerPermissions
 // ============================================================================
-export const UpdateManagerPermissionsRequestBodySchema = ManagerPermissionsSchema;
+export const UpdateManagerPermissionsRequestBodySchema = ManagerPermissionSchema;

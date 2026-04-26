@@ -162,9 +162,9 @@ export const getBillingsSummary = async (
   // Generates monthly income and outstanding of facility per month
   const incomeStatistics = await Billing.aggregate([
     {
-      $match: {
+      $match: combineFilters<BillingType>(filters, {
         facilityId: { $in: facilityIds },
-      },
+      }),
     },
     {
       $group: {
@@ -204,10 +204,10 @@ export const getBillingsSummary = async (
     const idString = f._id.toString();
 
     // Add unit data
-    const facilityUnits = unitStatistics.find((u) => idString == u._id.toString());
+    const facilityUnits = unitStatistics.find((u) => idString === u._id.toString());
 
     // Add total income and outstanding
-    const facilityStatistics = incomeStatistics.filter((u) => idString == u.facilityId.toString());
+    const facilityStatistics = incomeStatistics.filter((u) => idString === u.facilityId.toString());
     const facilityTotalIncome = facilityStatistics.reduce((a, c) => a + c.monthlyIncome, 0);
     const facilityTotalOutstanding = facilityStatistics.reduce((a, c) => a + c.outstanding, 0);
 
@@ -248,7 +248,7 @@ export const getfacilityBilling = async (
     Unit.countDocuments({ facilityId }), // total units
     Rental.distinct('unitId', { facilityId, status: 'active' }), // occupied units
     Billing.aggregate([
-      { $match: { facilityId } },
+      { $match: combineFilters<BillingType>(billingFilters, { facilityId }) },
       // Multople aggreations can be done in one query using $facet
       {
         $facet: {
@@ -373,14 +373,24 @@ export const getTenantBillings = async (
     .lean();
 
   // Map to add needed data
-  const billingsDetails = await billings.map(async (b) => {
-    const student = b.userId as any;
-    const unit = b.unitId as any;
-    const facility = b.facilityId as any;
+  const billingsDetails = billings.map((b) => {
+    const student = b.userId as unknown as {
+      firstName: string;
+      lastName: string;
+      profilePicture?: string;
+      contact: string;
+    };
+    const unit = b.unitId as unknown as {
+      roomNumber: string;
+    };
+    const facility = b.facilityId as unknown as {
+      name: string;
+    };
+
     return {
       id: b._id,
 
-      tenantName: '`${student.firstName} ${student.lastName}`',
+      tenantName: `${student.firstName} ${student.lastName}`,
       profilePicture: student.profilePicture || null,
 
       facilityName: facility.name,
@@ -391,7 +401,8 @@ export const getTenantBillings = async (
       amount: b.totalAmount,
     };
   });
-  return await billingsDetails;
+
+  return billingsDetails;
 };
 
 // Get billings of a Student

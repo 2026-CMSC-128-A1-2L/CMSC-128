@@ -4,6 +4,8 @@ import { AppError } from '../../error';
 import { Unit, type UnitType } from './unit.model';
 import type { Listing } from '../listing/listing.model';
 import { getListingById } from '../listing/listing.service';
+import { Rental } from '../rental/rental.model';
+import { combineFilters } from '../../middleware';
 
 export type CreateUnitArguments = {
   listingId: mongoose.Types.ObjectId;
@@ -74,4 +76,18 @@ export const deleteUnit = async (
   const unit = await Unit.where(filters).findOneAndDelete({ _id: unitId });
   if (!unit) throw new AppError(404, 'Unit not found.');
   return unit;
+};
+
+export const isUnitFull = async (
+  unitId: mongoose.Types.ObjectId,
+  filters: QueryFilter<UnitType>,
+) => {
+  const unit = await Unit.findOne(combineFilters(filters, { _id: unitId }));
+  if (!unit) throw new AppError(404, 'Unit not found.');
+
+  // Count active rentals
+  //
+  // TODO: if this is too slow, add an index or keep the count in the unit
+  const activeRentals = await Rental.find({ unitId, status: 'active' });
+  return unit.capacity === activeRentals.length;
 };

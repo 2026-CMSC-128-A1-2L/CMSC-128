@@ -120,7 +120,6 @@ export const createListing = async (
   // There can be a race condition here.
   const newListing = new Listing({
     landlordId: facility.landlordId,
-    managers: facility.managers,
     facilityId: data.facilityId,
     tags: data.tags,
 

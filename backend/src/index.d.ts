@@ -15,7 +15,7 @@ declare global {
         google: string[];
       };
       profilePicture?: string | null;
-      status: 'unverified' | 'verified' | 'inactive' | 'disabled';
+      status: 'setup' | 'unverified' | 'verified' | 'inactive' | 'disabled';
       documents: DocumentType[];
       verificationStatus: 'pending' | 'submitted' | 'rejected' | 'approved';
     }

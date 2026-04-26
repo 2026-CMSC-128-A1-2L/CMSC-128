@@ -373,6 +373,9 @@ PATCH /users/me
 // Delete own account
 DELETE /users/me
 
+// Sets one's own user type
+POST /users/me/onboard
+
 // Get a student's own details
 GET /users/me/applications
 GET /users/me/rentals
@@ -429,3 +432,48 @@ DELETE .../documents/:docId/files/:fileId
 POST .../documents/:docId/accept
 POST .../documents/:docId/reject
 ```
+
+## Flows
+
+### Onboarding and User Verification
+
+- A user starts at 'setup', which do not have a user type.
+- After a user chooses a type and puts in their details, they will be
+  'unverified'.
+- An unverified user can only see their own details and look at public
+  facilities. They cannot apply nor see the reviews.
+- After a user uploads their documents and gets it verified by the admin,
+  the admin can make them verified. This only applies for landlords and
+  students. Managers are verified if they are a manager of any facility.
+- Verification lasts for 1 year for students, and indefinitely for landlords
+- If a verification expires, their status changes to `unverified`.
+- They should still be able to access their information.
+- A user can be deleted by the admin, or they can delete their account
+  themselves.
+
+### Dorm Application
+
+### Booking
+
+### Rental
+
+### Document
+
+- This applies for facilities, lease transfers
+
+### Manager Invitation
+
+- A landlord sends an invite to an email to be a manager for a facility.
+- If the account already exists, and is not a manager account, it should fail.
+- If the account does not exist yet, the account needs to be made before
+  accepting the application.
+- When a manager accepts the invitation, if their status isn't `verified`,
+  their status changes to `verified.
+
+### Dorm Review
+
+- After a user submits a review, it will have the status `unverified`.
+- This does not contribute to the average rating of a building.
+- After the admin verifies it, it will have the status `verified`.
+
+### Report

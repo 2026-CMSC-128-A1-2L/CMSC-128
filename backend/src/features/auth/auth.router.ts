@@ -6,11 +6,11 @@ import { routeTestRegister, routeTestLogin } from './auth.controller';
 const router = Router();
 
 router.get(
-  '/google/student',
+  '/google',
   passportGoogle.authenticate('google', { scope: ['profile', 'email'] }) as RequestHandler,
 );
 router.get(
-  '/google/student/callback',
+  '/google/callback',
   passportGoogle.authenticate('google', {
     failureRedirect: '/login',
     successRedirect: '/',

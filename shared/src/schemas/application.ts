@@ -30,6 +30,11 @@ export const ApplicationFilterSchema = z
 export const GetApplicationsQuerySchema = QuerySchema(ApplicationFilterSchema);
 
 // POST /api/applications/:applicationId/assign-unit
-export const UpdateApplicationBodySchema = z.object({
+export const AssignUnitRequestBodySchema = z.object({
+  unitId: ObjectIdSchema,
+});
+
+// POST /api/applications/:applicationId/approve
+export const ApproveApplicationRequestBodySchema = z.object({
   unitId: ObjectIdSchema,
 });
