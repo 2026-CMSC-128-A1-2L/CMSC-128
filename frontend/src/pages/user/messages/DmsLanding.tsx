@@ -3,6 +3,9 @@ import DmsSidebar from '../../../components/general/DmsSidebar';
 import oswald from '../../../../assets/owl_inbox.png';
 
 const DmsLanding: FunctionComponent = () => {
+  
+
+
   return (
     <div className="w-full h-screen flex items-start font-inter overflow-hidden bg-white">
       <div className="sticky top-0 h-full w-fit flex-shrink-0 border-r border-whitesmoke">
