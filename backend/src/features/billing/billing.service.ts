@@ -10,6 +10,7 @@ import { Unit } from '../unit/unit.model';
 import { combineFilters } from '../../middleware';
 import { match } from 'node:assert';
 import { fa } from 'zod/v4/locales';
+import { DataTypeSchema } from 'shared';
 
 export type CreateBillingArguments = {
   rentalId: mongoose.Types.ObjectId;
@@ -36,7 +37,7 @@ export type GetBillingArguments = {
     min?: Date;
     max?: Date;
   };
-  paymentStatus: 'unpaid' | 'paid' | 'overdue' | 'partially_paid';
+  paymentStatus: 'unpaid' | 'paid' | 'overdue';
 };
 
 export const createBilling = async (
@@ -390,17 +391,113 @@ export const getUserBillings = async (
     {
       $facet:{
         monthlyStatistics: [
+          {$unwind: '$breakdown'},
           {
             $group:{
               _id: { year: { $year: '$dueDate' }, month: { $month: '$dueDate' } },
               monthlyExpense: { $sum: '$totalAmount' },
-              
+              monthlyOutstanding: { $sum: { $cond: [{ $ne: ['$paymentStatus', 'paid'] }, '$totalAmount', 0] } },
+              breakdownList: { $push: '$breakdown' },
+            },
+          },
+          {
+            $addFields: {
+              // flatten the breakdwonlist to get total
+              breakdown: {
+                $reduce: {
+                  input: '$breakdownList',
+                  initialValue: [],
+                  in: { $concatArrays: ['$$value', ['$$this']] },
+                }
+              },
+            }
+          },
+          {
+            $addFields: {
+              breakdownTotal: {
+                $sum: '$breakdown.amount',
+              },
+            },
+          },
+          {
+            $sort: { '_id.year': -1, '_id.month': -1 },
+          },
+          {
+            $project: {
+              _id: 0,
+              year: '$_id.year',
+              month: '$_id.month',
+              monthlyExpense: 1,
+              monthlyOutstanding: 1,
+              breakdown: 1,
+              breakdownTotal: 1,
+            },
+          }
+        ],
+
+        totals:[
+          {
+            $group: {
+              _id: null,
+              totalExpense: { $sum: '$totalAmount' },
+              totalOutstanding: { $sum: { $cond: [{ $ne: ['$paymentStatus', 'paid'] }, '$totalAmount', 0] } },
+              currentStatus: {
+                $min:{
+                  $cond:[
+                    {$eq:['paymentStatus', 'overdue'],},1,
+                    {$cond:[
+                      {$eq:['paymentStatus', 'unpaid']},2,
+                      3
+                    ]}
+                  ]
+                }
+              }
+            },
+            
+          },
+          {
+            $project: { 
+              _id: 0, 
+              totalExpense: 1, 
+              totalOutstanding: 1,
+              currentStatus: {
+                $switch: {
+                  branches: [
+                    { case: { $eq: ['$currentStatus', 1] }, then: 'overdue' },
+                    { case: { $eq: ['$currentStatus', 2] }, then: 'unpaid' },
+                    { case: { $eq: ['$currentStatus', 3] }, then: 'paid' },
+                  ],
+                  default: 'paid',
+                },
+              }     
             }
           }
         ],
+        billList:[
+          {$sort: { dueDate: -1 }},
+          {
+            $project: {
+              _id: 1,
+              dueDate: 1,
+              totalAmount: 1,
+              paymentStatus: 1,
+            }
+          }
+        ]
       }
     }
   ]);
 
+  const data = userBillingsSummary[0] || { monthlyStatistics: [], totals: [{ totalExpense: 0, totalOutstanding: 0 }], billList: [] };
+  
+  //Contains all data for main dashboard
+  const summary = data.totals[0]?.totalExpense || 0;
+  
+  return{
+    summary,
+    monthlyStatistics: data.monthlyStatistics,
+    unpaidPayments: data.billList.filter((b:any) => b.paymentStatus !== 'paid'),
+    billingHistory: data.billList.filter((b:any) => b.paymentStatus === 'paid'),
+  }
   
 }
