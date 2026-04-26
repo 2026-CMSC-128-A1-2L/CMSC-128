@@ -14,7 +14,10 @@ import {
   routeGetOverdueTenantsByLandlord,
 } from './facility.controller';
 import { routeCreateListing } from '../listing/listing.controller';
-import { routeGetFacilityReviews, routeGetAverageRatingsByFacility } from '../review/review.controller';
+import {
+  routeGetFacilityReviews,
+  routeGetAverageRatingsByFacility,
+} from '../review/review.controller';
 import {
   correctLandlordFilter,
   directManagerFilter,
