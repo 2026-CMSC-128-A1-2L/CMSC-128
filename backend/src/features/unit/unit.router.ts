@@ -1,8 +1,9 @@
 import { Router } from 'express';
-import { isSuperAdmin, currentTenantManagerFilter, managerFilter } from '../../middleware';
+import { isSuperAdmin, manageBillingsFilter, manageListingsFilter } from '../../middleware';
 import { routeGetUnits, routeGetUnit, routeUpdateUnit, routeDeleteUnit } from './unit.controller';
 import { routeGetRentalsByUnit } from '../rental/rental.controller';
 import { routeGetUnitBillings } from '../billing/billing.controller';
+import { currentTenantManagerFilter } from './unit.middleware';
 
 const router = Router();
 
@@ -27,7 +28,7 @@ router.get('/:unitId', currentTenantManagerFilter, routeGetUnit);
 //   Clarify whether to use applications, listings, or a new permission
 //
 // ============================================================================
-router.patch('/:unitId', managerFilter('listing', 'manageListings'), routeUpdateUnit);
+router.patch('/:unitId', manageListingsFilter, routeUpdateUnit);
 
 // ============================================================================
 // DELETE /api/units/:unitId
@@ -36,12 +37,12 @@ router.patch('/:unitId', managerFilter('listing', 'manageListings'), routeUpdate
 //   implement soft deletion
 //
 // ============================================================================
-router.delete('/:unitId', managerFilter('listing', 'manageListings'), routeDeleteUnit);
+router.delete('/:unitId', manageListingsFilter, routeDeleteUnit);
 
 // GET /api/units/:unitId/rentals
-router.get('/:unitId/rentals', managerFilter('facility', 'manageListings'), routeGetRentalsByUnit);
+router.get('/:unitId/rentals', manageListingsFilter, routeGetRentalsByUnit);
 
 // GET /api/units/:unitId/billings
-router.get('/:unitId/billings', managerFilter('facility', 'manageBillings'), routeGetUnitBillings);
+router.get('/:unitId/billings', manageBillingsFilter, routeGetUnitBillings);
 
 export default router;

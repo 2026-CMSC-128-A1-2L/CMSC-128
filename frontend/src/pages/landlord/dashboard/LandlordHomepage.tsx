@@ -1,5 +1,5 @@
 import { FunctionComponent, useCallback } from "react";
-import SideBar from "../../../components/user/SideBar";
+import SideBar from "../../../components/landlord/SideBarLandlord";
 import Footer from "../../../components/general/Footer";
 import { Icon } from "@iconify/react";
 import send from "../../../../assets/send.svg";

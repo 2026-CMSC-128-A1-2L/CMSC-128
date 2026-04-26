@@ -28,24 +28,20 @@ const Footer: FunctionComponent = () => {
         </div>
         <div className="flex items-center justify-center">
           <div className="flex flex-col items-center justify-center gap-2.5">
-
             <Link to="/home">
-            <b className="relative">Browse Dorms</b>
+              <b className="relative">Browse Dorms</b>
             </Link>
-            
-          <Link to="/landlord/properties/new">
-            <b className="relative">List your property</b>
-         </Link>
-            
-          
+
+            <Link to="/landlord/properties/new">
+              <b className="relative">List your property</b>
+            </Link>
           </div>
         </div>
         <div className="flex flex-col items-center justify-center gap-2.5">
-
           <Link to="/about">
             <b className="relative">About</b>
-          </Link> 
-          
+          </Link>
+
           <Link to="/contact-us">
             <b className="relative">Contact Us</b>
           </Link>

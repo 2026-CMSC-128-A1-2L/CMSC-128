@@ -7,7 +7,7 @@ interface SignInPopUpProps {
 }
 
 const SignInPopUp: FunctionComponent<SignInPopUpProps> = ({ onClose }) => {
-  const onGoogleContainerClick = useCallback(() => { }, []);
+  const onGoogleContainerClick = useCallback(() => {}, []);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {

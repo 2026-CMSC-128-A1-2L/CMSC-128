@@ -197,7 +197,6 @@ const ProfileInfo = () => {
                 className="flex items-center gap-1 text-[12px] text-teal-100 cursor-pointer hover:underline"
               >
                 <div className="relative font-medium text-[#096c5b]">
-                  
                   See Finance
                 </div>
                 <Icon

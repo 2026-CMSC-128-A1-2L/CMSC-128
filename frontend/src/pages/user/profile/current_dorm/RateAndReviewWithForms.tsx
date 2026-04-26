@@ -39,11 +39,13 @@ const RateAndReview: FunctionComponent = () => {
             <div className="self-stretch w-[1128px] flex flex-col items-start shrink-0">
               <div className="self-stretch h-16 overflow-hidden shrink-0 flex items-end p-2.5 box-border gap-2.5">
                 <div className="h-6 flex items-center gap-1.5">
-                  <BreadcrumbHeader routes={[
-                                        { name: "User Profile", url: "/profile-switcher" },
-                                        {name: "Current Dorm", url: "/current-dorm"},
-                                        {name: "Rate & Review", url: "/rate-review"}
-                                      ]}/>
+                  <BreadcrumbHeader
+                    routes={[
+                      { name: "User Profile", url: "/profile-switcher" },
+                      { name: "Current Dorm", url: "/current-dorm" },
+                      { name: "Rate & Review", url: "/rate-review" },
+                    ]}
+                  />
                 </div>
                 <div className="w-[704px] rounded-xl bg-aliceblue overflow-hidden shrink-0 hidden items-center py-2.5 px-6 box-border gap-2.5 text-dimgray font-inter">
                   <img className="h-6 w-6 relative" alt="" />

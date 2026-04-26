@@ -29,11 +29,29 @@ const RateAndReview: FunctionComponent = () => {
               <div className="self-stretch flex flex-col items-start py-num-0 pl-num-32 pr-20">
                 <div className="self-stretch h-16 overflow-hidden shrink-0 flex items-end p-2.5 box-border gap-2.5">
                   <div className="h-6 flex items-center gap-1.5">
-                    <BreadcrumbHeader routes={[
-                      { name: "User Profile", url: "/profile-switcher" },
-                      {name: "Current Dorm", url: "/current-dorm"},
-                      {name: "Rate & Review", url: "/rate-review"}
-                    ]}/>
+                    <div
+                      className="self-stretch w-[79px] relative font-semibold flex items-center shrink-0 cursor-pointer"
+                      onClick={onUserProfileTextClick}
+                    >
+                      User Profile
+                    </div>
+                    <Icon
+                      icon="iconamoon:arrow-right-2"
+                      className="h-6 w-6 relative"
+                    />
+
+                    <div
+                      className="self-stretch w-[95px] relative font-semibold flex items-center shrink-0 cursor-pointer"
+                      onClick={onUserProfileTextClick}
+                    >
+                      Current Dorm
+                    </div>
+
+                    <Icon
+                      icon="iconamoon:arrow-right-2"
+                      className="h-6 w-6 relative"
+                    />
+                    <div className="self-stretch w-[94px] relative font-semibold flex items-center shrink-0">{`Rate & Review`}</div>
                   </div>
                   <div className="w-[704px] rounded-xl bg-aliceblue overflow-hidden shrink-0 hidden items-center py-2.5 px-6 box-border gap-2.5 text-dimgray font-inter">
                     <img className="h-6 w-6 relative" alt="" />

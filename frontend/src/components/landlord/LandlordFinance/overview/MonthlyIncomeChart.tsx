@@ -13,7 +13,20 @@ interface MonthToShow {
   year: number;
 }
 
-const ALL_MONTHS = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+const ALL_MONTHS = [
+  'JAN',
+  'FEB',
+  'MAR',
+  'APR',
+  'MAY',
+  'JUN',
+  'JUL',
+  'AUG',
+  'SEP',
+  'OCT',
+  'NOV',
+  'DEC',
+];
 
 type TimeRange = '12' | '6';
 
@@ -39,7 +52,7 @@ const MonthlyIncomeChart: FunctionComponent = () => {
         { month: 'FEB', monthIndex: 1, year: 2026, totalIncome: 90000 },
         { month: 'MAR', monthIndex: 2, year: 2026, totalIncome: 82500 },
       ];
-      
+
       if (selectedRange === '6') {
         const sixMonthsData = [
           { month: 'OCT', monthIndex: 9, year: 2025, totalIncome: 80833 },
@@ -68,11 +81,11 @@ const MonthlyIncomeChart: FunctionComponent = () => {
     if (monthlyData.length === 0) {
       return { months: [], heights: [] };
     }
-    
-    const months = monthlyData.map(d => d.month);
-    const maxIncome = Math.max(...monthlyData.map(d => d.totalIncome), 1);
-    const heights = monthlyData.map(d => (d.totalIncome / maxIncome) * 100);
-    
+
+    const months = monthlyData.map((d) => d.month);
+    const maxIncome = Math.max(...monthlyData.map((d) => d.totalIncome), 1);
+    const heights = monthlyData.map((d) => (d.totalIncome / maxIncome) * 100);
+
     return { months, heights };
   };
 
@@ -98,7 +111,7 @@ const MonthlyIncomeChart: FunctionComponent = () => {
         <b className="h-6 flex-1 relative tracking-[-0.01em] flex items-center text-[16px] sm:text-[18px] text-gray font-inter text-center sm:text-left">
           Monthly Income
         </b>
-        
+
         {/* Toggle Button */}
         <button
           onClick={toggleRange}
@@ -122,9 +135,10 @@ const MonthlyIncomeChart: FunctionComponent = () => {
                     key={m}
                     className="rounded-[5px] transition-all duration-300"
                     style={{
-                      width: selectedRange === '6' ? 'clamp(25px, 14%, 45px)' : 'clamp(20px, 7%, 35px)',
+                      width:
+                        selectedRange === '6' ? 'clamp(25px, 14%, 45px)' : 'clamp(20px, 7%, 35px)',
                       height: `${heights[i]}%`,
-                      backgroundColor: i === months.length - 1 ? '#024338' : '#096c5b'
+                      backgroundColor: i === months.length - 1 ? '#024338' : '#096c5b',
                     }}
                   />
                 ))}
@@ -148,13 +162,19 @@ const MonthlyIncomeChart: FunctionComponent = () => {
         {/* Legend */}
         <div className="self-stretch flex flex-col sm:flex-row items-start sm:items-center justify-between py-0 px-3 text-left gap-2 sm:gap-0">
           <div className="flex items-end gap-1">
-            <div className="h-[15px] w-[15px] rounded-[5px]" style={{ backgroundColor: '#096c5b' }} />
+            <div
+              className="h-[15px] w-[15px] rounded-[5px]"
+              style={{ backgroundColor: '#096c5b' }}
+            />
             <div className="h-4 relative tracking-[0.02em] font-semibold flex items-center text-[10px] sm:text-[12px] text-darkslategray-100">
               {selectedRange === '6' ? 'Previous Months' : 'Past Months'}
             </div>
           </div>
           <div className="flex items-end gap-1">
-            <div className="h-[15px] w-[15px] rounded-[5px]" style={{ backgroundColor: '#024338' }} />
+            <div
+              className="h-[15px] w-[15px] rounded-[5px]"
+              style={{ backgroundColor: '#024338' }}
+            />
             <div className="h-4 relative tracking-[0.02em] font-semibold flex items-center text-[10px] sm:text-[12px] text-darkslategray-100">
               Current Month
             </div>

@@ -27,7 +27,7 @@ const IncomeBreakdown: FunctionComponent = () => {
       setIsLoading(true);
       try {
         const mockBillings: Billing[] = [
-          { 
+          {
             breakdown: [
               { name: 'Rent', amount: 3000 },
               { name: 'Utilities', amount: 1500 },
@@ -36,7 +36,7 @@ const IncomeBreakdown: FunctionComponent = () => {
             paidAmount: 4500,
             totalAmount: 4500,
           } as Billing,
-          { 
+          {
             breakdown: [
               { name: 'Rent', amount: 3000 },
               { name: 'Utilities', amount: 1700 },
@@ -45,7 +45,7 @@ const IncomeBreakdown: FunctionComponent = () => {
             paidAmount: 1850,
             totalAmount: 4850,
           } as Billing,
-          { 
+          {
             breakdown: [
               { name: 'Rent', amount: 3000 },
               { name: 'Utilities', amount: 1300 },
@@ -54,7 +54,7 @@ const IncomeBreakdown: FunctionComponent = () => {
             paidAmount: 0,
             totalAmount: 4300,
           } as Billing,
-          { 
+          {
             breakdown: [
               { name: 'Rent', amount: 3000 },
               { name: 'Utilities', amount: 1450 },
@@ -71,11 +71,11 @@ const IncomeBreakdown: FunctionComponent = () => {
         let totalPaid = 0;
         let totalAmount = 0;
 
-        mockBillings.forEach(billing => {
-          const rent = billing.breakdown.find(b => b.name === 'Rent')?.amount || 0;
-          const utilities = billing.breakdown.find(b => b.name === 'Utilities')?.amount || 0;
-          const misc = billing.breakdown.find(b => b.name === 'Misc. Fees')?.amount || 0;
-          
+        mockBillings.forEach((billing) => {
+          const rent = billing.breakdown.find((b) => b.name === 'Rent')?.amount || 0;
+          const utilities = billing.breakdown.find((b) => b.name === 'Utilities')?.amount || 0;
+          const misc = billing.breakdown.find((b) => b.name === 'Misc. Fees')?.amount || 0;
+
           totalRent += rent;
           totalUtilities += utilities;
           totalMisc += misc;
@@ -112,9 +112,21 @@ const IncomeBreakdown: FunctionComponent = () => {
   ];
 
   const legendItems = [
-    { color: 'bg-darkslategray-200', textColor: 'text-darkslategray-200', label: `Rent - ${breakdown.rent.percentage.toFixed(0)}%` },
-    { color: 'bg-teal-200', textColor: 'text-teal-200', label: `Utilities - ${breakdown.utilities.percentage.toFixed(0)}%` },
-    { color: 'bg-teal-100', textColor: 'text-teal-100', label: `Misc. - ${breakdown.misc.percentage.toFixed(0)}%` },
+    {
+      color: 'bg-darkslategray-200',
+      textColor: 'text-darkslategray-200',
+      label: `Rent - ${breakdown.rent.percentage.toFixed(0)}%`,
+    },
+    {
+      color: 'bg-teal-200',
+      textColor: 'text-teal-200',
+      label: `Utilities - ${breakdown.utilities.percentage.toFixed(0)}%`,
+    },
+    {
+      color: 'bg-teal-100',
+      textColor: 'text-teal-100',
+      label: `Misc. - ${breakdown.misc.percentage.toFixed(0)}%`,
+    },
   ];
 
   const donutGradient = `conic-gradient(
@@ -144,17 +156,16 @@ const IncomeBreakdown: FunctionComponent = () => {
         {/* Donut + legend - fixed width */}
         <div className="flex items-center gap-[42px] shrink-0">
           <div className="relative h-[150px] w-[150px] rounded-full shrink-0">
-            <div 
-              className="absolute inset-0 rounded-full"
-              style={{ background: donutGradient }}
-            />
+            <div className="absolute inset-0 rounded-full" style={{ background: donutGradient }} />
             <div className="absolute inset-[20px] rounded-full bg-white" />
           </div>
           <div className="flex flex-col gap-2">
             {legendItems.map(({ color, textColor, label }) => (
               <div key={label} className="flex items-center gap-2 whitespace-nowrap">
                 <div className={`h-[15px] w-[15px] rounded-[5px] ${color}`} />
-                <span className={`font-medium ${textColor} text-[12px] sm:text-[14px]`}>{label}</span>
+                <span className={`font-medium ${textColor} text-[12px] sm:text-[14px]`}>
+                  {label}
+                </span>
               </div>
             ))}
           </div>
@@ -180,8 +191,16 @@ const IncomeBreakdown: FunctionComponent = () => {
           </div>
 
           <div className="self-stretch flex flex-col items-start gap-5 text-[12px] text-teal-200 font-lora">
-            <ProgressRow label="Collection Rate" value={`${breakdown.collectionRate.toFixed(2)}%`} percent={breakdown.collectionRate} />
-            <ProgressRow label="Occupancy Rate" value={`${breakdown.occupancyRate.toFixed(2)}%`} percent={breakdown.occupancyRate} />
+            <ProgressRow
+              label="Collection Rate"
+              value={`${breakdown.collectionRate.toFixed(2)}%`}
+              percent={breakdown.collectionRate}
+            />
+            <ProgressRow
+              label="Occupancy Rate"
+              value={`${breakdown.occupancyRate.toFixed(2)}%`}
+              percent={breakdown.occupancyRate}
+            />
           </div>
         </div>
       </div>

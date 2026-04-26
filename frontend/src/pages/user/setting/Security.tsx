@@ -1,12 +1,9 @@
 import { FunctionComponent, useCallback } from 'react';
-import { Icon } from "@iconify/react"
+import { Icon } from '@iconify/react';
 import footer_logo from '../../../../assets/footer_logo.svg';
 
-
 const Security: FunctionComponent = () => {
-
   return (
-
     <div className="self-stretch rounded-t-none rounded-b-num-16 border-whitesmoke-200 border-solid border-[1px] overflow-hidden flex flex-col items-start py-6 px-8 gap-6 text-center text-[24px] text-black">
       <div className="flex flex-col items-start">
         <b className="relative leading-8">Security Settings</b>
@@ -20,10 +17,7 @@ const Security: FunctionComponent = () => {
             </div>
             <div className="self-stretch flex-1 rounded-num-16 border-whitesmoke-200 border-solid border-[1px] overflow-hidden flex flex-col items-start justify-center py-num-10 px-6 gap-2.5 text-left">
               <div className="flex items-center gap-2.5 text-center text-[24px] text-teal">
-                <Icon
-                  icon="flat-color-icons:google"
-                  className="h-6 w-6 relative"
-                ></Icon>
+                <Icon icon="flat-color-icons:google" className="h-6 w-6 relative"></Icon>
                 <b className="relative leading-8">Logged in via Google</b>
               </div>
               <a
@@ -47,39 +41,28 @@ const Security: FunctionComponent = () => {
                 <div className="self-stretch h-[68px] rounded-num-16 border-whitesmoke-200 border-solid border-[1px] box-border overflow-hidden shrink-0 flex flex-col items-start justify-center py-num-4 px-num-10">
                   <div className="self-stretch flex items-center gap-2.5">
                     <div className="flex-1 flex items-center gap-3">
-                      <Icon
-                        icon="wordpress:desktop"
-                        className="w-12 relative h-12"
-                      ></Icon>
+                      <Icon icon="wordpress:desktop" className="w-12 relative h-12"></Icon>
                       <div className="flex flex-col items-start justify-center py-num-4 px-num-0">
                         <div className="flex items-center">
                           <div className="relative font-medium">Windows PC</div>
                           <Icon icon="ph:dot" className="h-6 w-6 relative"></Icon>
                           <div className="relative font-medium">Chrome</div>
                           <Icon icon="ph:dot" className="h-6 w-6 relative"></Icon>
-                          <div className="relative font-medium">
-                            San Pablo City
-                          </div>
+                          <div className="relative font-medium">San Pablo City</div>
                         </div>
                         <div className="rounded-xl bg-lightcyan flex items-center py-num-4 px-3 text-slategray">
                           <div className="relative font-semibold">Active Now</div>
                         </div>
                       </div>
                     </div>
-                    <Icon
-                      icon="qlementine-icons:menu-dots-24"
-                      className="h-6 w-6 relative"
-                    ></Icon>
+                    <Icon icon="qlementine-icons:menu-dots-24" className="h-6 w-6 relative"></Icon>
                   </div>
                 </div>
               </div>
               <div className="self-stretch h-[68px] rounded-num-16 border-whitesmoke-200 border-solid border-[1px] box-border overflow-hidden shrink-0 flex flex-col items-start justify-center py-num-4 px-num-10">
                 <div className="self-stretch flex items-center gap-2.5">
                   <div className="flex-1 flex items-center gap-3">
-                    <Icon
-                      icon="wordpress:desktop"
-                      className="w-12 h-12 relative"
-                    ></Icon>
+                    <Icon icon="wordpress:desktop" className="w-12 h-12 relative"></Icon>
                     <div className="flex flex-col items-start justify-center py-num-4 px-num-0">
                       <div className="flex items-center">
                         <div className="relative font-medium">Windows PC</div>
@@ -89,16 +72,11 @@ const Security: FunctionComponent = () => {
                         <div className="relative font-medium">San Pablo City</div>
                       </div>
                       <div className="rounded-xl bg-aliceblue flex items-center py-num-4 px-3 text-slategray">
-                        <div className="relative font-semibold">
-                          Yesterday at 11:33 PM
-                        </div>
+                        <div className="relative font-semibold">Yesterday at 11:33 PM</div>
                       </div>
                     </div>
                   </div>
-                  <Icon
-                    icon="qlementine-icons:menu-dots-24"
-                    className="h-6 w-6 relative"
-                  ></Icon>
+                  <Icon icon="qlementine-icons:menu-dots-24" className="h-6 w-6 relative"></Icon>
                 </div>
               </div>
             </div>
@@ -131,15 +109,10 @@ const Security: FunctionComponent = () => {
                 <b className="relative">Security Tip</b>
               </div>
               <div className="self-stretch h-[63px] rounded-num-16 bg-aliceblue overflow-hidden shrink-0 flex items-start justify-center py-num-10 px-3 box-border gap-2 text-left text-slategray">
-                <Icon
-                  icon="flat-color-icons:info"
-                  className="h-6 w-6 relative shrink-0"
-                ></Icon>
+                <Icon icon="flat-color-icons:info" className="h-6 w-6 relative shrink-0"></Icon>
                 <div className="h-[68px] flex-1 relative leading-6 font-medium inline-block shrink-0">
                   {`To change your password or two-factor authentication, please visit your `}
-                  <span className="[text-decoration:underline]">
-                    Google Account Settings.
-                  </span>
+                  <span className="[text-decoration:underline]">Google Account Settings.</span>
                 </div>
               </div>
             </div>
@@ -157,9 +130,7 @@ const Security: FunctionComponent = () => {
         </div>
       </div>
     </div>
-
-  )
-
+  );
 };
 
 export default Security;

@@ -32,9 +32,12 @@ const OverviewTab: FunctionComponent = () => {
         ];
 
         const totalIncome = mockBillings.reduce((sum, b) => sum + (b.paidAmount || 0), 0);
-        const totalOutstanding = mockBillings.reduce((sum, b) => sum + (b.totalAmount - (b.paidAmount || 0)), 0);
-        const paidCount = mockBillings.filter(b => b.paymentStatus === 'paid').length;
-        
+        const totalOutstanding = mockBillings.reduce(
+          (sum, b) => sum + (b.totalAmount - (b.paidAmount || 0)),
+          0,
+        );
+        const paidCount = mockBillings.filter((b) => b.paymentStatus === 'paid').length;
+
         setStats({
           income: totalIncome,
           occupancy: { current: 28, total: 30 },
@@ -54,7 +57,10 @@ const OverviewTab: FunctionComponent = () => {
   const statCards = [
     { label: 'Income', value: `₱${stats.income.toFixed(2)}`, highlight: true },
     { label: 'Occupancy', value: `${stats.occupancy.current}/${stats.occupancy.total}` },
-    { label: 'Payments Collected', value: `${stats.paymentsCollected.current}/${stats.paymentsCollected.total}` },
+    {
+      label: 'Payments Collected',
+      value: `${stats.paymentsCollected.current}/${stats.paymentsCollected.total}`,
+    },
     { label: 'Outstanding Balance', value: `₱${stats.outstandingBalance.toFixed(2)}` },
   ];
 

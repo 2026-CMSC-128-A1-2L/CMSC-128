@@ -1,20 +1,20 @@
-import NavBarAdmin from "../../components/admin/NavBarAdmin";
-import SideBarAdmin from "../../components/admin/SideBarAdmin";
-import AdminPageTransition from "../../components/admin/AdminPageTransition";
-import { Icon } from "@iconify/react";
+import NavBarAdmin from '../../components/admin/NavBarAdmin';
+import SideBarAdmin from '../../components/admin/SideBarAdmin';
+import AdminPageTransition from '../../components/admin/AdminPageTransition';
+import { Icon } from '@iconify/react';
 
-const tableHeaders = ["Property Name", "Landlord", "Date Submitted", "Details"];
+const tableHeaders = ['Property Name', 'Landlord', 'Date Submitted', 'Details'];
 
 const tableData = [
-  { name: "MCNT Residences", landlord: "John Doe", date: "January 1, 2026" },
-  { name: "MCNT Residences", landlord: "John Doe", date: "January 1, 2026" },
-  { name: "MCNT Residences", landlord: "John Doe", date: "January 1, 2026" },
-  { name: "MCNT Residences", landlord: "John Doe", date: "January 1, 2026" },
-  { name: "MCNT Residences", landlord: "John Doe", date: "January 1, 2026" },
-  { name: "MCNT Residences", landlord: "John Doe", date: "January 1, 2026" },
-  { name: "MCNT Residences", landlord: "John Doe", date: "January 1, 2026" },
-  { name: "MCNT Residences", landlord: "John Doe", date: "January 1, 2026" },
-  { name: "MCNT Residences", landlord: "John Doe", date: "January 1, 2026" },
+  { name: 'MCNT Residences', landlord: 'John Doe', date: 'January 1, 2026' },
+  { name: 'MCNT Residences', landlord: 'John Doe', date: 'January 1, 2026' },
+  { name: 'MCNT Residences', landlord: 'John Doe', date: 'January 1, 2026' },
+  { name: 'MCNT Residences', landlord: 'John Doe', date: 'January 1, 2026' },
+  { name: 'MCNT Residences', landlord: 'John Doe', date: 'January 1, 2026' },
+  { name: 'MCNT Residences', landlord: 'John Doe', date: 'January 1, 2026' },
+  { name: 'MCNT Residences', landlord: 'John Doe', date: 'January 1, 2026' },
+  { name: 'MCNT Residences', landlord: 'John Doe', date: 'January 1, 2026' },
+  { name: 'MCNT Residences', landlord: 'John Doe', date: 'January 1, 2026' },
 ];
 
 function Listings() {
@@ -25,9 +25,7 @@ function Listings() {
         <div className="flex flex-1">
           <SideBarAdmin activeItem="listings" />
           <div className="flex-1 bg-white px-10 py-8">
-            <h1 className="font-['Outfit'] text-[48px] font-bold text-black">
-              Listings
-            </h1>
+            <h1 className="font-['Outfit'] text-[48px] font-bold text-black">Listings</h1>
 
             <div className="mt-6 rounded-2xl bg-white p-6 shadow-[0px_4px_20px_0px_rgba(0,0,0,0.25)]">
               {/* Section header with search */}
@@ -36,10 +34,7 @@ function Listings() {
                   For Review
                 </h2>
                 <div className="flex h-9 w-75.75 items-center gap-2 rounded-full border border-[#d0d0d0] bg-white px-4">
-                  <Icon
-                    icon="solar:magnifer-outline"
-                    className="h-4 w-4 text-[#7c8db5]"
-                  />
+                  <Icon icon="solar:magnifer-outline" className="h-4 w-4 text-[#7c8db5]" />
                   <input
                     type="text"
                     placeholder="Search"

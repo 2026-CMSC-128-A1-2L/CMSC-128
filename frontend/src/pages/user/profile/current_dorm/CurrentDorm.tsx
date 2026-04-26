@@ -29,9 +29,7 @@ const CurrentDorm: FunctionComponent = () => {
                     <b className="relative tracking-[-0.01em]">Room 31</b>
                   </div>
                   <div className="flex items-center justify-center p-num-10 mt-[-32px] relative text-[8px] text-black font-lora">
-                    <div className="relative tracking-[0.04em] font-semibold">
-                      UNIT
-                    </div>
+                    <div className="relative tracking-[0.04em] font-semibold">UNIT</div>
                   </div>
                 </div>
                 <div className="h-20 w-[280px] rounded-num-12 bg-white border-whitesmoke-200 border-solid border-[1px] box-border flex flex-col items-center">
@@ -39,9 +37,7 @@ const CurrentDorm: FunctionComponent = () => {
                     <b className="relative tracking-[-0.01em]">1 Year</b>
                   </div>
                   <div className="flex items-center justify-center p-num-10 mt-[-32px] relative text-[8px] text-black font-lora">
-                    <div className="relative tracking-[0.04em] font-semibold">
-                      Contract
-                    </div>
+                    <div className="relative tracking-[0.04em] font-semibold">Contract</div>
                   </div>
                 </div>
                 <div className="h-20 w-[280px] rounded-num-12 bg-white border-whitesmoke-200 border-solid border-[1px] box-border flex flex-col items-center">
@@ -49,9 +45,7 @@ const CurrentDorm: FunctionComponent = () => {
                     <b className="relative tracking-[-0.01em]">May 18, 2026</b>
                   </div>
                   <div className="flex items-center justify-center p-num-10 mt-[-32px] relative text-[8px] text-black font-lora">
-                    <div className="relative tracking-[0.04em] font-semibold">
-                      Lease End
-                    </div>
+                    <div className="relative tracking-[0.04em] font-semibold">Lease End</div>
                   </div>
                 </div>
               </div>
@@ -63,10 +57,7 @@ const CurrentDorm: FunctionComponent = () => {
                     className="flex items-center gap-1 text-[12px] text-teal-100 cursor-pointer hover:underline"
                   >
                     <div className="relative font-medium">View Details</div>
-                    <Icon
-                      icon="solar:arrow-right-up-linear"
-                      className="h-6 w-6 relative"
-                    />
+                    <Icon icon="solar:arrow-right-up-linear" className="h-6 w-6 relative" />
                   </a>
                 </div>
               </div>

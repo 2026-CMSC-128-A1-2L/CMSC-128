@@ -108,10 +108,7 @@ const DormCard: FunctionComponent<DormCardProps> = ({
 
                 <div className="w-full h-fit text-center mt-2">
                   <button className="text-teal font-bold text-num-10 underline hover:opacity-80 transition-opacity pb-2">
-                    <Link to="/unit">
-                      View all details
-                    </Link>
-                    
+                    <Link to="/unit">View all details</Link>
                   </button>
                 </div>
               </div>

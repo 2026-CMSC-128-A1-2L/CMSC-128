@@ -1,19 +1,17 @@
-import { FunctionComponent, useState } from "react";
-import LandlordLayout, {
-  type BreadcrumbItem,
-} from "../../../components/landlord/LandlordLayout";
-import type { SideBarLandlordItemKey } from "../../../components/landlord/SideBarLandlord";
-import SideNav from "../../../components/landlord/LandlordFinance/SideNav";
-import { Icon } from "@iconify/react";
+import { FunctionComponent, useState } from 'react';
+import LandlordLayout, { type BreadcrumbItem } from '../../../components/landlord/LandlordLayout';
+import type { SideBarLandlordItemKey } from '../../../components/landlord/SideBarLandlord';
+import SideNav from '../../../components/landlord/LandlordFinance/SideNav';
+import { Icon } from '@iconify/react';
 
 // Tabs
-import OverviewTab from "../../../components/landlord/LandlordFinance/overview/Overview";
-import TenantBillingsTab from "../../../components/landlord/LandlordFinance/billings/TenantBillings";
+import OverviewTab from '../../../components/landlord/LandlordFinance/overview/Overview';
+import TenantBillingsTab from '../../../components/landlord/LandlordFinance/billings/TenantBillings';
 
-type TabType = "overview" | "billings";
+type TabType = 'overview' | 'billings';
 
 const FinancePage: FunctionComponent = () => {
-  const [activeTab, setActiveTab] = useState<TabType>("overview");
+  const [activeTab, setActiveTab] = useState<TabType>('overview');
   const [isTransitioning, setIsTransitioning] = useState(false);
 
   const handleTabChange = (tab: TabType) => {
@@ -28,8 +26,8 @@ const FinancePage: FunctionComponent = () => {
   };
 
   const breadcrumbs: BreadcrumbItem[] = [
-    { label: "Finance", to: "/landlord/finance" },
-    { label: "One Sapphire Place" },
+    { label: 'Finance', to: '/landlord/finance' },
+    { label: 'One Sapphire Place' },
   ];
 
   return (
@@ -52,14 +50,9 @@ const FinancePage: FunctionComponent = () => {
             One Sapphire Place
           </b>
           <div className="self-stretch flex items-center py-0 px-4 gap-2">
-            <Icon
-              icon="mdi:map-marker"
-              className="text-lg"
-              aria-hidden="true"
-            />
+            <Icon icon="mdi:map-marker" className="text-lg" aria-hidden="true" />
             <b className="flex-1 relative text-sm">
-              Lot 3, Block 17, Sapphire St, Umali Subd, Los Baños, Philippines,
-              4030
+              Lot 3, Block 17, Sapphire St, Umali Subd, Los Baños, Philippines, 4030
             </b>
           </div>
           <div className="self-stretch flex items-center py-0 px-4 gap-2">
@@ -75,16 +68,10 @@ const FinancePage: FunctionComponent = () => {
           <div className="flex-1 overflow-hidden">
             <div
               className={`transition-all duration-300 ease-in-out ${
-                isTransitioning
-                  ? "opacity-0 translate-y-2"
-                  : "opacity-100 translate-y-0"
+                isTransitioning ? 'opacity-0 translate-y-2' : 'opacity-100 translate-y-0'
               }`}
             >
-              {activeTab === "overview" ? (
-                <OverviewTab />
-              ) : (
-                <TenantBillingsTab />
-              )}
+              {activeTab === 'overview' ? <OverviewTab /> : <TenantBillingsTab />}
             </div>
           </div>
         </div>
