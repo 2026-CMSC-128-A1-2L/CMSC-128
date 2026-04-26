@@ -7,6 +7,7 @@ import Footer from "../../../../components/general/Footer";
 import Switch from "../../../../components/user/CurrentDormToVerificationSwitch";
 import Sidebar from "../../../../components/user/SideBar";
 import placeholder from "../../../../../assets/logo_atlas_text.svg";
+import { Link } from "react-router-dom";
 
 const CurrentDorm: FunctionComponent = () => {
   const onContractInformationContainerClick = useCallback(() => {
@@ -375,6 +376,7 @@ const CurrentDorm: FunctionComponent = () => {
                             </div>
 
                             {/* rate and review */}
+                            <Link to="/rate-review" className="cursor-pointer hover:underline">
                             <div
                               className="self-stretch flex items-center justify-end py-1 px-3 cursor-pointer group"
                               onClick={() => setActiveTab("Rate and Review")}
@@ -391,8 +393,10 @@ const CurrentDorm: FunctionComponent = () => {
                                 />
                               </div>
                             </div>
-
+</Link>
+                            
                             {/* report listing */}
+                            <Link to="/report-dorm" className="cursor-pointer hover:underline">
                             <div
                               className="self-stretch flex items-center justify-end py-1 px-3 cursor-pointer group"
                               onClick={() => setActiveTab("Report Listing")}
@@ -409,8 +413,10 @@ const CurrentDorm: FunctionComponent = () => {
                                 />
                               </div>
                             </div>
+                            </Link>
 
                             {/* pasalo unit */}
+                            <Link to="/lease-transfer" className="cursor-pointer hover:underline">
                             <div
                               className="self-stretch flex items-center justify-end py-1 px-3 cursor-pointer group"
                               onClick={() => setActiveTab("Pasalo Unit")}
@@ -427,6 +433,8 @@ const CurrentDorm: FunctionComponent = () => {
                                 />
                               </div>
                             </div>
+
+                            </Link>
                           </div>
                         </div>
 

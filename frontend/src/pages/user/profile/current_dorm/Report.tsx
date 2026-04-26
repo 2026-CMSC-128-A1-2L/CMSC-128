@@ -32,8 +32,8 @@ export default function Reportv2() {
                     {/* <Header /> */}
                     <BreadcrumbHeader 
                         routes={[
-                            { name: 'User Profile', url: '/profile' },
-                            { name: 'Current Dorm', url: '/profile/dorm' },
+                            { name: 'User Profile', url: '/profile-switcher' },
+                            { name: 'Current Dorm', url: '/current-dorm' },
                             { name: 'Report' } // Left without a URL since it's the active page
                         ]} 
                     />

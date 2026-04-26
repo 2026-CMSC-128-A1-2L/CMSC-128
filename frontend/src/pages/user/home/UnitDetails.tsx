@@ -12,7 +12,7 @@ import RulesDetails from "../../../components/user/unitdetails/RulesDetails";
 import LocationDetails from "../../../components/user/unitdetails/LocationDetails";
 import ReviewDetails from "../../../components/user/unitdetails/ReviewDetails";
 import PropertyTab from "../../../components/user/unitdetails/PropertyTab";
-
+import { Link } from "react-router-dom";
 const UnitDetails: FunctionComponent = () => {
   const gallery = [`${pic}`, `${pic2}`, `${pic3}`];
 
@@ -238,6 +238,8 @@ const UnitDetails: FunctionComponent = () => {
                           </div>
                         </div>
                         <div className="w-num-259_3 flex flex-col items-center gap-[8.9px] shrink-0 text-white font-poppins">
+                          
+                          <Link to="/applications">
                           <div className="w-full h-[42.8px] relative rounded-[8.91px] bg-darkslategray-200 flex items-center py-[0.9px] pl-[46.4px] pr-[55.3px] box-border gap-[2.7px] text-left text-[14.26px] text-white font-poppins">
                             <div className="h-[41px] w-[140px] relative font-medium flex items-center shrink-0">{`Submit Application `}</div>
                             <Icon
@@ -245,6 +247,10 @@ const UnitDetails: FunctionComponent = () => {
                               className="h-6 w-6"
                             />
                           </div>{" "}
+                          </Link>
+                          
+                          
+                          
                           <div className="self-stretch h-[26.7px] relative text-num-10_7 font-lora text-dimgray text-center flex items-center justify-center shrink-0">
                             Landlord will respond within 24–48 hrs.
                             <br />
@@ -344,6 +350,8 @@ const UnitDetails: FunctionComponent = () => {
                               <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%]">
                                 <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] shadow-[0px_0px_3.57px_rgba(0,_0,_0,_0.25)] rounded-num-8_91 bg-darkslategray-200" />
                               </div>
+                              <Link to="/direct-messages">
+                              
                               <div className="absolute h-[49.84%] w-[51.74%] top-[25%] right-[24.31%] bottom-[25.16%] left-[23.95%]">
                                 <div className="absolute h-full w-[81.19%] top-[0%] left-[18.79%] font-medium flex items-center justify-center">
                                   Send Message
@@ -353,6 +361,7 @@ const UnitDetails: FunctionComponent = () => {
                                   className="absolute h-[95.38%] w-[13.44%] top-[11.15%] right-[86.56%] bottom-[-0.52%] left-[0%] max-w-full overflow-hidden max-h-full"
                                 />
                               </div>
+                              </Link>
                             </div>
                             <div className="w-[256.7px] h-[32.1px] relative">
                               <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] shadow-[0px_0px_3.57px_rgba(0,_0,_0,_0.15)] rounded-num-8_91 bg-darkslategray-200" />
@@ -432,6 +441,8 @@ const UnitDetails: FunctionComponent = () => {
                             </div>
                           </div>
                           <div className="self-stretch flex flex-col items-center justify-center gap-[10.7px] text-num-10_7 font-lora">
+                            <Link to="/unit">
+                            
                             <div className="w-num-249_6 h-[196.1px] relative shadow-[0px_0px_3.57px_rgba(0,_0,_0,_0.25)]">
                               <div className="absolute top-[0px] left-[0.88px] shadow-[0px_0px_3.57px_rgba(0,_0,_0,_0.25)] rounded-num-8_91 bg-whitesmoke-300 w-[247.8px] h-[196.1px]" />
                               <div className="absolute top-[124.81px] left-[0px] w-num-249_6 h-[71.3px]">
@@ -465,6 +476,8 @@ const UnitDetails: FunctionComponent = () => {
                                 alt=""
                               />
                             </div>
+                            </Link>
+                            <Link to="/unit">
                             <div className="w-num-249_6 h-[198.8px] relative [filter:drop-shadow(0px_0px_3.57px_rgba(0,_0,_0,_0.25))]">
                               <div className="absolute top-[0px] left-[0.88px] shadow-[0px_0px_3.57px_rgba(0,_0,_0,_0.25)] rounded-num-8_91 bg-whitesmoke-300 w-[247.8px] h-[196.1px]" />
                               <div className="absolute top-[127.48px] left-[0px] w-num-249_6 h-[71.3px]">
@@ -498,6 +511,7 @@ const UnitDetails: FunctionComponent = () => {
                                 alt=""
                               />
                             </div>
+                            </Link>
                           </div>
                         </div>
                       </div>

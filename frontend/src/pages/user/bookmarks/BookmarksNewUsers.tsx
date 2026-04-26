@@ -3,6 +3,7 @@ import { Icon } from "@iconify/react";
 
 import SideBar from "../../../components/user/SideBar";
 import Footer from "../../../components/general/Footer";
+import { Link } from "react-router-dom";
 
 const BookmarksNewUsers: FunctionComponent = () => {
   return (
@@ -37,16 +38,28 @@ const BookmarksNewUsers: FunctionComponent = () => {
                     <div className="w-full h-0.5 rounded-[100px] bg-whitesmoke-200" />
                   </div>
                   <div className="flex-1 flex items-center justify-center py-16 text-center text-sm">
+
                     <div className="flex items-center gap-2">
+
                       <b>
                         <span>No bookmarked listings yet. </span>
-                        <span className="text-teal">Browse listings</span>
+                          <Link to="/home">
+                        <span className="text-teal">
+                            Browse
+                            listings
+                        </span>
+
+                          </Link>
                       </b>
+
+                          <Link to="/home">
                       <Icon
                         icon="radix-icons:arrow-top-right"
                         className="h-6 w-6 relative"
                       />
+                          </Link>
                     </div>
+
                   </div>
                 </div>
               </div>

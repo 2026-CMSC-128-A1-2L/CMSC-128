@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import { Icon } from "@iconify/react";
 import DefaultAvatar from "../../../assets/default_avatar.svg";
 import VerifiedBadge from "../../../assets/verified_badge.svg";
+import { Link } from "react-router-dom";
 
 const ProfileInfo = () => {
   const [profileImage, setProfileImage] = useState<string>(DefaultAvatar);
@@ -191,19 +192,19 @@ const ProfileInfo = () => {
             <div className="self-stretch flex items-center gap-8 text-black">
               <b className="relative">Paid</b>
 
-              <a
-                href="#"
-                onClick={(e) => e.preventDefault()}
+              <Link
+                to="/finance"
                 className="flex items-center gap-1 text-[12px] text-teal-100 cursor-pointer hover:underline"
               >
                 <div className="relative font-medium text-[#096c5b]">
+                  
                   See Finance
                 </div>
                 <Icon
                   icon="solar:arrow-right-up-linear"
                   className="h-4 w-4 relative text-[#096c5b]"
                 />
-              </a>
+              </Link>
             </div>
           </div>
           <div className="flex flex-col items-start gap-1">

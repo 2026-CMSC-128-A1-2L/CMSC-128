@@ -30,8 +30,8 @@ export default function LeaseTransfer() {
                     {/* <Header /> */}
                     <BreadcrumbHeader
                         routes={[
-                            {name:'User Profile',url:'/profile'},
-                            {name:'Current Dorm',url:'/dorm'},
+                            {name:'User Profile',url:'/profile-switcher'},
+                            {name:'Current Dorm',url:'/current-dorm'},
                             {name:'Pasalo Unit'}
                         ]}
                     />

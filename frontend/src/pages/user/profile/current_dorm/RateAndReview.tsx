@@ -4,7 +4,7 @@ import { Icon } from "@iconify/react";
 import Location from "../../../../../assets/pin_location_icon.svg";
 import House from "../../../../../assets/house_icon.svg";
 import SideBar from "../../../../components/user/SideBar";
-
+import BreadcrumbHeader from "../../../../components/general/Breadcrumb";
 const RateAndReview: FunctionComponent = () => {
   const navigate = useNavigate();
 
@@ -29,29 +29,11 @@ const RateAndReview: FunctionComponent = () => {
               <div className="self-stretch flex flex-col items-start py-num-0 pl-num-32 pr-20">
                 <div className="self-stretch h-16 overflow-hidden shrink-0 flex items-end p-2.5 box-border gap-2.5">
                   <div className="h-6 flex items-center gap-1.5">
-                    <div
-                      className="self-stretch w-[79px] relative font-semibold flex items-center shrink-0 cursor-pointer"
-                      onClick={onUserProfileTextClick}
-                    >
-                      User Profile
-                    </div>
-                    <Icon
-                      icon="iconamoon:arrow-right-2"
-                      className="h-6 w-6 relative"
-                    />
-
-                    <div
-                      className="self-stretch w-[95px] relative font-semibold flex items-center shrink-0 cursor-pointer"
-                      onClick={onUserProfileTextClick}
-                    >
-                      Current Dorm
-                    </div>
-
-                    <Icon
-                      icon="iconamoon:arrow-right-2"
-                      className="h-6 w-6 relative"
-                    />
-                    <div className="self-stretch w-[94px] relative font-semibold flex items-center shrink-0">{`Rate & Review`}</div>
+                    <BreadcrumbHeader routes={[
+                      { name: "User Profile", url: "/profile-switcher" },
+                      {name: "Current Dorm", url: "/current-dorm"},
+                      {name: "Rate & Review", url: "/rate-review"}
+                    ]}/>
                   </div>
                   <div className="w-[704px] rounded-xl bg-aliceblue overflow-hidden shrink-0 hidden items-center py-2.5 px-6 box-border gap-2.5 text-dimgray font-inter">
                     <img className="h-6 w-6 relative" alt="" />
@@ -224,7 +206,7 @@ const RateAndReview: FunctionComponent = () => {
                     <div className="self-stretch flex items-center justify-center gap-4 text-center text-num-14 text-teal font-inter">
                       <div
                         className="h-8 rounded-2xl flex items-center justify-center py-num-0 px-4 box-border cursor-pointer"
-                        onClick={onUserProfileTextClick}
+                        onClick={() => navigate(-1)}
                       >
                         <b className="relative text-transparent !bg-clip-text [background:linear-gradient(180deg,_#c00f0f,_#e44f4f)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">
                           Go Back
@@ -232,7 +214,7 @@ const RateAndReview: FunctionComponent = () => {
                       </div>
                       <div
                         className="h-8 rounded-2xl bg-aliceblue flex items-center justify-center py-num-0 px-4 box-border cursor-pointer"
-                        onClick={onUserProfileTextClick}
+                        onClick={() => navigate("/rate-review-form")}
                       >
                         <b className="relative">Proceed</b>
                       </div>

@@ -1,16 +1,26 @@
 import { FunctionComponent } from "react";
 import Message from "../general/InboxMessage";
 import { Icon } from "@iconify/react";
-
+import { useNavigate } from "react-router-dom";
 const DmsSidebar: FunctionComponent = () => {
+  const navigate = useNavigate();
   return (
     <div className="w-50 h-screen relative overflow-hidden flex flex-col items-start py-15 pl-2.5 pr-2 box-border gap-2 text-left font-inter">
       <div className="w-full flex flex-col items-start gap-[1.875rem]">
         <div className="w-full flex items-center gap-0 text-[0.875rem]">
+
+
+
           <Icon
             icon="material-symbols-light:chevron-left"
-            className="w-8 h-8"
+            className="w-8 h-8 cursor-pointer"
+            onClick={()=>{
+              navigate(-1)
+            }}
           ></Icon>
+
+
+
           <div className="flex-1 px-3 py-2 rounded-num-8 bg-unavailable_action flex items-center text-num-14">
             <div className="font-medium text-unselected">Search messages</div>
           </div>
