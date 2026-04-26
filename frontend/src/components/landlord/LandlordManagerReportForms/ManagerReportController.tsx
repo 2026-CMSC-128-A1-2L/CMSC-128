@@ -9,6 +9,7 @@ import ReportManager6 from './ManagerReport6';
 interface StepProps {
   onNext: () => void;
   onCancel: () => void;
+  onClose:() => void; 
 }
 
 const ManagerReportFlow = () => {
@@ -35,6 +36,12 @@ const ManagerReportFlow = () => {
     setCurrentIdx(0);     // Reset progress to the first step
   };
 
+  const handleClose = () => {
+    setIsVisible(false); // Hide the popup
+    setCurrentIdx(0);     // Reset progress to the first step
+  };
+
+
   const ActiveComponent = steps[currentIdx].component;
 
   return (
@@ -54,6 +61,7 @@ const ManagerReportFlow = () => {
             <ActiveComponent 
               onNext={handleNext} 
               onCancel={handleCancel} 
+              onClose={handleClose}
             />
           </div>
         </div>

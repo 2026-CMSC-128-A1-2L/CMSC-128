@@ -1,197 +1,195 @@
-import { FunctionComponent } from 'react';
-import bill from '../../../assets/billings.png';
-import trash from '../../../assets/trash.svg';
-import report from '../../../assets/reportUser.svg';
-import calendar from '../../../assets/calendar.svg';
-import home from '../../../assets/Home.svg';
+import { FunctionComponent, useState, ChangeEvent } from 'react';
+import bill from 'frontend/assets/billings.png';
+import trash from 'frontend/assets/trash.svg';
+import report from 'frontend/assets/reportUser.svg';
+import calendar from 'frontend/assets/calendar.svg';
+import home from 'frontend/assets/Home.svg';
 
-type Props = {
+interface PermissionOption {
+  id: string;
+  label: string;
+  description: string;
+  icon: string;
+  category: 'property' | 'finance' | 'tenant';
+}
+
+type StepProps = {
   onCancel: () => void;
-  onSend: () => void;
+  onNext: (email: string, permissions: string[]) => void;
 };
 
-const AddManager1: FunctionComponent<Props> = ({ onCancel, onSend }) => {
+const PERMISSIONS: PermissionOption[] = [
+  { id: 'del_build', label: 'Delete Buildings', description: 'Allow manager to remove building records', icon: trash, category: 'property' },
+  { id: 'del_list', label: 'Delete Listings', description: 'Allow manager to remove listing records', icon: trash, category: 'property' },
+  { id: 'manage_build', label: 'Manage Buildings', description: 'Allow manager to access and edit building info', icon: home, category: 'property' },
+  { id: 'manage_bill', label: 'Manage Billings', description: 'Manage rents and utility payments', icon: bill, category: 'finance' },
+  { id: 'ocular', label: 'Accept Ocular Visits', description: 'Accept visit requests from potential tenants', icon: calendar, category: 'tenant' },
+  { id: 'report_user', label: 'Report Users', description: 'Report users for misconduct upon review', icon: report, category: 'tenant' },
+];
+
+const AddManager1: FunctionComponent<StepProps> = ({ onCancel, onNext }) => {
+  const [email, setEmail] = useState('');
+  
+  // Set 'manage_bill' as the default selected ID
+  const [selectedIds, setSelectedIds] = useState<string[]>(['manage_bill']);
+
+  const isEmailEmpty = email.trim() === '';
+
+  const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+  };
+
+  const togglePermission = (id: string) => {
+    setSelectedIds(prev => 
+      prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
+    );
+  };
+
+  const toggleCategory = (category: string) => {
+    const categoryIds = PERMISSIONS.filter(p => p.category === category).map(p => p.id);
+    const allSelected = categoryIds.every(id => selectedIds.includes(id));
+    
+    if (allSelected) {
+      setSelectedIds(prev => prev.filter(id => !categoryIds.includes(id)));
+    } else {
+      setSelectedIds(prev => Array.from(new Set([...prev, ...categoryIds])));
+    }
+  };
+
+  const handleSend = () => {
+    if (isEmailEmpty) return;
+    onNext(email, selectedIds);
+  };
+
   return (
-    <div className="relative rounded-tl-[26px] rounded-tr-num-0 rounded-b-num-0 bg-white w-full flex items-center text-left text-[28px] text-white font-poppins">
-      <div className="w-[490px] flex flex-col items-center justify-center pt-0 px-0 pb-[48px] box-border gap-[34px]">
-        <div className="self-stretch h-[698px] flex flex-col items-center">
-          <div className="self-stretch rounded-tl-[26px] rounded-tr-num-0 rounded-b-num-0 [background:linear-gradient(183.48deg,_#096c5b,_#16917c)] flex flex-col items-start justify-center py-[10px] pl-[46px] pr-[26px] shrink-0">
-            <div className="w-[426px] flex flex-col items-start justify-center pt-[26px] px-0 pb-[6px] box-border shrink-0">
-              <b className="self-stretch relative">Add Dorm Manager</b>
-              <b className="self-stretch relative text-[15px] tracking-[-0.01em] font-inter text-aliceblue">
-                Set permission for the facility manager
-              </b>
-            </div>
-          </div>
-          <div className="self-stretch flex flex-col items-start pt-[26px] px-[38px] pb-4 gap-[18px] shrink-0 text-[13px] text-dimgray font-inter">
-            <div className="self-stretch flex flex-col items-start gap-[6px]">
-              <b className="self-stretch relative">Email Address</b>
-              <div className="self-stretch h-[38px] rounded-[10px] border-whitesmoke border-solid border-[1px] box-border flex flex-col items-start justify-center py-1 px-[13px] text-black">
-                <div className="relative leading-6 font-medium">ncunanan@gmail.com</div>
-              </div>
-            </div>
-            <div className="self-stretch flex flex-col items-start gap-4">
-              <div className="self-stretch flex items-end py-0 pl-0 pr-[18px]">
-                <b className="self-stretch flex-1 relative flex items-center">
-                  Property Management
-                </b>
-                <div className="flex items-center gap-[9px] text-[11px] text-slategray">
-                  <div className="relative font-medium">Select All</div>
-                  <div className="h-5 w-5 relative">
-                    <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] shadow-[0px_0px_2px_rgba(0,_0,_0,_0.25)] rounded-[3px] bg-whitesmoke" />
-                  </div>
-                </div>
-              </div>
-              <div className="self-stretch flex flex-col items-start gap-[17px] text-black">
-                <div className="self-stretch rounded-[10px] flex items-center py-[10px] pl-[10px] pr-[18px] gap-[13px]">
-                  <div className="flex-1 flex items-center gap-[13px]">
-                    <div className="w-[24px] h-[24px] flex items-center justify-center relative rounded-[50%] bg-whitesmoke-100">
-                      <img className="h-[12px] w-[12px] relative" alt="" src={trash} />
-                    </div>
-                    <div className="flex flex-col items-start justify-center gap-1">
-                      <b className="relative">Delete Buildings</b>
-                      <div className="relative text-[11px] font-medium text-dimgray">
-                        Allow manager to remove building records
-                      </div>
-                    </div>
-                  </div>
-                  <div className="h-5 w-5 relative">
-                    <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] shadow-[0px_0px_2px_rgba(0,_0,_0,_0.25)] rounded-[3px] bg-whitesmoke" />
-                  </div>
-                </div>
-                <div className="self-stretch rounded-[10px] flex items-center py-[10px] pl-[10px] pr-[18px] gap-[13px]">
-                  <div className="flex-1 flex items-center gap-[13px]">
-                    <div className="w-[24px] h-[24px] flex items-center justify-center relative rounded-[50%] bg-whitesmoke-100">
-                      <img className="h-[12px] w-[12px] relative" alt="" src={trash} />
-                    </div>
-                    <div className="flex flex-col items-start justify-center gap-1">
-                      <b className="relative">Delete Listings</b>
-                      <div className="relative text-[11px] font-medium text-dimgray">
-                        Allow manager to remove listing records
-                      </div>
-                    </div>
-                  </div>
-                  <div className="h-5 w-5 relative">
-                    <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] shadow-[0px_0px_2px_rgba(0,_0,_0,_0.25)] rounded-[3px] bg-whitesmoke" />
-                  </div>
-                </div>
-                <div className="self-stretch rounded-[10px] flex items-center py-[10px] pl-[10px] pr-[18px] gap-[13px]">
-                  <div className="flex-1 flex items-center gap-[13px]">
-                    <div className="w-[24px] h-[24px] flex items-center justify-center relative rounded-[50%] bg-whitesmoke-100">
-                      <img className="h-[12px] w-[12px] relative" alt="" src={home} />
-                    </div>
-                    <div className="flex flex-col items-start justify-center gap-1">
-                      <b className="relative">Manage Buildings</b>
-                      <div className="relative text-[11px] font-medium text-dimgray">
-                        Allow manager to access and edit building info
-                      </div>
-                    </div>
-                  </div>
-                  <div className="h-5 w-5 relative">
-                    <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] shadow-[0px_0px_2px_rgba(0,_0,_0,_0.25)] rounded-[3px] bg-whitesmoke" />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="self-stretch flex flex-col items-start gap-4">
-              <div className="self-stretch flex items-end py-0 pl-0 pr-[18px]">
-                <b className="self-stretch flex-1 relative flex items-center">
-                  Billings and Financials
-                </b>
-                <div className="flex items-center gap-[9px] text-[11px] text-slategray">
-                  <div className="relative font-medium">Select All</div>
-                  <div className="h-5 w-5 relative">
-                    <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] shadow-[0px_0px_2px_rgba(0,_0,_0,_0.25)] rounded-[3px] bg-whitesmoke" />
-                  </div>
-                </div>
-              </div>
-              <div className="self-stretch flex flex-col items-start text-black">
-                <div className="self-stretch rounded-[10px] flex items-center py-[10px] pl-[10px] pr-[18px] gap-[13px]">
-                  <div className="flex-1 flex items-center gap-[13px]">
-                    <div className="h-[24px] w-[24px] relative">
-                      <div className="absolute top-[0px] left-[0px] rounded-[50%] bg-whitesmoke w-[24px] h-[24px]" />
-                      <div className="w-[24px] h-[24px] flex items-center justify-center relative rounded-[50%] bg-whitesmoke-100">
-                        <img className="h-[12px] w-[12px] relative" alt="" src={bill} />
-                      </div>
-                    </div>
-                    <div className="flex flex-col items-start justify-center gap-1">
-                      <b className="relative">Manage Billings</b>
-                      <div className="relative text-[11px] font-medium text-dimgray">
-                        Manage rents and utility payments
-                      </div>
-                    </div>
-                  </div>
-                  <div className="h-5 w-5 relative">
-                    <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] shadow-[0px_0px_2px_rgba(0,_0,_0,_0.25)] rounded-[3px] bg-whitesmoke" />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="self-stretch flex flex-col items-start gap-4">
-              <div className="self-stretch flex items-end py-0 pl-0 pr-[18px]">
-                <b className="self-stretch flex-1 relative flex items-center">Tenant Management</b>
-                <div className="flex items-center gap-[9px] text-[11px] text-slategray">
-                  <div className="relative font-medium">Select All</div>
-                  <div className="h-5 w-5 relative">
-                    <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] shadow-[0px_0px_2px_rgba(0,_0,_0,_0.25)] rounded-[3px] bg-whitesmoke" />
-                  </div>
-                </div>
-              </div>
-              <div className="self-stretch flex flex-col items-start gap-[17px] text-black">
-                <div className="self-stretch rounded-[10px] flex items-center py-[10px] pl-[10px] pr-[18px] gap-[13px]">
-                  <div className="flex-1 flex items-center gap-[13px]">
-                    <div className="w-[24px] h-[24px] flex items-center justify-center relative rounded-[50%] bg-whitesmoke-100">
-                      <img className="h-[12px] w-[12px] relative" alt="" src={calendar} />
-                    </div>
-                    <div className="flex flex-col items-start justify-center gap-1">
-                      <b className="relative">Accept Ocular Visits</b>
-                      <div className="relative text-[11px] font-medium text-dimgray">
-                        Accept ocular visit requests from potential tenants
-                      </div>
-                    </div>
-                  </div>
-                  <div className="h-5 w-5 relative">
-                    <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] shadow-[0px_0px_2px_rgba(0,_0,_0,_0.25)] rounded-[3px] bg-whitesmoke" />
-                  </div>
-                </div>
-                <div className="self-stretch rounded-[10px] flex items-center py-[10px] pl-[10px] pr-[18px] gap-[13px]">
-                  <div className="flex-1 flex items-center gap-[13px]">
-                    <div className="w-[24px] h-[24px] flex items-center justify-center relative rounded-[50%] bg-whitesmoke-100">
-                      <img className="h-[12px] w-[12px] relative" alt="" src={report} />
-                    </div>
-                    <div className="flex flex-col items-start justify-center gap-1">
-                      <b className="relative">Report Users</b>
-                      <div className="relative text-[11px] font-medium text-dimgray">
-                        Report users for misconduct upon review
-                      </div>
-                    </div>
-                  </div>
-                  <div className="h-5 w-5 relative">
-                    <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] shadow-[0px_0px_2px_rgba(0,_0,_0,_0.25)] rounded-[3px] bg-whitesmoke" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+    <div className="relative rounded-[24px] bg-white w-full flex flex-col items-center text-left text-white font-poppins shadow-xl overflow-hidden">
+      
+      {/* Header Section */}
+      <div className="self-stretch [background:linear-gradient(183.48deg,_#096c5b,_#16917c)] flex flex-col items-start justify-center py-8 pl-10 pr-6">
+        <div className="w-full flex flex-col items-start justify-center pt-4 px-0 pb-1 shrink-0">
+          <b className="self-stretch relative text-[22px]">Add Dorm Manager</b>
+          <b className="self-stretch relative text-[13px] tracking-[-0.01em] font-inter text-aliceblue">
+            Set permission for the facility manager
+          </b>
         </div>
-        <div className="flex items-center gap-[13px] text-[13px] text-crimson font-inter">
-          <div className="rounded-[10px] flex items-center justify-center py-[6px] px-5">
-            <button
-              className="relative font-semibold inline-block max-w-[215px]"
-              onClick={onCancel}
-            >
-              Cancel
-            </button>
-          </div>
-          <div className="rounded-[10px] bg-lightcyan overflow-hidden flex items-center justify-center py-[6px] px-5 text-teal">
-            <button className="relative font-semibold inline-block max-w-[215px]" onClick={onSend}>
-              Send Invite
-            </button>
-          </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="self-stretch flex flex-col items-start pt-6 px-8 pb-4 gap-8 text-[12px] text-dimgray font-inter">
+        
+        {/* Email Input */}
+        <div className="self-stretch flex flex-col items-start gap-2">
+          <b className="self-stretch relative text-[11px]">Email Address</b>
+          <input
+            type="email"
+            value={email}
+            onChange={handleEmailChange}
+            placeholder="Enter manager email"
+            className="self-stretch h-9 rounded-lg border-whitesmoke-200 border-solid border-[1px] box-border flex flex-col items-start justify-center py-1 px-3 text-black font-inter text-[12px] outline-none focus:border-teal transition-colors placeholder:text-lightgray"
+          />
         </div>
+
+        {/* Permission Sections */}
+        {[
+          { key: 'property', label: 'Property Management' },
+          { key: 'finance', label: 'Billings and Financials' },
+          { key: 'tenant', label: 'Tenant Management' }
+        ].map((cat) => {
+          const catIds = PERMISSIONS.filter(p => p.category === cat.key).map(p => p.id);
+          const isCatSelected = catIds.length > 0 && catIds.every(id => selectedIds.includes(id));
+
+          return (
+            <div key={cat.key} className="self-stretch flex flex-col items-start gap-3">
+              <div className="self-stretch flex items-end py-0 pl-0 pr-4">
+                <b className="self-stretch flex-1 relative flex items-center text-[12px]">
+                  {cat.label}
+                </b>
+                <button 
+                  onClick={() => toggleCategory(cat.key)}
+                  className="flex items-center gap-[8px] text-[10px] text-slategray border-none bg-transparent cursor-pointer hover:opacity-70 transition-opacity"
+                >
+                  <div className="relative font-medium">Select All</div>
+                  <div className="h-4 w-4 relative">
+                    <div className={`absolute h-full w-full rounded-sm transition-all ${
+                      isCatSelected ? 'bg-teal' : 'bg-whitesmoke-100 border border-gray-200'
+                    }`} />
+                    {isCatSelected && <CheckIcon />}
+                  </div>
+                </button>
+              </div>
+
+              <div className="self-stretch flex flex-col items-start gap-[14px]">
+                {PERMISSIONS.filter(p => p.category === cat.key).map((p) => {
+                  const isSelected = selectedIds.includes(p.id);
+                  return (
+                    <label 
+                      key={p.id}
+                      className="self-stretch rounded-lg flex items-center py-2 px-4 gap-3 cursor-pointer hover:bg-slate-50 transition-colors border border-transparent hover:border-gray-100"
+                    >
+                      <input 
+                        type="checkbox" 
+                        className="sr-only" 
+                        checked={isSelected}
+                        onChange={() => togglePermission(p.id)}
+                      />
+                      <div className="w-7 h-7 flex items-center justify-center relative rounded-full bg-whitesmoke-100 shrink-0">
+                        <img className="h-3.5 w-3.5 relative" alt="" src={p.icon} />
+                      </div>
+                      <div className="flex-1 flex flex-col items-start justify-center gap-0.5 text-black">
+                        <b className="relative text-[12px]">{p.label}</b>
+                        <div className="relative text-[10px] font-medium text-dimgray leading-tight">{p.description}</div>
+                      </div>
+                      <div className="h-5 w-5 relative shrink-0">
+                        <div className={`absolute h-full w-full rounded-sm transition-all ${
+                          isSelected ? 'bg-teal' : 'bg-whitesmoke-100 border border-gray-200'
+                        }`} />
+                        {isSelected && <CheckIcon />}
+                      </div>
+                    </label>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Action Buttons */}
+      <div className="flex items-center justify-center gap-3 py-8 text-[12px] text-crimson font-inter">
+        <button 
+          onClick={onCancel}
+          className="rounded-lg flex items-center justify-center py-1.5 px-6 cursor-pointer bg-transparent border-none text-crimson font-semibold hover:bg-red-50 active:scale-95 transition-all"
+        >
+          Cancel
+        </button>
+        <button 
+          onClick={handleSend}
+          disabled={isEmailEmpty}
+          className={`rounded-lg overflow-hidden flex items-center justify-center py-1.5 px-6 border-none font-semibold transition-all duration-300 ${
+            isEmailEmpty 
+              ? 'bg-gray-50 text-gray-300 cursor-not-allowed opacity-50' 
+              : 'bg-lightcyan text-teal cursor-pointer hover:bg-opacity-80 active:scale-95' 
+          }`}
+        >
+          Send Invite
+        </button>
       </div>
     </div>
   );
 };
+
+const CheckIcon = () => (
+  <svg 
+    className="absolute h-[70%] w-[70%] top-[15%] left-[15%]" 
+    viewBox="0 0 24 24" 
+    fill="none" 
+    stroke="white" 
+    strokeWidth="4" 
+    strokeLinecap="round" 
+    strokeLinejoin="round"
+  >
+    <polyline points="20 6 9 17 4 12" />
+  </svg>
+);
 
 export default AddManager1;
