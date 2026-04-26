@@ -15,6 +15,7 @@ export type ReviewType = {
     sourceType: 'local' | 'external';
     value: string;
   }[];
+  status: 'pending' | 'approved' | 'rejected';
 };
 
 const reviewSchema = new mongoose.Schema(
@@ -30,6 +31,13 @@ const reviewSchema = new mongoose.Schema(
     },
 
     description: { type: String },
+
+    status: {
+      type: String,
+      enum: ['pending', 'approved', 'rejected'],
+      default: 'pending',
+      required: true,
+    },
 
     // Optional review photos uploaded by the student (max 2)
     media: [
