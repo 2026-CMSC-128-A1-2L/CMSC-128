@@ -31,7 +31,7 @@ export const GetBillingsFilterSchema = z
         .transform((x) => new Date(x))
         .optional(),
     ),
-    paymentStatus: z.enum(['unpaid', 'paid', 'overdue', 'partially_paid']),
+    paymentStatus: z.enum(['unpaid', 'paid', 'overdue']),
   })
   .partial();
 

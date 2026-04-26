@@ -12,6 +12,7 @@ import {
   getBillings,
   getBillingsSummary,
   getfacilityBilling,
+  getUserBillings,
   updateBilling,
   updateBillingPayment,
 } from './billing.service';
@@ -74,6 +75,12 @@ export const routeGetBillingsSummary: RequestHandler = async (req, res, next) =>
 
 export const routeGetFacilityBillingsSummary: RequestHandler = async (req, res, next) => {
   const facilityId = ObjectIdSchema.parse(req.params.facilityId);
-  const billingsSummary = await getfacilityBilling(req.query, res.locals.filters);
+  const billingsSummary = await getfacilityBilling(facilityId, req.query, res.locals.filters);
   res.status(200).json({ data: billingsSummary });
+};
+
+export const routeGetUserBillingDashboard: RequestHandler = async (req, res, next) => {
+  const userId = ObjectIdSchema.parse(req.params.userId);
+  const data = await getUserBillings(userId, req.query, res.locals.filters);
+  res.status(200).json({ data });
 };

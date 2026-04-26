@@ -6,6 +6,7 @@ import {
   routeUpdateBilling,
   routeUpdateBillingPayment,
   routeGetBillingsSummary,
+  routeGetUserBillingDashboard,
 } from './billing.controller';
 import { getBillingId, isSuperAdmin, managerFilter, selfFilter } from '../../middleware';
 import { createDocumentRouter } from '../document/document.router';
@@ -97,7 +98,9 @@ router.get(
 );
 
 router.get(
-  '/:billingId',
+  '/facility/:facilityId/summary',
   managerFilter('facility', 'manageBillings', true),
   routeGetBillingsSummary,
 );
+
+router.get('/users/:userId/dashboard', selfFilter, routeGetUserBillingDashboard);
