@@ -1,5 +1,5 @@
 import { FunctionComponent } from 'react';
-import DormMap from '../utilities/DormMap';
+import DormMap from '../../utilities/DormMap';
 
 const LocationDetails: FunctionComponent = () => {
 
