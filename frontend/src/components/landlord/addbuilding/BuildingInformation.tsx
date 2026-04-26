@@ -8,6 +8,7 @@ import RoomTypeItem from './RoomTypeItem';
 import { useBuildingStore } from './useBuildingStore';
 import AddManager1 from '../LandlordManagerAddForms/LandlordManagerAdd1';
 import AddManager2 from '../LandlordManagerAddForms/LandlordManagerAdd2';
+import type { AddManagerFormValues } from '../LandlordManagerAddForms/LandlordManagerAdd1';
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 
@@ -28,32 +29,25 @@ interface BuildingFormValues {
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNextClick, onPrevClick }) => {
-  const { buildingInfo, setBuildingInfo, addRoomType } = useBuildingStore();
+  const { buildingInfo, setBuildingInfo, addRoomType, addManager, removeManager } = useBuildingStore();
 
-  // ─── Popup / Modal States ───
   const [activePopup, setActivePopup] = useState<'none' | 'add1' | 'add2'>('none');
-
-  // ─── Image Local State ───
   const [images, setImages] = useState<string[]>(buildingInfo.images || []);
   const [lightboxIndex, setLightboxIndex] = useState(-1);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm<BuildingFormValues>({
-    defaultValues: {
-      name: buildingInfo.name,
-      typeOfBuilding: buildingInfo.typeOfBuilding,
-      location: buildingInfo.location,
-      about: buildingInfo.about,
-    },
-    mode: 'onChange',
-  });
+  const { register, handleSubmit, watch, formState: { errors } } =
+    useForm<BuildingFormValues>({
+      defaultValues: {
+        name: buildingInfo.name,
+        typeOfBuilding: buildingInfo.typeOfBuilding,
+        location: buildingInfo.location,
+        about: buildingInfo.about,
+      },
+      mode: 'onChange',
+    });
 
-  // Sync every keystroke → zustand
+  // Sync keystrokes → zustand
   useEffect(() => {
     const subscription = watch((values) => {
       setBuildingInfo({
@@ -61,56 +55,50 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
         typeOfBuilding: values.typeOfBuilding ?? '',
         location: values.location ?? '',
         about: values.about ?? '',
-        images: images,
+        images,
       });
     });
     return () => subscription.unsubscribe();
   }, [watch, setBuildingInfo, images]);
 
-  // ─── Image Handlers ───
+  // ─── Image Handlers ───────────────────────────────────────────────────────
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      const newFiles = Array.from(e.target.files);
-      const newImageUrls = newFiles.map((file) => URL.createObjectURL(file));
-
-      const updatedImages = [...images, ...newImageUrls];
-      setImages(updatedImages);
-      setBuildingInfo({ images: updatedImages });
-
-      if (fileInputRef.current) {
-        fileInputRef.current.value = '';
-      }
+      const newUrls = Array.from(e.target.files).map((f) => URL.createObjectURL(f));
+      const updated = [...images, ...newUrls];
+      setImages(updated);
+      setBuildingInfo({ images: updated });
+      if (fileInputRef.current) fileInputRef.current.value = '';
     }
   };
 
-  const handleRemoveImage = (indexToRemove: number) => {
-    const updatedImages = images.filter((_, idx) => idx !== indexToRemove);
-    setImages(updatedImages);
-    setBuildingInfo({ images: updatedImages });
+  const handleRemoveImage = (i: number) => {
+    const updated = images.filter((_, idx) => idx !== i);
+    setImages(updated);
+    setBuildingInfo({ images: updated });
   };
 
-  // Called when Next is clicked — validates, logs, then advances
+  // ─── Manager Handlers ─────────────────────────────────────────────────────
+
+  // Receives full AddManagerFormValues (email + checkboxes) and stores in zustand
+  const handleManagerSend = (data: AddManagerFormValues) => {
+    addManager({ email: data.email.trim(), checkboxes: data.checkboxes });
+    setActivePopup('add2');
+  };
+
+  // ─── Submit — logs everything including manager permissions ───────────────
+
   const onSubmit = (data: BuildingFormValues) => {
     const fullData = {
       ...data,
+      images,
       roomTypes: buildingInfo.roomTypes,
-      managers: buildingInfo.managers,
-      images: images,
+      managers: buildingInfo.managers, // now ManagerData[] with email + checkboxes
     };
     console.log('=== Building Information Form Data ===');
     console.log(JSON.stringify(fullData, null, 2));
     onNextClick();
-  };
-
-  // ─── Manager Popup Handlers ───
-  const handleManagerCancel = () => {
-    setIsManagerPopupOpen(false);
-  };
-
-  const handleManagerSend = () => {
-    // Add any specific logic here to save the manager details to your store/backend
-    console.log("Manager invite sent!");
-    setIsManagerPopupOpen(false);
   };
 
   return (
@@ -128,10 +116,7 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
                 <b className="relative tracking-num--0_01">Building Information</b>
               </div>
               <div className="self-stretch flex flex-col items-start gap-5 text-left text-num-14 text-dimgray">
-
-                {/* Name + Type of Building */}
                 <div className="self-stretch flex items-start gap-10">
-                  {/* Name */}
                   <div className="flex-1 flex flex-col items-start gap-3">
                     <b className="relative">Name</b>
                     <div className="self-stretch flex flex-col gap-1">
@@ -142,13 +127,9 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
                           className="flex-1 bg-transparent text-sm text-gray-700 placeholder-slategray outline-none font-medium leading-num-24"
                         />
                       </div>
-                      {errors.name && (
-                        <span className="text-xs text-red-500">{errors.name.message}</span>
-                      )}
+                      {errors.name && <span className="text-xs text-red-500">{errors.name.message}</span>}
                     </div>
                   </div>
-
-                  {/* Type of Building */}
                   <div className="flex-1 flex flex-col items-start gap-3">
                     <b className="self-stretch h-[15.2px] relative flex items-center shrink-0">Type of Building</b>
                     <div className="self-stretch flex flex-col gap-1">
@@ -165,14 +146,10 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
                         </select>
                         <Icon icon="mynaui:chevron-down" className="w-5 h-5 shrink-0 pointer-events-none" />
                       </div>
-                      {errors.typeOfBuilding && (
-                        <span className="text-xs text-red-500">{errors.typeOfBuilding.message}</span>
-                      )}
+                      {errors.typeOfBuilding && <span className="text-xs text-red-500">{errors.typeOfBuilding.message}</span>}
                     </div>
                   </div>
                 </div>
-
-                {/* Location */}
                 <div className="self-stretch flex flex-col items-start gap-3">
                   <b className="relative">Location</b>
                   <div className="self-stretch flex flex-col gap-1">
@@ -183,9 +160,7 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
                         className="flex-1 bg-transparent text-sm text-gray-700 placeholder-slategray outline-none font-medium leading-num-24"
                       />
                     </div>
-                    {errors.location && (
-                      <span className="text-xs text-red-500">{errors.location.message}</span>
-                    )}
+                    {errors.location && <span className="text-xs text-red-500">{errors.location.message}</span>}
                   </div>
                 </div>
               </div>
@@ -202,9 +177,7 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
                 rows={5}
                 className="self-stretch rounded-num-12 bg-aliceblue border-whitesmoke border-solid border-[1px] py-3 px-num-16 text-left text-num-14 text-slategray outline-none font-medium resize-none leading-num-24"
               />
-              {errors.about && (
-                <span className="text-xs text-red-500">{errors.about.message}</span>
-              )}
+              {errors.about && <span className="text-xs text-red-500">{errors.about.message}</span>}
             </div>
 
             {/* ── Add Photos ── */}
@@ -213,13 +186,8 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
                 <b className="relative tracking-num--0_01">Add Photos</b>
               </div>
               <div className="self-stretch overflow-hidden flex items-start flex-wrap content-start py-num-10 px-0 gap-2">
-
-                {/* Render Uploaded Images */}
                 {images.map((src, index) => (
-                  <div
-                    key={index}
-                    className="relative group h-[100px] w-[100px] rounded-num-12 border-whitesmoke border-solid border-[1px] overflow-hidden bg-gray-50 shrink-0"
-                  >
+                  <div key={index} className="relative group h-[100px] w-[100px] rounded-num-12 border-whitesmoke border-solid border-[1px] overflow-hidden bg-gray-50 shrink-0">
                     <img
                       src={src}
                       alt={`Building preview ${index + 1}`}
@@ -228,34 +196,20 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
                     />
                     <button
                       type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleRemoveImage(index);
-                      }}
-                      className="absolute top-1 right-1 bg-white/80 backdrop-blur-sm rounded-full p-1 shadow-sm opacity-0 group-hover:opacity-100 transition-opacity text-red-500 hover:text-red-700 hover:bg-white"
+                      onClick={(e) => { e.stopPropagation(); handleRemoveImage(index); }}
+                      className="absolute top-1 right-1 bg-white/80 backdrop-blur-sm rounded-full p-1 shadow-sm opacity-0 group-hover:opacity-100 transition-opacity text-red-500 hover:text-red-700"
                     >
                       <Icon icon="material-symbols:close" className="w-4 h-4" />
                     </button>
                   </div>
                 ))}
-
-                {/* Upload Button */}
                 <div
                   onClick={() => fileInputRef.current?.click()}
                   className="h-[100px] w-[100px] rounded-num-12 border-whitesmoke border-solid border-[1px] box-border overflow-hidden shrink-0 flex flex-col items-center justify-center p-num-10 cursor-pointer hover:bg-gray-50 transition-colors text-slategray"
                 >
                   <Icon icon="material-symbols:add-photo-alternate-outline" className="w-8 h-8" />
                 </div>
-
-                {/* Hidden File Input */}
-                <input
-                  type="file"
-                  multiple
-                  accept="image/*"
-                  ref={fileInputRef}
-                  onChange={handleFileChange}
-                  className="hidden"
-                />
+                <input type="file" multiple accept="image/*" ref={fileInputRef} onChange={handleFileChange} className="hidden" />
               </div>
             </div>
 
@@ -283,9 +237,32 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
               <div className="self-stretch flex items-center">
                 <b className="relative tracking-num--0_01">Add Managers</b>
               </div>
+
+              {/* Invited manager email tags */}
+              {buildingInfo.managers.length > 0 && (
+                <div className="self-stretch flex items-start flex-wrap gap-2 mb-1">
+                  {buildingInfo.managers.map((manager) => (
+                    <div
+                      key={manager.email}
+                      className="flex items-center gap-1.5 rounded-full bg-aliceblue border border-whitesmoke py-1 px-3 text-num-14 text-slategray"
+                    >
+                      <span className="font-medium text-xs">{manager.email}</span>
+                      <button
+                        type="button"
+                        onClick={() => removeManager(manager.email)}
+                        className="text-slategray hover:text-red-500 transition-colors"
+                      >
+                        <Icon icon="material-symbols:close" className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Invite button */}
               <div
                 className="rounded-num-12 bg-aliceblue border-whitesmoke border-solid border-[1px] flex items-center py-2 px-num-16 gap-2.5 text-left text-num-14 text-slategray cursor-pointer hover:bg-blue-100 transition-colors"
-                onClick={() => setActivePopup('add1')} // Opens the first popup
+                onClick={() => setActivePopup('add1')}
               >
                 <div className="relative leading-num-24 font-medium">Invite Managers</div>
                 <Icon icon="material-symbols:add-rounded" className="w-4 h-4" />
@@ -297,10 +274,7 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
 
         {/* ── Back / Next ── */}
         <div className="w-[903px] overflow-hidden flex items-center justify-center py-0 px-num-10 box-border gap-2.5 text-num-14 text-dimgray">
-          <div
-            className="rounded-[45px] flex items-center justify-center py-2 px-8 cursor-pointer"
-            onClick={onPrevClick}
-          >
+          <div className="rounded-[45px] flex items-center justify-center py-2 px-8 cursor-pointer" onClick={onPrevClick}>
             <b className="relative">Back</b>
           </div>
           <button
@@ -313,7 +287,7 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
           </button>
         </div>
 
-        {/* ── Lightbox Viewer ── */}
+        {/* ── Lightbox ── */}
         <Lightbox
           open={lightboxIndex >= 0}
           index={lightboxIndex}
@@ -322,33 +296,26 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
         />
       </form>
 
-      {/* ── Popup 1: Add Manager ── */}
+      {/* ── Popup 1 ── */}
       {activePopup === 'add1' && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div
-            className="relative shadow-2xl rounded-tl-[26px]"
-            onClick={(e) => e.stopPropagation()}
-          >
+          <div className="relative shadow-2xl rounded-tl-[26px]" onClick={(e) => e.stopPropagation()}>
             <AddManager1
-              onCancel={() => setActivePopup('none')} // Closes completely
-              onSend={() => setActivePopup('add2')}   // Closes popup 1, opens popup 2
+              onCancel={() => setActivePopup('none')}
+              onSend={handleManagerSend}
             />
           </div>
         </div>
       )}
 
-      {/* ── Popup 2: Success / Last Step ── */}
+      {/* ── Popup 2 ── */}
       {activePopup === 'add2' && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div
-            className="relative shadow-2xl rounded-tl-[26px]"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <AddManager2
-              onClose={() => setActivePopup('none')} // Closes completely when done
-            />
+          <div className="relative shadow-2xl rounded-tl-[26px]" onClick={(e) => e.stopPropagation()}>
+            <AddManager2 onClose={() => setActivePopup('none')} />
           </div>
-        </div>)}
+        </div>
+      )}
     </>
   );
 };

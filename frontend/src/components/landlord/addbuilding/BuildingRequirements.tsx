@@ -16,7 +16,7 @@ const documents: DocumentItem[] = [
 ];
 
 const DocumentCard: FunctionComponent<DocumentItem> = ({ label, filename, date }) => (
-  <div className="w-full rounded-2xl border border-gray-200 bg-white px-8 py-2 pb-7 flex flex-col gap-7">
+  <div className="w-full rounded-2xl bg-white/75 px-8 py-2 pb-7 flex flex-col gap-7">
     {/* Header row */}
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-3">

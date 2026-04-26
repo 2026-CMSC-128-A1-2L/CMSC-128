@@ -1,7 +1,7 @@
 import { FunctionComponent, useCallback, useState } from 'react';
 import { Icon } from '@iconify/react';
 import { useBuildingStore } from './useBuildingStore';
-import type { RoomData, RoomTypeData } from './useBuildingStore';
+import type { RoomData, RoomTypeData, ManagerData } from './useBuildingStore';
 import ListingsSuccess from './ListingsSuccess';
 
 // ─── Props ────────────────────────────────────────────────────────────────────
@@ -198,10 +198,29 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
             <div className="self-stretch flex flex-col items-start p-num-10 gap-2.5">
               <b className="relative tracking-num--0_01">Managers</b>
               {buildingInfo.managers.length > 0 ? (
-                <div className="self-stretch flex flex-col gap-2">
-                  {buildingInfo.managers.map((m, i) => (
-                    <div key={i} className="rounded-num-12 bg-aliceblue border border-whitesmoke flex items-center py-2 px-4 text-sm text-slategray font-medium">
-                      {m}
+                <div className="self-stretch flex flex-col gap-3">
+                  {buildingInfo.managers.map((m: ManagerData) => (
+                    <div key={m.email} className="rounded-num-12 bg-aliceblue border border-whitesmoke flex flex-col py-3 px-4 gap-2">
+                      {/* Email */}
+                      <span className="text-sm text-gray-800 font-semibold">{m.email}</span>
+                      {/* Permissions */}
+                      <div className="flex flex-wrap gap-1.5">
+                        {(Object.entries(m.checkboxes) as [string, boolean][])
+                          .filter(([, enabled]) => enabled)
+                          .map(([key]) => (
+                            <span
+                              key={key}
+                              className="text-xs font-medium bg-white border border-whitesmoke text-slategray rounded-full px-2.5 py-0.5"
+                            >
+                              {key
+                                .replace(/([A-Z])/g, ' $1')
+                                .replace(/^./, (s) => s.toUpperCase())}
+                            </span>
+                          ))}
+                        {Object.values(m.checkboxes).every((v) => !v) && (
+                          <span className="text-xs italic text-gray-300">No permissions granted</span>
+                        )}
+                      </div>
                     </div>
                   ))}
                 </div>

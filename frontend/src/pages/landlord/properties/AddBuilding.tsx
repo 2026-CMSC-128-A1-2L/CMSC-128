@@ -59,7 +59,7 @@ const AddBuilding: FunctionComponent = () => {
 
           <div className="w-full h-px my-6" />
 
-          <div className="flex gap-40 px-20 items-start relative">
+          <div className="flex gap-30 px-20 items-start relative">
             <div className="flex flex-col sticky top-10 self-start" style={{ minWidth: '160px' }}>
               {steps.map((step, i) => (
                 <div key={i} className="flex">

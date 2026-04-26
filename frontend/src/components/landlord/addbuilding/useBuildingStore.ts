@@ -7,7 +7,7 @@ export interface RoomData {
   number: string;
   isAvailable: boolean;
   current_occupants: number;
-  user_occupant: string[]; // array of occupant user IDs
+  user_occupant: string[];
 }
 
 export interface RoomTypeData {
@@ -18,7 +18,21 @@ export interface RoomTypeData {
   tags: string[];
   about: string;
   images: string[];
-  rooms: RoomData[]; // changed from string[] to RoomData[]
+  rooms: RoomData[];
+}
+
+export interface ManagerPermissions {
+  deleteBuildings: boolean;
+  deleteListings: boolean;
+  manageBuildings: boolean;
+  manageBillings: boolean;
+  acceptOcularVisits: boolean;
+  reportUsers: boolean;
+}
+
+export interface ManagerData {
+  email: string;
+  checkboxes: ManagerPermissions;
 }
 
 export interface BuildingInformationData {
@@ -29,25 +43,25 @@ export interface BuildingInformationData {
   about: string;
   images: string[];
   roomTypes: RoomTypeData[];
-  managers: string[];
+  managers: ManagerData[]; // changed from string[] → ManagerData[]
 }
 
 interface BuildingStore {
   buildingInfo: BuildingInformationData;
 
-  // Building-level actions
   setBuildingInfo: (data: Partial<BuildingInformationData>) => void;
   reset: () => void;
 
-  // Room type actions
   addRoomType: () => void;
   updateRoomType: (id: string, data: Partial<RoomTypeData>) => void;
   removeRoomType: (id: string) => void;
 
-  // Room actions (scoped to a parent room type by roomTypeId)
   addRoom: (roomTypeId: string) => void;
   updateRoom: (roomTypeId: string, roomId: string, data: Partial<RoomData>) => void;
   removeRoom: (roomTypeId: string, roomId: string) => void;
+
+  addManager: (manager: ManagerData) => void;
+  removeManager: (email: string) => void;
 }
 
 // ─── Defaults ─────────────────────────────────────────────────────────────────
@@ -67,7 +81,7 @@ const defaultRoomType = (): RoomTypeData => ({
   capacity: '',
   tags: [],
   about: '',
-  photos: [],
+  images: [],
   rooms: [],
 });
 
@@ -77,7 +91,7 @@ const defaultState: BuildingInformationData = {
   typeOfBuilding: '',
   location: '',
   about: '',
-  photos: [],
+  images: [],
   roomTypes: [{ ...defaultRoomType(), name: '2 Pax Room' }],
   managers: [],
 };
@@ -86,8 +100,6 @@ const defaultState: BuildingInformationData = {
 
 export const useBuildingStore = create<BuildingStore>((set) => ({
   buildingInfo: defaultState,
-
-  // ── Building ──────────────────────────────────────────────────────────────
 
   setBuildingInfo: (data) =>
     set((state) => ({
@@ -124,7 +136,7 @@ export const useBuildingStore = create<BuildingStore>((set) => ({
       },
     })),
 
-  // ── Rooms (nested inside a RoomType) ─────────────────────────────────────
+  // ── Rooms ─────────────────────────────────────────────────────────────────
 
   addRoom: (roomTypeId) =>
     set((state) => ({
@@ -164,6 +176,31 @@ export const useBuildingStore = create<BuildingStore>((set) => ({
             ? { ...rt, rooms: rt.rooms.filter((room) => room.id !== roomId) }
             : rt
         ),
+      },
+    })),
+
+  // ── Managers ──────────────────────────────────────────────────────────────
+
+  addManager: (manager) =>
+    set((state) => {
+      // Prevent duplicate emails
+      const exists = state.buildingInfo.managers.some(
+        (m) => m.email === manager.email
+      );
+      if (exists) return state;
+      return {
+        buildingInfo: {
+          ...state.buildingInfo,
+          managers: [...state.buildingInfo.managers, manager],
+        },
+      };
+    }),
+
+  removeManager: (email) =>
+    set((state) => ({
+      buildingInfo: {
+        ...state.buildingInfo,
+        managers: state.buildingInfo.managers.filter((m) => m.email !== email),
       },
     })),
 }));
