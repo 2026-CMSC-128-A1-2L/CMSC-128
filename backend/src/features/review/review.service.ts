@@ -115,10 +115,17 @@ const removeReviewFromAverage = async (review: ReviewType) => {
   const facility = await HousingFacility.findById(facilityId);
   const { qualityAvg, comfortAvg, environmentAvg, reviewCount } = facility;
 
-  facility.qualityAvg = (qualityAvg * reviewCount - quality) / (reviewCount - 1);
-  facility.comfortAvg = (comfortAvg * reviewCount - comfort) / (reviewCount - 1);
-  facility.environmentAvg = (environmentAvg * reviewCount - environment) / (reviewCount - 1);
-  facility.reviewCount -= 1;
+  if (reviewCount <= 1) {
+    facility.qualityAvg = 0;
+    facility.comfortAvg = 0;
+    facility.environmentAvg = 0;
+    facility.reviewCount = 0;
+  } else {
+    facility.qualityAvg = (qualityAvg * reviewCount - quality) / (reviewCount - 1);
+    facility.comfortAvg = (comfortAvg * reviewCount - comfort) / (reviewCount - 1);
+    facility.environmentAvg = (environmentAvg * reviewCount - environment) / (reviewCount - 1);
+    facility.reviewCount -= 1;
+  }
 
   await facility.save();
 };
@@ -173,7 +180,7 @@ export const getAverageRatingsByFacility = async (facilityId: mongoose.Types.Obj
   if (!facility) throw new AppError(404, 'Facility not found.');
 
   const result = await Review.aggregate([
-    { $match: { facilityId } },
+    { $match: { facilityId, status: 'approved' } },
     {
       $group: {
         _id: null,
