@@ -10,9 +10,14 @@ import {
   routeUpdateManagerPermissions,
   routeApproveFacility,
   routeRejectFacility,
+  routeGetMonthlyIncomeByLandlord,
+  routeGetOverdueTenantsByLandlord,
 } from './facility.controller';
 import { routeCreateListing } from '../listing/listing.controller';
-import { routeGetFacilityReviews, routeGetAverageRatingsByFacility } from '../review/review.controller';
+import {
+  routeGetFacilityReviews,
+  routeGetAverageRatingsByFacility,
+} from '../review/review.controller';
 import {
   correctLandlordFilter,
   directManagerFilter,
@@ -46,6 +51,30 @@ router.post('/search', routeSearchFacilities);
 //
 // landlord only
 router.post('/', isLandlord, routeCreateFacility);
+
+// ============================================================================
+// GET /api/facilities/landlord/monthly-income
+//
+// Returns expected monthly income across all facilities owned by the landlord.
+// Calculated as the sum of unit prices for every active rental.
+//
+// Must be declared before /:facilityId to avoid route param collision.
+//
+// landlord only
+// ============================================================================
+router.get('/landlord/monthly-income', isLandlord, routeGetMonthlyIncomeByLandlord);
+  
+// ============================================================================
+// GET /api/facilities/landlord/overdue-tenants
+//
+// Returns all active tenants whose most recent billing is overdue,
+// across all facilities owned by the landlord.
+//
+// Must be declared before /:facilityId to avoid route param collision.
+//
+// landlord only
+// ============================================================================
+router.get('/landlord/overdue-tenants', isLandlord, routeGetOverdueTenantsByLandlord);
 
 // GET /api/facilities/:facilityId
 //

@@ -2,13 +2,7 @@
 import '../../config.js';
 import { describe, it, expect, beforeAll } from 'vitest';
 import { buildHousingFacility } from '../../test/factories.js';
-import {
-  landlord,
-  landlordAgent,
-  studentAgent,
-  guestAgent,
-  student,
-} from '../../test/setup.js';
+import { landlord, landlordAgent, studentAgent, guestAgent, student } from '../../test/setup.js';
 import { Listing } from '../listing/listing.model.js';
 import { Unit } from '../unit/unit.model.js';
 import { Rental } from '../rental/rental.model.js';
@@ -206,9 +200,7 @@ describe('Reviews API', () => {
   describe('GET /api/facilities/:facilityId/average-ratings', () => {
     describe('Logic', () => {
       it('should return average ratings for a facility with reviews', async () => {
-        const response = await studentAgent.get(
-          `/api/facilities/${facilityId}/average-ratings`,
-        );
+        const response = await studentAgent.get(`/api/facilities/${facilityId}/average-ratings`);
         expect(response).statusToBe(200);
         expect(response.body.data.quality).toBeDefined();
         expect(response.body.data.comfort).toBeDefined();

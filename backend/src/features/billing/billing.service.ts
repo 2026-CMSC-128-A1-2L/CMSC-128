@@ -8,10 +8,17 @@ import { buildQuery } from '../../utils';
 import { HousingFacility } from '../facility/facility.model';
 import { Unit } from '../unit/unit.model';
 import { combineFilters } from '../../middleware';
+import { DocumentType } from '../document/document.model';
 
 export type CreateBillingArguments = {
   rentalId: mongoose.Types.ObjectId;
   dueDate: Date;
+
+  paymentMethod: {
+    method: 'gcash' | 'bank_transfer';
+    qr: DocumentType[];
+  }[];
+
   breakdown: {
     name: string;
     amount: number;
@@ -20,6 +27,11 @@ export type CreateBillingArguments = {
 
 export type UpdateBillingArguments = {
   dueDate?: Date;
+};
+
+export type submitBillingPaymentArguments = {
+  paymentMethod: 'gcash' | 'bank_transfer';
+  file: string;
 };
 
 export type GetBillingArguments = {
@@ -34,7 +46,7 @@ export type GetBillingArguments = {
     min?: Date;
     max?: Date;
   };
-  paymentStatus: 'unpaid' | 'paid' | 'overdue' | 'partially_paid';
+  paymentStatus: 'unpaid' | 'paid' | 'overdue';
 };
 
 export const createBilling = async (
@@ -45,6 +57,7 @@ export const createBilling = async (
   if (!rental) throw new AppError(404, 'Rental not found.');
 
   const totalAmount = data.breakdown.map((x) => x.amount).reduce((x, y) => x + y);
+
   const billing = new Billing({
     userId: rental.userId,
     unitId: rental.unitId,
@@ -52,6 +65,7 @@ export const createBilling = async (
     dueDate: data.dueDate,
     totalAmount,
     breakdown: data.breakdown,
+    paymentMethod: data.paymentMethod,
   });
 
   const savedBilling = await billing.save();
@@ -224,17 +238,17 @@ export const getBillingsSummary = async (
   };
 };
 
-export const getFacilityBilling = async (
+export const getfacilityBilling = async (
   facilityId: mongoose.Types.ObjectId,
-  billingFilters: QueryFilter<BillingType>,
+  query: Partial<GetBillingArguments>,
+  filters: QueryFilter<BillingType>,
 ) => {
-  // TODO: check first if the user is a manager of the building.
   const [facility, totalUnits, occupiedUnits, incomeStatistics] = await Promise.all([
-    HousingFacility.findById(facilityId).lean(),
-    Unit.countDocuments({ facilityId }),
-    Rental.distinct('unitId', { facilityId, status: 'active' }),
+    HousingFacility.findById(facilityId).lean(), // facility
+    Unit.countDocuments({ facilityId }), // total units
+    Rental.distinct('unitId', { facilityId, status: 'active' }), // occupied units
     Billing.aggregate([
-      { $match: combineFilters<BillingType>(billingFilters, { facilityId }) },
+      { $match: combineFilters<BillingType>(filters, { facilityId }) },
       // Multople aggreations can be done in one query using $facet
       {
         $facet: {
@@ -248,8 +262,8 @@ export const getFacilityBilling = async (
                 outstanding: {
                   $sum: { $cond: [{ $ne: ['$paymentStatus', 'paid'] }, '$totalAmount', 0] },
                 },
-                unpaidCount: { $sum: { $cond: [{ $eq: ['$paymentStatus', 'unpaid'] }, 1, 0] } },
-                totalCount: { $sum: 1 },
+                monthlyUnpaid: { $sum: { $cond: [{ $eq: ['$paymentStatus', 'unpaid'] }, 1, 0] } },
+                monthlyCount: { $sum: 1 },
               },
             },
             {
@@ -307,14 +321,25 @@ export const getFacilityBilling = async (
       },
     ]),
   ]);
+
   if (!facility) throw new AppError(404, 'Facility not found');
 
   const totalOccupiedUnits = occupiedUnits.length;
   const { monthlyStatistics, totals, breakdown } = incomeStatistics[0];
+  const facilityTotals = totals[0] || {
+    totalIncome: 0,
+    totalOutstanding: 0,
+    totalUnpaid: 0,
+    totalBills: 0,
+  };
 
   const collectionRate =
-    totals.totalIncome + totals.totalOutstanding > 0
-      ? Math.round((totals.totalIncome / (totals.totalIncome + totals.totalOutstanding)) * 100)
+    facilityTotals.totalIncome + facilityTotals.totalOutstanding > 0
+      ? Math.round(
+          (facilityTotals.totalIncome /
+            (facilityTotals.totalIncome + facilityTotals.totalOutstanding)) *
+            100,
+        )
       : 0;
   const occupancyRate = totalUnits > 0 ? Math.round((totalOccupiedUnits / totalUnits) * 100) : 0;
 
@@ -329,7 +354,7 @@ export const getFacilityBilling = async (
       collectionRate: collectionRate,
     },
     breakdown: {
-      monthlyIncome: totals.totalIncome,
+      monthlyIncome: facilityTotals.totalIncome,
       incomeBreakdown: breakdown,
     },
   };
@@ -378,4 +403,169 @@ export const getTenantBillings = async (
   });
 
   return billingsDetails;
+};
+
+// Get billings of a Student
+export const getUserBillings = async (
+  userId: mongoose.Types.ObjectId,
+  query: Partial<GetBillingArguments>,
+  filters: QueryFilter<BillingType>,
+) => {
+  const matchFilters = combineFilters(combineFilters(buildQuery(query), { userId }), filters);
+  const userBillingsSummary = await Billing.aggregate([
+    { $match: matchFilters },
+    {
+      $facet: {
+        monthlyStatistics: [
+          {
+            $group: {
+              _id: { year: { $year: '$dueDate' }, month: { $month: '$dueDate' } },
+              monthlyExpense: { $sum: '$totalAmount' },
+              monthlyOutstanding: {
+                $sum: { $cond: [{ $ne: ['$paymentStatus', 'paid'] }, '$totalAmount', 0] },
+              },
+              breakdownList: { $push: '$breakdown' },
+            },
+          },
+          {
+            $addFields: {
+              // flatten the breakdwonlist to get total
+              breakdown: {
+                $reduce: {
+                  input: '$breakdownList',
+                  initialValue: [],
+                  in: { $concatArrays: ['$$value', '$$this'] },
+                },
+              },
+            },
+          },
+          {
+            $project: {
+              _id: 0,
+              year: '$_id.year',
+              month: '$_id.month',
+              monthlyExpense: 1,
+              monthlyOutstanding: 1,
+              breakdown: 1,
+            },
+          },
+          { $sort: { year: -1, month: -1 } },
+        ],
+
+        totals: [
+          {
+            $group: {
+              _id: null,
+              totalExpense: { $sum: '$totalAmount' },
+              totalOutstanding: {
+                $sum: { $cond: [{ $ne: ['$paymentStatus', 'paid'] }, '$totalAmount', 0] },
+              },
+              currentStatus: {
+                $min: {
+                  $cond: [
+                    { $eq: ['$paymentStatus', 'overdue'] },
+                    1,
+                    { $cond: [{ $eq: ['$paymentStatus', 'unpaid'] }, 2, 3] },
+                  ],
+                },
+              },
+            },
+          },
+          {
+            $project: {
+              _id: 0,
+              totalExpense: 1,
+              totalOutstanding: 1,
+              currentStatus: {
+                $switch: {
+                  branches: [
+                    { case: { $eq: ['$currentStatus', 1] }, then: 'overdue' },
+                    { case: { $eq: ['$currentStatus', 2] }, then: 'unpaid' },
+                    { case: { $eq: ['$currentStatus', 3] }, then: 'paid' },
+                  ],
+                  default: 'paid',
+                },
+              },
+            },
+          },
+        ],
+        billList: [
+          { $sort: { dueDate: -1 } },
+          {
+            $project: {
+              _id: 1,
+              dueDate: 1,
+              totalAmount: 1,
+              paymentStatus: 1,
+            },
+          },
+        ],
+        currentFacility: [
+          { $sort: { dueDate: -1 } },
+          { $limit: 1 },
+          {
+            $lookup: {
+              from: 'housingfacilities',
+              localField: 'facilityId',
+              foreignField: '_id',
+              as: 'facility',
+            },
+          },
+          { $unwind: '$facility' },
+          {
+            $project: {
+              _id: 0,
+              name: '$facility.name',
+              address: '$facility.location.text',
+            },
+          },
+        ],
+      },
+    },
+  ]);
+
+  const data = userBillingsSummary[0] || {
+    monthlyStatistics: [],
+    totals: [],
+    billList: [],
+    currentFacility: [],
+  };
+
+  //Contains all data for main dashboard
+  const summary = data.totals[0] || { totalExpense: 0, totalOutstanding: 0, currentStatus: 'paid' };
+
+  //
+  const facilityDetails = data.currentFacility[0];
+  if (!facilityDetails) throw new AppError(404, 'Biilling facility not found');
+
+  return {
+    summary: {
+      totalExpense: summary.totalExpense,
+      totalOutstanding: summary.totalOutstanding,
+      currentStatus: summary.currentStatus,
+    },
+    facilityDetails,
+    monthlyStatistics: data.monthlyStatistics,
+    unpaidPayments: data.billList.filter((b: any) => b.paymentStatus !== 'paid'),
+    billingHistory: data.billList.filter((b: any) => b.paymentStatus === 'paid'),
+  };
+};
+
+export const sumbitBillingPayment = async (
+  billingId: mongoose.Types.ObjectId,
+  data: submitBillingPaymentArguments,
+  filters: QueryFilter<BillingType>,
+) => {
+  const billing = await Billing.findOne(combineFilters<BillingType>({ _id: billingId }, filters));
+  if (!billing) throw new AppError(404, 'Billing not found.');
+
+  const receiptDocument: DocumentType = {
+    docId: new mongoose.Types.ObjectId().toString(),
+    name: `Recipt for ${billing._id}`,
+    status: 'pending',
+    files: [data.file],
+    message: `Payment method: ${data.paymentMethod}`,
+  };
+  billing.documents.push(receiptDocument);
+  return await billing.save();
 };

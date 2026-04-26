@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { isSuperAdmin } from '../../middleware';
-import { routeGetTags, routeCreateTag, routeUpdateTag, routeDeleteTag } from './tag.controller';
+import { routeGetTags, routeCreateTag, routeUpdateTag, routeDeleteTag, routeEnrichTags } from './tag.controller';
 
 const router = Router();
 
@@ -30,6 +30,18 @@ router.get('/', routeGetTags);
 // - dataType must match schema (e.g., enum requires values)
 // - Numeric must respect min/max if provided
 router.post('/', isSuperAdmin, routeCreateTag);
+
+// POST /api/tags/enrich
+//
+// Input:
+// - Body: { [tagName]: value } — a listing's raw tags map
+//
+// Output:
+// - Array of { name, displayName, dataType, value } for each recognized tag
+//
+// Must be declared before /:tagName to avoid route param collision.
+// Any authenticated user — intended to be called after fetching a listing.
+router.post('/enrich', routeEnrichTags);
 
 // PATCH /api/tags/:tagName
 //
