@@ -18,7 +18,7 @@ export const MANAGER_PERMISSIONS = [
   'manageApplications',
   'reportUsers',
 ] as const;
-export const USER_STATUS = ['setup', 'unverified', 'verified', 'disabled'] as const;
+export const USER_STATUS = ['setup', 'unverified', 'verified', 'disabled', 'legacy'] as const;
 export const USER_TYPE = ['Admin', 'Manager', 'Landlord', 'Student'] as const;
 
 export type FacilityType = (typeof FACILITY_TYPES)[number];
