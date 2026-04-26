@@ -35,6 +35,18 @@ export interface ManagerData {
   checkboxes: ManagerPermissions;
 }
 
+export interface PaymentMethodData {
+  name: string;
+  accountNumber: string; // GCash number or bank account number
+  qrImage: string;       // object URL of uploaded QR image
+}
+
+export interface PaymentData {
+  enabled: boolean;
+  gcash: PaymentMethodData | null;
+  bank: PaymentMethodData | null;
+}
+
 export interface BuildingInformationData {
   id: string;
   name: string;
@@ -43,13 +55,15 @@ export interface BuildingInformationData {
   about: string;
   images: string[];
   roomTypes: RoomTypeData[];
-  managers: ManagerData[]; // changed from string[] → ManagerData[]
+  managers: ManagerData[];
+  payment: PaymentData;
 }
 
 interface BuildingStore {
   buildingInfo: BuildingInformationData;
 
   setBuildingInfo: (data: Partial<BuildingInformationData>) => void;
+  setPayment: (data: Partial<PaymentData>) => void;
   reset: () => void;
 
   addRoomType: () => void;
@@ -85,6 +99,12 @@ const defaultRoomType = (): RoomTypeData => ({
   rooms: [],
 });
 
+const defaultPayment: PaymentData = {
+  enabled: false,
+  gcash: null,
+  bank: null,
+};
+
 const defaultState: BuildingInformationData = {
   id: crypto.randomUUID(),
   name: '',
@@ -92,8 +112,9 @@ const defaultState: BuildingInformationData = {
   location: '',
   about: '',
   images: [],
-  roomTypes: [{ ...defaultRoomType(), name: 'Room Type' }],
+  roomTypes: [{ ...defaultRoomType(), name: '2 Pax Room' }],
   managers: [],
+  payment: defaultPayment,
 };
 
 // ─── Store ────────────────────────────────────────────────────────────────────
@@ -104,6 +125,14 @@ export const useBuildingStore = create<BuildingStore>((set) => ({
   setBuildingInfo: (data) =>
     set((state) => ({
       buildingInfo: { ...state.buildingInfo, ...data },
+    })),
+
+  setPayment: (data) =>
+    set((state) => ({
+      buildingInfo: {
+        ...state.buildingInfo,
+        payment: { ...state.buildingInfo.payment, ...data },
+      },
     })),
 
   reset: () => set({ buildingInfo: defaultState }),
@@ -183,10 +212,7 @@ export const useBuildingStore = create<BuildingStore>((set) => ({
 
   addManager: (manager) =>
     set((state) => {
-      // Prevent duplicate emails
-      const exists = state.buildingInfo.managers.some(
-        (m) => m.email === manager.email
-      );
+      const exists = state.buildingInfo.managers.some((m) => m.email === manager.email);
       if (exists) return state;
       return {
         buildingInfo: {

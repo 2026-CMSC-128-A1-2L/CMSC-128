@@ -18,8 +18,6 @@ interface BuildingInformationProps {
   onPrevClick: () => void;
 }
 
-// ─── Form shape ───────────────────────────────────────────────────────────────
-
 interface BuildingFormValues {
   name: string;
   typeOfBuilding: string;
@@ -48,7 +46,6 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
       mode: 'onChange',
     });
 
-  // Sync keystrokes → zustand
   useEffect(() => {
     const subscription = watch((values) => {
       setBuildingInfo({
@@ -62,7 +59,7 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
     return () => subscription.unsubscribe();
   }, [watch, setBuildingInfo, images]);
 
-  // ─── Image Handlers ───────────────────────────────────────────────────────
+  // ─── Image handlers ───────────────────────────────────────────────────────
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -80,22 +77,22 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
     setBuildingInfo({ images: updated });
   };
 
-  // ─── Manager Handlers ─────────────────────────────────────────────────────
+  // ─── Manager handlers ─────────────────────────────────────────────────────
 
-  // Receives full AddManagerFormValues (email + checkboxes) and stores in zustand
   const handleManagerSend = (data: AddManagerFormValues) => {
     addManager({ email: data.email.trim(), checkboxes: data.checkboxes });
     setActivePopup('add2');
   };
 
-  // ─── Submit — logs everything including manager permissions ───────────────
+  // ─── Submit — logs all data including payment ─────────────────────────────
 
   const onSubmit = (data: BuildingFormValues) => {
     const fullData = {
       ...data,
       images,
       roomTypes: buildingInfo.roomTypes,
-      managers: buildingInfo.managers, // now ManagerData[] with email + checkboxes
+      managers: buildingInfo.managers,
+      payment: buildingInfo.payment,
     };
     console.log('=== Building Information Form Data ===');
     console.log(JSON.stringify(fullData, null, 2));
@@ -140,10 +137,10 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
                           className="flex-1 bg-transparent text-sm text-gray-700 outline-none font-medium appearance-none cursor-pointer"
                         >
                           <option value="">Select type</option>
+                          <option value="residential">Residential</option>
+                          <option value="commercial">Commercial</option>
                           <option value="dormitory">Dormitory</option>
-                          <option value="appartment">Appartment</option>
-                          <option value="bedspacer">Bed Spacer</option>
-                          <option value="Transient">Transient</option>
+                          <option value="mixed">Mixed Use</option>
                         </select>
                         <Icon icon="mynaui:chevron-down" className="w-5 h-5 shrink-0 pointer-events-none" />
                       </div>
@@ -233,15 +230,21 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
               </div>
             </div>
 
-            <Payments />
+            {/* ── Cashless Payments ── */}
+            <div className="self-stretch overflow-hidden flex flex-col items-start p-num-10 gap-2.5">
+              <div className="self-stretch flex items-center">
+                <b className="relative tracking-num--0_01">Payment Methods</b>
+              </div>
+              <div className="self-stretch">
+                <Payments />
+              </div>
+            </div>
 
             {/* ── Add Managers ── */}
             <div className="self-stretch overflow-hidden flex flex-col items-start p-num-10 gap-2.5">
               <div className="self-stretch flex items-center">
                 <b className="relative tracking-num--0_01">Add Managers</b>
               </div>
-
-              {/* Invited manager email tags */}
               {buildingInfo.managers.length > 0 && (
                 <div className="self-stretch flex items-start flex-wrap gap-2 mb-1">
                   {buildingInfo.managers.map((manager) => (
@@ -261,8 +264,6 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
                   ))}
                 </div>
               )}
-
-              {/* Invite button */}
               <div
                 className="rounded-num-12 bg-aliceblue border-whitesmoke border-solid border-[1px] flex items-center py-2 px-num-16 gap-2.5 text-left text-num-14 text-slategray cursor-pointer hover:bg-blue-100 transition-colors"
                 onClick={() => setActivePopup('add1')}
@@ -290,7 +291,6 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
           </button>
         </div>
 
-        {/* ── Lightbox ── */}
         <Lightbox
           open={lightboxIndex >= 0}
           index={lightboxIndex}
@@ -299,19 +299,13 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
         />
       </form>
 
-      {/* ── Popup 1 ── */}
       {activePopup === 'add1' && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
           <div className="relative shadow-2xl rounded-tl-[26px]" onClick={(e) => e.stopPropagation()}>
-            <AddManager1
-              onCancel={() => setActivePopup('none')}
-              onSend={handleManagerSend}
-            />
+            <AddManager1 onCancel={() => setActivePopup('none')} onSend={handleManagerSend} />
           </div>
         </div>
       )}
-
-      {/* ── Popup 2 ── */}
       {activePopup === 'add2' && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
           <div className="relative shadow-2xl rounded-tl-[26px]" onClick={(e) => e.stopPropagation()}>
