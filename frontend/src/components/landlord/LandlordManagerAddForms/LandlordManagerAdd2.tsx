@@ -1,5 +1,5 @@
 import { FunctionComponent } from 'react';
-import success from '../../../assets/reportSuccess.svg';
+import { Icon } from '@iconify/react';
 
 type Props = {
   onClose: () => void;
@@ -7,33 +7,31 @@ type Props = {
 
 const AddManager2: FunctionComponent<Props> = ({ onClose }) => {
   return (
-    <div className="w-120 h-125 relative rounded-2xl bg-white overflow-hidden flex flex-col items-start p-8 box-border text-center text-2xl text-black font-inter">
-      <div className="self-stretch h-[436px] overflow-hidden shrink-0 flex flex-col items-center pt-[65px] px-2.5 pb-6 box-border gap-6">
-        <div className="self-stretch flex flex-col items-start">
-          <div className="self-stretch bg-white overflow-hidden flex items-center justify-center py-[5px] px-[3px]">
-            <div className="w-[100px] h-[100px] flex items-center justify-center relative rounded-[50%] bg-lightcyan">
-              <img className="h-[76px] w-[76px]" alt="" src={success} />
-            </div>
-          </div>
-          <div className="self-stretch overflow-hidden flex flex-col items-center justify-center p-2.5 gap-2.5">
-            <b className="self-stretch relative leading-8">Manager Invite Sent!</b>
-            <div className="self-stretch relative text-sm leading-5">
-              <span className="font-medium">{`We’ve notified `}</span>
-              <b>Nathaniel Cunanan</b>
-              <span className="font-medium">{` about your invite. The invite will expire in `}</span>
-              <b>7 days</b>
-              <span className="font-medium">. You’ll be notified once they accept or decline.</span>
-            </div>
-          </div>
-        </div>
-        <div className="self-stretch flex-1 overflow-hidden flex flex-col items-center p-2.5 text-sm text-teal">
-          <div className="rounded-xl bg-lightcyan overflow-hidden flex items-center justify-center py-3 px-8">
-            <button className="relative font-semibold cursor-pointer" onClick={onClose}>
-              Close
-            </button>
-          </div>
-        </div>
+    <div className="relative w-[480px] rounded-[16px] bg-white overflow-hidden flex flex-col items-center p-[32px] gap-[24px] text-center">
+      {/* Icon */}
+      <div className="flex h-[100px] w-[100px] items-center justify-center rounded-full bg-[#e0f7f4]">
+        <Icon icon="solar:letter-bold" className="h-[56px] w-[56px] text-[#096c5b]" aria-hidden="true" />
       </div>
+
+      {/* Text */}
+      <div className="flex flex-col items-center gap-[10px]">
+        <b className="font-['Inter',sans-serif] text-[24px] leading-[32px] text-black">Manager Invite Sent!</b>
+        <p className="font-['Inter',sans-serif] text-[14px] leading-[20px] text-black">
+          <span className="font-medium">We've notified </span>
+          <b>Nathaniel Cunanan</b>
+          <span className="font-medium"> about your invite. The invite will expire in </span>
+          <b>7 days</b>
+          <span className="font-medium">. You'll be notified once they accept or decline.</span>
+        </p>
+      </div>
+
+      {/* Close */}
+      <button
+        onClick={onClose}
+        className="rounded-[12px] bg-[#e0f7f4] py-[12px] px-[32px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] transition-opacity hover:opacity-80"
+      >
+        Close
+      </button>
     </div>
   );
 };

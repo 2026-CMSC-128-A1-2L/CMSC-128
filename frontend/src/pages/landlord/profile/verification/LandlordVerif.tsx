@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import type { FunctionComponent } from 'react';
-import SideBar from '../../../../components/user/SideBar';
+import SideBar from '../../../../components/landlord/SideBarLandlord';
 import Footer from '../../../../components/general/Footer';
 import { Icon } from '@iconify/react';
 import VerifiedBadge from '../../../../../assets/verified_badge.svg';
