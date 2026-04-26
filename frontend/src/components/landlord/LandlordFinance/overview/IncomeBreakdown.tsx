@@ -138,14 +138,14 @@ const IncomeBreakdown: FunctionComponent = () => {
 
   if (isLoading) {
     return (
-      <div className="w-full max-w-[848px] h-[280px] rounded-2xl bg-white border-whitesmoke-200 border-solid border-[1px] box-border flex flex-col items-start py-6 px-9 gap-[19px]">
+      <div className="w-full rounded-2xl bg-white border-whitesmoke-200 border-solid border-[1px] flex flex-col items-start py-6 px-9 gap-[19px]">
         <div className="w-full h-full bg-gray-100 animate-pulse rounded-lg" />
       </div>
     );
   }
 
   return (
-    <div className="w-full max-w-[848px] rounded-2xl bg-white border-whitesmoke-200 border-solid border-[1px] box-border flex flex-col items-start py-6 px-4 sm:px-6 md:px-9 gap-[19px]">
+    <div className="w-full rounded-2xl bg-white border-whitesmoke-200 border-solid border-[1px] flex flex-col items-start py-6 px-4 sm:px-6 md:px-9 gap-[19px]">
       <div className="flex items-center justify-center p-2 box-border">
         <b className="relative tracking-[-0.01em] shrink-0 text-[16px] sm:text-[18px] text-gray font-inter">
           Income Breakdown
@@ -153,7 +153,7 @@ const IncomeBreakdown: FunctionComponent = () => {
       </div>
 
       <div className="self-stretch flex flex-wrap lg:flex-nowrap items-start gap-6 lg:gap-3 text-[14px] text-teal-200">
-        {/* Donut + legend - fixed width */}
+        {/* Donut + legend */}
         <div className="flex items-center gap-[42px] shrink-0">
           <div className="relative h-[150px] w-[150px] rounded-full shrink-0">
             <div className="absolute inset-0 rounded-full" style={{ background: donutGradient }} />
@@ -173,12 +173,12 @@ const IncomeBreakdown: FunctionComponent = () => {
 
         {/* Breakdown cards + rate bars - takes remaining space */}
         <div className="flex-1 min-w-0 flex flex-col items-start gap-[23px] text-[18px] text-darkslategray-200">
-          {/* Breakdown cards - fixed width, no wrap */}
+          {/* Breakdown cards */}
           <div className="flex flex-row items-center justify-between gap-4 w-full">
             {breakdownCards.map(({ amount, label }) => (
               <div
                 key={label}
-                className="flex-1 min-w-[100px] h-[49px] rounded-[10px] bg-white border-whitesmoke-200 border-solid border-[1px] box-border flex flex-col items-start py-2 px-2.5"
+                className="flex-1 min-w-[100px] h-[49px] rounded-[10px] bg-white border-whitesmoke-200 border-solid border-[1px] flex flex-col items-start py-2 px-2.5"
               >
                 <b className="w-full h-[22px] relative tracking-[-0.01em] flex items-center shrink-0 text-[12px] sm:text-[14px] md:text-[16px] lg:text-[18px]">
                   {amount}

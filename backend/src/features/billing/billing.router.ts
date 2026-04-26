@@ -6,6 +6,7 @@ import {
   routeUpdateBilling,
   routeUpdateBillingPayment,
   routeGetBillingsSummary,
+  routeGetUserBillingDashboard,
 } from './billing.controller';
 import {
   getBillingId,
@@ -91,6 +92,17 @@ router.use(
 // .dashboard to get details for the main dashboard
 // .billingCards to get access to data for the cards.
 // ============================================================================
-router.get('/summary', manageBillingsFilter, includeSelf, routeGetBillingsSummary);
+router.get('/landlord/summary', manageBillingsFilter, routeGetBillingsSummary);
+
+router.get('/facility/:facilityId/summary', manageBillingsFilter, routeGetBillingsSummary);
+
+router.get('/users/:userId/dashboard', selfFilter, routeGetUserBillingDashboard);
+
+// ============================================================================
+// POST /api/billings/:billingId/submit-payment
+//
+// This is used by the tenant to submit their payment for a billing.
+// ============================================================================
+router.post('/:billingId/submit-payment', selfFilter, routeUpdateBillingPayment);
 
 export default router;

@@ -1,6 +1,7 @@
 import { FunctionComponent, useCallback } from 'react';
 import { Icon } from '@iconify/react';
 import placeholder from '../../../../../assets/logo_atlas_text.svg';
+import { Link } from 'react-router-dom';
 
 const CurrentDorm: FunctionComponent = () => {
   const onContractInformationContainerClick = useCallback(() => {
@@ -66,6 +67,8 @@ const CurrentDorm: FunctionComponent = () => {
         <div className="self-stretch flex items-start justify-center pt-num-24 px-num-32 pb-20 gap-6 text-num-14 text-black">
           <div className="w-[280px] rounded-2xl border-whitesmoke-200 border-solid border-[1px] box-border overflow-hidden shrink-0 flex flex-col items-start py-3 px-4">
             <div className="self-stretch flex flex-col items-end py-3 px-num-0 gap-2">
+              
+              <Link to="/contract-information" className="cursor-pointer hover:underline">
               <div
                 className="flex items-center justify-center gap-2 cursor-pointer"
                 onClick={onContractInformationContainerClick}
@@ -73,6 +76,10 @@ const CurrentDorm: FunctionComponent = () => {
                 <div className="relative font-semibold">Contract Information</div>
                 <Icon icon="iconamoon:arrow-right-2" className="h-6 w-6 relative" />
               </div>
+              </Link>
+              
+              
+              <Link to="/rate-review" className="cursor-pointer hover:underline">
               <div
                 className="flex items-center justify-center gap-2 cursor-pointer"
                 onClick={onContractInformationContainerClick}
@@ -80,6 +87,12 @@ const CurrentDorm: FunctionComponent = () => {
                 <div className="relative font-semibold">Rate and Review</div>
                 <Icon icon="iconamoon:arrow-right-2" className="h-6 w-6 relative" />
               </div>
+
+</Link>
+              
+
+
+              <Link to="/report-dorm" className="cursor-pointer hover:underline">
               <div
                 className="flex items-center justify-center gap-2 cursor-pointer"
                 onClick={onContractInformationContainerClick}
@@ -87,6 +100,11 @@ const CurrentDorm: FunctionComponent = () => {
                 <div className="relative font-semibold">Report Listing</div>
                 <Icon icon="iconamoon:arrow-right-2" className="h-6 w-6 relative" />
               </div>
+</Link>
+              
+
+
+              <Link to="/lease-transfer" className="cursor-pointer hover:underline">
               <div
                 className="flex items-center justify-center gap-2 cursor-pointer"
                 onClick={onContractInformationContainerClick}
@@ -94,6 +112,10 @@ const CurrentDorm: FunctionComponent = () => {
                 <div className="relative font-semibold">Pasalo Unit</div>
                 <Icon icon="iconamoon:arrow-right-2" className="h-6 w-6 relative" />
               </div>
+</Link>
+              
+
+
             </div>
           </div>
           <div className="h-[168px] w-[612px] rounded-lg border-whitesmoke-200 border-solid border-[1px] box-border overflow-hidden shrink-0 flex items-center px-8 text-left" />

@@ -1,6 +1,7 @@
-import type { FunctionComponent } from 'react';
-import LogoFooter from '../../../assets/footer_logo.svg?react';
-import { Icon } from '@iconify/react';
+import type { FunctionComponent } from "react";
+import LogoFooter from "../../../assets/footer_logo.svg?react";
+import { Icon } from "@iconify/react";
+import { Link } from "react-router-dom";
 
 const Footer: FunctionComponent = () => {
   return (
@@ -27,17 +28,31 @@ const Footer: FunctionComponent = () => {
         </div>
         <div className="flex items-center justify-center">
           <div className="flex flex-col items-center justify-center gap-2.5">
-            <b className="relative">Browse Dorms</b>
-            <b className="relative">List your property</b>
+            <Link to="/home">
+              <b className="relative">Browse Dorms</b>
+            </Link>
+
+            <Link to="/landlord/properties/new">
+              <b className="relative">List your property</b>
+            </Link>
           </div>
         </div>
         <div className="flex flex-col items-center justify-center gap-2.5">
-          <b className="relative">About</b>
-          <b className="relative">Contact Us</b>
+          <Link to="/about">
+            <b className="relative">About</b>
+          </Link>
+
+          <Link to="/contact-us">
+            <b className="relative">Contact Us</b>
+          </Link>
         </div>
         <div className="flex flex-col items-center justify-center gap-2.5">
-          <b className="relative">Privacy Policy</b>
-          <b className="relative">Terms of Use</b>
+          <Link to="/privacy-policy">
+            <b className="relative">Privacy Policy</b>
+          </Link>
+          <Link to="/terms-of-use">
+            <b className="relative">Terms of Use</b>
+          </Link>
         </div>
       </div>
     </div>

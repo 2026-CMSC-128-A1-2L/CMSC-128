@@ -133,7 +133,7 @@ const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose 
                 {/* last step*/}
                 <button
                   onClick={handleNext}
-                  className="w-[54px] rounded-lg bg-[#b0bdc6] py-1 text-[12px] text-[#2f3136] font-semibold font-lora text-center cursor-pointer hover:brightness-95 transition-all"
+                  className="w-[54px] rounded-lg bg-[#d0dbe3] py-1 text-[12px] text-[#2f3136] font-semibold font-lora text-center cursor-pointer hover:brightness-95 transition-all"
                 >
                   {step === totalSteps ? 'Finish' : 'Next'}
                 </button>

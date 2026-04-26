@@ -112,9 +112,9 @@ const statusMessages: Record<string, { subject: string; content: string }> = {
     subject: 'Application Rejected',
     content: 'Your application has been rejected by the landlord.',
   },
-  'contract-signed': {
-    subject: 'Contract Signed',
-    content: 'Your contract has been signed.',
+  finalized: {
+    subject: 'Finalized',
+    content: 'Your application has been finalized.',
   },
 };
 
@@ -234,11 +234,43 @@ export const assignApplicationUnit = async (
   // TODO: check the correct status
   // 'waitlisted',
   // 'approved',
-  // 'contract-signed',
+  // 'finalized',
 
   if (await isUnitFull(unitId, { listingId: application.listingId }))
     throw new AppError(422, 'This unit is already full.');
 
   application.unitId = unitId;
+  return await application.save();
+};
+
+export const getUnvalidatedApplications = async (listingId: mongoose.Types.ObjectId) => {
+  return await ApplicationForm.find({
+    listingId,
+    status: { $in: ['pending', 'waitlisted'] },
+  });
+};
+
+export const getPendingApplications = async (listingId: mongoose.Types.ObjectId) => {
+  return await ApplicationForm.find({
+    listingId,
+    status: 'pending',
+  });
+};
+
+// user side kapag approved ni manager/landlord
+export const finalizeApplication = async (
+  applicationId: mongoose.Types.ObjectId,
+  filters: QueryFilter<ApplicationType>,
+) => {
+  const application = await ApplicationForm.where(filters).findById(applicationId);
+  if (!application) return;
+
+  // The only legal states for initial acceptance is from `approved`
+  if (application.status !== 'approved')
+    throw new AppError(422, `Applications that are '${application.status}' cannot be finalized.`);
+
+  application.status = 'finalized';
+  const { subject, content } = statusMessages[application.status];
+  await sendNotification(application.userId, subject, content);
   return await application.save();
 };

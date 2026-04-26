@@ -1,21 +1,21 @@
-import { FunctionComponent, useCallback } from 'react';
-import SideBar from '../../../components/user/SideBar';
-import Footer from '../../../components/general/Footer';
-import { Icon } from '@iconify/react';
-import send from '../../../../assets/send.svg';
-import DefaultAvatar from '../../../../assets/default_avatar.svg';
-import VerifiedBadge from '../../../../assets/verified_badge.svg';
-import search from '../../../../assets/search.svg';
-import left from '../../../../assets/leftArrow.svg';
-import right from '../../../../assets/rightArrow.svg';
-import house from '../../../../assets/House.svg';
-import balance from '../../../../assets/outstandingBalance.svg';
-import income from '../../../../assets/incomeIcon.svg';
-import view from '../../../../assets/View More.svg';
-import help from '../../../../assets/helpChatIcon.svg';
-import sapphire1 from '../../../../assets/sapphire1.jpg';
-import sapphire2 from '../../../../assets/sapphire2.jpg';
-import sapphire3 from '../../../../assets/sapphire3.png';
+import { FunctionComponent, useCallback } from "react";
+import SideBar from "../../../components/landlord/SideBarLandlord";
+import Footer from "../../../components/general/Footer";
+import { Icon } from "@iconify/react";
+import send from "../../../../assets/send.svg";
+import DefaultAvatar from "../../../../assets/default_avatar.svg";
+import VerifiedBadge from "../../../../assets/verified_badge.svg";
+import search from "../../../../assets/search.svg";
+import left from "../../../../assets/leftArrow.svg";
+import right from "../../../../assets/rightArrow.svg";
+import house from "../../../../assets/House.svg";
+import balance from "../../../../assets/outstandingBalance.svg";
+import income from "../../../../assets/incomeIcon.svg";
+import view from "../../../../assets/View More.svg";
+import help from "../../../../assets/helpChatIcon.svg";
+import sapphire1 from "../../../../assets/sapphire1.jpg";
+import sapphire2 from "../../../../assets/sapphire2.jpg";
+import sapphire3 from "../../../../assets/sapphire3.png";
 
 const LandlordHomepage: FunctionComponent = () => {
   const onHeaderContainerClick = useCallback(() => {
@@ -69,12 +69,16 @@ const LandlordHomepage: FunctionComponent = () => {
                                 Php 138,600
                               </b>
                             </div>
-                            <div className="relative leading-6 font-medium">Feb 2026</div>
+                            <div className="relative leading-6 font-medium">
+                              Feb 2026
+                            </div>
                           </div>
                           <div className="h-[140px] w-[220px] rounded-num-16 bg-white border-whitesmoke border-solid border-[1px] box-border overflow-hidden shrink-0 flex flex-col items-center justify-center p-num-12 gap-2">
                             <div className="flex flex-col items-center gap-1">
                               <b className="relative">Number of Tenants</b>
-                              <b className="relative text-num-24 leading-8 text-teal-200">28</b>
+                              <b className="relative text-num-24 leading-8 text-teal-200">
+                                28
+                              </b>
                             </div>
                             <div className="relative leading-6 font-medium text-transparent !bg-clip-text [background:linear-gradient(0deg,_#ffc273,_#fa7900)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">
                               2 ongoing lease transfers
@@ -83,9 +87,13 @@ const LandlordHomepage: FunctionComponent = () => {
                           <div className="h-[140px] w-[220px] rounded-num-16 bg-white border-whitesmoke border-solid border-[1px] box-border overflow-hidden shrink-0 flex flex-col items-center justify-center p-num-12 gap-2">
                             <div className="flex flex-col items-center gap-1">
                               <b className="relative">Overdue Rent</b>
-                              <b className="relative text-num-24 leading-8 text-teal-200">1</b>
+                              <b className="relative text-num-24 leading-8 text-teal-200">
+                                1
+                              </b>
                             </div>
-                            <div className="relative leading-6 font-medium">Tenant</div>
+                            <div className="relative leading-6 font-medium">
+                              Tenant
+                            </div>
                           </div>
                           <div className="h-[140px] w-[220px] rounded-num-16 bg-darkslategray border-whitesmoke border-solid border-[1px] box-border overflow-hidden shrink-0 flex flex-col items-center justify-center p-num-12 gap-1 text-num-18 text-whitesmoke">
                             <Icon
@@ -93,9 +101,13 @@ const LandlordHomepage: FunctionComponent = () => {
                               className="w-12 h-12 relative"
                             />
                             <div className="flex flex-col items-center gap-1">
-                              <b className="relative tracking-num--0_01">Pay Reminder</b>
+                              <b className="relative tracking-num--0_01">
+                                Pay Reminder
+                              </b>
                               <div className="rounded-num-100 bg-whitesmoke flex items-center justify-center py-num-4 px-num-12 gap-2.5 text-num-12 text-teal-200">
-                                <div className="relative font-medium">Notify your tenants</div>
+                                <div className="relative font-medium">
+                                  Notify your tenants
+                                </div>
                                 <div className="h-6 w-6 rounded-num-100 bg-teal-200 overflow-hidden shrink-0 flex flex-col items-center justify-center">
                                   <img
                                     className="w-[14.1px] h-[12.2px] relative"
@@ -110,7 +122,9 @@ const LandlordHomepage: FunctionComponent = () => {
                       </div>
                       <div className="self-stretch overflow-hidden flex flex-col items-start gap-2">
                         <div className="self-stretch flex items-center gap-6">
-                          <b className="relative leading-8">Your Current Properties</b>
+                          <b className="relative leading-8">
+                            Your Current Properties
+                          </b>
                           <div className="flex items-center justify-center gap-1 text-num-12 text-teal-200 font-lora">
                             <div className="relative [text-decoration:underline] tracking-num-0_02 font-semibold">
                               View All
@@ -119,9 +133,17 @@ const LandlordHomepage: FunctionComponent = () => {
                           </div>
                         </div>
                         <div className="self-stretch flex items-center justify-end gap-6">
-                          <img className="h-6 w-6 relative object-contain" alt="" src={left} />
+                          <img
+                            className="h-6 w-6 relative object-contain"
+                            alt=""
+                            src={left}
+                          />
                           <div className="rounded-num-100 bg-lightcyan overflow-hidden flex items-center py-[7px] px-[9px]">
-                            <img className="h-[10.6px] w-1.5 relative" alt="" src={right} />
+                            <img
+                              className="h-[10.6px] w-1.5 relative"
+                              alt=""
+                              src={right}
+                            />
                           </div>
                         </div>
                         <div className="self-stretch rounded-num-16 border-whitesmoke border-solid border-[1px] overflow-hidden flex items-center p-4 gap-6 text-left text-num-14 font-poppins">
@@ -150,25 +172,41 @@ const LandlordHomepage: FunctionComponent = () => {
                                     </div>
                                   </div>
                                   <div className="flex items-center gap-2 shrink-0 text-dimgray">
-                                    <img className="h-3.5 w-4 relative" alt="" src={house} />
+                                    <img
+                                      className="h-3.5 w-4 relative"
+                                      alt=""
+                                      src={house}
+                                    />
                                     <b className="h-[13px] w-[51px] relative tracking-num--0_01 flex items-center shrink-0">
                                       18/24
                                     </b>
                                   </div>
                                   <div className="self-stretch flex items-center justify-center gap-4 shrink-0">
                                     <div className="flex items-end gap-2">
-                                      <img className="h-3.5 w-4 relative" alt="" src={income} />
+                                      <img
+                                        className="h-3.5 w-4 relative"
+                                        alt=""
+                                        src={income}
+                                      />
                                       <b className="h-num-12_8 w-[75.1px] relative tracking-num--0_01 flex text-transparent !bg-clip-text [background:linear-gradient(180deg,_#5dc2a8_27.88%,_#0c8873_84.13%)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] items-center shrink-0">
                                         ₱89400.00
                                       </b>
                                     </div>
                                     <div className="flex items-center gap-2">
-                                      <img className="h-4 w-4 relative" alt="" src={balance} />
+                                      <img
+                                        className="h-4 w-4 relative"
+                                        alt=""
+                                        src={balance}
+                                      />
                                       <b className="h-num-12_8 w-[73.2px] relative tracking-num--0_01 flex text-transparent !bg-clip-text [background:linear-gradient(180deg,_#c29722,_#f6b709)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] items-center shrink-0">
                                         ₱12600.00
                                       </b>
                                     </div>
-                                    <img className="h-6 w-6 relative" alt="" src={view} />
+                                    <img
+                                      className="h-6 w-6 relative"
+                                      alt=""
+                                      src={view}
+                                    />
                                   </div>
                                 </div>
                               </div>
@@ -199,25 +237,41 @@ const LandlordHomepage: FunctionComponent = () => {
                                     </div>
                                   </div>
                                   <div className="flex items-center gap-2 shrink-0 text-dimgray">
-                                    <img className="h-3.5 w-4 relative" alt="" src={house} />
+                                    <img
+                                      className="h-3.5 w-4 relative"
+                                      alt=""
+                                      src={house}
+                                    />
                                     <b className="h-[13px] w-[51px] relative tracking-num--0_01 flex items-center shrink-0">
                                       20/24
                                     </b>
                                   </div>
                                   <div className="self-stretch flex items-center justify-center gap-4 shrink-0">
                                     <div className="flex items-end gap-2">
-                                      <img className="h-3.5 w-4 relative" alt="" src={income} />
+                                      <img
+                                        className="h-3.5 w-4 relative"
+                                        alt=""
+                                        src={income}
+                                      />
                                       <b className="h-num-12_8 w-[75.1px] relative tracking-num--0_01 flex text-transparent !bg-clip-text [background:linear-gradient(180deg,_#5dc2a8_27.88%,_#0c8873_84.13%)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] items-center shrink-0">
                                         ₱89400.00
                                       </b>
                                     </div>
                                     <div className="flex items-center gap-2">
-                                      <img className="h-4 w-4 relative" alt="" src={balance} />
+                                      <img
+                                        className="h-4 w-4 relative"
+                                        alt=""
+                                        src={balance}
+                                      />
                                       <b className="h-num-12_8 w-[73.2px] relative tracking-num--0_01 flex text-transparent !bg-clip-text [background:linear-gradient(180deg,_#c29722,_#f6b709)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] items-center shrink-0">
                                         ₱12600.00
                                       </b>
                                     </div>
-                                    <img className="h-6 w-6 relative" alt="" src={view} />
+                                    <img
+                                      className="h-6 w-6 relative"
+                                      alt=""
+                                      src={view}
+                                    />
                                   </div>
                                 </div>
                               </div>
@@ -248,25 +302,41 @@ const LandlordHomepage: FunctionComponent = () => {
                                     </div>
                                   </div>
                                   <div className="flex items-center gap-2 shrink-0 text-dimgray">
-                                    <img className="h-3.5 w-4 relative" alt="" src={house} />
+                                    <img
+                                      className="h-3.5 w-4 relative"
+                                      alt=""
+                                      src={house}
+                                    />
                                     <b className="h-[13px] w-[51px] relative tracking-num--0_01 flex items-center shrink-0">
                                       18/24
                                     </b>
                                   </div>
                                   <div className="self-stretch flex items-center justify-center gap-4 shrink-0">
                                     <div className="flex items-end gap-2">
-                                      <img className="h-3.5 w-4 relative" alt="" src={income} />
+                                      <img
+                                        className="h-3.5 w-4 relative"
+                                        alt=""
+                                        src={income}
+                                      />
                                       <b className="h-num-12_8 w-[75.1px] relative tracking-num--0_01 flex text-transparent !bg-clip-text [background:linear-gradient(180deg,_#5dc2a8_27.88%,_#0c8873_84.13%)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] items-center shrink-0">
                                         ₱89400.00
                                       </b>
                                     </div>
                                     <div className="flex items-center gap-2">
-                                      <img className="h-4 w-4 relative" alt="" src={balance} />
+                                      <img
+                                        className="h-4 w-4 relative"
+                                        alt=""
+                                        src={balance}
+                                      />
                                       <b className="h-num-12_8 w-[73.2px] relative tracking-num--0_01 flex text-transparent !bg-clip-text [background:linear-gradient(180deg,_#c29722,_#f6b709)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] items-center shrink-0">
                                         ₱12600.00
                                       </b>
                                     </div>
-                                    <img className="h-6 w-6 relative" alt="" src={view} />
+                                    <img
+                                      className="h-6 w-6 relative"
+                                      alt=""
+                                      src={view}
+                                    />
                                   </div>
                                 </div>
                               </div>
@@ -278,7 +348,9 @@ const LandlordHomepage: FunctionComponent = () => {
                     <div className="w-[704px] flex items-start gap-8 text-left text-num-18 text-teal-200">
                       <div className="h-[274px] flex-1 rounded-xl border-whitesmoke border-solid border-[1px] box-border overflow-hidden flex flex-col items-center pt-num-24 px-0 pb-num-32 gap-2.5">
                         <div className="self-stretch overflow-hidden flex items-center py-0 px-num-24 gap-2">
-                          <b className="relative tracking-num--0_01">Pending Applications</b>
+                          <b className="relative tracking-num--0_01">
+                            Pending Applications
+                          </b>
                           <Icon
                             icon="radix-icons:arrow-top-right"
                             className="w-5 relative max-h-full"
@@ -290,7 +362,11 @@ const LandlordHomepage: FunctionComponent = () => {
                         </div>
                         <div className="self-stretch flex-1 overflow-hidden flex flex-col items-start py-0 px-num-24 gap-3 text-num-14 text-black">
                           <div className="self-stretch rounded-num-8 border-whitesmoke border-solid border-[1px] overflow-hidden flex items-center py-num-4 px-num-12 gap-2.5 shrink-0">
-                            <img className="h-10 w-10 object-cover" alt="" src={DefaultAvatar} />
+                            <img
+                              className="h-10 w-10 object-cover"
+                              alt=""
+                              src={DefaultAvatar}
+                            />
                             <div className="h-12 flex-1 overflow-hidden flex flex-col items-start justify-center p-2.5 box-border gap-1">
                               <b className="relative shrink-0">Daphne Dayne</b>
                               <div className="relative text-num-12 tracking-num-0_02 font-semibold font-lora text-slategray shrink-0">
@@ -299,18 +375,30 @@ const LandlordHomepage: FunctionComponent = () => {
                             </div>
                           </div>
                           <div className="self-stretch rounded-num-8 border-whitesmoke border-solid border-[1px] overflow-hidden flex items-center py-num-4 px-num-12 gap-2.5 shrink-0">
-                            <img className="h-10 w-10 object-cover" alt="" src={DefaultAvatar} />
+                            <img
+                              className="h-10 w-10 object-cover"
+                              alt=""
+                              src={DefaultAvatar}
+                            />
                             <div className="h-12 flex-1 overflow-hidden flex flex-col items-start justify-center p-2.5 box-border gap-1">
-                              <b className="relative shrink-0">Nathaniel Cunanan</b>
+                              <b className="relative shrink-0">
+                                Nathaniel Cunanan
+                              </b>
                               <div className="relative text-num-12 tracking-num-0_02 font-semibold font-lora text-slategray shrink-0">
                                 ncunanan@up.edu.ph
                               </div>
                             </div>
                           </div>
                           <div className="self-stretch rounded-num-8 border-whitesmoke border-solid border-[1px] overflow-hidden flex items-center py-num-4 px-num-12 gap-2.5 shrink-0">
-                            <img className="h-10 w-10 object-cover" alt="" src={DefaultAvatar} />
+                            <img
+                              className="h-10 w-10 object-cover"
+                              alt=""
+                              src={DefaultAvatar}
+                            />
                             <div className="h-12 overflow-hidden flex flex-col items-start justify-center p-2.5 box-border gap-1">
-                              <b className="relative shrink-0">Lance Chrysler De Jesus</b>
+                              <b className="relative shrink-0">
+                                Lance Chrysler De Jesus
+                              </b>
                               <div className="relative text-num-12 tracking-num-0_02 font-semibold font-lora text-slategray shrink-0">
                                 lvdejesus1@up.edu.ph
                               </div>
@@ -323,7 +411,9 @@ const LandlordHomepage: FunctionComponent = () => {
                           className="self-stretch overflow-hidden flex items-center py-0 px-num-24 gap-2 cursor-pointer"
                           onClick={onHeaderContainerClick}
                         >
-                          <b className="relative tracking-num--0_01">Scheduled Visits</b>
+                          <b className="relative tracking-num--0_01">
+                            Scheduled Visits
+                          </b>
                           <Icon
                             icon="radix-icons:arrow-top-right"
                             className="w-5 relative max-h-full"
@@ -335,7 +425,11 @@ const LandlordHomepage: FunctionComponent = () => {
                         </div>
                         <div className="self-stretch flex-1 overflow-hidden flex flex-col items-start py-0 px-num-24 gap-3 text-num-14 text-black">
                           <div className="self-stretch rounded-num-8 border-whitesmoke border-solid border-[1px] overflow-hidden flex items-center py-num-4 px-num-12 gap-2.5">
-                            <img className="h-10 w-10 object-cover" alt="" src={DefaultAvatar} />
+                            <img
+                              className="h-10 w-10 object-cover"
+                              alt=""
+                              src={DefaultAvatar}
+                            />
                             <div className="h-12 flex-1 overflow-hidden flex flex-col items-start justify-center p-2.5 box-border gap-1">
                               <b className="relative shrink-0">Daphne Dayne</b>
                               <div className="relative text-num-12 tracking-num-0_02 font-semibold font-lora text-slategray shrink-0">
@@ -344,9 +438,15 @@ const LandlordHomepage: FunctionComponent = () => {
                             </div>
                           </div>
                           <div className="self-stretch rounded-num-8 border-whitesmoke border-solid border-[1px] overflow-hidden flex items-center py-num-4 px-num-12 gap-2.5">
-                            <img className="h-10 w-10 object-cover" alt="" src={DefaultAvatar} />
+                            <img
+                              className="h-10 w-10 object-cover"
+                              alt=""
+                              src={DefaultAvatar}
+                            />
                             <div className="h-12 flex-1 overflow-hidden flex flex-col items-start justify-center p-2.5 box-border gap-1">
-                              <b className="relative shrink-0">Nathaniel Cunanan</b>
+                              <b className="relative shrink-0">
+                                Nathaniel Cunanan
+                              </b>
                               <div className="relative text-num-12 tracking-num-0_02 font-semibold font-lora text-slategray shrink-0">
                                 ncunanan@up.edu.ph
                               </div>
@@ -374,7 +474,11 @@ const LandlordHomepage: FunctionComponent = () => {
                               Quevin James A. Custodio
                             </b>
                             <div className="self-stretch overflow-hidden flex items-end p-[3px]">
-                              <img className="h-6 w-6 relative" alt="" src={VerifiedBadge} />
+                              <img
+                                className="h-6 w-6 relative"
+                                alt=""
+                                src={VerifiedBadge}
+                              />
                             </div>
                           </div>
                           <b className="w-[203px] relative text-num-14 flex text-dimgray items-center shrink-0">
@@ -385,10 +489,16 @@ const LandlordHomepage: FunctionComponent = () => {
                       <div className="self-stretch flex flex-col items-start gap-3 shrink-0 text-num-14">
                         <b className="self-stretch relative">Activity</b>
                         <div className="self-stretch rounded-num-8 border-whitesmoke border-solid border-[1px] overflow-hidden flex items-center py-2.5 px-num-12 gap-2">
-                          <img className="h-10 w-10 object-cover" alt="" src={DefaultAvatar} />
+                          <img
+                            className="h-10 w-10 object-cover"
+                            alt=""
+                            src={DefaultAvatar}
+                          />
                           <div className="flex-1 overflow-hidden flex flex-col items-start justify-center py-2.5 px-0 gap-1">
                             <div className="self-stretch flex items-center py-0 pl-0 pr-2 gap-1">
-                              <b className="flex-1 relative">Haira Espinocilla</b>
+                              <b className="flex-1 relative">
+                                Haira Espinocilla
+                              </b>
                               <div className="relative text-[8px] font-medium text-slategray">
                                 3d ago
                               </div>
@@ -399,7 +509,11 @@ const LandlordHomepage: FunctionComponent = () => {
                           </div>
                         </div>
                         <div className="self-stretch rounded-num-8 border-whitesmoke border-solid border-[1px] overflow-hidden flex items-center py-2.5 px-num-12 gap-2">
-                          <img className="h-10 w-10 object-cover" alt="" src={DefaultAvatar} />
+                          <img
+                            className="h-10 w-10 object-cover"
+                            alt=""
+                            src={DefaultAvatar}
+                          />
                           <div className="flex-1 overflow-hidden flex flex-col items-start justify-center py-2.5 px-0 gap-1">
                             <div className="self-stretch flex items-center py-0 pl-0 pr-2 gap-1">
                               <b className="flex-1 relative">Riz Doroja</b>
@@ -413,7 +527,11 @@ const LandlordHomepage: FunctionComponent = () => {
                           </div>
                         </div>
                         <div className="self-stretch rounded-num-8 border-whitesmoke border-solid border-[1px] overflow-hidden flex items-center py-2.5 px-num-12 gap-2">
-                          <img className="h-10 w-10 object-cover" alt="" src={DefaultAvatar} />
+                          <img
+                            className="h-10 w-10 object-cover"
+                            alt=""
+                            src={DefaultAvatar}
+                          />
                           <div className="flex-1 overflow-hidden flex flex-col items-start justify-center py-2.5 px-0 gap-1">
                             <div className="self-stretch flex items-center py-0 pl-0 pr-2 gap-1">
                               <b className="flex-1 relative">Dorm Manager #2</b>
@@ -427,7 +545,11 @@ const LandlordHomepage: FunctionComponent = () => {
                           </div>
                         </div>
                         <div className="self-stretch rounded-num-8 border-whitesmoke border-solid border-[1px] overflow-hidden flex items-center py-2.5 px-num-12 gap-2">
-                          <img className="h-10 w-10 object-cover" alt="" src={DefaultAvatar} />
+                          <img
+                            className="h-10 w-10 object-cover"
+                            alt=""
+                            src={DefaultAvatar}
+                          />
                           <div className="flex-1 overflow-hidden flex flex-col items-start justify-center py-2.5 px-0 gap-1">
                             <div className="self-stretch flex items-center py-0 pl-0 pr-2 gap-1">
                               <b className="flex-1 relative">Dorm Manager #1</b>
