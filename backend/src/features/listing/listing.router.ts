@@ -116,7 +116,7 @@ router.get('/:listingId/reviews', listingViewFilter, routeGetListingReviews);
 // ============================================================================
 // POST /api/listings/:listingId/reviews
 // ============================================================================
-router.post('/:listingId/reviews', routeCreateReview);
+router.post('/:listingId/reviews', isVerifiedStudent, routeCreateReview);
 
 // ============================================================================
 // POST /api/listings/:listingId/report
