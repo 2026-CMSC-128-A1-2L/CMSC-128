@@ -556,7 +556,7 @@ export const sumbitBillingPayment = async (
   data: submitBillingPaymentArguments,
   filters: QueryFilter<BillingType>,
 ) => {
-  const billing = await Billing.findOne({ _id: billingId, filters });
+  const billing = await Billing.findOne(combineFilters<BillingType>({ _id: billingId }, filters));
   if (!billing) throw new AppError(404, 'Billing not found.');
 
   const receiptDocument: DocumentType = {
