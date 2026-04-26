@@ -8,7 +8,7 @@ export const APPLICATION_STATUS = [
   'rejected',
   'waitlisted',
   'approved',
-  'contract-signed',
+  'finalized',
 ] as const;
 export const MANAGER_PERMISSIONS = [
   'deleteListings',
