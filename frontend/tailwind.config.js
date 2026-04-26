@@ -11,6 +11,7 @@ export default {
         slategray: "#64748b",
         silver: "#b5c8c5",
         gray: "#001d18",
+        lightcyan: "#cbf6ed", // Integrated from first config
         darkslategray: {
           DEFAULT: "#024338",
           100: "#2f3136",
@@ -36,7 +37,6 @@ export default {
         "num-56_3": "56.3px",
         "num-28_2": "28.2px",
         "num-21_1": "21.1px",
-        // Kept both versions of the custom border shortcut if they differ in intent
         "num-1": "0.9px solid #f0f0f0",
         "num-1-alt": "1px solid #f0f0f0",
       },
