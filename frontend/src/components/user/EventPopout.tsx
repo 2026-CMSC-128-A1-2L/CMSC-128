@@ -1,7 +1,5 @@
 import { FunctionComponent } from 'react';
-import dotIcon from '../../../assets/dot.svg';
-import exIcon from '../../../assets/ex.svg';
-import deleteIcon from '../../../assets/delete.svg';
+import { Icon } from '@iconify/react';
 
 export type EventPopoutType = {
   className?: string;
@@ -14,10 +12,9 @@ const EventPopout: FunctionComponent<EventPopoutType> = ({ className = '', onClo
       className={`w-[419px] h-[164px] relative max-w-full max-h-full overflow-auto text-left text-[12px] text-black font-lora ${className}`}
     >
       <div className="absolute top-[0px] left-[0px] rounded-md bg-white w-[419px] h-[164px]" />
-      <img
+      <Icon
+        icon="ic:round-close"
         className="absolute top-[11px] left-[367px] w-10 h-10 cursor-pointer"
-        src={exIcon}
-        alt="close"
         onClick={onClose}
       />
       <div className="absolute top-[12px] left-[322px] w-10 h-10">
@@ -32,12 +29,11 @@ const EventPopout: FunctionComponent<EventPopoutType> = ({ className = '', onClo
       </div>
       <div className="absolute top-[88px] left-[85px] whitespace-pre-wrap">{`One Sapphire Place     `}</div>
       <div className="absolute top-[107px] left-[85px]"> Daphne the Landlord</div>
-      <img
+      <Icon
+        icon="ic:round-circle"
         className="absolute top-[44px] left-[53px] w-[24px] h-[24px]"
-        src={dotIcon}
-        alt="red dot"
       />
-      <img className="absolute top-[19px] left-[330px] w-6 h-6" src={deleteIcon} alt="trash" />
+      <Icon icon="ic:round-delete" className="absolute top-[19px] left-[330px] w-6 h-6" />
     </div>
   );
 };
