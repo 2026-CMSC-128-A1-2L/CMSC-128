@@ -5,6 +5,7 @@ import Lightbox from 'yet-another-react-lightbox';
 import 'yet-another-react-lightbox/styles.css';
 
 import RoomTypeItem from './RoomTypeItem';
+import Payments from './Payment';
 import { useBuildingStore } from './useBuildingStore';
 import AddManager1 from '../LandlordManagerAddForms/LandlordManagerAdd1';
 import AddManager2 from '../LandlordManagerAddForms/LandlordManagerAdd2';
@@ -231,6 +232,8 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
                 </button>
               </div>
             </div>
+
+            <Payments />
 
             {/* ── Add Managers ── */}
             <div className="self-stretch overflow-hidden flex flex-col items-start p-num-10 gap-2.5">
