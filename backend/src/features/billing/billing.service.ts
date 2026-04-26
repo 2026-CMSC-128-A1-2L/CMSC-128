@@ -391,7 +391,6 @@ export const getUserBillings = async (
     {
       $facet:{
         monthlyStatistics: [
-          {$unwind: '$breakdown'},
           {
             $group:{
               _id: { year: { $year: '$dueDate' }, month: { $month: '$dueDate' } },
@@ -407,20 +406,10 @@ export const getUserBillings = async (
                 $reduce: {
                   input: '$breakdownList',
                   initialValue: [],
-                  in: { $concatArrays: ['$$value', ['$$this']] },
+                  in: { $concatArrays: ['$$value', '$$this'] },
                 }
               },
             }
-          },
-          {
-            $addFields: {
-              breakdownTotal: {
-                $sum: '$breakdown.amount',
-              },
-            },
-          },
-          {
-            $sort: { '_id.year': -1, '_id.month': -1 },
           },
           {
             $project: {
@@ -430,9 +419,9 @@ export const getUserBillings = async (
               monthlyExpense: 1,
               monthlyOutstanding: 1,
               breakdown: 1,
-              breakdownTotal: 1,
             },
-          }
+          },
+          {$sort: { 'year': -1, 'month': -1 },},
         ],
 
         totals:[
@@ -444,9 +433,9 @@ export const getUserBillings = async (
               currentStatus: {
                 $min:{
                   $cond:[
-                    {$eq:['paymentStatus', 'overdue'],},1,
+                    {$eq:['$paymentStatus', 'overdue'],},1,
                     {$cond:[
-                      {$eq:['paymentStatus', 'unpaid']},2,
+                      {$eq:['$paymentStatus', 'unpaid']},2,
                       3
                     ]}
                   ]
@@ -483,21 +472,52 @@ export const getUserBillings = async (
               paymentStatus: 1,
             }
           }
+        ],
+        currentFacility: [
+          {$sort: { dueDate: -1 }},
+          {$limit: 1},
+          {
+            $lookup: {
+              from: 'housingfacilities',
+              localField: 'facilityId',
+              foreignField: '_id',
+              as: 'facility',
+            },
+          },
+          {$unwind: '$facility'},
+          {
+            $project: {
+              _id: 0,
+              name: '$facility.name',
+              address: '$facility.location.text',
+            }
+          }
         ]
       }
     }
   ]);
 
-  const data = userBillingsSummary[0] || { monthlyStatistics: [], totals: [{ totalExpense: 0, totalOutstanding: 0 }], billList: [] };
+  const data = userBillingsSummary[0] || {
+    monthlyStatistics: [], 
+    totals: [],
+    billList: [], 
+    currentFacility: [],
+  };
   
   //Contains all data for main dashboard
-  const summary = data.totals[0]?.totalExpense || 0;
+  const summary = data.totals[0] || { totalExpense: 0, totalOutstanding: 0, currentStatus: 'paid' };
+  const facilityDetails = data.currentFacility[0];
+  if(!facilityDetails) throw new AppError(404, 'Biilling facility not found');
   
   return{
-    summary,
+    summary:{
+      totalExpense: summary.totalExpense,
+      totalOutstanding: summary.totalOutstanding,
+      currentStatus: summary.currentStatus,
+      facilityDetails
+    },
     monthlyStatistics: data.monthlyStatistics,
     unpaidPayments: data.billList.filter((b:any) => b.paymentStatus !== 'paid'),
     billingHistory: data.billList.filter((b:any) => b.paymentStatus === 'paid'),
   }
-  
 }
