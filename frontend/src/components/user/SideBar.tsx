@@ -34,16 +34,20 @@ const SidebarItem = ({
 
 const SideBar: FunctionComponent = () => {
   return (
-    <div className="w-50 h-full border-whitesmoke border-solid border-r box-border flex flex-col items-center py-8 px-num-0 gap-8 text-left text-darkslategray font-inter">
+    <div className="w-50 border-whitesmoke border-solid border box-border flex flex-col items-center py-8 px-num-0 gap-8 text-left text-darkslategray font-buhun-retro-two-free">
       <AtlasLogoText className="fill-darkslategray w-32 h-auto" />
-      <div className="mx-4 flex flex-col items-center gap-8 shrink-0 text-num-14 text-gray font-inter w-full">
-        <div className="w-full h-10 rounded-full bg-whitesmoke overflow-hidden shrink-0 flex items-center py-1 px-3 box-border text-num-8">
+      <div className="mx-4 flex flex-col items-center gap-8 shrink-0 text-num-14 text-gray font-inter">
+        <div className="w-full h-10 rounded-full bg-whitesmoke overflow-hidden shrink-0 flex items-center py-1 px-3 box-border text-[10px]">
           <div className="flex-1 overflow-hidden flex items-start">
             <div className="relative font-semibold">Search</div>
           </div>
-          <Icon icon="material-symbols:search" className="w-6 h-6" />
+          <img
+            className="w-7 rounded-[100px] max-h-full"
+            alt=""
+            src={search_icon}
+          />
         </div>
-        <div className="w-full h-num-300 flex flex-col items-start gap-3 overflow-y-auto">
+        <div className="h-[426px] flex flex-col items-start gap-3">
           <Link to="/home">
             <SidebarItem value="Home" active={true}>
               <Icon icon="mdi:home" className="w-7 h-7" />
@@ -89,27 +93,27 @@ const SideBar: FunctionComponent = () => {
             </SidebarItem>
           </Link>
         </div>
-        <div className="w-full flex flex-col items-start gap-3 border-t border-whitesmoke pt-4">
-          <div className="w-full flex items-center py-num-0 pl-num-0 pr-num-20 box-border gap-6">
-            <div className="h-11 w-1 rounded-sm bg-white overflow-hidden shrink-0 flex flex-col items-start py-num-10 pl-num-10 pr-num-0 box-border" />
+        <div className="flex flex-col items-start gap-3">
+          <div className="w-num-180 flex items-center py-num-0 pl-num-0 pr-num-20 box-border gap-6">
+            <div className="h-11 w-2 rounded-num-4 bg-white overflow-hidden shrink-0 flex flex-col items-start py-num-10 pl-num-10 pr-num-0 box-border" />
             <div className="flex-1 rounded-num-12 flex items-center">
               <div className="flex-1 flex items-center gap-4">
-                <Icon icon="bi:moon-stars" className="h-6 w-6" />
-                <div className="flex-1 relative font-semibold text-num-12">Dark Mode</div>
+                <img className="h-[24.4px] w-[24.4px]" alt="" src={dark_icon} />
+                <div className="flex-1 relative font-semibold">Dark Mode</div>
               </div>
             </div>
           </div>
-          <div className="w-full flex flex-col items-start py-num-0 px-num-20">
-            <div className="w-full h-px bg-whitesmoke shrink-0" />
+          <div className="flex flex-col items-start py-num-0 px-num-20">
+            <div className="h-[1px] bg-whitesmoke shrink-0" />
           </div>
-          <div className="w-full overflow-hidden flex items-center py-num-10 pl-8 pr-num-20 gap-2">
-            <Icon icon="bi:person-circle" className="w-7 h-7 rounded-full" />
+          <div className="overflow-hidden flex items-center py-num-10 pl-8 pr-num-20 gap-2">
+            <Icon icon="bi:person-circle" className="w-7 h-7 rounded-[100px]" />
 
             <div className="overflow-hidden flex flex-col items-start justify-center gap-1">
-              <div className="w-fit flex items-center">
-                <b className="relative text-num-12">Sign In</b>
+              <div className="w-[76px] flex items-center">
+                <b className="relative inline-block max-w-[196px]">Sign In</b>
               </div>
-              <div className="flex items-start text-num-8 text-silver">
+              <div className="flex items-start text-[10px] text-silver">
                 <b className="relative">to continue</b>
               </div>
             </div>
