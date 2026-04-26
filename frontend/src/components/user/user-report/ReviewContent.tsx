@@ -1,6 +1,6 @@
-import InfoIcon from '../../../assets/infoicon_icon.svg'
-import CommIcon from '../../../assets/comments-regular-full.svg'
-import DiamondPlusIcon from '../../../assets/DiamondPlus.png'
+import InfoIcon from '../../../../assets/infoicon_icon.svg'
+import CommIcon from '../../../../assets/comments-regular-full.svg'
+import DiamondPlusIcon from '../../../../assets/DiamondPlus.png'
 import CheckboxItem from './CheckboxItem'
 import { useState } from 'react'
 
