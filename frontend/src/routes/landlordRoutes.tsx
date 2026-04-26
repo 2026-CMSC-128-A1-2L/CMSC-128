@@ -17,6 +17,7 @@ import LandlordUnvalidatedApplications from "../pages/landlord/tenants/LandlordU
 import LandlordUnvalidatedTenantDetail from "../pages/landlord/tenants/LandlordUnvalidatedTenantDetail";
 
 import { Route } from "react-router-dom";
+import LandlordPropertyFinance from "../pages/landlord/finance/LandlordPropertyFinance";
 
 const landlordRoutes = [
   <Route
@@ -78,6 +79,11 @@ const landlordRoutes = [
     key="landlord-finance"
     path="/landlord/finance"
     element={<LandlordFinance />}
+  />,
+  <Route
+    key="landlord-property-finance"
+    path="/landlord/finance/property/:propertyId"
+    element={<LandlordPropertyFinance />}
   />,
   <Route
     key="landlord-settings"
