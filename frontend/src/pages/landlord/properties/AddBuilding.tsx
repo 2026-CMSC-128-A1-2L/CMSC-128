@@ -30,10 +30,10 @@ const AddBuilding: FunctionComponent = () => {
         return <BuildingRequirements onNextClick={onNextClick} />;
       case 1:
         // Pass onNextClick to the next component too if it has a next button
-        return <BuildingInformation onNextClick={onNextClick} />;
+        return <BuildingInformation onNextClick={onNextClick} onPrevClick={onPrevClick} />;
       case 2:
 
-        return <BuildingSubmit />;
+        return <BuildingSubmit onPrevClick={onPrevClick} />;
       default:
     }
   };

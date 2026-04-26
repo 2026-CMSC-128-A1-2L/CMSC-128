@@ -92,7 +92,7 @@ const defaultState: BuildingInformationData = {
   location: '',
   about: '',
   images: [],
-  roomTypes: [{ ...defaultRoomType(), name: '2 Pax Room' }],
+  roomTypes: [{ ...defaultRoomType(), name: 'Room Type' }],
   managers: [],
 };
 

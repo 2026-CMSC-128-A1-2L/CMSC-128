@@ -140,10 +140,10 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
                           className="flex-1 bg-transparent text-sm text-gray-700 outline-none font-medium appearance-none cursor-pointer"
                         >
                           <option value="">Select type</option>
-                          <option value="residential">Residential</option>
-                          <option value="commercial">Commercial</option>
                           <option value="dormitory">Dormitory</option>
-                          <option value="mixed">Mixed Use</option>
+                          <option value="appartment">Appartment</option>
+                          <option value="bedspacer">Bed Spacer</option>
+                          <option value="Transient">Transient</option>
                         </select>
                         <Icon icon="mynaui:chevron-down" className="w-5 h-5 shrink-0 pointer-events-none" />
                       </div>
