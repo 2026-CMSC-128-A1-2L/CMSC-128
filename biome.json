@@ -35,6 +35,9 @@
       "recommended": true,
       "suspicious": {
         "noExplicitAny": "error"
+      },
+      "style": {
+        "useImportType": "off"
       }
     }
   },

@@ -1,6 +1,6 @@
-import { FunctionComponent, useState } from 'react';
-import { Icon } from '@iconify/react';
-import PortalPopup from '../../PortalPopup';
+import { FunctionComponent, useState } from "react";
+import { Icon } from "@iconify/react";
+import PortalPopup from "../../../components/general/PortalPopup";
 
 export type SubmitReceiptType = {
   className?: string;
@@ -8,22 +8,26 @@ export type SubmitReceiptType = {
   onClose?: () => void;
   dueDate?: string;
   dueAmount?: number;
-  onSubmit?: (data: { referenceNo: string; paymentMethod: string; receiptFile: File | null }) => void;
+  onSubmit?: (data: {
+    referenceNo: string;
+    paymentMethod: string;
+    receiptFile: File | null;
+  }) => void;
 };
 
-const SubmitReceipt: FunctionComponent<SubmitReceiptType> = ({ 
-  className = '', 
-  isOpen = false, 
+const SubmitReceipt: FunctionComponent<SubmitReceiptType> = ({
+  className = "",
+  isOpen = false,
   onClose,
-  dueDate = '',
+  dueDate = "",
   dueAmount = 0,
-  onSubmit 
+  onSubmit,
 }) => {
-  const [referenceNo, setReferenceNo] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState('');
+  const [referenceNo, setReferenceNo] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("");
   const [isMethodDropdownOpen, setIsMethodDropdownOpen] = useState(false);
 
-  const paymentMethods = ['GCash', 'Bank Transfer', 'Cash', 'Maya'];
+  const paymentMethods = ["GCash", "Bank Transfer", "Cash", "Maya"];
 
   const handleSubmit = () => {
     if (onSubmit) {
@@ -39,7 +43,12 @@ const SubmitReceipt: FunctionComponent<SubmitReceiptType> = ({
   if (!isOpen) return null;
 
   return (
-    <PortalPopup overlayColor="rgba(0, 0, 0, 0.5)" placement="Centered" onOutsideClick={onClose} zIndex={100}>
+    <PortalPopup
+      overlayColor="rgba(0, 0, 0, 0.5)"
+      placement="Centered"
+      onOutsideClick={onClose}
+      zIndex={100}
+    >
       <div
         className={`relative w-[480px] max-h-[90vh] rounded-num-16 bg-white overflow-y-auto flex flex-col items-start p-8 box-border text-left text-num-24 text-black font-inter ${className}`}
       >
@@ -60,7 +69,10 @@ const SubmitReceipt: FunctionComponent<SubmitReceiptType> = ({
                 onClick={onClose}
                 className="cursor-pointer transition-all duration-200 ease-in-out hover:scale-110 active:scale-95 p-1 rounded-full hover:bg-whitesmoke-100"
               >
-                <Icon icon="fontisto:close" className="w-5 h-5 text-darkslategray-100 hover:text-crimson transition-colors" />
+                <Icon
+                  icon="fontisto:close"
+                  className="w-5 h-5 text-darkslategray-100 hover:text-crimson transition-colors"
+                />
               </button>
             </div>
           </div>
@@ -89,22 +101,30 @@ const SubmitReceipt: FunctionComponent<SubmitReceiptType> = ({
                 placeholder="Reference/Transaction No."
                 className="w-full rounded-num-8 bg-white border-whitesmoke-200 border-solid border-[2px] p-3 focus:outline-none focus:border-teal transition-colors"
               />
-              
+
               {/* Payment Method Dropdown */}
               <div className="relative w-full">
                 <div
                   onClick={() => setIsMethodDropdownOpen(!isMethodDropdownOpen)}
                   className="w-full rounded-num-8 bg-white border-whitesmoke-200 border-solid border-[2px] flex items-center justify-between p-3 cursor-pointer hover:border-teal transition-colors"
                 >
-                  <div className={paymentMethod ? 'text-black' : 'text-dimgray'}>
-                    {paymentMethod || 'Payment Method Used'}
+                  <div
+                    className={paymentMethod ? "text-black" : "text-dimgray"}
+                  >
+                    {paymentMethod || "Payment Method Used"}
                   </div>
-                  <Icon icon="mdi-light:chevron-down" className="h-5 w-5 text-gray-400" />
+                  <Icon
+                    icon="mdi-light:chevron-down"
+                    className="h-5 w-5 text-gray-400"
+                  />
                 </div>
-                
+
                 {isMethodDropdownOpen && (
                   <>
-                    <div className="fixed inset-0 z-10" onClick={() => setIsMethodDropdownOpen(false)} />
+                    <div
+                      className="fixed inset-0 z-10"
+                      onClick={() => setIsMethodDropdownOpen(false)}
+                    />
                     <div className="absolute top-full left-0 right-0 mt-1 z-20 bg-white border border-whitesmoke-200 rounded-num-8 shadow-lg overflow-hidden animate-fade-in">
                       {paymentMethods.map((method) => (
                         <div
@@ -141,7 +161,9 @@ const SubmitReceipt: FunctionComponent<SubmitReceiptType> = ({
               onClick={handleSubmit}
               className="w-full rounded-num-12 bg-lightcyan overflow-hidden flex items-center justify-center p-3 transition-all duration-200 ease-in-out hover:bg-teal hover:text-white hover:scale-[1.02] active:scale-95 cursor-pointer group"
             >
-              <div className="font-semibold group-hover:text-white transition-colors">Submit</div>
+              <div className="font-semibold group-hover:text-white transition-colors">
+                Submit
+              </div>
             </button>
           </div>
         </div>

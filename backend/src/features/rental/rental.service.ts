@@ -3,14 +3,17 @@ import { AppError } from '../../error';
 import { combineFilters } from '../../middleware';
 import { ApplicationForm } from '../application/application.model';
 import { Rental } from './rental.model';
+import { Unit } from '../unit/unit.model';
+import { UnitFilterSchema } from 'shared';
 
 // TODO: verify if actual move-in/out dates are needed
 // No activities field yet
 export type CreateRentalArguments = {
   userId: mongoose.Types.ObjectId;
+  facilityId: mongoose.Types.ObjectId;
   unitId: mongoose.Types.ObjectId;
 
-  applicationId: mongoose.Types.ObjectId;
+  applicationId?: mongoose.Types.ObjectId;
 
   expectedMoveInDate?: Date | null;
   expectedMoveOutDate?: Date | null;
@@ -35,17 +38,28 @@ export const createRental = async (data: CreateRentalArguments) => {
     throw new AppError(422, 'Expected move-out date should not be before expected move-in date.');
   }
 
-  const newRental = new Rental({
+  const unit = await Unit.findById(data.unitId);
+  
+  if(!unit) throw new AppError(404, 'Unit not found.');
+
+  if(unit.currentRentals.length >= unit.capacity){
+    throw new AppError(400, 'Unit is already at full capacity.');
+  }
+
+  const newRental = await new Rental({
     userId: data.userId,
     unitId: data.unitId,
-
     applicationId: data.applicationId,
-
+    status: 'active',
     expectedMoveInDate: data.expectedMoveInDate,
     expectedMoveOutDate: data.expectedMoveOutDate,
-  });
+  }).save();
 
-  return await newRental.save();
+  // add the rental id of the newly created rental to the currentRentals of unit
+  unit.currentRentals.push(newRental._id);
+  await unit.save();
+
+  return newRental;
 };
 
 export const getAllRentals = async (filters: any) => {
@@ -255,9 +269,18 @@ export const moveOut = async (
   }
 
   rental.set({
-    status: 'active',
+    status: 'ended',
     actualMoveOutDate: moveOutDate,
   });
 
-  return await rental.save();
+  await rental.save();
+
+  // remove current rental to the currentRentals of the unit
+  await Unit.updateOne(
+    { _id: rental.unitId },
+    { $pull: { currentRentals: rental._id } },
+  );
+
+
+  return rental;
 };

@@ -8,8 +8,8 @@ interface SideNavProps {
 }
 
 const tabs: { id: TabType; label: string; width: string }[] = [
-  { id: 'overview',  label: 'Overview',        width: 'w-[78px]'  },
-  { id: 'billings',  label: 'Tenant Billings',  width: 'w-[123px]' },
+  { id: 'overview', label: 'Overview', width: 'w-[78px]' },
+  { id: 'billings', label: 'Tenant Billings', width: 'w-[123px]' },
 ];
 
 const SideNav: FunctionComponent<SideNavProps> = ({ activeTab, onTabChange }) => (
@@ -17,15 +17,20 @@ const SideNav: FunctionComponent<SideNavProps> = ({ activeTab, onTabChange }) =>
     {tabs.map(({ id, label, width }, i) => (
       <div
         key={id}
-        className={`w-full h-16 flex items-center justify-center py-5 px-4 cursor-pointer transition-colors whitespace-nowrap
-          ${i === 0 ? 'rounded-t-[10px]' : ''}
-          ${activeTab === id
-            ? 'border-l-[8px] lg:border-l-[8px] border-b-0 lg:border-b-0 border-darkslategray-200 border-solid text-darkslategray-200'
+        className={`w-full h-16 flex items-center justify-center py-5 px-4 cursor-pointer transition-all duration-200 ${
+          i === 0 ? 'rounded-t-[10px]' : ''
+        } ${
+          activeTab === id
+            ? 'border-l-[8px] lg:border-l-[8px] border-b-0 lg:border-b-0 border-darkslategray-200 border-solid text-darkslategray-200 bg-gray-50'
             : 'text-darkslategray-100 hover:bg-gray-50'
-          }`}
+        }`}
         onClick={() => onTabChange(id)}
       >
-        <div className={`h-[23px] ${width} relative font-medium flex items-center justify-center shrink-0`}>
+        <div
+          className={`h-[23px] ${width} relative font-medium flex items-center justify-center shrink-0 transition-transform duration-200 ${
+            activeTab === id ? 'scale-105' : 'scale-100'
+          }`}
+        >
           {label}
         </div>
       </div>

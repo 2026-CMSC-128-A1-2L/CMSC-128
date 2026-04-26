@@ -1,26 +1,23 @@
 import mongoose from 'mongoose';
 import { ROOM_TYPES } from 'shared';
-import { managerPermissionSchema } from '../facility/facility.model';
 
 export type ListingType = {
   _id: mongoose.Types.ObjectId;
   facilityId: mongoose.Types.ObjectId;
   landlordId: mongoose.Types.ObjectId;
-  managers: {
-    userId: mongoose.Types.ObjectId;
-    permissions: { manageBillings: boolean; manageApplications: boolean; manageListings: boolean };
-  }[];
   tags: Record<string, number | string | boolean>;
   roomType: (typeof ROOM_TYPES)[number];
   capacity: number;
-  isPrivate: boolean;
-  allowVisit: boolean;
-  allowTransfer: boolean;
   description?: string | null;
   media: {
     sourceType: 'local' | 'external';
     value: string;
   }[];
+
+  qualityAvg: number;
+  comfortAvg: number;
+  environmentAvg: number;
+  reviewCount: number;
 };
 
 const ListingSchema = new mongoose.Schema<ListingType>({
@@ -28,27 +25,20 @@ const ListingSchema = new mongoose.Schema<ListingType>({
   facilityId: { type: mongoose.Schema.Types.ObjectId, ref: 'HousingFacility', required: true },
   landlordId: { type: mongoose.Schema.Types.ObjectId, ref: 'Landlord', required: true },
 
-  managers: [
-    {
-      userId: { type: mongoose.Schema.Types.ObjectId, ref: 'Manager', required: true },
-      permissions: {
-        type: managerPermissionSchema,
-        required: true,
-      },
-    },
-  ],
-
-  // Uses names
+  // A map of tag names to a string, number, or a boolean
   tags: {
     type: Map,
     of: mongoose.Schema.Types.Mixed,
   },
   roomType: { type: String, enum: ROOM_TYPES, required: true },
+
+  // Maximum number of tenants in one unit
   capacity: { type: Number, required: true },
-  isPrivate: { type: Boolean, default: false },
-  allowVisit: { type: Boolean, default: false },
-  allowTransfer: { type: Boolean, default: false },
-  description: { type: String },
+
+  // Optional description
+  description: String,
+
+  // List of images or video
   media: [
     {
       // Local source type is used for ones that are uploaded to the object store
@@ -57,6 +47,12 @@ const ListingSchema = new mongoose.Schema<ListingType>({
       value: { type: String, required: true },
     },
   ],
+
+  qualityAvg: { type: Number, default: 0.0 },
+  comfortAvg: { type: Number, default: 0.0 },
+  environmentAvg: { type: Number, default: 0.0 },
+
+  reviewCount: { type: Number, default: 0 },
 });
 
 export const Listing = mongoose.model('Listing', ListingSchema);

@@ -1,6 +1,6 @@
-import { Icon } from '@iconify/react';
-import { FunctionComponent, useState, useRef, useEffect } from 'react';
-import PortalPopup from '../../PortalPopup';
+import { Icon } from "@iconify/react";
+import { FunctionComponent, useState, useRef, useEffect } from "react";
+import PortalPopup from "../../../components/general/PortalPopup";
 
 export type PaymentMethodsType = {
   className?: string;
@@ -8,28 +8,31 @@ export type PaymentMethodsType = {
   onClose?: () => void;
 };
 
-const PaymentMethods: FunctionComponent<PaymentMethodsType> = ({ 
-  className = '', 
-  isOpen = false, 
-  onClose 
+const PaymentMethods: FunctionComponent<PaymentMethodsType> = ({
+  className = "",
+  isOpen = false,
+  onClose,
 }) => {
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('');
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("");
   const [isMethodDropdownOpen, setIsMethodDropdownOpen] = useState(false);
-  const [accountName, setAccountName] = useState('');
-  const [referenceNo, setReferenceNo] = useState('');
+  const [accountName, setAccountName] = useState("");
+  const [referenceNo, setReferenceNo] = useState("");
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const paymentMethods = ['GCash', 'Bank Transfer', 'Cash', 'Maya'];
+  const paymentMethods = ["GCash", "Bank Transfer", "Cash", "Maya"];
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsMethodDropdownOpen(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const handleSubmit = () => {
@@ -44,7 +47,12 @@ const PaymentMethods: FunctionComponent<PaymentMethodsType> = ({
   if (!isOpen) return null;
 
   return (
-    <PortalPopup overlayColor="rgba(0, 0, 0, 0.5)" placement="Centered" onOutsideClick={onClose} zIndex={100}>
+    <PortalPopup
+      overlayColor="rgba(0, 0, 0, 0.5)"
+      placement="Centered"
+      onOutsideClick={onClose}
+      zIndex={100}
+    >
       <div
         className={`relative w-[480px] max-h-[90vh] rounded-num-16 bg-white overflow-y-auto flex flex-col items-start p-8 box-border text-left text-num-24 text-black font-inter ${className}`}
       >
@@ -61,7 +69,10 @@ const PaymentMethods: FunctionComponent<PaymentMethodsType> = ({
               onClick={onClose}
               className="cursor-pointer transition-all duration-200 ease-in-out hover:scale-110 active:scale-95 p-1 rounded-full hover:bg-whitesmoke-100"
             >
-              <Icon icon="fontisto:close" className="w-5 h-5 text-darkslategray-100 hover:text-crimson transition-colors" />
+              <Icon
+                icon="fontisto:close"
+                className="w-5 h-5 text-darkslategray-100 hover:text-crimson transition-colors"
+              />
             </button>
           </div>
           <div className="w-full h-0.5 bg-whitesmoke-200" />
@@ -135,7 +146,9 @@ const PaymentMethods: FunctionComponent<PaymentMethodsType> = ({
           {/* Submit Payment Details Section */}
           <div className="flex flex-col items-start gap-2 w-full">
             <div className="flex items-center w-full">
-              <b className="text-num-18 tracking-num--0_01">SUBMIT PAYMENT DETAILS</b>
+              <b className="text-num-18 tracking-num--0_01">
+                SUBMIT PAYMENT DETAILS
+              </b>
             </div>
             <div className="w-full flex flex-col items-start gap-3 text-num-14 text-dimgray font-lora">
               <input
@@ -152,19 +165,26 @@ const PaymentMethods: FunctionComponent<PaymentMethodsType> = ({
                 placeholder="Reference/Transaction No."
                 className="w-full rounded-num-8 bg-white border-whitesmoke-200 border-solid border-[2px] p-3 focus:outline-none focus:border-teal transition-colors"
               />
-              
+
               {/* Payment Method Dropdown */}
               <div className="relative w-full" ref={dropdownRef}>
                 <div
                   onClick={() => setIsMethodDropdownOpen(!isMethodDropdownOpen)}
                   className="w-full rounded-num-8 bg-white border-whitesmoke-200 border-solid border-[2px] flex items-center justify-between p-3 cursor-pointer hover:border-teal transition-colors"
                 >
-                  <div className={selectedPaymentMethod ? 'text-black' : 'text-dimgray'}>
-                    {selectedPaymentMethod || 'Payment Method Used'}
+                  <div
+                    className={
+                      selectedPaymentMethod ? "text-black" : "text-dimgray"
+                    }
+                  >
+                    {selectedPaymentMethod || "Payment Method Used"}
                   </div>
-                  <Icon icon="mdi-light:chevron-down" className="h-5 w-5 text-gray-400" />
+                  <Icon
+                    icon="mdi-light:chevron-down"
+                    className="h-5 w-5 text-gray-400"
+                  />
                 </div>
-                
+
                 {isMethodDropdownOpen && (
                   <div className="absolute top-full left-0 right-0 mt-1 z-50 bg-white border border-whitesmoke-200 rounded-num-8 shadow-lg overflow-hidden animate-fade-in">
                     {paymentMethods.map((method) => (
@@ -204,7 +224,9 @@ const PaymentMethods: FunctionComponent<PaymentMethodsType> = ({
             onClick={handleSubmit}
             className="w-full rounded-num-12 bg-lightcyan overflow-hidden flex items-center justify-center p-3 transition-all duration-200 ease-in-out hover:bg-teal hover:text-white hover:scale-[1.02] active:scale-95 cursor-pointer group"
           >
-            <div className="font-semibold text-num-14 text-teal group-hover:text-white transition-colors">Submit</div>
+            <div className="font-semibold text-num-14 text-teal group-hover:text-white transition-colors">
+              Submit
+            </div>
           </button>
         </div>
       </div>

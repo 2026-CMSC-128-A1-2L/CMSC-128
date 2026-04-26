@@ -3,6 +3,7 @@ import {
   CreateBillingBodySchema,
   GetBillingsQuerySchema,
   ObjectIdSchema,
+  submitBillingPaymentArgumentsSchema,
   UpdateBillingPaymentRequestBodySchema,
   UpdateBillingRequestBodySchema,
 } from 'shared';
@@ -10,10 +11,16 @@ import {
   createBilling,
   getBilling,
   getBillings,
+  getBillingsSummary,
+  getfacilityBilling,
+  getUserBillings,
   updateBilling,
   updateBillingPayment,
+  sumbitBillingPayment,
 } from './billing.service';
 import { AppError } from '../../error';
+
+import assert from 'node:assert';
 
 export const routeCreateBilling: RequestHandler = async (req, res, _next) => {
   const params = CreateBillingBodySchema.parse(req.body);
@@ -60,4 +67,31 @@ export const routeGetUserBillings: RequestHandler = async (req, res, next) => {
 export const routeGetUnitBillings: RequestHandler = async (req, res, next) => {
   const unitId = ObjectIdSchema.parse(req.params.unitId);
   res.status(200).json({ data: await getBillings({ unitId }, res.locals.filters) });
+};
+
+// GET /billings/summary
+export const routeGetBillingsSummary: RequestHandler = async (req, res, next) => {
+  assert.ok(req.user);
+  const userId = ObjectIdSchema.parse(req.user._id);
+  const billingsSummary = await getBillingsSummary(userId, res.locals.filters);
+  res.status(200).json({ data: billingsSummary });
+};
+
+export const routeGetFacilityBillingsSummary: RequestHandler = async (req, res, next) => {
+  const facilityId = ObjectIdSchema.parse(req.params.facilityId);
+  const billingsSummary = await getfacilityBilling(facilityId, req.query, res.locals.filters);
+  res.status(200).json({ data: billingsSummary });
+};
+
+export const routeGetUserBillingDashboard: RequestHandler = async (req, res, next) => {
+  const userId = ObjectIdSchema.parse(req.params.userId);
+  const data = await getUserBillings(userId, req.query, res.locals.filters);
+  res.status(200).json({ data });
+};
+
+export const routeSubmitBillingPayment: RequestHandler = async (req, res, next) => {
+  const billingId = ObjectIdSchema.parse(req.params.billingId);
+  const params = submitBillingPaymentArgumentsSchema.parse(req.body);
+  const billing = await sumbitBillingPayment(billingId, params, res.locals.filters);
+  res.status(200).json({ data: billing });
 };
