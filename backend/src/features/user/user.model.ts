@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { documentSchema, type DocumentType } from '../document/document.model';
+import { UserStatus, UserTypeType, USER_STATUS, USER_TYPE } from 'shared';
 
 export type UserType = {
   _id: mongoose.Types.ObjectId;
@@ -16,8 +17,9 @@ export type UserType = {
   auth: {
     google: string[];
   };
-  status: 'unverified' | 'verified' | 'inactive' | 'disabled';
-  userType: 'Admin' | 'Landlord' | 'Manager' | 'Student';
+
+  status: UserStatus;
+  userType?: UserTypeType;
 
   documents: DocumentType[];
   verificationStatus: 'pending' | 'submitted' | 'rejected' | 'approved';
@@ -54,6 +56,7 @@ const userSchema = new mongoose.Schema<UserType>(
       required: true,
     },
 
+    // `setup` - did not finish onboarding yet.
     // `unverified` - never verified. Can only see public listings.
     // `verified` - verified for the semester. Can see all listings and access
     //   own data.
@@ -64,8 +67,8 @@ const userSchema = new mongoose.Schema<UserType>(
     //   verify again.
     status: {
       type: String,
-      enum: ['unverified', 'verified', 'inactive', 'disabled'],
-      default: 'unverified',
+      enum: USER_STATUS,
+      default: 'setup',
       required: true,
     },
 
@@ -85,8 +88,7 @@ const userSchema = new mongoose.Schema<UserType>(
     // Make sure to fill up fields for the user type.
     userType: {
       type: String,
-      enum: ['Admin', 'Landlord', 'Manager', 'Student'],
-      required: true,
+      enum: USER_TYPE,
     },
     documents: { type: [documentSchema], required: true, default: [] },
     verificationStatus: {
@@ -103,8 +105,11 @@ const userSchema = new mongoose.Schema<UserType>(
 export const User = mongoose.model('User', userSchema);
 
 export const Admin = User.discriminator('Admin', new mongoose.Schema());
+
+// TODO: add availability schema
 export const Landlord = User.discriminator('Landlord', new mongoose.Schema());
 export const Manager = User.discriminator('Manager', new mongoose.Schema());
+
 export const Student = User.discriminator(
   'Student',
   new mongoose.Schema({
@@ -113,4 +118,4 @@ export const Student = User.discriminator(
   }),
 );
 
-export const isVerified = (status: string) => status == 'verified';
+export const isVerified = (status: string) => status === 'verified';

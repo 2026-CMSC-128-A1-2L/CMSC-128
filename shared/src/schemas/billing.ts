@@ -1,4 +1,4 @@
-import z from 'zod';
+import z, { file } from 'zod';
 import { ObjectIdSchema, QuerySchema, RangeSchema } from './common';
 
 // POST /billings
@@ -9,6 +9,20 @@ export const CreateBillingBodySchema = z.object({
     z.object({
       name: z.string(),
       amount: z.number(),
+    }),
+  ),
+  paymentMethod: z.array(
+    z.object({
+      method: z.enum(['gcash', 'bank_transfer']),
+      qr: z.array(
+        z.object({
+          docId: z.string(),
+          name: z.string(),
+          status: z.enum(['accepted', 'rejected', 'pending']),
+          message: z.string().optional(),
+          files: z.array(z.string()),
+        }),
+      ),
     }),
   ),
 });
@@ -31,7 +45,7 @@ export const GetBillingsFilterSchema = z
         .transform((x) => new Date(x))
         .optional(),
     ),
-    paymentStatus: z.enum(['unpaid', 'paid', 'overdue', 'partially_paid']),
+    paymentStatus: z.enum(['unpaid', 'paid', 'overdue']),
   })
   .partial();
 
@@ -51,6 +65,11 @@ export const UpdateBillingRequestBodySchema = z
 
 export const UpdateBillingPaymentRequestBodySchema = z.object({
   amount: z.number(),
+});
+
+export const submitBillingPaymentArgumentsSchema = z.object({
+  file: z.string(),
+  paymentMethod: z.enum(['gcash', 'bank_transfer']),
 });
 
 export const VerifyBillingRequestBodySchema = z.object({

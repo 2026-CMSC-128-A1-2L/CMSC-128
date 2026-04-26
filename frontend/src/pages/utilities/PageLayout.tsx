@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom';
-import PageBackground from '../../components/PageBackground';
+import PageBackground from '../../components/general/PageBackground';
 
 const PageLayout = () => {
   return (

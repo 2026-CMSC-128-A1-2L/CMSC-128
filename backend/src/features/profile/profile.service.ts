@@ -13,7 +13,7 @@ export const getProfile = async (userId: mongoose.Types.ObjectId) => {
     userType: { $in: ['Manager', 'Landlord'] },
     status: 'verified',
   }).lean()) as ManagerType;
-  if (user.userType == 'Manager') {
+  if (user.userType === 'Manager') {
     const facilities = (await HousingFacility.find({
       managers: { $elemMatch: { userId } },
     })) as HousingFacilityType[];
@@ -42,7 +42,7 @@ export const getProfile = async (userId: mongoose.Types.ObjectId) => {
     };
 
     return profile;
-  } else if (user.userType == 'Landlord') {
+  } else if (user.userType === 'Landlord') {
     const facilities = (await HousingFacility.find({
       landlordId: userId,
     })) as HousingFacilityType[];
@@ -51,7 +51,7 @@ export const getProfile = async (userId: mongoose.Types.ObjectId) => {
     const managerIds: Set<mongoose.Types.ObjectId> = new Set();
     facilities.forEach((x) => {
       x.managers.forEach((y) => {
-        managerIds.add(y.user);
+        managerIds.add(y.userId);
       });
     });
 

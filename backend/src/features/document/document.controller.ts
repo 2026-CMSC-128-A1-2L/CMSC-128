@@ -7,6 +7,7 @@ import {
   createDeleteDocument,
   createAcceptDocument,
   createRejectDocument,
+  WithDocument,
 } from './document.service';
 import type mongoose from 'mongoose';
 import type { QueryFilter } from 'mongoose';
@@ -14,7 +15,7 @@ import type { QueryFilter } from 'mongoose';
 // GET ../documents
 export const routeGetDocuments = (model: ModelWithDocument): RequestHandler => {
   const getDocuments = createGetDocuments(model);
-  return async (req, res, next) => {
+  return async (_req, res, _next) => {
     assert.ok(res.locals.id);
     res.send({
       data: await getDocuments(res.locals.id as mongoose.Types.ObjectId, res.locals.filters),
@@ -33,7 +34,7 @@ const AddDocumentBodySchema = z.object({
 
 export const routeAddDocument = (model: ModelWithDocument): RequestHandler => {
   const addDocument = createAddDocument(model);
-  return async (req, res, next) => {
+  return async (req, res, _next) => {
     const params = AddDocumentParamsSchema.parse(req.params);
     const body = AddDocumentBodySchema.parse(req.body);
 
@@ -57,7 +58,7 @@ const DeleteDocumentParamsSchema = z.object({
 
 export const routeDeleteDocument = (model: ModelWithDocument): RequestHandler => {
   const deleteDocument = createDeleteDocument(model);
-  return async (req, res, next) => {
+  return async (req, res, _next) => {
     const params = DeleteDocumentParamsSchema.parse(req.params);
     assert.ok(res.locals.id);
     res.send({
@@ -78,7 +79,7 @@ const AcceptDocumentParamsSchema = z.object({
 
 export const routeAcceptDocument = (model: ModelWithDocument): RequestHandler => {
   const acceptDocument = createAcceptDocument(model);
-  return async (req, res, next) => {
+  return async (req, res, _next) => {
     const params = AcceptDocumentParamsSchema.parse(req.params);
 
     assert.ok(res.locals.id);
@@ -104,17 +105,17 @@ const RejectDocumentBodySchema = z.object({
 export const routeRejectDocument = (
   model: ModelWithDocument,
 ): RequestHandler<
-  any,
-  any,
-  any,
-  any,
+  unknown,
+  unknown,
+  unknown,
+  unknown,
   {
     id: mongoose.Types.ObjectId;
-    filters?: QueryFilter<ModelWithDocument>;
+    filters?: QueryFilter<WithDocument>;
   }
 > => {
   const rejectDocument = createRejectDocument(model);
-  return async (req, res, next) => {
+  return async (req, res, _next) => {
     const params = RejectDocumentParamsSchema.parse(req.params);
     const body = RejectDocumentBodySchema.parse(req.body);
 

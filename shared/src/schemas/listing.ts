@@ -54,6 +54,7 @@ export const ListingFilterSchema = z.object({
     })
     .optional(),
   isPrivate: z.boolean().optional(),
+  isAcceptingApplications: z.boolean().optional(),
   allowVisit: z.boolean().optional(),
   allowTransfer: z.boolean().optional(),
 });

@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
-import PageBackground from '../PageBackground';
+import PageBackground from '../general/PageBackground';
 import SideBarLandlord, { type SideBarLandlordItemKey } from './SideBarLandlord';
 import LandlordFooter from './LandlordFooter';
 
@@ -70,7 +70,7 @@ const LandlordLayout = ({ activeSidebarItem, breadcrumbs = [], children }: Landl
                 </ol>
               </nav>
             )}
-            <div className="flex-1">{children}</div>
+            <div className="pl-[10px] flex-1">{children}</div>
           </div>
 
           <LandlordFooter />
