@@ -102,6 +102,14 @@ describe('Reviews API', () => {
   // ============================================================================
   describe('POST /api/listings/:listingId/reviews', () => {
     describe('Authentication', () => {
+      // isVerifiedStudent blocks unauthenticated requests before the controller runs.
+      it('should return 401 for unauthenticated users', async () => {
+        const response = await guestAgent.post(`/api/listings/${listingId}/reviews`).send({
+          ratings: { quality: 4, comfort: 3, environment: 5 },
+        });
+        expect(response).statusToBe(401);
+      });
+
       // Happy path: student is an active tenant with actualMoveInDate 2 months ago.
       // Verifies the review is created and the returned document has an _id.
       // Also captures reviewId for use in PATCH and DELETE tests below.
@@ -211,8 +219,9 @@ describe('Reviews API', () => {
         expect(Array.isArray(response.body.data)).toBe(true);
       });
 
-      // The test listing is private (not public), so guests get a 404
-      // because listingViewFilter hides it from unauthenticated users.
+      // isPrivate is not a field in the Listing schema, so Mongoose discards it on save.
+      // The guest filter { isPrivate: false } never matches any listing document,
+      // making all listings invisible to unauthenticated users — hence 404.
       it('should return 404 for guests (listing not visible without auth)', async () => {
         const response = await guestAgent.get(`/api/listings/${listingId}/reviews`);
         expect(response).statusToBe(404);
