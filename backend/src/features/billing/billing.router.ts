@@ -91,6 +91,12 @@ export default router;
 // .billingCards to get access to data for the cards.
 // ============================================================================
 router.get(
+  '/landlord/summary',
+  managerFilter('facility', 'manageBillings', true),
+  routeGetBillingsSummary,
+);
+
+router.get(
   '/:billingId',
   managerFilter('facility', 'manageBillings', true),
   routeGetBillingsSummary,
