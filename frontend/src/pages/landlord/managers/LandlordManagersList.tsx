@@ -1,10 +1,10 @@
-import { FunctionComponent, useState, useCallback } from "react";
-import AddManager from "../../../components/landlord/LandlordManagerAddController.tsx";
-import ReportManager from "../../../components/landlord/LandlordManagerReportController.tsx";
-import SideBar from "../../../components/user/SideBar.tsx";
-import DefaultAvatar from "../../assets/default_avatar.svg";
-import { Icon } from "@iconify/react";
-import dots from "../../assets/3dotsmenu.png";
+import { FunctionComponent, useState, useCallback } from 'react';
+import AddManager from '../../../components/landlord/LandlordManagerAddController.tsx';
+import ReportManager from '../../../components/landlord/LandlordManagerReportController.tsx';
+import SideBar from '../../../components/user/SideBar.tsx';
+import DefaultAvatar from '../../assets/default_avatar.svg';
+import { Icon } from '@iconify/react';
+import dots from '../../assets/3dotsmenu.png';
 
 const Managers: FunctionComponent = () => {
   const [isAddManagerOpen, setAddManagerOpen] = useState(false);
@@ -129,13 +129,8 @@ const Managers: FunctionComponent = () => {
                         </div>
                         <div className="flex flex-col items-start py-0 px-num-10 gap-2.5 shrink-0">
                           <div className="flex items-start gap-2.5">
-                            <b className="relative tracking-num--0_01">
-                              Two Sapphire Place
-                            </b>
-                            <Icon
-                              icon="mdi-light:plus"
-                              className="h-6 w-6 relative"
-                            />
+                            <b className="relative tracking-num--0_01">Two Sapphire Place</b>
+                            <Icon icon="mdi-light:plus" className="h-6 w-6 relative" />
                           </div>
                           <div className="flex items-center text-black">
                             <div className="w-[350px] flex flex-col items-start justify-center">
@@ -166,13 +161,8 @@ const Managers: FunctionComponent = () => {
                         </div>
                         <div className="flex flex-col items-start py-0 px-num-10 shrink-0">
                           <div className="flex items-start gap-2.5">
-                            <b className="relative tracking-num--0_01">
-                              Three Sapphire Place
-                            </b>
-                            <Icon
-                              icon="mdi-light:plus"
-                              className="h-6 w-6 relative"
-                            />
+                            <b className="relative tracking-num--0_01">Three Sapphire Place</b>
+                            <Icon icon="mdi-light:plus" className="h-6 w-6 relative" />
                           </div>
                         </div>
                       </div>
@@ -184,10 +174,7 @@ const Managers: FunctionComponent = () => {
                     <div className="flex-1 flex items-center gap-20">
                       <div className="flex items-center gap-4">
                         <div className="flex items-center gap-2">
-                          <img
-                            className="w-12 relative max-h-full object-cover"
-                            alt=""
-                          />
+                          <img className="w-12 relative max-h-full object-cover" alt="" />
                           <div className="flex items-center gap-3">
                             <div className="flex items-center gap-1">
                               <img className="h-5 w-5 relative" alt="" />
@@ -225,10 +212,7 @@ const Managers: FunctionComponent = () => {
         </div>
       </div>
       <AddManager isOpen={isAddManagerOpen} onClose={closeAddManager} />
-      <ReportManager
-        isOpen={isReportManagerOpen}
-        onClose={closeReportManager}
-      />
+      <ReportManager isOpen={isReportManagerOpen} onClose={closeReportManager} />
     </>
   );
 };

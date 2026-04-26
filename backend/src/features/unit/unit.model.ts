@@ -18,7 +18,7 @@ const unitSchema = new mongoose.Schema<UnitType>({
 
   // NOTE: Always keep consistent everytime a user gets accepted or moves out.
   currentRentals: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Rental' }],
-  capacity: { type: Number, required: true, default: 0, min: 0},
+  capacity: { type: Number, required: true, default: 0, min: 0 },
   price: { type: Number, required: true },
 
   // Location inside the building

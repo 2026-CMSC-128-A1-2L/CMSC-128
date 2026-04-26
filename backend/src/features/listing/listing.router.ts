@@ -1,5 +1,11 @@
 import { Router } from 'express';
-import { listingViewFilter, isSuperAdmin, isVerifiedStudent } from '../../middleware';
+import {
+  listingViewFilter,
+  isVerifiedStudent,
+  manageApplicationsFilter,
+  manageListingsFilter,
+  managerFilter,
+} from '../../middleware';
 import {
   routeGetListings,
   routeGetListing,
@@ -12,11 +18,6 @@ import { routeGetRentalsByListing } from '../rental/rental.controller';
 import { routeGetListingReviews, routeCreateReview } from '../review/review.controller';
 import { routeReportListing } from '../report/report.controller';
 import { routeGetApplicationsByListing } from '../application/application.controller';
-import {
-  manageApplicationsFilter,
-  manageListingsFilter,
-  managerFilter,
-} from './listing.middleware';
 
 const router = Router();
 
@@ -115,7 +116,7 @@ router.get('/:listingId/reviews', listingViewFilter, routeGetListingReviews);
 // ============================================================================
 // POST /api/listings/:listingId/reviews
 // ============================================================================
-router.post('/:listingId/reviews', routeCreateReview);
+router.post('/:listingId/reviews', isVerifiedStudent, routeCreateReview);
 
 // ============================================================================
 // POST /api/listings/:listingId/report

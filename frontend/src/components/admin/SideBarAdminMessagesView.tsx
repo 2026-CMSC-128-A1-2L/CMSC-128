@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { Icon } from "@iconify/react";
-import MessageCard, { type MessageCardState } from "../general/MessageCard";
+import { useState } from 'react';
+import { Icon } from '@iconify/react';
+import MessageCard, { type MessageCardState } from '../general/MessageCard';
 
 export type MessageItem = {
   id: string;
@@ -25,27 +25,24 @@ const SideBarAdminMessagesView = ({
   onBack,
   onViewArchived,
 }: SideBarAdminMessagesViewProps) => {
-  const [filter, setFilter] = useState<"all" | "unread">("all");
+  const [filter, setFilter] = useState<'all' | 'unread'>('all');
   const [hoveredId, setHoveredId] = useState<string | null>(null);
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState('');
 
   const unreadCount = messages.filter((m) => m.unread).length;
 
   const filtered = messages
-    .filter((m) => (filter === "unread" ? m.unread : true))
+    .filter((m) => (filter === 'unread' ? m.unread : true))
     .filter((m) => {
       if (!query.trim()) return true;
       const q = query.toLowerCase();
-      return (
-        m.sender.toLowerCase().includes(q) ||
-        m.preview.toLowerCase().includes(q)
-      );
+      return m.sender.toLowerCase().includes(q) || m.preview.toLowerCase().includes(q);
     });
 
   const resolveState = (id: string): MessageCardState => {
-    if (id === activeMessageId) return "clicked";
-    if (id === hoveredId) return "hovered";
-    return "default";
+    if (id === activeMessageId) return 'clicked';
+    if (id === hoveredId) return 'hovered';
+    return 'default';
   };
 
   return (
@@ -56,11 +53,7 @@ const SideBarAdminMessagesView = ({
         aria-label="Back to navigation"
         className="mb-[28px] flex h-[32px] w-[32px] cursor-pointer items-center justify-center text-black transition-colors duration-150 hover:text-[#2F8677]"
       >
-        <Icon
-          icon="ic:baseline-chevron-left"
-          className="h-[28px] w-[28px]"
-          aria-hidden="true"
-        />
+        <Icon icon="ic:baseline-chevron-left" className="h-[28px] w-[28px]" aria-hidden="true" />
       </button>
 
       {/* Search */}
@@ -83,25 +76,25 @@ const SideBarAdminMessagesView = ({
       <div className="mb-[20px] flex items-center gap-[8px]">
         <button
           type="button"
-          onClick={() => setFilter("all")}
+          onClick={() => setFilter('all')}
           className={[
             "h-[32px] cursor-pointer rounded-full px-[16px] font-['Inter'] text-[12px] font-bold transition-colors duration-200",
-            filter === "all"
-              ? "bg-[#0B251C] text-white"
-              : "bg-transparent text-[#0B251C] hover:bg-[#E6F7F1]",
-          ].join(" ")}
+            filter === 'all'
+              ? 'bg-[#0B251C] text-white'
+              : 'bg-transparent text-[#0B251C] hover:bg-[#E6F7F1]',
+          ].join(' ')}
         >
           All
         </button>
         <button
           type="button"
-          onClick={() => setFilter("unread")}
+          onClick={() => setFilter('unread')}
           className={[
             "flex h-[32px] cursor-pointer items-center gap-[6px] rounded-full px-[16px] font-['Inter'] text-[12px] font-bold transition-colors duration-200",
-            filter === "unread"
-              ? "bg-[#CBF6ED] text-[#096C5B]"
-              : "bg-transparent text-[#096C5B] hover:bg-[#E6F7F1]",
-          ].join(" ")}
+            filter === 'unread'
+              ? 'bg-[#CBF6ED] text-[#096C5B]'
+              : 'bg-transparent text-[#096C5B] hover:bg-[#E6F7F1]',
+          ].join(' ')}
         >
           <span>Unread</span>
           <span>{unreadCount}</span>
@@ -123,9 +116,7 @@ const SideBarAdminMessagesView = ({
               timeLabel={m.timeLabel}
               state={resolveState(m.id)}
               onMouseEnter={() => setHoveredId(m.id)}
-              onMouseLeave={() =>
-                setHoveredId((prev) => (prev === m.id ? null : prev))
-              }
+              onMouseLeave={() => setHoveredId((prev) => (prev === m.id ? null : prev))}
               onClick={() => onSelectMessage?.(m.id)}
             />
           ))

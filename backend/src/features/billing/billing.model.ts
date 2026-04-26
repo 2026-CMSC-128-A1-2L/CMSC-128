@@ -2,7 +2,9 @@ import mongoose from 'mongoose';
 import { documentSchema, type DocumentType } from '../document/document.model';
 
 const PAYMENT_STATUS = ['unpaid', 'paid', 'overdue'];
+const PAYMENT_METHODS = ['gcash', 'bank_transfer'];
 type PaymentStatusType = (typeof PAYMENT_STATUS)[number];
+type PaymentMethodType = (typeof PAYMENT_METHODS)[number];
 
 export type BillingType = {
   userId: mongoose.Types.ObjectId;
@@ -15,7 +17,10 @@ export type BillingType = {
   totalAmount: number;
   paymentStatus: PaymentStatusType;
   documents: DocumentType[];
-  paymentQr: String;
+  paymentMethod: {
+    method: PaymentMethodType;
+    qr: DocumentType[];
+  }[];
   breakdown: {
     name: string;
     amount: number;
@@ -45,11 +50,14 @@ const billingSchema = new mongoose.Schema<BillingType>(
       default: 'unpaid',
     },
 
+    // TODO: Clarify
+    paymentMethod: {
+      method: { type: String, enum: PAYMENT_METHODS, required: true },
+      qr: { type: [documentSchema], default: [] },
+    },
+
     // URL or file path to the proof of payment
     documents: { type: [documentSchema], required: true, default: [] },
-
-    // Qr if using Gcash
-    paymentQr: String,
 
     breakdown: {
       type: [

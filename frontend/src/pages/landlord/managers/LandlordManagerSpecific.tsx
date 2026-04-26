@@ -1,12 +1,12 @@
-import { FunctionComponent, useState, useCallback } from "react";
-import { Icon } from "@iconify/react";
-import UpdateManager from "../../../components/landlord/LandlordManagerUpdateController";
-import SideBar from "../../../components/user/SideBar";
-import DefaultAvatar from "../../assets/default_avatar.svg";
-import check from "../../assets/Check.svg";
-import x from "../../assets/X.svg";
-import clock from "../../assets/Clock.svg";
-import edit from "../../assets/editIcon.svg";
+import { FunctionComponent, useState, useCallback } from 'react';
+import { Icon } from '@iconify/react';
+import UpdateManager from '../../../components/landlord/LandlordManagerUpdateController';
+import SideBar from '../../../components/user/SideBar';
+import DefaultAvatar from '../../assets/default_avatar.svg';
+import check from '../../assets/Check.svg';
+import x from '../../assets/X.svg';
+import clock from '../../assets/Clock.svg';
+import edit from '../../assets/editIcon.svg';
 
 const ViewSpecificManager: FunctionComponent = () => {
   const [isUpdateManagerOpen, setUpdateManagerOpen] = useState(false);
@@ -50,13 +50,8 @@ const ViewSpecificManager: FunctionComponent = () => {
                       >
                         Managers
                       </div>
-                      <Icon
-                        icon="iconamoon:arrow-right-2"
-                        className="h-6 w-6 relative"
-                      />
-                      <div className="relative font-semibold">
-                        Daphne Dhayne
-                      </div>
+                      <Icon icon="iconamoon:arrow-right-2" className="h-6 w-6 relative" />
+                      <div className="relative font-semibold">Daphne Dhayne</div>
                     </div>
                   </div>
                   <div className="self-stretch h-[908px] rounded-[17.27px] bg-white border-whitesmoke-200 border-solid border-[1.1px] box-border flex flex-col items-start gap-[13px] text-center text-num-15_11 text-dimgray font-inter">
@@ -65,13 +60,9 @@ const ViewSpecificManager: FunctionComponent = () => {
                         <div className="self-stretch flex flex-col items-start gap-[10.8px]">
                           <b className="relative">Manager Profile</b>
                           <div className="flex items-center justify-center text-[25.9px] text-darkslategray-200">
-                            <b className="relative leading-[34.53px]">
-                              Daphne Dayne
-                            </b>
+                            <b className="relative leading-[34.53px]">Daphne Dayne</b>
                           </div>
-                          <b className="relative text-teal">
-                            dcanape@up.edu.ph
-                          </b>
+                          <b className="relative text-teal">dcanape@up.edu.ph</b>
                         </div>
                       </div>
                       <div className="self-stretch overflow-hidden flex items-center py-[4.3px] px-[34.5px] gap-[124.1px]">
@@ -83,9 +74,7 @@ const ViewSpecificManager: FunctionComponent = () => {
                         <div className="overflow-hidden flex flex-col items-start p-[10.8px] gap-[17.3px]">
                           <div className="flex flex-col items-start gap-[4.3px]">
                             <b className="relative">Name</b>
-                            <b className="relative text-black">
-                              CANAPE, DAPHNE
-                            </b>
+                            <b className="relative text-black">CANAPE, DAPHNE</b>
                           </div>
                           <div className="flex flex-col items-start gap-[4.3px]">
                             <div className="flex items-start">
@@ -97,9 +86,7 @@ const ViewSpecificManager: FunctionComponent = () => {
                             <div className="flex items-start">
                               <b className="relative">Home Address</b>
                             </div>
-                            <b className="relative text-black">
-                              Los Banos Laguna
-                            </b>
+                            <b className="relative text-black">Los Banos Laguna</b>
                           </div>
                         </div>
                         <div className="overflow-hidden flex flex-col items-start p-[10.8px] gap-[17.3px]">
@@ -123,18 +110,12 @@ const ViewSpecificManager: FunctionComponent = () => {
                     <div className="self-stretch flex flex-col items-start gap-[43.2px] text-[25.9px] text-darkslategray-100">
                       <div className="self-stretch flex flex-col items-start justify-center py-0 px-[34.5px] gap-[16.2px]">
                         <div className="self-stretch flex items-center">
-                          <b className="relative leading-[34.53px]">
-                            Availability
-                          </b>
+                          <b className="relative leading-[34.53px]">Availability</b>
                         </div>
                         <div className="w-[891px] flex items-center py-0 px-[21.6px] box-border gap-[120px] text-left text-[18px] text-teal">
                           <div className="h-[63.3px] w-[278.4px] relative shrink-0">
                             <div className="absolute top-[0px] left-[0px] w-[278.4px] flex items-center justify-between gap-5">
-                              <img
-                                className="h-[34.5px] w-[34.5px] relative"
-                                alt=""
-                                src={clock}
-                              />
+                              <img className="h-[34.5px] w-[34.5px] relative" alt="" src={clock} />
                               <div className="w-[216.9px] flex flex-col items-start gap-[8.6px]">
                                 <b className="self-stretch h-[22.7px] relative tracking-[-0.01em] inline-block shrink-0">
                                   Ocular Visitation
@@ -150,10 +131,7 @@ const ViewSpecificManager: FunctionComponent = () => {
                           </div>
                           <div className="h-[63.3px] w-[480.2px] relative shrink-0">
                             <div className="absolute top-[0px] left-[0px] w-[480.2px] flex items-center justify-between gap-5">
-                              <Icon
-                                icon="ix:inquiry"
-                                className="h-[34.5px] w-[34.5px] relative"
-                              />
+                              <Icon icon="ix:inquiry" className="h-[34.5px] w-[34.5px] relative" />
                               <div className="w-[418.7px] flex flex-col items-start gap-[8.6px]">
                                 <b className="self-stretch h-[22.7px] relative tracking-[-0.01em] inline-block shrink-0">
                                   General Inquiries
@@ -183,9 +161,7 @@ const ViewSpecificManager: FunctionComponent = () => {
                       </div>
                       <div className="self-stretch flex flex-col items-start justify-center py-0 px-[34.5px] gap-[16.2px]">
                         <div className="self-stretch flex items-center gap-[25.9px]">
-                          <b className="relative leading-[34.53px]">
-                            Permissions
-                          </b>
+                          <b className="relative leading-[34.53px]">Permissions</b>
                           <img
                             className="h-[19.4px] w-[19.4px] relative cursor-pointer"
                             alt=""
@@ -235,10 +211,7 @@ const ViewSpecificManager: FunctionComponent = () => {
                     <div className="flex-1 flex items-center gap-20">
                       <div className="flex items-center gap-4">
                         <div className="flex items-center gap-2">
-                          <img
-                            className="w-12 relative max-h-full object-cover"
-                            alt=""
-                          />
+                          <img className="w-12 relative max-h-full object-cover" alt="" />
                           <div className="flex items-center gap-3">
                             <div className="flex items-center gap-1">
                               <img className="h-5 w-5 relative" alt="" />
@@ -278,10 +251,7 @@ const ViewSpecificManager: FunctionComponent = () => {
           </div>
         </div>
       </div>
-      <UpdateManager
-        isOpen={isUpdateManagerOpen}
-        onClose={closeUpdateManager}
-      />
+      <UpdateManager isOpen={isUpdateManagerOpen} onClose={closeUpdateManager} />
     </>
   );
 };

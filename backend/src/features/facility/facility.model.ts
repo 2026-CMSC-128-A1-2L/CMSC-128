@@ -1,18 +1,26 @@
 import mongoose from 'mongoose';
-import type { FacilityType } from 'shared';
+import {
+  ManagerPermission,
+  ManagerPermissionSchema,
+  MANAGER_PERMISSIONS,
+  type FacilityType,
+} from 'shared';
 import { documentSchema, type DocumentType } from '../document/document.model';
+import z from 'zod';
 
-export type ManagerPermissionType = {
-  manageBillings: boolean;
-  manageApplications: boolean;
-  manageListings: boolean;
-};
+export type ManagerPermissionType = z.infer<typeof ManagerPermissionSchema>;
 
-export const managerPermissionSchema = new mongoose.Schema<ManagerPermissionType>({
-  manageBillings: { type: Boolean, default: false },
-  manageApplications: { type: Boolean, default: false },
-  manageListings: { type: Boolean, default: false },
-});
+const permissionDefinition = MANAGER_PERMISSIONS.reduce(
+  (acc, permission) => {
+    acc[permission] = { type: Boolean, default: false };
+    return acc;
+  },
+  {} as Record<ManagerPermission, { type: BooleanConstructor; default: boolean }>,
+);
+
+export const managerPermissionSchema = new mongoose.Schema<ManagerPermissionType>(
+  permissionDefinition,
+);
 
 export type HousingFacilityType = {
   _id: mongoose.Types.ObjectId;
@@ -23,7 +31,7 @@ export type HousingFacilityType = {
     permissions: ManagerPermissionType;
   }[];
   location: {
-    coordinates?: {
+    coordinates: {
       lat: number;
       long: number;
     };
@@ -36,13 +44,10 @@ export type HousingFacilityType = {
 
   // For reviews
 
-  qualitySum: number;
-  comfortSum: number;
-  environmentSum: number;
-
-  qualityCount: number;
-  comfortCount: number;
-  environmentCount: number;
+  qualityAvg: number;
+  comfortAvg: number;
+  environmentAvg: number;
+  reviewCount: number;
 
   // Overrides dates if specified
   isAcceptingApplications?: boolean;
@@ -51,6 +56,7 @@ export type HousingFacilityType = {
   applicationOpenDate?: Date;
   applicationCloseDate?: Date;
 
+  verifiedAt: Date;
   createdAt: Date;
   updatedAt: Date;
 
@@ -90,7 +96,7 @@ const HousingFacilitySchema = new mongoose.Schema<HousingFacilityType>(
           },
           { _id: false },
         ),
-        required: false, // The object itself is optional...
+        required: true,
       },
       text: { type: String, required: true },
     },
@@ -105,13 +111,11 @@ const HousingFacilitySchema = new mongoose.Schema<HousingFacilityType>(
     documents: [documentSchema],
 
     // For review
-    qualitySum: { type: Number, default: 0 },
-    comfortSum: { type: Number, default: 0 },
-    environmentSum: { type: Number, default: 0 },
+    qualityAvg: { type: Number, default: 0.0 },
+    comfortAvg: { type: Number, default: 0.0 },
+    environmentAvg: { type: Number, default: 0.0 },
 
-    qualityCount: { type: Number, default: 0 },
-    comfortCount: { type: Number, default: 0 },
-    environmentCount: { type: Number, default: 0 },
+    reviewCount: { type: Number, default: 0 },
 
     isPrivate: { type: Boolean, default: false },
     allowVisit: { type: Boolean, default: false },
@@ -122,6 +126,8 @@ const HousingFacilitySchema = new mongoose.Schema<HousingFacilityType>(
     // Range of allowed application period. Can be overridden by `isAcceptingApplications`
     applicationOpenDate: { type: Date, required: false },
     applicationCloseDate: { type: Date, required: false },
+
+    verifiedAt: Date,
 
     description: { type: String, required: true },
     media: [

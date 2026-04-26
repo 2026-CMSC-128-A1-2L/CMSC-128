@@ -10,18 +10,17 @@ const ProgressBar: FunctionComponent<ProgressBarProps> = ({ currentStep }) => {
   return (
     <div className="self-stretch flex flex-col items-center justify-center text-darkslategray-200 font-poppins">
       <div className="w-[723px] h-[87px] relative">
-        
         <div
           className={`absolute h-[9.2%] w-[32.64%] top-[29.89%] left-[11.07%] rounded-[34.55px] ${
-            currentStep >= 1 
-              ? '[background:linear-gradient(90deg,_rgba(2,_67,_56,_0.8),_#b5c8c5_99.99%)]' 
+            currentStep >= 1
+              ? '[background:linear-gradient(90deg,_rgba(2,_67,_56,_0.8),_#b5c8c5_99.99%)]'
               : 'bg-[#B5C8C5]'
           }`}
         />
         <div
           className={`absolute h-[9.2%] w-[34.44%] top-[26.44%] left-[54.91%] rounded-[34.55px] ${
-            currentStep >= 2 
-              ? '[background:linear-gradient(90deg,_rgba(2,_67,_56,_0.8),_#b5c8c5_99.99%)]' 
+            currentStep >= 2
+              ? '[background:linear-gradient(90deg,_rgba(2,_67,_56,_0.8),_#b5c8c5_99.99%)]'
               : 'bg-[#B5C8C5]'
           }`}
         />

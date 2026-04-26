@@ -1,15 +1,10 @@
 import mongoose from 'mongoose';
 import { ROOM_TYPES } from 'shared';
-import { managerPermissionSchema } from '../facility/facility.model';
 
 export type ListingType = {
   _id: mongoose.Types.ObjectId;
   facilityId: mongoose.Types.ObjectId;
   landlordId: mongoose.Types.ObjectId;
-  managers: {
-    userId: mongoose.Types.ObjectId;
-    permissions: { manageBillings: boolean; manageApplications: boolean; manageListings: boolean };
-  }[];
   tags: Record<string, number | string | boolean>;
   roomType: (typeof ROOM_TYPES)[number];
   capacity: number;
@@ -18,22 +13,17 @@ export type ListingType = {
     sourceType: 'local' | 'external';
     value: string;
   }[];
+
+  qualityAvg: number;
+  comfortAvg: number;
+  environmentAvg: number;
+  reviewCount: number;
 };
 
 const ListingSchema = new mongoose.Schema<ListingType>({
   // include both owners for easier checking of owner, changes to these fields should be rare in practice
   facilityId: { type: mongoose.Schema.Types.ObjectId, ref: 'HousingFacility', required: true },
   landlordId: { type: mongoose.Schema.Types.ObjectId, ref: 'Landlord', required: true },
-
-  managers: [
-    {
-      userId: { type: mongoose.Schema.Types.ObjectId, ref: 'Manager', required: true },
-      permissions: {
-        type: managerPermissionSchema,
-        required: true,
-      },
-    },
-  ],
 
   // A map of tag names to a string, number, or a boolean
   tags: {
@@ -57,6 +47,12 @@ const ListingSchema = new mongoose.Schema<ListingType>({
       value: { type: String, required: true },
     },
   ],
+
+  qualityAvg: { type: Number, default: 0.0 },
+  comfortAvg: { type: Number, default: 0.0 },
+  environmentAvg: { type: Number, default: 0.0 },
+
+  reviewCount: { type: Number, default: 0 },
 });
 
 export const Listing = mongoose.model('Listing', ListingSchema);

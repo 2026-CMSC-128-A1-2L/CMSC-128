@@ -13,7 +13,6 @@ function App() {
       <Routes>
         {/* under page layout??? */}
         <Route path="/" element={<UserLanding />} />
-
         <Route element={<PageLayout />}>
           {userRoutes}
           {adminRoutes}

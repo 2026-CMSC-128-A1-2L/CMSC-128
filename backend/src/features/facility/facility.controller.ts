@@ -2,7 +2,6 @@ import type { RequestHandler } from 'express';
 import {
   CreateFacilityRequestBodySchema,
   type GetFacilityResponseBodySchema,
-  GetFacilitiesRequestQuerySchema,
   ObjectIdSchema,
   UpdateFacilityRequestBodySchema,
   UpdateManagerPermissionsRequestBodySchema,
@@ -19,7 +18,10 @@ import {
   updateManagerPermissions,
   approveFacility,
   searchFacilities,
+  getMonthlyIncomeByLandlord,
+  getOverdueTenantsByLandlord,
 } from './facility.service';
+import assert from 'node:assert';
 
 // GET /facilities: routeGetFacilities
 export const routeGetFacilities: RequestHandler = async (_req, res, _next) => {
@@ -49,12 +51,17 @@ export const routeGetFacility: RequestHandler = async (req, res, _next) => {
   const facilityResponse: z.infer<typeof GetFacilityResponseBodySchema> = {
     id: facility._id,
     name: facility.name,
-    landlordId: {
+    location: facility.location,
+    description: facility.description,
+    verifiedAt: facility.verifiedAt,
+    media: facility.media,
+    landlord: {
       id: facility.landlordId._id,
       profilePicture: facility.landlordId.profilePicture,
       firstName: facility.landlordId.firstName,
       middleName: facility.landlordId.middleName,
       lastName: facility.landlordId.lastName,
+      contact: facility.landlordId.contact,
 
       // TODO:  fetch actual number of units
       numUnits: 0,
@@ -67,11 +74,13 @@ export const routeGetFacility: RequestHandler = async (req, res, _next) => {
       middleName: x.userId.middleName,
       lastName: x.userId.lastName,
     })),
-    location: facility.location,
     type: facility.type,
     isAcceptingApplications: facility.isAcceptingApplications,
     applicationOpenDate: facility.applicationOpenDate,
     applicationCloseDate: facility.applicationCloseDate,
+    allowVisit: facility.allowVisit,
+    allowTransfer: facility.allowTransfer,
+    listings: [],
   };
 
   res.status(200).json({ data: facilityResponse });
@@ -119,4 +128,24 @@ export const routeRejectFacility: RequestHandler = async (req, res, _next) => {
   const facilityId = ObjectIdSchema.parse(req.params.facilityId);
   const approvedFacility = await approveFacility(facilityId, res.locals.filters ?? {});
   res.status(200).json({ data: approvedFacility });
+};
+
+// GET /api/facilities/landlord/monthly-income
+//
+// Returns the expected monthly income for the authenticated landlord.
+// Sums the unit price of every active rental across all owned facilities.
+export const routeGetMonthlyIncomeByLandlord: RequestHandler = async (req, res, _next) => {
+  assert.ok(req.user);
+  const data = await getMonthlyIncomeByLandlord(req.user._id);
+  res.status(200).json({ data });
+};
+
+// GET /api/facilities/landlord/overdue-tenants
+//
+// Returns all active tenants whose most recent billing is overdue,
+// across all facilities owned by the authenticated landlord.
+export const routeGetOverdueTenantsByLandlord: RequestHandler = async (req, res, _next) => {
+  assert.ok(req.user);
+  const data = await getOverdueTenantsByLandlord(req.user._id);
+  res.status(200).json({ data });
 };

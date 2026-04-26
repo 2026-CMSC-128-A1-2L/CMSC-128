@@ -2,15 +2,21 @@ import type mongoose from 'mongoose';
 import type { QueryFilter } from 'mongoose';
 import { AppError } from '../../error';
 import { Unit, type UnitType } from './unit.model';
-import type { Listing } from '../listing/listing.model';
+import { Listing, type ListingType } from '../listing/listing.model';
 import { getListingById } from '../listing/listing.service';
+import { Rental } from '../rental/rental.model';
+import { combineFilters } from '../../middleware';
+import { Student } from '../user/user.model';
+import { createRental } from '../rental/rental.service';
+import { TagFilterSchema } from 'shared';
 
 export type CreateUnitArguments = {
   listingId: mongoose.Types.ObjectId;
   roomNumber: string;
   price: number;
-  location?: string | null;
+  location?: string | null;   // location inside building
   isAvailable: boolean;
+  legacyTenants: number;
 };
 
 // Parameters for filtering listings
@@ -24,30 +30,65 @@ export type GetUnitArguments = {
 
 export const createUnit = async (
   data: CreateUnitArguments,
-  filters: QueryFilter<typeof Listing>,
+  filters: QueryFilter<ListingType>,
 ) => {
   const listing = await getListingById(data.listingId, filters);
   if (!listing) {
     throw new AppError(404, 'Listing not found.');
   }
 
-  return await new Unit(data).save();
+
+  const unit = await new Unit({
+    listingId: data.listingId,
+    roomNumber: data.roomNumber,
+    price: data.price,
+    location: data.location,
+    
+    // derived from listing
+    facilityId: listing.facilityId,
+    capacity: listing.capacity,
+  }).save();
+
+  // if there are legacy tenants
+  if (data.legacyTenants && data.legacyTenants > 0) {
+    for (let i = 0; i < data.legacyTenants; i++) {
+
+      const student = await new Student({
+        firstName: 'Legacy',
+        lastName: 'Tenant',
+        emails: [],
+        auth: { google: [] },
+        studentNumber: `legacy-${unit._id}-${i}`, // set temporary student number since it is reqd
+        documents: [],
+        status: 'legacy',
+      }).save();
+
+      await createRental({
+        userId: student._id,
+        facilityId: listing.facilityId,
+        unitId: unit._id
+      });
+
+    }
+  }
+
+  return unit;
 };
 
-export function buildUnitQuery(args: Partial<GetUnitArguments>): QueryFilter<typeof Unit> {
+export function buildUnitQuery(args: Partial<GetUnitArguments>): QueryFilter<UnitType> {
   return args;
 }
 
 export const getUnits = async (args: Partial<GetUnitArguments>, filter: QueryFilter<UnitType>) => {
   const query = buildUnitQuery(args);
-  return await Unit.where(filter).find(query);
+  return await Unit.find({...filter, ...query}).populate(getTenantNames);
 };
 
 export const getUnitById = async (
   id: mongoose.Types.ObjectId,
-  filter: QueryFilter<typeof Unit>,
+  filter: QueryFilter<UnitType>,
 ) => {
-  return await Unit.where(filter).findById(id);
+  return await Unit.findOne(combineFilters(filter, {_id: id})).populate(getTenantNames);
 };
 
 export type UpdateUnitArguments = {
@@ -60,7 +101,7 @@ export type UpdateUnitArguments = {
 export const updateUnit = async (
   unitId: mongoose.Types.ObjectId,
   data: UpdateUnitArguments,
-  filters: QueryFilter<typeof Unit>,
+  filters: QueryFilter<UnitType>,
 ) => {
   const unit = await Unit.where(filters).findOneAndUpdate(unitId, { $set: data });
   if (!unit) throw new AppError(404, 'Unit not found.');
@@ -74,4 +115,35 @@ export const deleteUnit = async (
   const unit = await Unit.where(filters).findOneAndDelete({ _id: unitId });
   if (!unit) throw new AppError(404, 'Unit not found.');
   return unit;
+};
+
+// export const isUnitFull = async (
+//   unitId: mongoose.Types.ObjectId,
+//   filters: QueryFilter<UnitType>,
+// ) => {
+//   const unit = await Unit.findOne(combineFilters(filters, { _id: unitId }));
+//   if (!unit) throw new AppError(404, 'Unit not found.');
+
+//   // Count active rentals
+//   //
+//   // TODO: if this is too slow, add an index or keep the count in the unit
+//   const activeRentals = await Rental.find({ unitId, status: 'active' });
+//   return unit.capacity === activeRentals.length;
+// };
+
+// changed old isUnitFull logic since currentRentals update is handled by the rental services
+export const isUnitFull = async (
+  unitId: mongoose.Types.ObjectId,
+  filters: QueryFilter<UnitType>,
+) => {
+  const unit = await Unit.findOne(combineFilters(filters, { _id: unitId }));
+  if (!unit) throw new AppError(404, 'Unit not found.');
+
+  return unit.capacity === unit.currentRentals.length;
+};
+
+// helper function to get the names instead of userIds for the currentRentals
+export const getTenantNames = {
+  path: 'currentRentals',
+  populate: { path: 'userId', select: 'firstName lastName' }
 };

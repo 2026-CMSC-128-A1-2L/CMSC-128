@@ -1,10 +1,10 @@
-import { FunctionComponent, useCallback } from "react";
-import { Icon } from "@iconify/react";
-import Verified from "../../../assets/verified_badge.svg";
-import Photo from "../../assets/photo.svg";
+import { FunctionComponent, useCallback } from 'react';
+import { Icon } from '@iconify/react';
+import Verified from '../../../assets/verified_badge.svg';
+import Photo from '../../assets/photo.svg';
 // import Arrow from "../../../assets/Arrow up.svg";
-import Sidebar from "../../../../components/user/SideBar";
-import Footer from "../../../../components/general/Footer";
+import Sidebar from '../../../../components/user/SideBar';
+import Footer from '../../../../components/general/Footer';
 
 const FinalizedApplicationPage1a: FunctionComponent = () => {
   const onSubmitButtonContainerClick = useCallback(() => {
@@ -14,7 +14,7 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
   const onArrowUpClick = useCallback(() => {
     const anchor = document.querySelector("[data-scroll-to='currentDormText']");
     if (anchor) {
-      anchor.scrollIntoView({ block: "start", behavior: "smooth" });
+      anchor.scrollIntoView({ block: 'start', behavior: 'smooth' });
     }
   }, []);
 
@@ -39,22 +39,15 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
                   <div className="self-stretch h-16 overflow-hidden shrink-0 flex items-end p-num-10 box-border gap-2.5">
                     <div className="h-6 flex items-center gap-1.5">
                       <div className="relative font-semibold">User Profile</div>
-                      <Icon
-                        icon="iconamoon:arrow-right-2"
-                        className="h-6 w-6 relative"
-                      />
-                      <div
-                        className="relative font-semibold"
-                        data-scroll-to="currentDormText"
-                      >
+                      <Icon icon="iconamoon:arrow-right-2" className="h-6 w-6 relative" />
+                      <div className="relative font-semibold" data-scroll-to="currentDormText">
                         Current Dorm
                       </div>
                     </div>
                     <div className="w-[704px] rounded-xl bg-aliceblue overflow-hidden shrink-0 hidden items-center py-num-10 px-6 box-border gap-2.5 text-dimgray font-inter">
                       <img className="h-6 w-6 relative" alt="" />
                       <b className="relative">
-                        Search for Dorms, Apartments, or Locations (e.g. UPLB,
-                        Umali Subdivision)
+                        Search for Dorms, Apartments, or Locations (e.g. UPLB, Umali Subdivision)
                       </b>
                     </div>
                   </div>
@@ -65,15 +58,9 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
                           <b className="relative">Student Profile</b>
                           <div className="flex items-center justify-center gap-2.5 text-[24px] text-darkslategray-200">
                             <b className="relative leading-8">Daphne Dayne</b>
-                            <img
-                              className="h-6 w-6 relative"
-                              alt=""
-                              src={Verified}
-                            />
+                            <img className="h-6 w-6 relative" alt="" src={Verified} />
                           </div>
-                          <b className="relative text-teal">
-                            dcanape@up.edu.ph
-                          </b>
+                          <b className="relative text-teal">dcanape@up.edu.ph</b>
                         </div>
                       </div>
                       <div className="self-stretch overflow-hidden flex items-start justify-between py-1 px-num-32 gap-5">
@@ -85,27 +72,19 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
                         <div className="overflow-hidden flex flex-col items-start p-num-10 gap-4">
                           <div className="flex flex-col items-start gap-1">
                             <b className="relative">Name</b>
-                            <b className="relative text-black">
-                              CANAPE, DAPHNE
-                            </b>
+                            <b className="relative text-black">CANAPE, DAPHNE</b>
                           </div>
                           <div className="flex flex-col items-start gap-1">
                             <div className="flex items-start gap-2">
                               <b className="relative">Contact number</b>
-                              <Icon
-                                icon="iconamoon:edit"
-                                className="w-5 relative max-h-full"
-                              />
+                              <Icon icon="iconamoon:edit" className="w-5 relative max-h-full" />
                             </div>
                             <b className="relative text-black">- - - - -</b>
                           </div>
                           <div className="flex flex-col items-start gap-1">
                             <div className="flex items-start gap-2">
                               <b className="relative">Home Address</b>
-                              <Icon
-                                icon="iconamoon:edit"
-                                className="w-5 relative max-h-full"
-                              />
+                              <Icon icon="iconamoon:edit" className="w-5 relative max-h-full" />
                             </div>
                             <b className="relative text-black">{`- - - - - `}</b>
                           </div>
@@ -127,9 +106,7 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
                         <div className="overflow-hidden flex flex-col items-start p-num-10 gap-4">
                           <div className="flex flex-col items-start gap-1">
                             <b className="relative">Current Dorm</b>
-                            <b className="relative text-black">
-                              One Sapphire Place
-                            </b>
+                            <b className="relative text-black">One Sapphire Place</b>
                             <div className="flex items-center gap-1 text-num-12">
                               <div className="relative font-medium text-transparent !bg-clip-text [background:linear-gradient(180deg,_#c29722,_#f6b709)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">
                                 Pending
@@ -159,9 +136,7 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
                           <div className="w-[520px] h-12 relative">
                             <div className="absolute h-[99.38%] w-[99.87%] top-[0%] right-[-0.25%] bottom-[0.62%] left-[0.38%] rounded-[99.72px] bg-white flex items-center justify-center p-1 box-border gap-1 shrink-0">
                               <div className="h-[39.9px] w-[235.3px] rounded-[99.72px] bg-darkslategray-200 flex items-center justify-center p-1 box-border">
-                                <div className="relative font-semibold">
-                                  CURRENT DORM
-                                </div>
+                                <div className="relative font-semibold">CURRENT DORM</div>
                               </div>
                               <div className="h-[39.9px] w-[235.3px] rounded-[99.72px] flex items-center justify-center py-[11px] px-[74.8px] box-border text-slategray">
                                 <div className="relative font-semibold shrink-0">
@@ -171,9 +146,7 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
                             </div>
                           </div>
                           <div className="self-stretch h-8 flex items-center justify-center py-num-0 px-num-32 box-border gap-6 text-[24px] text-darkslategray-100">
-                            <b className="relative leading-8">
-                              Finalize Your Application
-                            </b>
+                            <b className="relative leading-8">Finalize Your Application</b>
                             <div className="relative text-num-12 [text-decoration:underline] font-medium text-transparent !bg-clip-text [background:linear-gradient(180deg,_#c00f0f,_#e44f4f)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">
                               Cancel
                             </div>
@@ -205,9 +178,7 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
                               icon="material-symbols:info-outline"
                               className="h-6 w-6 relative"
                             />
-                            <b className="relative leading-8">
-                              Required Documents
-                            </b>
+                            <b className="relative leading-8">Required Documents</b>
                           </div>
                           <b className="relative text-num-14 text-dimgray">
                             0 out of 3 Documents Uploaded
@@ -234,10 +205,7 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
                               </div>
                             </div>
                             <div className="w-[72px] flex items-center gap-6">
-                              <Icon
-                                icon="iconamoon:eye"
-                                className="h-6 w-6 relative"
-                              />
+                              <Icon icon="iconamoon:eye" className="h-6 w-6 relative" />
                               <Icon
                                 icon="qlementine-icons:menu-dots-16"
                                 className="h-6 w-6 relative"
@@ -246,10 +214,7 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
                           </div>
                           <div className="w-[852px] h-[88px] rounded-num-16 border-dimgray border-dashed border-[1px] box-border overflow-hidden shrink-0 flex items-center py-num-12 px-4 text-black">
                             <div className="h-16 flex items-center gap-6">
-                              <Icon
-                                icon="icons8:upload-2"
-                                className="h-16 w-16 relative"
-                              />
+                              <Icon icon="icons8:upload-2" className="h-16 w-16 relative" />
                               <div className="flex flex-col items-start justify-center gap-2">
                                 <b className="relative">Upload the document</b>
                                 <div className="relative text-num-12 tracking-[0.02em] font-semibold font-lora text-slategray">
@@ -264,18 +229,14 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
                         <div className="w-[916px] rounded-num-16 bg-white border-whitesmoke border-solid border-[1px] box-border overflow-hidden flex flex-col items-start justify-center py-num-10 px-num-32 gap-2.5">
                           <div className="self-stretch flex items-center justify-between py-num-0 pl-num-0 pr-6 gap-0">
                             <div className="flex-1 flex items-center gap-6">
-                              <b className="relative text-left">
-                                Parental Consent Form
-                              </b>
+                              <b className="relative text-left">Parental Consent Form</b>
                               <div className="h-8 w-24 rounded-num-16 bg-white flex items-center justify-center py-num-0 px-num-12 box-border">
                                 <b className="relative text-transparent !bg-clip-text [background:linear-gradient(180deg,_#c00f0f,_#e44f4f)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">
                                   Required
                                 </b>
                               </div>
                               <div className="rounded-num-16 overflow-hidden flex items-center py-num-10 px-4 gap-1 text-num-12 text-teal">
-                                <b className="relative">
-                                  Download Consent Form
-                                </b>
+                                <b className="relative">Download Consent Form</b>
                                 <Icon
                                   icon="material-symbols:download-rounded"
                                   className="h-5 w-5 relative"
@@ -283,10 +244,7 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
                               </div>
                             </div>
                             <div className="flex items-center gap-6">
-                              <Icon
-                                icon="iconamoon:eye"
-                                className="h-6 w-6 relative"
-                              />
+                              <Icon icon="iconamoon:eye" className="h-6 w-6 relative" />
                               <Icon
                                 icon="qlementine-icons:menu-dots-16"
                                 className="h-6 w-6 relative"
@@ -295,10 +253,7 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
                           </div>
                           <div className="w-[852px] rounded-num-16 border-dimgray border-dashed border-[1px] box-border overflow-hidden flex items-center py-num-12 px-4 text-left text-black">
                             <div className="h-16 flex-1 flex items-center gap-6">
-                              <Icon
-                                icon="icons8:upload-2"
-                                className="h-16 w-16 relative"
-                              />
+                              <Icon icon="icons8:upload-2" className="h-16 w-16 relative" />
                               <div className="flex flex-col items-start justify-center gap-2">
                                 <b className="relative">Upload the document</b>
                                 <div className="relative text-num-12 tracking-[0.02em] font-semibold font-lora text-slategray">
@@ -313,18 +268,14 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
                         <div className="w-[916px] rounded-num-16 bg-white border-whitesmoke border-solid border-[1px] box-border overflow-hidden flex flex-col items-start justify-center py-num-10 px-num-32 gap-2.5">
                           <div className="self-stretch flex items-center justify-between py-num-0 pl-num-0 pr-6 gap-5">
                             <div className="w-[492px] flex items-center gap-6">
-                              <b className="relative text-left">
-                                Tenancy Contract
-                              </b>
+                              <b className="relative text-left">Tenancy Contract</b>
                               <div className="h-8 w-24 rounded-num-16 bg-white flex items-center justify-center py-num-0 px-num-12 box-border">
                                 <b className="relative text-transparent !bg-clip-text [background:linear-gradient(180deg,_#c00f0f,_#e44f4f)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">
                                   Required
                                 </b>
                               </div>
                               <div className="rounded-num-16 overflow-hidden flex items-center py-num-10 px-4 gap-1 text-num-12 text-teal">
-                                <b className="relative">
-                                  Download Tenancy Contract
-                                </b>
+                                <b className="relative">Download Tenancy Contract</b>
                                 <Icon
                                   icon="material-symbols:download-rounded"
                                   className="h-5 w-5 relative"
@@ -332,10 +283,7 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
                               </div>
                             </div>
                             <div className="flex items-center gap-6">
-                              <Icon
-                                icon="iconamoon:eye"
-                                className="h-6 w-6 relative"
-                              />
+                              <Icon icon="iconamoon:eye" className="h-6 w-6 relative" />
                               <Icon
                                 icon="qlementine-icons:menu-dots-16"
                                 className="h-6 w-6 relative"
@@ -344,10 +292,7 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
                           </div>
                           <div className="w-[852px] rounded-num-16 border-dimgray border-dashed border-[1px] box-border overflow-hidden flex items-center py-num-12 px-4 text-left text-black">
                             <div className="h-16 flex items-center gap-6">
-                              <Icon
-                                icon="icons8:upload-2"
-                                className="h-16 w-16 relative"
-                              />
+                              <Icon icon="icons8:upload-2" className="h-16 w-16 relative" />
                               <div className="flex flex-col items-start justify-center gap-2">
                                 <b className="relative">Upload the document</b>
                                 <div className="relative text-num-12 tracking-[0.02em] font-semibold font-lora text-slategray">
