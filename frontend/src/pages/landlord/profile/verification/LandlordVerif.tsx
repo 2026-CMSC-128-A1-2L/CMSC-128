@@ -3,7 +3,9 @@ import type { FunctionComponent } from 'react';
 import SideBar from '../../../../components/user/SideBar';
 import Footer from '../../../../components/general/Footer';
 import { Icon } from '@iconify/react';
-import VerifiedBadge from '../../assets/verified_badge.svg';
+import VerifiedBadge from '../../../../../assets/verified_badge.svg';
+import TutorialBubble from '../../../../components/landlord/TutorialsForLandlord';
+import TutorialIcon from '../../../../../assets/help-chat.svg';
 
 const LandlordVerif: FunctionComponent = () => {
   const [verificationStep, setVerificationStep] = useState(2); // 0: submit, 1: reviewing, 2: finish
@@ -14,6 +16,8 @@ const LandlordVerif: FunctionComponent = () => {
       anchor.scrollIntoView({ block: 'start', behavior: 'smooth' });
     }
   }, []);
+
+  const [showHelp, setShowHelp] = useState(false);
 
   return (
     <div className="w-full h-screen flex flex-col font-lora text-darkslategray-100 overflow-hidden">
@@ -143,6 +147,9 @@ const LandlordVerif: FunctionComponent = () => {
                                 </div>
                               </div>
                             </div>
+
+                            <TutorialBubble show={showHelp} onClose={() => setShowHelp(false)} />
+
                             <div className="self-stretch flex items-center py-num-0 px-num-32 gap-6 shrink-0 text-[24px]">
                               <div className="flex-1 flex items-center">
                                 <div className="flex items-center gap-2">
@@ -240,6 +247,13 @@ const LandlordVerif: FunctionComponent = () => {
           </div>
         </div>
       </div>
+      {/* ======= FLOATING ICON FOR TUTORIAL ======= */}
+          <div
+            className="fixed bottom-10 right-10 z-[1000] cursor-pointer transition-all hover:scale-110 active:scale-95"
+            onClick={() => setShowHelp(!showHelp)}
+          >
+            <img src={TutorialIcon} alt="Help" className="w-16 h-16 drop-shadow-lg" />
+          </div>
     </div>
   );
 };
