@@ -1,15 +1,15 @@
-import { FunctionComponent, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Icon } from '@iconify/react';
-import Location from '../../../../../assets/pin_location_icon.svg';
-import House from '../../../../../assets/house_icon.svg';
-import SideBar from '../../../../components/user/SideBar';
-
+import { FunctionComponent, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import { Icon } from "@iconify/react";
+import Location from "../../../../../assets/pin_location_icon.svg";
+import House from "../../../../../assets/house_icon.svg";
+import SideBar from "../../../../components/user/SideBar";
+import BreadcrumbHeader from "../../../../components/general/Breadcrumb";
 const RateAndReview: FunctionComponent = () => {
   const navigate = useNavigate();
 
   const onUserProfileTextClick = useCallback(() => {
-    navigate('/rate-review-form');
+    navigate("/rate-review-form");
   }, [navigate]);
 
   return (
@@ -35,7 +35,10 @@ const RateAndReview: FunctionComponent = () => {
                     >
                       User Profile
                     </div>
-                    <Icon icon="iconamoon:arrow-right-2" className="h-6 w-6 relative" />
+                    <Icon
+                      icon="iconamoon:arrow-right-2"
+                      className="h-6 w-6 relative"
+                    />
 
                     <div
                       className="self-stretch w-[95px] relative font-semibold flex items-center shrink-0 cursor-pointer"
@@ -44,13 +47,17 @@ const RateAndReview: FunctionComponent = () => {
                       Current Dorm
                     </div>
 
-                    <Icon icon="iconamoon:arrow-right-2" className="h-6 w-6 relative" />
+                    <Icon
+                      icon="iconamoon:arrow-right-2"
+                      className="h-6 w-6 relative"
+                    />
                     <div className="self-stretch w-[94px] relative font-semibold flex items-center shrink-0">{`Rate & Review`}</div>
                   </div>
                   <div className="w-[704px] rounded-xl bg-aliceblue overflow-hidden shrink-0 hidden items-center py-2.5 px-6 box-border gap-2.5 text-dimgray font-inter">
                     <img className="h-6 w-6 relative" alt="" />
                     <b className="relative">
-                      Search for Dorms, Apartments, or Locations (e.g. UPLB, Umali Subdivision)
+                      Search for Dorms, Apartments, or Locations (e.g. UPLB,
+                      Umali Subdivision)
                     </b>
                   </div>
                 </div>
@@ -81,7 +88,11 @@ const RateAndReview: FunctionComponent = () => {
                                 </div>
                               </div>
                               <div className="self-stretch flex items-center py-num-0 px-num-12 gap-[7px]">
-                                <img className="h-[9px] w-[9px] relative" alt="" src={House} />
+                                <img
+                                  className="h-[9px] w-[9px] relative"
+                                  alt=""
+                                  src={House}
+                                />
                                 <div className="flex items-center justify-center">
                                   <div className="relative">
                                     <span className="font-medium">{`Quevin Custodio `}</span>
@@ -92,7 +103,11 @@ const RateAndReview: FunctionComponent = () => {
                                 </div>
                               </div>
                               <div className="self-stretch flex items-center py-num-0 px-num-12 gap-[7px]">
-                                <img className="h-[9px] w-[9px] relative" alt="" src={House} />
+                                <img
+                                  className="h-[9px] w-[9px] relative"
+                                  alt=""
+                                  src={House}
+                                />
                                 <div className="flex items-center justify-center">
                                   <div className="relative">
                                     <span className="font-medium">{`Nathaniel Cunanan `}</span>
@@ -148,9 +163,10 @@ const RateAndReview: FunctionComponent = () => {
                       </div>
                       <div className="self-stretch overflow-hidden flex items-center justify-center py-num-0 px-20 text-darkslategray-100 font-inter font-medium text-[14px]">
                         <div className="flex-1 relative font-medium">
-                          Your experience matters! Help future residents find their perfect home by
-                          sharing your honest thoughts. This quick three-step process ensures your
-                          review provides the most helpful insights for the community.
+                          Your experience matters! Help future residents find
+                          their perfect home by sharing your honest thoughts.
+                          This quick three-step process ensures your review
+                          provides the most helpful insights for the community.
                         </div>
                       </div>
                     </div>
@@ -208,7 +224,7 @@ const RateAndReview: FunctionComponent = () => {
                     <div className="self-stretch flex items-center justify-center gap-4 text-center text-num-14 text-teal font-inter">
                       <div
                         className="h-8 rounded-2xl flex items-center justify-center py-num-0 px-4 box-border cursor-pointer"
-                        onClick={onUserProfileTextClick}
+                        onClick={() => navigate(-1)}
                       >
                         <b className="relative text-transparent !bg-clip-text [background:linear-gradient(180deg,_#c00f0f,_#e44f4f)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">
                           Go Back
@@ -216,7 +232,7 @@ const RateAndReview: FunctionComponent = () => {
                       </div>
                       <div
                         className="h-8 rounded-2xl bg-aliceblue flex items-center justify-center py-num-0 px-4 box-border cursor-pointer"
-                        onClick={onUserProfileTextClick}
+                        onClick={() => navigate("/rate-review-form")}
                       >
                         <b className="relative">Proceed</b>
                       </div>

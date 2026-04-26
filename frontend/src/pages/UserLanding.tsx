@@ -28,16 +28,23 @@ const UserLanding: FunctionComponent = () => {
               <div className="self-stretch flex items-center gap-12 text-center text-teal-200">
                 <div className="self-stretch flex items-center justify-center py-0 px-1">
                   <b className="h-[35px] w-[141.6px] relative tracking-num--0_01 flex items-center justify-center shrink-0">
+                    <Link to="/home">
                     See All Listings
+                  
+                    </Link>
+                    
                   </b>
                 </div>
                 <div className="self-stretch flex items-center justify-center py-0 px-1">
                   <b className="h-[35px] w-[76px] relative tracking-num--0_01 flex items-center justify-center shrink-0">
+                    <Link to="/about">
                     About
+                    </Link>
+                    
                   </b>
                 </div>
                 <div className="self-stretch flex items-center justify-center py-0 px-1">
-                  <Link to="/contact">
+                  <Link to="/contact-us">
                     <b className="relative tracking-num--0_01">Contact Us</b>
                   </Link>
                 </div>
@@ -482,10 +489,17 @@ const UserLanding: FunctionComponent = () => {
                 PLATFORM
               </b>
               <div className="self-stretch h-num-28_4 relative flex items-center shrink-0 mt-[-4px]">
+                <Link to="/home">
+                
                 Browse Dorms
+                </Link>
               </div>
               <div className="self-stretch h-num-28_4 relative flex items-center shrink-0 mt-[-4px]">
+                
+                <Link to="/">
+                
                 How it works
+                </Link>
               </div>
             </div>
             <div className="flex flex-col items-start">
@@ -493,10 +507,14 @@ const UserLanding: FunctionComponent = () => {
                 SUPPORT
               </b>
               <div className="w-[108.9px] h-num-28_4 relative flex items-center shrink-0 mt-[-4px]">
-                About
+                <Link to="/about">
+                  About
+                </Link>
               </div>
               <div className="w-[108.9px] h-num-28_4 relative flex items-center shrink-0 mt-[-4px]">
-                Contact us
+                <Link to="/contact-us">
+                  Contact us
+                </Link> 
               </div>
             </div>
             <div className="w-[187.5px] flex flex-col items-start">
@@ -504,10 +522,14 @@ const UserLanding: FunctionComponent = () => {
                 LEGAL
               </b>
               <div className="self-stretch h-num-28_4 relative flex items-center shrink-0 mt-[-4px]">
-                Privacy Policy
+                <Link to="/privacy">
+                  Privacy Policy
+                </Link>
               </div>
               <div className="self-stretch h-num-28_4 relative flex items-center shrink-0 mt-[-4px]">
-                Terms of Use
+                <Link to="/terms-of-use">
+                  Terms of Use
+                </Link>
               </div>
             </div>
           </div>
