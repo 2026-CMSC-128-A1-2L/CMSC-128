@@ -5,10 +5,23 @@ import {
   ReportListingBodySchema,
   ReportUserBodySchema,
 } from 'shared';
-import { getReports, resolveReport, reportListing, reportUser } from './report.service';
+import { getReports, getReport, getMyReports, resolveReport, reportListing, reportUser } from './report.service';
 
 export const routeGetReports: RequestHandler = async (req, res, next) => {
   const reports = await getReports();
+  res.status(200).json({ data: reports });
+};
+
+// GET /api/reports/:reportId — admin only
+export const routeGetReport: RequestHandler = async (req, res, next) => {
+  const reportId = ObjectIdSchema.parse(req.params.reportId);
+  const report = await getReport(reportId);
+  res.status(200).json({ data: report });
+};
+
+// GET /api/users/me/reports — logged-in user sees their own submitted reports
+export const routeGetMyReports: RequestHandler = async (req, res, next) => {
+  const reports = await getMyReports(req.user!._id);
   res.status(200).json({ data: reports });
 };
 
@@ -39,6 +52,7 @@ export const routeReportUser: RequestHandler = async (req, res, next) => {
 
   const report = await reportUser({
     userId: req.user!._id,
+    reporterType: req.user!.userType,
     userReported: userId,
     ...body,
   });

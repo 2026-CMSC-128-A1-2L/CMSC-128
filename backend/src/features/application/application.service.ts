@@ -7,12 +7,11 @@ import {
   type ApplicationType,
 } from './application.model';
 import { sendNotification } from '../notification/notification.service';
-import { Unit } from '../unit/unit.model';
-import { Rental } from '../rental/rental.model';
 import { buildQuery, type NullablePartial } from '../../utils';
 import z from 'zod';
 import { DateTimeSchema, ObjectIdSchema } from 'shared';
 import { combineFilters } from '../../middleware';
+import { isUnitFull } from '../unit/unit.service';
 
 export type GetApplicationsArguments = NullablePartial<{
   userId: mongoose.Types.ObjectId;
@@ -99,30 +98,23 @@ export const deleteApplication = async (
   return await ApplicationForm.where(filters).findOneAndDelete({ _id: applicationId });
 };
 
+// TODO: fix these messages
 const statusMessages: Record<string, { subject: string; content: string }> = {
-  'manager-approved': {
-    subject: 'Application Approved',
-    content: 'Your application has been approved by the manager.',
+  waitlisted: {
+    subject: 'Waitlisted',
+    content: 'Your application has been approved by the manager. You are now on the waitlist.',
   },
-  'manager-rejected': {
-    subject: 'Application Rejected',
-    content: 'Your application has been rejected by the manager.',
-  },
-  'manager-waitlisted': {
-    subject: 'Application Waitlisted',
-    content: 'Your application has been waitlisted by the manager.',
-  },
-  'landlord-approved': {
-    subject: 'Application Approved',
+  approved: {
+    subject: 'Approved',
     content: 'Your application has been approved by the landlord.',
   },
-  'landlord-rejected': {
+  rejected: {
     subject: 'Application Rejected',
     content: 'Your application has been rejected by the landlord.',
   },
-  'landlord-waitlisted': {
-    subject: 'Application Waitlisted',
-    content: 'Your application has been waitlisted by the landlord.',
+  finalized: {
+    subject: 'Finalized',
+    content: 'Your application has been finalized.',
   },
 };
 
@@ -141,75 +133,87 @@ export const updateApplicationStatus = async (
   return await sendNotification(application.userId, subject, content);
 };
 
-export const approveApplication = async (
-  isFinal: boolean,
+export const approveFinalApplication = async (
   applicationId: mongoose.Types.ObjectId,
   filters: QueryFilter<ApplicationType>,
 ) => {
   const application = await ApplicationForm.where(filters).findById(applicationId);
   if (!application) return;
 
-  if (isFinal) {
-    // The only legal states for final acceptance is from
-    // `manager-approved` and `manager-waitlisted`.
-    //
-    // TODO: clarify this case. Landlord should be able to override an application
-    // that is rejected by a manager. But this also means that the requirements are
-    // not met.
-    //
-    // throw new AppError(422, "Cannot accept an application rejected by a manager.");
-    if (application.status === 'waitlisted') {
-      application.status = 'approved';
-      const { subject, content } = statusMessages[application.status];
-      await sendNotification(application.userId, subject, content);
-      return await application.save();
-    }
-
-    throw new AppError(422, `Applications that are '${application.status}' cannot be approved.`);
-  } else {
-    // The only legal states for initial acceptance is from `pending`
-    if (application.status === 'pending') {
-      application.status = 'waitlisted';
-      const { subject, content } = statusMessages[application.status];
-      await sendNotification(application.userId, subject, content);
-      return await application.save();
-    }
-
+  // The only legal states for final acceptance is from
+  // `manager-approved` and `manager-waitlisted`.
+  //
+  // TODO: clarify this case. Landlord should be able to override an application
+  // that is rejected by a manager. But this also means that the requirements are
+  // not met.
+  //
+  // throw new AppError(422, "Cannot accept an application rejected by a manager.");
+  if (application.status !== 'waitlisted') {
     throw new AppError(422, `Applications that are '${application.status}' cannot be approved.`);
   }
+
+  application.status = 'approved';
+  const { subject, content } = statusMessages[application.status];
+  await sendNotification(application.userId, subject, content);
+  return await application.save();
 };
 
-export const rejectApplication = async (
-  isFinal: boolean,
+export const approveInitialApplication = async (
+  applicationId: mongoose.Types.ObjectId,
+  unitId: mongoose.Types.ObjectId,
+  filters: QueryFilter<ApplicationType>,
+) => {
+  const application = await ApplicationForm.where(filters).findById(applicationId);
+  if (!application) return;
+
+  // The only legal states for initial acceptance is from `pending`
+  if (application.status !== 'pending')
+    throw new AppError(422, `Applications that are '${application.status}' cannot be approved.`);
+
+  if (await isUnitFull(unitId, { listingId: application.listingId }))
+    throw new AppError(422, 'Unit is already full.');
+
+  application.status = 'waitlisted';
+  application.unitId = unitId;
+  const { subject, content } = statusMessages[application.status];
+  await sendNotification(application.userId, subject, content);
+  return await application.save();
+};
+
+export const rejectFinalApplication = async (
   applicationId: mongoose.Types.ObjectId,
   filters: QueryFilter<ApplicationType>,
 ) => {
   const application = await ApplicationForm.where(filters).findById(applicationId);
   if (!application) return;
 
-  if (isFinal) {
-    // The only legal states for final rejection is from `manager-approved` and `manager-waitlisted`.
-    //
-    // throw new AppError(422, "Cannot accept an application rejected by a manager.");
-    if (application.status === 'waitlisted' || application.status === 'pending') {
-      application.status = 'rejected';
-      const { subject, content } = statusMessages[application.status];
-      await sendNotification(application.userId, subject, content);
-      return await application.save();
-    }
-
+  // The only legal states for final rejection is from `manager-approved` and `manager-waitlisted`.
+  //
+  // throw new AppError(422, "Cannot accept an application rejected by a manager.");
+  if (application.status !== 'waitlisted' && application.status !== 'pending')
     throw new AppError(422, `Applications that are '${application.status}' cannot be rejected.`);
-  } else {
-    // The only legal states for initial acceptance is from `pending`
-    if (application.status === 'pending') {
-      application.status = 'rejected';
-      const { subject, content } = statusMessages[application.status];
-      await sendNotification(application.userId, subject, content);
-      return await application.save();
-    }
 
+  application.status = 'rejected';
+  const { subject, content } = statusMessages[application.status];
+  await sendNotification(application.userId, subject, content);
+  return await application.save();
+};
+
+export const rejectInitialApplication = async (
+  applicationId: mongoose.Types.ObjectId,
+  filters: QueryFilter<ApplicationType>,
+) => {
+  const application = await ApplicationForm.where(filters).findById(applicationId);
+  if (!application) return;
+
+  // The only legal states for initial acceptance is from `pending`
+  if (application.status !== 'pending')
     throw new AppError(422, `Applications that are '${application.status}' cannot be rejected.`);
-  }
+
+  application.status = 'rejected';
+  const { subject, content } = statusMessages[application.status];
+  await sendNotification(application.userId, subject, content);
+  return await application.save();
 };
 
 export const assignApplicationUnit = async (
@@ -220,23 +224,53 @@ export const assignApplicationUnit = async (
   const application = await ApplicationForm.where(filters).findOne(applicationId);
   if (!application) throw new AppError(404, 'Application not found.');
 
+  if (application.status === 'pending' || application.status === 'rejected') {
+    throw new AppError(
+      422,
+      `Applications that are '${application.status}' cannot have an assigned unit.`,
+    );
+  }
+
   // TODO: check the correct status
   // 'waitlisted',
   // 'approved',
-  // 'contract-signed',
+  // 'finalized',
 
-  // Only units that are in the correct listing
-  const unit = await Unit.findOne({ _id: unitId, listingId: application.listingId });
-  if (!unit) throw new AppError(404, 'Unit not found.');
-
-  // Count active rentals
-  //
-  // TODO: if this is too slow, add an index or keep the count in the unit
-  const activeRentals = await Rental.find({ unitId, status: 'active' });
-
-  // If the unit is full, don't add
-  if (unit.capacity === activeRentals.length) throw new AppError(422, 'This unit is already full.');
+  if (await isUnitFull(unitId, { listingId: application.listingId }))
+    throw new AppError(422, 'This unit is already full.');
 
   application.unitId = unitId;
+  return await application.save();
+};
+
+export const getUnvalidatedApplications = async (listingId: mongoose.Types.ObjectId) => {
+  return await ApplicationForm.find({
+    listingId,
+    status: { $in: ['pending', 'waitlisted'] },
+  });
+};
+
+export const getPendingApplications = async (listingId: mongoose.Types.ObjectId) => {
+  return await ApplicationForm.find({
+    listingId,
+    status: 'pending',
+  });
+};
+
+// user side kapag approved ni manager/landlord
+export const finalizeApplication = async (
+  applicationId: mongoose.Types.ObjectId,
+  filters: QueryFilter<ApplicationType>,
+) => {
+  const application = await ApplicationForm.where(filters).findById(applicationId);
+  if (!application) return;
+
+  // The only legal states for initial acceptance is from `approved`
+  if (application.status !== 'approved')
+    throw new AppError(422, `Applications that are '${application.status}' cannot be finalized.`);
+
+  application.status = 'finalized';
+  const { subject, content } = statusMessages[application.status];
+  await sendNotification(application.userId, subject, content);
   return await application.save();
 };

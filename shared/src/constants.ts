@@ -8,9 +8,22 @@ export const APPLICATION_STATUS = [
   'rejected',
   'waitlisted',
   'approved',
-  'contract-signed',
+  'finalized',
 ] as const;
+export const MANAGER_PERMISSIONS = [
+  'deleteListings',
+  'manageListings',
+  'manageBillings',
+  'manageBookings',
+  'manageApplications',
+  'reportUsers',
+] as const;
+export const USER_STATUS = ['setup', 'unverified', 'verified', 'disabled', 'legacy'] as const;
+export const USER_TYPE = ['Admin', 'Manager', 'Landlord', 'Student'] as const;
 
 export type FacilityType = (typeof FACILITY_TYPES)[number];
 export type DocumentStatusType = (typeof DOCUMENT_STATUS)[number];
 export type BookingStatusType = (typeof BOOKING_STATUS)[number];
+export type ManagerPermission = (typeof MANAGER_PERMISSIONS)[number];
+export type UserStatus = (typeof USER_STATUS)[number];
+export type UserTypeType = (typeof USER_TYPE)[number];

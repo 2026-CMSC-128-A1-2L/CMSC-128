@@ -5,35 +5,32 @@ import { HousingFacility } from '../facility/facility.model';
 import { Listing, ListingType } from '../listing/listing.model';
 import { Rental } from '../rental/rental.model';
 import { Unit } from '../unit/unit.model';
-import { Review } from './review.model';
+import { Review, ReviewType } from './review.model';
 import { QueryFilter } from 'mongoose';
 
-export type createReviewArguments = {
+type Ratings = {
+  quality: number;
+  comfort: number;
+  environment: number;
+};
+
+export type CreateReviewArguments = {
   userId: mongoose.Types.ObjectId;
-  listingId: mongoose.Types.ObjectId;
-  ratings: {
-    quality: number;
-    comfort: number;
-    environment: number;
-  };
+  ratings: Ratings;
   description?: string;
   mediaUrls?: string[];
 };
 
-export type updateReviewArguments = {
+export type UpdateReviewArguments = {
   reviewId: mongoose.Types.ObjectId;
   userId: mongoose.Types.ObjectId;
-  ratings?: {
-    quality: number;
-    comfort: number;
-    environment: number;
-  };
+  ratings?: Ratings;
   description?: string;
 };
 
 export const createReview = async (
   listingId: mongoose.Types.ObjectId,
-  data: createReviewArguments,
+  data: CreateReviewArguments,
   filters: QueryFilter<ListingType>,
 ) => {
   const listing = await Listing.findOne(combineFilters({ _id: listingId }, filters));
@@ -41,7 +38,11 @@ export const createReview = async (
 
   // Only active tenants of this listing may leave a review
   const unitIds = await Unit.find({ listingId }).distinct('_id');
-  const activeRental = await Rental.findOne({ userId: data.userId, unitId: { $in: unitIds }, status: 'active' });
+  const activeRental = await Rental.findOne({
+    userId: data.userId,
+    unitId: { $in: unitIds },
+    status: 'active',
+  });
   if (!activeRental) throw new AppError(422, 'Only active tenants can leave a review.');
 
   const media =
@@ -79,11 +80,74 @@ export const getFacilityReviews = async (facilityId: mongoose.Types.ObjectId) =>
   return await Review.find({ facilityId });
 };
 
-export const updateReview = async (data: updateReviewArguments) => {
+const addReviewFromAverage = async (review: ReviewType) => {
+  const { _id: reviewId, facilityId, ratings } = review;
+  const { quality, comfort, environment } = ratings;
+
+  const facility = await HousingFacility.findById(facilityId);
+  const { qualityAvg, comfortAvg, environmentAvg, reviewCount } = facility;
+
+  facility.qualityAvg = (qualityAvg * reviewCount + quality) / (reviewCount + 1);
+  facility.comfortAvg = (comfortAvg * reviewCount + comfort) / (reviewCount + 1);
+  facility.environmentAvg = (environmentAvg * reviewCount + environment) / (reviewCount + 1);
+  facility.reviewCount += 1;
+
+  await facility.save();
+};
+
+const removeReviewFromAverage = async (review: ReviewType) => {
+  const { _id: reviewId, facilityId, ratings } = review;
+  const { quality, comfort, environment } = ratings;
+
+  const facility = await HousingFacility.findById(facilityId);
+  const { qualityAvg, comfortAvg, environmentAvg, reviewCount } = facility;
+
+  facility.qualityAvg = (qualityAvg * reviewCount - quality) / (reviewCount - 1);
+  facility.comfortAvg = (comfortAvg * reviewCount - comfort) / (reviewCount - 1);
+  facility.environmentAvg = (environmentAvg * reviewCount - environment) / (reviewCount + 1);
+  facility.reviewCount += 1;
+
+  await facility.save();
+};
+
+export const updateReview = async (data: UpdateReviewArguments) => {
   const review = await Review.findOne({ _id: data.reviewId, userId: data.userId });
   if (!review) throw new AppError(404, 'Review not found.');
-  review.set({ ratings: data.ratings, description: data.description });
+
+  // NOTE: if pre is approved, post is pending, so it should be removed from the average.
+  if (review.status === 'approved') await removeReviewFromAverage(review);
+
+  review.set({ ratings: data.ratings, description: data.description, status: 'pending' });
   return await review.save();
+};
+
+export const updateReviewStatus = async (
+  reviewId: mongoose.Types.ObjectId,
+  status: 'rejected' | 'approved',
+) => {
+  const review = await Review.findOneAndUpdate(
+    reviewId,
+    { $set: { status } },
+    { returnDocument: 'after' },
+  );
+  if (!review) throw new AppError(404, 'Review not found.');
+
+  // NOTE: no previous check is done because it is assumed that it came from pending
+  if (status === 'approved') await addReviewFromAverage(review);
+
+  return review;
+};
+
+export const deleteReview = async (
+  reviewId: mongoose.Types.ObjectId,
+  userId: mongoose.Types.ObjectId,
+) => {
+  const review = await Review.findOne({ _id: reviewId, userId });
+  if (!review) throw new AppError(404, 'Review not found.');
+
+  if (review.status === 'pending') await removeReviewFromAverage(review);
+
+  return await review.deleteOne();
 };
 
 // Computes the average quality, comfort, and environment ratings
@@ -113,17 +177,4 @@ export const getAverageRatingsByFacility = async (facilityId: mongoose.Types.Obj
   const { quality, comfort, environment, total } = result[0];
   const overall = (quality + comfort + environment) / 3;
   return { quality, comfort, environment, overall, total };
-};
-
-export const deleteReview = async (
-  reviewId: mongoose.Types.ObjectId,
-  userId: mongoose.Types.ObjectId,
-) => {
-  const review = await Review.findOne({ _id: reviewId, userId });
-
-  if (!review) {
-    throw new AppError(404, 'Review not found.');
-  }
-
-  return await review.deleteOne();
 };

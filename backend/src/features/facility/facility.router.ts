@@ -10,15 +10,20 @@ import {
   routeUpdateManagerPermissions,
   routeApproveFacility,
   routeRejectFacility,
+  routeGetMonthlyIncomeByLandlord,
+  routeGetOverdueTenantsByLandlord,
 } from './facility.controller';
 import { routeCreateListing } from '../listing/listing.controller';
-import { routeGetFacilityReviews, routeGetAverageRatingsByFacility } from '../review/review.controller';
+import {
+  routeGetFacilityReviews,
+  routeGetAverageRatingsByFacility,
+} from '../review/review.controller';
 import {
   correctLandlordFilter,
+  directManagerFilter,
   isLandlord,
   isSuperAdmin,
   listingViewFilter,
-  managerFilter,
 } from '../../middleware';
 import { routeGetVisitBookingsByFacility } from '../booking/booking.controller';
 
@@ -47,6 +52,30 @@ router.post('/search', routeSearchFacilities);
 // landlord only
 router.post('/', isLandlord, routeCreateFacility);
 
+// ============================================================================
+// GET /api/facilities/landlord/monthly-income
+//
+// Returns expected monthly income across all facilities owned by the landlord.
+// Calculated as the sum of unit prices for every active rental.
+//
+// Must be declared before /:facilityId to avoid route param collision.
+//
+// landlord only
+// ============================================================================
+router.get('/landlord/monthly-income', isLandlord, routeGetMonthlyIncomeByLandlord);
+  
+// ============================================================================
+// GET /api/facilities/landlord/overdue-tenants
+//
+// Returns all active tenants whose most recent billing is overdue,
+// across all facilities owned by the landlord.
+//
+// Must be declared before /:facilityId to avoid route param collision.
+//
+// landlord only
+// ============================================================================
+router.get('/landlord/overdue-tenants', isLandlord, routeGetOverdueTenantsByLandlord);
+
 // GET /api/facilities/:facilityId
 //
 // Retreives a facility. This includes listing details, including reviews.
@@ -59,11 +88,7 @@ router.get('/:facilityId', routeGetFacility);
 // Edits a facility.
 //
 // manager with manageListings permission only
-router.patch(
-  '/:facilityId',
-  managerFilter('facility-direct', 'manageListings'),
-  routeUpdateFacility,
-);
+router.patch('/:facilityId', directManagerFilter('manageListings'), routeUpdateFacility);
 
 // DELETE /api/facilities/:facilityId
 //
@@ -92,7 +117,7 @@ router.patch('/:facilityId/managers/:managerId', isLandlord, routeUpdateManagerP
 // POST /api/facilities/:facilityId/listings
 //
 // Manager with manageListings permission or landlord
-router.post('/:facilityId/listings', managerFilter('direct', 'manageListings'), routeCreateListing); // TODO: fix implementation, use parameter
+router.post('/:facilityId/listings', directManagerFilter('manageListings'), routeCreateListing); // TODO: fix implementation, use parameter
 
 // GET /api/facilities/:facilityId/reviews
 // Input:
@@ -131,7 +156,7 @@ router.post('/:facilityId/reject', isSuperAdmin, routeRejectFacility);
 // ============================================================================
 router.get(
   '/:facilityId/bookings',
-  managerFilter('direct', 'manageListings'),
+  directManagerFilter('manageListings'),
   routeGetVisitBookingsByFacility,
 );
 export default router;
