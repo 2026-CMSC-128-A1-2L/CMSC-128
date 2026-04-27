@@ -31,6 +31,7 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
   const { buildingInfo, setBuildingInfo, addRoomType, addManager, removeManager } = useBuildingStore();
 
   const [activePopup, setActivePopup] = useState<'none' | 'add1' | 'add2'>('none');
+  const [lastInvitedEmail, setLastInvitedEmail] = useState('');
   const [images, setImages] = useState<string[]>(buildingInfo.images || []);
   const [lightboxIndex, setLightboxIndex] = useState(-1);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -81,6 +82,7 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
 
   const handleManagerSend = (data: AddManagerFormValues) => {
     addManager({ email: data.email.trim(), checkboxes: data.checkboxes });
+    setLastInvitedEmail(data.email.trim());
     setActivePopup('add2');
   };
 
@@ -309,7 +311,7 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
       {activePopup === 'add2' && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
           <div className="relative shadow-2xl rounded-tl-[26px]" onClick={(e) => e.stopPropagation()}>
-            <AddManager2 onClose={() => setActivePopup('none')} />
+            <AddManager2 onClose={() => setActivePopup('none')} email={lastInvitedEmail} />
           </div>
         </div>
       )}

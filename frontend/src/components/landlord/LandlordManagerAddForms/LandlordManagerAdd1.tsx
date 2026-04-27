@@ -78,10 +78,8 @@ const AddManager1: FunctionComponent<Props> = ({ onCancel, onSend }) => {
   const onSubmit = (data: AddManagerFormValues) => {
     console.log('=== Add Manager Form Data ===');
     console.log(JSON.stringify(data, null, 2));
-    onSend(data);
+    onSend(data); // passes email + checkboxes up to parent
   };
-
-  // ─── Permission Row ───────────────────────────────────────────────────────
 
   const PermissionRow = ({
     icon,
@@ -117,7 +115,7 @@ const AddManager1: FunctionComponent<Props> = ({ onCancel, onSend }) => {
       >
         <div className="self-stretch h-[698px] flex flex-col items-center">
 
-          {/* ── Header ── */}
+          {/* Header */}
           <div className="self-stretch rounded-tl-[26px] [background:linear-gradient(183.48deg,_#096c5b,_#16917c)] flex flex-col items-start justify-center py-[10px] pl-[46px] pr-[26px] shrink-0">
             <div className="w-[426px] flex flex-col items-start justify-center pt-[26px] px-0 pb-[6px] box-border shrink-0">
               <b className="self-stretch relative">Add Dorm Manager</b>
@@ -127,7 +125,7 @@ const AddManager1: FunctionComponent<Props> = ({ onCancel, onSend }) => {
             </div>
           </div>
 
-          {/* ── Body ── */}
+          {/* Body */}
           <div className="self-stretch flex flex-col items-start pt-[26px] px-[38px] pb-4 gap-[18px] shrink-0 text-[13px] text-dimgray font-inter overflow-y-auto">
 
             {/* Email */}
@@ -153,7 +151,7 @@ const AddManager1: FunctionComponent<Props> = ({ onCancel, onSend }) => {
               </div>
             </div>
 
-            {/* ── Property Management ── */}
+            {/* Property Management */}
             <div className="self-stretch flex flex-col items-start gap-4">
               <b className="self-stretch relative flex items-center">Property Management</b>
               <div className="self-stretch flex flex-col items-start gap-[17px]">
@@ -163,7 +161,7 @@ const AddManager1: FunctionComponent<Props> = ({ onCancel, onSend }) => {
               </div>
             </div>
 
-            {/* ── Billings and Financials ── */}
+            {/* Billings and Financials */}
             <div className="self-stretch flex flex-col items-start gap-4">
               <b className="self-stretch relative flex items-center">Billings and Financials</b>
               <div className="self-stretch flex flex-col items-start">
@@ -171,7 +169,7 @@ const AddManager1: FunctionComponent<Props> = ({ onCancel, onSend }) => {
               </div>
             </div>
 
-            {/* ── Tenant Management ── */}
+            {/* Tenant Management */}
             <div className="self-stretch flex flex-col items-start gap-4">
               <b className="self-stretch relative flex items-center">Tenant Management</b>
               <div className="self-stretch flex flex-col items-start gap-[17px]">
@@ -183,7 +181,7 @@ const AddManager1: FunctionComponent<Props> = ({ onCancel, onSend }) => {
           </div>
         </div>
 
-        {/* ── Actions ── */}
+        {/* Actions */}
         <div className="flex items-center gap-[13px] text-[13px] text-crimson font-inter">
           <div className="rounded-[10px] flex items-center justify-center py-[6px] px-5 text-red-500">
             <button type="button" className="relative font-semibold" onClick={onCancel}>
@@ -191,7 +189,7 @@ const AddManager1: FunctionComponent<Props> = ({ onCancel, onSend }) => {
             </button>
           </div>
           <div className="w-30 rounded-[10px] bg-lightcyan overflow-hidden flex items-center justify-center py-[6px] text-teal">
-            <button type="submit" className="relative font-semibold">
+            <button type="submit" className="relative font-semibold px-5">
               Send Invite
             </button>
           </div>
