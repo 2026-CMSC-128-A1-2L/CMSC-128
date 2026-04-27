@@ -51,6 +51,8 @@ export const buildUser = Factory.define<UserParams, Partial<UserParams>, UserTyp
       return (
         await new Student({ ...data, studentNumber: data.studentNumber || '202300001' }).save()
       ).toObject();
+    default:
+      throw new Error(`Unknown userType: ${data.userType}`);
   }
 });
 
