@@ -20,6 +20,7 @@ import { Route } from "react-router-dom";
 
 import Settings from "../pages/user/setting/Settings";
 import TestPage from "../pages/utilities/TestPage";
+import Registration from "../pages/Registration";
 
 const userRoutes = [
   <Route key="home" path="/home" element={<HomePage />} />,
@@ -62,6 +63,9 @@ const userRoutes = [
   />,
   <Route key="settings" path="/settings" element={<Settings />} />,
   <Route key="pendingapplication" path="/finappli" element={<FinalizedApplicationPage1a />} />,
+
+
+  <Route key="registration" path="/registration" element={<Registration />} />,
 ];
 
 export default userRoutes;
