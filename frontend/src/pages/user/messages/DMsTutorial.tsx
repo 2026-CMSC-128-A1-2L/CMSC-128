@@ -1,4 +1,4 @@
-import { type FunctionComponent, useState } from 'react';
+import { FunctionComponent, useState } from 'react';
 import { Icon } from '@iconify/react';
 
 interface TutorialBubbleProps {
@@ -11,60 +11,46 @@ const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose 
 
   const helpContent = [
     {
-      title: 'Submit Documents',
-      text: '(For Old UP Students - Option 1) Upload your official University ID. Your name, photo, and college must be clear.',
-      position: 'top-[55px] left-[150px]',
-      total: 3,
-      currentStep: 1,
-    },
-    {
-      title: 'Submit Documents',
-      text: '(For Old UP Students - Option 2) Upload your official Form 5 which can be downloaded from your AMIS portal.',
-      position: 'top-[55px] left-[150px]',
-      total: 3,
-      currentStep: 2,
-    },
-    {
-      title: 'Submit Documents',
-      text: '(For Incoming Freshman Students) Upload your Notice of Admission that was sent to you via your UP mail.',
-      position: 'top-[55px] left-[150px]',
-      total: 3,
-      currentStep: 3,
-    },
-    {
-      title: 'Reviewing Documents',
-      text: 'Once submitted, the admin will validate your submissions.',
-      position: 'top-[55px] left-[460px]',
+      title: 'Notifications',
+      text: 'This is where ATLAS sends you active notifications to keep you up-to-date!',
+      position: 'top-[40px] left-[190px]',
       total: 2,
       currentStep: 1,
     },
     {
-      title: 'Reviewing Documents',
-      text: 'Reviewing your documents may take up to 48 to 72 hours.',
-      position: 'top-[55px] left-[460px]',
+      title: 'Notifications',
+      text: 'Look out for updates on your submissions and important system announcements.',
+      position: 'top-[40px] left-[190px]',
       total: 2,
       currentStep: 2,
     },
     {
-      title: 'Finalized Documents',
-      text: 'Once the admin has reviewed and approved of your documents, your account is now secured!',
-      position: 'top-[55px] left-[785px]',
-      total: 3,
+      title: 'Direct Messages',
+      text: 'Connect directly with tenants, dorm managers, or landlords through messages!',
+      position: 'top-[320px] left-[190px]',
+      total: 2,
       currentStep: 1,
     },
     {
-      title: 'Finalized Documents',
-      text: 'As a verified user, you can now apply, manage, and settle your housing during your...',
-      position: 'top-[55px] left-[785px]',
-      total: 3,
+      title: 'Direct Messages',
+      text: 'Quickly catch up by fltering for unread messages to stay on top of your conversations.',
+      position: 'top-[320px] left-[190px]',
+      total: 2,
       currentStep: 2,
     },
     {
-      title: 'Finalized Documents',
-      text: 'stay here at UPLB. If you have more questions you may visit <here> or contact our admins.',
-      position: 'top-[55px] left-[785px]',
-      total: 3,
-      currentStep: 3,
+      title: 'Archived Messages',
+      text: 'Read messages are moved to the archive after 7 days.',
+      position: 'top-[600px] left-[190px]',
+      total: 2,
+      currentStep: 1,
+    },
+    {
+      title: 'Archived Messages',
+      text: 'This is to help you focus on your most recent and active conversations.',
+      position: 'top-[600px] left-[190px]',
+      total: 2,
+      currentStep: 2,
     },
   ];
 
@@ -74,12 +60,7 @@ const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose 
   const totalSteps = helpContent.length;
 
   const handleNext = () => {
-    if (step < totalSteps) {
-      setStep(step + 1);
-    } else {
-      onClose();
-      setStep(1);
-    }
+    if (step < totalSteps) setStep(step + 1);
   };
 
   const handleBack = () => {
@@ -87,13 +68,13 @@ const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose 
   };
 
   const isLastStep = step === totalSteps;
-  
+
   return (
     <div
       className={`absolute ${current.position} z-[999] flex flex-col items-start animate-in fade-in zoom-in duration-200 transition-all`}
     >
-      <div className="w-[232px] flex flex-col items-center">
-        <Icon icon="ph:caret-up-fill" className="text-aliceblue w-14 h-15 mb-[-23px] z-10" />
+      <div className="w-[232px] flex flex-row items-center">
+        <Icon icon="ph:caret-left-fill" className="text-aliceblue w-14 h-15 mr-[-23px] z-10" />
 
         <div className="w-[232px] rounded-2xl bg-aliceblue shadow-xl border border-whitesmoke-200 flex flex-col items-start overflow-hidden">
           <div className="self-stretch flex flex-col items-start py-4 px-4 gap-3">
@@ -117,7 +98,7 @@ const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose 
             </div>
 
             <div className="self-stretch flex items-center justify-between mt-1">
-              {/* step */}
+              {/* step counter */}
               <div className="text-[12px] font-semibold font-lora text-darkslategray tracking-wide">
                 {current.currentStep}/{current.total}
               </div>

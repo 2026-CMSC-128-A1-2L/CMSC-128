@@ -2,10 +2,14 @@ import { type FunctionComponent, useCallback, useState } from 'react';
 import BuildingRequirements from '../../../components/landlord/addbuilding/BuildingRequirements';
 import BuildingInformation from '../../../components/landlord/addbuilding/BuildingInformation';
 import BuildingSubmit from '../../../components/landlord/addbuilding/BuildingSubmit';
+import TutorialIcon from "../../../../assets/help-chat.svg";
+import TutorialBubble from '../properties/AddBuildingTutorials';
 import { Icon } from '@iconify/react';
 
 const AddBuilding: FunctionComponent = () => {
   const [currentStep, setCurrentStep] = useState(0);
+
+  const [showHelp, setShowHelp] = useState(false);
 
   const onCancelClick = useCallback(() => {
   }, []);
@@ -72,14 +76,26 @@ const AddBuilding: FunctionComponent = () => {
                 </div>
               ))}
             </div>
+            <TutorialBubble show={showHelp} onClose={() => setShowHelp(false)} />
 
             {renderStepContent()}
 
           </div>
         </div>
       </div>
+      {/* ======= FLOATING ICON ========== */}
+      <div
+        className="fixed bottom-10 right-10 z-[1000] cursor-pointer transition-all hover:scale-110 active:scale-95"
+        onClick={() => setShowHelp(!showHelp)}
+      >
+        <img
+          src={TutorialIcon}
+          alt="Help"
+          className="w-16 h-16 drop-shadow-lg"
+        />
+      </div>
     </div>
   );
 };
 
-export default AddBuilding;
+      export default AddBuilding;
