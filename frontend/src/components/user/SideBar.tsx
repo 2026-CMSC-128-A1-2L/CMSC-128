@@ -1,10 +1,11 @@
-import type { FunctionComponent, ReactElement } from "react";
+import { useState, type FunctionComponent, type ReactElement } from "react";
 import search_icon from "../../../assets/sidebar_search.svg";
 import AtlasLogoText from "../../../assets/logo_atlas_text.svg?react";
 import dark_icon from "../../../assets/sidebar_darkmode.svg";
 import { Icon } from "@iconify/react";
 import { Link } from "react-router-dom";
-
+import UserMenuPopup from "./UserMenuPopup";
+import { useNavigate } from "react-router-dom";
 const SidebarItem = ({
   value,
   active,
@@ -33,6 +34,9 @@ const SidebarItem = ({
 };
 
 const SideBar: FunctionComponent = () => {
+
+const [isMenuOpen, setIsMenuOpen] = useState(false);  
+const navigate= useNavigate();
   return (
     <div className="w-50 border-whitesmoke border-solid border box-border flex flex-col items-center py-8 px-num-0 gap-8 text-left text-darkslategray font-buhun-retro-two-free">
       <AtlasLogoText className="fill-darkslategray w-32 h-auto" />
@@ -106,18 +110,38 @@ const SideBar: FunctionComponent = () => {
           <div className="flex flex-col items-start py-num-0 px-num-20">
             <div className="h-[1px] bg-whitesmoke shrink-0" />
           </div>
-          <div className="overflow-hidden flex items-center py-num-10 pl-8 pr-num-20 gap-2">
-            <Icon icon="bi:person-circle" className="w-7 h-7 rounded-[100px]" />
+          
+          <div className="relative">
+            <div className="overflow-hidden flex items-center py-num-10 pl-8 pr-num-20 gap-2 group cursor-pointer"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              <Icon icon="bi:person-circle" className="w-7 h-7 rounded-[100px]" />
 
-            <div className="overflow-hidden flex flex-col items-start justify-center gap-1">
-              <div className="w-[76px] flex items-center">
-                <b className="relative inline-block max-w-[196px]">Sign In</b>
-              </div>
-              <div className="flex items-start text-[10px] text-silver">
-                <b className="relative">to continue</b>
+              <div className="overflow-hidden flex flex-col items-start justify-center gap-1">
+                <div className="w-[76px] flex items-center">
+                  <b className="relative inline-block max-w-[196px] group-hover:text-[#5DC2A8]">Sign In</b>
+                </div>
+                <div className="flex items-start text-[10px] text-silver">
+                  <b className="relative">to continue</b>
+                </div>
               </div>
             </div>
+              <UserMenuPopup 
+              isOpen={isMenuOpen} 
+              onViewProfile={() => {
+                console.log('Routing to profile...')
+                navigate('/profile-switcher')
+              }} 
+              onLogOut={() => {
+                console.log('Logging out...')
+                navigate('/')
+              }} 
+            />
           </div>
+          
+
+
+
         </div>
       </div>
     </div>
