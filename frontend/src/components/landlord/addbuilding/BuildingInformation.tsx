@@ -124,7 +124,7 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
                         <input
                           {...register('name', { required: 'Building name is required' })}
                           placeholder="Aa"
-                          className="flex-1 bg-transparent text-sm text-gray-700 placeholder-slategray outline-none font-medium leading-num-24"
+                          className="flex-1 bg-transparent text-sm text-black placeholder-slategray outline-none font-medium leading-num-24"
                         />
                       </div>
                       {errors.name && <span className="text-xs text-red-500">{errors.name.message}</span>}
@@ -136,13 +136,13 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
                       <div className="self-stretch h-12 rounded-num-12 bg-aliceblue border-whitesmoke border-solid border-[1px] box-border flex items-center px-4">
                         <select
                           {...register('typeOfBuilding', { required: 'Please select a building type' })}
-                          className="flex-1 bg-transparent text-sm text-gray-700 outline-none font-medium appearance-none cursor-pointer"
+                          className="flex-1 bg-transparent text-sm text-black outline-none font-medium appearance-none cursor-pointer"
                         >
                           <option value="">Select type</option>
-                          <option value="residential">Residential</option>
-                          <option value="commercial">Commercial</option>
                           <option value="dormitory">Dormitory</option>
-                          <option value="mixed">Mixed Use</option>
+                          <option value="appartment">Appartment</option>
+                          <option value="bedspacer">Bed Spacer</option>
+                          <option value="transient">Transient</option>
                         </select>
                         <Icon icon="mynaui:chevron-down" className="w-5 h-5 shrink-0 pointer-events-none" />
                       </div>
@@ -157,7 +157,7 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
                       <input
                         {...register('location', { required: 'Location is required' })}
                         placeholder="Aa"
-                        className="flex-1 bg-transparent text-sm text-gray-700 placeholder-slategray outline-none font-medium leading-num-24"
+                        className="flex-1 bg-transparent text-sm text-black placeholder-slategray outline-none font-medium leading-num-24"
                       />
                     </div>
                     {errors.location && <span className="text-xs text-red-500">{errors.location.message}</span>}
@@ -218,7 +218,7 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
               <div className="self-stretch flex items-center">
                 <b className="relative tracking-num--0_01">Room Types</b>
               </div>
-              <div className="self-stretch flex flex-col gap-3 text-left text-num-14 text-gray">
+              <div className="self-stretch flex flex-col gap-3 text-left text-num-14 text-black">
                 {buildingInfo.roomTypes.map((rt) => (
                   <RoomTypeItem key={rt.id} roomType={rt} />
                 ))}

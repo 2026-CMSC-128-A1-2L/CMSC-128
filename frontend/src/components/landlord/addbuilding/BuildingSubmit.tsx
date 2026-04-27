@@ -40,13 +40,13 @@ const RequirementRow: FunctionComponent<{ req: RequirementItem }> = ({ req }) =>
 
       {/* Label + filename */}
       <div className="flex-1 flex flex-col gap-0.5 min-w-0">
-        <span className="text-sm font-bold text-gray-700">{req.label}</span>
+        <span className="text-sm font-bold text-black">{req.label}</span>
         {isUploaded ? (
           <span className="text-xs text-slategray font-medium truncate">
             {req.file!.name} · Submitted: {req.date}
           </span>
         ) : (
-          <span className="text-xs italic text-gray-300">Not uploaded</span>
+          <span className="text-xs italic text-gray-100">Not uploaded</span>
         )}
       </div>
 
@@ -91,7 +91,7 @@ const RoomRow: FunctionComponent<{ room: RoomData; index: number }> = ({ room, i
 const RoomTypeBlock: FunctionComponent<{ roomType: RoomTypeData }> = ({ roomType }) => (
   <div className="w-full rounded-xl border border-whitesmoke flex flex-col overflow-hidden">
     <div className="flex items-center px-4 py-3 bg-gray-50 border-b border-whitesmoke">
-      <b className="text-sm text-gray-700">{roomType.roomType || roomType.name || 'Room Type'}</b>
+      <b className="text-sm text-black">{roomType.roomType || roomType.name || 'Room Type'}</b>
       {roomType.capacity && (
         <span className="ml-3 text-xs font-medium text-slategray bg-aliceblue px-2 py-0.5 rounded-full border border-whitesmoke">
           Capacity: {roomType.capacity}
@@ -123,7 +123,7 @@ const RoomTypeBlock: FunctionComponent<{ roomType: RoomTypeData }> = ({ roomType
           ))}
         </div>
       ) : (
-        <p className="text-xs text-gray-300 italic">No rooms added.</p>
+        <p className="text-xs text-gray-100 italic">No rooms added.</p>
       )}
     </div>
   </div>
@@ -137,16 +137,16 @@ const PaymentMethodBlock: FunctionComponent<{
   data: PaymentMethodData;
 }> = ({ title, accountLabel, data }) => (
   <div className="flex-1 flex flex-col gap-3">
-    <span className="text-sm font-bold text-gray-600 tracking-wide">{title}</span>
+    <span className="text-sm font-bold text-black tracking-wide">{title}</span>
     <div className="rounded-2xl bg-aliceblue border border-whitesmoke flex flex-col py-5 px-6 gap-5">
       <div className="flex items-start gap-8">
         <div className="flex flex-col gap-1 min-w-0">
           <span className="text-xs font-medium text-slategray">Name</span>
-          <span className="text-sm font-bold text-gray-800 truncate">{data.name || '—'}</span>
+          <span className="text-sm font-bold text-black truncate">{data.name || '—'}</span>
         </div>
         <div className="flex flex-col gap-1 min-w-0">
           <span className="text-xs font-medium text-slategray">{accountLabel}</span>
-          <span className="text-sm font-bold text-gray-800 truncate">{data.accountNumber || '—'}</span>
+          <span className="text-sm font-bold text-black truncate">{data.accountNumber || '—'}</span>
         </div>
       </div>
       {data.qrImage ? (
@@ -216,8 +216,8 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
                 {/* Upload progress badge */}
                 <span
                   className={`text-xs font-semibold rounded-full px-3 py-1 ${allUploaded
-                      ? 'bg-teal-100 text-teal-700'
-                      : 'bg-red-100 text-red-600'
+                    ? 'bg-teal-100 text-teal-700'
+                    : 'bg-red-100 text-red-600'
                     }`}
                 >
                   {uploadedCount} / {requirements.length} uploaded
@@ -249,7 +249,7 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
             <div className="self-stretch flex flex-col items-start py-num-10 px-0 gap-2.5 text-left">
               <b className="relative tracking-num--0_01">About</b>
               <div className="self-stretch rounded-num-12 bg-aliceblue border-whitesmoke border-solid border-[1px] py-3 px-4 text-left text-num-14 text-slategray font-medium min-h-[120px]">
-                {buildingInfo.about || <span className="italic text-gray-300">No description provided.</span>}
+                {buildingInfo.about || <span className="italic text-gray-100">No description provided.</span>}
               </div>
             </div>
 
@@ -263,7 +263,7 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-gray-300 italic py-2">No photos uploaded.</p>
+                <p className="text-sm text-gray-100 italic py-2">No photos uploaded.</p>
               )}
             </div>
 
@@ -274,7 +274,7 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
                 {buildingInfo.roomTypes.length > 0 ? (
                   buildingInfo.roomTypes.map((rt) => <RoomTypeBlock key={rt.id} roomType={rt} />)
                 ) : (
-                  <p className="text-sm text-gray-300 italic">No room types added.</p>
+                  <p className="text-sm text-gray-100 italic">No room types added.</p>
                 )}
               </div>
             </div>
@@ -283,7 +283,7 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
             <div className="self-stretch flex flex-col items-start py-4 px-0 gap-4">
               <b className="relative tracking-num--0_01">Payment Methods</b>
               {!payment.enabled ? (
-                <p className="text-sm text-gray-300 italic">Cashless payment not enabled.</p>
+                <p className="text-sm text-gray-100 italic">Cashless payment not enabled.</p>
               ) : (
                 <div className="self-stretch flex flex-col gap-5">
                   <div className="flex items-center gap-2">
@@ -297,7 +297,7 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
                       <div className="flex flex-col gap-3">
                         <span className="text-sm font-bold text-gray-600">GCash</span>
                         <div className="rounded-2xl bg-aliceblue border border-whitesmoke py-5 px-6">
-                          <p className="text-sm text-gray-300 italic">Not set up.</p>
+                          <p className="text-sm text-gray-100 italic">Not set up.</p>
                         </div>
                       </div>
                     )}
@@ -307,7 +307,7 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
                       <div className="flex flex-col gap-3">
                         <span className="text-sm font-bold text-gray-600">Bank Transfer</span>
                         <div className="rounded-2xl bg-aliceblue border border-whitesmoke py-5 px-6">
-                          <p className="text-sm text-gray-300 italic">Not set up.</p>
+                          <p className="text-sm text-gray-100 italic">Not set up.</p>
                         </div>
                       </div>
                     )}
@@ -327,7 +327,7 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
                         <div className="w-8 h-8 rounded-full bg-teal-100 flex items-center justify-center shrink-0">
                           <Icon icon="material-symbols:person-outline-rounded" className="w-4 h-4 text-teal-700" />
                         </div>
-                        <span className="text-sm font-bold text-gray-800">{m.email}</span>
+                        <span className="text-sm font-bold text-slategray">{m.email}</span>
                       </div>
                       <div className="w-full h-px bg-whitesmoke" />
                       <div className="flex flex-col gap-2">
@@ -343,14 +343,14 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
                               ))}
                           </div>
                         ) : (
-                          <span className="text-xs italic text-gray-300">No permissions granted</span>
+                          <span className="text-xs italic text-gray-100">No permissions granted</span>
                         )}
                       </div>
                     </div>
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-gray-300 italic">No managers invited.</p>
+                <p className="text-sm text-gray-100 italic">No managers invited.</p>
               )}
             </div>
 

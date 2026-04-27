@@ -90,14 +90,14 @@ const DetailForm: FunctionComponent<DetailFormProps> = ({
       </div>
 
       {/* Name + Account Number */}
-      <div className="self-stretch flex items-start gap-10 text-gray">
+      <div className="self-stretch flex items-start gap-10 text-black">
         <div className="flex-1 flex flex-col items-start gap-3">
           <b className="relative">Name</b>
           <div className="self-stretch rounded-xl bg-aliceblue border-whitesmoke border-solid border-[1px] flex items-center py-3 px-4">
             <input
               {...register('name')}
               placeholder="Aa"
-              className="flex-1 bg-transparent text-sm text-gray-700 placeholder-slategray outline-none font-medium leading-6"
+              className="flex-1 bg-transparent text-sm text-black placeholder-slategray outline-none font-medium leading-6"
             />
           </div>
         </div>
@@ -109,7 +109,7 @@ const DetailForm: FunctionComponent<DetailFormProps> = ({
             <input
               {...register('accountNumber')}
               placeholder="09"
-              className="flex-1 bg-transparent text-sm text-gray-700 placeholder-slategray outline-none font-medium leading-6"
+              className="flex-1 bg-transparent text-sm text-black placeholder-slategray outline-none font-medium leading-6"
             />
           </div>
         </div>

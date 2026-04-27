@@ -68,7 +68,7 @@ const DocumentCard: FunctionComponent<DocumentCardProps> = ({
       {/* Header row */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <span className="font-bold text-gray-800 text-sm">{label}</span>
+          <span className="font-bold text-black text-sm">{label}</span>
           <span
             className={`text-xs font-semibold rounded-2xl px-3 py-1 ${isUploaded ? 'text-slate-500 bg-slate-100' : 'text-red-600 bg-red-100'
               }`}

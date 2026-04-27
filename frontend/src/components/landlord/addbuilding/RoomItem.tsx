@@ -62,7 +62,7 @@ const RoomItem: FunctionComponent<RoomItemProps> = ({ room, roomTypeId, index, c
           <input
             {...register('number', { required: true })}
             placeholder={String(index + 1)}
-            className="flex-1 bg-transparent text-sm text-gray-700 placeholder-slategray outline-none font-medium leading-6"
+            className="flex-1 bg-transparent text-sm text-black placeholder-slategray outline-none font-medium leading-6"
           />
         </div>
       </div>
@@ -73,12 +73,12 @@ const RoomItem: FunctionComponent<RoomItemProps> = ({ room, roomTypeId, index, c
         <div className="self-stretch rounded-xl bg-aliceblue border border-whitesmoke flex items-center py-2 px-1 gap-2.5">
           <select
             {...register('isAvailable')}
-            className="flex-1 bg-transparent text-sm text-slategray outline-none font-medium leading-6 appearance-none cursor-pointer"
+            className="flex-1 bg-transparent text-sm text-black outline-none font-medium leading-6 appearance-none cursor-pointer"
           >
             <option value="open">Open</option>
             <option value="occupied">Occupied</option>
           </select>
-          <Icon icon="mynaui:chevron-down" className="w-4 h-4 shrink-0 pointer-events-none text-slategray" />
+          <Icon icon="mynaui:chevron-down" className="w-4 h-4 shrink-0 pointer-events-none text-black" />
         </div>
       </div>
 
@@ -97,7 +97,7 @@ const RoomItem: FunctionComponent<RoomItemProps> = ({ room, roomTypeId, index, c
                 },
               })}
               placeholder="0"
-              className="flex-1 bg-transparent text-sm text-slategray outline-none font-medium leading-6"
+              className="flex-1 bg-transparent text-sm text-black outline-none font-medium leading-6"
             />
           </div>
           {/* Display validation error if user exceeds capacity */}

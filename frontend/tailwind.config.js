@@ -152,7 +152,7 @@ export default {
         "num-1-teal": "0.9px solid #096c5b",
       },
       fontFamily: {
-        lora: "Lora",
+        lora: ["Lora", "serif"],
         inter: ["Inter", "sans-serif"],
         "buhun-retro-two-free": ["Buhun Retro Two FREE", "sans-serif"],
         poppins: ["Poppins", "sans-serif"],
