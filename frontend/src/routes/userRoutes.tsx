@@ -20,12 +20,15 @@ import MyCalendar from "../pages/user/calendar/MyCalendar";
 import ProfileSwitcher from "../pages/user/profile/ProfileSwitcher";
 import Report from "../pages/user/profile/current_dorm/Report";
 import LeaseTransfer from "../pages/user/profile/current_dorm/LeaseTransfer";
+import FinalizedApplicationPage1a from "../pages/user/profile/current_dorm/FinalizedApplicationPage1a";
 import { Route } from "react-router-dom";
 
 import Settings from "../pages/user/setting/Settings";
+import TestPage from "../pages/utilities/TestPage";
 
 const userRoutes = [
   <Route key="home" path="/home" element={<HomePage />} />,
+  <Route key="test" path="/test" element={<TestPage />} />,
   <Route key="filter" path="/filter" element={<Filter />} />,
   <Route key="contact" path="/contact-us" element={<ContactUs />} />,
   <Route key="bookmark" path="/bookmark" element={<BookmarksNewUsers />} />,
@@ -63,6 +66,7 @@ const userRoutes = [
     element={<ProfileSwitcher />}
   />,
   <Route key="settings" path="/settings" element={<Settings />} />,
+  <Route key="pendingapplication" path="/finappli" element={<FinalizedApplicationPage1a />} />,
 ];
 
 export default userRoutes;
