@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import { documentSchema, type DocumentType } from '../document/document.model';
 
 const PAYMENT_STATUS = ['unpaid', 'paid', 'overdue'];
-const PAYMENT_METHODS = ['gcash', 'bank_transfer'];
+const PAYMENT_METHODS = ['gcash', 'bank_transfer', ' cash'];
 type PaymentStatusType = (typeof PAYMENT_STATUS)[number];
 type PaymentMethodType = (typeof PAYMENT_METHODS)[number];
 

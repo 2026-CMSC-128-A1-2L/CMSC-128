@@ -10,6 +10,7 @@ import { Unit } from '../unit/unit.model';
 import { combineFilters } from '../../middleware';
 import { DocumentType } from '../document/document.model';
 
+
 export type CreateBillingArguments = {
   rentalId: mongoose.Types.ObjectId;
   dueDate: Date;
@@ -30,7 +31,7 @@ export type UpdateBillingArguments = {
 };
 
 export type submitBillingPaymentArguments = {
-  paymentMethod: 'gcash' | 'bank_transfer';
+  paymentMethod: 'gcash' | 'bank_transfer' | 'cash';
   file: string;
 };
 
@@ -397,7 +398,7 @@ export const getTenantBillings = async (
 
       unitName: unit.roomNumber,
       dueDate: b.dueDate,
-      status: b.paymentStatus,
+      status: b.paymentStatus === 'paid' ? 'paid' : b.dueDate && b.dueDate < new Date() ? 'overdue' : 'unpaid',
       amount: b.totalAmount,
     };
   });
@@ -460,15 +461,26 @@ export const getUserBillings = async (
               totalOutstanding: {
                 $sum: { $cond: [{ $ne: ['$paymentStatus', 'paid'] }, '$totalAmount', 0] },
               },
-              currentStatus: {
-                $min: {
-                  $cond: [
-                    { $eq: ['$paymentStatus', 'overdue'] },
-                    1,
-                    { $cond: [{ $eq: ['$paymentStatus', 'unpaid'] }, 2, 3] },
-                  ],
-                },
+        currentStatus: {
+          $min: {
+            $cond: [
+              {
+                $and: [
+                  { $ne: ['$paymentStatus', 'paid'] },
+                  { $lt: ['$dueDate', new Date()] },
+                ],
               },
+              1,
+              {
+                $cond: [
+                  { $eq: ['$paymentStatus', 'paid'] },
+                  3,
+                  2,
+                ],
+              },
+            ],
+          },
+        },
             },
           },
           {
@@ -496,7 +508,19 @@ export const getUserBillings = async (
               _id: 1,
               dueDate: 1,
               totalAmount: 1,
-              paymentStatus: 1,
+              paymentStatus: {
+                $cond: [
+                  {$eq: ['$paymentStatus', 'paid']}, 
+                  'paid',
+                  {
+                    $cond: [
+                      {$lt: ['$dueDate', new Date()]},
+                      'overdue',
+                      'unpaid'
+                    ]
+                  }
+                ]
+              },
             },
           },
         ],
