@@ -33,8 +33,8 @@ export default function Reportv2() {
         <div className="flex flex-col max-w-[1128px] ml-5 md:ml-10 py-10">
           <BreadcrumbHeader
             routes={[
-              { name: "User Profile", url: "/profile" },
-              { name: "Current Dorm", url: "/profile/dorm" },
+              { name: "User Profile", url: "/profile-switcher" },
+              { name: "Current Dorm", url: "/current-dorm" },
               { name: "Report" },
             ]}
           />
