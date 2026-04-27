@@ -102,7 +102,6 @@ describe('Reviews API', () => {
   // ============================================================================
   describe('POST /api/listings/:listingId/reviews', () => {
     describe('Authentication', () => {
-      // isVerifiedStudent blocks unauthenticated requests before the controller runs.
       it('should return 401 for unauthenticated users', async () => {
         const response = await guestAgent.post(`/api/listings/${listingId}/reviews`).send({
           ratings: { quality: 4, comfort: 3, environment: 5 },
@@ -172,7 +171,6 @@ describe('Reviews API', () => {
         expect(response).statusToBe(404);
       });
 
-      // The landlord has no active rental in this listing, so they fail the tenant check.
       it('should return 422 when the user is not an active tenant', async () => {
         const response = await landlordAgent.post(`/api/listings/${listingId}/reviews`).send({
           ratings: { quality: 4, comfort: 3, environment: 5 },

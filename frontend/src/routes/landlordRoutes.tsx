@@ -11,6 +11,7 @@ import LandlordVisits from "../pages/landlord/visits/LandlordVisits";
 import LandlordFinance from "../pages/landlord/finance/LandlordFinance";
 import LandlordSettings from "../pages/landlord/settings/LandlordSettings";
 import LandlordNewListing from "../pages/landlord/properties/LandlordNewListing";
+import AddBuilding from "../pages/landlord/properties/AddBuilding";
 import BuildingInfo from "../pages/landlord/properties/BuildingInfo";
 import LandlordTenantDetail from "../pages/landlord/tenants/LandlordTenantDetail";
 import LandlordUnvalidatedApplications from "../pages/landlord/tenants/LandlordUnvalidatedApplications";
@@ -91,6 +92,14 @@ const landlordRoutes = [
     path="/landlord/settings"
     element={<LandlordSettings />}
   />,
+
+  <Route
+    key="landlord-add-building"
+    path="/landlord/add-building"
+    element={<AddBuilding />}
+  />,
+
+
   <Route
     key="landlord-tenants-unvalidated"
     path="/landlord/tenants/unvalidated"

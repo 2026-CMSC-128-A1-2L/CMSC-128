@@ -2,15 +2,16 @@ import type { RequestHandler } from 'express';
 import { CreateInviteManagerBodySchema } from 'shared';
 import { sendNotification } from '../notification/notification.service';
 import { inviteManager, acceptInvite, declineInvite, getInvites } from './invite.service';
+import { AppError } from '../../error';
+import { Invite } from './invite.model';
 import z from 'zod';
 
-// GET /api/invites
+
 // returns all invites for the logged in user (by their email)
 export const routeGetInvites: RequestHandler = async (_req, res, _next) => {
   res.status(200).json({ data: await getInvites(res.locals.filters) });
 };
 
-// POST /api/invites
 // landlord sends an invite to a manager by email
 export const routeInviteManager: RequestHandler = async (req, res, _next) => {
   assert.ok(req.user);
@@ -20,8 +21,7 @@ export const routeInviteManager: RequestHandler = async (req, res, _next) => {
   res.status(201).json({ data: invite });
 };
 
-// POST /api/invites/:token/accept
-// logged in user accepts an invite
+// manager accepts an invite from landlord
 export const routeAcceptInvite: RequestHandler = async (req, res, _next) => {
   assert.ok(req.user);
   const token = z.string().parse(req.params.token);
@@ -35,8 +35,7 @@ export const routeAcceptInvite: RequestHandler = async (req, res, _next) => {
   res.sendStatus(204);
 };
 
-// POST /api/invites/:token/decline
-// logged in user declines an invite
+// manager declines an invite
 export const routeDeclineInvite: RequestHandler = async (req, res, _next) => {
   assert.ok(req.user);
   const token = z.string().parse(req.params.token);
@@ -47,5 +46,26 @@ export const routeDeclineInvite: RequestHandler = async (req, res, _next) => {
     `A manager has declined your invite for the facility.`,
   );
 
+  res.sendStatus(204);
+};
+
+
+// get specific invites
+export const routeGetInviteById: RequestHandler = async (req, res, next) => {
+  const token = z.string().parse(req.params.inviteId);
+  const invite = await Invite.findOne({ token, ...res.locals.filters });
+  if (!invite) throw new AppError(404, 'Invite not found.');
+  res.status(200).json({ data: invite });
+};
+
+
+// landlord to delete/retract invites to add a manager
+export const routeDeleteInvite: RequestHandler = async (req, res, next) => {
+  assert.ok(req.user);
+  const token = z.string().parse(req.params.inviteId);
+  const invite = await Invite.findOne({ token, landlordId: req.user._id });
+  if (!invite) throw new AppError(404, 'Invite not found.');
+  if (invite.status !== 'pending') throw new AppError(400, 'Can only cancel pending invites.');
+  await invite.deleteOne();
   res.sendStatus(204);
 };
