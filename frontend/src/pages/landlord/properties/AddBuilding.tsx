@@ -1,13 +1,16 @@
 import { FunctionComponent, useCallback, useState } from 'react';
 import BuildingRequirements from '../../../components/landlord/addbuilding/BuildingRequirements';
-// Import your next component here once you create it
 import BuildingInformation from '../../../components/landlord/addbuilding/BuildingInformation';
 import BuildingSubmit from '../../../components/landlord/addbuilding/BuildingSubmit';
+import TutorialIcon from "../../../../assets/help-chat.svg";
+import TutorialBubble from '../properties/AddBuildingTutorials';
 import { Icon } from '@iconify/react';
 
 const AddBuilding: FunctionComponent = () => {
   // 1. Track the current step (0 = Requirements, 1 = Information, 2 = Finalize)
   const [currentStep, setCurrentStep] = useState(0);
+
+  const [showHelp, setShowHelp] = useState(false);
 
   const onCancelClick = useCallback(() => {
     // Logic to close modal or go back to previous page
@@ -63,7 +66,6 @@ const AddBuilding: FunctionComponent = () => {
             <div className="flex flex-col sticky top-10 self-start" style={{ minWidth: '160px' }}>
               {steps.map((step, i) => (
                 <div key={i} className="flex">
-                  {/* ... Your existing stepper dot/line UI ... */}
                   <div className="flex flex-col items-center mr-3">
                     <div
                       className="w-8 h-8 rounded-full shrink-0 flex items-center justify-center"
@@ -81,6 +83,7 @@ const AddBuilding: FunctionComponent = () => {
                 </div>
               ))}
             </div>
+            <TutorialBubble show={showHelp} onClose={() => setShowHelp(false)} />
 
             {/* 5. Call the render function here instead of hardcoding the component */}
             {renderStepContent()}
@@ -88,8 +91,19 @@ const AddBuilding: FunctionComponent = () => {
           </div>
         </div>
       </div>
+      {/* ======= FLOATING ICON ========== */}
+      <div
+        className="fixed bottom-10 right-10 z-[1000] cursor-pointer transition-all hover:scale-110 active:scale-95"
+        onClick={() => setShowHelp(!showHelp)}
+      >
+        <img
+          src={TutorialIcon}
+          alt="Help"
+          className="w-16 h-16 drop-shadow-lg"
+        />
+      </div>
     </div>
   );
 };
 
-export default AddBuilding;
+      export default AddBuilding;

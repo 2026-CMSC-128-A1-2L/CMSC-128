@@ -1,4 +1,4 @@
-import { FunctionComponent, useCallback } from "react";
+import { FunctionComponent, useCallback, useState } from "react";
 import SideBar from "../../../components/landlord/SideBarLandlord";
 import Footer from "../../../components/general/Footer";
 import { Icon } from "@iconify/react";
@@ -17,10 +17,15 @@ import sapphire1 from "../../../../assets/sapphire1.jpg";
 import sapphire2 from "../../../../assets/sapphire2.jpg";
 import sapphire3 from "../../../../assets/sapphire3.png";
 
+import TutorialBubble from "../dashboard/LandlordHomepageTutorials";
+import TutorialIcon from "../../../../assets/help-chat.svg";
+
 const LandlordHomepage: FunctionComponent = () => {
   const onHeaderContainerClick = useCallback(() => {
     // Add your code here
   }, []);
+
+  const [showHelp, setShowHelp] = useState(false);
 
   return (
     <div className="w-full h-screen relative flex flex-col items-start isolate gap-2.5 text-left text-num-14 text-dimgray font-inter">
@@ -36,6 +41,7 @@ const LandlordHomepage: FunctionComponent = () => {
                 <SideBar />
                 <div className="h-[924px] flex-1 border-whitesmoke border-solid border-[1px] box-border flex flex-col items-start" />
               </div>
+              <TutorialBubble show={showHelp} onClose={() => setShowHelp(false)} />
               <div className="h-[1112px] w-[106px] bg-white border-whitesmoke border-solid border-[1px] box-border overflow-hidden shrink-0 hidden flex-col items-center pt-num-24 pb-[30px] pl-num-32 pr-2.5" />
               <div className="self-stretch flex-1 overflow-hidden flex items-start pt-0 px-0 pb-20">
                 <div className="flex-1 flex flex-col items-start shrink-0">
@@ -57,7 +63,7 @@ const LandlordHomepage: FunctionComponent = () => {
                             <Icon
                               icon="radix-icons:arrow-top-right"
                               className="w-4 relative max-h-full"
-                              alt=""
+                              alt="arrow"
                             />
                           </div>
                         </div>
@@ -574,6 +580,17 @@ const LandlordHomepage: FunctionComponent = () => {
             </div>
           </div>
         </div>
+      </div>
+      {/* ======= FLOATING ICON ========== */}
+      <div
+        className="fixed bottom-10 right-10 z-[1000] cursor-pointer transition-all hover:scale-110 active:scale-95"
+        onClick={() => setShowHelp(!showHelp)}
+      >
+        <img
+          src={TutorialIcon}
+          alt="Help"
+          className="w-16 h-16 drop-shadow-lg"
+        />
       </div>
     </div>
   );

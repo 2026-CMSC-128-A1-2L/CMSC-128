@@ -11,60 +11,53 @@ const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose 
 
   const helpContent = [
     {
-      title: 'Submit Documents',
-      text: '(For Old UP Students - Option 1) Upload your official University ID. Your name, photo, and college must be clear.',
-      position: 'top-[55px] left-[150px]',
+      title: 'Requirements',
+      text: 'To add a building, we need to verify your ownership and business legitimacy. Please prepare the following documents listed on the right.',
+      position: 'top-[-75px] left-[220px]',
       total: 3,
       currentStep: 1,
     },
     {
-      title: 'Submit Documents',
-      text: '(For Old UP Students - Option 2) Upload your official Form 5 which can be downloaded from your AMIS portal.',
-      position: 'top-[55px] left-[150px]',
+      title: 'Requirements',
+      text: 'Additionally, please ensure your DTI Registration and BIR Certificate are up to date. These documents are crucial for the verification process.',
+      position: 'top-[-75px] left-[220px]',
       total: 3,
       currentStep: 2,
     },
     {
-      title: 'Submit Documents',
-      text: '(For Incoming Freshman Students) Upload your Notice of Admission that was sent to you via your UP mail.',
-      position: 'top-[55px] left-[150px]',
+      title: 'Requirements',
+      text: 'Upload your Tenancy Contract Template. This will be used to generate digital agreements once a student chooses your building. Make sure it includes all your standard dorm policies!',
+      position: 'top-[-75px] left-[220px]',
       total: 3,
       currentStep: 3,
     },
     {
-      title: 'Reviewing Documents',
-      text: 'Once submitted, the admin will validate your submissions.',
-      position: 'top-[55px] left-[460px]',
+      title: 'Building Information',
+      text: 'Start adding your building information!',
+      position: 'top-[140px] left-[220px]',
       total: 2,
       currentStep: 1,
     },
     {
-      title: 'Reviewing Documents',
-      text: 'Reviewing your documents may take up to 48 to 72 hours.',
-      position: 'top-[55px] left-[460px]',
+      title: 'Building Information',
+      text: 'Fill out all the necessary details about your building. The more information you provide, the easier it will be for students to choose your property.',
+      position: 'top-[140px] left-[220px]',
       total: 2,
       currentStep: 2,
     },
     {
-      title: 'Finalized Documents',
-      text: 'Once the admin has reviewed and approved of your documents, your account is now secured!',
-      position: 'top-[55px] left-[785px]',
-      total: 3,
+      title: 'Finalize',
+      text: 'Finalize your information by reviewing all the details on the right.',
+      position: 'top-[300px] left-[220px]',
+      total: 2,
       currentStep: 1,
     },
     {
-      title: 'Finalized Documents',
-      text: 'As a verified user, you can now apply, manage, and settle your housing during your...',
-      position: 'top-[55px] left-[785px]',
-      total: 3,
+      title: 'Finalize',
+      text: 'Once you finish reviewing, you may click submit! Your building can now be viewed by potential tenants.',
+      position: 'top-[300px] left-[220px]',
+      total: 2,
       currentStep: 2,
-    },
-    {
-      title: 'Finalized Documents',
-      text: 'stay here at UPLB. If you have more questions you may visit <here> or contact our admins.',
-      position: 'top-[55px] left-[785px]',
-      total: 3,
-      currentStep: 3,
     },
   ];
 
@@ -74,12 +67,7 @@ const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose 
   const totalSteps = helpContent.length;
 
   const handleNext = () => {
-    if (step < totalSteps) {
-      setStep(step + 1);
-    } else {
-      onClose();
-      setStep(1);
-    }
+    if (step < totalSteps) setStep(step + 1);
   };
 
   const handleBack = () => {
@@ -87,13 +75,13 @@ const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose 
   };
 
   const isLastStep = step === totalSteps;
-  
+
   return (
     <div
       className={`absolute ${current.position} z-[999] flex flex-col items-start animate-in fade-in zoom-in duration-200 transition-all`}
     >
-      <div className="w-[232px] flex flex-col items-center">
-        <Icon icon="ph:caret-up-fill" className="text-aliceblue w-14 h-15 mb-[-23px] z-10" />
+      <div className="w-[232px] flex flex-row items-center">
+        <Icon icon="ph:caret-left-fill" className="text-aliceblue w-14 h-15 mr-[-23px] z-10" />
 
         <div className="w-[232px] rounded-2xl bg-aliceblue shadow-xl border border-whitesmoke-200 flex flex-col items-start overflow-hidden">
           <div className="self-stretch flex flex-col items-start py-4 px-4 gap-3">
@@ -117,7 +105,7 @@ const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose 
             </div>
 
             <div className="self-stretch flex items-center justify-between mt-1">
-              {/* step */}
+              {/* step counter */}
               <div className="text-[12px] font-semibold font-lora text-darkslategray tracking-wide">
                 {current.currentStep}/{current.total}
               </div>
