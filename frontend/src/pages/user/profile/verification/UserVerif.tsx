@@ -1,10 +1,11 @@
-import { FunctionComponent, useState, useCallback, useMemo } from 'react';
-import ProgressBar from '../../../../components/user/ProgressBar';
-import TutorialBubble from '../../../../components/user/Tutorials';
-import TutorialIcon from '../../../../../assets/help-chat.svg';
-import UserDocumentsSubmissionHeader from '../../../../components/user/UserDocumentsSubmissionHeader';
-import UserDocumentsList from '../../../../components/user/UserDocumentsList';
-import { userDocuments } from '../../../../components/user/UserDocumentsData';
+import { FunctionComponent, useState, useCallback, useMemo } from "react";
+import ProgressBar from "../../../../components/user/ProgressBar";
+import TutorialBubble from "../../../../components/user/Tutorials";
+import TutorialIcon from "../../../../../assets/help-chat.svg";
+import UserDocumentsSubmissionHeader from "../../../../components/user/user-verification/UserDocumentsSubmissionHeader";
+import UserDocumentsList from "../../../../components/user/user-verification/UserDocumentsList";
+import { userDocuments } from "../../../../components/user/user-verification/UserDocumentsData";
+import type { UserDocumentSlot } from "../../../../components/user/user-verification/UserDocumentsData";
 
 interface UserVerifProps {
   verificationStep: number;
@@ -16,7 +17,7 @@ const UserVerif: FunctionComponent<UserVerifProps> = ({ verificationStep }) => {
 
   const uploadedCount = useMemo(
     () => Object.values(uploads).filter(Boolean).length,
-    [uploads]
+    [uploads],
   );
 
   const canSubmit = uploadedCount === userDocuments.length;
@@ -27,11 +28,11 @@ const UserVerif: FunctionComponent<UserVerifProps> = ({ verificationStep }) => {
 
   const handleSubmit = () => {
     // TODO: Implement submit logic
-    console.log('Submitting documents:', uploads);
+    console.log("Submitting documents:", uploads);
   };
 
   const handleEdit = (id: string) => {
-    console.log('Edit document:', id);
+    console.log("Edit document:", id);
   };
 
   const handleDelete = (id: string) => {
@@ -73,7 +74,11 @@ const UserVerif: FunctionComponent<UserVerifProps> = ({ verificationStep }) => {
         className="fixed bottom-10 right-10 z-[1000] cursor-pointer transition-all hover:scale-110 active:scale-95"
         onClick={() => setShowHelp(!showHelp)}
       >
-        <img src={TutorialIcon} alt="Help" className="w-16 h-16 drop-shadow-lg" />
+        <img
+          src={TutorialIcon}
+          alt="Help"
+          className="w-16 h-16 drop-shadow-lg"
+        />
       </div>
     </div>
   );

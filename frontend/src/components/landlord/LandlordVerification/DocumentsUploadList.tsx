@@ -1,7 +1,5 @@
-import DocumentUploadCard, {
-  type DocumentStatus,
-} from './DocumentUploadCard';
-import { DocumentSlot } from './DocumentsData';
+import DocumentUploadCard, { type DocumentStatus } from "./DocumentUploadCard";
+import type { DocumentSlot } from "./DocumentsData";
 
 interface DocumentsUploadListProps {
   documents: DocumentSlot[];
@@ -15,7 +13,7 @@ const DocumentsUploadList = ({
   onFileSelected,
 }: DocumentsUploadListProps) => {
   const getStatus = (id: string): DocumentStatus =>
-    uploads[id] ? 'uploaded' : 'missing';
+    uploads[id] ? "uploaded" : "missing";
 
   return (
     <>
