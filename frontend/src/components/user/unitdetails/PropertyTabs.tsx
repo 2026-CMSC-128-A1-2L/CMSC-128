@@ -1,24 +1,23 @@
 import { type FunctionComponent, useEffect, useRef, useState } from 'react';
 
-const PropertyTabs: FunctionComponent<{ children: React.ReactElement[] }> = (props: {
-  children: React.ReactElement[];
-}) => {
-  const tabs = props.children.map((x) => x.props.text);
+interface TabProps {
+  text: string;
+  element: React.ReactNode;
+}
 
+const PropertyTabs: FunctionComponent<{ children: React.ReactElement<TabProps>[] }> = (props) => {
+  const tabs = props.children.map((x) => x.props.text);
   const [activeTab, setActiveTab] = useState<string>(tabs[0]);
   const activeIndex = tabs.indexOf(activeTab);
-
   const [width, setWidth] = useState(0);
   const tabContainer = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!tabContainer.current) return;
-
     const observer = new ResizeObserver(() => {
       if (!tabContainer.current) return;
       setWidth(tabContainer.current.clientWidth / tabs.length);
     });
-
     observer.observe(tabContainer.current);
   }, [tabs.length]);
 
@@ -39,7 +38,6 @@ const PropertyTabs: FunctionComponent<{ children: React.ReactElement[] }> = (pro
               </button>
             ))}
           </div>
-
           <div className="w-full relative h-[2px] bg-gainsboro">
             <div
               className="absolute top-0 h-full bg-teal-600 transition-all duration-300 ease-in-out"
@@ -51,9 +49,10 @@ const PropertyTabs: FunctionComponent<{ children: React.ReactElement[] }> = (pro
           </div>
         </div>
       </div>
-
       <div className="w-full">{props.children[activeIndex].props.element}</div>
     </div>
   );
 };
+
 export default PropertyTabs;
+export type { TabProps };

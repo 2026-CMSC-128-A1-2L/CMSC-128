@@ -8,7 +8,7 @@ interface PaymentMethodsDropdownProps {
 
 const PaymentMethodsDropdown: FunctionComponent<
   PaymentMethodsDropdownProps
-> = ({ onSelect }) => {
+> = ({/* onSelect */ }) => {
   const buttonContainerRef = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState(false);
 

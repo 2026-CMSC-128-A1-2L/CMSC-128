@@ -17,9 +17,6 @@ const getHighlightClasses = (state: SideBarLandlordButtonState): string => {
   return 'bg-white';
 };
 
-const _getContentBgClasses = (_state: SideBarLandlordButtonState): string => {
-  return 'bg-transparent';
-};
 
 const getTextClasses = (state: SideBarLandlordButtonState): string => {
   if (state === 'clicked') return 'text-[#096c5b]';
