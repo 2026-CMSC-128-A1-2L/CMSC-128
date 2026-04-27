@@ -45,6 +45,6 @@ export const routeTestLogin: RequestHandler = async (req, res, next) => {
     return next(new AppError(404, 'User not found.'));
   }
 
-  await promisify(req.login.bind(req))(user);
+  await promisify(req.login.bind(req))(user as Express.User);
   res.status(200).send(req.user);
 };

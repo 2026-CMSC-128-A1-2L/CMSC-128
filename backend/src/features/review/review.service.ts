@@ -98,6 +98,7 @@ const addReviewFromAverage = async (review: ReviewType) => {
   const { quality, comfort, environment } = ratings;
 
   const facility = await HousingFacility.findById(facilityId);
+  if (!facility) throw new AppError(404, 'Facility not found.');
   const { qualityAvg, comfortAvg, environmentAvg, reviewCount } = facility;
 
   facility.qualityAvg = (qualityAvg * reviewCount + quality) / (reviewCount + 1);
@@ -113,6 +114,7 @@ const removeReviewFromAverage = async (review: ReviewType) => {
   const { quality, comfort, environment } = ratings;
 
   const facility = await HousingFacility.findById(facilityId);
+  if (!facility) throw new AppError(404, 'Facility not found.');
   const { qualityAvg, comfortAvg, environmentAvg, reviewCount } = facility;
 
   if (reviewCount <= 1) {
@@ -135,7 +137,7 @@ export const updateReview = async (data: UpdateReviewArguments) => {
   if (!review) throw new AppError(404, 'Review not found.');
 
   // NOTE: if pre is approved, post is pending, so it should be removed from the average.
-  if (review.status === 'approved') await removeReviewFromAverage(review);
+  if (review.status === 'approved') await removeReviewFromAverage(review as ReviewType);
 
   review.set({ ratings: data.ratings, description: data.description, status: 'pending' });
   return await review.save();
@@ -153,7 +155,7 @@ export const updateReviewStatus = async (
   if (!review) throw new AppError(404, 'Review not found.');
 
   // NOTE: no previous check is done because it is assumed that it came from pending
-  if (status === 'approved') await addReviewFromAverage(review);
+  if (status === 'approved') await addReviewFromAverage(review as ReviewType);
 
   return review;
 };
@@ -165,7 +167,7 @@ export const deleteReview = async (
   const review = await Review.findOne({ _id: reviewId, userId });
   if (!review) throw new AppError(404, 'Review not found.');
 
-  if (review.status === 'approved') await removeReviewFromAverage(review);
+  if (review.status === 'approved') await removeReviewFromAverage(review as ReviewType);
 
   return await review.deleteOne();
 };

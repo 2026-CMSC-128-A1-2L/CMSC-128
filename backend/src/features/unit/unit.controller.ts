@@ -27,6 +27,7 @@ export const routeCreateUnit: RequestHandler = async (req, res, next) => {
     price: params.price,
     location: params.location ?? null,
     isAvailable: params.isAvailable,
+    legacyTenants: 0,
   };
 
   const newUnit = await createUnit(args, res.locals.filters);
