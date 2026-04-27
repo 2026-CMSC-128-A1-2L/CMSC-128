@@ -1,19 +1,19 @@
-import { type FunctionComponent, useCallback } from "react";
+import { type FunctionComponent } from "react";
 import { Icon } from "@iconify/react";
 import VerifiedBadge from "../../../../../assets/verified_badge.svg";
 import DefaultAvatar from "../../../../../assets/default_avatar.svg";
 import { useState, useRef } from "react";
 import Footer from "../../../../components/general/Footer";
-import Switch from "../../../../components/user/CurrentDormToVerificationSwitch";
+// import Switch from "../../../../components/user/CurrentDormToVerificationSwitch";
 import Sidebar from "../../../../components/user/SideBar";
 import placeholder from "../../../../../assets/logo_atlas_text.svg";
 import { Link } from "react-router-dom";
 
 const CurrentDorm: FunctionComponent = () => {
-  const _onContractInformationContainerClick = useCallback(() => {
-    // Add your code here
-  }, []);
-
+  // const _onContractInformationContainerClick = useCallback(() => {
+  //   // Add your code here
+  // }, []);
+  //
   const [profileImage, setProfileImage] = useState<string>(DefaultAvatar);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -276,7 +276,7 @@ const CurrentDorm: FunctionComponent = () => {
                     </div>
                   </div>
                   <div className="self-stretch h-[680px] flex flex-col items-start gap-12 text-white">
-                    {<Switch />}
+                    {/* {<Switch />} */}
                     <div className="self-stretch flex flex-col items-start gap-3 shrink-0 text-[24px] text-teal-200">
                       <div className="w-[1128px] h-[520px] bg-white flex flex-col items-center justify-center">
                         <div className="w-[916px] h-[520px] rounded-num-12 border-whitesmoke-200 border-solid border-[1px] box-border flex flex-col items-start">
