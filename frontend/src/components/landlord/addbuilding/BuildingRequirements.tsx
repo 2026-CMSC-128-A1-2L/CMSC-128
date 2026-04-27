@@ -2,23 +2,12 @@ import React, { FunctionComponent, useState, useRef, useEffect } from 'react';
 import { Icon } from '@iconify/react';
 import Lightbox from 'yet-another-react-lightbox';
 import 'yet-another-react-lightbox/styles.css';
+import { useBuildingStore } from './useBuildingStore';
+import type { RequirementItem } from './useBuildingStore';
 
-export interface DocumentItem {
-  id: string;
-  label: string;
-  file: File | null;
-  date: string | null;
-}
+// ─── Document Card ────────────────────────────────────────────────────────────
 
-const initialDocuments: DocumentItem[] = [
-  { id: 'valid_id', label: 'Valid ID', file: null, date: null },
-  { id: 'business_permit', label: 'Business Permit', file: null, date: null },
-  { id: 'dti_registration', label: 'DTI Business Name Registration', file: null, date: null },
-  { id: 'bir_cert', label: 'BIR Certificate of Registration', file: null, date: null },
-  { id: 'tenancy_contract', label: 'Tenancy Contract Template', file: null, date: null },
-];
-
-interface DocumentCardProps extends DocumentItem {
+interface DocumentCardProps extends RequirementItem {
   onUpload: (file: File) => void;
   onRemove: () => void;
 }
@@ -31,12 +20,8 @@ const DocumentCard: FunctionComponent<DocumentCardProps> = ({
   onRemove,
 }) => {
   const isUploaded = !!file;
-
-  // States for lightbox and dropdown menu
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  // Ref to handle clicking outside the menu
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -74,7 +59,6 @@ const DocumentCard: FunctionComponent<DocumentCardProps> = ({
   };
 
   const handleViewExample = () => {
-    // Placeholder for viewing example logic
     alert(`Showing example file for ${label}`);
     setIsMenuOpen(false);
   };
@@ -95,7 +79,6 @@ const DocumentCard: FunctionComponent<DocumentCardProps> = ({
 
         {isUploaded && (
           <div className="flex items-center gap-3">
-            {/* View File Button */}
             <button
               onClick={() => setIsLightboxOpen(true)}
               className="hover:opacity-70 transition-opacity"
@@ -103,8 +86,6 @@ const DocumentCard: FunctionComponent<DocumentCardProps> = ({
             >
               <Icon icon="iconamoon:eye" className="w-5 h-5" color="#096C5B" />
             </button>
-
-            {/* Menu Toggle Button */}
             <div className="relative" ref={menuRef}>
               <button
                 onClick={() => setIsMenuOpen((prev) => !prev)}
@@ -112,26 +93,15 @@ const DocumentCard: FunctionComponent<DocumentCardProps> = ({
               >
                 <Icon icon="qlementine-icons:menu-dots-16" className="w-5 h-5" color="#096C5B" />
               </button>
-
-              {/* Dropdown Menu */}
               {isMenuOpen && (
                 <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-100 z-10 overflow-hidden flex flex-col text-sm">
-                  <button
-                    onClick={handleViewExample}
-                    className="w-full text-left px-4 py-2.5 hover:bg-gray-50 text-gray-700 transition-colors"
-                  >
+                  <button onClick={handleViewExample} className="w-full text-left px-4 py-2.5 hover:bg-gray-50 text-gray-700 transition-colors">
                     View Example File
                   </button>
-                  <button
-                    onClick={handleDownload}
-                    className="w-full text-left px-4 py-2.5 hover:bg-gray-50 text-gray-700 transition-colors border-t border-gray-100"
-                  >
+                  <button onClick={handleDownload} className="w-full text-left px-4 py-2.5 hover:bg-gray-50 text-gray-700 transition-colors border-t border-gray-100">
                     Download File
                   </button>
-                  <button
-                    onClick={handleRemove}
-                    className="w-full text-left px-4 py-2.5 hover:bg-red-50 text-red-600 transition-colors border-t border-gray-100 font-medium"
-                  >
+                  <button onClick={handleRemove} className="w-full text-left px-4 py-2.5 hover:bg-red-50 text-red-600 transition-colors border-t border-gray-100 font-medium">
                     Remove File
                   </button>
                 </div>
@@ -158,7 +128,7 @@ const DocumentCard: FunctionComponent<DocumentCardProps> = ({
             </div>
           </>
         ) : (
-          <label className="flex items-center gap-2 cursor-pointer bg-teal-50 hover:bg-teal-100 hover:text-white transition-colors text-[#096C5B] px-4 py-2 rounded-lg w-full justify-center">
+          <label className="flex items-center gap-2 cursor-pointer bg-teal-50 hover:bg-teal-100 transition-colors text-[#096C5B] px-4 py-2 rounded-lg w-full justify-center">
             <Icon icon="material-symbols:upload-rounded" className="w-5 h-5" />
             <span className="text-sm font-semibold">Upload File</span>
             <input
@@ -171,7 +141,6 @@ const DocumentCard: FunctionComponent<DocumentCardProps> = ({
         )}
       </div>
 
-      {/* Lightbox for viewing uploaded image */}
       {isLightboxOpen && file && (
         <Lightbox
           open={isLightboxOpen}
@@ -183,12 +152,15 @@ const DocumentCard: FunctionComponent<DocumentCardProps> = ({
   );
 };
 
+// ─── Main Component ───────────────────────────────────────────────────────────
+
 interface BuildingRequirementsProps {
   onNextClick: () => void;
 }
 
 const BuildingRequirements: FunctionComponent<BuildingRequirementsProps> = ({ onNextClick }) => {
-  const [documents, setDocuments] = useState<DocumentItem[]>(initialDocuments);
+  const { buildingInfo, updateRequirement } = useBuildingStore();
+  const documents = buildingInfo.requirements;
 
   const handleFileUpload = (id: string, uploadedFile: File) => {
     const formattedDate = new Intl.DateTimeFormat('en-GB', {
@@ -196,20 +168,11 @@ const BuildingRequirements: FunctionComponent<BuildingRequirementsProps> = ({ on
       month: 'long',
       year: 'numeric',
     }).format(new Date());
-
-    setDocuments((prevDocs) =>
-      prevDocs.map((doc) =>
-        doc.id === id ? { ...doc, file: uploadedFile, date: formattedDate } : doc
-      )
-    );
+    updateRequirement(id, uploadedFile, formattedDate);
   };
 
   const handleFileRemove = (id: string) => {
-    setDocuments((prevDocs) =>
-      prevDocs.map((doc) =>
-        doc.id === id ? { ...doc, file: null, date: null } : doc
-      )
-    );
+    updateRequirement(id, null, null);
   };
 
   return (
@@ -225,7 +188,6 @@ const BuildingRequirements: FunctionComponent<BuildingRequirementsProps> = ({ on
         />
       ))}
 
-      {/* Next button */}
       <div className="flex justify-center mt-5">
         <button
           onClick={onNextClick}

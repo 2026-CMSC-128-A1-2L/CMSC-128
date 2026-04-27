@@ -37,14 +37,22 @@ export interface ManagerData {
 
 export interface PaymentMethodData {
   name: string;
-  accountNumber: string; // GCash number or bank account number
-  qrImage: string;       // object URL of uploaded QR image
+  accountNumber: string;
+  qrImage: string;
 }
 
 export interface PaymentData {
   enabled: boolean;
   gcash: PaymentMethodData | null;
   bank: PaymentMethodData | null;
+}
+
+// Stores the uploaded file object + display metadata
+export interface RequirementItem {
+  id: string;
+  label: string;
+  file: File | null;
+  date: string | null;
 }
 
 export interface BuildingInformationData {
@@ -57,6 +65,7 @@ export interface BuildingInformationData {
   roomTypes: RoomTypeData[];
   managers: ManagerData[];
   payment: PaymentData;
+  requirements: RequirementItem[];
 }
 
 interface BuildingStore {
@@ -64,6 +73,7 @@ interface BuildingStore {
 
   setBuildingInfo: (data: Partial<BuildingInformationData>) => void;
   setPayment: (data: Partial<PaymentData>) => void;
+  updateRequirement: (id: string, file: File | null, date: string | null) => void;
   reset: () => void;
 
   addRoomType: () => void;
@@ -105,6 +115,14 @@ const defaultPayment: PaymentData = {
   bank: null,
 };
 
+const defaultRequirements: RequirementItem[] = [
+  { id: 'valid_id', label: 'Valid ID', file: null, date: null },
+  { id: 'business_permit', label: 'Business Permit', file: null, date: null },
+  { id: 'dti_registration', label: 'DTI Business Name Registration', file: null, date: null },
+  { id: 'bir_cert', label: 'BIR Certificate of Registration', file: null, date: null },
+  { id: 'tenancy_contract', label: 'Tenancy Contract Template', file: null, date: null },
+];
+
 const defaultState: BuildingInformationData = {
   id: crypto.randomUUID(),
   name: '',
@@ -115,6 +133,7 @@ const defaultState: BuildingInformationData = {
   roomTypes: [{ ...defaultRoomType(), name: '2 Pax Room' }],
   managers: [],
   payment: defaultPayment,
+  requirements: defaultRequirements,
 };
 
 // ─── Store ────────────────────────────────────────────────────────────────────
@@ -132,6 +151,17 @@ export const useBuildingStore = create<BuildingStore>((set) => ({
       buildingInfo: {
         ...state.buildingInfo,
         payment: { ...state.buildingInfo.payment, ...data },
+      },
+    })),
+
+  // Updates a single requirement's file and date by id
+  updateRequirement: (id, file, date) =>
+    set((state) => ({
+      buildingInfo: {
+        ...state.buildingInfo,
+        requirements: state.buildingInfo.requirements.map((req) =>
+          req.id === id ? { ...req, file, date } : req
+        ),
       },
     })),
 

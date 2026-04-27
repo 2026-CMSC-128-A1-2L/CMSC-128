@@ -1,7 +1,7 @@
 import { FunctionComponent, useCallback, useState } from 'react';
 import { Icon } from '@iconify/react';
 import { useBuildingStore } from './useBuildingStore';
-import type { RoomData, RoomTypeData, ManagerData, PaymentMethodData } from './useBuildingStore';
+import type { RoomData, RoomTypeData, ManagerData, PaymentMethodData, RequirementItem } from './useBuildingStore';
 import ListingsSuccess from './ListingsSuccess';
 
 // ─── Props ────────────────────────────────────────────────────────────────────
@@ -20,6 +20,46 @@ const ReadOnlyField: FunctionComponent<{ label: string; value: string }> = ({ la
     </div>
   </div>
 );
+
+// ─── Requirement Row ──────────────────────────────────────────────────────────
+
+const RequirementRow: FunctionComponent<{ req: RequirementItem }> = ({ req }) => {
+  const isUploaded = !!req.file;
+  return (
+    <div className="self-stretch rounded-2xl bg-aliceblue border border-whitesmoke flex items-center py-4 px-6 gap-4">
+      {/* Status icon */}
+      <div
+        className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${isUploaded ? 'bg-teal-100' : 'bg-red-100'
+          }`}
+      >
+        <Icon
+          icon={isUploaded ? 'material-symbols:check-rounded' : 'material-symbols:close-rounded'}
+          className={`w-4 h-4 ${isUploaded ? 'text-teal-700' : 'text-red-500'}`}
+        />
+      </div>
+
+      {/* Label + filename */}
+      <div className="flex-1 flex flex-col gap-0.5 min-w-0">
+        <span className="text-sm font-bold text-gray-700">{req.label}</span>
+        {isUploaded ? (
+          <span className="text-xs text-slategray font-medium truncate">
+            {req.file!.name} · Submitted: {req.date}
+          </span>
+        ) : (
+          <span className="text-xs italic text-gray-300">Not uploaded</span>
+        )}
+      </div>
+
+      {/* Badge */}
+      <span
+        className={`text-xs font-semibold rounded-2xl px-3 py-1 shrink-0 ${isUploaded ? 'text-slate-500 bg-slate-100' : 'text-red-600 bg-red-100'
+          }`}
+      >
+        {isUploaded ? 'Uploaded' : 'Missing'}
+      </span>
+    </div>
+  );
+};
 
 // ─── Room Row ─────────────────────────────────────────────────────────────────
 
@@ -97,11 +137,8 @@ const PaymentMethodBlock: FunctionComponent<{
   data: PaymentMethodData;
 }> = ({ title, accountLabel, data }) => (
   <div className="flex-1 flex flex-col gap-3">
-    {/* Card title */}
     <span className="text-sm font-bold text-gray-600 tracking-wide">{title}</span>
-
     <div className="rounded-2xl bg-aliceblue border border-whitesmoke flex flex-col py-5 px-6 gap-5">
-      {/* Name + Account side by side */}
       <div className="flex items-start gap-8">
         <div className="flex flex-col gap-1 min-w-0">
           <span className="text-xs font-medium text-slategray">Name</span>
@@ -112,16 +149,10 @@ const PaymentMethodBlock: FunctionComponent<{
           <span className="text-sm font-bold text-gray-800 truncate">{data.accountNumber || '—'}</span>
         </div>
       </div>
-
-      {/* QR Code */}
       {data.qrImage ? (
         <div className="flex flex-col gap-2">
           <span className="text-xs font-medium text-slategray">QR Code</span>
-          <img
-            src={data.qrImage}
-            alt="QR"
-            className="h-[120px] w-[120px] rounded-xl object-cover border border-whitesmoke"
-          />
+          <img src={data.qrImage} alt="QR" className="h-[120px] w-[120px] rounded-xl object-cover border border-whitesmoke" />
         </div>
       ) : (
         <div className="flex flex-col gap-1">
@@ -138,18 +169,31 @@ const PaymentMethodBlock: FunctionComponent<{
 const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick }) => {
   const { buildingInfo } = useBuildingStore();
   const [showSuccess, setShowSuccess] = useState(false);
+  const { payment, requirements } = buildingInfo;
+
+  const uploadedCount = requirements.filter((r) => r.file !== null).length;
+  const allUploaded = uploadedCount === requirements.length;
 
   const handleSubmit = useCallback(() => {
+    // Log all data including requirements (file metadata only — File objects can't be JSON serialised)
+    const loggable = {
+      ...buildingInfo,
+      requirements: buildingInfo.requirements.map((r) => ({
+        id: r.id,
+        label: r.label,
+        fileName: r.file?.name ?? null,
+        fileSize: r.file?.size ?? null,
+        date: r.date,
+      })),
+    };
     console.log('=== Final Building Submission ===');
-    console.log(JSON.stringify(buildingInfo, null, 2));
+    console.log(JSON.stringify(loggable, null, 2));
     setShowSuccess(true);
   }, [buildingInfo]);
 
   const handleContinue = useCallback(() => {
     setShowSuccess(false);
   }, []);
-
-  const { payment } = buildingInfo;
 
   return (
     <>
@@ -165,11 +209,33 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
               </p>
             </div>
 
+            {/* ── Requirements ── */}
+            <div className="self-stretch flex flex-col items-start py-4 px-0 gap-4">
+              <div className="self-stretch flex items-center justify-between">
+                <b className="relative tracking-num--0_01">Building Requirements</b>
+                {/* Upload progress badge */}
+                <span
+                  className={`text-xs font-semibold rounded-full px-3 py-1 ${allUploaded
+                      ? 'bg-teal-100 text-teal-700'
+                      : 'bg-red-100 text-red-600'
+                    }`}
+                >
+                  {uploadedCount} / {requirements.length} uploaded
+                </span>
+              </div>
+              <div className="self-stretch flex flex-col gap-3">
+                {requirements.map((req) => (
+                  <RequirementRow key={req.id} req={req} />
+                ))}
+              </div>
+            </div>
+
+            {/* Divider */}
+            <div className="self-stretch h-px bg-whitesmoke my-2" />
+
             {/* Building Info */}
             <div className="self-stretch flex flex-col items-start gap-6">
-              <div className="self-stretch flex items-center">
-                <b className="relative tracking-num--0_01">Building Information</b>
-              </div>
+              <b className="relative tracking-num--0_01">Building Information</b>
               <div className="self-stretch flex flex-col items-start gap-5 text-left">
                 <div className="self-stretch flex items-start gap-10">
                   <ReadOnlyField label="Name" value={buildingInfo.name} />
@@ -213,20 +279,17 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
               </div>
             </div>
 
-            {/* ── Payment Methods ── */}
+            {/* Payment Methods */}
             <div className="self-stretch flex flex-col items-start py-4 px-0 gap-4">
               <b className="relative tracking-num--0_01">Payment Methods</b>
               {!payment.enabled ? (
                 <p className="text-sm text-gray-300 italic">Cashless payment not enabled.</p>
               ) : (
                 <div className="self-stretch flex flex-col gap-5">
-                  {/* Enabled badge */}
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 rounded-full bg-teal-600 shrink-0" />
                     <span className="text-xs font-semibold text-teal-700">Cashless Payment Enabled</span>
                   </div>
-
-                  {/* GCash + Bank side by side, equal width */}
                   <div className="self-stretch grid grid-cols-2 gap-5">
                     {payment.gcash && payment.gcash.name ? (
                       <PaymentMethodBlock title="GCash" accountLabel="GCash Number" data={payment.gcash} />
@@ -259,22 +322,14 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
               {buildingInfo.managers.length > 0 ? (
                 <div className="self-stretch flex flex-col gap-3">
                   {buildingInfo.managers.map((m: ManagerData) => (
-                    <div
-                      key={m.email}
-                      className="self-stretch rounded-2xl bg-aliceblue border border-whitesmoke flex flex-col py-5 px-6 gap-4"
-                    >
-                      {/* Email */}
+                    <div key={m.email} className="self-stretch rounded-2xl bg-aliceblue border border-whitesmoke flex flex-col py-5 px-6 gap-4">
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded-full bg-teal-100 flex items-center justify-center shrink-0">
                           <Icon icon="material-symbols:person-outline-rounded" className="w-4 h-4 text-teal-700" />
                         </div>
                         <span className="text-sm font-bold text-gray-800">{m.email}</span>
                       </div>
-
-                      {/* Divider */}
                       <div className="w-full h-px bg-whitesmoke" />
-
-                      {/* Permissions */}
                       <div className="flex flex-col gap-2">
                         <span className="text-xs font-medium text-slategray">Permissions</span>
                         {Object.values(m.checkboxes).some(Boolean) ? (
@@ -282,10 +337,7 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
                             {(Object.entries(m.checkboxes) as [string, boolean][])
                               .filter(([, enabled]) => enabled)
                               .map(([key]) => (
-                                <span
-                                  key={key}
-                                  className="text-xs font-semibold bg-white border border-whitesmoke text-gray-600 rounded-full px-3 py-1"
-                                >
+                                <span key={key} className="text-xs font-semibold bg-white border border-whitesmoke text-gray-600 rounded-full px-3 py-1">
                                   {key.replace(/([A-Z])/g, ' $1').replace(/^./, (s) => s.toUpperCase())}
                                 </span>
                               ))}

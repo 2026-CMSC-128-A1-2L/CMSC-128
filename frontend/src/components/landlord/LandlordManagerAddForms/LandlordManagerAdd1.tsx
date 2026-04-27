@@ -185,12 +185,12 @@ const AddManager1: FunctionComponent<Props> = ({ onCancel, onSend }) => {
 
         {/* ── Actions ── */}
         <div className="flex items-center gap-[13px] text-[13px] text-crimson font-inter">
-          <div className="rounded-[10px] flex items-center justify-center py-[6px] px-5">
+          <div className="rounded-[10px] flex items-center justify-center py-[6px] px-5 text-red-500">
             <button type="button" className="relative font-semibold" onClick={onCancel}>
               Cancel
             </button>
           </div>
-          <div className="rounded-[10px] bg-lightcyan overflow-hidden flex items-center justify-center py-[6px] px-5 text-teal">
+          <div className="w-30 rounded-[10px] bg-lightcyan overflow-hidden flex items-center justify-center py-[6px] text-teal">
             <button type="submit" className="relative font-semibold">
               Send Invite
             </button>
