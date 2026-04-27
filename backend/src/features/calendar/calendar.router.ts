@@ -1,9 +1,13 @@
 import { Router } from 'express';
-import { routeGetCalendar } from './calendar.controller';
+import { isLoggedIn } from '../../middleware';
+import { routeGetCalendar, routeGetUpcomingEvents } from './calendar.controller';
 
 const router = Router();
 
 // GET /api/calendar
-router.get('/', routeGetCalendar);
+router.get('/', isLoggedIn, routeGetCalendar);
+
+// GET api/calendar/upcoming
+router.get('/upcoming', isLoggedIn, routeGetUpcomingEvents);
 
 export default router;
