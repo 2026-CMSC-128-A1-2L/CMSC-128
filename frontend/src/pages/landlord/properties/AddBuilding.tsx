@@ -1,4 +1,4 @@
-import { FunctionComponent, useCallback, useState } from 'react';
+import { type FunctionComponent, useCallback, useState } from 'react';
 import BuildingRequirements from '../../../components/landlord/addbuilding/BuildingRequirements';
 import BuildingInformation from '../../../components/landlord/addbuilding/BuildingInformation';
 import BuildingSubmit from '../../../components/landlord/addbuilding/BuildingSubmit';
@@ -7,32 +7,26 @@ import TutorialBubble from '../properties/AddBuildingTutorials';
 import { Icon } from '@iconify/react';
 
 const AddBuilding: FunctionComponent = () => {
-  // 1. Track the current step (0 = Requirements, 1 = Information, 2 = Finalize)
   const [currentStep, setCurrentStep] = useState(0);
 
   const [showHelp, setShowHelp] = useState(false);
 
   const onCancelClick = useCallback(() => {
-    // Logic to close modal or go back to previous page
   }, []);
 
-  // 2. Make onNextClick advance the step
   const onNextClick = useCallback(() => {
     setCurrentStep((prev) => prev + 1);
   }, []);
 
-  // Make a "Previous" click if you need one later
   const onPrevClick = useCallback(() => {
     setCurrentStep((prev) => prev - 1);
   }, [])
 
-  // 3. Create a function to conditionally render the content based on the step
   const renderStepContent = () => {
     switch (currentStep) {
       case 0:
         return <BuildingRequirements onNextClick={onNextClick} />;
       case 1:
-        // Pass onNextClick to the next component too if it has a next button
         return <BuildingInformation onNextClick={onNextClick} onPrevClick={onPrevClick} />;
       case 2:
 
@@ -41,7 +35,6 @@ const AddBuilding: FunctionComponent = () => {
     }
   };
 
-  // 4. Update the stepper array to dynamically highlight the active step
   const steps = [
     { label: 'Requirements', active: currentStep === 0 },
     { label: 'Building Information', active: currentStep === 1 },
@@ -85,7 +78,6 @@ const AddBuilding: FunctionComponent = () => {
             </div>
             <TutorialBubble show={showHelp} onClose={() => setShowHelp(false)} />
 
-            {/* 5. Call the render function here instead of hardcoding the component */}
             {renderStepContent()}
 
           </div>

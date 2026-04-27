@@ -1,4 +1,4 @@
-import { FunctionComponent, useState, useEffect } from 'react';
+import { type FunctionComponent, useState, useEffect } from 'react';
 import ProgressRow from './ProgressBar';
 import type { Billing } from '../types/billing';
 

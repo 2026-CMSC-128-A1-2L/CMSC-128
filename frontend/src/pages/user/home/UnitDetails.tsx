@@ -1,4 +1,4 @@
-import { FunctionComponent, useCallback, useState } from "react";
+import { type FunctionComponent, useCallback, } from "react";
 import SideBar from "../../../components/user/SideBar";
 import { Icon } from "@iconify/react";
 import PropertyTabs from "../../../components/user/unitdetails/PropertyTabs";

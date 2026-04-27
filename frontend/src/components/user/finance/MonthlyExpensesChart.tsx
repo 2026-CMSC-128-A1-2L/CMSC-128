@@ -1,10 +1,11 @@
-import { FunctionComponent, useState } from 'react';
-import { Icon } from '@iconify/react';
+import { type FunctionComponent, useState } from 'react';
 
-interface MonthlyData {
+{/*
+  interface MonthlyData {
   month: string;
   amount: number;
 }
+*/}
 
 const ALL_MONTHS = ['APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC', 'JAN', 'FEB', 'MAR'];
 const ALL_EXPENSES = [4500, 4850, 4300, 4500, 4700, 4900, 5100, 4950, 5200, 5050, 5300, 5450];

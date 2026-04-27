@@ -1,5 +1,5 @@
 import { Icon } from "@iconify/react";
-import { FunctionComponent, useState, useRef, useEffect } from "react";
+import { type FunctionComponent, useState, useRef, useEffect } from "react";
 import PortalPopup from "../../../components/general/PortalPopup";
 
 export type PaymentMethodsType = {

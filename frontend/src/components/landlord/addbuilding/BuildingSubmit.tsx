@@ -1,4 +1,4 @@
-import { FunctionComponent, useCallback, useState } from 'react';
+import { type FunctionComponent, useCallback, useState } from 'react';
 import { Icon } from '@iconify/react';
 import { useBuildingStore } from './useBuildingStore';
 import type { RoomData, RoomTypeData, ManagerData, PaymentMethodData, RequirementItem } from './useBuildingStore';
@@ -43,7 +43,7 @@ const RequirementRow: FunctionComponent<{ req: RequirementItem }> = ({ req }) =>
         <span className="text-sm font-bold text-black">{req.label}</span>
         {isUploaded ? (
           <span className="text-xs text-slategray font-medium truncate">
-            {req.file!.name} · Submitted: {req.date}
+            {req.file?.name} · Submitted: {req.date}
           </span>
         ) : (
           <span className="text-xs italic text-gray-100">Not uploaded</span>
@@ -291,7 +291,7 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
                     <span className="text-xs font-semibold text-teal-700">Cashless Payment Enabled</span>
                   </div>
                   <div className="self-stretch grid grid-cols-2 gap-5">
-                    {payment.gcash && payment.gcash.name ? (
+                    {payment.gcash?.name ? (
                       <PaymentMethodBlock title="GCash" accountLabel="GCash Number" data={payment.gcash} />
                     ) : (
                       <div className="flex flex-col gap-3">
@@ -301,7 +301,7 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
                         </div>
                       </div>
                     )}
-                    {payment.bank && payment.bank.name ? (
+                    {payment.bank?.name ? (
                       <PaymentMethodBlock title="Bank Transfer" accountLabel="Account Number" data={payment.bank} />
                     ) : (
                       <div className="flex flex-col gap-3">
@@ -325,19 +325,18 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
                     <div key={m.email} className="self-stretch rounded-2xl bg-aliceblue border border-whitesmoke flex flex-col py-5 px-6 gap-4">
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded-full bg-teal-100 flex items-center justify-center shrink-0">
-                          <Icon icon="material-symbols:person-outline-rounded" className="w-4 h-4 text-teal-700" />
                         </div>
                         <span className="text-sm font-bold text-slategray">{m.email}</span>
                       </div>
                       <div className="w-full h-px bg-whitesmoke" />
                       <div className="flex flex-col gap-2">
-                        <span className="text-xs font-medium text-slategray">Permissions</span>
+                        <span className="text-sm font-medium text-slategray">Permissions</span>
                         {Object.values(m.checkboxes).some(Boolean) ? (
                           <div className="flex flex-wrap gap-2">
                             {(Object.entries(m.checkboxes) as [string, boolean][])
                               .filter(([, enabled]) => enabled)
                               .map(([key]) => (
-                                <span key={key} className="text-xs font-semibold bg-white border border-whitesmoke text-gray-600 rounded-full px-3 py-1">
+                                <span key={key} className="text-xs font-semibold bg-white border border-whitesmoke text-slategray rounded-full px-3 py-1">
                                   {key.replace(/([A-Z])/g, ' $1').replace(/^./, (s) => s.toUpperCase())}
                                 </span>
                               ))}

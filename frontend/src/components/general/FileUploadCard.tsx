@@ -1,4 +1,4 @@
-import React from 'react';
+import type React from 'react';
 import UploadIcon from '../../../assets/upload_media_icon.svg'
 import EyeIcon from '../../../assets/iconamoon_eye.svg'
 import MoreIcon from '../../../assets/qlementine-icons_menu-dots-16.svg'

@@ -1,4 +1,4 @@
-import { FunctionComponent, useEffect, useRef, useState } from 'react';
+import { type FunctionComponent, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Icon } from '@iconify/react';
 import { useBuildingStore } from './useBuildingStore';
@@ -65,8 +65,6 @@ const DetailForm: FunctionComponent<DetailFormProps> = ({
     setQrError('');
     const url = URL.createObjectURL(file);
     setQrPreview(url);
-    // onSave will fire via the watch useEffect on next render,
-    // but we also call it directly here so the QR is captured immediately
     const current = watch();
     onSave(current.name ?? '', current.accountNumber ?? '', url);
   };
@@ -164,7 +162,6 @@ const DetailForm: FunctionComponent<DetailFormProps> = ({
   );
 };
 
-// ─── Main Payments Component ──────────────────────────────────────────────────
 
 const Payments: FunctionComponent = () => {
   const { buildingInfo, setPayment } = useBuildingStore();

@@ -1,4 +1,5 @@
-import React, { FunctionComponent, useState, useRef, useEffect } from 'react';
+import type React from 'react';
+import { type FunctionComponent, useState, useRef, useEffect } from 'react'
 import { Icon } from '@iconify/react';
 import Lightbox from 'yet-another-react-lightbox';
 import 'yet-another-react-lightbox/styles.css';

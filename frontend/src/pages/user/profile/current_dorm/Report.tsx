@@ -27,8 +27,7 @@ export default function Reportv2() {
   const [reportJsonData, setReportJsonData] = useState("");
 
   return (
-    <>
-      <div className="flex">
+    <div className="flex">
         <SideBar />
         <div className="flex flex-col max-w-[1128px] ml-5 md:ml-10 py-10">
           <BreadcrumbHeader
@@ -77,6 +76,5 @@ export default function Reportv2() {
           </div>
         </div>
       </div>
-    </>
   );
 }

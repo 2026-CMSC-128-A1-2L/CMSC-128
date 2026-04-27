@@ -1,4 +1,4 @@
-import React from 'react';
+import type React from 'react';
 
 // Define the props so it can be controlled by the parent component
 interface CheckboxItemProps {

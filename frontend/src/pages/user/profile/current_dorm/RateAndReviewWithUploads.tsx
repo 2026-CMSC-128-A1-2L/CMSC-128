@@ -1,4 +1,4 @@
-import { FunctionComponent, useCallback } from "react";
+import { type FunctionComponent, useCallback } from "react";
 import { Icon } from "@iconify/react";
 import Location from "../../../../../assets/pin_location_icon.svg";
 import House from "../../../../../assets/house_icon.svg";

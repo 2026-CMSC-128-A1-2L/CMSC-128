@@ -5,7 +5,6 @@ import DormCard from '../../../components/user/DormCard';
 import { dormData } from '../../../data/dorms';
 import Banner from '../../../components/general/Banner';
 import FilterTab from '../../../components/user/Filter/FilterTab';
-import Footer from '../../../components/general/Footer';
 
 const HomePage: FunctionComponent = () => {
   const onViewMoreContainerClick = useCallback(() => {

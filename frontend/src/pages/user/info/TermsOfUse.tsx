@@ -1,5 +1,4 @@
-import { FunctionComponent, useCallback } from "react";
-import { Icon } from "@iconify/react";
+import { type FunctionComponent, useCallback } from "react";
 import SideBar from "../../../components/user/SideBar";
 import { Link } from "react-router-dom";
 import BreadcrumbHeader from "../../../components/general/Breadcrumb";
@@ -664,7 +663,7 @@ const TermsOfUse: FunctionComponent = () => {
                                     <a
                                       className="text-[inherit]"
                                       href={`https://www.claudeusercontent.com/?domain=claude.ai&parentOrigin=https%3A%2F%2Fclaude.ai&errorReportingMode=parent&formattedSpreadsheets=true#`}
-                                      target="_blank"
+                                      target="_blank" rel="noopener"
                                     >
                                       <span className="[text-decoration:underline]">
                                         Privacy Policy

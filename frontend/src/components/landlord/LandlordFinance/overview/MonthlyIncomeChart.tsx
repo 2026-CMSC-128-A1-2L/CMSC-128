@@ -1,5 +1,4 @@
-import { FunctionComponent, useState, useEffect } from 'react';
-import type { Billing } from '../billings/types/billing';
+import { type FunctionComponent, useState, useEffect } from 'react';
 
 interface MonthlyData {
   month: string;
@@ -8,12 +7,13 @@ interface MonthlyData {
   totalIncome: number;
 }
 
-interface MonthToShow {
+{/*interface MonthToShow {
   monthIndex: number;
   year: number;
 }
 
-const ALL_MONTHS = [
+
+const _ALL_MONTHS = [
   'JAN',
   'FEB',
   'MAR',
@@ -27,6 +27,8 @@ const ALL_MONTHS = [
   'NOV',
   'DEC',
 ];
+
+*/}
 
 type TimeRange = '12' | '6';
 
@@ -75,7 +77,7 @@ const MonthlyIncomeChart: FunctionComponent = () => {
 
   useEffect(() => {
     fetchMonthlyIncome();
-  }, [selectedRange]);
+  }, [fetchMonthlyIncome]);
 
   const getChartData = () => {
     if (monthlyData.length === 0) {

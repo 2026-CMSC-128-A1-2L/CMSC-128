@@ -1,4 +1,4 @@
-import { FunctionComponent, useState, useCallback } from "react";
+import { type FunctionComponent, useState, useCallback } from "react";
 import Footer from "../../../components/general/Footer";
 import SideBar from "../../../components/user/SideBar";
 import MiniCalendar from "../../../components/user/MiniCalendar";

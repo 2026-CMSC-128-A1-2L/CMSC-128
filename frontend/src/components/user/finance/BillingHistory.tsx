@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import type { FunctionComponent } from 'react';
 import type { BillingHistoryItem } from '../finance/types/tenantFinance';
 
 interface BillingHistoryProps {
