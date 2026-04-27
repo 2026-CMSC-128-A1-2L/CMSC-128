@@ -1,4 +1,5 @@
-import React, { useState, useCallback, useMemo, memo } from 'react';
+import type React from 'react';
+import { useState, useCallback, useMemo, memo } from 'react';
 import { Icon } from '@iconify/react';
 
 import Lightbox from 'yet-another-react-lightbox';

@@ -1,6 +1,5 @@
-import { FunctionComponent, useState, useEffect } from "react";
+import { type FunctionComponent, useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
-import { useNavigate } from "react-router-dom";
 import SideBar from "../../../components/user/SideBar";
 import Footer from "../../../components/general/Footer";
 import PaymentMethodsDropdown from "../../../components/user/finance/PaymentMethodsDropdown";

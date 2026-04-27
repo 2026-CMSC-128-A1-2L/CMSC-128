@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import type { FunctionComponent } from 'react';
 import bill from '../../../../assets/billings.png';
 import trash from '../../../../assets/trash.svg';
 import report from '../../../../assets/reportUser.svg';

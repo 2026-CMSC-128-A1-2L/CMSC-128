@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import type { FunctionComponent } from 'react';
 import allowed from '../../../../assets/allowed.svg';
 import not_allowed from '../../../../assets/not_allowed.svg';
 

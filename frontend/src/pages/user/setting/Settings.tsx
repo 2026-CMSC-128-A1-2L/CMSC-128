@@ -1,4 +1,4 @@
-import { FunctionComponent, useCallback } from 'react';
+import type { FunctionComponent, } from 'react';
 import SideBar from '../../../components/user/SideBar';
 import Footer from '../../../components/general/Footer';
 import PropertyTabs from '../../../components/user/unitdetails/PropertyTabs';

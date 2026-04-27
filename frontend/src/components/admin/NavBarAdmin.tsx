@@ -9,7 +9,6 @@ const NavBarAdmin: FunctionComponent = () => {
         <div className="flex h-[74px] w-[185px] shrink-0 items-center">
           <img
             src={atlasLogo}
-            s
             alt="Atlas logo"
             className="h-[74px] w-[185px] object-contain object-left"
           />

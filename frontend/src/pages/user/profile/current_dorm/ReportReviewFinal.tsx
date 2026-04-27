@@ -1,15 +1,12 @@
-import { FunctionComponent, useCallback } from 'react';
+import { type FunctionComponent, useCallback } from 'react';
 import SideBar from '../../../../components/user/SideBar';
 import AtlasLogo from '../../assets/atlas logo (for white bg).png';
-import Checkpoint from '../../assets/checkpoint.svg';
 import Icon from '../../assets/icon.svg';
 import IconAMoonArrowRight2 from '../../assets/iconamoon_arrow-right-2.svg';
 import IconAMoonEye from '../../assets/iconamoon_eye.svg';
 import Icons8 from '../../assets/icons8_upload-2.svg';
 import Image from '../../assets/image.png';
-import Photo from '../../assets/photo.svg';
 import Qlementine from '../../assets/qlementine-icons_menu-dots-16.svg';
-import Upload from '../../../utilities/Upload';
 
 const ReportReviewFinal: FunctionComponent = () => {
   const onUserProfileTextClick = useCallback(() => {

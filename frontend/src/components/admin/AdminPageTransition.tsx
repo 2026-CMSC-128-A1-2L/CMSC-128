@@ -1,5 +1,5 @@
 import { useEffect, useState, type ReactNode } from 'react';
-import { useLocation } from 'react-router-dom';
+// import { useLocation } from 'react-router-dom';
 
 type AdminPageTransitionProps = {
   children: ReactNode;
@@ -18,7 +18,7 @@ const AdminPageTransition = ({
   duration = 260,
   className = '',
 }: AdminPageTransitionProps) => {
-  const location = useLocation();
+  // const _location = useLocation();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -27,7 +27,7 @@ const AdminPageTransition = ({
     // committed before we flip to opacity-100, guaranteeing the transition.
     const id = requestAnimationFrame(() => setVisible(true));
     return () => cancelAnimationFrame(id);
-  }, [location.pathname]);
+  }, []);
 
   return (
     <div

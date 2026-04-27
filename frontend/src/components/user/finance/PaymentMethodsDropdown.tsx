@@ -1,4 +1,4 @@
-import { FunctionComponent, useRef, useState, useCallback } from "react";
+import { type FunctionComponent, useRef, useState, useCallback } from "react";
 import { Icon } from "@iconify/react";
 import PaymentMethods from "./PaymentMethods";
 
@@ -8,7 +8,7 @@ interface PaymentMethodsDropdownProps {
 
 const PaymentMethodsDropdown: FunctionComponent<
   PaymentMethodsDropdownProps
-> = ({ onSelect }) => {
+> = ({/* onSelect */ }) => {
   const buttonContainerRef = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState(false);
 

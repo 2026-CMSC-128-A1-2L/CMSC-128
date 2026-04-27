@@ -1,4 +1,4 @@
-import { FunctionComponent, useState, useEffect, useRef } from 'react';
+import { type FunctionComponent, useState, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { Icon } from '@iconify/react';
 import Lightbox from 'yet-another-react-lightbox';

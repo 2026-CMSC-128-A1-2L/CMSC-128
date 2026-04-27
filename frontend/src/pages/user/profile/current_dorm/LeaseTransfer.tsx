@@ -2,7 +2,6 @@ import CurrentDormInfoCard from "../../../../components/CurrentDormInfoCard"
 import StepIndicator from "../../../../components/StepIndicator"
 import DormitoryImg from '../../../../../assets/image.png'
 import SideBar from "../../../../components/user/SideBar"
-import Header from "../../../../components/user/user-report/Header"
 import BreadcrumbHeader from "../../../../components/general/Breadcrumb"
 import ReasonContent from "../../../../components/user/lease-transfer/ReasonContent"
 
@@ -23,7 +22,6 @@ export default function LeaseTransfer() {
     const [leaseTransferStages,setLeaseTransferStages]=useState(1)
 
     return (
-        <>
         <div className="flex">
                 <SideBar />
                 <div className="flex flex-col max-w-[1128px] md:ml-10 py-10">
@@ -47,9 +45,9 @@ export default function LeaseTransfer() {
                         />
                         <StepIndicator currentStep={leaseTransferStages} steps={StepIndicatorStages}/>
                         <div className="w-full px-25 my-15">
-                            {leaseTransferStages==1 && <ReasonContent leaseTransferStages={leaseTransferStages} setLeaseTransferStages={setLeaseTransferStages}/>}
-                            {leaseTransferStages==2 && <DocumentsContent leaseTransferStages={leaseTransferStages} setLeaseTransferStages={setLeaseTransferStages}/>}
-                            {leaseTransferStages==3 && <FinalizeContent 
+                            {leaseTransferStages===1 && <ReasonContent leaseTransferStages={leaseTransferStages} setLeaseTransferStages={setLeaseTransferStages}/>}
+                            {leaseTransferStages===2 && <DocumentsContent leaseTransferStages={leaseTransferStages} setLeaseTransferStages={setLeaseTransferStages}/>}
+                            {leaseTransferStages===3 && <FinalizeContent 
                                                         leaseTransferStages={leaseTransferStages}    
                                                         setLeaseTransferStages={setLeaseTransferStages}
                                                         DormitoryName={DormitoryName}
@@ -64,6 +62,5 @@ export default function LeaseTransfer() {
                 
                 
             </div>
-        </>
     )
 }

@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import type { FunctionComponent } from 'react';
-import SideBar from '../../../../components/user/SideBar';
+import SideBar from '../../../../components/landlord/SideBarLandlord';
 import Footer from '../../../../components/general/Footer';
 import { Icon } from '@iconify/react';
 import VerifiedBadge from '../../../../../assets/verified_badge.svg';
@@ -8,7 +8,7 @@ import TutorialBubble from '../../../../components/landlord/TutorialsForLandlord
 import TutorialIcon from '../../../../../assets/help-chat.svg';
 
 const LandlordVerif: FunctionComponent = () => {
-  const [verificationStep, setVerificationStep] = useState(2); // 0: submit, 1: reviewing, 2: finish
+  const [verificationStep, _setVerificationStep] = useState(2); // 0: submit, 1: reviewing, 2: finish
 
   const onArrowUpClick = useCallback(() => {
     const anchor = document.querySelector("[data-scroll-to='searchBarContainer']");

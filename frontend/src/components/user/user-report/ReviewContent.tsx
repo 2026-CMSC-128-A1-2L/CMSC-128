@@ -54,14 +54,13 @@ export default function ReviewContent(props: ReviewContentProps) {
     }
     const {reportStages,setReportStages,reportJsonData, setReportJsonData}=props
     return (
-        <>
-            <div className="flex flex-col max-w-[714px]  text-black  font-inter py-10 gap-30">
+        <div className="flex flex-col max-w-[714px]  text-black  font-inter py-10 gap-30">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-10 px-4">
                     
                     <div className='flex flex-col items-center gap-4'>
                         <img src={InfoIcon} alt="" className="w-7 h-7"/>
                         <p className="text-[#224c25] text-[24px]">Information</p>
-                            {reportField.filter((field,fieldIndex)=>{return field.category==="Information"}).map((field,fieldIndex)=>{
+                            {reportField.filter((field,_fieldIndex)=>{return field.category==="Information"}).map((field,_fieldIndex)=>{
                                 return(
                                 <CheckboxItem key={field.id}
                                     label={field.label}
@@ -77,7 +76,7 @@ export default function ReviewContent(props: ReviewContentProps) {
                     <div className='flex flex-col items-center gap-4'>
                         <img src={CommIcon} alt="" className="w-7 h-7"/>
                         <p className="text-[#224c25] text-[24px]">Communication</p>
-                        {reportField.filter((field,fieldIndex)=>{return field.category==="Communication"}).map((field,fieldIndex)=>{
+                        {reportField.filter((field,_fieldIndex)=>{return field.category==="Communication"}).map((field,_fieldIndex)=>{
                                 return(
                                 <CheckboxItem key={field.id}
                                     label={field.label}
@@ -93,7 +92,7 @@ export default function ReviewContent(props: ReviewContentProps) {
                     <div className='flex flex-col items-center gap-4'>
                         <img src={DiamondPlusIcon} alt="" className="w-7 h-7"/>
                         <p className="text-[#224c25] text-[24px]">Others</p>
-                        {reportField.filter((field,fieldIndex)=>{return field.category==="Others"}).map((field,fieldIndex)=>{
+                        {reportField.filter((field,_fieldIndex)=>{return field.category==="Others"}).map((field,_fieldIndex)=>{
                                 return(
                                 <CheckboxItem key={field.id}
                                     label={field.label}
@@ -133,6 +132,5 @@ export default function ReviewContent(props: ReviewContentProps) {
 
                 </div>
             </div>
-        </>
     )
 }

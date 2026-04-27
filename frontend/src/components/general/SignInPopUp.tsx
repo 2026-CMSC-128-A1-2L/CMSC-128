@@ -1,4 +1,4 @@
-import { FunctionComponent, useCallback } from 'react';
+import { type FunctionComponent, useCallback } from 'react';
 import { useEffect } from 'react';
 import logo from '../../../assets/footer_logo.svg';
 import { Link } from 'react-router-dom';
@@ -21,7 +21,7 @@ const SignInPopUp: FunctionComponent<SignInPopUpProps> = ({ onClose }) => {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, []);
+  }, [onClose]);
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">

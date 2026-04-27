@@ -1,5 +1,5 @@
 import { Icon } from '@iconify/react';
-import { FunctionComponent } from 'react';
+import type { FunctionComponent } from 'react';
 
 export type PaymentMethodsType = {
   className?: string;

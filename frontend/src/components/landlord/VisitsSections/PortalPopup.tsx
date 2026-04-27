@@ -1,4 +1,4 @@
-import { CSSProperties, RefObject, FunctionComponent, ReactNode, useMemo, useCallback, useState, useRef, useEffect} from "react";
+import { type CSSProperties, type RefObject, type FunctionComponent, type ReactNode, useMemo, useCallback, useState, useRef, useEffect} from "react";
 
 import { createPortal } from "react-dom";
 
@@ -112,7 +112,7 @@ type PopupProps = {
                 								style.maxHeight = "90%";
                 								setRelativeStyle(style)
               							}
-            						},[left, right, top, bottom, placement, relativeLayerRef?.current, relContainerRef?.current])
+            						},[left, right, top, bottom, placement, relativeLayerRef?.current])
               							
               							useEffect(() => {
                 								setPosition();

@@ -1,4 +1,4 @@
-import { FunctionComponent, useState, useEffect } from 'react';
+import { type FunctionComponent, useState, useEffect } from 'react';
 import PortalPopup from '../../../general/PortalPopout';
 
 interface AddBillingPopupProps {

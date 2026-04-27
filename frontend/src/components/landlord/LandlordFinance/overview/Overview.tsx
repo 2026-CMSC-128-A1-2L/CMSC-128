@@ -1,4 +1,4 @@
-import { FunctionComponent, useState, useEffect } from 'react';
+import { type FunctionComponent, useState, useEffect } from 'react';
 import StatCard from './StatCard';
 import MonthlyIncomeChart from './MonthlyIncomeChart';
 import IncomeBreakdown from './IncomeBreakdown';

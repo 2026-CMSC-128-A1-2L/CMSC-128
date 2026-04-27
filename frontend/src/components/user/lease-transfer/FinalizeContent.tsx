@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import InfoIcon from '../../../../assets/infoicon_icon.svg'
-import FileUploadCard from '../../general/FileUploadCard'
 import FinalizeDisplayLines from './FinalizeDisplayLines'
 import CheckboxItem from '../user-report/CheckboxItem'
 interface FinalizeContentProps{
@@ -13,7 +12,7 @@ interface FinalizeContentProps{
 export default function FinalizeContent(props:FinalizeContentProps) {
 
     const {leaseTransferStages,setLeaseTransferStages,DormitoryName,RoomNumber}=props
-    const Property=DormitoryName+" - "+RoomNumber
+    const Property=`${DormitoryName} - ${RoomNumber}`
     const [isAgreed,setIsAgreed]=useState(false)
     return (
     <>

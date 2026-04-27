@@ -1,6 +1,5 @@
-import { FunctionComponent, useCallback } from "react";
+import { type FunctionComponent, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { Icon } from "@iconify/react";
 import { useState } from "react";
 import Location from "../../../../../assets/pin_location_icon.svg";
 import House from "../../../../../assets/house_icon.svg";
