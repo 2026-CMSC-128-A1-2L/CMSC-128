@@ -1,10 +1,11 @@
 import type { RequestHandler } from 'express';
-import { ObjectIdSchema } from 'shared';
+import { ObjectIdSchema, GetBookmarksQuerySchema } from 'shared';
 import { getBookmarksByUser, createBookmark, deleteBookmark } from './bookmark.service';
 
 export const routeGetBookmarkedUnits: RequestHandler = async (req, res, next) => {
   const userId = req.user!._id;
-  const result = await getBookmarksByUser(userId);
+  const { sortBy, order } = GetBookmarksQuerySchema.parse(req.query);
+  const result = await getBookmarksByUser(userId, sortBy, order);
   res.status(200).json(result);
 };
 
@@ -16,8 +17,8 @@ export const routeAddBookmark: RequestHandler = async (req, res, next) => {
 };
 
 export const routeDeleteBookmark: RequestHandler = async (req, res, next) => {
-  const bookmarkId = ObjectIdSchema.parse(req.params.bookmarkId);
+  const listingId = ObjectIdSchema.parse(req.params.listingId);
   const userId = req.user!._id;
-  const result = await deleteBookmark(userId, bookmarkId);
+  const result = await deleteBookmark(userId, listingId);
   res.status(200).json(result);
 };
