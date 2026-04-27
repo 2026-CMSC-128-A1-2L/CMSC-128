@@ -7,6 +7,7 @@ import Footer from "../../../../components/general/Footer";
 import Switch from "../../../../components/user/CurrentDormToVerificationSwitch";
 import Sidebar from "../../../../components/user/SideBar";
 import placeholder from "../../../../../assets/logo_atlas_text.svg";
+import { Link } from "react-router-dom";
 
 const CurrentDorm: FunctionComponent = () => {
   const onContractInformationContainerClick = useCallback(() => {
@@ -375,58 +376,73 @@ const CurrentDorm: FunctionComponent = () => {
                             </div>
 
                             {/* rate and review */}
-                            <div
-                              className="self-stretch flex items-center justify-end py-1 px-3 cursor-pointer group"
-                              onClick={() => setActiveTab("Rate and Review")}
+                            <Link
+                              to="/rate-review"
+                              className="cursor-pointer hover:underline"
                             >
-                              <div className="flex items-center gap-2">
-                                <div
-                                  className={`relative font-semibold transition-colors ${activeTab === "Rate and Review" ? "text-[#096C5B]" : "text-black"}`}
-                                >
-                                  Rate and Review
+                              <div
+                                className="self-stretch flex items-center justify-end py-1 px-3 cursor-pointer group"
+                                onClick={() => setActiveTab("Rate and Review")}
+                              >
+                                <div className="flex items-center gap-2">
+                                  <div
+                                    className={`relative font-semibold transition-colors ${activeTab === "Rate and Review" ? "text-[#096C5B]" : "text-black"}`}
+                                  >
+                                    Rate and Review
+                                  </div>
+                                  <Icon
+                                    icon="iconamoon:arrow-right-2"
+                                    className={`h-6 w-6 transition-colors ${activeTab === "Rate and Review" ? "text-[#096C5B]" : "text-black"}`}
+                                  />
                                 </div>
-                                <Icon
-                                  icon="iconamoon:arrow-right-2"
-                                  className={`h-6 w-6 transition-colors ${activeTab === "Rate and Review" ? "text-[#096C5B]" : "text-black"}`}
-                                />
                               </div>
-                            </div>
+                            </Link>
 
                             {/* report listing */}
-                            <div
-                              className="self-stretch flex items-center justify-end py-1 px-3 cursor-pointer group"
-                              onClick={() => setActiveTab("Report Listing")}
+                            <Link
+                              to="/report-dorm"
+                              className="cursor-pointer hover:underline"
                             >
-                              <div className="flex items-center gap-2">
-                                <div
-                                  className={`relative font-semibold transition-colors ${activeTab === "Report Listing" ? "text-[#096C5B]" : "text-black"}`}
-                                >
-                                  Report Listing
+                              <div
+                                className="self-stretch flex items-center justify-end py-1 px-3 cursor-pointer group"
+                                onClick={() => setActiveTab("Report Listing")}
+                              >
+                                <div className="flex items-center gap-2">
+                                  <div
+                                    className={`relative font-semibold transition-colors ${activeTab === "Report Listing" ? "text-[#096C5B]" : "text-black"}`}
+                                  >
+                                    Report Listing
+                                  </div>
+                                  <Icon
+                                    icon="iconamoon:arrow-right-2"
+                                    className={`h-6 w-6 transition-colors ${activeTab === "Report Listing" ? "text-[#096C5B]" : "text-black"}`}
+                                  />
                                 </div>
-                                <Icon
-                                  icon="iconamoon:arrow-right-2"
-                                  className={`h-6 w-6 transition-colors ${activeTab === "Report Listing" ? "text-[#096C5B]" : "text-black"}`}
-                                />
                               </div>
-                            </div>
+                            </Link>
 
                             {/* pasalo unit */}
-                            <div
-                              className="self-stretch flex items-center justify-end py-1 px-3 cursor-pointer group"
-                              onClick={() => setActiveTab("Pasalo Unit")}
+                            <Link
+                              to="/lease-transfer"
+                              className="cursor-pointer hover:underline"
                             >
-                              <div className="flex items-center gap-2">
-                                <div
-                                  className={`relative font-semibold transition-colors ${activeTab === "Pasalo Unit" ? "text-[#096C5B]" : "text-black"}`}
-                                >
-                                  Pasalo Unit
+                              <div
+                                className="self-stretch flex items-center justify-end py-1 px-3 cursor-pointer group"
+                                onClick={() => setActiveTab("Pasalo Unit")}
+                              >
+                                <div className="flex items-center gap-2">
+                                  <div
+                                    className={`relative font-semibold transition-colors ${activeTab === "Pasalo Unit" ? "text-[#096C5B]" : "text-black"}`}
+                                  >
+                                    Pasalo Unit
+                                  </div>
+                                  <Icon
+                                    icon="iconamoon:arrow-right-2"
+                                    className={`h-6 w-6 transition-colors ${activeTab === "Pasalo Unit" ? "text-[#096C5B]" : "text-black"}`}
+                                  />
                                 </div>
-                                <Icon
-                                  icon="iconamoon:arrow-right-2"
-                                  className={`h-6 w-6 transition-colors ${activeTab === "Pasalo Unit" ? "text-[#096C5B]" : "text-black"}`}
-                                />
                               </div>
-                            </div>
+                            </Link>
                           </div>
                         </div>
 

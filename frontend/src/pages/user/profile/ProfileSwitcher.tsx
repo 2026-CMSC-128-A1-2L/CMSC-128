@@ -1,22 +1,20 @@
 // pages/user/ProfileSwitcher.tsx
-import { useState, useCallback } from "react";
-import CurrentDorm from "./current_dorm/CurrentDorm";
-import UserVerif from "./verification/UserVerif";
-import Sidebar from "../../../components/user/SideBar";
-import Footer from "../../../components/general/Footer";
-import Switch from "../../../components/user/CurrentDormToVerificationSwitch";
-import ProfileInfo from "../../../components/user/ProfileInfo";
-import { Icon } from "@iconify/react";
+import { useState, useCallback } from 'react';
+import CurrentDorm from './current_dorm/CurrentDorm';
+import UserVerif from './verification/UserVerif';
+import Sidebar from '../../../components/user/SideBar';
+import Footer from '../../../components/general/Footer';
+import Switch from '../../../components/user/CurrentDormToVerificationSwitch';
+import ProfileInfo from '../../../components/user/ProfileInfo';
+import { Icon } from '@iconify/react';
 
 const ProfileSwitcher = () => {
-  const [activeTab, setActiveTab] = useState<"dorm" | "verification">("dorm");
+  const [activeTab, setActiveTab] = useState<'dorm' | 'verification'>('dorm');
 
   const onArrowUpClick = useCallback(() => {
-    const anchor = document.querySelector(
-      "[data-scroll-to='searchBarContainer']",
-    );
+    const anchor = document.querySelector("[data-scroll-to='searchBarContainer']");
     if (anchor) {
-      anchor.scrollIntoView({ block: "start", behavior: "smooth" });
+      anchor.scrollIntoView({ block: 'start', behavior: 'smooth' });
     }
   }, []);
 
@@ -36,14 +34,9 @@ const ProfileSwitcher = () => {
               >
                 <div className="h-6 flex items-center gap-1.5">
                   <div className="relative font-semibold">User Profile</div>
-                  <Icon
-                    icon="iconamoon:arrow-right-2"
-                    className="h-6 w-6 relative"
-                  />
+                  <Icon icon="iconamoon:arrow-right-2" className="h-6 w-6 relative" />
                   <div className="relative font-semibold">
-                    {activeTab === "dorm"
-                      ? "Current Dorm"
-                      : "Verification Status"}
+                    {activeTab === 'dorm' ? 'Current Dorm' : 'Verification Status'}
                   </div>
                 </div>
               </div>
@@ -55,11 +48,7 @@ const ProfileSwitcher = () => {
                   <Switch activeTab={activeTab} setActiveTab={setActiveTab} />
 
                   <div className="self-stretch w-full">
-                    {activeTab === "dorm" ? (
-                      <CurrentDorm />
-                    ) : (
-                      <UserVerif verificationStep={1} />
-                    )}
+                    {activeTab === 'dorm' ? <CurrentDorm /> : <UserVerif verificationStep={1} />}
                   </div>
                 </div>
               </div>
@@ -68,10 +57,7 @@ const ProfileSwitcher = () => {
                 className="fixed bottom-32 right-10 w-[60px] h-[60px] rounded-[30px] [background:linear-gradient(183.48deg,_#096c5b,_#16917c)] flex items-center justify-center cursor-pointer z-[1000] shadow-lg transition-all hover:scale-110 active:scale-95"
                 onClick={onArrowUpClick}
               >
-                <Icon
-                  icon="mdi:arrow-up"
-                  className="w-[27.7px] h-[27.7px] text-white"
-                />
+                <Icon icon="mdi:arrow-up" className="w-[27.7px] h-[27.7px] text-white" />
               </div>
               {/* ======= SCROLL UP ICON ======= */}
             </div>

@@ -7,8 +7,15 @@ import {
   routeAssignApplicationUnit,
   routeApproveApplication,
   routeRejectApplication,
+  routeFinalizeApplication,
 } from './application.controller';
-import { isSuperAdmin, isVerifiedStudent, managerFilter, selfFilter } from '../../middleware';
+import {
+  includeSelf,
+  isSuperAdmin,
+  isVerifiedStudent,
+  manageApplicationsFilter,
+  selfFilter,
+} from '../../middleware';
 
 const router = Router();
 
@@ -38,11 +45,7 @@ router.post('/', isVerifiedStudent, routeCreateApplication);
 // - Returns 404 if not found
 // - Should enforce access control (student or authorized staff)
 // ============================================================================
-router.get(
-  '/:applicationId',
-  managerFilter('listing', 'manageApplications', true),
-  routeGetApplication,
-);
+router.get('/:applicationId', manageApplicationsFilter, includeSelf, routeGetApplication);
 
 // ============================================================================
 // DELETE /api/applications/:applicationId
@@ -58,33 +61,27 @@ router.delete('/:applicationId', selfFilter, routeDeleteApplication);
 //  - If a manager approves an application, it is made waitlisted
 //  - If a landlord approves an application, it is made approved
 // ============================================================================
-router.post(
-  '/:applicationId/approve',
-  managerFilter('listing', 'manageApplications'),
-  routeApproveApplication,
-);
+router.post('/:applicationId/approve', manageApplicationsFilter, routeApproveApplication);
 
 // ============================================================================
 // POST /api/applications/:applicationId/reject
 //
 // Rejects an application.
 // ============================================================================
-router.post(
-  '/:applicationId/reject',
-  managerFilter('listing', 'manageApplications'),
-  routeRejectApplication,
-);
+router.post('/:applicationId/reject', manageApplicationsFilter, routeRejectApplication);
 
 // ============================================================================
 // POST /api/applications/:applicationId/assign-unit
 //
 // Assigns a unit for the student with the application.
 // ============================================================================
-router.post(
-  '/:applicationId/assign-unit',
-  managerFilter('listing', 'manageApplications'),
-  routeAssignApplicationUnit,
-);
+router.post('/:applicationId/assign-unit', manageApplicationsFilter, routeAssignApplicationUnit);
 
-// TODO: finalization
+// ============================================================================
+// POST /api/applications/:applicationId/finalize
+//
+// Finalizes an application.
+// ============================================================================
+router.post('/:applicationId/finalize', manageApplicationsFilter, routeFinalizeApplication);
+
 export default router;

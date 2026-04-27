@@ -1,10 +1,10 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent } from 'react';
 
 export type ChoicesType = {
   className?: string;
 };
 
-const Choices: FunctionComponent<ChoicesType> = ({ className = "" }) => {
+const Choices: FunctionComponent<ChoicesType> = ({ className = '' }) => {
   return (
     <div
       className={`relative rounded-num-12 bg-white border-whitesmoke border-solid border-[1px] box-border overflow-hidden flex flex-col items-start py-[0.75rem] pl-[1rem] pr-[1.25rem] gap-[0.5rem] max-w-full max-h-full text-left text-[0.75rem] text-teal font-lora ${className}`}

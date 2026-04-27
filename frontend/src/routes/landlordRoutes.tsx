@@ -1,6 +1,7 @@
 import LandlordHomepage from "../pages/landlord/dashboard/LandlordHomepage";
 import LandlordProfile from "../pages/landlord/profile/LandlordProfile";
 import LandlordProfileVerification from "../pages/landlord/profile/verification/LandlordProfileVerification";
+import LandlordVerif from "../pages/landlord/profile/verification/LandlordVerif";
 import LandlordDashboard from "../pages/landlord/dashboard/LandlordDashboard";
 import LandlordMessages from "../pages/landlord/messages/LandlordMessages";
 import LandlordProperties from "../pages/landlord/properties/LandlordProperties";
@@ -11,7 +12,13 @@ import LandlordFinance from "../pages/landlord/finance/LandlordFinance";
 import LandlordSettings from "../pages/landlord/settings/LandlordSettings";
 import LandlordNewListing from "../pages/landlord/properties/LandlordNewListing";
 import AddBuilding from "../pages/landlord/properties/AddBuilding";
+import BuildingInfo from "../pages/landlord/properties/BuildingInfo";
+import LandlordTenantDetail from "../pages/landlord/tenants/LandlordTenantDetail";
+import LandlordUnvalidatedApplications from "../pages/landlord/tenants/LandlordUnvalidatedApplications";
+import LandlordUnvalidatedTenantDetail from "../pages/landlord/tenants/LandlordUnvalidatedTenantDetail";
+
 import { Route } from "react-router-dom";
+import LandlordPropertyFinance from "../pages/landlord/finance/LandlordPropertyFinance";
 
 const landlordRoutes = [
   <Route
@@ -27,7 +34,7 @@ const landlordRoutes = [
   <Route
     key="landlord-profile-verification"
     path="/landlord/profile/verification"
-    element={<LandlordProfileVerification />}
+    element={<LandlordVerif />} //modified from <LandlordProfileVerification />
   />,
   <Route
     key="landlord-dashboard"
@@ -50,6 +57,11 @@ const landlordRoutes = [
     element={<LandlordNewListing />}
   />,
   <Route
+    key="landlord-properties-building-info"
+    path="/landlord/properties/building-info"
+    element={<BuildingInfo />}
+  />,
+  <Route
     key="landlord-managers"
     path="/landlord/managers"
     element={<LandlordManagers />}
@@ -70,6 +82,11 @@ const landlordRoutes = [
     element={<LandlordFinance />}
   />,
   <Route
+    key="landlord-property-finance"
+    path="/landlord/finance/property/:propertyId"
+    element={<LandlordPropertyFinance />}
+  />,
+  <Route
     key="landlord-settings"
     path="/landlord/settings"
     element={<LandlordSettings />}
@@ -82,6 +99,21 @@ const landlordRoutes = [
   />,
 
 
+  <Route
+    key="landlord-tenants-unvalidated"
+    path="/landlord/tenants/unvalidated"
+    element={<LandlordUnvalidatedApplications />}
+  />,
+  <Route
+    key="landlord-tenants-unvalidated-tenantId"
+    path="/landlord/tenants/unvalidated/:tenantId"
+    element={<LandlordUnvalidatedTenantDetail />}
+  />,
+  <Route
+    key="landlord-tenants-detail"
+    path="/landlord/tenants/:tenantId"
+    element={<LandlordTenantDetail />}
+  />,
 ];
 
 export default landlordRoutes;

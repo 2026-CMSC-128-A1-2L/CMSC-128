@@ -1,29 +1,29 @@
-import { FunctionComponent, useState } from "react";
-import { Icon } from "@iconify/react";
-import Tags from "../Filter/Tags";
-import Distance from "../Filter/DistanceMap";
+import { FunctionComponent, useState } from 'react';
+import { Icon } from '@iconify/react';
+import Tags from '../Filter/Tags';
+import Distance from '../Filter/DistanceMap';
 
 const Filter: FunctionComponent = () => {
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(1000);
-  const [pax, setPax] = useState<number | "Any">("Any");
-  const [propertyType, setPropertyType] = useState("Dormitory");
+  const [pax, setPax] = useState<number | 'Any'>('Any');
+  const [propertyType, setPropertyType] = useState('Dormitory');
   const [selectedEssentials, setSelectedEssentials] = useState<string[]>([]);
   const [distance, setDistance] = useState(1); // default 1km
 
   const handleReset = () => {
     setMinPrice(0);
     setMaxPrice(1000);
-    setPax("Any");
-    setPropertyType("Dormitory");
+    setPax('Any');
+    setPropertyType('Dormitory');
     setSelectedEssentials([]);
   };
 
-  const handlePaxChange = (type: "add" | "minus") => {
-    if (type === "add") {
-      setPax((prev) => (prev === "Any" ? 1 : prev + 1));
+  const handlePaxChange = (type: 'add' | 'minus') => {
+    if (type === 'add') {
+      setPax((prev) => (prev === 'Any' ? 1 : prev + 1));
     } else {
-      setPax((prev) => (prev === "Any" || prev <= 1 ? "Any" : prev - 1));
+      setPax((prev) => (prev === 'Any' || prev <= 1 ? 'Any' : prev - 1));
     }
   };
 
@@ -31,9 +31,7 @@ const Filter: FunctionComponent = () => {
     <div className="relative rounded-[14.1px] bg-white w-130 h-fit overflow-hidden flex flex-col items-start py-[2.643rem] px-[1.762rem] box-border gap-[0.881rem] text-left text-[0.771rem] text-teal font-inter shadow-lg">
       <div className="w-full overflow-hidden flex items-center py-[0rem] pl-[0rem] pr-[0.662rem] gap-[0.55rem] text-center text-[1.322rem] text-gray">
         <div className="flex-1 flex items-center">
-          <b className="relative leading-[1.763rem] text-black">
-            Select filter
-          </b>
+          <b className="relative leading-[1.763rem] text-black">Select filter</b>
         </div>
         <button
           onClick={handleReset}
@@ -49,23 +47,21 @@ const Filter: FunctionComponent = () => {
           <div className="w-full flex flex-col items-start text-center text-dimgray">
             <div className="w-full overflow-hidden flex flex-col items-start py-[0.55rem] px-[0rem] gap-[0.55rem]">
               <div className="self-stretch flex items-center">
-                <b className="relative text-darkgreen text-num-14">
-                  Property Type
-                </b>
+                <b className="relative text-darkgreen text-num-14">Property Type</b>
               </div>
 
               <div className="w-full flex items-center justify-between gap-2">
                 {[
-                  { id: "Apartment", icon: "roentgen:apartments-1-story" },
+                  { id: 'Apartment', icon: 'roentgen:apartments-1-story' },
                   {
-                    id: "Dormitory",
-                    icon: "roentgen:apartments-3-story-skillion-roof",
+                    id: 'Dormitory',
+                    icon: 'roentgen:apartments-3-story-skillion-roof',
                   },
                   {
-                    id: "Transient",
-                    icon: "roentgen:apartments-1-story-gabled-roof",
+                    id: 'Transient',
+                    icon: 'roentgen:apartments-1-story-gabled-roof',
                   },
-                  { id: "Bed Spacer", icon: "ion:bed-sharp" },
+                  { id: 'Bed Spacer', icon: 'ion:bed-sharp' },
                 ].map((type) => (
                   <div
                     key={type.id}
@@ -73,8 +69,8 @@ const Filter: FunctionComponent = () => {
                     className={`w-full cursor-pointer rounded-num-12 flex flex-col items-start p-[0.55rem] gap-[0.437rem]
                       ${
                         propertyType === type.id
-                          ? "bg-lightcyan/45 text-teal"
-                          : "bg-white text-dimgray border border-solid border-whitesmoke"
+                          ? 'bg-lightcyan/45 text-teal'
+                          : 'bg-white text-dimgray border border-solid border-whitesmoke'
                       }`}
                   >
                     <Icon icon={type.icon} className="w-5 h-5" />
@@ -84,7 +80,7 @@ const Filter: FunctionComponent = () => {
                   </div>
                 ))}
               </div>
-            </div>{" "}
+            </div>{' '}
           </div>
 
           <div className="w-full overflow-hidden flex items-start p-[0.55rem] gap-[0.55rem] text-left">
@@ -93,19 +89,16 @@ const Filter: FunctionComponent = () => {
             </div>
             <div className="flex items-center gap-[0.55rem] text-teal">
               <button
-                onClick={() => handlePaxChange("minus")}
+                onClick={() => handlePaxChange('minus')}
                 className="bg-transparent border-none p-0 cursor-pointer flex items-center"
               >
-                <Icon
-                  icon="lsicon:minus-outline"
-                  className="w-4 h-4 text-teal"
-                />
+                <Icon icon="lsicon:minus-outline" className="w-4 h-4 text-teal" />
               </button>
               <div className="overflow-hidden flex flex-col items-center justify-center py0 px-[0.218rem] min-w-[2rem]">
                 <b className="self-stretch relative text-center">{pax}</b>
               </div>
               <button
-                onClick={() => handlePaxChange("add")}
+                onClick={() => handlePaxChange('add')}
                 className="bg-transparent border-none p-0 cursor-pointer flex items-center"
               >
                 <Icon icon="formkit:add" className="w-4 h-4 text-teal" />
@@ -177,18 +170,10 @@ const Filter: FunctionComponent = () => {
         <div className="flex items-center justify-between">
           <span className="font-bold text-gray-700">Kilometers</span>
           <div className="flex items-center justify-center w-24 h-10 border border-gray-300 rounded-lg bg-white shadow-sm">
-            <span className="font-bold text-[#13634F]">
-              {distance.toFixed(1)}
-            </span>
+            <span className="font-bold text-[#13634F]">{distance.toFixed(1)}</span>
             <div className="flex flex-col ml-2 border-l border-gray-200 pl-1">
-              <Icon
-                icon="heroicons:chevron-up-20-solid"
-                className="w-3 h-3 text-gray-400"
-              />
-              <Icon
-                icon="heroicons:chevron-down-20-solid"
-                className="w-3 h-3 text-gray-400"
-              />
+              <Icon icon="heroicons:chevron-up-20-solid" className="w-3 h-3 text-gray-400" />
+              <Icon icon="heroicons:chevron-down-20-solid" className="w-3 h-3 text-gray-400" />
             </div>
           </div>
         </div>

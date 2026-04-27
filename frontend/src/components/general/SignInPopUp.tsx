@@ -1,13 +1,13 @@
 import { FunctionComponent, useCallback } from 'react';
 import { useEffect } from 'react';
 import logo from '../../../assets/footer_logo.svg';
-
+import { Link } from 'react-router-dom';
 interface SignInPopUpProps {
   onClose: () => void;
 }
 
 const SignInPopUp: FunctionComponent<SignInPopUpProps> = ({ onClose }) => {
-  const onGoogleContainerClick = useCallback(() => { }, []);
+  const onGoogleContainerClick = useCallback(() => {}, []);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -71,9 +71,20 @@ const SignInPopUp: FunctionComponent<SignInPopUpProps> = ({ onClose }) => {
             Signing up for an ATLAS account means you agree to the
           </p>
           <div className="flex items-center justify-center gap-1 text-teal-200">
-            <span className="font-semibold cursor-pointer underline">Privacy Policy</span>
+            <span className="font-semibold cursor-pointer underline">
+              <Link to="terms-of-use">
+                Privacy Policy
+              </Link>
+              
+            </span>
             <span className="text-dimgray">and</span>
-            <span className="font-semibold cursor-pointer underline">Terms of Service.</span>
+            <span className="font-semibold cursor-pointer underline">
+              <Link to="terms-of-use">
+                Terms of Service.
+              
+              </Link>
+              
+            </span>
           </div>
         </div>
       </div>

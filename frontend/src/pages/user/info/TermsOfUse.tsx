@@ -1,6 +1,8 @@
 import { FunctionComponent, useCallback } from "react";
 import { Icon } from "@iconify/react";
 import SideBar from "../../../components/user/SideBar";
+import { Link } from "react-router-dom";
+import BreadcrumbHeader from "../../../components/general/Breadcrumb";
 
 const TermsOfUse: FunctionComponent = () => {
   const onTopicContainerClick = useCallback(() => {
@@ -105,14 +107,12 @@ const TermsOfUse: FunctionComponent = () => {
               <div className="self-stretch h-[1024px] flex flex-col items-start shrink-0">
                 <div className="self-stretch flex-1 flex flex-col items-start gap-6">
                   <div className="w-full h-16 flex items-end text-num-10 box-border">
-                    <div className="w-full h-fit flex items-center gap-1.5">
-                      <div className="relative font-semibold">Home</div>
-                      <Icon
-                        icon="iconamoon:arrow-right-2"
-                        className="h-6 w-6 relative"
-                      />
-                      <div className="relative font-semibold">Terms of Use</div>
-                    </div>
+                    <BreadcrumbHeader
+                      routes={[
+                        { name: "Home", url: "/" },
+                        { name: "Terms of Use" },
+                      ]}
+                    ></BreadcrumbHeader>
                   </div>
                   <div className="self-stretch flex-1 flex flex-col items-center gap-8 text-[24px] text-black font-inter">
                     <div className="self-stretch flex flex-col items-start justify-center gap-3">
@@ -869,13 +869,20 @@ const TermsOfUse: FunctionComponent = () => {
                             </div>
                             <div className="self-stretch relative text-num-14 leading-num-24 font-medium text-black">
                               <span>{`If you have questions, concerns, or requests relating to these Terms of Use, you may contact us through `}</span>
-                              <span className="[text-decoration:underline] text-dodgerblue">
-                                Contact Us
-                              </span>
+
+                              <Link to="/contact-us">
+                                <span className="[text-decoration:underline] text-dodgerblue">
+                                  Contact Us
+                                </span>
+                              </Link>
                               <span>{` and `}</span>
-                              <span className="[text-decoration:underline] text-dodgerblue">
-                                Support
-                              </span>
+
+                              <Link to="/support">
+                                <span className="[text-decoration:underline] text-dodgerblue">
+                                  Support
+                                </span>
+                              </Link>
+
                               <span> page</span>
                             </div>
                           </div>

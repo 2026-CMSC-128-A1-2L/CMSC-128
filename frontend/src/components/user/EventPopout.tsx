@@ -1,17 +1,14 @@
-import { FunctionComponent } from "react";
-import dotIcon from "../../../assets/dot.svg";
-import exIcon from "../../../assets/ex.svg";
-import deleteIcon from "../../../assets/delete.svg";
+import { FunctionComponent } from 'react';
+import dotIcon from '../../../assets/dot.svg';
+import exIcon from '../../../assets/ex.svg';
+import deleteIcon from '../../../assets/delete.svg';
 
 export type EventPopoutType = {
   className?: string;
   onClose?: () => void;
 };
 
-const EventPopout: FunctionComponent<EventPopoutType> = ({
-  className = "",
-  onClose,
-}) => {
+const EventPopout: FunctionComponent<EventPopoutType> = ({ className = '', onClose }) => {
   return (
     <div
       className={`w-[419px] h-[164px] relative max-w-full max-h-full overflow-auto text-left text-[12px] text-black font-lora ${className}`}
@@ -29,27 +26,18 @@ const EventPopout: FunctionComponent<EventPopoutType> = ({
           <div className="self-stretch h-[29.1px] relative overflow-hidden shrink-0" />
         </div>
       </div>
-      <div className="absolute top-[39px] left-[85px] text-[20px] font-semibold">
-        Ocular visit
-      </div>
+      <div className="absolute top-[39px] left-[85px] text-[20px] font-semibold">Ocular visit</div>
       <div className="absolute top-[69px] left-[85px] whitespace-pre-wrap">
         Tuesday, March 9 4:00PM - 5:00PM
       </div>
       <div className="absolute top-[88px] left-[85px] whitespace-pre-wrap">{`One Sapphire Place     `}</div>
-      <div className="absolute top-[107px] left-[85px]">
-        {" "}
-        Daphne the Landlord
-      </div>
+      <div className="absolute top-[107px] left-[85px]"> Daphne the Landlord</div>
       <img
         className="absolute top-[44px] left-[53px] w-[24px] h-[24px]"
         src={dotIcon}
         alt="red dot"
       />
-      <img
-        className="absolute top-[19px] left-[330px] w-6 h-6"
-        src={deleteIcon}
-        alt="trash"
-      />
+      <img className="absolute top-[19px] left-[330px] w-6 h-6" src={deleteIcon} alt="trash" />
     </div>
   );
 };

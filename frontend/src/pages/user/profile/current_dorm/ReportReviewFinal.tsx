@@ -1,15 +1,15 @@
-import { FunctionComponent, useCallback } from "react";
-import SideBar from "../../../../components/user/SideBar";
-import AtlasLogo from "../../assets/atlas logo (for white bg).png";
-import Checkpoint from "../../assets/checkpoint.svg";
-import Icon from "../../assets/icon.svg";
-import IconAMoonArrowRight2 from "../../assets/iconamoon_arrow-right-2.svg";
-import IconAMoonEye from "../../assets/iconamoon_eye.svg";
-import Icons8 from "../../assets/icons8_upload-2.svg";
-import Image from "../../assets/image.png";
-import Photo from "../../assets/photo.svg";
-import Qlementine from "../../assets/qlementine-icons_menu-dots-16.svg";
-import Upload from "../../../utilities/Upload";
+import { FunctionComponent, useCallback } from 'react';
+import SideBar from '../../../../components/user/SideBar';
+import AtlasLogo from '../../assets/atlas logo (for white bg).png';
+import Checkpoint from '../../assets/checkpoint.svg';
+import Icon from '../../assets/icon.svg';
+import IconAMoonArrowRight2 from '../../assets/iconamoon_arrow-right-2.svg';
+import IconAMoonEye from '../../assets/iconamoon_eye.svg';
+import Icons8 from '../../assets/icons8_upload-2.svg';
+import Image from '../../assets/image.png';
+import Photo from '../../assets/photo.svg';
+import Qlementine from '../../assets/qlementine-icons_menu-dots-16.svg';
+import Upload from '../../../utilities/Upload';
 
 const ReportReviewFinal: FunctionComponent = () => {
   const onUserProfileTextClick = useCallback(() => {
@@ -41,29 +41,20 @@ const ReportReviewFinal: FunctionComponent = () => {
                     >
                       User Profile
                     </div>
-                    <img
-                      className="h-6 w-6 relative"
-                      alt=""
-                      src={IconAMoonArrowRight2}
-                    />
+                    <img className="h-6 w-6 relative" alt="" src={IconAMoonArrowRight2} />
                     <div
                       className="relative font-semibold cursor-pointer"
                       onClick={onUserProfileTextClick}
                     >
                       Current Dorm
                     </div>
-                    <img
-                      className="h-6 w-6 relative"
-                      alt=""
-                      src={IconAMoonArrowRight2}
-                    />
+                    <img className="h-6 w-6 relative" alt="" src={IconAMoonArrowRight2} />
                     <div className="relative font-semibold">Report</div>
                   </div>
                   <div className="w-[704px] rounded-xl bg-aliceblue overflow-hidden shrink-0 hidden items-center py-num-10 px-6 box-border gap-2.5 text-dimgray font-inter">
                     <img className="h-6 w-6 relative" alt="" />
                     <b className="relative">
-                      Search for Dorms, Apartments, or Locations (e.g. UPLB,
-                      Umali Subdivision)
+                      Search for Dorms, Apartments, or Locations (e.g. UPLB, Umali Subdivision)
                     </b>
                   </div>
                 </div>
@@ -83,11 +74,7 @@ const ReportReviewFinal: FunctionComponent = () => {
                                 <b className="flex-1 relative leading-8">{`One Sapphire Place `}</b>
                               </div>
                               <div className="self-stretch flex items-center py-num-0 px-num-12 gap-2">
-                                <img
-                                  className="w-[9px] relative max-h-full"
-                                  alt=""
-                                  src={Icon}
-                                />
+                                <img className="w-[9px] relative max-h-full" alt="" src={Icon} />
                                 <div className="flex items-center justify-center">
                                   <div className="relative font-medium">
                                     Batong Malake, Los Banos, Laguna
@@ -95,10 +82,7 @@ const ReportReviewFinal: FunctionComponent = () => {
                                 </div>
                               </div>
                               <div className="self-stretch flex items-center py-num-0 px-num-12 gap-[7px]">
-                                <img
-                                  className="h-[9px] w-[9px] relative"
-                                  alt=""
-                                />
+                                <img className="h-[9px] w-[9px] relative" alt="" />
                                 <div className="flex items-center justify-center">
                                   <div className="relative">
                                     <span className="font-medium">{`Quevin Custodio `}</span>
@@ -109,10 +93,7 @@ const ReportReviewFinal: FunctionComponent = () => {
                                 </div>
                               </div>
                               <div className="self-stretch flex items-center py-num-0 px-num-12 gap-[7px]">
-                                <img
-                                  className="h-[9px] w-[9px] relative"
-                                  alt=""
-                                />
+                                <img className="h-[9px] w-[9px] relative" alt="" />
                                 <div className="flex items-center justify-center">
                                   <div className="relative">
                                     <span className="font-medium">{`Nathaniel Cunanan `}</span>
@@ -182,25 +163,13 @@ const ReportReviewFinal: FunctionComponent = () => {
                               </div>
                             </div>
                             <div className="w-[72px] flex items-center gap-6">
-                              <img
-                                className="h-6 w-6 relative"
-                                alt=""
-                                src={IconAMoonEye}
-                              />
-                              <img
-                                className="h-6 w-6 relative"
-                                alt=""
-                                src={Qlementine}
-                              />
+                              <img className="h-6 w-6 relative" alt="" src={IconAMoonEye} />
+                              <img className="h-6 w-6 relative" alt="" src={Qlementine} />
                             </div>
                           </div>
                           <div className="w-[852px] h-[88px] rounded-num-16 border-dimgray border-dashed border-[1px] box-border overflow-hidden shrink-0 flex items-center py-num-12 px-4 text-black">
                             <div className="h-16 flex items-center gap-6">
-                              <img
-                                className="h-16 w-16 relative"
-                                alt=""
-                                src={Icons8}
-                              />
+                              <img className="h-16 w-16 relative" alt="" src={Icons8} />
                               <div className="flex flex-col items-start justify-center gap-2">
                                 <b className="relative">Upload the document</b>
                                 <div className="relative text-[12px] tracking-[0.02em] font-semibold font-lora text-slategray">{`.jpg or .png `}</div>
@@ -222,25 +191,13 @@ const ReportReviewFinal: FunctionComponent = () => {
                             </div>
                           </div>
                           <div className="w-[72px] flex items-center gap-6">
-                            <img
-                              className="h-6 w-6 relative"
-                              alt=""
-                              src={IconAMoonEye}
-                            />
-                            <img
-                              className="h-6 w-6 relative"
-                              alt=""
-                              src={Qlementine}
-                            />
+                            <img className="h-6 w-6 relative" alt="" src={IconAMoonEye} />
+                            <img className="h-6 w-6 relative" alt="" src={Qlementine} />
                           </div>
                         </div>
                         <div className="w-[852px] h-[88px] rounded-num-16 border-dimgray border-dashed border-[1px] box-border overflow-hidden shrink-0 flex items-center py-num-12 px-4 text-black">
                           <div className="h-16 flex items-center gap-6">
-                            <img
-                              className="h-16 w-16 relative"
-                              alt=""
-                              src={Icons8}
-                            />
+                            <img className="h-16 w-16 relative" alt="" src={Icons8} />
                             <div className="flex flex-col items-start justify-center gap-2">
                               <b className="relative">Upload the document</b>
                               <div className="relative text-[12px] tracking-[0.02em] font-semibold font-lora text-slategray">{`.jpg or .png `}</div>

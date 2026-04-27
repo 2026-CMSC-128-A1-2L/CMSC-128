@@ -1,14 +1,14 @@
-import type { FunctionComponent } from "react";
-import landing_image from "../../assets/landing_building.webp";
-import AtlasCurious from "../../assets/logo_curious.svg?react";
-import AtlasText from "../../assets/logo_atlas_text.svg?react";
-import map from "../../assets/map.svg";
-import AutoImageSwitcher from "../components/general/AutoImageSwitcher";
-import SignInPopUp from "../components/general/SignInPopUp";
+import type { FunctionComponent } from 'react';
+import landing_image from '../../assets/landing_building.webp';
+import AtlasCurious from '../../assets/logo_curious.svg?react';
+import AtlasText from '../../assets/logo_atlas_text.svg?react';
+import map from '../../assets/map.svg';
+import AutoImageSwitcher from '../components/general/AutoImageSwitcher';
+import SignInPopUp from '../components/general/SignInPopUp';
 
-import { Icon } from "@iconify/react";
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Icon } from '@iconify/react';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const UserLanding: FunctionComponent = () => {
   const [showSignIn, setShowSignIn] = useState(false);
@@ -21,29 +21,30 @@ const UserLanding: FunctionComponent = () => {
             <div className="w-screen flex items-center py-4 px-8 lg:px-16 box-border">
               <div className="flex-1 flex flex-col items-start justify-center">
                 <div className="flex items-center gap-2">
-                  <AtlasText
-                    className="w-32 h-auto fill-darkslategray"
-                    fill="#024338"
-                  />
-                  <Icon
-                    icon="mdi-light:chevron-down"
-                    className="h-6 w-6 relative"
-                  />
+                  <AtlasText className="w-32 h-auto fill-darkslategray" fill="#024338" />
+                  <Icon icon="mdi-light:chevron-down" className="h-6 w-6 relative" />
                 </div>
               </div>
               <div className="self-stretch flex items-center gap-12 text-center text-teal-200">
                 <div className="self-stretch flex items-center justify-center py-0 px-1">
                   <b className="h-[35px] w-[141.6px] relative tracking-num--0_01 flex items-center justify-center shrink-0">
+                    <Link to="/home">
                     See All Listings
+                  
+                    </Link>
+                    
                   </b>
                 </div>
                 <div className="self-stretch flex items-center justify-center py-0 px-1">
                   <b className="h-[35px] w-[76px] relative tracking-num--0_01 flex items-center justify-center shrink-0">
+                    <Link to="/about">
                     About
+                    </Link>
+                    
                   </b>
                 </div>
                 <div className="self-stretch flex items-center justify-center py-0 px-1">
-                  <Link to="/contact">
+                  <Link to="/contact-us">
                     <b className="relative tracking-num--0_01">Contact Us</b>
                   </Link>
                 </div>
@@ -51,15 +52,10 @@ const UserLanding: FunctionComponent = () => {
               <button onClick={() => setShowSignIn(true)}>
                 <div className="rounded-[45px] [background:linear-gradient(99.18deg,_#5dc2a8_27.88%,_#0c8873_88.15%)] flex items-center justify-center py-3 px-4 gap-1 text-white cursor-pointer">
                   Sign In
-                  <Icon
-                    icon="si:arrow-right-duotone"
-                    className="w-7 h-7 relative"
-                  />
+                  <Icon icon="si:arrow-right-duotone" className="w-7 h-7 relative" />
                 </div>
               </button>
-              {showSignIn && (
-                <SignInPopUp onClose={() => setShowSignIn(false)} />
-              )}
+              {showSignIn && <SignInPopUp onClose={() => setShowSignIn(false)} />}
             </div>
           </div>
 
@@ -82,15 +78,9 @@ const UserLanding: FunctionComponent = () => {
               />
               <div className="h-[658px] w-[535px] overflow-hidden hidden flex-col items-center py-num-32 px-2.5 box-border gap-4 z-[3] shrink-0">
                 <b className="relative tracking-num--0_01">Search Sharper</b>
-                <b className="relative tracking-num--0_01 text-gray-700">
-                  Live Better
-                </b>
-                <b className="relative tracking-num--0_01 text-gray-600">
-                  Lease Smarter
-                </b>
-                <b className="relative tracking-num--0_01 text-white">
-                  Hassle-Free
-                </b>
+                <b className="relative tracking-num--0_01 text-gray-700">Live Better</b>
+                <b className="relative tracking-num--0_01 text-gray-600">Lease Smarter</b>
+                <b className="relative tracking-num--0_01 text-white">Hassle-Free</b>
               </div>
               <div className="self-stretch flex flex-col items-end py-16 px-0 z-[4] shrink-0 text-[160px] font-buhun-retro-two-free">
                 <div className="w-[577px] relative tracking-[0.04em] text-transparent !bg-clip-text [background:linear-gradient(180deg,_#5dc2a8_27.88%,_#0c8873_84.13%)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] flex items-center justify-center">
@@ -120,15 +110,12 @@ const UserLanding: FunctionComponent = () => {
                     <b className="font-inter">ATLAS</b>
                     <span className="font-medium">{` is a dormitory searching and management platform built specifically for the `}</span>
                   </span>
-                  <b className="text-teal-100">
-                    University of the Philippines Los Baños
-                  </b>
+                  <b className="text-teal-100">University of the Philippines Los Baños</b>
                   <span className="font-medium">
-                    {" "}
-                    community. It bridges the gap between students looking for
-                    housing and landlords or housing authorities managing their
-                    properties—bringing the entire process online in one
-                    reliable, transparent place.
+                    {' '}
+                    community. It bridges the gap between students looking for housing and landlords
+                    or housing authorities managing their properties—bringing the entire process
+                    online in one reliable, transparent place.
                   </span>
                 </div>
               </div>
@@ -140,33 +127,24 @@ const UserLanding: FunctionComponent = () => {
             <div className="self-stretch bg-white flex items-center justify-center py-10 px-0 gap-[89px] text-center text-num-24 text-gray-300">
               <div className="h-[233px] w-[200px] relative transition-transform duration-300 ease-in-out hover:scale-110">
                 <div className="absolute top-[-11px] left-[-20px] w-[239px] h-60 flex flex-col items-center p-2.5 box-border gap-3.5 shrink-0">
-                  <Icon
-                    icon="tabler:search"
-                    color="#2F8677"
-                    className="w-20 h-20"
-                  />
+                  <Icon icon="tabler:search" color="#2F8677" className="w-20 h-20" />
                   <b className="w-[177px] relative leading-num-32 flex items-center justify-center">
                     DISCOVER
                   </b>
                   <b className="w-num-199 relative text-num-18 flex font-lora items-center justify-center">
-                    Browse and filter available dorms near campus with accurate,
-                    up-to-date listings.
+                    Browse and filter available dorms near campus with accurate, up-to-date
+                    listings.
                   </b>
                 </div>
               </div>
               <div className="h-[247px] w-num-199 relative transition-transform duration-300 ease-in-out hover:scale-110">
                 <div className="absolute top-[-2px] left-[-19px] w-[234px] h-[249px] flex flex-col items-center p-2.5 box-border gap-3.5 shrink-0">
-                  <Icon
-                    icon="emojione-monotone:clipboard"
-                    color="#2F8677"
-                    className="w-15 h-15"
-                  />
+                  <Icon icon="emojione-monotone:clipboard" color="#2F8677" className="w-15 h-15" />
                   <b className="w-[177px] relative leading-num-32 flex items-center justify-center">
                     APPLY
                   </b>
                   <b className="w-num-199 relative text-num-18 flex font-lora items-center justify-center">
-                    Submit dorm applications digitally, no more paper forms or
-                    in-person queuing.
+                    Submit dorm applications digitally, no more paper forms or in-person queuing.
                   </b>
                 </div>
               </div>
@@ -175,24 +153,19 @@ const UserLanding: FunctionComponent = () => {
                   <Icon icon="mdi:home" color="#2F8677" className="w-17 h-17" />
                   <b className="self-stretch relative leading-num-32">MANAGE</b>
                   <b className="self-stretch relative text-num-18 font-lora">
-                    Landlords can monitor listings, tenants, and documents in
-                    one place.
+                    Landlords can monitor listings, tenants, and documents in one place.
                   </b>
                 </div>
               </div>
               <div className="h-[247px] w-num-199 relative transition-transform duration-300 ease-in-out hover:scale-110">
                 <div className="absolute top-[-2px] left-[-18px] w-[234px] h-[249px] flex flex-col items-center p-2.5 box-border gap-3.5 shrink-0">
-                  <Icon
-                    icon="mdi:security"
-                    color="#2F8677"
-                    className="w-15 h-15"
-                  />
+                  <Icon icon="mdi:security" color="#2F8677" className="w-15 h-15" />
                   <b className="w-[177px] relative leading-num-32 flex items-center justify-center">
                     STAY SAFE
                   </b>
                   <b className="w-num-199 relative text-num-18 flex font-lora items-center justify-center">
-                    Emergency contacts, hazard disclosures, and safety
-                    information available at a glance.
+                    Emergency contacts, hazard disclosures, and safety information available at a
+                    glance.
                   </b>
                 </div>
               </div>
@@ -205,10 +178,9 @@ const UserLanding: FunctionComponent = () => {
               <div className="flex-1 flex flex-col items-end justify-center py-16 pr-20 gap-3 text-right text-white">
                 <b className="self-stretch relative">How does it help?</b>
                 <div className="self-stretch relative text-[20px] leading-10 font-medium">
-                  Currently, dormitory searching and management at UPLB relies
-                  heavily on manual, fragmented processes that are both
-                  inefficient and difficult to track. ATLAS replaces these with
-                  a structured digital system that benefits every party
+                  Currently, dormitory searching and management at UPLB relies heavily on manual,
+                  fragmented processes that are both inefficient and difficult to track. ATLAS
+                  replaces these with a structured digital system that benefits every party
                   involved.
                 </div>
               </div>
@@ -225,18 +197,12 @@ const UserLanding: FunctionComponent = () => {
               <div className="self-stretch overflow-hidden flex items-start p-2.5 gap-5 text-left text-num-24">
                 <div className="self-stretch flex-1 flex flex-col items-start py-2.5 px-0 gap-2.5">
                   <div className="self-stretch rounded-num-16 bg-white overflow-hidden flex flex-col items-start py-4 px-num-32 gap-2.5">
-                    <Icon
-                      icon="iconoir:design-nib"
-                      className="w-[58px] h-[58px]"
-                      color="#096C5B"
-                    />
+                    <Icon icon="iconoir:design-nib" className="w-[58px] h-[58px]" color="#096C5B" />
                     <div className="self-stretch flex flex-col items-start gap-1">
-                      <b className="relative leading-num-32">
-                        Role-based Views
-                      </b>
+                      <b className="relative leading-num-32">Role-based Views</b>
                       <div className="self-stretch relative text-num-18 tracking-num--0_01 leading-num-25 font-semibold text-teal-100">
-                        Distinct interfaces for Students, Managers, and Admins
-                        to ensure users only see what they need.
+                        Distinct interfaces for Students, Managers, and Admins to ensure users only
+                        see what they need.
                       </div>
                     </div>
                   </div>
@@ -247,33 +213,23 @@ const UserLanding: FunctionComponent = () => {
                       color="#096C5B"
                     />
                     <div className="self-stretch flex flex-col items-start gap-1">
-                      <b className="self-stretch relative leading-num-32">
-                        Verification Cycles
-                      </b>
+                      <b className="self-stretch relative leading-num-32">Verification Cycles</b>
                       <div className="self-stretch relative text-num-18 tracking-num--0_01 leading-num-25 font-semibold text-teal-100">
-                        Verification badges expire periodically to ensure a safe
-                        space for the community.
+                        Verification badges expire periodically to ensure a safe space for the
+                        community.
                       </div>
                     </div>
                   </div>
                 </div>
                 <div className="self-stretch w-[300px] flex items-start justify-center py-2.5 px-0 box-border">
                   <div className="self-stretch flex-1 rounded-xl bg-white overflow-hidden flex flex-col items-start p-2.5 box-border gap-2.5 max-w-full">
-                    <Icon
-                      icon="mdi:home"
-                      className="w-[58px] h-[58px] ml-5"
-                      color="#096C5B"
-                    />
+                    <Icon icon="mdi:home" className="w-[58px] h-[58px] ml-5" color="#096C5B" />
                     <div className="self-stretch flex flex-col items-center justify-center py-0 px-num-32 gap-2.5">
-                      <b className="self-stretch relative leading-num-32">
-                        Accomodation Tracking
-                      </b>
+                      <b className="self-stretch relative leading-num-32">Accomodation Tracking</b>
                       <div className="self-stretch relative text-num-18 tracking-num--0_01 leading-num-25 font-semibold text-teal-100">
-                        Housing authorities can manage dormitory rooms, assign
-                        approved students, enforce capacity limits, and monitor
-                        move-in and move-out dates, all from one unified
-                        dashboard. No spreadsheets, no guesswork, no
-                        overbooking.
+                        Housing authorities can manage dormitory rooms, assign approved students,
+                        enforce capacity limits, and monitor move-in and move-out dates, all from
+                        one unified dashboard. No spreadsheets, no guesswork, no overbooking.
                       </div>
                     </div>
                   </div>
@@ -286,12 +242,10 @@ const UserLanding: FunctionComponent = () => {
                       color="#096C5B"
                     />
                     <div className="self-stretch flex flex-col items-start gap-1">
-                      <b className="self-stretch relative leading-num-32">
-                        Customizable Updates
-                      </b>
+                      <b className="self-stretch relative leading-num-32">Customizable Updates</b>
                       <div className="self-stretch relative text-num-18 tracking-num--0_01 leading-num-25 font-semibold text-teal-100">
-                        Get notified via email or system notifications the
-                        moment a manager approves or rejects your request.
+                        Get notified via email or system notifications the moment a manager approves
+                        or rejects your request.
                       </div>
                     </div>
                   </div>
@@ -305,8 +259,8 @@ const UserLanding: FunctionComponent = () => {
                       <div className="self-stretch flex flex-col items-start gap-1">
                         <b className="self-stretch relative leading-num-32">{`Fast & Smooth Process`}</b>
                         <div className="self-stretch relative text-num-18 tracking-num--0_01 leading-num-25 font-semibold text-teal-100">
-                          Optimized workflows and automated document generation
-                          move you from "Applying" to "Approved" in record time.
+                          Optimized workflows and automated document generation move you from
+                          "Applying" to "Approved" in record time.
                         </div>
                       </div>
                     </div>
@@ -324,13 +278,11 @@ const UserLanding: FunctionComponent = () => {
             <div className="h-10" />
             <div className="max-w-2xl w-full">
               <p className="text-num-24 md:text-num-24 lg:text-[18px] leading-relaxed md:leading-[1.6] font-inter font-normal text-white text-center opacity-90">
-                Finding a dormitory near UPLB is a stressful process for many
-                students, especially those coming from outside Los Baños.
-                Information is scattered, processes are manual, and there is
-                little transparency between tenants and landlords. At the same
-                time, landlords and housing authorities struggle to coordinate
-                applications, maintain records, and communicate with their
-                tenants efficiently.
+                Finding a dormitory near UPLB is a stressful process for many students, especially
+                those coming from outside Los Baños. Information is scattered, processes are manual,
+                and there is little transparency between tenants and landlords. At the same time,
+                landlords and housing authorities struggle to coordinate applications, maintain
+                records, and communicate with their tenants efficiently.
               </p>
             </div>
             <div className="h-20" />
@@ -393,8 +345,7 @@ const UserLanding: FunctionComponent = () => {
                       03
                     </b>
                     <b className="h-num-55 w-num-914 relative text-num-28 flex font-inter text-darkslategray-200 text-left items-center shrink-0">
-                      Improved coordination and communication between tenants
-                      and providers
+                      Improved coordination and communication between tenants and providers
                     </b>
                     <Icon icon="lucide:plus" className="h-[26px] w-[26px]" />
                   </div>
@@ -406,8 +357,8 @@ const UserLanding: FunctionComponent = () => {
                       04
                     </b>
                     <b className="h-num-55 w-num-914 relative text-num-28 flex font-inter text-darkslategray-200 text-left items-center shrink-0">
-                      Greater transparency, accessibility, and accountability in
-                      dormitory-related processes
+                      Greater transparency, accessibility, and accountability in dormitory-related
+                      processes
                     </b>
                     <Icon icon="lucide:plus" className="h-[26px] w-[26px]" />
                   </div>
@@ -530,10 +481,7 @@ const UserLanding: FunctionComponent = () => {
         </div>
 
         <div className="w-screen h-[150px] relative shrink-0 z-[2] text-num-12 text-teal-100 font-poppins bg-[#001D18]">
-          <img
-            className="absolute top-[0px] left-[0px] w-screen h-[150px]"
-            alt=""
-          />
+          <img className="absolute top-[0px] left-[0px] w-screen h-[150px]" alt="" />
           <div className="absolute top-[0px] left-[8.89px] w-[1420.2px] h-[150px] flex items-center justify-center gap-[146px]">
             {/* <img className="w-[218.4px] relative max-h-full object-cover" alt="" src={atlas_text} /> */}
             <div className="w-[127.9px] flex flex-col items-start">
@@ -541,10 +489,17 @@ const UserLanding: FunctionComponent = () => {
                 PLATFORM
               </b>
               <div className="self-stretch h-num-28_4 relative flex items-center shrink-0 mt-[-4px]">
+                <Link to="/home">
+                
                 Browse Dorms
+                </Link>
               </div>
               <div className="self-stretch h-num-28_4 relative flex items-center shrink-0 mt-[-4px]">
+                
+                <Link to="/">
+                
                 How it works
+                </Link>
               </div>
             </div>
             <div className="flex flex-col items-start">
@@ -552,10 +507,14 @@ const UserLanding: FunctionComponent = () => {
                 SUPPORT
               </b>
               <div className="w-[108.9px] h-num-28_4 relative flex items-center shrink-0 mt-[-4px]">
-                About
+                <Link to="/about">
+                  About
+                </Link>
               </div>
               <div className="w-[108.9px] h-num-28_4 relative flex items-center shrink-0 mt-[-4px]">
-                Contact us
+                <Link to="/contact-us">
+                  Contact us
+                </Link> 
               </div>
             </div>
             <div className="w-[187.5px] flex flex-col items-start">
@@ -563,10 +522,14 @@ const UserLanding: FunctionComponent = () => {
                 LEGAL
               </b>
               <div className="self-stretch h-num-28_4 relative flex items-center shrink-0 mt-[-4px]">
-                Privacy Policy
+                <Link to="/privacy">
+                  Privacy Policy
+                </Link>
               </div>
               <div className="self-stretch h-num-28_4 relative flex items-center shrink-0 mt-[-4px]">
-                Terms of Use
+                <Link to="/terms-of-use">
+                  Terms of Use
+                </Link>
               </div>
             </div>
           </div>

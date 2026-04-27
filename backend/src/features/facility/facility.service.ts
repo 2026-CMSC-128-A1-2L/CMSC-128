@@ -10,6 +10,9 @@ import {
 } from './facility.model';
 import { inviteManager } from '../invite/invite.service';
 import type mongoose from 'mongoose';
+import { getAllRentals } from '../rental/rental.service';
+import { getUnits } from '../unit/unit.service';
+import { getBillings } from '../billing/billing.service';
 
 type FacilityFilters = {
   name?: string;
@@ -152,10 +155,11 @@ export const searchFacilities = async (filters: FacilityFilters) => {
 export type CreateFacilityArguments = {
   managers?: {
     email: string;
-    permissions: { manageBillings: boolean; manageApplications: boolean; manageListings: boolean };
+    permissions: ManagerPermissionType;
   }[];
 
   name: string;
+  description: string;
   type: string;
   location?: {
     coordinates?: {
@@ -209,6 +213,7 @@ export const createFacility = async (
     ],
 
     name: data.name,
+    description: data.description,
     type: data.type,
     location: data.location,
 
@@ -382,4 +387,139 @@ export const rejectFacility = async (
 
   facility.status = 'rejected';
   return await facility.save();
+};
+
+export const getManagedFacilities = async (
+  userId: mongoose.Types.ObjectId,
+): Promise<mongoose.Types.ObjectId[]> => {
+  return await HousingFacility.find({ 'managers.userId': userId }).distinct('_id');
+};
+
+// Returns all facilities owned by a landlord (full documents, not just IDs).
+export const getFacilitiesByLandlord = async (landlordId: mongoose.Types.ObjectId) => {
+  return await HousingFacility.find({ landlordId }).lean();
+};
+
+// Returns the expected monthly income for a landlord.
+//
+// Chain: Landlord → Facilities → active Rentals → Units (price)
+//
+// For each active rental under the landlord's facilities, we look up the
+// unit's price. Summing those prices gives the expected monthly income —
+// i.e. what the landlord should collect if every active tenant pays in full.
+//
+// Returns:
+//   total          – grand total across all facilities
+//   totalTenants   – total number of active tenants
+//   byFacility     – per-facility breakdown ({ facilityId, facilityName, expectedMonthlyIncome, tenantCount })
+export const getMonthlyIncomeByLandlord = async (landlordId: mongoose.Types.ObjectId) => {
+  const facilities = await getFacilitiesByLandlord(landlordId);
+  const facilityIds = facilities.map((f) => f._id);
+
+  // getAllRentals accepts a plain Mongoose filter object.
+  const activeRentals = await getAllRentals({ facilityId: { $in: facilityIds }, status: 'active' });
+
+  // Collect unique unitIds from the rentals, then fetch those units via getUnits.
+  const uniqueUnitIds = [
+    ...new Map(activeRentals.map((r) => [r.unitId.toString(), r.unitId])).values(),
+  ];
+  const units = await getUnits({ }, { _id: { $in: uniqueUnitIds } });
+
+  const unitPriceMap = new Map(units.map((u) => [u._id.toString(), u.price]));
+
+  // Aggregate per facility.
+  const byFacility = facilities.map((facility) => {
+    const facilityRentals = activeRentals.filter(
+      (r) => r.facilityId.toString() === facility._id.toString(),
+    );
+
+    const expectedMonthlyIncome = facilityRentals.reduce((sum, rental) => {
+      const price = unitPriceMap.get(rental.unitId.toString()) ?? 0;
+      return sum + price;
+    }, 0);
+
+    return {
+      facilityId: facility._id,
+      facilityName: facility.name,
+      expectedMonthlyIncome,
+      tenantCount: facilityRentals.length,
+    };
+  });
+
+  const total = byFacility.reduce((sum, f) => sum + f.expectedMonthlyIncome, 0);
+  const totalTenants = byFacility.reduce((sum, f) => sum + f.tenantCount, 0);
+
+  return { total, totalTenants, byFacility };
+};
+
+// Returns tenants (rentals) that have an overdue billing as their latest billing status.
+//
+// Chain: Landlord → Facilities → active Rentals → latest Billing per rental
+//
+// For each active rental, we find its most recently due billing. If that
+// billing's paymentStatus is 'overdue', the tenant is considered overdue.
+//
+// Returns:
+//   overdueTenants  – list of { rentalId, userId, facilityId, unitId, billing: { id, dueDate, totalAmount } }
+//   overdueCount    – total number of overdue tenants
+//   byFacility      – per-facility breakdown ({ facilityId, facilityName, overdueCount })
+export const getOverdueTenantsByLandlord = async (landlordId: mongoose.Types.ObjectId) => {
+  const facilities = await getFacilitiesByLandlord(landlordId);
+  const facilityIds = facilities.map((f) => f._id);
+
+  const activeRentals = await getAllRentals({ facilityId: { $in: facilityIds }, status: 'active' });
+
+  if (activeRentals.length === 0) {
+    return { overdueTenants: [], overdueCount: 0, byFacility: [] };
+  }
+
+  const rentalIds = activeRentals.map((r) => r._id);
+
+  // getBillings accepts a query filter — fetch all billings for these rentals.
+  // We then group by rentalId in JS to find the latest billing per rental.
+  const allBillings = await getBillings({ }, { rentalId: { $in: rentalIds } });
+
+  // Group billings by rentalId and pick the one with the latest dueDate.
+  const latestBillingByRentalId = new Map<string, typeof allBillings[number]>();
+  for (const billing of allBillings) {
+    const key = billing.rentalId.toString();
+    const existing = latestBillingByRentalId.get(key);
+    if (!existing || (billing.dueDate && (!existing.dueDate || billing.dueDate > existing.dueDate))) {
+      latestBillingByRentalId.set(key, billing);
+    }
+  }
+
+  const overdueTenants = activeRentals
+    .filter((r) => latestBillingByRentalId.get(r._id.toString())?.paymentStatus === 'overdue')
+    .map((r) => {
+      const billing = latestBillingByRentalId.get(r._id.toString())!;
+      return {
+        rentalId: r._id,
+        userId: r.userId,
+        facilityId: r.facilityId,
+        unitId: r.unitId,
+        billing: {
+          id: billing._id,
+          dueDate: billing.dueDate,
+          totalAmount: billing.totalAmount,
+        },
+      };
+    });
+
+  const byFacility = facilities.map((facility) => {
+    const overdueCount = overdueTenants.filter(
+      (t) => t.facilityId.toString() === facility._id.toString(),
+    ).length;
+    return {
+      facilityId: facility._id,
+      facilityName: facility.name,
+      overdueCount,
+    };
+  });
+
+  return {
+    overdueTenants,
+    overdueCount: overdueTenants.length,
+    byFacility,
+  };
 };

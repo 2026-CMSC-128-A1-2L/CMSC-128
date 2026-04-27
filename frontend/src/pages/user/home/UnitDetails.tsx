@@ -12,7 +12,7 @@ import RulesDetails from "../../../components/user/unitdetails/RulesDetails";
 import LocationDetails from "../../../components/user/unitdetails/LocationDetails";
 import ReviewDetails from "../../../components/user/unitdetails/ReviewDetails";
 import PropertyTab from "../../../components/user/unitdetails/PropertyTab";
-
+import { Link } from "react-router-dom";
 const UnitDetails: FunctionComponent = () => {
   const gallery = [`${pic}`, `${pic2}`, `${pic3}`];
 
@@ -238,13 +238,16 @@ const UnitDetails: FunctionComponent = () => {
                           </div>
                         </div>
                         <div className="w-num-259_3 flex flex-col items-center gap-[8.9px] shrink-0 text-white font-poppins">
-                          <div className="w-full h-[42.8px] relative rounded-[8.91px] bg-darkslategray-200 flex items-center py-[0.9px] pl-[46.4px] pr-[55.3px] box-border gap-[2.7px] text-left text-[14.26px] text-white font-poppins">
-                            <div className="h-[41px] w-[140px] relative font-medium flex items-center shrink-0">{`Submit Application `}</div>
-                            <Icon
-                              icon="formkit:arrowright"
-                              className="h-6 w-6"
-                            />
-                          </div>{" "}
+                          <Link to="/applications">
+                            <div className="w-full h-[42.8px] relative rounded-[8.91px] bg-darkslategray-200 flex items-center py-[0.9px] pl-[46.4px] pr-[55.3px] box-border gap-[2.7px] text-left text-[14.26px] text-white font-poppins">
+                              <div className="h-[41px] w-[140px] relative font-medium flex items-center shrink-0">{`Submit Application `}</div>
+                              <Icon
+                                icon="formkit:arrowright"
+                                className="h-6 w-6"
+                              />
+                            </div>{" "}
+                          </Link>
+
                           <div className="self-stretch h-[26.7px] relative text-num-10_7 font-lora text-dimgray text-center flex items-center justify-center shrink-0">
                             Landlord will respond within 24–48 hrs.
                             <br />
@@ -344,15 +347,17 @@ const UnitDetails: FunctionComponent = () => {
                               <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%]">
                                 <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] shadow-[0px_0px_3.57px_rgba(0,_0,_0,_0.25)] rounded-num-8_91 bg-darkslategray-200" />
                               </div>
-                              <div className="absolute h-[49.84%] w-[51.74%] top-[25%] right-[24.31%] bottom-[25.16%] left-[23.95%]">
-                                <div className="absolute h-full w-[81.19%] top-[0%] left-[18.79%] font-medium flex items-center justify-center">
-                                  Send Message
+                              <Link to="/direct-messages">
+                                <div className="absolute h-[49.84%] w-[51.74%] top-[25%] right-[24.31%] bottom-[25.16%] left-[23.95%]">
+                                  <div className="absolute h-full w-[81.19%] top-[0%] left-[18.79%] font-medium flex items-center justify-center">
+                                    Send Message
+                                  </div>
+                                  <Icon
+                                    icon="material-symbols:mail-outline"
+                                    className="absolute h-[95.38%] w-[13.44%] top-[11.15%] right-[86.56%] bottom-[-0.52%] left-[0%] max-w-full overflow-hidden max-h-full"
+                                  />
                                 </div>
-                                <Icon
-                                  icon="material-symbols:mail-outline"
-                                  className="absolute h-[95.38%] w-[13.44%] top-[11.15%] right-[86.56%] bottom-[-0.52%] left-[0%] max-w-full overflow-hidden max-h-full"
-                                />
-                              </div>
+                              </Link>
                             </div>
                             <div className="w-[256.7px] h-[32.1px] relative">
                               <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] shadow-[0px_0px_3.57px_rgba(0,_0,_0,_0.15)] rounded-num-8_91 bg-darkslategray-200" />
@@ -432,72 +437,76 @@ const UnitDetails: FunctionComponent = () => {
                             </div>
                           </div>
                           <div className="self-stretch flex flex-col items-center justify-center gap-[10.7px] text-num-10_7 font-lora">
-                            <div className="w-num-249_6 h-[196.1px] relative shadow-[0px_0px_3.57px_rgba(0,_0,_0,_0.25)]">
-                              <div className="absolute top-[0px] left-[0.88px] shadow-[0px_0px_3.57px_rgba(0,_0,_0,_0.25)] rounded-num-8_91 bg-whitesmoke-300 w-[247.8px] h-[196.1px]" />
-                              <div className="absolute top-[124.81px] left-[0px] w-num-249_6 h-[71.3px]">
-                                <div className="absolute top-[0px] left-[0px] rounded-t-num-0 rounded-b-num-8_91 bg-whitesmoke-300 w-num-249_6 h-[71.3px] opacity-[0.15]" />
-                                <img
-                                  className="absolute top-[45.47px] left-[222.18px] w-[18.3px] h-[18.4px]"
-                                  alt=""
-                                />
-                                <div className="absolute top-[11.59px] left-[223.06px] tracking-num-0_02 font-semibold flex items-center w-[15.9px] h-[12.5px]">
-                                  4.3
-                                </div>
-                                <div className="absolute top-[31.23px] left-[12.97px] w-[171.4px] h-num-14_7">
+                            <Link to="/unit">
+                              <div className="w-num-249_6 h-[196.1px] relative shadow-[0px_0px_3.57px_rgba(0,_0,_0,_0.25)]">
+                                <div className="absolute top-[0px] left-[0.88px] shadow-[0px_0px_3.57px_rgba(0,_0,_0,_0.25)] rounded-num-8_91 bg-whitesmoke-300 w-[247.8px] h-[196.1px]" />
+                                <div className="absolute top-[124.81px] left-[0px] w-num-249_6 h-[71.3px]">
+                                  <div className="absolute top-[0px] left-[0px] rounded-t-num-0 rounded-b-num-8_91 bg-whitesmoke-300 w-num-249_6 h-[71.3px] opacity-[0.15]" />
                                   <img
-                                    className="absolute top-[0px] left-[0px] w-[14.7px] h-num-14_7"
+                                    className="absolute top-[45.47px] left-[222.18px] w-[18.3px] h-[18.4px]"
                                     alt=""
                                   />
-                                  <div className="absolute top-[0.89px] left-[18.65px] tracking-num-0_02 font-semibold flex items-center w-[152.8px] h-[12.4px]">
-                                    569Q+3J2, Los Baños, Laguna
+                                  <div className="absolute top-[11.59px] left-[223.06px] tracking-num-0_02 font-semibold flex items-center w-[15.9px] h-[12.5px]">
+                                    4.3
                                   </div>
+                                  <div className="absolute top-[31.23px] left-[12.97px] w-[171.4px] h-num-14_7">
+                                    <img
+                                      className="absolute top-[0px] left-[0px] w-[14.7px] h-num-14_7"
+                                      alt=""
+                                    />
+                                    <div className="absolute top-[0.89px] left-[18.65px] tracking-num-0_02 font-semibold flex items-center w-[152.8px] h-[12.4px]">
+                                      569Q+3J2, Los Baños, Laguna
+                                    </div>
+                                  </div>
+                                  <b className="absolute top-[11.59px] left-[13.37px] text-[16.05px] tracking-num--0_01 flex font-inter items-center w-[184.5px] h-[14.3px]">
+                                    Westbrook Residences
+                                  </b>
                                 </div>
-                                <b className="absolute top-[11.59px] left-[13.37px] text-[16.05px] tracking-num--0_01 flex font-inter items-center w-[184.5px] h-[14.3px]">
-                                  Westbrook Residences
-                                </b>
-                              </div>
-                              <img
-                                className="absolute top-[8.02px] left-[219.31px] w-[25.2px] h-[25.2px]"
-                                alt=""
-                              />
-                              <img
-                                className="absolute top-[0px] left-[0.89px] rounded-t-num-8_91 rounded-b-num-0 w-[248.3px] h-[123.7px] object-cover"
-                                alt=""
-                              />
-                            </div>
-                            <div className="w-num-249_6 h-[198.8px] relative [filter:drop-shadow(0px_0px_3.57px_rgba(0,_0,_0,_0.25))]">
-                              <div className="absolute top-[0px] left-[0.88px] shadow-[0px_0px_3.57px_rgba(0,_0,_0,_0.25)] rounded-num-8_91 bg-whitesmoke-300 w-[247.8px] h-[196.1px]" />
-                              <div className="absolute top-[127.48px] left-[0px] w-num-249_6 h-[71.3px]">
-                                <div className="absolute top-[0px] left-[0px] rounded-t-num-0 rounded-b-num-8_91 bg-white w-num-249_6 h-[71.3px] opacity-[0.15]" />
                                 <img
-                                  className="absolute top-[42.79px] left-[222.18px] w-[18.3px] h-[18.4px]"
+                                  className="absolute top-[8.02px] left-[219.31px] w-[25.2px] h-[25.2px]"
                                   alt=""
                                 />
-                                <div className="absolute top-[8.92px] left-[223.06px] tracking-num-0_02 font-semibold flex items-center w-[15.9px] h-[12.5px]">
-                                  4.8
-                                </div>
-                                <div className="absolute top-[28.55px] left-[12.97px] w-[183.2px] h-num-14_7">
+                                <img
+                                  className="absolute top-[0px] left-[0.89px] rounded-t-num-8_91 rounded-b-num-0 w-[248.3px] h-[123.7px] object-cover"
+                                  alt=""
+                                />
+                              </div>
+                            </Link>
+                            <Link to="/unit">
+                              <div className="w-num-249_6 h-[198.8px] relative [filter:drop-shadow(0px_0px_3.57px_rgba(0,_0,_0,_0.25))]">
+                                <div className="absolute top-[0px] left-[0.88px] shadow-[0px_0px_3.57px_rgba(0,_0,_0,_0.25)] rounded-num-8_91 bg-whitesmoke-300 w-[247.8px] h-[196.1px]" />
+                                <div className="absolute top-[127.48px] left-[0px] w-num-249_6 h-[71.3px]">
+                                  <div className="absolute top-[0px] left-[0px] rounded-t-num-0 rounded-b-num-8_91 bg-white w-num-249_6 h-[71.3px] opacity-[0.15]" />
                                   <img
-                                    className="absolute top-[0px] left-[0px] w-[14.7px] h-num-14_7"
+                                    className="absolute top-[42.79px] left-[222.18px] w-[18.3px] h-[18.4px]"
                                     alt=""
                                   />
-                                  <div className="absolute top-[0.87px] left-[18.23px] tracking-num-0_02 font-semibold flex items-center w-[164.9px] h-[12.5px]">
-                                    10247 Ruby St, Los Baños, Laguna
+                                  <div className="absolute top-[8.92px] left-[223.06px] tracking-num-0_02 font-semibold flex items-center w-[15.9px] h-[12.5px]">
+                                    4.8
                                   </div>
+                                  <div className="absolute top-[28.55px] left-[12.97px] w-[183.2px] h-num-14_7">
+                                    <img
+                                      className="absolute top-[0px] left-[0px] w-[14.7px] h-num-14_7"
+                                      alt=""
+                                    />
+                                    <div className="absolute top-[0.87px] left-[18.23px] tracking-num-0_02 font-semibold flex items-center w-[164.9px] h-[12.5px]">
+                                      10247 Ruby St, Los Baños, Laguna
+                                    </div>
+                                  </div>
+                                  <b className="absolute top-[8.92px] left-[13.28px] text-[16.05px] tracking-num--0_01 flex font-inter items-center w-[160.2px] h-[14.3px]">
+                                    Ruby Residences
+                                  </b>
                                 </div>
-                                <b className="absolute top-[8.92px] left-[13.28px] text-[16.05px] tracking-num--0_01 flex font-inter items-center w-[160.2px] h-[14.3px]">
-                                  Ruby Residences
-                                </b>
+                                <img
+                                  className="absolute top-[0px] left-[0.89px] rounded-t-num-8_91 rounded-b-num-0 w-[247.8px] h-[124.8px] object-cover"
+                                  alt=""
+                                />
+                                <img
+                                  className="absolute top-[8.02px] left-[219.31px] w-[25.2px] h-[25.2px]"
+                                  alt=""
+                                />
                               </div>
-                              <img
-                                className="absolute top-[0px] left-[0.89px] rounded-t-num-8_91 rounded-b-num-0 w-[247.8px] h-[124.8px] object-cover"
-                                alt=""
-                              />
-                              <img
-                                className="absolute top-[8.02px] left-[219.31px] w-[25.2px] h-[25.2px]"
-                                alt=""
-                              />
-                            </div>
+                            </Link>
                           </div>
                         </div>
                       </div>

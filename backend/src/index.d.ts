@@ -9,13 +9,13 @@ declare global {
       firstName: string;
       middleName?: string | null;
       lastName: string;
-      userType: 'Admin' | 'Student' | 'Manager' | 'Landlord';
+      userType: 'Admin' | 'Student' | 'Manager' | 'Landlord' | undefined;
       emails: string[];
       auth: {
         google: string[];
       };
       profilePicture?: string | null;
-      status: 'unverified' | 'verified' | 'inactive' | 'disabled';
+      status: 'setup' | 'unverified' | 'verified' | 'inactive' | 'disabled';
       documents: DocumentType[];
       verificationStatus: 'pending' | 'submitted' | 'rejected' | 'approved';
     }

@@ -32,9 +32,12 @@ const OverviewTab: FunctionComponent = () => {
         ];
 
         const totalIncome = mockBillings.reduce((sum, b) => sum + (b.paidAmount || 0), 0);
-        const totalOutstanding = mockBillings.reduce((sum, b) => sum + (b.totalAmount - (b.paidAmount || 0)), 0);
-        const paidCount = mockBillings.filter(b => b.paymentStatus === 'paid').length;
-        
+        const totalOutstanding = mockBillings.reduce(
+          (sum, b) => sum + (b.totalAmount - (b.paidAmount || 0)),
+          0,
+        );
+        const paidCount = mockBillings.filter((b) => b.paymentStatus === 'paid').length;
+
         setStats({
           income: totalIncome,
           occupancy: { current: 28, total: 30 },
@@ -54,33 +57,37 @@ const OverviewTab: FunctionComponent = () => {
   const statCards = [
     { label: 'Income', value: `₱${stats.income.toFixed(2)}`, highlight: true },
     { label: 'Occupancy', value: `${stats.occupancy.current}/${stats.occupancy.total}` },
-    { label: 'Payments Collected', value: `${stats.paymentsCollected.current}/${stats.paymentsCollected.total}` },
+    {
+      label: 'Payments Collected',
+      value: `${stats.paymentsCollected.current}/${stats.paymentsCollected.total}`,
+    },
     { label: 'Outstanding Balance', value: `₱${stats.outstandingBalance.toFixed(2)}` },
   ];
 
   if (isLoading) {
     return (
-      <div className="flex flex-col items-start gap-5 text-left text-[18px] text-gray font-inter">
-        <div className="w-full max-w-[848px] h-[84px] bg-gray-100 animate-pulse rounded-[10px]" />
-        <div className="w-full max-w-[848px] h-[280px] bg-gray-100 animate-pulse rounded-2xl" />
-        <div className="w-full max-w-[848px] h-[280px] bg-gray-100 animate-pulse rounded-2xl" />
+      <div className="flex flex-col items-start gap-5 text-left text-[18px] text-gray font-inter w-full">
+        <div className="w-full h-[84px] bg-gray-100 animate-pulse rounded-[10px]" />
+        <div className="w-full h-[280px] bg-gray-100 animate-pulse rounded-2xl" />
+        <div className="w-full h-[280px] bg-gray-100 animate-pulse rounded-2xl" />
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col items-start gap-5 text-left text-[18px] text-gray font-inter">
-      {/* Stat cards row - responsive grid */}
-      <div className="w-full max-w-[848px] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[15px]">
+    <div className="flex flex-col items-start gap-5 text-left text-[18px] text-gray font-inter w-full">
+      {/* Stat cards row */}
+      <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[15px]">
         {statCards.map((card) => (
           <StatCard key={card.label} {...card} />
         ))}
       </div>
 
-      <div className="w-full max-w-[848px] overflow-x-auto">
+      {/* Charts */}
+      <div className="w-full">
         <MonthlyIncomeChart />
       </div>
-      <div className="w-full max-w-[848px] overflow-x-auto">
+      <div className="w-full">
         <IncomeBreakdown />
       </div>
     </div>

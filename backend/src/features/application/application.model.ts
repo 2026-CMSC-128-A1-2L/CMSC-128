@@ -5,10 +5,13 @@ import { APPLICATION_STATUS } from 'shared';
 export type ApplicationStatusType = (typeof APPLICATION_STATUS)[number];
 
 export type ApplicationType = {
+  _id: mongoose.Types.ObjectId;
+
   userId: mongoose.Types.ObjectId;
   listingId: mongoose.Types.ObjectId;
-  preferredMoveInDate: Date;
   facilityId: mongoose.Types.ObjectId;
+
+  preferredMoveInDate: Date;
   status: ApplicationStatusType;
   leaseDuration: '6-months' | '12-months';
   moveInDate: Date;
@@ -21,14 +24,14 @@ const applicationFormSchema = new mongoose.Schema<ApplicationType>(
   {
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'Student', required: true },
     listingId: { type: mongoose.Schema.Types.ObjectId, ref: 'Listing', required: true },
-    preferredMoveInDate: { type: Date, required: true },
     facilityId: { type: mongoose.Schema.Types.ObjectId, ref: 'HousingFacility', required: true },
+
+    preferredMoveInDate: { type: Date, required: true },
     status: {
       type: String,
       enum: APPLICATION_STATUS,
       default: 'pending',
     },
-
     leaseDuration: { type: String, enum: ['6-months', '12-months'], required: true },
     moveInDate: { type: Date, required: true },
     message: String,

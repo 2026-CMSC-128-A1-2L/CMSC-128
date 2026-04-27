@@ -4,14 +4,15 @@ import { Factory } from 'fishery';
 import { type HousingFacilityType, HousingFacility } from '../features/facility/facility.model';
 import { Landlord, Manager, Student, Admin, type UserType } from '../features/user/user.model';
 import type { DocumentType } from '../features/document/document.model';
+import { UserStatus, UserTypeType } from 'shared';
 
 type UserParams = {
   firstName: string;
   middleName?: string | null;
   lastName: string;
   emails: string[];
-  status: 'unverified' | 'verified' | 'inactive' | 'disabled';
-  userType: 'Admin' | 'Manager' | 'Landlord' | 'Student';
+  status: UserStatus;
+  userType?: UserTypeType;
   profilePicture?: string | null;
   contact?: string;
   address?: string;
@@ -93,12 +94,28 @@ export const buildUnverifiedStudent = buildUser.params({
   status: 'unverified',
 });
 
-export type HousingFacilityParams = Omit<HousingFacilityType, '_id' | 'createdAt' | 'updatedAt'>;
+export type HousingFacilityParams = Omit<
+  HousingFacilityType,
+  | '_id'
+  | 'createdAt'
+  | 'updatedAt'
+  | 'qualityAvg'
+  | 'reviewCount'
+  | 'verifiedAt'
+  | 'description'
+  | 'comfortAvg'
+  | 'environmentAvg'
+  | 'allowVisit'
+  | 'allowTransfer'
+  | 'isPrivate'
+  | 'media'
+>;
 
 export const buildHousingFacility = Factory.define<
   HousingFacilityParams,
   Partial<HousingFacilityParams>,
-  HousingFacilityType
+  HousingFacilityType,
+  Partial<HousingFacilityParams>
 >(({ sequence }) => ({
   name: `Test Facility ${sequence.toString()}`,
   landlordId: new mongoose.Types.ObjectId(),
@@ -113,5 +130,8 @@ export const buildHousingFacility = Factory.define<
   documents: [],
   isAcceptingApplications: false,
 })).onCreate(async (data) => {
-  return (await new HousingFacility(data).save()) as HousingFacilityType;
+  return (await new HousingFacility({
+    description: 'Test facility description',
+    ...data,
+  }).save()) as HousingFacilityType;
 });

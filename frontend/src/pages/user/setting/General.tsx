@@ -2,14 +2,8 @@ import { FunctionComponent, useCallback } from 'react';
 import { Icon } from '@iconify/react';
 import info_icon from '../../../../assets/infoicon_icon.svg';
 
-
-
 const General: FunctionComponent = () => {
-
-
-
   return (
-
     <div className="self-stretch rounded-t-none rounded-b-num-16 border-whitesmoke-200 border-solid border-[1px] overflow-hidden flex flex-col items-start py-6 px-num-32 gap-6 text-center text-[24px] text-black">
       <div className="self-stretch flex flex-col items-start gap-8">
         <div className="flex flex-col items-start">
@@ -27,9 +21,7 @@ const General: FunctionComponent = () => {
             </div>
             <div className="flex flex-col items-start gap-1">
               <b className="relative">University Domain</b>
-              <b className="relative text-darkslategray">
-                University of the Philippines Los Baños
-              </b>
+              <b className="relative text-darkslategray">University of the Philippines Los Baños</b>
             </div>
           </div>
           <div className="flex-1 flex flex-col items-start gap-3">
@@ -43,10 +35,7 @@ const General: FunctionComponent = () => {
                   <div className="flex items-center gap-1 text-[12px]">
                     <div className="relative font-medium">Get Verified</div>
 
-                    <Icon
-                      icon="solar:arrow-right-up-linear"
-                      className="w-4 relative max-h-full"
-                    />
+                    <Icon icon="solar:arrow-right-up-linear" className="w-4 relative max-h-full" />
                   </div>
                 </div>
               </div>
@@ -96,11 +85,7 @@ const General: FunctionComponent = () => {
               </div>
               <div className="self-stretch overflow-hidden flex items-start py-num-10 px-3 gap-1 text-left">
                 <div className="self-stretch w-4 overflow-hidden shrink-0 flex flex-col items-start p-px box-border">
-                  <img
-                    className="w-[13.3px] h-[13.3px] relative"
-                    alt=""
-                    src={info_icon}
-                  />
+                  <img className="w-[13.3px] h-[13.3px] relative" alt="" src={info_icon} />
                 </div>
                 <div className="h-[68px] flex-1 relative font-medium inline-block">{`Maintain your own records by downloading a full copy of your digital footprint. This includes all information given by the user, verified documents and communication logs within the ATLAS ecosystem. `}</div>
               </div>
@@ -122,16 +107,12 @@ const General: FunctionComponent = () => {
               </div>
               <div className="self-stretch overflow-hidden flex items-start py-num-10 px-3 gap-1 text-left">
                 <div className="self-stretch w-4 overflow-hidden shrink-0 flex flex-col items-start p-px box-border">
-                  <img
-                    className="w-[13.3px] h-[13.3px] relative"
-                    alt=""
-                    src={info_icon}
-                  />
+                  <img className="w-[13.3px] h-[13.3px] relative" alt="" src={info_icon} />
                 </div>
                 <div className="h-[68px] flex-1 relative leading-6 font-medium inline-block">
-                  Deletion will results in the complete removal of all you
-                  personal data and documentation from our active servers. Once
-                  processed, this data cannot be recovered.
+                  Deletion will results in the complete removal of all you personal data and
+                  documentation from our active servers. Once processed, this data cannot be
+                  recovered.
                 </div>
               </div>
             </div>
@@ -139,8 +120,7 @@ const General: FunctionComponent = () => {
         </div>
       </div>
     </div>
-
-  )
+  );
 };
 
 export default General;

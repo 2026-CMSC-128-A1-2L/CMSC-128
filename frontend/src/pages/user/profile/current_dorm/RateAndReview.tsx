@@ -4,7 +4,7 @@ import { Icon } from "@iconify/react";
 import Location from "../../../../../assets/pin_location_icon.svg";
 import House from "../../../../../assets/house_icon.svg";
 import SideBar from "../../../../components/user/SideBar";
-
+import BreadcrumbHeader from "../../../../components/general/Breadcrumb";
 const RateAndReview: FunctionComponent = () => {
   const navigate = useNavigate();
 
@@ -224,7 +224,7 @@ const RateAndReview: FunctionComponent = () => {
                     <div className="self-stretch flex items-center justify-center gap-4 text-center text-num-14 text-teal font-inter">
                       <div
                         className="h-8 rounded-2xl flex items-center justify-center py-num-0 px-4 box-border cursor-pointer"
-                        onClick={onUserProfileTextClick}
+                        onClick={() => navigate(-1)}
                       >
                         <b className="relative text-transparent !bg-clip-text [background:linear-gradient(180deg,_#c00f0f,_#e44f4f)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">
                           Go Back
@@ -232,7 +232,7 @@ const RateAndReview: FunctionComponent = () => {
                       </div>
                       <div
                         className="h-8 rounded-2xl bg-aliceblue flex items-center justify-center py-num-0 px-4 box-border cursor-pointer"
-                        onClick={onUserProfileTextClick}
+                        onClick={() => navigate("/rate-review-form")}
                       >
                         <b className="relative">Proceed</b>
                       </div>

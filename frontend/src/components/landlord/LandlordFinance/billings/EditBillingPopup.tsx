@@ -1,6 +1,6 @@
-import { FunctionComponent, useState, useEffect } from "react";
-import type { Billing } from "../types/billing";
-import PortalPopup from "../../../general/PortalPopout";
+import { FunctionComponent, useState, useEffect } from 'react';
+import type { Billing } from '../types/billing';
+import PortalPopup from '../../../general/PortalPopout';
 
 interface EditBillingPopupProps {
   isOpen: boolean;
@@ -15,47 +15,42 @@ const EditBillingPopup: FunctionComponent<EditBillingPopupProps> = ({
   billing,
   onSave,
 }) => {
-  const [fullName, setFullName] = useState<string>("");
-  const [rent, setRent] = useState<string>("");
-  const [utilities, setUtilities] = useState<string>("");
-  const [miscFees, setMiscFees] = useState<string>("");
-  const [amountPaid, setAmountPaid] = useState<string>("");
+  const [fullName, setFullName] = useState<string>('');
+  const [rent, setRent] = useState<string>('');
+  const [utilities, setUtilities] = useState<string>('');
+  const [miscFees, setMiscFees] = useState<string>('');
+  const [amountPaid, setAmountPaid] = useState<string>('');
 
   useEffect(() => {
     if (isOpen && billing) {
-      const rentItem = billing.breakdown.find((b) => b.name === "Rent");
-      const utilitiesItem = billing.breakdown.find(
-        (b) => b.name === "Utilities",
-      );
-      const miscItem = billing.breakdown.find((b) => b.name === "Misc. Fees");
+      const rentItem = billing.breakdown.find((b) => b.name === 'Rent');
+      const utilitiesItem = billing.breakdown.find((b) => b.name === 'Utilities');
+      const miscItem = billing.breakdown.find((b) => b.name === 'Misc. Fees');
 
-      setFullName("");
-      setRent(rentItem?.amount.toString() || "");
-      setUtilities(utilitiesItem?.amount.toString() || "");
-      setMiscFees(miscItem?.amount.toString() || "");
-      setAmountPaid(billing.paidAmount?.toString() || "");
+      setFullName('');
+      setRent(rentItem?.amount.toString() || '');
+      setUtilities(utilitiesItem?.amount.toString() || '');
+      setMiscFees(miscItem?.amount.toString() || '');
+      setAmountPaid(billing.paidAmount?.toString() || '');
     }
   }, [isOpen, billing]);
 
   const handleSave = () => {
     if (onSave && billing) {
       const updatedBreakdown = [
-        { name: "Rent", amount: parseFloat(rent) || 0 },
-        { name: "Utilities", amount: parseFloat(utilities) || 0 },
-        { name: "Misc. Fees", amount: parseFloat(miscFees) || 0 },
+        { name: 'Rent', amount: parseFloat(rent) || 0 },
+        { name: 'Utilities', amount: parseFloat(utilities) || 0 },
+        { name: 'Misc. Fees', amount: parseFloat(miscFees) || 0 },
       ];
 
-      const totalAmount = updatedBreakdown.reduce(
-        (sum, item) => sum + item.amount,
-        0,
-      );
+      const totalAmount = updatedBreakdown.reduce((sum, item) => sum + item.amount, 0);
       const paidAmountValue = parseFloat(amountPaid) || 0;
 
-      let paymentStatus: Billing["paymentStatus"] = "unpaid";
+      let paymentStatus: Billing['paymentStatus'] = 'unpaid';
       if (paidAmountValue >= totalAmount) {
-        paymentStatus = "paid";
+        paymentStatus = 'paid';
       } else if (paidAmountValue > 0) {
-        paymentStatus = "partially_paid";
+        paymentStatus = 'partially_paid';
       }
 
       const updatedBilling: Billing = {
@@ -78,10 +73,10 @@ const EditBillingPopup: FunctionComponent<EditBillingPopupProps> = ({
 
   const getRoomNumber = (unitId: string): string => {
     const roomMap: Record<string, string> = {
-      unit1: "01",
-      unit2: "02",
-      unit3: "03",
-      unit4: "04",
+      unit1: '01',
+      unit2: '02',
+      unit3: '03',
+      unit4: '04',
     };
     return roomMap[unitId] || unitId;
   };
@@ -97,9 +92,7 @@ const EditBillingPopup: FunctionComponent<EditBillingPopupProps> = ({
     >
       <div className="relative w-full max-w-[612px] bg-white rounded-[32px] shadow-[0px_4px_20px_rgba(0,_0,_0,_0.15)] overflow-hidden">
         <div className="bg-gradient-to-b from-[#c29722] to-[#f6b709] px-[40px] sm:px-[57px] pt-[30px] pb-[40px]">
-          <b className="block text-[24px] sm:text-[32px] text-white mb-2">
-            Edit Billing
-          </b>
+          <b className="block text-[24px] sm:text-[32px] text-white mb-2">Edit Billing</b>
           <b className="block text-[14px] sm:text-[18px] tracking-[-0.01em] font-inter text-white">
             Edit existing billing of your tenant for this month!
           </b>
@@ -112,9 +105,7 @@ const EditBillingPopup: FunctionComponent<EditBillingPopupProps> = ({
             </b>
             <div className="shadow-[0px_0px_5px_rgba(0,_0,_0,_0.25)] rounded-md bg-whitesmoke-100 h-10 w-full">
               <div className="w-full h-full px-4 flex items-center text-[12px] sm:text-[14px] font-medium font-inter text-darkslategray-100">
-                {billing
-                  ? `Room ${getRoomNumber(billing.unitId)}`
-                  : "Select a room"}
+                {billing ? `Room ${getRoomNumber(billing.unitId)}` : 'Select a room'}
               </div>
             </div>
           </div>

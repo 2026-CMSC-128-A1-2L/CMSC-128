@@ -27,7 +27,7 @@ const IncomeBreakdown: FunctionComponent = () => {
       setIsLoading(true);
       try {
         const mockBillings: Billing[] = [
-          { 
+          {
             breakdown: [
               { name: 'Rent', amount: 3000 },
               { name: 'Utilities', amount: 1500 },
@@ -36,7 +36,7 @@ const IncomeBreakdown: FunctionComponent = () => {
             paidAmount: 4500,
             totalAmount: 4500,
           } as Billing,
-          { 
+          {
             breakdown: [
               { name: 'Rent', amount: 3000 },
               { name: 'Utilities', amount: 1700 },
@@ -45,7 +45,7 @@ const IncomeBreakdown: FunctionComponent = () => {
             paidAmount: 1850,
             totalAmount: 4850,
           } as Billing,
-          { 
+          {
             breakdown: [
               { name: 'Rent', amount: 3000 },
               { name: 'Utilities', amount: 1300 },
@@ -54,7 +54,7 @@ const IncomeBreakdown: FunctionComponent = () => {
             paidAmount: 0,
             totalAmount: 4300,
           } as Billing,
-          { 
+          {
             breakdown: [
               { name: 'Rent', amount: 3000 },
               { name: 'Utilities', amount: 1450 },
@@ -71,11 +71,11 @@ const IncomeBreakdown: FunctionComponent = () => {
         let totalPaid = 0;
         let totalAmount = 0;
 
-        mockBillings.forEach(billing => {
-          const rent = billing.breakdown.find(b => b.name === 'Rent')?.amount || 0;
-          const utilities = billing.breakdown.find(b => b.name === 'Utilities')?.amount || 0;
-          const misc = billing.breakdown.find(b => b.name === 'Misc. Fees')?.amount || 0;
-          
+        mockBillings.forEach((billing) => {
+          const rent = billing.breakdown.find((b) => b.name === 'Rent')?.amount || 0;
+          const utilities = billing.breakdown.find((b) => b.name === 'Utilities')?.amount || 0;
+          const misc = billing.breakdown.find((b) => b.name === 'Misc. Fees')?.amount || 0;
+
           totalRent += rent;
           totalUtilities += utilities;
           totalMisc += misc;
@@ -112,9 +112,21 @@ const IncomeBreakdown: FunctionComponent = () => {
   ];
 
   const legendItems = [
-    { color: 'bg-darkslategray-200', textColor: 'text-darkslategray-200', label: `Rent - ${breakdown.rent.percentage.toFixed(0)}%` },
-    { color: 'bg-teal-200', textColor: 'text-teal-200', label: `Utilities - ${breakdown.utilities.percentage.toFixed(0)}%` },
-    { color: 'bg-teal-100', textColor: 'text-teal-100', label: `Misc. - ${breakdown.misc.percentage.toFixed(0)}%` },
+    {
+      color: 'bg-darkslategray-200',
+      textColor: 'text-darkslategray-200',
+      label: `Rent - ${breakdown.rent.percentage.toFixed(0)}%`,
+    },
+    {
+      color: 'bg-teal-200',
+      textColor: 'text-teal-200',
+      label: `Utilities - ${breakdown.utilities.percentage.toFixed(0)}%`,
+    },
+    {
+      color: 'bg-teal-100',
+      textColor: 'text-teal-100',
+      label: `Misc. - ${breakdown.misc.percentage.toFixed(0)}%`,
+    },
   ];
 
   const donutGradient = `conic-gradient(
@@ -126,14 +138,14 @@ const IncomeBreakdown: FunctionComponent = () => {
 
   if (isLoading) {
     return (
-      <div className="w-full max-w-[848px] h-[280px] rounded-2xl bg-white border-whitesmoke-200 border-solid border-[1px] box-border flex flex-col items-start py-6 px-9 gap-[19px]">
+      <div className="w-full rounded-2xl bg-white border-whitesmoke-200 border-solid border-[1px] flex flex-col items-start py-6 px-9 gap-[19px]">
         <div className="w-full h-full bg-gray-100 animate-pulse rounded-lg" />
       </div>
     );
   }
 
   return (
-    <div className="w-full max-w-[848px] rounded-2xl bg-white border-whitesmoke-200 border-solid border-[1px] box-border flex flex-col items-start py-6 px-4 sm:px-6 md:px-9 gap-[19px]">
+    <div className="w-full rounded-2xl bg-white border-whitesmoke-200 border-solid border-[1px] flex flex-col items-start py-6 px-4 sm:px-6 md:px-9 gap-[19px]">
       <div className="flex items-center justify-center p-2 box-border">
         <b className="relative tracking-[-0.01em] shrink-0 text-[16px] sm:text-[18px] text-gray font-inter">
           Income Breakdown
@@ -141,20 +153,19 @@ const IncomeBreakdown: FunctionComponent = () => {
       </div>
 
       <div className="self-stretch flex flex-wrap lg:flex-nowrap items-start gap-6 lg:gap-3 text-[14px] text-teal-200">
-        {/* Donut + legend - fixed width */}
+        {/* Donut + legend */}
         <div className="flex items-center gap-[42px] shrink-0">
           <div className="relative h-[150px] w-[150px] rounded-full shrink-0">
-            <div 
-              className="absolute inset-0 rounded-full"
-              style={{ background: donutGradient }}
-            />
+            <div className="absolute inset-0 rounded-full" style={{ background: donutGradient }} />
             <div className="absolute inset-[20px] rounded-full bg-white" />
           </div>
           <div className="flex flex-col gap-2">
             {legendItems.map(({ color, textColor, label }) => (
               <div key={label} className="flex items-center gap-2 whitespace-nowrap">
                 <div className={`h-[15px] w-[15px] rounded-[5px] ${color}`} />
-                <span className={`font-medium ${textColor} text-[12px] sm:text-[14px]`}>{label}</span>
+                <span className={`font-medium ${textColor} text-[12px] sm:text-[14px]`}>
+                  {label}
+                </span>
               </div>
             ))}
           </div>
@@ -162,12 +173,12 @@ const IncomeBreakdown: FunctionComponent = () => {
 
         {/* Breakdown cards + rate bars - takes remaining space */}
         <div className="flex-1 min-w-0 flex flex-col items-start gap-[23px] text-[18px] text-darkslategray-200">
-          {/* Breakdown cards - fixed width, no wrap */}
+          {/* Breakdown cards */}
           <div className="flex flex-row items-center justify-between gap-4 w-full">
             {breakdownCards.map(({ amount, label }) => (
               <div
                 key={label}
-                className="flex-1 min-w-[100px] h-[49px] rounded-[10px] bg-white border-whitesmoke-200 border-solid border-[1px] box-border flex flex-col items-start py-2 px-2.5"
+                className="flex-1 min-w-[100px] h-[49px] rounded-[10px] bg-white border-whitesmoke-200 border-solid border-[1px] flex flex-col items-start py-2 px-2.5"
               >
                 <b className="w-full h-[22px] relative tracking-[-0.01em] flex items-center shrink-0 text-[12px] sm:text-[14px] md:text-[16px] lg:text-[18px]">
                   {amount}
@@ -180,8 +191,16 @@ const IncomeBreakdown: FunctionComponent = () => {
           </div>
 
           <div className="self-stretch flex flex-col items-start gap-5 text-[12px] text-teal-200 font-lora">
-            <ProgressRow label="Collection Rate" value={`${breakdown.collectionRate.toFixed(2)}%`} percent={breakdown.collectionRate} />
-            <ProgressRow label="Occupancy Rate" value={`${breakdown.occupancyRate.toFixed(2)}%`} percent={breakdown.occupancyRate} />
+            <ProgressRow
+              label="Collection Rate"
+              value={`${breakdown.collectionRate.toFixed(2)}%`}
+              percent={breakdown.collectionRate}
+            />
+            <ProgressRow
+              label="Occupancy Rate"
+              value={`${breakdown.occupancyRate.toFixed(2)}%`}
+              percent={breakdown.occupancyRate}
+            />
           </div>
         </div>
       </div>
