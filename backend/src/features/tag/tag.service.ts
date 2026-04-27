@@ -148,9 +148,7 @@ export const deleteTag = async (tagName: string) => {
 //
 // Intended to be called directly by the client via POST /api/tags/enrich, passing
 // a listing's raw tags map. Tags not found in the database are silently omitted.
-export const enrichTags = async (
-  tags: Record<string, string | number | boolean>,
-) => {
+export const enrichTags = async (tags: Record<string, string | number | boolean>) => {
   const names = Object.keys(tags);
   if (names.length === 0) return [];
 

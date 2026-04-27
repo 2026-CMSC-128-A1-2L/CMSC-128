@@ -73,7 +73,6 @@ const DetailForm: FunctionComponent<DetailFormProps> = ({
 
   return (
     <div className="flex-1 w-full relative flex flex-col items-start justify-center gap-4 text-left text-num-14 text-teal font-inter">
-
       {/* Header */}
       <div className="self-stretch flex items-center gap-2.5 text-[17.7px]">
         <div className="flex-1 flex items-center justify-center">
@@ -156,10 +155,7 @@ const DetailForm: FunctionComponent<DetailFormProps> = ({
       </div>
 
       {/* File size error */}
-      {qrError && (
-        <span className="text-xs text-red-500 -mt-2">{qrError}</span>
-      )}
-
+      {qrError && <span className="text-xs text-red-500 -mt-2">{qrError}</span>}
     </div>
   );
 };
@@ -191,8 +187,9 @@ const Payments: FunctionComponent = () => {
 
   return (
     <div
-      className={`w-full relative rounded-[11.8px] flex flex-col items-start py-4 px-3 box-border [transform:_rotate(-0.3deg)] [transform-origin:0_0] text-left text-[17.7px] font-inter transition-all ${payment.enabled ? 'gap-[15.7px] text-teal-200' : 'text-teal'
-        }`}
+      className={`w-full relative rounded-[11.8px] flex flex-col items-start py-4 px-3 box-border [transform:_rotate(-0.3deg)] [transform-origin:0_0] text-left text-[17.7px] font-inter transition-all ${
+        payment.enabled ? 'gap-[15.7px] text-teal-200' : 'text-teal'
+      }`}
     >
       {/* Header & Toggle */}
       <div className="self-stretch flex items-center justify-between gap-5">
@@ -201,12 +198,14 @@ const Payments: FunctionComponent = () => {
         </b>
         <div className="h-[30.5px] w-[64.9px] relative cursor-pointer" onClick={handleToggle}>
           <div
-            className={`absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] rounded-[19.67px] transition-colors ${payment.enabled ? 'bg-teal-100' : 'bg-silver'
-              }`}
+            className={`absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] rounded-[19.67px] transition-colors ${
+              payment.enabled ? 'bg-teal-100' : 'bg-silver'
+            }`}
           />
           <div
-            className={`absolute h-[80.66%] w-[37.9%] top-[9.67%] bottom-[9.67%] shadow-[0px_3.93px_3.93px_rgba(0,0,0,0.25)] rounded-[50%] bg-white transition-all ${payment.enabled ? 'right-[6.03%] left-[56.07%]' : 'right-[56.03%] left-[6.06%]'
-              }`}
+            className={`absolute h-[80.66%] w-[37.9%] top-[9.67%] bottom-[9.67%] shadow-[0px_3.93px_3.93px_rgba(0,0,0,0.25)] rounded-[50%] bg-white transition-all ${
+              payment.enabled ? 'right-[6.03%] left-[56.07%]' : 'right-[56.03%] left-[6.06%]'
+            }`}
           />
         </div>
       </div>
@@ -214,7 +213,6 @@ const Payments: FunctionComponent = () => {
       {/* Expanded Content */}
       {payment.enabled && (
         <div className="flex flex-col items-start gap-[30px] text-slategray w-full">
-
           {/* GCash */}
           {!isGcashOpen ? (
             <div
@@ -254,7 +252,6 @@ const Payments: FunctionComponent = () => {
               onSave={handleSaveBank}
             />
           )}
-
         </div>
       )}
     </div>

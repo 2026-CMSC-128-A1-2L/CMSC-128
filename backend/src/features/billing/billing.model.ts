@@ -18,6 +18,8 @@ export type BillingType = {
   paymentStatus: PaymentStatusType;
   documents: DocumentType[];
   paymentMethod: {
+    name: string;
+    billingNumber: string;
     method: PaymentMethodType;
     qr: DocumentType[];
   }[];
@@ -52,6 +54,8 @@ const billingSchema = new mongoose.Schema<BillingType>(
 
     // TODO: Clarify
     paymentMethod: {
+      name: { type: String, required: true },
+      billingNumber: { type: String, required: true },
       method: { type: String, enum: PAYMENT_METHODS, required: true },
       qr: { type: [documentSchema], default: [] },
     },

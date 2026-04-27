@@ -6,7 +6,20 @@ interface MonthlyData {
   amount: number;
 }
 
-const ALL_MONTHS = ['APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC', 'JAN', 'FEB', 'MAR'];
+const ALL_MONTHS = [
+  'APR',
+  'MAY',
+  'JUN',
+  'JUL',
+  'AUG',
+  'SEP',
+  'OCT',
+  'NOV',
+  'DEC',
+  'JAN',
+  'FEB',
+  'MAR',
+];
 const ALL_EXPENSES = [4500, 4850, 4300, 4500, 4700, 4900, 5100, 4950, 5200, 5050, 5300, 5450];
 
 type TimeRange = '12' | '6';
@@ -25,7 +38,7 @@ const MonthlyExpensesChart: FunctionComponent = () => {
 
   const { months, expenses } = getChartData();
   const maxExpense = Math.max(...expenses, 1);
-  const heights = expenses.map(e => (e / maxExpense) * 100);
+  const heights = expenses.map((e) => (e / maxExpense) * 100);
 
   const toggleRange = () => {
     setSelectedRange(selectedRange === '12' ? '6' : '12');
@@ -35,7 +48,9 @@ const MonthlyExpensesChart: FunctionComponent = () => {
     <div className="w-full h-[280px] rounded-[16px] bg-white border-whitesmoke-200 border-solid border-[1px] box-border flex flex-col items-center justify-center py-6 px-4 relative gap-2.5">
       {/* Header with Toggle Button */}
       <div className="w-full flex items-center justify-center gap-3 z-10">
-        <b className="h-6 flex-1 text-[18px] tracking-[-0.01em] flex items-center">Monthly Expenses</b>
+        <b className="h-6 flex-1 text-[18px] tracking-[-0.01em] flex items-center">
+          Monthly Expenses
+        </b>
         <button
           onClick={toggleRange}
           className="rounded-lg bg-darkslategray-200 hover:bg-teal-200 transition-colors flex items-center justify-center p-2 cursor-pointer w-[100px]"
@@ -57,7 +72,7 @@ const MonthlyExpensesChart: FunctionComponent = () => {
                 style={{
                   width: selectedRange === '6' ? 'clamp(25px, 12%, 45px)' : 'clamp(20px, 7%, 35px)',
                   height: `${heights[i]}%`,
-                  backgroundColor: i === months.length - 1 ? '#024338' : '#096c5b'
+                  backgroundColor: i === months.length - 1 ? '#024338' : '#096c5b',
                 }}
               />
             ))}
@@ -72,12 +87,20 @@ const MonthlyExpensesChart: FunctionComponent = () => {
         </div>
         <div className="w-full flex items-start justify-between text-left text-[12px] text-silver">
           <div className="flex items-end gap-1">
-            <div className="h-[15px] w-[15px] rounded-[5px]" style={{ backgroundColor: '#096c5b' }} />
+            <div
+              className="h-[15px] w-[15px] rounded-[5px]"
+              style={{ backgroundColor: '#096c5b' }}
+            />
             <div className="h-4 tracking-[0.02em] font-semibold flex items-center">Past Months</div>
           </div>
           <div className="flex items-end gap-1">
-            <div className="h-[15px] w-[15px] rounded-[5px]" style={{ backgroundColor: '#024338' }} />
-            <div className="h-4 tracking-[0.02em] font-semibold flex items-center">Current Month</div>
+            <div
+              className="h-[15px] w-[15px] rounded-[5px]"
+              style={{ backgroundColor: '#024338' }}
+            />
+            <div className="h-4 tracking-[0.02em] font-semibold flex items-center">
+              Current Month
+            </div>
           </div>
         </div>
       </div>

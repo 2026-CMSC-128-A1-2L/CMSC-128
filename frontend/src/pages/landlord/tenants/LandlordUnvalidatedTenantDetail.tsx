@@ -1,27 +1,20 @@
-import { useState } from "react";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
-import LandlordLayout from "../../../components/landlord/LandlordLayout";
-import TenantAvatar from "../../../components/landlord/tenants/TenantAvatar";
-import TenantInfoField from "../../../components/landlord/tenants/TenantInfoField";
-import TenantProfileHeader from "../../../components/landlord/tenants/TenantProfileHeader";
-import SubmittedDocumentCard from "../../../components/landlord/tenants/SubmittedDocumentCard";
-import FileActionPopup from "../../../components/landlord/tenants/popups/FileActionPopup";
-import RejectDocumentPopup from "../../../components/landlord/tenants/popups/RejectDocumentPopup";
-import {
-  getPendingApplicationById,
-  type SubmittedDocument,
-} from "../../../data/landlordTenants";
+import { useState } from 'react';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import LandlordLayout from '../../../components/landlord/LandlordLayout';
+import TenantAvatar from '../../../components/landlord/tenants/TenantAvatar';
+import TenantInfoField from '../../../components/landlord/tenants/TenantInfoField';
+import TenantProfileHeader from '../../../components/landlord/tenants/TenantProfileHeader';
+import SubmittedDocumentCard from '../../../components/landlord/tenants/SubmittedDocumentCard';
+import FileActionPopup from '../../../components/landlord/tenants/popups/FileActionPopup';
+import RejectDocumentPopup from '../../../components/landlord/tenants/popups/RejectDocumentPopup';
+import { getPendingApplicationById, type SubmittedDocument } from '../../../data/landlordTenants';
 
 const LandlordUnvalidatedTenantDetail = () => {
   const { tenantId } = useParams<{ tenantId: string }>();
   const navigate = useNavigate();
-  const application = tenantId
-    ? getPendingApplicationById(tenantId)
-    : undefined;
+  const application = tenantId ? getPendingApplicationById(tenantId) : undefined;
   const [openFileMenuId, setOpenFileMenuId] = useState<string | null>(null);
-  const [rejectTarget, setRejectTarget] = useState<SubmittedDocument | null>(
-    null,
-  );
+  const [rejectTarget, setRejectTarget] = useState<SubmittedDocument | null>(null);
 
   if (!application) {
     return <Navigate to="/landlord/tenants/unvalidated" replace />;
@@ -30,30 +23,27 @@ const LandlordUnvalidatedTenantDetail = () => {
   const hasDocuments = application.documents.length > 0;
 
   const handleReject = () => {
-    navigate("/landlord/tenants/unvalidated");
+    navigate('/landlord/tenants/unvalidated');
   };
 
   const handleApprove = () => {
-    navigate("/landlord/tenants");
+    navigate('/landlord/tenants');
   };
 
   return (
     <LandlordLayout
       activeSidebarItem="tenants"
       breadcrumbs={[
-        { label: "My Tenants", to: "/landlord/tenants" },
+        { label: 'My Tenants', to: '/landlord/tenants' },
         {
-          label: "Unvalidated Applications",
-          to: "/landlord/tenants/unvalidated",
+          label: 'Unvalidated Applications',
+          to: '/landlord/tenants/unvalidated',
         },
         { label: application.displayName },
       ]}
     >
       <div className="flex w-full flex-col gap-[24px] rounded-[16px] border border-solid border-[#f0f0f0] bg-white p-[32px]">
-        <TenantProfileHeader
-          displayName={application.displayName}
-          email={application.email}
-        />
+        <TenantProfileHeader displayName={application.displayName} email={application.email} />
 
         <div className="grid w-full gap-[32px] md:grid-cols-[320px_minmax(0,1fr)] md:items-start">
           <section
@@ -67,30 +57,18 @@ const LandlordUnvalidatedTenantDetail = () => {
             />
 
             <div className="grid w-full grid-cols-2 gap-x-[32px] gap-y-[16px]">
-              <TenantInfoField label="Full Name">
-                {application.fullName}
-              </TenantInfoField>
-              <TenantInfoField label="Home Address">
-                {application.homeAddress}
-              </TenantInfoField>
-              <TenantInfoField label="Contact number">
-                {application.contactNumber}
-              </TenantInfoField>
-              <TenantInfoField label="Pending Dorm">
-                {application.dormName}
-              </TenantInfoField>
+              <TenantInfoField label="Full Name">{application.fullName}</TenantInfoField>
+              <TenantInfoField label="Home Address">{application.homeAddress}</TenantInfoField>
+              <TenantInfoField label="Contact number">{application.contactNumber}</TenantInfoField>
+              <TenantInfoField label="Pending Dorm">{application.dormName}</TenantInfoField>
               <TenantInfoField label="Contract Duration">
                 {application.contractDuration}
               </TenantInfoField>
-              <TenantInfoField label="Base Rent Fee">
-                {application.baseRentFee}
-              </TenantInfoField>
+              <TenantInfoField label="Base Rent Fee">{application.baseRentFee}</TenantInfoField>
               <TenantInfoField label="Monthly Due Date">
                 {application.monthlyDueDate}
               </TenantInfoField>
-              <TenantInfoField label="Mode of Payment">
-                {application.modeOfPayment}
-              </TenantInfoField>
+              <TenantInfoField label="Mode of Payment">{application.modeOfPayment}</TenantInfoField>
             </div>
           </section>
 
@@ -122,9 +100,7 @@ const LandlordUnvalidatedTenantDetail = () => {
                       key={document.id}
                       document={document}
                       onMoreOptions={() =>
-                        setOpenFileMenuId((prev) =>
-                          prev === document.id ? null : document.id,
-                        )
+                        setOpenFileMenuId((prev) => (prev === document.id ? null : document.id))
                       }
                       actionMenu={
                         <FileActionPopup
@@ -171,7 +147,7 @@ const LandlordUnvalidatedTenantDetail = () => {
         document={rejectTarget}
         isOpen={Boolean(rejectTarget)}
         onClose={() => setRejectTarget(null)}
-        onConfirm={() => navigate("/landlord/tenants/unvalidated")}
+        onConfirm={() => navigate('/landlord/tenants/unvalidated')}
       />
     </LandlordLayout>
   );

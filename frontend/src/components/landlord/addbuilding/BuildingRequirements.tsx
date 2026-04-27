@@ -70,8 +70,9 @@ const DocumentCard: FunctionComponent<DocumentCardProps> = ({
         <div className="flex items-center gap-3">
           <span className="font-bold text-gray-800 text-sm">{label}</span>
           <span
-            className={`text-xs font-semibold rounded-2xl px-3 py-1 ${isUploaded ? 'text-slate-500 bg-slate-100' : 'text-red-600 bg-red-100'
-              }`}
+            className={`text-xs font-semibold rounded-2xl px-3 py-1 ${
+              isUploaded ? 'text-slate-500 bg-slate-100' : 'text-red-600 bg-red-100'
+            }`}
           >
             {isUploaded ? 'Uploaded' : 'Missing'}
           </span>
@@ -95,13 +96,22 @@ const DocumentCard: FunctionComponent<DocumentCardProps> = ({
               </button>
               {isMenuOpen && (
                 <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-100 z-10 overflow-hidden flex flex-col text-sm">
-                  <button onClick={handleViewExample} className="w-full text-left px-4 py-2.5 hover:bg-gray-50 text-gray-700 transition-colors">
+                  <button
+                    onClick={handleViewExample}
+                    className="w-full text-left px-4 py-2.5 hover:bg-gray-50 text-gray-700 transition-colors"
+                  >
                     View Example File
                   </button>
-                  <button onClick={handleDownload} className="w-full text-left px-4 py-2.5 hover:bg-gray-50 text-gray-700 transition-colors border-t border-gray-100">
+                  <button
+                    onClick={handleDownload}
+                    className="w-full text-left px-4 py-2.5 hover:bg-gray-50 text-gray-700 transition-colors border-t border-gray-100"
+                  >
                     Download File
                   </button>
-                  <button onClick={handleRemove} className="w-full text-left px-4 py-2.5 hover:bg-red-50 text-red-600 transition-colors border-t border-gray-100 font-medium">
+                  <button
+                    onClick={handleRemove}
+                    className="w-full text-left px-4 py-2.5 hover:bg-red-50 text-red-600 transition-colors border-t border-gray-100 font-medium"
+                  >
                     Remove File
                   </button>
                 </div>
@@ -122,9 +132,7 @@ const DocumentCard: FunctionComponent<DocumentCardProps> = ({
               <span className="font-semibold text-xs text-gray-800 truncate max-w-[200px]">
                 {file.name}
               </span>
-              <span className="text-xs text-gray-400 font-medium mt-0.5">
-                Submitted: {date}
-              </span>
+              <span className="text-xs text-gray-400 font-medium mt-0.5">Submitted: {date}</span>
             </div>
           </>
         ) : (

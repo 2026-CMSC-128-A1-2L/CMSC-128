@@ -1,16 +1,15 @@
-import React from 'react'
-
+import React from 'react';
 
 interface StepIndicatorProps {
   currentStep: number;
-  steps: string[]; 
+  steps: string[];
 }
 
-export default function StepIndicator(props:StepIndicatorProps) {
-  const {currentStep,steps} = props
+export default function StepIndicator(props: StepIndicatorProps) {
+  const { currentStep, steps } = props;
   if (!steps || steps.length === 0) return null;
   return (
-  <div className="flex items-center w-full max-w-[780px] py-[40px] px-[20px] mx-auto font-inter">
+    <div className="flex items-center w-full max-w-[780px] py-[40px] px-[20px] mx-auto font-inter">
       {steps.map((label, index) => {
         // Calculate the step number (1-indexed) based on the array position
         const stepNumber = index + 1;
@@ -27,7 +26,7 @@ export default function StepIndicator(props:StepIndicatorProps) {
                   isActive || isPast ? 'bg-darkslategray' : 'bg-silver-100'
                 }`}
               ></div>
-              
+
               {/* Absolute Label - now just pulling the string directly */}
               <span className="absolute top-[40px] whitespace-nowrap font-bold text-teal text-num-14">
                 {label}
@@ -39,10 +38,10 @@ export default function StepIndicator(props:StepIndicatorProps) {
               <div
                 className={`flex-1 h-[9px] mx-[24px] rounded-full ${
                   isPast
-                    ? 'bg-darkslategray' 
+                    ? 'bg-darkslategray'
                     : isActive
-                    ? 'bg-gradient-to-r from-darkslategray to-silver-100' 
-                    : 'bg-silver-100' 
+                      ? 'bg-gradient-to-r from-darkslategray to-silver-100'
+                      : 'bg-silver-100'
                 }`}
               ></div>
             )}

@@ -236,12 +236,10 @@ describe('Reports API', () => {
       // The route applies isVerifiedCheck middleware, which rejects unauthenticated
       // requests (401) and unverified users (403) before the controller runs.
       it('should return 401 for unauthenticated users', async () => {
-        const response = await guestAgent
-          .post(`/api/users/${manager._id.toString()}/report`)
-          .send({
-            description: 'Manager is not doing their job.',
-            flags: ['Negligence in Duties'],
-          });
+        const response = await guestAgent.post(`/api/users/${manager._id.toString()}/report`).send({
+          description: 'Manager is not doing their job.',
+          flags: ['Negligence in Duties'],
+        });
         expect(response).statusToBe(401);
       });
 
@@ -357,9 +355,7 @@ describe('Reports API', () => {
       // Students may only report managers or landlords — reporting another
       // student violates the role constraint and returns 403.
       it('should return 403 when a student tries to report another student', async () => {
-        const otherStudent = await (
-          await import('../../test/factories.js')
-        ).buildStudent.create();
+        const otherStudent = await (await import('../../test/factories.js')).buildStudent.create();
         const response = await studentAgent
           .post(`/api/users/${otherStudent._id.toString()}/report`)
           .send({

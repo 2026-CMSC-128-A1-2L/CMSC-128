@@ -85,7 +85,6 @@ const RoomTypeItem: FunctionComponent<RoomTypeItemProps> = ({ roomType }) => {
 
   return (
     <div className="w-full rounded-xl border border-whitesmoke overflow-hidden flex flex-col">
-
       {/* Header */}
       <div className="flex items-center px-4 py-2">
         {!isExpanded && (
@@ -107,7 +106,6 @@ const RoomTypeItem: FunctionComponent<RoomTypeItemProps> = ({ roomType }) => {
       {/* Expanded form */}
       {isExpanded && (
         <div className="flex flex-col px-4 pb-8 gap-6 text-sm text-gray-500 font-inter">
-
           {/* Room Type + Capacity */}
           <div className="self-stretch flex items-start gap-10">
             <div className="flex-1 flex flex-col items-start gap-3">
@@ -164,7 +162,6 @@ const RoomTypeItem: FunctionComponent<RoomTypeItemProps> = ({ roomType }) => {
           <div className="self-stretch flex flex-col items-start gap-1">
             <b className="text-gray-700">Add Photos</b>
             <div className="flex items-start flex-wrap gap-2 py-2">
-
               {/* Render Uploaded Images */}
               {images.map((src, index) => (
                 <div
@@ -224,7 +221,6 @@ const RoomTypeItem: FunctionComponent<RoomTypeItemProps> = ({ roomType }) => {
           >
             Remove this room type
           </button>
-
         </div>
       )}
 
@@ -235,7 +231,6 @@ const RoomTypeItem: FunctionComponent<RoomTypeItemProps> = ({ roomType }) => {
         close={() => setLightboxIndex(-1)}
         slides={images.map((src) => ({ src }))}
       />
-
     </div>
   );
 };

@@ -21,7 +21,7 @@ const AddBuilding: FunctionComponent = () => {
   // Make a "Previous" click if you need one later
   const onPrevClick = useCallback(() => {
     setCurrentStep((prev) => prev - 1);
-  }, [])
+  }, []);
 
   // 3. Create a function to conditionally render the content based on the step
   const renderStepContent = () => {
@@ -32,7 +32,6 @@ const AddBuilding: FunctionComponent = () => {
         // Pass onNextClick to the next component too if it has a next button
         return <BuildingInformation onNextClick={onNextClick} onPrevClick={onPrevClick} />;
       case 2:
-
         return <BuildingSubmit onPrevClick={onPrevClick} />;
       default:
     }
@@ -48,14 +47,21 @@ const AddBuilding: FunctionComponent = () => {
   return (
     <div className="w-screen font-sans">
       <div className="px-20 pt-4 pb-12">
-        <div className="flex items-center gap-1.5 py-4 cursor-pointer w-full" onClick={onCancelClick}>
-          <Icon icon='material-symbols-light:chevron-left' className='w-7 h-7' />
+        <div
+          className="flex items-center gap-1.5 py-4 cursor-pointer w-full"
+          onClick={onCancelClick}
+        >
+          <Icon icon="material-symbols-light:chevron-left" className="w-7 h-7" />
           <span className="text-sm font-semibold text-gray-700">Cancel</span>
         </div>
 
         <div className="rounded-3xl border border-gray-200 px-10 pt-8 pb-10">
-          <h1 className="text-2xl font-bold" style={{ color: '#1a5c50' }}>Add a New Building</h1>
-          <p className="text-sm font-semibold text-gray-500 mt-1">Follow 3 simple steps and you're ready to go!</p>
+          <h1 className="text-2xl font-bold" style={{ color: '#1a5c50' }}>
+            Add a New Building
+          </h1>
+          <p className="text-sm font-semibold text-gray-500 mt-1">
+            Follow 3 simple steps and you're ready to go!
+          </p>
 
           <div className="w-full h-px my-6" />
 
@@ -70,11 +76,21 @@ const AddBuilding: FunctionComponent = () => {
                       style={{ background: step.active ? '#1a5c50' : '#d1d5db' }}
                     />
                     {i < steps.length - 1 && (
-                      <div className="w-0.5" style={{ flex: 1, minHeight: '150px', background: i === 0 ? '#b5c8c5' : '#d1d5db' }} />
+                      <div
+                        className="w-0.5"
+                        style={{
+                          flex: 1,
+                          minHeight: '150px',
+                          background: i === 0 ? '#b5c8c5' : '#d1d5db',
+                        }}
+                      />
                     )}
                   </div>
                   <div className="flex items-start pt-1.5 pb-4">
-                    <span className="text-sm font-semibold" style={{ color: step.active ? '#1a5c50' : '#9ca3af' }}>
+                    <span
+                      className="text-sm font-semibold"
+                      style={{ color: step.active ? '#1a5c50' : '#9ca3af' }}
+                    >
                       {step.label}
                     </span>
                   </div>
@@ -84,7 +100,6 @@ const AddBuilding: FunctionComponent = () => {
 
             {/* 5. Call the render function here instead of hardcoding the component */}
             {renderStepContent()}
-
           </div>
         </div>
       </div>

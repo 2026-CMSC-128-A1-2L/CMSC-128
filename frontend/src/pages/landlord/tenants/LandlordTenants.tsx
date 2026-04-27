@@ -1,26 +1,23 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { Icon } from "@iconify/react";
-import LandlordLayout from "../../../components/landlord/LandlordLayout";
-import TenantsToolbar from "../../../components/landlord/tenants/TenantsToolbar";
-import TenantCard from "../../../components/landlord/tenants/TenantCard";
-import RemoveTenantPopup from "../../../components/landlord/tenants/popups/RemoveTenantPopup";
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Icon } from '@iconify/react';
+import LandlordLayout from '../../../components/landlord/LandlordLayout';
+import TenantsToolbar from '../../../components/landlord/tenants/TenantsToolbar';
+import TenantCard from '../../../components/landlord/tenants/TenantCard';
+import RemoveTenantPopup from '../../../components/landlord/tenants/popups/RemoveTenantPopup';
 import {
   TENANT_COUNT,
   pendingApplications,
   tenants,
   type Tenant,
-} from "../../../data/landlordTenants";
+} from '../../../data/landlordTenants';
 
 const LandlordTenants = () => {
   const pendingCount = pendingApplications.length;
   const [removeTarget, setRemoveTarget] = useState<Tenant | null>(null);
 
   return (
-    <LandlordLayout
-      activeSidebarItem="tenants"
-      breadcrumbs={[{ label: "My Tenants" }]}
-    >
+    <LandlordLayout activeSidebarItem="tenants" breadcrumbs={[{ label: 'My Tenants' }]}>
       <div className="flex w-full flex-col gap-[32px] pt-[16px]">
         <section className="flex w-full flex-col gap-[12px]">
           <TenantsToolbar

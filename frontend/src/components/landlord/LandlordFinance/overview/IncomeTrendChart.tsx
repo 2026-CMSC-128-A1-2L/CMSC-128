@@ -28,23 +28,23 @@ const IncomeTrendChart: FunctionComponent = () => {
     ];
 
     setIsAnimating(true);
-    
+
     setTimeout(() => {
       const displayData = selectedRange === '6' ? mockData.slice(-6) : mockData;
       setMonthlyData(displayData);
-      
+
       setTimeout(() => {
         setIsAnimating(false);
       }, 50);
     }, 150);
   }, [selectedRange]);
 
-  const maxIncome = Math.max(...monthlyData.map(d => d.income), 1);
+  const maxIncome = Math.max(...monthlyData.map((d) => d.income), 1);
 
   const getHeight = (income: number) => (income / maxIncome) * 108;
 
   const toggleRange = () => {
-    setSelectedRange(prev => prev === '12' ? '6' : '12');
+    setSelectedRange((prev) => (prev === '12' ? '6' : '12'));
   };
 
   return (
@@ -97,18 +97,18 @@ const IncomeTrendChart: FunctionComponent = () => {
 
         <div className="self-stretch flex items-center justify-between py-0 px-3 mt-2">
           <div className="flex items-end gap-1 group cursor-pointer">
-            <div 
-              className="h-[15px] w-[15px] rounded-[5px] transition-all duration-300 group-hover:scale-110" 
-              style={{ backgroundColor: '#096c5b' }} 
+            <div
+              className="h-[15px] w-[15px] rounded-[5px] transition-all duration-300 group-hover:scale-110"
+              style={{ backgroundColor: '#096c5b' }}
             />
             <div className="text-[10px] sm:text-[12px] font-semibold text-darkslategray-100 transition-all duration-200 group-hover:text-teal-200">
               {selectedRange === '6' ? 'Previous Months' : 'Past Months'}
             </div>
           </div>
           <div className="flex items-end gap-1 group cursor-pointer">
-            <div 
-              className="h-[15px] w-[15px] rounded-[5px] transition-all duration-300 group-hover:scale-110" 
-              style={{ backgroundColor: '#024338' }} 
+            <div
+              className="h-[15px] w-[15px] rounded-[5px] transition-all duration-300 group-hover:scale-110"
+              style={{ backgroundColor: '#024338' }}
             />
             <div className="text-[10px] sm:text-[12px] font-semibold text-darkslategray-100 transition-all duration-200 group-hover:text-teal-200">
               Current Month

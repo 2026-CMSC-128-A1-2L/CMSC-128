@@ -1,11 +1,11 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Icon } from "@iconify/react";
-import LandlordLayout from "../../../components/landlord/LandlordLayout";
-import TenantsToolbar from "../../../components/landlord/tenants/TenantsToolbar";
-import UnvalidatedTenantCard from "../../../components/landlord/tenants/UnvalidatedTenantCard";
-import UnvalidatedCardActionsPopup from "../../../components/landlord/tenants/popups/UnvalidatedCardActionsPopup";
-import { pendingApplications } from "../../../data/landlordTenants";
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Icon } from '@iconify/react';
+import LandlordLayout from '../../../components/landlord/LandlordLayout';
+import TenantsToolbar from '../../../components/landlord/tenants/TenantsToolbar';
+import UnvalidatedTenantCard from '../../../components/landlord/tenants/UnvalidatedTenantCard';
+import UnvalidatedCardActionsPopup from '../../../components/landlord/tenants/popups/UnvalidatedCardActionsPopup';
+import { pendingApplications } from '../../../data/landlordTenants';
 
 const LandlordUnvalidatedApplications = () => {
   const navigate = useNavigate();
@@ -15,8 +15,8 @@ const LandlordUnvalidatedApplications = () => {
     <LandlordLayout
       activeSidebarItem="tenants"
       breadcrumbs={[
-        { label: "My Tenants", to: "/landlord/tenants" },
-        { label: "Unvalidated Applications" },
+        { label: 'My Tenants', to: '/landlord/tenants' },
+        { label: 'Unvalidated Applications' },
       ]}
     >
       <div className="flex w-full flex-col gap-[32px] pt-[16px]">
@@ -53,15 +53,13 @@ const LandlordUnvalidatedApplications = () => {
                 key={application.id}
                 application={application}
                 detailTo={`/landlord/tenants/unvalidated/${application.id}`}
-                onMoreOptions={(app) =>
-                  setOpenMenuId((prev) => (prev === app.id ? null : app.id))
-                }
+                onMoreOptions={(app) => setOpenMenuId((prev) => (prev === app.id ? null : app.id))}
                 actionMenu={
                   <UnvalidatedCardActionsPopup
                     isOpen={openMenuId === application.id}
                     onMessage={() => {
                       setOpenMenuId(null);
-                      navigate("/landlord/messages");
+                      navigate('/landlord/messages');
                     }}
                     onRequestInterview={() => setOpenMenuId(null)}
                     onRemoveRequest={() => setOpenMenuId(null)}

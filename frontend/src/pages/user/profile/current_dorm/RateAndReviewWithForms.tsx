@@ -1,23 +1,23 @@
-import { FunctionComponent, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
-import { Icon } from "@iconify/react";
-import { useState } from "react";
-import Location from "../../../../../assets/pin_location_icon.svg";
-import House from "../../../../../assets/house_icon.svg";
-import StarIcon from "../../../../../assets/quality_star_icon.svg";
-import FilledStarIcon from "../../../../../assets/quality_star_icon_filled.svg";
-import LeafIcon from "../../../../../assets/comfort_leaf_icon.svg";
-import FilledLeafIcon from "../../../../../assets/comfort_leaf_icon_filled.svg";
-import TreeIcon from "../../../../../assets/environment_tree_icon.svg";
-import FilledTreeIcon from "../../../../../assets/environment_tree_icon_filled.svg";
-import SideBar from "../../../../components/user/SideBar";
-import BreadcrumbHeader from "../../../../components/general/Breadcrumb";
+import { FunctionComponent, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Icon } from '@iconify/react';
+import { useState } from 'react';
+import Location from '../../../../../assets/pin_location_icon.svg';
+import House from '../../../../../assets/house_icon.svg';
+import StarIcon from '../../../../../assets/quality_star_icon.svg';
+import FilledStarIcon from '../../../../../assets/quality_star_icon_filled.svg';
+import LeafIcon from '../../../../../assets/comfort_leaf_icon.svg';
+import FilledLeafIcon from '../../../../../assets/comfort_leaf_icon_filled.svg';
+import TreeIcon from '../../../../../assets/environment_tree_icon.svg';
+import FilledTreeIcon from '../../../../../assets/environment_tree_icon_filled.svg';
+import SideBar from '../../../../components/user/SideBar';
+import BreadcrumbHeader from '../../../../components/general/Breadcrumb';
 
 const RateAndReview: FunctionComponent = () => {
   const navigate = useNavigate();
 
   const onUserProfileTextClick = useCallback(() => {
-    navigate("/rate-review-upload");
+    navigate('/rate-review-upload');
   }, [navigate]);
 
   const [qualityRating, setQualityRating] = useState(0);
@@ -41,17 +41,16 @@ const RateAndReview: FunctionComponent = () => {
                 <div className="h-6 flex items-center gap-1.5">
                   <BreadcrumbHeader
                     routes={[
-                      { name: "User Profile", url: "/profile-switcher" },
-                      { name: "Current Dorm", url: "/current-dorm" },
-                      { name: "Rate & Review", url: "/rate-review" },
+                      { name: 'User Profile', url: '/profile-switcher' },
+                      { name: 'Current Dorm', url: '/current-dorm' },
+                      { name: 'Rate & Review', url: '/rate-review' },
                     ]}
                   />
                 </div>
                 <div className="w-[704px] rounded-xl bg-aliceblue overflow-hidden shrink-0 hidden items-center py-2.5 px-6 box-border gap-2.5 text-dimgray font-inter">
                   <img className="h-6 w-6 relative" alt="" />
                   <b className="relative">
-                    Search for Dorms, Apartments, or Locations (e.g. UPLB, Umali
-                    Subdivision)
+                    Search for Dorms, Apartments, or Locations (e.g. UPLB, Umali Subdivision)
                   </b>
                 </div>
               </div>
@@ -70,11 +69,7 @@ const RateAndReview: FunctionComponent = () => {
                               <b className="flex-1 relative leading-8">{`One Sapphire Place `}</b>
                             </div>
                             <div className="self-stretch flex items-center py-num-0 px-num-12 gap-2">
-                              <img
-                                className="w-[9px] relative max-h-full"
-                                alt=""
-                                src={Location}
-                              />
+                              <img className="w-[9px] relative max-h-full" alt="" src={Location} />
                               <div className="flex items-center justify-center">
                                 <div className="relative font-medium text-[14px]">
                                   Batong Malake, Los Banos, Laguna
@@ -82,11 +77,7 @@ const RateAndReview: FunctionComponent = () => {
                               </div>
                             </div>
                             <div className="self-stretch flex items-center py-num-0 px-num-12 gap-[7px]">
-                              <img
-                                className="h-[9px] w-[9px] relative"
-                                alt=""
-                                src={House}
-                              />
+                              <img className="h-[9px] w-[9px] relative" alt="" src={House} />
                               <div className="flex items-center justify-center">
                                 <div className="relative">
                                   <span className="font-medium">{`Quevin Custodio `}</span>
@@ -97,11 +88,7 @@ const RateAndReview: FunctionComponent = () => {
                               </div>
                             </div>
                             <div className="self-stretch flex items-center py-num-0 px-num-12 gap-[7px]">
-                              <img
-                                className="h-[9px] w-[9px] relative"
-                                alt=""
-                                src={House}
-                              />
+                              <img className="h-[9px] w-[9px] relative" alt="" src={House} />
                               <div className="flex items-center justify-center">
                                 <div className="relative">
                                   <span className="font-medium">{`Nathaniel Cunanan `}</span>
@@ -174,18 +161,14 @@ const RateAndReview: FunctionComponent = () => {
                               <img
                                 className="absolute h-[79.33%] w-[75.16%] top-[12.5%] right-[12.34%] bottom-[8.17%] left-[12.5%] max-w-full overflow-hidden max-h-full transition-transform active:scale-90"
                                 alt={`Rate ${num}`}
-                                src={
-                                  num <= qualityRating
-                                    ? FilledStarIcon
-                                    : StarIcon
-                                }
+                                src={num <= qualityRating ? FilledStarIcon : StarIcon}
                               />
                             </button>
                           ))}
                         </div>
                         <div className="h-[33.2px] w-[347.6px] relative text-num-14 text-center flex items-center justify-center shrink-0">
-                          Rate the overall condition of the building, furniture,
-                          and utilities. Does everything work as it should?
+                          Rate the overall condition of the building, furniture, and utilities. Does
+                          everything work as it should?
                         </div>
                       </div>
                     </div>
@@ -204,18 +187,14 @@ const RateAndReview: FunctionComponent = () => {
                               <img
                                 className="absolute h-[79.33%] w-[75.16%] top-[12.5%] right-[12.34%] bottom-[8.17%] left-[12.5%] max-w-full overflow-hidden max-h-full transition-transform active:scale-90"
                                 alt={`Rate ${num}`}
-                                src={
-                                  num <= comfortRating
-                                    ? FilledLeafIcon
-                                    : LeafIcon
-                                }
+                                src={num <= comfortRating ? FilledLeafIcon : LeafIcon}
                               />
                             </button>
                           ))}
                         </div>
                         <div className="h-[33.2px] w-[347.6px] relative text-num-14 text-center flex items-center justify-center shrink-0">
-                          Rate the bedding, room layout, and the overall feel of
-                          the 'home away from home' experience.
+                          Rate the bedding, room layout, and the overall feel of the 'home away from
+                          home' experience.
                         </div>
                       </div>
                     </div>
@@ -234,18 +213,14 @@ const RateAndReview: FunctionComponent = () => {
                               <img
                                 className="absolute h-[79.33%] w-[75.16%] top-[12.5%] right-[12.34%] bottom-[8.17%] left-[12.5%] max-w-full overflow-hidden max-h-full transition-transform active:scale-90"
                                 alt={`Rate ${num}`}
-                                src={
-                                  num <= environmentRating
-                                    ? FilledTreeIcon
-                                    : TreeIcon
-                                }
+                                src={num <= environmentRating ? FilledTreeIcon : TreeIcon}
                               />
                             </button>
                           ))}
                         </div>
                         <div className="h-[33.2px] w-[347.6px] relative text-num-14 text-center flex items-center justify-center shrink-0">
-                          Rate the atmosphere, and cleanliness of the
-                          surroundings. Is it a good place for study and rest?
+                          Rate the atmosphere, and cleanliness of the surroundings. Is it a good
+                          place for study and rest?
                         </div>
                       </div>
                     </div>

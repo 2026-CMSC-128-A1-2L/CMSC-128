@@ -5,7 +5,7 @@ interface PropertyIncomeChartProps {
 }
 
 const PropertyIncomeChart: FunctionComponent<PropertyIncomeChartProps> = ({ properties }) => {
-  const maxIncome = Math.max(...properties.map(p => p.income), 1);
+  const maxIncome = Math.max(...properties.map((p) => p.income), 1);
   const chartHeight = 132;
 
   const getHeight = (income: number) => (income / maxIncome) * chartHeight;
@@ -26,8 +26,8 @@ const PropertyIncomeChart: FunctionComponent<PropertyIncomeChartProps> = ({ prop
                   className={`w-full rounded-md transition-all duration-300 ${
                     isHighest ? 'bg-darkslategray-200' : 'bg-teal-200'
                   }`}
-                  style={{ 
-                    height: `${height}px`, 
+                  style={{
+                    height: `${height}px`,
                     minHeight: '20px',
                   }}
                 />

@@ -21,12 +21,12 @@ export default function VisitRequestCard({
         <div className="font-semibold text-darkslategray-100">{visitorName}</div>
         <div className="text-num-14 text-dimgray">{dateTime}</div>
       </div>
-      
+
       <div className="flex-1 flex flex-col gap-1 min-w-0">
         <div className="font-semibold text-darkslategray-100">{propertyName}</div>
         <div className="text-num-14 text-dimgray">{buildingName}</div>
       </div>
-      
+
       <div className="flex items-center gap-2 flex-shrink-0">
         <button
           onClick={onReject}

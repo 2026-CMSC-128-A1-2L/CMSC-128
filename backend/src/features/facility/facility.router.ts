@@ -63,7 +63,7 @@ router.post('/', isLandlord, routeCreateFacility);
 // landlord only
 // ============================================================================
 router.get('/landlord/monthly-income', isLandlord, routeGetMonthlyIncomeByLandlord);
-  
+
 // ============================================================================
 // GET /api/facilities/landlord/overdue-tenants
 //

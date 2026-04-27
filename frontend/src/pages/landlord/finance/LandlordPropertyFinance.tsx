@@ -63,9 +63,13 @@ const LandlordPropertyFinance: FunctionComponent = () => {
 
   return (
     <LandlordLayout activeSidebarItem="finance" breadcrumbs={breadcrumbs}>
-      <div className={`flex flex-col w-full transition-all duration-300 ease-out ${
-        isPageLoading && !isNavigatingBack ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'
-      } ${isNavigatingBack ? 'opacity-0 translate-y-4' : ''}`}>
+      <div
+        className={`flex flex-col w-full transition-all duration-300 ease-out ${
+          isPageLoading && !isNavigatingBack
+            ? 'opacity-0 translate-y-4'
+            : 'opacity-100 translate-y-0'
+        } ${isNavigatingBack ? 'opacity-0 translate-y-4' : ''}`}
+      >
         <div className="self-stretch flex flex-col items-start justify-center gap-3 mb-6">
           <div className="self-stretch flex items-center justify-between gap-5">
             <div className="h-8 flex flex-col items-center justify-end">
@@ -79,14 +83,10 @@ const LandlordPropertyFinance: FunctionComponent = () => {
 
         {/* Property Header */}
         <div className="self-stretch h-[120px] flex flex-col items-start justify-center py-0 px-2 box-border gap-1 text-num-14 text-darkslategray-100 font-lora mb-6">
-          <b className="self-stretch relative text-[24px] leading-8 font-inter">
-            {property.name}
-          </b>
+          <b className="self-stretch relative text-[24px] leading-8 font-inter">{property.name}</b>
           <div className="self-stretch flex items-center py-0 px-4 gap-2">
             <Icon icon="mdi:map-marker" className="text-lg" aria-hidden="true" />
-            <b className="flex-1 relative text-sm">
-              {property.address}
-            </b>
+            <b className="flex-1 relative text-sm">{property.address}</b>
           </div>
           <div className="self-stretch flex items-center py-0 px-4 gap-2">
             <Icon icon="mdi:phone" className="text-lg" aria-hidden="true" />

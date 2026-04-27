@@ -6,7 +6,6 @@ import { AppError } from '../../error';
 import { Invite } from './invite.model';
 import z from 'zod';
 
-
 // returns all invites for the logged in user (by their email)
 export const routeGetInvites: RequestHandler = async (_req, res, _next) => {
   res.status(200).json({ data: await getInvites(res.locals.filters) });
@@ -49,7 +48,6 @@ export const routeDeclineInvite: RequestHandler = async (req, res, _next) => {
   res.sendStatus(204);
 };
 
-
 // get specific invites
 export const routeGetInviteById: RequestHandler = async (req, res, next) => {
   const token = z.string().parse(req.params.inviteId);
@@ -57,7 +55,6 @@ export const routeGetInviteById: RequestHandler = async (req, res, next) => {
   if (!invite) throw new AppError(404, 'Invite not found.');
   res.status(200).json({ data: invite });
 };
-
 
 // landlord to delete/retract invites to add a manager
 export const routeDeleteInvite: RequestHandler = async (req, res, next) => {

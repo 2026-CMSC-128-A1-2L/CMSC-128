@@ -39,12 +39,19 @@ const CheckboxBox: FunctionComponent<{
 }> = ({ checked, onChange }) => (
   <div className="h-5 w-5 relative cursor-pointer shrink-0" onClick={onChange}>
     <div
-      className={`absolute h-full w-full top-0 right-0 bottom-0 left-0 shadow-[0px_0px_2px_rgba(0,0,0,0.25)] rounded-[3px] transition-colors ${checked ? 'bg-teal-600' : 'bg-whitesmoke'
-        }`}
+      className={`absolute h-full w-full top-0 right-0 bottom-0 left-0 shadow-[0px_0px_2px_rgba(0,0,0,0.25)] rounded-[3px] transition-colors ${
+        checked ? 'bg-teal-600' : 'bg-whitesmoke'
+      }`}
     />
     {checked && (
       <svg className="absolute inset-0 m-auto w-3 h-3" viewBox="0 0 12 12" fill="none">
-        <path d="M2 6l3 3 5-5" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+        <path
+          d="M2 6l3 3 5-5"
+          stroke="white"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
       </svg>
     )}
   </div>
@@ -53,21 +60,26 @@ const CheckboxBox: FunctionComponent<{
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 const AddManager1: FunctionComponent<Props> = ({ onCancel, onSend }) => {
-  const { register, handleSubmit, watch, setValue, formState: { errors } } =
-    useForm<AddManagerFormValues>({
-      defaultValues: {
-        email: '',
-        checkboxes: {
-          deleteBuildings: false,
-          deleteListings: false,
-          manageBuildings: false,
-          manageBillings: false,
-          acceptOcularVisits: false,
-          reportUsers: false,
-        },
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm<AddManagerFormValues>({
+    defaultValues: {
+      email: '',
+      checkboxes: {
+        deleteBuildings: false,
+        deleteListings: false,
+        manageBuildings: false,
+        manageBillings: false,
+        acceptOcularVisits: false,
+        reportUsers: false,
       },
-      mode: 'onChange',
-    });
+    },
+    mode: 'onChange',
+  });
 
   const checkboxes = watch('checkboxes');
 
@@ -114,7 +126,6 @@ const AddManager1: FunctionComponent<Props> = ({ onCancel, onSend }) => {
         className="w-[490px] flex flex-col items-center justify-center pt-0 px-0 pb-[48px] box-border gap-[34px]"
       >
         <div className="self-stretch h-[698px] flex flex-col items-center">
-
           {/* Header */}
           <div className="self-stretch rounded-tl-[26px] [background:linear-gradient(183.48deg,_#096c5b,_#16917c)] flex flex-col items-start justify-center py-[10px] pl-[46px] pr-[26px] shrink-0">
             <div className="w-[426px] flex flex-col items-start justify-center pt-[26px] px-0 pb-[6px] box-border shrink-0">
@@ -127,7 +138,6 @@ const AddManager1: FunctionComponent<Props> = ({ onCancel, onSend }) => {
 
           {/* Body */}
           <div className="self-stretch flex flex-col items-start pt-[26px] px-[38px] pb-4 gap-[18px] shrink-0 text-[13px] text-dimgray font-inter overflow-y-auto">
-
             {/* Email */}
             <div className="self-stretch flex flex-col items-start gap-[6px]">
               <b className="self-stretch relative">Email Address</b>
@@ -155,9 +165,24 @@ const AddManager1: FunctionComponent<Props> = ({ onCancel, onSend }) => {
             <div className="self-stretch flex flex-col items-start gap-4">
               <b className="self-stretch relative flex items-center">Property Management</b>
               <div className="self-stretch flex flex-col items-start gap-[17px]">
-                <PermissionRow icon={trash} label="Delete Buildings" description="Allow manager to remove building records" field="deleteBuildings" />
-                <PermissionRow icon={trash} label="Delete Listings" description="Allow manager to remove listing records" field="deleteListings" />
-                <PermissionRow icon={home} label="Manage Buildings" description="Allow manager to access and edit building info" field="manageBuildings" />
+                <PermissionRow
+                  icon={trash}
+                  label="Delete Buildings"
+                  description="Allow manager to remove building records"
+                  field="deleteBuildings"
+                />
+                <PermissionRow
+                  icon={trash}
+                  label="Delete Listings"
+                  description="Allow manager to remove listing records"
+                  field="deleteListings"
+                />
+                <PermissionRow
+                  icon={home}
+                  label="Manage Buildings"
+                  description="Allow manager to access and edit building info"
+                  field="manageBuildings"
+                />
               </div>
             </div>
 
@@ -165,7 +190,12 @@ const AddManager1: FunctionComponent<Props> = ({ onCancel, onSend }) => {
             <div className="self-stretch flex flex-col items-start gap-4">
               <b className="self-stretch relative flex items-center">Billings and Financials</b>
               <div className="self-stretch flex flex-col items-start">
-                <PermissionRow icon={bill} label="Manage Billings" description="Manage rents and utility payments" field="manageBillings" />
+                <PermissionRow
+                  icon={bill}
+                  label="Manage Billings"
+                  description="Manage rents and utility payments"
+                  field="manageBillings"
+                />
               </div>
             </div>
 
@@ -173,11 +203,20 @@ const AddManager1: FunctionComponent<Props> = ({ onCancel, onSend }) => {
             <div className="self-stretch flex flex-col items-start gap-4">
               <b className="self-stretch relative flex items-center">Tenant Management</b>
               <div className="self-stretch flex flex-col items-start gap-[17px]">
-                <PermissionRow icon={calendar} label="Accept Ocular Visits" description="Accept ocular visit requests from potential tenants" field="acceptOcularVisits" />
-                <PermissionRow icon={report} label="Report Users" description="Report users for misconduct upon review" field="reportUsers" />
+                <PermissionRow
+                  icon={calendar}
+                  label="Accept Ocular Visits"
+                  description="Accept ocular visit requests from potential tenants"
+                  field="acceptOcularVisits"
+                />
+                <PermissionRow
+                  icon={report}
+                  label="Report Users"
+                  description="Report users for misconduct upon review"
+                  field="reportUsers"
+                />
               </div>
             </div>
-
           </div>
         </div>
 
@@ -194,7 +233,6 @@ const AddManager1: FunctionComponent<Props> = ({ onCancel, onSend }) => {
             </button>
           </div>
         </div>
-
       </form>
     </div>
   );

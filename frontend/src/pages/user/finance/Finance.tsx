@@ -1,94 +1,83 @@
-import { FunctionComponent, useState, useEffect } from "react";
-import { Icon } from "@iconify/react";
-import { useNavigate } from "react-router-dom";
-import SideBar from "../../../components/user/SideBar";
-import Footer from "../../../components/general/Footer";
-import PaymentMethodsDropdown from "../../../components/user/finance/PaymentMethodsDropdown";
-import SubmitReceipt from "../../../components/user/finance/SubmitReceipt";
-import MonthlyExpensesChart from "../../../components/user/finance/MonthlyExpensesChart";
+import { FunctionComponent, useState, useEffect } from 'react';
+import { Icon } from '@iconify/react';
+import { useNavigate } from 'react-router-dom';
+import SideBar from '../../../components/user/SideBar';
+import Footer from '../../../components/general/Footer';
+import PaymentMethodsDropdown from '../../../components/user/finance/PaymentMethodsDropdown';
+import SubmitReceipt from '../../../components/user/finance/SubmitReceipt';
+import MonthlyExpensesChart from '../../../components/user/finance/MonthlyExpensesChart';
 import type {
   TenantBilling,
   UpcomingPayment,
-} from "../../../components/user/finance/types/tenantFinance";
+} from '../../../components/user/finance/types/tenantFinance';
 
 // Mock data - replace with API calls
 const fetchCurrentBilling = async (): Promise<TenantBilling | null> => {
   return {
-    _id: "billing_1",
-    userId: "user_1",
-    unitId: "unit_1",
-    facilityId: "facility_1",
-    dueDate: "2026-04-15",
+    _id: 'billing_1',
+    userId: 'user_1',
+    unitId: 'unit_1',
+    facilityId: 'facility_1',
+    dueDate: '2026-04-15',
     paymentDate: null,
     paidAmount: null,
     totalAmount: 4950,
-    paymentStatus: "unpaid",
+    paymentStatus: 'unpaid',
     breakdown: [
-      { name: "Monthly Rent", amount: 3000 },
-      { name: "Electricity", amount: 800 },
-      { name: "Water", amount: 350 },
-      { name: "Internet", amount: 500 },
-      { name: "Others", amount: 300 },
+      { name: 'Monthly Rent', amount: 3000 },
+      { name: 'Electricity', amount: 800 },
+      { name: 'Water', amount: 350 },
+      { name: 'Internet', amount: 500 },
+      { name: 'Others', amount: 300 },
     ],
-    createdAt: "2026-03-01",
-    updatedAt: "2026-03-01",
+    createdAt: '2026-03-01',
+    updatedAt: '2026-03-01',
   };
 };
 
 const fetchUpcomingPayments = async (): Promise<UpcomingPayment[]> => {
   return [
     {
-      id: "1",
-      dueDate: "April 15, 2026",
+      id: '1',
+      dueDate: 'April 15, 2026',
       amount: 4950,
-      billingId: "billing_1",
+      billingId: 'billing_1',
     },
-    { id: "2", dueDate: "May 15, 2026", amount: 4950, billingId: "billing_2" },
+    { id: '2', dueDate: 'May 15, 2026', amount: 4950, billingId: 'billing_2' },
   ];
 };
 
-const getPaymentStatusDisplay = (
-  status: string,
-): { text: string; gradient: string } => {
+const getPaymentStatusDisplay = (status: string): { text: string; gradient: string } => {
   switch (status) {
-    case "paid":
+    case 'paid':
       return {
-        text: "PAID",
-        gradient:
-          "bg-gradient-to-b from-[#5dc2a8] to-[#0c8873] bg-clip-text text-transparent",
+        text: 'PAID',
+        gradient: 'bg-gradient-to-b from-[#5dc2a8] to-[#0c8873] bg-clip-text text-transparent',
       };
-    case "overdue":
+    case 'overdue':
       return {
-        text: "OVERDUE",
-        gradient:
-          "bg-gradient-to-b from-[#c00f0f] to-[#e44f4f] bg-clip-text text-transparent",
+        text: 'OVERDUE',
+        gradient: 'bg-gradient-to-b from-[#c00f0f] to-[#e44f4f] bg-clip-text text-transparent',
       };
-    case "partially_paid":
+    case 'partially_paid':
       return {
-        text: "PARTIAL",
-        gradient:
-          "bg-gradient-to-t from-[#ffc273] to-[#fa7900] bg-clip-text text-transparent",
+        text: 'PARTIAL',
+        gradient: 'bg-gradient-to-t from-[#ffc273] to-[#fa7900] bg-clip-text text-transparent',
       };
     default:
       return {
-        text: "PENDING",
-        gradient:
-          "bg-gradient-to-b from-[#c29722] to-[#f6b709] bg-clip-text text-transparent",
+        text: 'PENDING',
+        gradient: 'bg-gradient-to-b from-[#c29722] to-[#f6b709] bg-clip-text text-transparent',
       };
   }
 };
 
 const TenantFinancePage: FunctionComponent = () => {
-  const [currentBilling, setCurrentBilling] = useState<TenantBilling | null>(
-    null,
-  );
-  const [upcomingPayments, setUpcomingPayments] = useState<UpcomingPayment[]>(
-    [],
-  );
+  const [currentBilling, setCurrentBilling] = useState<TenantBilling | null>(null);
+  const [upcomingPayments, setUpcomingPayments] = useState<UpcomingPayment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitReceiptOpen, setIsSubmitReceiptOpen] = useState(false);
-  const [selectedPayment, setSelectedPayment] =
-    useState<UpcomingPayment | null>(null);
+  const [selectedPayment, setSelectedPayment] = useState<UpcomingPayment | null>(null);
 
   useEffect(() => {
     const loadData = async () => {
@@ -101,7 +90,7 @@ const TenantFinancePage: FunctionComponent = () => {
         setCurrentBilling(billing);
         setUpcomingPayments(payments);
       } catch (error) {
-        console.error("Failed to load finance data:", error);
+        console.error('Failed to load finance data:', error);
       } finally {
         setIsLoading(false);
       }
@@ -124,16 +113,15 @@ const TenantFinancePage: FunctionComponent = () => {
     paymentMethod: string;
     receiptFile: File | null;
   }) => {
-    console.log("Submitting receipt for payment:", selectedPayment, data);
+    console.log('Submitting receipt for payment:', selectedPayment, data);
     handleCloseSubmitReceipt();
   };
 
   const paymentStatus = currentBilling
     ? getPaymentStatusDisplay(currentBilling.paymentStatus)
     : {
-        text: "PENDING",
-        gradient:
-          "bg-gradient-to-b from-[#c29722] to-[#f6b709] bg-clip-text text-transparent",
+        text: 'PENDING',
+        gradient: 'bg-gradient-to-b from-[#c29722] to-[#f6b709] bg-clip-text text-transparent',
       };
 
   const totalDue = currentBilling?.totalAmount || 0;
@@ -142,17 +130,13 @@ const TenantFinancePage: FunctionComponent = () => {
     : totalDue;
 
   const rentAmount =
-    currentBilling?.breakdown.find((b) => b.name === "Monthly Rent")?.amount ||
-    3000;
+    currentBilling?.breakdown.find((b) => b.name === 'Monthly Rent')?.amount || 3000;
   const electricityAmount =
-    currentBilling?.breakdown.find((b) => b.name === "Electricity")?.amount ||
-    800;
-  const waterAmount =
-    currentBilling?.breakdown.find((b) => b.name === "Water")?.amount || 350;
+    currentBilling?.breakdown.find((b) => b.name === 'Electricity')?.amount || 800;
+  const waterAmount = currentBilling?.breakdown.find((b) => b.name === 'Water')?.amount || 350;
   const internetAmount =
-    currentBilling?.breakdown.find((b) => b.name === "Internet")?.amount || 500;
-  const othersAmount =
-    currentBilling?.breakdown.find((b) => b.name === "Others")?.amount || 300;
+    currentBilling?.breakdown.find((b) => b.name === 'Internet')?.amount || 500;
+  const othersAmount = currentBilling?.breakdown.find((b) => b.name === 'Others')?.amount || 300;
 
   if (isLoading) {
     return (
@@ -186,9 +170,7 @@ const TenantFinancePage: FunctionComponent = () => {
                         <div className="self-stretch flex items-center justify-between gap-5 flex-wrap">
                           <div className="flex flex-col items-center justify-end">
                             <div className="flex items-center gap-10">
-                              <b className="relative leading-8 shrink-0">
-                                Finance
-                              </b>
+                              <b className="relative leading-8 shrink-0">Finance</b>
                             </div>
                           </div>
                         </div>
@@ -199,9 +181,7 @@ const TenantFinancePage: FunctionComponent = () => {
                       <div className="self-stretch flex flex-col items-start gap-6 md:gap-8 text-[14px] font-lora mt-6">
                         <div className="self-stretch flex flex-col items-start justify-center py-0 px-2 md:px-3 box-border gap-1">
                           <div className="self-stretch flex flex-col md:flex-row items-start md:items-center justify-between gap-3 md:gap-5 text-[20px] md:text-[24px] font-inter">
-                            <b className="relative leading-8">
-                              One Sapphire Place
-                            </b>
+                            <b className="relative leading-8">One Sapphire Place</b>
                             <PaymentMethodsDropdown />
                           </div>
                           <div className="self-stretch flex items-start py-0 px-2 md:px-[11px] gap-2">
@@ -210,18 +190,12 @@ const TenantFinancePage: FunctionComponent = () => {
                               className="h-5 w-5 relative shrink-0"
                             />
                             <b className="flex-1 text-sm md:text-base break-words">
-                              Lot 3, Block 17, Sapphire St, Umali Subd, Los
-                              Baños, Philippines, 4030
+                              Lot 3, Block 17, Sapphire St, Umali Subd, Los Baños, Philippines, 4030
                             </b>
                           </div>
                           <div className="self-stretch flex items-center py-0 px-2 md:px-[11px] gap-2">
-                            <Icon
-                              icon="mdi-light:phone"
-                              className="h-5 w-5 relative shrink-0"
-                            />
-                            <b className="flex-1 text-sm md:text-base">
-                              0969 014 8776
-                            </b>
+                            <Icon icon="mdi-light:phone" className="h-5 w-5 relative shrink-0" />
+                            <b className="flex-1 text-sm md:text-base">0969 014 8776</b>
                           </div>
                         </div>
 
@@ -231,14 +205,10 @@ const TenantFinancePage: FunctionComponent = () => {
                           <div className="w-full lg:w-[300px] rounded-[16px] overflow-hidden shrink-0 flex flex-col items-start gap-2.5">
                             {/* Total Due Card */}
                             <div className="self-stretch rounded-[16px] bg-lightcyan-200 overflow-hidden flex flex-col items-start p-3 md:p-4 gap-2.5">
-                              <b className="relative text-sm md:text-base">
-                                Total Due
-                              </b>
+                              <b className="relative text-sm md:text-base">Total Due</b>
                               <div className="flex items-start gap-2.5 text-[20px] md:text-[24px]">
                                 <b className="relative leading-8">Php</b>
-                                <b className="relative leading-8">
-                                  {totalDue.toFixed(2)}
-                                </b>
+                                <b className="relative leading-8">{totalDue.toFixed(2)}</b>
                               </div>
                             </div>
 
@@ -298,9 +268,7 @@ const TenantFinancePage: FunctionComponent = () => {
                                 </div>
                                 <div className="self-stretch flex items-start justify-between gap-2.5 text-teal pt-2 border-t border-whitesmoke-200">
                                   <b className="flex-1 relative">Total</b>
-                                  <b className="flex-1 relative">
-                                    Php {totalDue.toFixed(2)}
-                                  </b>
+                                  <b className="flex-1 relative">Php {totalDue.toFixed(2)}</b>
                                 </div>
                               </div>
                             </div>
@@ -311,9 +279,7 @@ const TenantFinancePage: FunctionComponent = () => {
                             {/* Outstanding Balance and Payment Status Row */}
                             <div className="self-stretch flex flex-col sm:flex-row items-stretch gap-2">
                               <div className="flex-1 rounded-[16px] bg-white border-whitesmoke-200 border-solid border-[1px] overflow-hidden flex flex-col items-start p-3 md:p-4 gap-2.5">
-                                <b className="relative text-sm md:text-base">
-                                  Outstanding Balance
-                                </b>
+                                <b className="relative text-sm md:text-base">Outstanding Balance</b>
                                 <div className="flex items-start gap-2.5 text-[20px] md:text-[24px]">
                                   <b className="relative leading-8">Php</b>
                                   <b className="relative leading-8">
@@ -322,9 +288,7 @@ const TenantFinancePage: FunctionComponent = () => {
                                 </div>
                               </div>
                               <div className="flex-1 rounded-[16px] bg-white border-whitesmoke-200 border-solid border-[1px] overflow-hidden flex flex-col items-start p-3 md:p-4 gap-2.5">
-                                <b className="relative text-sm md:text-base">
-                                  Payment Status
-                                </b>
+                                <b className="relative text-sm md:text-base">Payment Status</b>
                                 <div className="flex items-start text-[20px] md:text-[24px]">
                                   <div
                                     className={`relative leading-8 font-extrabold bg-clip-text text-transparent ${paymentStatus.gradient}`}
@@ -367,9 +331,7 @@ const TenantFinancePage: FunctionComponent = () => {
                                     onClick={() => handlePayNow(payment)}
                                     className="w-full sm:w-[90px] rounded-[12px] bg-lightcyan-100 overflow-hidden shrink-0 flex items-center justify-center py-2.5 px-3 cursor-pointer text-center text-teal hover:opacity-90 transition-opacity whitespace-nowrap"
                                   >
-                                    <div className="font-semibold text-sm">
-                                      Pay Now
-                                    </div>
+                                    <div className="font-semibold text-sm">Pay Now</div>
                                   </button>
                                 </div>
                               ))}
@@ -390,9 +352,7 @@ const TenantFinancePage: FunctionComponent = () => {
                               <div className="self-stretch flex-1 overflow-hidden flex flex-col items-start py-0 px-2 md:px-3 gap-2 text-left text-[11px] md:text-[12px]">
                                 <div className="self-stretch rounded-lg border-whitesmoke-200 border-solid border-[1px] overflow-hidden flex items-center py-2 px-3">
                                   <div className="self-stretch overflow-hidden flex flex-col items-start gap-1">
-                                    <div className="font-semibold">
-                                      January 15, 2026
-                                    </div>
+                                    <div className="font-semibold">January 15, 2026</div>
                                     <div className="text-[9px] md:text-[10px] tracking-[0.04em] font-semibold font-lora text-dimgray">
                                       Php 4500.00
                                     </div>
@@ -400,9 +360,7 @@ const TenantFinancePage: FunctionComponent = () => {
                                 </div>
                                 <div className="self-stretch rounded-lg border-whitesmoke-200 border-solid border-[1px] overflow-hidden flex items-center py-2 px-3">
                                   <div className="self-stretch overflow-hidden flex flex-col items-start gap-1">
-                                    <div className="font-semibold">
-                                      February 15, 2026
-                                    </div>
+                                    <div className="font-semibold">February 15, 2026</div>
                                     <div className="text-[9px] md:text-[10px] tracking-[0.04em] font-semibold font-lora text-dimgray">
                                       Php 4500.00
                                     </div>
@@ -410,9 +368,7 @@ const TenantFinancePage: FunctionComponent = () => {
                                 </div>
                                 <div className="self-stretch rounded-lg border-whitesmoke-200 border-solid border-[1px] overflow-hidden flex items-center py-2 px-3">
                                   <div className="self-stretch overflow-hidden flex flex-col items-start gap-1">
-                                    <div className="font-semibold">
-                                      March 15, 2026
-                                    </div>
+                                    <div className="font-semibold">March 15, 2026</div>
                                     <div className="text-[9px] md:text-[10px] tracking-[0.04em] font-semibold font-lora text-dimgray">
                                       Php 4500.00
                                     </div>

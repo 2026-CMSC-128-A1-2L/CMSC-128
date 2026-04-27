@@ -1,17 +1,15 @@
-import React, { useState, useRef } from "react";
-import { Icon } from "@iconify/react";
-import DefaultAvatar from "../../../assets/default_avatar.svg";
-import VerifiedBadge from "../../../assets/verified_badge.svg";
-import { Link } from "react-router-dom";
+import React, { useState, useRef } from 'react';
+import { Icon } from '@iconify/react';
+import DefaultAvatar from '../../../assets/default_avatar.svg';
+import VerifiedBadge from '../../../assets/verified_badge.svg';
+import { Link } from 'react-router-dom';
 
 const ProfileInfo = () => {
   const [profileImage, setProfileImage] = useState<string>(DefaultAvatar);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // handle profile image change
-  const handleProfileImageChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
+  const handleProfileImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       const imageUrl = URL.createObjectURL(file);
@@ -21,13 +19,11 @@ const ProfileInfo = () => {
 
   // contact number editing state
   const [isEditing, setIsEditing] = useState(false);
-  const [contactNumber, setContactNumber] = useState("09*********");
+  const [contactNumber, setContactNumber] = useState('09*********');
 
   // home address editing state
   const [isEditingAddress, setIsEditingAddress] = useState(false);
-  const [homeAddress, setHomeAddress] = useState(
-    "Brgy. Batong Malake, Los Banos, Laguna",
-  );
+  const [homeAddress, setHomeAddress] = useState('Brgy. Batong Malake, Los Banos, Laguna');
 
   const handleSaveAddress = () => {
     setIsEditingAddress(false);
@@ -41,7 +37,7 @@ const ProfileInfo = () => {
   // redact contact number except for first 2 digits
   const redactContact = (number: string) => {
     if (number.length < 2) return number;
-    return number.substring(0, 2) + "*".repeat(number.length - 2);
+    return number.substring(0, 2) + '*'.repeat(number.length - 2);
   };
 
   return (
@@ -100,9 +96,7 @@ const ProfileInfo = () => {
                 className="focus:outline-none hover:opacity-80 transition-opacity"
               >
                 <Icon
-                  icon={
-                    isEditing ? "solar:check-read-linear" : "iconamoon:edit"
-                  }
+                  icon={isEditing ? 'solar:check-read-linear' : 'iconamoon:edit'}
                   className="h-6 w-6 relative"
                   color="#096C5B"
                 />
@@ -116,12 +110,10 @@ const ProfileInfo = () => {
                   onChange={(e) => setContactNumber(e.target.value)}
                   autoFocus
                   className="border-b border-[#096C5B] text-[14px] bg-transparent outline-none w-[200px] py-1"
-                  onKeyDown={(e) => e.key === "Enter" && handleSave()}
+                  onKeyDown={(e) => e.key === 'Enter' && handleSave()}
                 />
               ) : (
-                <b className="relative text-black py-1 text-left">
-                  {redactContact(contactNumber)}
-                </b>
+                <b className="relative text-black py-1 text-left">{redactContact(contactNumber)}</b>
               )}
             </div>
           </div>
@@ -130,19 +122,11 @@ const ProfileInfo = () => {
               <b className="relative">Home Address</b>
 
               <button
-                onClick={() =>
-                  isEditingAddress
-                    ? handleSaveAddress()
-                    : setIsEditingAddress(true)
-                }
+                onClick={() => (isEditingAddress ? handleSaveAddress() : setIsEditingAddress(true))}
                 className="focus:outline-none hover:opacity-80 transition-opacity"
               >
                 <Icon
-                  icon={
-                    isEditingAddress
-                      ? "solar:check-read-linear"
-                      : "iconamoon:edit"
-                  }
+                  icon={isEditingAddress ? 'solar:check-read-linear' : 'iconamoon:edit'}
                   className="h-6 w-6 relative"
                   color="#096C5B"
                 />
@@ -156,12 +140,10 @@ const ProfileInfo = () => {
                   onChange={(e) => setHomeAddress(e.target.value)}
                   autoFocus
                   className="border-b border-[#096C5B] text-[14px] bg-transparent outline-none w-[300px] py-1 text-black"
-                  onKeyDown={(e) => e.key === "Enter" && handleSaveAddress()}
+                  onKeyDown={(e) => e.key === 'Enter' && handleSaveAddress()}
                 />
               ) : (
-                <b className="relative text-black py-1 text-left">
-                  {homeAddress}
-                </b>
+                <b className="relative text-black py-1 text-left">{homeAddress}</b>
               )}
             </div>
           </div>
@@ -196,9 +178,7 @@ const ProfileInfo = () => {
                 to="/finance"
                 className="flex items-center gap-1 text-[12px] text-teal-100 cursor-pointer hover:underline"
               >
-                <div className="relative font-medium text-[#096c5b]">
-                  See Finance
-                </div>
+                <div className="relative font-medium text-[#096c5b]">See Finance</div>
                 <Icon
                   icon="solar:arrow-right-up-linear"
                   className="h-4 w-4 relative text-[#096c5b]"

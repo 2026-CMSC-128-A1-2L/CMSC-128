@@ -72,18 +72,11 @@ const SignInPopUp: FunctionComponent<SignInPopUpProps> = ({ onClose }) => {
           </p>
           <div className="flex items-center justify-center gap-1 text-teal-200">
             <span className="font-semibold cursor-pointer underline">
-              <Link to="terms-of-use">
-                Privacy Policy
-              </Link>
-              
+              <Link to="terms-of-use">Privacy Policy</Link>
             </span>
             <span className="text-dimgray">and</span>
             <span className="font-semibold cursor-pointer underline">
-              <Link to="terms-of-use">
-                Terms of Service.
-              
-              </Link>
-              
+              <Link to="terms-of-use">Terms of Service.</Link>
             </span>
           </div>
         </div>

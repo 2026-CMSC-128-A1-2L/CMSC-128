@@ -56,10 +56,10 @@ const LandlordFinance: FunctionComponent = () => {
       setIsLoading(true);
       try {
         const mockStats: OverviewStats = {
-          totalIncome: 163600.00,
+          totalIncome: 163600.0,
           totalBuildings: 3,
           occupancyRate: 82,
-          outstandingBalance: 23400.00,
+          outstandingBalance: 23400.0,
           collectionRate: 94,
         };
 
@@ -71,8 +71,8 @@ const LandlordFinance: FunctionComponent = () => {
             // No imageUrl - will use placeholder
             totalUnits: 24,
             occupiedUnits: 24,
-            income: 89400.00,
-            outstanding: 12600.00,
+            income: 89400.0,
+            outstanding: 12600.0,
             status: 'active',
           },
           {
@@ -82,8 +82,8 @@ const LandlordFinance: FunctionComponent = () => {
             // No imageUrl - will use placeholder
             totalUnits: 21,
             occupiedUnits: 18,
-            income: 73200.00,
-            outstanding: 9300.00,
+            income: 73200.0,
+            outstanding: 9300.0,
             status: 'active',
           },
           {
@@ -93,8 +93,8 @@ const LandlordFinance: FunctionComponent = () => {
             // No imageUrl - will use placeholder
             totalUnits: 16,
             occupiedUnits: 12,
-            income: 42340.00,
-            outstanding: 0.00,
+            income: 42340.0,
+            outstanding: 0.0,
             status: 'active',
           },
         ];
@@ -111,9 +111,7 @@ const LandlordFinance: FunctionComponent = () => {
     fetchData();
   }, []);
 
-  const breadcrumbs: BreadcrumbItem[] = [
-    { label: 'Finance', to: '/landlord/finance' },
-  ];
+  const breadcrumbs: BreadcrumbItem[] = [{ label: 'Finance', to: '/landlord/finance' }];
 
   const statCards = [
     { label: 'Total Income', value: `₱${stats.totalIncome.toFixed(2)}`, highlight: true },
@@ -149,9 +147,11 @@ const LandlordFinance: FunctionComponent = () => {
 
   return (
     <LandlordLayout activeSidebarItem="finance" breadcrumbs={breadcrumbs}>
-      <div className={`flex flex-col w-full transition-all duration-300 ease-out ${
-        isPageLoading ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'
-      }`}>
+      <div
+        className={`flex flex-col w-full transition-all duration-300 ease-out ${
+          isPageLoading ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'
+        }`}
+      >
         {/* Header */}
         <div className="self-stretch flex flex-col items-start justify-center gap-3 mb-6">
           <div className="self-stretch flex items-center justify-between gap-5">
@@ -167,7 +167,11 @@ const LandlordFinance: FunctionComponent = () => {
         {/* Stats Cards Row */}
         <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-[15px] mb-6">
           {statCards.map((card, index) => (
-            <div key={card.label} className="transition-all duration-300 hover:translate-y-[-2px]" style={{ animationDelay: `${index * 100}ms` }}>
+            <div
+              key={card.label}
+              className="transition-all duration-300 hover:translate-y-[-2px]"
+              style={{ animationDelay: `${index * 100}ms` }}
+            >
               <StatCard {...card} />
             </div>
           ))}
@@ -192,17 +196,14 @@ const LandlordFinance: FunctionComponent = () => {
           </div>
           <div className="w-full flex flex-wrap items-start gap-4">
             {properties.map((property, index) => (
-              <div 
-                key={property.id} 
+              <div
+                key={property.id}
                 className={`transition-all duration-300 hover:translate-y-[-4px] ${
                   clickedPropertyId === property.id ? 'animate-pulse-scale' : ''
                 }`}
                 style={{ animationDelay: `${index * 100}ms` }}
               >
-                <PropertyCard 
-                  {...property} 
-                  onClick={() => handlePropertyClick(property.id)} 
-                />
+                <PropertyCard {...property} onClick={() => handlePropertyClick(property.id)} />
               </div>
             ))}
             {/* Add Property Card */}
@@ -212,7 +213,7 @@ const LandlordFinance: FunctionComponent = () => {
                 className="h-[360px] w-[348px] flex flex-col items-center justify-center rounded-[25px] bg-white border-silver border-dashed border-2 cursor-pointer hover:bg-gray-50 transition-colors"
               >
                 <div className="flex flex-col items-center gap-3">
-                    <Icon icon="mdi:plus" className="w-12 h-12 text-gray-400" />
+                  <Icon icon="mdi:plus" className="w-12 h-12 text-gray-400" />
                   <b className="text-[18px] tracking-[-0.01em] text-gray">Add New Property</b>
                   <div className="text-[14px] font-medium text-silver text-center max-w-[220px]">
                     Register a dorm, boarding house, etc.

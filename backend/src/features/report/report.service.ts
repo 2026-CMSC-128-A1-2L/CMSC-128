@@ -50,13 +50,16 @@ export const reportListing = async (data: CreateListingReportArgs) => {
 
   // Only active tenants of this facility may submit a report
   const facilityListingIds = await Listing.find({ facilityId: listing.facilityId }).distinct('_id');
-  const facilityUnitIds = await Unit.find({ listingId: { $in: facilityListingIds } }).distinct('_id');
+  const facilityUnitIds = await Unit.find({ listingId: { $in: facilityListingIds } }).distinct(
+    '_id',
+  );
   const activeRental = await Rental.findOne({
     userId: data.userId,
     unitId: { $in: facilityUnitIds },
     status: 'active',
   });
-  if (!activeRental) throw new AppError(403, 'Only active tenants of this facility can submit a report.');
+  if (!activeRental)
+    throw new AppError(403, 'Only active tenants of this facility can submit a report.');
 
   // Prevent duplicate pending reports
   const existing = await ListingReport.findOne({

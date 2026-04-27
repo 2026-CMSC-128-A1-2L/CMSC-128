@@ -60,7 +60,10 @@ const UnvalidatedTenantCard = ({
       <div className="flex h-[32px] w-full items-center gap-[8px] px-[10px] py-[4px]">
         {application.reviewedByManager && (
           <>
-            <span aria-hidden="true" className="flex h-[24px] w-[24px] items-center justify-center text-[#096c5b]">
+            <span
+              aria-hidden="true"
+              className="flex h-[24px] w-[24px] items-center justify-center text-[#096c5b]"
+            >
               <Icon icon="fluent:checkmark-circle-20-regular" className="h-[20px] w-[20px]" />
             </span>
             <span className="font-['Inter',sans-serif] text-[14px] font-bold text-[#096c5b]">
@@ -89,7 +92,11 @@ const UnvalidatedTenantCard = ({
           aria-label={`More options for ${application.displayName}`}
           className="flex h-[24px] w-[12px] shrink-0 cursor-pointer items-center justify-center text-[#2f3136] transition-colors hover:text-[#096c5b]"
         >
-          <Icon icon="iconamoon:menu-kebab-vertical" className="h-[24px] w-[24px]" aria-hidden="true" />
+          <Icon
+            icon="iconamoon:menu-kebab-vertical"
+            className="h-[24px] w-[24px]"
+            aria-hidden="true"
+          />
         </button>
       </div>
 

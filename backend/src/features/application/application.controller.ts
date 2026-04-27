@@ -132,7 +132,7 @@ export const routeFinalizeApplication: ApplicationHandler = async (req, res, _ne
   const applicationId = ObjectIdSchema.parse(req.params.applicationId);
   let updatedApplication: ApplicationType | undefined;
   updatedApplication = await finalizeApplication(applicationId, res.locals.filters);
-  
+
   if (!updatedApplication) throw new AppError(404, 'Application not found.');
   res.status(200).send(updatedApplication);
 };

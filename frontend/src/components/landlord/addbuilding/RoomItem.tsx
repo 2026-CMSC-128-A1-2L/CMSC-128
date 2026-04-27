@@ -54,7 +54,6 @@ const RoomItem: FunctionComponent<RoomItemProps> = ({ room, roomTypeId, index, c
 
   return (
     <div className="self-stretch flex items-center gap-2">
-
       {/* Room Number */}
       <div className="flex-1 flex flex-col items-center justify-start gap-2.5">
         <div className="relative leading-6 font-medium text-black text-sm">Room Number</div>
@@ -78,7 +77,10 @@ const RoomItem: FunctionComponent<RoomItemProps> = ({ room, roomTypeId, index, c
             <option value="open">Open</option>
             <option value="occupied">Occupied</option>
           </select>
-          <Icon icon="mynaui:chevron-down" className="w-4 h-4 shrink-0 pointer-events-none text-slategray" />
+          <Icon
+            icon="mynaui:chevron-down"
+            className="w-4 h-4 shrink-0 pointer-events-none text-slategray"
+          />
         </div>
       </div>
 
@@ -116,7 +118,6 @@ const RoomItem: FunctionComponent<RoomItemProps> = ({ room, roomTypeId, index, c
       >
         <Icon icon="typcn:minus" className="w-5 h-5" />
       </button>
-
     </div>
   );
 };

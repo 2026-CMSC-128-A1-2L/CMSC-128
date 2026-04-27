@@ -10,13 +10,14 @@ import { Unit } from '../unit/unit.model';
 import { combineFilters } from '../../middleware';
 import { DocumentType } from '../document/document.model';
 
-
 export type CreateBillingArguments = {
   rentalId: mongoose.Types.ObjectId;
   dueDate: Date;
 
   paymentMethod: {
-    method: 'gcash' | 'bank_transfer';
+    method: 'gcash' | 'bank_transfer'|'cash';
+    name: string;
+    billingNumber: string;
     qr: DocumentType[];
   }[];
 
@@ -398,7 +399,12 @@ export const getTenantBillings = async (
 
       unitName: unit.roomNumber,
       dueDate: b.dueDate,
-      status: b.paymentStatus === 'paid' ? 'paid' : b.dueDate && b.dueDate < new Date() ? 'overdue' : 'unpaid',
+      status:
+        b.paymentStatus === 'paid'
+          ? 'paid'
+          : b.dueDate && b.dueDate < new Date()
+            ? 'overdue'
+            : 'unpaid',
       amount: b.totalAmount,
     };
   });
@@ -461,26 +467,22 @@ export const getUserBillings = async (
               totalOutstanding: {
                 $sum: { $cond: [{ $ne: ['$paymentStatus', 'paid'] }, '$totalAmount', 0] },
               },
-        currentStatus: {
-          $min: {
-            $cond: [
-              {
-                $and: [
-                  { $ne: ['$paymentStatus', 'paid'] },
-                  { $lt: ['$dueDate', new Date()] },
-                ],
+              currentStatus: {
+                $min: {
+                  $cond: [
+                    {
+                      $and: [
+                        { $ne: ['$paymentStatus', 'paid'] },
+                        { $lt: ['$dueDate', new Date()] },
+                      ],
+                    },
+                    1,
+                    {
+                      $cond: [{ $eq: ['$paymentStatus', 'paid'] }, 3, 2],
+                    },
+                  ],
+                },
               },
-              1,
-              {
-                $cond: [
-                  { $eq: ['$paymentStatus', 'paid'] },
-                  3,
-                  2,
-                ],
-              },
-            ],
-          },
-        },
             },
           },
           {
@@ -510,16 +512,12 @@ export const getUserBillings = async (
               totalAmount: 1,
               paymentStatus: {
                 $cond: [
-                  {$eq: ['$paymentStatus', 'paid']}, 
+                  { $eq: ['$paymentStatus', 'paid'] },
                   'paid',
                   {
-                    $cond: [
-                      {$lt: ['$dueDate', new Date()]},
-                      'overdue',
-                      'unpaid'
-                    ]
-                  }
-                ]
+                    $cond: [{ $lt: ['$dueDate', new Date()] }, 'overdue', 'unpaid'],
+                  },
+                ],
               },
             },
           },
