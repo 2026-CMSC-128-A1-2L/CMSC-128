@@ -42,22 +42,19 @@ const ReportTenant4: FunctionComponent = () => {
   const isAllSelected = selectedConcerns.length === SECURITY_CONCERNS.length;
 
   // Button Handlers
-  {/*const handleCancel = () => {
+  const handleCancel = () => {
     console.log('Reporting cancelled');
-    setSelectedViolations([]);
-    // pag nag cancel
+    setSelectedConcerns([]);
   };
 
   const handleNext = () => {
-    if (selectedViolations.length === 0) {
+    if (selectedConcerns.length === 0) {
       //if walang clincik
       return;
     }
-    console.log('Proceeding with violations:', selectedViolations);
+    console.log('Proceeding with violations:', selectedConcerns);
     // next popup
   };
-
-  */}
 
   return (
     <div className="relative rounded-tl-[32px] rounded-tr-num-0 rounded-b-num-0 bg-white w-full flex items-center text-left text-[32px] text-white font-poppins">
@@ -97,8 +94,9 @@ const ReportTenant4: FunctionComponent = () => {
                   </div>
                   <div className="h-6 w-6 relative">
                     <div
-                      className={`absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] shadow-[0px_0px_2px_rgba(0,_0,_0,_0.25)] rounded ${isAllSelected ? 'bg-teal' : 'bg-whitesmoke-100'
-                        }`}
+                      className={`absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] shadow-[0px_0px_2px_rgba(0,_0,_0,_0.25)] rounded ${
+                        isAllSelected ? 'bg-teal' : 'bg-whitesmoke-100'
+                      }`}
                     />
                     {isAllSelected && <CheckMark />}
                   </div>
@@ -132,8 +130,9 @@ const ReportTenant4: FunctionComponent = () => {
                         </div>
                         <div className="h-6 w-6 relative overflow-hidden shrink-0">
                           <div
-                            className={`absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] shadow-[0px_0px_2px_rgba(0,_0,_0,_0.25)] rounded ${isChecked ? 'bg-teal' : 'bg-whitesmoke-100'
-                              }`}
+                            className={`absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] shadow-[0px_0px_2px_rgba(0,_0,_0,_0.25)] rounded ${
+                              isChecked ? 'bg-teal' : 'bg-whitesmoke-100'
+                            }`}
                           />
                           {isChecked && <CheckMark />}
                         </div>

@@ -1,5 +1,5 @@
 import { useEffect, useState, type ReactNode } from 'react';
-import { useLocation } from 'react-router-dom';
+// import { useLocation } from 'react-router-dom';
 
 type AdminPageTransitionProps = {
   children: ReactNode;
@@ -18,7 +18,7 @@ const AdminPageTransition = ({
   duration = 260,
   className = '',
 }: AdminPageTransitionProps) => {
-  const _location = useLocation();
+  // const _location = useLocation();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
