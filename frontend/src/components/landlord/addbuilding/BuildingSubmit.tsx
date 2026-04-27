@@ -1,4 +1,4 @@
-import { FunctionComponent, useCallback, useState } from 'react';
+import { type FunctionComponent, useCallback, useState } from 'react';
 import { Icon } from '@iconify/react';
 import { useBuildingStore } from './useBuildingStore';
 import type { RoomData, RoomTypeData, ManagerData, PaymentMethodData, RequirementItem } from './useBuildingStore';
@@ -43,7 +43,7 @@ const RequirementRow: FunctionComponent<{ req: RequirementItem }> = ({ req }) =>
         <span className="text-sm font-bold text-black">{req.label}</span>
         {isUploaded ? (
           <span className="text-xs text-slategray font-medium truncate">
-            {req.file!.name} · Submitted: {req.date}
+            {req.file?.name} · Submitted: {req.date}
           </span>
         ) : (
           <span className="text-xs italic text-gray-100">Not uploaded</span>
@@ -291,7 +291,7 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
                     <span className="text-xs font-semibold text-teal-700">Cashless Payment Enabled</span>
                   </div>
                   <div className="self-stretch grid grid-cols-2 gap-5">
-                    {payment.gcash && payment.gcash.name ? (
+                    {payment.gcash?.name ? (
                       <PaymentMethodBlock title="GCash" accountLabel="GCash Number" data={payment.gcash} />
                     ) : (
                       <div className="flex flex-col gap-3">
@@ -301,7 +301,7 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
                         </div>
                       </div>
                     )}
-                    {payment.bank && payment.bank.name ? (
+                    {payment.bank?.name ? (
                       <PaymentMethodBlock title="Bank Transfer" accountLabel="Account Number" data={payment.bank} />
                     ) : (
                       <div className="flex flex-col gap-3">

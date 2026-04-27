@@ -1,8 +1,7 @@
-import { FunctionComponent, useCallback, useState } from 'react';
+import { type FunctionComponent, useCallback, useState } from 'react';
 import { Icon } from '@iconify/react';
 import Verified from '../../../../../assets/verified_badge.svg';
 import Photo from '../../../../../assets/photo.svg';
-import Arrow from "../../../../../assets/arrow_up.svg";
 import Sidebar from '../../../../components/user/SideBar';
 import Footer from '../../../../components/general/Footer';
 import CancelApplication1 from '../../../../components/user/Profile/CancelApplication1';

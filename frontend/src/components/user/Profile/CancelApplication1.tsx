@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import type { FunctionComponent } from 'react';
 import cancelIcon from '../../../../assets/cancel_popup.svg';
 
 type Props = {

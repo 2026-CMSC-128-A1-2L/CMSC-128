@@ -1,4 +1,4 @@
-import { FunctionComponent, useCallback } from "react";
+import type { FunctionComponent, } from "react";
 
 interface MainCalendarGridProps {
   onEventClick?: () => void;

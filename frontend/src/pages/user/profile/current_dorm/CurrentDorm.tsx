@@ -1,4 +1,4 @@
-import { FunctionComponent, useCallback } from 'react';
+import { type FunctionComponent, useCallback } from 'react';
 import { Icon } from '@iconify/react';
 import placeholder from '../../../../../assets/logo_atlas_text.svg';
 import { Link } from 'react-router-dom';

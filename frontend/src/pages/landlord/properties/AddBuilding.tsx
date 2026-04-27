@@ -1,4 +1,4 @@
-import { FunctionComponent, useCallback, useState } from 'react';
+import { type FunctionComponent, useCallback, useState } from 'react';
 import BuildingRequirements from '../../../components/landlord/addbuilding/BuildingRequirements';
 import BuildingInformation from '../../../components/landlord/addbuilding/BuildingInformation';
 import BuildingSubmit from '../../../components/landlord/addbuilding/BuildingSubmit';

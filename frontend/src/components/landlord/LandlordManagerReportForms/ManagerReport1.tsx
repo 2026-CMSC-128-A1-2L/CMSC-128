@@ -1,4 +1,4 @@
-import { FunctionComponent, useState } from 'react';
+import { type FunctionComponent, useState } from 'react';
 import ReportManagerShell from './ReportManagerShell.tsx';
 import ReportManagerSection from './ReportManagerSection.tsx';
 

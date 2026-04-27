@@ -12,8 +12,8 @@ import VisitsCalendarView from "../../../components/landlord/VisitsSections/Visi
 
 const Visits: FunctionComponent = () => {
   const [isSetAvailableTimeOpen, setSetAvailableTimeOpen] = useState(false);
-  const [currentMonth, setCurrentMonth] = useState("Apr");
-  const [currentYear, setCurrentYear] = useState(2026);
+  const [_currentMonth, _setCurrentMonth] = useState("Apr");
+  const [_currentYear, _setCurrentYear] = useState(2026);
 
   const openSetAvailableTime = useCallback(() => {
     setSetAvailableTimeOpen(true);

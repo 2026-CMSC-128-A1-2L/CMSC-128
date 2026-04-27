@@ -1,4 +1,4 @@
-import { FunctionComponent, useState, useEffect, useRef } from 'react';
+import { type FunctionComponent, useState, useEffect, useRef } from 'react';
 import type { Billing } from '../types/billing';
 
 interface BillingRowProps {
@@ -135,7 +135,7 @@ const BillingRow: FunctionComponent<BillingRowProps> = ({
           onClick={handleToggle}
           className={`w-[100px] rounded-lg ${
             hasStatus && selectedStatus
-              ? statusGradients[selectedStatus] + ' flex items-center justify-center'
+              ? `${statusGradients[selectedStatus]} flex items-center justify-center`
               : 'bg-white border-whitesmoke-200 border-solid border-[1px]'
           } py-[4.5px] px-2 font-inter cursor-pointer transition-all duration-300 hover:opacity-90 ${
             isChanging ? 'scale-95' : 'scale-100'
@@ -152,7 +152,7 @@ const BillingRow: FunctionComponent<BillingRowProps> = ({
 
         {isOpen && (
           <>
-            <div className="fixed inset-0 z-10" onClick={() => onToggle && onToggle(billing._id)} />
+            <div className="fixed inset-0 z-10" onClick={() => onToggle?.(billing._id)} />
             <div className="absolute top-full left-1/2 -translate-x-1/2 mt-1 w-[100px] z-50 bg-white border border-whitesmoke-200 rounded-lg shadow-lg overflow-hidden">
               {statusOptions.map((status) => {
                 const isSelected = selectedStatus === status;

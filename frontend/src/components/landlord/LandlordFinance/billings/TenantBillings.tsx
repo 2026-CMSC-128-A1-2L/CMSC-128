@@ -1,4 +1,4 @@
-import { FunctionComponent, useState, useEffect } from 'react';
+import { type FunctionComponent, useState, useEffect } from 'react';
 import { Icon } from '@iconify/react';
 import BillingRow from './BillingRow';
 import AddBillingPopup from './AddBillingPopup';
@@ -17,7 +17,7 @@ const TABLE_COLUMNS = [
 ];
 
 // Mock data - replace with API call
-const fetchBillings = async (month: Date): Promise<Billing[]> => {
+const fetchBillings = async (_month: Date): Promise<Billing[]> => {
   const mockBillings: Billing[] = [
     {
       _id: '1',

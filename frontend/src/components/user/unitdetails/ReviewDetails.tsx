@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import type { FunctionComponent } from 'react';
 import ReviewCard from './ReviewCard';
 import RatingBreakdown from './RatingBreakdown';
 

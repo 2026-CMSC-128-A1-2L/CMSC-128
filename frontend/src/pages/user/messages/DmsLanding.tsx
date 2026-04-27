@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import type { FunctionComponent } from 'react';
 import DmsSidebar from '../../../components/general/DmsSidebar';
 import oswald from '../../../../assets/owl_inbox.png';
 

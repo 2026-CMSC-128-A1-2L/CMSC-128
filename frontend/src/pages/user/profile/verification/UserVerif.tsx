@@ -1,11 +1,10 @@
-import { FunctionComponent, useState, useCallback, useMemo } from "react";
+import { type FunctionComponent, useState, useMemo } from "react";
 import ProgressBar from "../../../../components/user/ProgressBar";
 import TutorialBubble from "../../../../components/user/Tutorials";
 import TutorialIcon from "../../../../../assets/help-chat.svg";
 import UserDocumentsSubmissionHeader from "../../../../components/user/user-verification/UserDocumentsSubmissionHeader";
 import UserDocumentsList from "../../../../components/user/user-verification/UserDocumentsList";
 import { userDocuments } from "../../../../components/user/user-verification/UserDocumentsData";
-import type { UserDocumentSlot } from "../../../../components/user/user-verification/UserDocumentsData";
 
 interface UserVerifProps {
   verificationStep: number;

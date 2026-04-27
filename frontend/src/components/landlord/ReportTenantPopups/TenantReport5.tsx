@@ -1,4 +1,4 @@
-import { FunctionComponent, useState } from 'react';
+import { type FunctionComponent, useState } from 'react';
 
 const ReportTenant5: FunctionComponent = () => {
   const [isDeclared, setIsDeclared] = useState(false);

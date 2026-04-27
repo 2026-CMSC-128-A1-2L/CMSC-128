@@ -1,5 +1,4 @@
-import { FunctionComponent, useState } from 'react';
-import { Icon } from '@iconify/react';
+import { type FunctionComponent, useState } from 'react';
 
 interface MonthlyData {
   month: string;

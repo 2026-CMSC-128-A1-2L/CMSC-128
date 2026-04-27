@@ -1,6 +1,5 @@
 import LandlordHomepage from "../pages/landlord/dashboard/LandlordHomepage";
 import LandlordProfile from "../pages/landlord/profile/LandlordProfile";
-import LandlordProfileVerification from "../pages/landlord/profile/verification/LandlordProfileVerification";
 import LandlordVerif from "../pages/landlord/profile/verification/LandlordVerif";
 import LandlordDashboard from "../pages/landlord/dashboard/LandlordHomepage";
 import LandlordMessages from "../pages/landlord/messages/LandlordMessages";

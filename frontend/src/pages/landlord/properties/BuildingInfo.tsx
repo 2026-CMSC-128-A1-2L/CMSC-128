@@ -178,7 +178,7 @@ const AddListingCard = () => (
 );
 
 const BuildingInfo = () => {
-  const [data, setData] = useState<BuildingInformation>({
+  const [data, _setData] = useState<BuildingInformation>({
     name: 'Two Sapphire Place',
     buildingType: 'maganda',
     status: 'Active',
@@ -295,7 +295,7 @@ const BuildingInfo = () => {
             <div className="flex flex-col p-2.5 gap-2.5">
               <b>Photos</b>
               <div className="flex flex-wrap gap-2.5">
-                {photos.map((x, index) => (
+                {photos.map((_x, index) => (
                   <div
                     // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                     key={index}

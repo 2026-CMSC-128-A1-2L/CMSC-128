@@ -1,4 +1,4 @@
-import { FunctionComponent, useEffect, useRef, useState } from 'react';
+import { type FunctionComponent, useEffect, useRef, useState } from 'react';
 
 const PropertyTabs: FunctionComponent<{ children: React.ReactElement[] }> = (props: {
   children: React.ReactElement[];
@@ -20,7 +20,7 @@ const PropertyTabs: FunctionComponent<{ children: React.ReactElement[] }> = (pro
     });
 
     observer.observe(tabContainer.current);
-  }, [tabContainer]);
+  }, [tabs.length]);
 
   return (
     <div className="w-full relative flex flex-col items-start gap-[29px] font-inter">

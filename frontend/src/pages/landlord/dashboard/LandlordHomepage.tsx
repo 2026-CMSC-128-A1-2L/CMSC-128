@@ -1,4 +1,4 @@
-import { FunctionComponent, useRef, useState } from "react";
+import { type FunctionComponent, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Icon } from "@iconify/react";
 import LandlordLayout from "../../../components/landlord/LandlordLayout";

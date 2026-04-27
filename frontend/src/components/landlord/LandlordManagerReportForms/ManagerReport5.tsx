@@ -1,4 +1,4 @@
-import { FunctionComponent, useState } from 'react';
+import { type FunctionComponent, useState } from 'react';
 import { Icon } from '@iconify/react';
 
 type Props = { onSubmit: () => void; onCancel: () => void };

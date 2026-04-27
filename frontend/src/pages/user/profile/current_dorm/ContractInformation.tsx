@@ -1,4 +1,4 @@
-import { FunctionComponent, useCallback } from "react";
+import { type FunctionComponent, useCallback } from "react";
 import { Icon } from "@iconify/react";
 import VerifiedBadge from "../../../../../assets/verified_badge.svg";
 import DefaultAvatar from "../../../../../assets/default_avatar.svg";
@@ -10,7 +10,7 @@ import placeholder from "../../../../../assets/logo_atlas_text.svg";
 import { Link } from "react-router-dom";
 
 const CurrentDorm: FunctionComponent = () => {
-  const onContractInformationContainerClick = useCallback(() => {
+  const _onContractInformationContainerClick = useCallback(() => {
     // Add your code here
   }, []);
 
@@ -170,7 +170,6 @@ const CurrentDorm: FunctionComponent = () => {
                                 onChange={(e) =>
                                   setContactNumber(e.target.value)
                                 }
-                                autoFocus
                                 className="border-b border-[#096C5B] text-[14px] bg-transparent outline-none w-[200px] py-1"
                                 onKeyDown={(e) =>
                                   e.key === "Enter" && handleSave()
@@ -212,7 +211,6 @@ const CurrentDorm: FunctionComponent = () => {
                                 type="text"
                                 value={homeAddress}
                                 onChange={(e) => setHomeAddress(e.target.value)}
-                                autoFocus
                                 className="border-b border-[#096C5B] text-[14px] bg-transparent outline-none w-[300px] py-1 text-black"
                                 onKeyDown={(e) =>
                                   e.key === "Enter" && handleSaveAddress()

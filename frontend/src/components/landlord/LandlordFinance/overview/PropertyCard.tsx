@@ -1,4 +1,4 @@
-import { FunctionComponent, useState } from 'react';
+import { type FunctionComponent, useState } from 'react';
 import { Icon } from '@iconify/react';
 import placeholderImage from '../../../../../assets/sapphire.jpg';
 

@@ -17,7 +17,7 @@ const getHighlightClasses = (state: SideBarLandlordButtonState): string => {
   return 'bg-white';
 };
 
-const getContentBgClasses = (state: SideBarLandlordButtonState): string => {
+const _getContentBgClasses = (_state: SideBarLandlordButtonState): string => {
   return 'bg-transparent';
 };
 

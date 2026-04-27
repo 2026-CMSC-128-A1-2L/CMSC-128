@@ -1,4 +1,4 @@
-import { FunctionComponent, useRef, useState, useCallback } from "react";
+import { type FunctionComponent, useRef, useState, useCallback } from "react";
 import { Icon } from "@iconify/react";
 import PaymentMethods from "./PaymentMethods";
 

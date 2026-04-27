@@ -1,4 +1,4 @@
-import { FunctionComponent, useState, useEffect } from 'react';
+import { type FunctionComponent, useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import LandlordLayout, { type BreadcrumbItem } from '../../../components/landlord/LandlordLayout';
 import StatCard from '../../../components/landlord/LandlordFinance/overview/StatCard';
@@ -7,7 +7,6 @@ import IncomeTrendChart from '../../../components/landlord/LandlordFinance/overv
 import PropertyCard from '../../../components/landlord/LandlordFinance/overview/PropertyCard';
 import { Icon } from '@iconify/react';
 
-import sapphirePic from '../../../../assets/sapphire.jpg';
 
 interface PropertyStats {
   id: string;
@@ -31,7 +30,7 @@ interface OverviewStats {
 
 const LandlordFinance: FunctionComponent = () => {
   const navigate = useNavigate();
-  const location = useLocation();
+  const _location = useLocation();
   const [stats, setStats] = useState<OverviewStats>({
     totalIncome: 0,
     totalBuildings: 0,
@@ -49,7 +48,7 @@ const LandlordFinance: FunctionComponent = () => {
       setIsPageLoading(false);
     }, 100);
     return () => clearTimeout(timer);
-  }, [location.pathname]);
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
