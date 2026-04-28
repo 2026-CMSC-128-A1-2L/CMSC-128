@@ -23,15 +23,20 @@ export default function Reportv2() {
   const [reportJsonData, setReportJsonData] = useState('');
 
   return (
-    <>
-      <div className="flex">
+    <div className="flex">
         <SideBar />
         <div className="flex flex-col max-w-[1128px] ml-5 md:ml-10 py-10">
           <BreadcrumbHeader
             routes={[
+<<<<<<< HEAD
               { name: 'User Profile', url: '/profile' },
               { name: 'Current Dorm', url: '/profile/dorm' },
               { name: 'Report' },
+=======
+              { name: "User Profile", url: "/profile-switcher" },
+              { name: "Current Dorm", url: "/current-dorm" },
+              { name: "Report" },
+>>>>>>> af025055f14b35dfeb8093ed004226db6b313833
             ]}
           />
           <div className="flex flex-col items-center max-w-[1128px] bg-white border border-whitesmoke-200 rounded-2xl overflow-hidden shadow-sm">
@@ -67,6 +72,5 @@ export default function Reportv2() {
           </div>
         </div>
       </div>
-    </>
   );
 }

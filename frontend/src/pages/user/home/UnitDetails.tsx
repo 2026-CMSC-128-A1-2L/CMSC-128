@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { FunctionComponent, useCallback, useState } from 'react';
 import SideBar from '../../../components/user/SideBar';
 import { Icon } from '@iconify/react';
@@ -13,6 +14,23 @@ import LocationDetails from '../../../components/user/unitdetails/LocationDetail
 import ReviewDetails from '../../../components/user/unitdetails/ReviewDetails';
 import PropertyTab from '../../../components/user/unitdetails/PropertyTab';
 import { Link } from 'react-router-dom';
+=======
+import { type FunctionComponent, useCallback, } from "react";
+import SideBar from "../../../components/user/SideBar";
+import { Icon } from "@iconify/react";
+import PropertyTabs from "../../../components/user/unitdetails/PropertyTabs";
+import ImageCarousel from "../../../components/user/unitdetails/ImageCarousel";
+import pic from "../../../../assets/landing_contact.webp";
+import pic2 from "../../../../assets/landing_listing.webp";
+import pic3 from "../../../../assets/landing_contact.webp";
+import AboutDetails from "../../../components/user/unitdetails/AboutDetails";
+import AmenetiesDetails from "../../../components/user/unitdetails/AmenetiesDetails";
+import RulesDetails from "../../../components/user/unitdetails/RulesDetails";
+import LocationDetails from "../../../components/user/unitdetails/LocationDetails";
+import ReviewDetails from "../../../components/user/unitdetails/ReviewDetails";
+import PropertyTab from "../../../components/user/unitdetails/PropertyTab";
+import { Link } from "react-router-dom";
+>>>>>>> af025055f14b35dfeb8093ed004226db6b313833
 const UnitDetails: FunctionComponent = () => {
   const gallery = [`${pic}`, `${pic2}`, `${pic3}`];
 

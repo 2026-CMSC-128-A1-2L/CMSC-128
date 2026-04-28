@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import CurrentDormInfoCard from '../../../../components/CurrentDormInfoCard';
 import StepIndicator from '../../../../components/StepIndicator';
 import DormitoryImg from '../../../../../assets/image.png';
@@ -5,6 +6,14 @@ import SideBar from '../../../../components/user/SideBar';
 import Header from '../../../../components/user/user-report/Header';
 import BreadcrumbHeader from '../../../../components/general/Breadcrumb';
 import ReasonContent from '../../../../components/user/lease-transfer/ReasonContent';
+=======
+import CurrentDormInfoCard from "../../../../components/CurrentDormInfoCard"
+import StepIndicator from "../../../../components/StepIndicator"
+import DormitoryImg from '../../../../../assets/image.png'
+import SideBar from "../../../../components/user/SideBar"
+import BreadcrumbHeader from "../../../../components/general/Breadcrumb"
+import ReasonContent from "../../../../components/user/lease-transfer/ReasonContent"
+>>>>>>> af025055f14b35dfeb8093ed004226db6b313833
 
 import { useState } from 'react';
 import DocumentsContent from '../../../../components/user/lease-transfer/DocumentsContent';
@@ -21,6 +30,7 @@ export default function LeaseTransfer() {
 
   const [leaseTransferStages, setLeaseTransferStages] = useState(1);
 
+<<<<<<< HEAD
   return (
     <>
       <div className="flex">
@@ -72,4 +82,48 @@ export default function LeaseTransfer() {
       </div>
     </>
   );
+=======
+    return (
+        <div className="flex">
+                <SideBar />
+                <div className="flex flex-col max-w-[1128px] md:ml-10 py-10">
+                    {/* <Header /> */}
+                    <BreadcrumbHeader
+                        routes={[
+                            {name:'User Profile',url:'/profile-switcher'},
+                            {name:'Current Dorm',url:'/current-dorm'},
+                            {name:'Pasalo Unit'}
+                        ]}
+                    />
+                    <div className="flex flex-col items-center max-w-[1128px] bg-white border border-whitesmoke-200 rounded-2xl overflow-hidden shadow-sm">
+                        <CurrentDormInfoCard
+                            LandlordName={LandlordName}
+                            ManagerName={ManagerName}
+                            DormitoryName={DormitoryName}
+                            DormitoryAddress={DormitoryAddress}
+                            RoomNumber={RoomNumber}
+                            DormitoryImage={DormitoryImage}
+                            DormitoryTags={DormitoryTags}
+                        />
+                        <StepIndicator currentStep={leaseTransferStages} steps={StepIndicatorStages}/>
+                        <div className="w-full px-25 my-15">
+                            {leaseTransferStages===1 && <ReasonContent leaseTransferStages={leaseTransferStages} setLeaseTransferStages={setLeaseTransferStages}/>}
+                            {leaseTransferStages===2 && <DocumentsContent leaseTransferStages={leaseTransferStages} setLeaseTransferStages={setLeaseTransferStages}/>}
+                            {leaseTransferStages===3 && <FinalizeContent 
+                                                        leaseTransferStages={leaseTransferStages}    
+                                                        setLeaseTransferStages={setLeaseTransferStages}
+                                                        DormitoryName={DormitoryName}
+                                                        RoomNumber={RoomNumber}
+                                                        />}
+                        </div>
+                        
+
+                    </div>
+                </div>
+
+                
+                
+            </div>
+    )
+>>>>>>> af025055f14b35dfeb8093ed004226db6b313833
 }

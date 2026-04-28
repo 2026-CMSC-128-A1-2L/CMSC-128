@@ -1,4 +1,4 @@
-import { FunctionComponent, useEffect, useState, useRef } from 'react';
+import { type FunctionComponent, useEffect, useState, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { Icon } from '@iconify/react';
 import Lightbox from 'yet-another-react-lightbox';
@@ -131,7 +131,7 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({
                         <input
                           {...register('name', { required: 'Building name is required' })}
                           placeholder="Aa"
-                          className="flex-1 bg-transparent text-sm text-gray-700 placeholder-slategray outline-none font-medium leading-num-24"
+                          className="flex-1 bg-transparent text-sm text-black placeholder-slategray outline-none font-medium leading-num-24"
                         />
                       </div>
                       {errors.name && (
@@ -146,16 +146,21 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({
                     <div className="self-stretch flex flex-col gap-1">
                       <div className="self-stretch h-12 rounded-num-12 bg-aliceblue border-whitesmoke border-solid border-[1px] box-border flex items-center px-4">
                         <select
+<<<<<<< HEAD
                           {...register('typeOfBuilding', {
                             required: 'Please select a building type',
                           })}
                           className="flex-1 bg-transparent text-sm text-gray-700 outline-none font-medium appearance-none cursor-pointer"
+=======
+                          {...register('typeOfBuilding', { required: 'Please select a building type' })}
+                          className="flex-1 bg-transparent text-sm text-black outline-none font-medium appearance-none cursor-pointer"
+>>>>>>> af025055f14b35dfeb8093ed004226db6b313833
                         >
                           <option value="">Select type</option>
-                          <option value="residential">Residential</option>
-                          <option value="commercial">Commercial</option>
                           <option value="dormitory">Dormitory</option>
-                          <option value="mixed">Mixed Use</option>
+                          <option value="appartment">Appartment</option>
+                          <option value="bedspacer">Bed Spacer</option>
+                          <option value="transient">Transient</option>
                         </select>
                         <Icon
                           icon="mynaui:chevron-down"
@@ -177,7 +182,7 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({
                       <input
                         {...register('location', { required: 'Location is required' })}
                         placeholder="Aa"
-                        className="flex-1 bg-transparent text-sm text-gray-700 placeholder-slategray outline-none font-medium leading-num-24"
+                        className="flex-1 bg-transparent text-sm text-black placeholder-slategray outline-none font-medium leading-num-24"
                       />
                     </div>
                     {errors.location && (
@@ -253,7 +258,7 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({
               <div className="self-stretch flex items-center">
                 <b className="relative tracking-num--0_01">Room Types</b>
               </div>
-              <div className="self-stretch flex flex-col gap-3 text-left text-num-14 text-gray">
+              <div className="self-stretch flex flex-col gap-3 text-left text-num-14 text-black">
                 {buildingInfo.roomTypes.map((rt) => (
                   <RoomTypeItem key={rt.id} roomType={rt} />
                 ))}

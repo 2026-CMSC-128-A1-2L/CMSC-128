@@ -1,8 +1,15 @@
+<<<<<<< HEAD
 import { FunctionComponent, useCallback } from 'react';
 import { Icon } from '@iconify/react';
 import SideBar from '../../../components/user/SideBar';
 import { Link } from 'react-router-dom';
 import BreadcrumbHeader from '../../../components/general/Breadcrumb';
+=======
+import { type FunctionComponent, useCallback } from "react";
+import SideBar from "../../../components/user/SideBar";
+import { Link } from "react-router-dom";
+import BreadcrumbHeader from "../../../components/general/Breadcrumb";
+>>>>>>> af025055f14b35dfeb8093ed004226db6b313833
 
 const TermsOfUse: FunctionComponent = () => {
   const onTopicContainerClick = useCallback(() => {
@@ -585,7 +592,7 @@ const TermsOfUse: FunctionComponent = () => {
                                     <a
                                       className="text-[inherit]"
                                       href={`https://www.claudeusercontent.com/?domain=claude.ai&parentOrigin=https%3A%2F%2Fclaude.ai&errorReportingMode=parent&formattedSpreadsheets=true#`}
-                                      target="_blank"
+                                      target="_blank" rel="noopener"
                                     >
                                       <span className="[text-decoration:underline]">
                                         Privacy Policy

@@ -1,7 +1,14 @@
+<<<<<<< HEAD
 import React from 'react';
 import UploadIcon from '../../../assets/upload_media_icon.svg';
 import EyeIcon from '../../../assets/iconamoon_eye.svg';
 import MoreIcon from '../../../assets/qlementine-icons_menu-dots-16.svg';
+=======
+import type React from 'react';
+import UploadIcon from '../../../assets/upload_media_icon.svg'
+import EyeIcon from '../../../assets/iconamoon_eye.svg'
+import MoreIcon from '../../../assets/qlementine-icons_menu-dots-16.svg'
+>>>>>>> af025055f14b35dfeb8093ed004226db6b313833
 //USAGE
 //<FileUploadCard title="Current Lease Agreement" isRequired={true} desc=".jpg or .png less than 500KB"/>
 

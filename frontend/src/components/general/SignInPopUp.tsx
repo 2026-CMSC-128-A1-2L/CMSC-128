@@ -1,4 +1,4 @@
-import { FunctionComponent, useCallback } from 'react';
+import { type FunctionComponent, useCallback } from 'react';
 import { useEffect } from 'react';
 import logo from '../../../assets/footer_logo.svg';
 import { Link } from 'react-router-dom';
@@ -7,7 +7,7 @@ interface SignInPopUpProps {
 }
 
 const SignInPopUp: FunctionComponent<SignInPopUpProps> = ({ onClose }) => {
-  const onGoogleContainerClick = useCallback(() => {}, []);
+  const onGoogleContainerClick = useCallback(() => { }, []);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -21,7 +21,7 @@ const SignInPopUp: FunctionComponent<SignInPopUpProps> = ({ onClose }) => {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, []);
+  }, [onClose]);
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
@@ -53,17 +53,22 @@ const SignInPopUp: FunctionComponent<SignInPopUpProps> = ({ onClose }) => {
         </div>
 
         <div className="self-stretch p-2.5">
-          <div
-            className="self-stretch rounded-num-12 bg-aliceblue border-whitesmoke-300 border-solid border-[1px] flex items-center justify-center py-3 px-4 gap-3 cursor-pointer hover:bg-lightcyan transition-colors"
-            onClick={onGoogleContainerClick}
-          >
-            <img
-              className="h-6 w-6 relative"
-              alt="G"
-              src="https://www.svgrepo.com/show/475656/google-color.svg"
-            />
-            <b className="relative tracking-num--0_01 text-gray">Sign in with Google</b>
-          </div>
+
+
+          <Link to="/registration">
+            <div
+              className="self-stretch rounded-num-12 bg-aliceblue border-whitesmoke-300 border-solid border-[1px] flex items-center justify-center py-3 px-4 gap-3 cursor-pointer hover:bg-lightcyan transition-colors"
+              onClick={onGoogleContainerClick}
+            >
+              <img
+                className="h-6 w-6 relative"
+                alt="G"
+                src="https://www.svgrepo.com/show/475656/google-color.svg"
+              />
+              <b className="relative tracking-num--0_01 text-gray">Sign in with Google</b>
+            </div>
+
+          </Link>
         </div>
 
         <div className="text-center text-num-12">
@@ -72,11 +77,26 @@ const SignInPopUp: FunctionComponent<SignInPopUpProps> = ({ onClose }) => {
           </p>
           <div className="flex items-center justify-center gap-1 text-teal-200">
             <span className="font-semibold cursor-pointer underline">
+<<<<<<< HEAD
               <Link to="terms-of-use">Privacy Policy</Link>
             </span>
             <span className="text-dimgray">and</span>
             <span className="font-semibold cursor-pointer underline">
               <Link to="terms-of-use">Terms of Service.</Link>
+=======
+              <Link to="terms-of-use">
+                Privacy Policy
+              </Link>
+
+            </span>
+            <span className="text-dimgray">and</span>
+            <span className="font-semibold cursor-pointer underline">
+              <Link to="terms-of-use">
+                Terms of Service.
+
+              </Link>
+
+>>>>>>> af025055f14b35dfeb8093ed004226db6b313833
             </span>
           </div>
         </div>

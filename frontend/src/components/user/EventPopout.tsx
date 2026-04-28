@@ -1,7 +1,5 @@
-import { FunctionComponent } from 'react';
-import dotIcon from '../../../assets/dot.svg';
-import exIcon from '../../../assets/ex.svg';
-import deleteIcon from '../../../assets/delete.svg';
+import type { FunctionComponent } from 'react';
+import { Icon } from '@iconify/react';
 
 export type EventPopoutType = {
   className?: string;
@@ -11,33 +9,28 @@ export type EventPopoutType = {
 const EventPopout: FunctionComponent<EventPopoutType> = ({ className = '', onClose }) => {
   return (
     <div
-      className={`w-[419px] h-[164px] relative max-w-full max-h-full overflow-auto text-left text-[12px] text-black font-lora ${className}`}
+      className={`w-96 h-auto relative max-w-full max-h-full overflow-auto text-left text-num-12 text-black font-inter ${className}`}
     >
-      <div className="absolute top-[0px] left-[0px] rounded-md bg-white w-[419px] h-[164px]" />
-      <img
-        className="absolute top-[11px] left-[367px] w-10 h-10 cursor-pointer"
-        src={exIcon}
-        alt="close"
+      <div className="absolute top-0 left-0 rounded-md bg-white w-full h-full p-4" />
+      <Icon
+        icon="ic:round-close"
+        className="absolute top-3 right-3 w-8 h-8 cursor-pointer hover:opacity-70"
         onClick={onClose}
       />
-      <div className="absolute top-[12px] left-[322px] w-10 h-10">
-        <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] rounded-[7.27px] bg-white" />
-        <div className="absolute h-[72.75%] w-[72.75%] top-[13.64%] right-[13.62%] bottom-[13.61%] left-[13.63%] rounded-[3.64px] flex flex-col items-start opacity-[0.7]">
-          <div className="self-stretch h-[29.1px] relative overflow-hidden shrink-0" />
+      <div className="absolute top-3 right-12 w-8 h-8">
+        <div className="absolute h-full w-full top-0 right-0 bottom-0 left-0 rounded-lg bg-white" />
+        <div className="absolute h-3/4 w-3/4 top-1/2 right-1/2 bottom-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-md flex flex-col items-start opacity-70">
+          <div className="self-stretch h-8 relative overflow-hidden shrink-0" />
         </div>
       </div>
-      <div className="absolute top-[39px] left-[85px] text-[20px] font-semibold">Ocular visit</div>
-      <div className="absolute top-[69px] left-[85px] whitespace-pre-wrap">
+      <div className="absolute top-10 left-20 text-lg font-semibold">Ocular visit</div>
+      <div className="absolute top-16 left-20 whitespace-pre-wrap text-num-12">
         Tuesday, March 9 4:00PM - 5:00PM
       </div>
-      <div className="absolute top-[88px] left-[85px] whitespace-pre-wrap">{`One Sapphire Place     `}</div>
-      <div className="absolute top-[107px] left-[85px]"> Daphne the Landlord</div>
-      <img
-        className="absolute top-[44px] left-[53px] w-[24px] h-[24px]"
-        src={dotIcon}
-        alt="red dot"
-      />
-      <img className="absolute top-[19px] left-[330px] w-6 h-6" src={deleteIcon} alt="trash" />
+      <div className="absolute top-20 left-20 whitespace-pre-wrap text-num-12">{`One Sapphire Place     `}</div>
+      <div className="absolute top-24 left-20 text-num-12"> Daphne the Landlord</div>
+      <Icon icon="ic:round-circle" className="absolute top-11 left-12 w-6 h-6" />
+      <Icon icon="ic:round-delete" className="absolute top-4 right-16 w-6 h-6" />
     </div>
   );
 };

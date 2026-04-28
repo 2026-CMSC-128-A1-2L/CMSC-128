@@ -1,8 +1,17 @@
+<<<<<<< HEAD
 import React, { useState, useRef } from 'react';
 import { Icon } from '@iconify/react';
 import DefaultAvatar from '../../../assets/default_avatar.svg';
 import VerifiedBadge from '../../../assets/verified_badge.svg';
 import { Link } from 'react-router-dom';
+=======
+import type React from "react";
+import { useState, useRef } from "react";
+import { Icon } from "@iconify/react";
+import DefaultAvatar from "../../../assets/default_avatar.svg";
+import VerifiedBadge from "../../../assets/verified_badge.svg";
+import { Link } from "react-router-dom";
+>>>>>>> af025055f14b35dfeb8093ed004226db6b313833
 
 const ProfileInfo = () => {
   const [profileImage, setProfileImage] = useState<string>(DefaultAvatar);
@@ -108,7 +117,6 @@ const ProfileInfo = () => {
                   type="text"
                   value={contactNumber}
                   onChange={(e) => setContactNumber(e.target.value)}
-                  autoFocus
                   className="border-b border-[#096C5B] text-[14px] bg-transparent outline-none w-[200px] py-1"
                   onKeyDown={(e) => e.key === 'Enter' && handleSave()}
                 />
@@ -138,7 +146,6 @@ const ProfileInfo = () => {
                   type="text"
                   value={homeAddress}
                   onChange={(e) => setHomeAddress(e.target.value)}
-                  autoFocus
                   className="border-b border-[#096C5B] text-[14px] bg-transparent outline-none w-[300px] py-1 text-black"
                   onKeyDown={(e) => e.key === 'Enter' && handleSaveAddress()}
                 />

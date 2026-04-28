@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { FunctionComponent, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
@@ -12,6 +13,21 @@ import TreeIcon from '../../../../../assets/environment_tree_icon.svg';
 import FilledTreeIcon from '../../../../../assets/environment_tree_icon_filled.svg';
 import SideBar from '../../../../components/user/SideBar';
 import BreadcrumbHeader from '../../../../components/general/Breadcrumb';
+=======
+import { type FunctionComponent, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import Location from "../../../../../assets/pin_location_icon.svg";
+import House from "../../../../../assets/house_icon.svg";
+import StarIcon from "../../../../../assets/quality_star_icon.svg";
+import FilledStarIcon from "../../../../../assets/quality_star_icon_filled.svg";
+import LeafIcon from "../../../../../assets/comfort_leaf_icon.svg";
+import FilledLeafIcon from "../../../../../assets/comfort_leaf_icon_filled.svg";
+import TreeIcon from "../../../../../assets/environment_tree_icon.svg";
+import FilledTreeIcon from "../../../../../assets/environment_tree_icon_filled.svg";
+import SideBar from "../../../../components/user/SideBar";
+import BreadcrumbHeader from "../../../../components/general/Breadcrumb";
+>>>>>>> af025055f14b35dfeb8093ed004226db6b313833
 
 const RateAndReview: FunctionComponent = () => {
   const navigate = useNavigate();

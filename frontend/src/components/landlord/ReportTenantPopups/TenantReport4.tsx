@@ -1,4 +1,4 @@
-import { FunctionComponent, useState } from 'react';
+import { type FunctionComponent, useState } from 'react';
 
 interface SecurityConcern {
   id: string;
@@ -44,16 +44,15 @@ const ReportTenant4: FunctionComponent = () => {
   // Button Handlers
   const handleCancel = () => {
     console.log('Reporting cancelled');
-    setSelectedViolations([]);
-    // pag nag cancel
+    setSelectedConcerns([]);
   };
 
   const handleNext = () => {
-    if (selectedViolations.length === 0) {
+    if (selectedConcerns.length === 0) {
       //if walang clincik
       return;
     }
-    console.log('Proceeding with violations:', selectedViolations);
+    console.log('Proceeding with violations:', selectedConcerns);
     // next popup
   };
 

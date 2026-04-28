@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { useState } from 'react';
 import InfoIcon from '../../../../assets/infoicon_icon.svg';
 import FileUploadCard from '../../general/FileUploadCard';
@@ -15,6 +16,25 @@ export default function FinalizeContent(props: FinalizeContentProps) {
   const Property = DormitoryName + ' - ' + RoomNumber;
   const [isAgreed, setIsAgreed] = useState(false);
   return (
+=======
+import { useState } from 'react'
+import InfoIcon from '../../../../assets/infoicon_icon.svg'
+import FinalizeDisplayLines from './FinalizeDisplayLines'
+import CheckboxItem from '../user-report/CheckboxItem'
+interface FinalizeContentProps{
+    leaseTransferStages:number,
+    setLeaseTransferStages:any,
+    DormitoryName:string,
+    RoomNumber:string
+}
+
+export default function FinalizeContent(props:FinalizeContentProps) {
+
+    const {leaseTransferStages,setLeaseTransferStages,DormitoryName,RoomNumber}=props
+    const Property=`${DormitoryName} - ${RoomNumber}`
+    const [isAgreed,setIsAgreed]=useState(false)
+    return (
+>>>>>>> af025055f14b35dfeb8093ed004226db6b313833
     <>
       <div className="flex text-lora font-bold items-end px-15 gap-2 mb-2">
         <img src={InfoIcon} alt="" className="w-5 h-5 " />

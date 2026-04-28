@@ -1,6 +1,12 @@
+<<<<<<< HEAD
 import { Icon } from '@iconify/react';
 import { FunctionComponent, useState, useRef, useEffect } from 'react';
 import PortalPopup from '../../../components/general/PortalPopup';
+=======
+import { Icon } from "@iconify/react";
+import { type FunctionComponent, useState, useRef, useEffect } from "react";
+import PortalPopup from "../../../components/general/PortalPopup";
+>>>>>>> af025055f14b35dfeb8093ed004226db6b313833
 
 export type PaymentMethodsType = {
   className?: string;

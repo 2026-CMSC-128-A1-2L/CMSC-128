@@ -1,5 +1,4 @@
-import { FunctionComponent } from 'react';
-import { Icon } from '@iconify/react';
+import type { FunctionComponent } from 'react';
 
 interface ListingsSuccessProps {
   onConfirmContainerClick: () => void;

@@ -1,4 +1,4 @@
-import { FunctionComponent, useState, useEffect, useRef } from 'react';
+import { type FunctionComponent, useState, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { Icon } from '@iconify/react';
 import Lightbox from 'yet-another-react-lightbox';
@@ -89,7 +89,7 @@ const RoomTypeItem: FunctionComponent<RoomTypeItemProps> = ({ roomType }) => {
       <div className="flex items-center px-4 py-2">
         {!isExpanded && (
           <div className="flex-1 text-left">
-            <b className="text-sm text-gray-700">{headerLabel}</b>
+            <b className="text-sm text-black">{headerLabel}</b>
           </div>
         )}
         {isExpanded && <div className="flex-1" />}
@@ -105,17 +105,22 @@ const RoomTypeItem: FunctionComponent<RoomTypeItemProps> = ({ roomType }) => {
 
       {/* Expanded form */}
       {isExpanded && (
+<<<<<<< HEAD
         <div className="flex flex-col px-4 pb-8 gap-6 text-sm text-gray-500 font-inter">
+=======
+        <div className="flex flex-col px-4 pb-8 gap-6 text-sm text-black font-inter">
+
+>>>>>>> af025055f14b35dfeb8093ed004226db6b313833
           {/* Room Type + Capacity */}
           <div className="self-stretch flex items-start gap-10">
             <div className="flex-1 flex flex-col items-start gap-3">
-              <b className="text-gray-700">Room Type</b>
+              <b className="text-black">Room Type</b>
               <div className="self-stretch flex flex-col gap-1">
                 <div className="self-stretch h-12 rounded-xl bg-aliceblue border border-whitesmoke flex items-center px-4">
                   <input
                     {...register('roomType', { required: 'Room type is required' })}
                     placeholder="e.g. Single, Double..."
-                    className="flex-1 bg-transparent text-sm text-gray-700 placeholder-slategray outline-none font-medium"
+                    className="flex-1 bg-transparent text-sm text-black placeholder-slategray outline-none font-medium"
                   />
                 </div>
                 {errors.roomType && (
@@ -125,7 +130,7 @@ const RoomTypeItem: FunctionComponent<RoomTypeItemProps> = ({ roomType }) => {
             </div>
 
             <div className="flex-1 flex flex-col items-start gap-3">
-              <b className="text-gray-700">Capacity</b>
+              <b className="text-black">Capacity</b>
               <div className="self-stretch flex flex-col gap-1">
                 <div className="self-stretch h-12 rounded-xl bg-aliceblue border border-whitesmoke flex items-center px-4">
                   <input
@@ -134,7 +139,7 @@ const RoomTypeItem: FunctionComponent<RoomTypeItemProps> = ({ roomType }) => {
                       pattern: { value: /^[0-9]+$/, message: 'Must be a number' },
                     })}
                     placeholder="e.g. 2"
-                    className="flex-1 bg-transparent text-sm text-gray-700 placeholder-slategray outline-none font-medium"
+                    className="flex-1 bg-transparent text-sm text-black placeholder-slategray outline-none font-medium"
                   />
                 </div>
                 {errors.capacity && (
@@ -147,20 +152,20 @@ const RoomTypeItem: FunctionComponent<RoomTypeItemProps> = ({ roomType }) => {
           {/* About */}
           <div className="self-stretch flex flex-col items-start gap-2.5">
             <div className="flex items-center gap-4">
-              <b className="text-gray-700">About</b>
+              <b className="text-black">About</b>
               <span className="font-medium text-dimgray">Not required</span>
             </div>
             <textarea
               {...register('about')}
               placeholder="Describe this room type..."
               rows={4}
-              className="self-stretch rounded-xl bg-aliceblue border border-whitesmoke py-3 px-4 text-sm text-gray-700 placeholder-slategray outline-none font-medium resize-none"
+              className="self-stretch rounded-xl bg-aliceblue border border-whitesmoke py-3 px-4 text-sm text-black placeholder-slategray outline-none font-medium resize-none"
             />
           </div>
 
           {/* Add Photos */}
           <div className="self-stretch flex flex-col items-start gap-1">
-            <b className="text-gray-700">Add Photos</b>
+            <b className="text-black">Add Photos</b>
             <div className="flex items-start flex-wrap gap-2 py-2">
               {/* Render Uploaded Images */}
               {images.map((src, index) => (
@@ -209,7 +214,7 @@ const RoomTypeItem: FunctionComponent<RoomTypeItemProps> = ({ roomType }) => {
 
           {/* Add Rooms */}
           <div className="self-stretch flex flex-col items-start gap-4">
-            <b className="text-gray-700">Add Rooms</b>
+            <b className="text-black">Add Rooms</b>
             <AddRoom roomType={roomType} />
           </div>
 

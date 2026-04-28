@@ -1,4 +1,4 @@
-import { FunctionComponent, useState } from 'react';
+import { type FunctionComponent, useState } from 'react';
 import UpdateManager1 from './LandlordManagerUpdateForms/LandlordManagerUpdate1.tsx';
 import UpdateManager2 from './LandlordManagerUpdateForms/LandlordManagerUpdate2.tsx';
 import PortalPopup from './LandlordManagerPortal.tsx';

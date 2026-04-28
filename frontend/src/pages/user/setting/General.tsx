@@ -1,4 +1,4 @@
-import { FunctionComponent, useCallback } from 'react';
+import type { FunctionComponent } from 'react';
 import { Icon } from '@iconify/react';
 import info_icon from '../../../../assets/infoicon_icon.svg';
 
@@ -50,6 +50,7 @@ const General: FunctionComponent = () => {
                   className="relative font-bold text-[inherit] [text-decoration:none]"
                   href="mailto:dcanape@up.edu.ph"
                   target="_blank"
+                  rel="noopener"
                 >
                   dcanape@up.edu.ph
                 </a>

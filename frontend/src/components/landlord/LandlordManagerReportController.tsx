@@ -1,4 +1,4 @@
-import { FunctionComponent, useState } from 'react';
+import { type FunctionComponent, useState } from 'react';
 import ReportManager1 from './LandlordManagerReportForms/ManagerReport1';
 import ReportManager2 from './LandlordManagerReportForms/ManagerReport2';
 import ReportManager3 from './LandlordManagerReportForms/ManagerReport3';

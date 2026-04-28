@@ -1,7 +1,14 @@
+<<<<<<< HEAD
 import { FunctionComponent } from 'react';
 import Message from '../general/InboxMessage';
 import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
+=======
+import type { FunctionComponent } from "react";
+import Message from "../general/InboxMessage";
+import { Icon } from "@iconify/react";
+import { useNavigate } from "react-router-dom";
+>>>>>>> af025055f14b35dfeb8093ed004226db6b313833
 const DmsSidebar: FunctionComponent = () => {
   const navigate = useNavigate();
   return (

@@ -10,8 +10,13 @@ import VisitsCalendarView from '../../../components/landlord/VisitsSections/Visi
 
 const Visits: FunctionComponent = () => {
   const [isSetAvailableTimeOpen, setSetAvailableTimeOpen] = useState(false);
+<<<<<<< HEAD
   const [currentMonth, setCurrentMonth] = useState('Apr');
   const [currentYear, setCurrentYear] = useState(2026);
+=======
+  const [_currentMonth, _setCurrentMonth] = useState('Apr');
+  const [_currentYear, _setCurrentYear] = useState(2026);
+>>>>>>> af025055f14b35dfeb8093ed004226db6b313833
 
   const openSetAvailableTime = useCallback(() => {
     setSetAvailableTimeOpen(true);
@@ -108,7 +113,8 @@ const Visits: FunctionComponent = () => {
 
             {/* Upcoming Visits Section */}
             <div className="bg-white rounded-num-8 p-4 border border-whitesmoke-200">
-              <UpcomingVisitsSection />
+              {/* TODO: put actual visits */}
+              <UpcomingVisitsSection visits={[]} />
             </div>
           </div>
 
@@ -143,13 +149,23 @@ const Visits: FunctionComponent = () => {
 
             {/* Calendar Grid */}
             <div className="bg-white rounded-num-8 p-6 border border-whitesmoke-200 flex-1">
-              <VisitsCalendarView />
+              {/* TODO: put actual visits */}
+              <VisitsCalendarView visits={[]} />
             </div>
           </div>
         </div>
 
         {/* Visit Requests Section - Full Width Below */}
+<<<<<<< HEAD
         <VisitRequestsSection onAccept={handleAcceptRequest} onReject={handleRejectRequest} />
+=======
+        {/* TODO: put actual requests */}
+        <VisitRequestsSection
+          requests={[]}
+          onAccept={handleAcceptRequest}
+          onReject={handleRejectRequest}
+        />
+>>>>>>> af025055f14b35dfeb8093ed004226db6b313833
       </div>
 
       {isSetAvailableTimeOpen && (

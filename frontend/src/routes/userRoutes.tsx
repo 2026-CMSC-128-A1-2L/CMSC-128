@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import BookmarksNewUsers from '../pages/user/bookmarks/BookmarksNewUsers';
 import UserLanding from '../pages/UserLanding';
 import UnitDetails from '../pages/user/home/UnitDetails';
@@ -23,9 +24,35 @@ import LeaseTransfer from '../pages/user/profile/current_dorm/LeaseTransfer';
 import { Route } from 'react-router-dom';
 
 import Settings from '../pages/user/setting/Settings';
+=======
+import BookmarksNewUsers from "../pages/user/bookmarks/BookmarksNewUsers";
+import UnitDetails from "../pages/user/home/UnitDetails";
+import DmsLanding from "../pages/user/messages/DmsLanding";
+import Filter from "../components/user/Filter/FilterTab";
+import HomePage from "../pages/user/home/HomePage";
+import Finance from "../pages/user/finance/Finance";
+import ContactUs from "../pages/user/info/ContactUs";
+import CurrentDorm from "../pages/user/profile/current_dorm/CurrentDorm";
+import ContractInformation from "../pages/user/profile/current_dorm/ContractInformation";
+import RateAndReview from "../pages/user/profile/current_dorm/RateAndReview";
+import RateAndReviewForm from "../pages/user/profile/current_dorm/RateAndReviewWithForms";
+import RateAndReviewUpload from "../pages/user/profile/current_dorm/RateAndReviewWithUploads";
+import TermsOfUse from "../pages/user/info/TermsOfUse";
+import MyCalendar from "../pages/user/calendar/MyCalendar";
+import ProfileSwitcher from "../pages/user/profile/ProfileSwitcher";
+import Report from "../pages/user/profile/current_dorm/Report";
+import LeaseTransfer from "../pages/user/profile/current_dorm/LeaseTransfer";
+import FinalizedApplicationPage1a from "../pages/user/profile/current_dorm/FinalizedApplicationPage1a";
+import { Route } from "react-router-dom";
+
+import Settings from "../pages/user/setting/Settings";
+import TestPage from "../pages/utilities/TestPage";
+import Registration from "../pages/Registration";
+>>>>>>> af025055f14b35dfeb8093ed004226db6b313833
 
 const userRoutes = [
   <Route key="home" path="/home" element={<HomePage />} />,
+  <Route key="test" path="/test" element={<TestPage />} />,
   <Route key="filter" path="/filter" element={<Filter />} />,
   <Route key="contact" path="/contact-us" element={<ContactUs />} />,
   <Route key="bookmark" path="/bookmark" element={<BookmarksNewUsers />} />,
@@ -43,6 +70,10 @@ const userRoutes = [
   <Route key="mycalendar" path="/my-calendar" element={<MyCalendar />} />,
   <Route key="profile-switcher" path="/profile-switcher" element={<ProfileSwitcher />} />,
   <Route key="settings" path="/settings" element={<Settings />} />,
+  <Route key="pendingapplication" path="/finappli" element={<FinalizedApplicationPage1a />} />,
+
+
+  <Route key="registration" path="/registration" element={<Registration />} />,
 ];
 
 export default userRoutes;

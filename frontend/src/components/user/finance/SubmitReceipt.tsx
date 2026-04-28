@@ -1,6 +1,12 @@
+<<<<<<< HEAD
 import { FunctionComponent, useState } from 'react';
 import { Icon } from '@iconify/react';
 import PortalPopup from '../../../components/general/PortalPopup';
+=======
+import { type FunctionComponent, useState } from "react";
+import { Icon } from "@iconify/react";
+import PortalPopup from "../../../components/general/PortalPopup";
+>>>>>>> af025055f14b35dfeb8093ed004226db6b313833
 
 export type SubmitReceiptType = {
   className?: string;

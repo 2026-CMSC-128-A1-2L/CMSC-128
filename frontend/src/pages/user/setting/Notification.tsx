@@ -1,5 +1,5 @@
 import { Icon } from '@iconify/react';
-import { type FunctionComponent, useCallback } from 'react';
+import type { FunctionComponent } from 'react';
 
 const Notification: FunctionComponent = () => {
   return (

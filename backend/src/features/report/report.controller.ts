@@ -59,7 +59,7 @@ export const routeReportUser: RequestHandler = async (req, res, next) => {
 
   const report = await reportUser({
     userId: req.user!._id,
-    reporterType: req.user!.userType,
+    reporterType: req.user!.userType!,
     userReported: userId,
     ...body,
   });

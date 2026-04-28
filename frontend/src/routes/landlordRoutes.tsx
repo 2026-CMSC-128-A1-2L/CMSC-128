@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import LandlordHomepage from '../pages/landlord/dashboard/LandlordHomepage';
 import LandlordProfile from '../pages/landlord/profile/LandlordProfile';
 import LandlordProfileVerification from '../pages/landlord/profile/verification/LandlordProfileVerification';
@@ -16,6 +17,26 @@ import BuildingInfo from '../pages/landlord/properties/BuildingInfo';
 import LandlordTenantDetail from '../pages/landlord/tenants/LandlordTenantDetail';
 import LandlordUnvalidatedApplications from '../pages/landlord/tenants/LandlordUnvalidatedApplications';
 import LandlordUnvalidatedTenantDetail from '../pages/landlord/tenants/LandlordUnvalidatedTenantDetail';
+=======
+import LandlordHomepage from "../pages/landlord/dashboard/LandlordHomepage";
+import LandlordProfile from "../pages/landlord/profile/LandlordProfile";
+import LandlordVerif from "../pages/landlord/profile/verification/LandlordVerif";
+import LandlordDashboard from "../pages/landlord/dashboard/LandlordHomepage";
+import LandlordMessages from "../pages/landlord/messages/LandlordMessages";
+import LandlordProperties from "../pages/landlord/properties/LandlordProperties";
+import LandlordManagers from "../pages/landlord/managers/LandlordManagersList";
+import LandlordTenants from "../pages/landlord/tenants/LandlordTenants";
+import LandlordVisits from "../pages/landlord/visits/LandlordVisits";
+import LandlordFinance from "../pages/landlord/finance/LandlordFinance";
+import LandlordSettings from "../pages/landlord/settings/LandlordSettings";
+import LandlordNewListing from "../pages/landlord/properties/LandlordNewListing";
+import AddBuilding from "../pages/landlord/properties/AddBuilding";
+import BuildingInfo from "../pages/landlord/properties/BuildingInfo";
+import LandlordTenantDetail from "../pages/landlord/tenants/LandlordTenantDetail";
+import LandlordUnvalidatedApplications from "../pages/landlord/tenants/LandlordUnvalidatedApplications";
+import LandlordUnvalidatedTenantDetail from "../pages/landlord/tenants/LandlordUnvalidatedTenantDetail";
+import LandlordManagersSpecific from "../pages/landlord/managers/LandlordManagerSpecific";
+>>>>>>> af025055f14b35dfeb8093ed004226db6b313833
 
 import { Route } from 'react-router-dom';
 import LandlordPropertyFinance from '../pages/landlord/finance/LandlordPropertyFinance';
@@ -68,6 +89,11 @@ const landlordRoutes = [
     key="landlord-tenants-detail"
     path="/landlord/tenants/:tenantId"
     element={<LandlordTenantDetail />}
+  />,
+  <Route
+    key="landlord-tenants-detail"
+    path="/landlord/managers/:id"
+    element={<LandlordManagersSpecific />}
   />,
 ];
 

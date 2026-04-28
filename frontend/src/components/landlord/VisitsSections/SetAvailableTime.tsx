@@ -1,4 +1,4 @@
-import { FunctionComponent, useState, useCallback } from 'react';
+import { type FunctionComponent, useState, useCallback } from 'react';
 
 const HOURS = Array.from({ length: 10 }, (_, i) => `${i + 8}:00`);
 const DAYS = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];

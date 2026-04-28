@@ -1,4 +1,4 @@
-import { FunctionComponent, useState, useEffect } from 'react';
+import { type FunctionComponent, useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import LandlordLayout, { type BreadcrumbItem } from '../../../components/landlord/LandlordLayout';
 import SideNav from '../../../components/landlord/LandlordFinance/SideNav';

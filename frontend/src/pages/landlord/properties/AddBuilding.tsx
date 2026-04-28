@@ -1,35 +1,31 @@
-import { FunctionComponent, useCallback, useState } from 'react';
+import { type FunctionComponent, useCallback, useState } from 'react';
 import BuildingRequirements from '../../../components/landlord/addbuilding/BuildingRequirements';
-// Import your next component here once you create it
 import BuildingInformation from '../../../components/landlord/addbuilding/BuildingInformation';
 import BuildingSubmit from '../../../components/landlord/addbuilding/BuildingSubmit';
+import TutorialIcon from '../../../../assets/help-chat.svg';
+import TutorialBubble from '../properties/AddBuildingTutorials';
 import { Icon } from '@iconify/react';
 
 const AddBuilding: FunctionComponent = () => {
-  // 1. Track the current step (0 = Requirements, 1 = Information, 2 = Finalize)
   const [currentStep, setCurrentStep] = useState(0);
 
-  const onCancelClick = useCallback(() => {
-    // Logic to close modal or go back to previous page
-  }, []);
+  const [showHelp, setShowHelp] = useState(false);
 
-  // 2. Make onNextClick advance the step
+  const onCancelClick = useCallback(() => {}, []);
+
   const onNextClick = useCallback(() => {
     setCurrentStep((prev) => prev + 1);
   }, []);
 
-  // Make a "Previous" click if you need one later
   const onPrevClick = useCallback(() => {
     setCurrentStep((prev) => prev - 1);
   }, []);
 
-  // 3. Create a function to conditionally render the content based on the step
   const renderStepContent = () => {
     switch (currentStep) {
       case 0:
         return <BuildingRequirements onNextClick={onNextClick} />;
       case 1:
-        // Pass onNextClick to the next component too if it has a next button
         return <BuildingInformation onNextClick={onNextClick} onPrevClick={onPrevClick} />;
       case 2:
         return <BuildingSubmit onPrevClick={onPrevClick} />;
@@ -37,7 +33,6 @@ const AddBuilding: FunctionComponent = () => {
     }
   };
 
-  // 4. Update the stepper array to dynamically highlight the active step
   const steps = [
     { label: 'Requirements', active: currentStep === 0 },
     { label: 'Building Information', active: currentStep === 1 },
@@ -69,7 +64,6 @@ const AddBuilding: FunctionComponent = () => {
             <div className="flex flex-col sticky top-10 self-start" style={{ minWidth: '160px' }}>
               {steps.map((step, i) => (
                 <div key={i} className="flex">
-                  {/* ... Your existing stepper dot/line UI ... */}
                   <div className="flex flex-col items-center mr-3">
                     <div
                       className="w-8 h-8 rounded-full shrink-0 flex items-center justify-center"
@@ -97,11 +91,18 @@ const AddBuilding: FunctionComponent = () => {
                 </div>
               ))}
             </div>
+            <TutorialBubble show={showHelp} onClose={() => setShowHelp(false)} />
 
-            {/* 5. Call the render function here instead of hardcoding the component */}
             {renderStepContent()}
           </div>
         </div>
+      </div>
+      {/* ======= FLOATING ICON ========== */}
+      <div
+        className="fixed bottom-10 right-10 z-[1000] cursor-pointer transition-all hover:scale-110 active:scale-95"
+        onClick={() => setShowHelp(!showHelp)}
+      >
+        <img src={TutorialIcon} alt="Help" className="w-16 h-16 drop-shadow-lg" />
       </div>
     </div>
   );

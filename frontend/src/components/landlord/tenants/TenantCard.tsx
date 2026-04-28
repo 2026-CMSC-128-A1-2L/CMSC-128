@@ -1,4 +1,4 @@
-import { type MouseEvent } from 'react';
+import type { MouseEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import type { PaymentStatus, Tenant } from '../../../data/landlordTenants';

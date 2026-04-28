@@ -152,12 +152,21 @@ export default {
         'num-1-teal': '0.9px solid #096c5b',
       },
       fontFamily: {
+<<<<<<< HEAD
         lora: 'Lora',
         inter: ['Inter', 'sans-serif'],
         'buhun-retro-two-free': ['Buhun Retro Two FREE', 'sans-serif'],
         poppins: ['Poppins', 'sans-serif'],
         geist: ['Geist', 'sans-serif'],
         inherit: 'inherit',
+=======
+        lora: ["Lora", "serif"],
+        inter: ["Inter", "sans-serif"],
+        "buhun-retro-two-free": ["Buhun Retro Two FREE", "sans-serif"],
+        poppins: ["Poppins", "sans-serif"],
+        geist: ["Geist", "sans-serif"],
+        inherit: "inherit",
+>>>>>>> af025055f14b35dfeb8093ed004226db6b313833
       },
       borderRadius: {
         'num-0': '0px',

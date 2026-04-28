@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 import InfoIcon from '../../../../assets/infoicon_icon.svg';
 import LeaseTransferInput from './LeaseTransferInput';
+=======
+import InfoIcon from '../../../../assets/infoicon_icon.svg'
+>>>>>>> af025055f14b35dfeb8093ed004226db6b313833
 
 interface ReasonContentProps {
   leaseTransferStages: number;

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { FunctionComponent, useState, useEffect } from 'react';
 import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
@@ -6,6 +7,15 @@ import Footer from '../../../components/general/Footer';
 import PaymentMethodsDropdown from '../../../components/user/finance/PaymentMethodsDropdown';
 import SubmitReceipt from '../../../components/user/finance/SubmitReceipt';
 import MonthlyExpensesChart from '../../../components/user/finance/MonthlyExpensesChart';
+=======
+import { type FunctionComponent, useState, useEffect } from "react";
+import { Icon } from "@iconify/react";
+import SideBar from "../../../components/user/SideBar";
+import Footer from "../../../components/general/Footer";
+import PaymentMethodsDropdown from "../../../components/user/finance/PaymentMethodsDropdown";
+import SubmitReceipt from "../../../components/user/finance/SubmitReceipt";
+import MonthlyExpensesChart from "../../../components/user/finance/MonthlyExpensesChart";
+>>>>>>> af025055f14b35dfeb8093ed004226db6b313833
 import type {
   TenantBilling,
   UpcomingPayment,

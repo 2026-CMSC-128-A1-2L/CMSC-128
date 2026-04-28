@@ -1,4 +1,4 @@
-import { FunctionComponent, useCallback } from 'react';
+import type { FunctionComponent } from 'react';
 import { Icon } from '@iconify/react';
 import footer_logo from '../../../../assets/footer_logo.svg';
 
@@ -24,6 +24,7 @@ const Security: FunctionComponent = () => {
                 className="self-stretch relative [text-decoration:underline] font-medium text-[inherit]"
                 href="mailto:dcanape@up.edu.ph"
                 target="_blank"
+                rel="noopener"
               >
                 dcanape@up.edu.ph
               </a>
