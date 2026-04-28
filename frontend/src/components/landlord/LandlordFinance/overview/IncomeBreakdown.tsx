@@ -138,14 +138,14 @@ const IncomeBreakdown: FunctionComponent = () => {
 
   if (isLoading) {
     return (
-      <div className="w-full rounded-2xl bg-white border-whitesmoke-200 border-solid border-[1px] flex flex-col items-start py-6 px-9 gap-[19px]">
+      <div className="w-full rounded-2xl bg-white border-whitesmoke-200 border-solid border flex flex-col items-start py-6 px-9 gap-[19px]">
         <div className="w-full h-full bg-gray-100 animate-pulse rounded-lg" />
       </div>
     );
   }
 
   return (
-    <div className="w-full rounded-2xl bg-white border-whitesmoke-200 border-solid border-[1px] flex flex-col items-start py-6 px-4 sm:px-6 md:px-9 gap-[19px]">
+    <div className="w-full rounded-2xl bg-white border-whitesmoke-200 border-solid border flex flex-col items-start py-6 px-4 sm:px-6 md:px-9 gap-[19px]">
       <div className="flex items-center justify-center p-2 box-border">
         <b className="relative tracking-[-0.01em] shrink-0 text-[16px] sm:text-[18px] text-gray font-inter">
           Income Breakdown
@@ -178,7 +178,7 @@ const IncomeBreakdown: FunctionComponent = () => {
             {breakdownCards.map(({ amount, label }) => (
               <div
                 key={label}
-                className="flex-1 min-w-[100px] h-[49px] rounded-[10px] bg-white border-whitesmoke-200 border-solid border-[1px] flex flex-col items-start py-2 px-2.5"
+                className="flex-1 min-w-[100px] h-[49px] rounded-[10px] bg-white border-whitesmoke-200 border-solid border flex flex-col items-start py-2 px-2.5"
               >
                 <b className="w-full h-[22px] relative tracking-[-0.01em] flex items-center shrink-0 text-[12px] sm:text-[14px] md:text-[16px] lg:text-[18px]">
                   {amount}

@@ -25,7 +25,7 @@ const PropertyTabs: FunctionComponent<{ children: React.ReactElement<TabProps>[]
     <div className="w-full relative flex flex-col items-start gap-[29px] font-inter">
       <div className="flex w-full flex-1">
         <div className="flex flex-col w-full text-center">
-          <div ref={tabContainer} className="flex w-full items-start z-[1]">
+          <div ref={tabContainer} className="flex w-full items-start z-1">
             {tabs.map((tab) => (
               <button
                 key={tab}

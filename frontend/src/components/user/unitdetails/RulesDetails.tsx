@@ -12,7 +12,7 @@ const RuleDetails: FunctionComponent = () => {
           </div>
           <div className="w-full flex flex-col items-start py-0 px-[21px] gap-3 text-num-14">
             <div className="self-stretch h-12 relative">
-              <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] rounded-num-10 bg-white border-whitesmoke border-solid border-[1px] box-border" />
+              <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] rounded-num-10 bg-white border-whitesmoke border-solid border box-border" />
               <img
                 className="absolute h-[58.33%] w-[3.11%] top-[20.83%] right-[95.55%] bottom-[20.83%] left-[1.33%] max-w-full overflow-hidden max-h-full"
                 alt=""
@@ -23,7 +23,7 @@ const RuleDetails: FunctionComponent = () => {
               </div>
             </div>
             <div className="self-stretch h-12 relative">
-              <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] rounded-num-10 bg-white border-whitesmoke border-solid border-[1px] box-border" />
+              <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] rounded-num-10 bg-white border-whitesmoke border-solid border box-border" />
               <img
                 className="absolute h-[58.33%] w-[3.11%] top-[20.83%] right-[95.55%] bottom-[20.83%] left-[1.33%] max-w-full overflow-hidden max-h-full"
                 alt=""
@@ -34,7 +34,7 @@ const RuleDetails: FunctionComponent = () => {
               </div>
             </div>
             <div className="self-stretch h-12 relative">
-              <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] rounded-num-10 bg-white border-whitesmoke border-solid border-[1px] box-border" />
+              <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] rounded-num-10 bg-white border-whitesmoke border-solid border box-border" />
               <img
                 className="absolute h-[58.33%] w-[3.11%] top-[20.83%] right-[95.55%] bottom-[20.83%] left-[1.33%] max-w-full overflow-hidden max-h-full"
                 alt=""
@@ -45,7 +45,7 @@ const RuleDetails: FunctionComponent = () => {
               </div>
             </div>
             <div className="self-stretch h-12 relative">
-              <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] rounded-num-10 bg-white border-whitesmoke border-solid border-[1px] box-border" />
+              <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] rounded-num-10 bg-white border-whitesmoke border-solid border box-border" />
               <img
                 className="absolute h-[58.33%] w-[3.11%] top-[20.83%] right-[95.55%] bottom-[20.83%] left-[1.33%] max-w-full overflow-hidden max-h-full"
                 alt=""
@@ -56,7 +56,7 @@ const RuleDetails: FunctionComponent = () => {
               </div>
             </div>
             <div className="self-stretch h-12 relative">
-              <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] rounded-num-10 bg-white border-whitesmoke border-solid border-[1px] box-border" />
+              <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] rounded-num-10 bg-white border-whitesmoke border-solid border box-border" />
               <img
                 className="absolute h-[58.33%] w-[3.11%] top-[20.83%] right-[95.55%] bottom-[20.83%] left-[1.33%] max-w-full overflow-hidden max-h-full"
                 alt=""

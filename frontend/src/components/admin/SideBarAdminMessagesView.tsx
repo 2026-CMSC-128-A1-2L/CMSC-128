@@ -124,7 +124,7 @@ const SideBarAdminMessagesView = ({
       </div>
 
       {/* Divider */}
-      <div className="mx-auto mb-[12px] mt-[12px] h-[1px] w-[228px] bg-[#BEBEBE]" />
+      <div className="mx-auto mb-[12px] mt-[12px] h-px w-[228px] bg-[#BEBEBE]" />
 
       {/* View Archived Messages */}
       <button

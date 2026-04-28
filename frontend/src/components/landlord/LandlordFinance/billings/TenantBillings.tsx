@@ -304,11 +304,11 @@ const TenantBillingsTab: FunctionComponent = () => {
           </div>
         </div>
 
-        <div className="w-full rounded-[12.75px] bg-white border-whitesmoke-200 border-solid border-[2px] box-border overflow-hidden relative">
+        <div className="w-full rounded-[12.75px] bg-white border-whitesmoke-200 border-solid border-2 box-border overflow-hidden relative">
           <div className="w-full overflow-x-hidden">
             <div className="w-full h-12 rounded-t-[12.75px] bg-darkslategray-200 flex items-center px-6 gap-4 text-[12px] sm:text-[14px] text-white font-inter">
               {TABLE_COLUMNS.map(({ label, className }) => (
-                <div key={label} className={`${className} flex-shrink-0`}>
+                <div key={label} className={`${className} shrink-0`}>
                   <b className="flex items-center justify-center">{label}</b>
                 </div>
               ))}

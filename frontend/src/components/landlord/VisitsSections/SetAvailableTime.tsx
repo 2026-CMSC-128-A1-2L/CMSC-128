@@ -57,7 +57,7 @@ const SetAvailableTime: FunctionComponent<SetAvailableTimeProps> = ({ onClose })
               							))}
             						</div>
           					</div>
-          					<div className="w-full h-auto bg-white overflow-hidden shrink-0 grid box-border grid-cols-[repeat(7,_1fr)] grid-rows-[repeat(10,_1fr)]" style={{ gap: '8px' }}>
+          					<div className="w-full h-auto bg-white overflow-hidden shrink-0 grid box-border grid-cols-[repeat(7,1fr)] grid-rows-[repeat(10,1fr)]" style={{ gap: '8px' }}>
             						{availability.map((row, rowIdx) =>
               							row.map((isAvailable, colIdx) => (
                 								<div

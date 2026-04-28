@@ -46,7 +46,7 @@ const MyCalendar: FunctionComponent = () => {
 
                     {/* Calendar Content */}
                     <div className="self-stretch flex-1 rounded-2xl bg-white border border-whitesmoke-200 flex flex-col items-start gap-4 text-center text-dimgray">
-                      <div className="self-stretch flex-1 flex items-start text-num-15_45 overflow-auto px-6 py-6 gap-6">
+                      <div className="self-stretch flex-1 flex items-start text-num-15.45 overflow-auto px-6 py-6 gap-6">
                         <MiniCalendar onEventClick={openEventPopout} />
                         <MainCalendarGrid onEventClick={openEventPopout} />
                       </div>

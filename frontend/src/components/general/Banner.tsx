@@ -17,7 +17,7 @@ const Banner: FunctionComponent = () => {
           />
 
           {/* left frame */}
-          <div className="w-full flex-1 relative h-[25rem] z-10">
+          <div className="w-full flex-1 relative h-100 z-10">
             <img
               className="absolute top-30 -left-5 w-120 -rotate-5 rounded-num-12 shadow-lg z-10"
               src={pic2}
@@ -61,7 +61,7 @@ const Banner: FunctionComponent = () => {
                 </div>
               </div>
 
-              <button className="rounded-[45px] [background:linear-gradient(99.18deg,_#5dc2a8_27.88%,_#0c8873_88.15%)] hover:brightness-110 transition-all flex items-center justify-center py-4 px-6 gap-2 text-white shadow-lg">
+              <button className="rounded-[45px] [background:linear-gradient(99.18deg,#5dc2a8_27.88%,#0c8873_88.15%)] hover:brightness-110 transition-all flex items-center justify-center py-4 px-6 gap-2 text-white shadow-lg">
                 <b className="text-[1.2rem]">Find my spot!</b>
                 <Icon icon="si:arrow-right-duotone" className="h-6 w-6" />
               </button>

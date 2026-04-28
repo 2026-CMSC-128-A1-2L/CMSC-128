@@ -34,7 +34,7 @@ const ListingsSuccess: FunctionComponent<ListingsSuccessProps> = ({ onConfirmCon
             <b className="self-stretch relative leading-8">Building Application Successful</b>
             <div className="self-stretch relative text-sm leading-6 font-medium">
               <span>{`You have successfully finalize your application.`}<br />{``}<br />{`Your application shall be reviewed within `}</span>
-              <span className="text-transparent !bg-clip-text [background:linear-gradient(180deg,_#c29722,_#f6b709)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">{`48 - 72 hours `}</span>
+              <span className="text-transparent bg-clip-text! [background:linear-gradient(180deg,#c29722,#f6b709)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">{`48 - 72 hours `}</span>
               <span>by our admins, constant notifications shall be sent to keep you posted at all time.</span>
             </div>
           </div>

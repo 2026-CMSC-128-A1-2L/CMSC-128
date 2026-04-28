@@ -193,7 +193,7 @@ const SideBarLandlord = ({
             </span>
             {user.verified && (
               <span className="flex items-center gap-[4px]">
-                <span className="bg-gradient-to-b from-[#5dc2a8] to-[#0c8873] bg-clip-text font-['Inter',sans-serif] text-[10px] font-bold leading-[normal] text-transparent whitespace-nowrap">
+                <span className="bg-linear-to-b from-[#5dc2a8] to-[#0c8873] bg-clip-text font-['Inter',sans-serif] text-[10px] font-bold leading-[normal] text-transparent whitespace-nowrap">
                   Verified
                 </span>
                 <span

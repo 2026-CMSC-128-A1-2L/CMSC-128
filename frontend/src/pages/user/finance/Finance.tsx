@@ -54,25 +54,25 @@ const getPaymentStatusDisplay = (
       return {
         text: "PAID",
         gradient:
-          "bg-gradient-to-b from-[#5dc2a8] to-[#0c8873] bg-clip-text text-transparent",
+          "bg-linear-to-b from-[#5dc2a8] to-[#0c8873] bg-clip-text text-transparent",
       };
     case "overdue":
       return {
         text: "OVERDUE",
         gradient:
-          "bg-gradient-to-b from-[#c00f0f] to-[#e44f4f] bg-clip-text text-transparent",
+          "bg-linear-to-b from-[#c00f0f] to-[#e44f4f] bg-clip-text text-transparent",
       };
     case "partially_paid":
       return {
         text: "PARTIAL",
         gradient:
-          "bg-gradient-to-t from-[#ffc273] to-[#fa7900] bg-clip-text text-transparent",
+          "bg-linear-to-t from-[#ffc273] to-[#fa7900] bg-clip-text text-transparent",
       };
     default:
       return {
         text: "PENDING",
         gradient:
-          "bg-gradient-to-b from-[#c29722] to-[#f6b709] bg-clip-text text-transparent",
+          "bg-linear-to-b from-[#c29722] to-[#f6b709] bg-clip-text text-transparent",
       };
   }
 };
@@ -132,7 +132,7 @@ const TenantFinancePage: FunctionComponent = () => {
     : {
         text: "PENDING",
         gradient:
-          "bg-gradient-to-b from-[#c29722] to-[#f6b709] bg-clip-text text-transparent",
+          "bg-linear-to-b from-[#c29722] to-[#f6b709] bg-clip-text text-transparent",
       };
 
   const totalDue = currentBilling?.totalAmount || 0;
@@ -169,7 +169,7 @@ const TenantFinancePage: FunctionComponent = () => {
   return (
     <>
       <div className="w-full min-h-screen relative overflow-y-auto flex flex-col items-start isolate gap-2.5 text-left text-[31.85px] text-darkslategray-200">
-        <div className="w-full h-full absolute top-0 left-0 z-0 bg-gradient-to-b from-whitesmoke-100 to-white" />
+        <div className="w-full h-full absolute top-0 left-0 z-0 bg-linear-to-b from-whitesmoke-100 to-white" />
 
         <div className="w-full overflow-hidden shrink-0 flex flex-col items-start z-1">
           <div className="self-stretch flex-1 overflow-hidden flex flex-col items-start py-0 pl-0 pr-4 lg:pr-20">
@@ -208,7 +208,7 @@ const TenantFinancePage: FunctionComponent = () => {
                               icon="mdi-light:map-marker"
                               className="h-5 w-5 relative shrink-0"
                             />
-                            <b className="flex-1 text-sm md:text-base break-words">
+                            <b className="flex-1 text-sm md:text-base wrap-break-word">
                               Lot 3, Block 17, Sapphire St, Umali Subd, Los
                               Baños, Philippines, 4030
                             </b>
@@ -248,7 +248,7 @@ const TenantFinancePage: FunctionComponent = () => {
                                   Cost Breakdown
                                 </b>
                               </div>
-                              <div className="self-stretch rounded-[16px] border-whitesmoke-200 border-solid border-[1px] overflow-hidden flex flex-col items-start p-2.5 md:p-3 gap-2.5 text-center text-[12px] md:text-[14px]">
+                              <div className="self-stretch rounded-[16px] border-whitesmoke-200 border-solid border overflow-hidden flex flex-col items-start p-2.5 md:p-3 gap-2.5 text-center text-[12px] md:text-[14px]">
                                 <div className="self-stretch flex items-start justify-center gap-2.5">
                                   <b className="flex-1 relative">Description</b>
                                   <b className="flex-1 relative">Amount</b>
@@ -309,7 +309,7 @@ const TenantFinancePage: FunctionComponent = () => {
                           <div className="flex-1 rounded-[16px] overflow-hidden flex flex-col items-center gap-2.5">
                             {/* Outstanding Balance and Payment Status Row */}
                             <div className="self-stretch flex flex-col sm:flex-row items-stretch gap-2">
-                              <div className="flex-1 rounded-[16px] bg-white border-whitesmoke-200 border-solid border-[1px] overflow-hidden flex flex-col items-start p-3 md:p-4 gap-2.5">
+                              <div className="flex-1 rounded-[16px] bg-white border-whitesmoke-200 border-solid border overflow-hidden flex flex-col items-start p-3 md:p-4 gap-2.5">
                                 <b className="relative text-sm md:text-base">
                                   Outstanding Balance
                                 </b>
@@ -320,7 +320,7 @@ const TenantFinancePage: FunctionComponent = () => {
                                   </b>
                                 </div>
                               </div>
-                              <div className="flex-1 rounded-[16px] bg-white border-whitesmoke-200 border-solid border-[1px] overflow-hidden flex flex-col items-start p-3 md:p-4 gap-2.5">
+                              <div className="flex-1 rounded-[16px] bg-white border-whitesmoke-200 border-solid border overflow-hidden flex flex-col items-start p-3 md:p-4 gap-2.5">
                                 <b className="relative text-sm md:text-base">
                                   Payment Status
                                 </b>
@@ -344,15 +344,15 @@ const TenantFinancePage: FunctionComponent = () => {
                               <b className="self-stretch text-[16px] md:text-[18px] tracking-[-0.01em]">
                                 Upcoming Payments
                               </b>
-                              <div className="self-stretch h-0.5 border-whitesmoke-200 border-solid border-[1px]" />
+                              <div className="self-stretch h-0.5 border-whitesmoke-200 border-solid border" />
 
                               {upcomingPayments.map((payment) => (
                                 <div
                                   key={payment.id}
-                                  className="self-stretch rounded-lg border-whitesmoke-200 border-solid border-[1px] overflow-hidden flex flex-col sm:flex-row items-start sm:items-center justify-between py-3 px-3 gap-3"
+                                  className="self-stretch rounded-lg border-whitesmoke-200 border-solid border overflow-hidden flex flex-col sm:flex-row items-start sm:items-center justify-between py-3 px-3 gap-3"
                                 >
                                   <div className="self-stretch flex items-center gap-2.5">
-                                    <div className="h-5 w-5 rounded-[4px] bg-gradient-to-b from-[#c29722] to-[#f6b709] overflow-hidden shrink-0" />
+                                    <div className="h-5 w-5 rounded-[4px] bg-linear-to-b from-[#c29722] to-[#f6b709] overflow-hidden shrink-0" />
                                     <div className="overflow-hidden flex flex-col items-start gap-1">
                                       <div className="font-semibold shrink-0 text-sm md:text-base">
                                         {payment.dueDate}
@@ -376,7 +376,7 @@ const TenantFinancePage: FunctionComponent = () => {
                           </div>
 
                           {/* Rightmost Column - Overview with Billing History */}
-                          <div className="w-full lg:w-[180px] rounded-[16px] border-whitesmoke-200 border-solid border-[1px] box-border overflow-hidden shrink-0 flex flex-col items-start py-2.5 px-0 gap-2 text-center text-[20px] md:text-[24px]">
+                          <div className="w-full lg:w-[180px] rounded-[16px] border-whitesmoke-200 border-solid border box-border overflow-hidden shrink-0 flex flex-col items-start py-2.5 px-0 gap-2 text-center text-[20px] md:text-[24px]">
                             <div className="self-stretch rounded-[16px] bg-white overflow-hidden flex flex-col items-start p-3">
                               <div className="self-stretch relative leading-8 font-extrabold text-base md:text-xl">
                                 Overview
@@ -387,7 +387,7 @@ const TenantFinancePage: FunctionComponent = () => {
                                 Billing History
                               </b>
                               <div className="self-stretch flex-1 overflow-hidden flex flex-col items-start py-0 px-2 md:px-3 gap-2 text-left text-[11px] md:text-[12px]">
-                                <div className="self-stretch rounded-lg border-whitesmoke-200 border-solid border-[1px] overflow-hidden flex items-center py-2 px-3">
+                                <div className="self-stretch rounded-lg border-whitesmoke-200 border-solid border overflow-hidden flex items-center py-2 px-3">
                                   <div className="self-stretch overflow-hidden flex flex-col items-start gap-1">
                                     <div className="font-semibold">
                                       January 15, 2026
@@ -397,7 +397,7 @@ const TenantFinancePage: FunctionComponent = () => {
                                     </div>
                                   </div>
                                 </div>
-                                <div className="self-stretch rounded-lg border-whitesmoke-200 border-solid border-[1px] overflow-hidden flex items-center py-2 px-3">
+                                <div className="self-stretch rounded-lg border-whitesmoke-200 border-solid border overflow-hidden flex items-center py-2 px-3">
                                   <div className="self-stretch overflow-hidden flex flex-col items-start gap-1">
                                     <div className="font-semibold">
                                       February 15, 2026
@@ -407,7 +407,7 @@ const TenantFinancePage: FunctionComponent = () => {
                                     </div>
                                   </div>
                                 </div>
-                                <div className="self-stretch rounded-lg border-whitesmoke-200 border-solid border-[1px] overflow-hidden flex items-center py-2 px-3">
+                                <div className="self-stretch rounded-lg border-whitesmoke-200 border-solid border overflow-hidden flex items-center py-2 px-3">
                                   <div className="self-stretch overflow-hidden flex flex-col items-start gap-1">
                                     <div className="font-semibold">
                                       March 15, 2026

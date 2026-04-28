@@ -13,8 +13,8 @@ const RateAndReview: FunctionComponent = () => {
 
   return (
     <div className="w-full h-screen relative overflow-y-auto flex flex-col items-start isolate gap-2.5 text-left text-num-14 text-darkslategray-100 font-lora">
-      {/* <img className="w-[1440px] h-[1192px] absolute !!m-[0 important] top-[0px] left-[0px] shrink-0 z-[0]" alt=""/> */}
-      <div className="w-full max-w-[1440px] min-h-screen overflow-hidden flex flex-col items-start z-[1] mx-auto">
+      {/* <img className="w-[1440px] h-[1192px] absolute !!m-[0 important] top-0 left-0 shrink-0 z-0" alt=""/> */}
+      <div className="w-full max-w-[1440px] min-h-screen overflow-hidden flex flex-col items-start z-1 mx-auto">
         <div className="self-stretch flex-1 overflow-hidden flex flex-col items-start py-num-0 pl-num-0 pr-20">
           <div className="w-[1440px] flex-1 flex items-center shrink-0">
             <div className="fixed top-0 left-0 h-full w-[200px] hidden md:block z-10">
@@ -22,7 +22,7 @@ const RateAndReview: FunctionComponent = () => {
             </div>
             {/* <SideBar /> */}
             <div className="h-[1112px] hidden flex-col items-center">
-              <div className="w-[106px] h-[924px] bg-white border-whitesmoke-200 border-solid border-[1px] box-border overflow-hidden shrink-0 flex flex-col items-center py-num-32 pl-num-32 pr-2.5" />
+              <div className="w-[106px] h-[924px] bg-white border-whitesmoke-200 border-solid border box-border overflow-hidden shrink-0 flex flex-col items-center py-num-32 pl-num-32 pr-2.5" />
             </div>
             <div className="self-stretch w-[1240px] flex flex-col items-start justify-between gap-0">
               <div className="self-stretch flex flex-col items-start py-num-0 pl-num-32 pr-20">
@@ -60,10 +60,10 @@ const RateAndReview: FunctionComponent = () => {
                     </b>
                   </div>
                 </div>
-                <div className="self-stretch h-[800px] rounded-2xl bg-white border-whitesmoke-200 border-solid border-[1px] box-border flex flex-col items-start py-num-32 px-num-0 gap-[27px] text-black">
+                <div className="self-stretch h-[800px] rounded-2xl bg-white border-whitesmoke-200 border-solid border box-border flex flex-col items-start py-num-32 px-num-0 gap-[27px] text-black">
                   <div className="self-stretch flex flex-col items-start gap-3 shrink-0">
                     <div className="w-[1128px] h-[196px] flex items-center justify-center py-num-0 px-[100px] box-border">
-                      <div className="h-[195px] w-[928px] rounded-xl border-whitesmoke-200 border-solid border-[1px] box-border flex items-center gap-2.5">
+                      <div className="h-[195px] w-[928px] rounded-xl border-whitesmoke-200 border-solid border box-border flex items-center gap-2.5">
                         <img
                           className="h-[195px] w-[305px] rounded-tl-xl rounded-tr-none rounded-br-none rounded-bl-xl object-cover"
                           alt=""
@@ -144,7 +144,7 @@ const RateAndReview: FunctionComponent = () => {
                     <div className="self-stretch flex flex-col items-center py-6 px-num-32 gap-[25px] text-center text-darkslategray-200 font-poppins">
                       <div className="self-stretch flex items-center justify-center">
                         <div className="h-[93.9px] w-[784px] relative">
-                          <div className="absolute h-[9.16%] w-[32.64%] top-[29.9%] right-[56.29%] bottom-[60.94%] left-[11.07%] rounded-[34.55px] [background:linear-gradient(90deg,_rgba(2,_67,_56,_0.8),_#b5c8c5)]" />
+                          <div className="absolute h-[9.16%] w-[32.64%] top-[29.9%] right-[56.29%] bottom-[60.94%] left-[11.07%] rounded-[34.55px] [background:linear-gradient(90deg,rgba(2,67,56,0.8),#b5c8c5)]" />
                           <div className="absolute h-[37.91%] w-[13.42%] top-[51.75%] left-[0%] leading-8 font-semibold flex items-center justify-center">
                             Information
                           </div>
@@ -173,7 +173,7 @@ const RateAndReview: FunctionComponent = () => {
                   <div className="self-stretch h-[340px] flex flex-col items-center gap-[82px] shrink-0 text-[20px]">
                     <div className="self-stretch flex flex-col items-center justify-center py-num-12 px-num-32">
                       <div className="w-[714px] h-[147px] relative">
-                        <div className="absolute top-[-0.99px] left-[0px] w-[714.5px] flex flex-col items-start justify-center gap-[21px]">
+                        <div className="absolute top-[-0.99px] left-0 w-[714.5px] flex flex-col items-start justify-center gap-[21px]">
                           <div className="w-[268px] h-[12.6px] relative">
                             <b className="absolute h-full w-full top-[0%] left-[0%] flex items-center">
                               Frequently Asks Questions:
@@ -225,7 +225,7 @@ const RateAndReview: FunctionComponent = () => {
                         className="h-8 rounded-2xl flex items-center justify-center py-num-0 px-4 box-border cursor-pointer"
                         onClick={() => navigate(-1)}
                       >
-                        <b className="relative text-transparent !bg-clip-text [background:linear-gradient(180deg,_#c00f0f,_#e44f4f)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">
+                        <b className="relative text-transparent bg-clip-text! [background:linear-gradient(180deg,#c00f0f,#e44f4f)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">
                           Go Back
                         </b>
                       </div>

@@ -46,7 +46,7 @@ const DormCard: FunctionComponent<DormCardProps> = ({
 
   return (
     <div
-      className={`relative bg-white border-whitesmoke border-solid border-[1px] box-border overflow-hidden flex flex-col items-start text-left text-black font-inter transition-all duration-300
+      className={`relative bg-white border-whitesmoke border-solid border box-border overflow-hidden flex flex-col items-start text-left text-black font-inter transition-all duration-300
         ${isExpanded ? "w-66 h-fit rounded-num-16 shadow-sm" : "w-66 h-56 rounded-[15.31px]"}`}
     >
       <img className="w-66 h-30 object-cover" src={image} alt={name} />

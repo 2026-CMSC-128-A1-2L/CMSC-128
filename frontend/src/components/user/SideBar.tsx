@@ -108,7 +108,7 @@ const navigate= useNavigate();
             </div>
           </div>
           <div className="flex flex-col items-start py-num-0 px-num-20">
-            <div className="h-[1px] bg-whitesmoke shrink-0" />
+            <div className="h-px bg-whitesmoke shrink-0" />
           </div>
           
           <div className="relative">

@@ -4,7 +4,7 @@ import info_icon from '../../../../assets/infoicon_icon.svg';
 
 const General: FunctionComponent = () => {
   return (
-    <div className="self-stretch rounded-t-none rounded-b-num-16 border-whitesmoke-200 border-solid border-[1px] overflow-hidden flex flex-col items-start py-6 px-num-32 gap-6 text-center text-[24px] text-black">
+    <div className="self-stretch rounded-t-none rounded-b-num-16 border-whitesmoke-200 border-solid border overflow-hidden flex flex-col items-start py-6 px-num-32 gap-6 text-center text-[24px] text-black">
       <div className="self-stretch flex flex-col items-start gap-8">
         <div className="flex flex-col items-start">
           <b className="relative leading-8">Account Information</b>
@@ -29,7 +29,7 @@ const General: FunctionComponent = () => {
               <div className="flex flex-col items-start gap-1">
                 <b className="relative">Verification Status</b>
                 <div className="self-stretch flex items-center gap-8 text-teal-100">
-                  <b className="relative text-transparent !bg-clip-text [background:linear-gradient(180deg,_#c00f0f,_#e44f4f)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">
+                  <b className="relative text-transparent bg-clip-text! [background:linear-gradient(180deg,#c00f0f,#e44f4f)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">
                     Unverified
                   </b>
                   <div className="flex items-center gap-1 text-[12px]">
@@ -47,7 +47,7 @@ const General: FunctionComponent = () => {
               </div>
               <div className="flex items-center justify-center">
                 <a
-                  className="relative font-bold text-[inherit] [text-decoration:none]"
+                  className="relative font-bold text-inherit [text-decoration:none]"
                   href="mailto:dcanape@up.edu.ph"
                   target="_blank" rel="noopener"
                 >
@@ -65,7 +65,7 @@ const General: FunctionComponent = () => {
           </div>
         </div>
       </div>
-      <div className="self-stretch h-0.5 rounded-[100px] border-whitesmoke-200 border-solid border-[1px] box-border overflow-hidden shrink-0 flex flex-col items-center justify-center py-num-0 px-num-10" />
+      <div className="self-stretch h-0.5 rounded-[100px] border-whitesmoke-200 border-solid border box-border overflow-hidden shrink-0 flex flex-col items-center justify-center py-num-0 px-num-10" />
       <div className="self-stretch flex flex-col items-start gap-8">
         <div className="self-stretch flex flex-col items-start">
           <div className="flex flex-col items-start">
@@ -98,7 +98,7 @@ const General: FunctionComponent = () => {
                 <div className="self-stretch flex flex-col items-start py-num-0 px-2">
                   <div className="h-8 rounded-num-16 bg-aliceblue flex items-center justify-center py-num-0 px-3 box-border">
                     <div className="h-8 rounded-num-16 bg-aliceblue flex items-center justify-center py-num-0 px-3 box-border">
-                      <b className="relative text-transparent !bg-clip-text [background:linear-gradient(180deg,_#c00f0f,_#e44f4f)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">
+                      <b className="relative text-transparent bg-clip-text! [background:linear-gradient(180deg,#c00f0f,#e44f4f)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">
                         Delete Account
                       </b>
                     </div>

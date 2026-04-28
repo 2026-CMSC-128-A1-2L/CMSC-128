@@ -12,17 +12,17 @@ const Settings: FunctionComponent = () => {
   return (
     <div className="w-full h-screen relative overflow-y-auto flex flex-col items-start isolate gap-2.5 text-left text-num-14 text-darkslategray font-inter">
       <img
-        className="w-full h-screen absolute !!m-[0 important] top-[0px] left-[0px] shrink-0 z-[0]"
+        className="w-full h-screen absolute !!m-[0 important] top-0 left-0 shrink-0 z-0"
         alt=""
       />
-      <div className="w-full h-[1192px] overflow-hidden shrink-0 flex flex-col items-start z-[1]">
+      <div className="w-full h-[1192px] overflow-hidden shrink-0 flex flex-col items-start z-1">
         <div className="self-stretch flex-1 overflow-hidden flex flex-col items-start">
           <div className="self-stretch flex-1 flex items-center">
             <div className="self-stretch w-[200px] flex items-start">
               <SideBar />
             </div>
             <div className="h-[1112px] hidden flex-col items-center">
-              <div className="w-[106px] h-[924px] bg-white border-whitesmoke-200 border-solid border-[1px] box-border overflow-hidden shrink-0 flex flex-col items-center py-num-32 pl-num-32 pr-num-10" />
+              <div className="w-[106px] h-[924px] bg-white border-whitesmoke-200 border-solid border box-border overflow-hidden shrink-0 flex flex-col items-center py-num-32 pl-num-32 pr-num-10" />
             </div>
             <div className="self-stretch w-[1240px] overflow-hidden shrink-0 flex flex-col items-start justify-between gap-0">
               <div className="self-stretch flex-1 flex flex-col items-start pt-16 pb-num-0 pl-num-32 pr-20">

@@ -44,12 +44,12 @@ const RegistrationProfile: FunctionComponent<RegistrationProfileProps> = ({ onNe
     <div className="flex-1 w-full relative overflow-hidden flex items-start justify-center text-center text-num-14 text-dimgray font-inter">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="w-[620px] rounded-num-12 border-whitesmoke border-solid border-[1px] box-border overflow-hidden flex flex-col items-start pt-3 px-4 pb-5 gap-5"
+        className="w-[620px] rounded-num-12 border-whitesmoke border-solid border box-border overflow-hidden flex flex-col items-start pt-3 px-4 pb-5 gap-5"
       >
 
         {/* ── Full Name ── */}
         <div className="self-stretch flex flex-col items-start justify-start px-num-10 pt-num-10 gap-1">
-          <div className="self-stretch h-11 rounded-num-12 bg-aliceblue border-whitesmoke border-solid border-[1px] box-border overflow-hidden flex items-center justify-start py-0 px-3 gap-2.5">
+          <div className="self-stretch h-11 rounded-num-12 bg-aliceblue border-whitesmoke border-solid border box-border overflow-hidden flex items-center justify-start py-0 px-3 gap-2.5">
             <div className="overflow-hidden flex items-center p-1 shrink-0">
               <Icon icon="material-symbols:person-outline-rounded" className="h-6 w-6" />
             </div>
@@ -81,7 +81,7 @@ const RegistrationProfile: FunctionComponent<RegistrationProfileProps> = ({ onNe
         {/* ── Contact + Email ── */}
         <div className="self-stretch flex items-start px-num-10 gap-4">
           <div className="flex-1 flex flex-col gap-1">
-            <div className="rounded-num-12 bg-aliceblue border-whitesmoke border-solid border-[1px] overflow-hidden flex items-center py-num-10 px-3 gap-2">
+            <div className="rounded-num-12 bg-aliceblue border-whitesmoke border-solid border overflow-hidden flex items-center py-num-10 px-3 gap-2">
               <Icon icon="proicons:call" className="h-6 w-6 shrink-0" />
               <input
                 {...register('contactNumber', {
@@ -98,7 +98,7 @@ const RegistrationProfile: FunctionComponent<RegistrationProfileProps> = ({ onNe
           </div>
 
           <div className="flex-1 flex flex-col gap-1">
-            <div className="rounded-num-12 bg-aliceblue border-whitesmoke border-solid border-[1px] overflow-hidden flex items-center py-num-10 px-3 gap-2.5">
+            <div className="rounded-num-12 bg-aliceblue border-whitesmoke border-solid border overflow-hidden flex items-center py-num-10 px-3 gap-2.5">
               <Icon icon="mdi-light:email" className="h-6 w-6 shrink-0" />
               <input
                 {...register('email', {
@@ -117,7 +117,7 @@ const RegistrationProfile: FunctionComponent<RegistrationProfileProps> = ({ onNe
 
         {/* ── Home Address ── */}
         <div className="self-stretch flex flex-col items-start px-num-10 gap-1">
-          <div className="self-stretch rounded-num-12 bg-aliceblue border-whitesmoke border-solid border-[1px] overflow-hidden flex items-center py-num-10 px-3 gap-2.5">
+          <div className="self-stretch rounded-num-12 bg-aliceblue border-whitesmoke border-solid border overflow-hidden flex items-center py-num-10 px-3 gap-2.5">
             <Icon icon="ep:location" className="h-6 w-6 shrink-0" />
             <input
               {...register('homeAddress', { required: 'Home address is required' })}

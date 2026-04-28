@@ -96,11 +96,11 @@ const TermsOfUse: FunctionComponent = () => {
         <SideBar></SideBar>
       </div>
 
-      <div className="w-full flex flex-col items-start z-[1] shrink-0">
+      <div className="w-full flex flex-col items-start z-1 shrink-0">
         <div className="self-stretch h-[1024px] flex flex-col items-start py-num-0 pl-num-0 pr-20 box-border">
           <div className="self-stretch flex-1 flex items-center gap-8">
             <div className="h-[1112px] hidden flex-col items-center shrink-0">
-              <div className="w-[106px] h-[924px] bg-white border-whitesmoke-200 border-solid border-[1px] box-border overflow-hidden shrink-0 flex flex-col items-center py-8 pl-8 pr-num-10" />
+              <div className="w-[106px] h-[924px] bg-white border-whitesmoke-200 border-solid border box-border overflow-hidden shrink-0 flex flex-col items-center py-8 pl-8 pr-num-10" />
             </div>
             <div className="self-stretch flex-1 flex flex-col items-start pt-num-0 px-num-0 pb-[140px] shrink-0">
               <div className="self-stretch h-[1024px] flex flex-col items-start shrink-0">
@@ -186,7 +186,7 @@ const TermsOfUse: FunctionComponent = () => {
                               Key terms used throughout the agreement
                             </div>
                             <div className="flex items-start gap-2.5">
-                              <div className="h-40 w-num-360 rounded-num-16 bg-white border-whitesmoke-200 border-solid border-[1px] box-border flex flex-col items-center justify-center">
+                              <div className="h-40 w-num-360 rounded-num-16 bg-white border-whitesmoke-200 border-solid border box-border flex flex-col items-center justify-center">
                                 <div className="self-stretch flex items-center py-num-10 px-num-24">
                                   <b className="relative tracking-num--0_01">
                                     ATLAS
@@ -199,7 +199,7 @@ const TermsOfUse: FunctionComponent = () => {
                                   </div>
                                 </div>
                               </div>
-                              <div className="h-40 w-num-360 rounded-num-16 bg-white border-whitesmoke-200 border-solid border-[1px] box-border flex flex-col items-center justify-center">
+                              <div className="h-40 w-num-360 rounded-num-16 bg-white border-whitesmoke-200 border-solid border box-border flex flex-col items-center justify-center">
                                 <div className="self-stretch flex items-center py-num-10 px-num-24">
                                   <b className="relative tracking-num--0_01">
                                     User
@@ -215,7 +215,7 @@ const TermsOfUse: FunctionComponent = () => {
                               </div>
                             </div>
                             <div className="flex items-start gap-2.5">
-                              <div className="h-40 w-num-360 rounded-num-16 bg-white border-whitesmoke-200 border-solid border-[1px] box-border flex flex-col items-center justify-center">
+                              <div className="h-40 w-num-360 rounded-num-16 bg-white border-whitesmoke-200 border-solid border box-border flex flex-col items-center justify-center">
                                 <div className="self-stretch flex items-center py-num-10 px-num-24">
                                   <b className="relative tracking-num--0_01">{`Tenant / Student `}</b>
                                 </div>
@@ -227,7 +227,7 @@ const TermsOfUse: FunctionComponent = () => {
                                   </div>
                                 </div>
                               </div>
-                              <div className="h-40 w-num-360 rounded-num-16 bg-white border-whitesmoke-200 border-solid border-[1px] box-border flex flex-col items-center justify-center">
+                              <div className="h-40 w-num-360 rounded-num-16 bg-white border-whitesmoke-200 border-solid border box-border flex flex-col items-center justify-center">
                                 <div className="self-stretch flex items-center py-num-10 px-num-24">
                                   <b className="relative tracking-num--0_01">
                                     Landlord / Manager
@@ -243,7 +243,7 @@ const TermsOfUse: FunctionComponent = () => {
                               </div>
                             </div>
                             <div className="flex items-start gap-2.5">
-                              <div className="h-40 w-num-360 rounded-num-16 bg-white border-whitesmoke-200 border-solid border-[1px] box-border flex flex-col items-center justify-center">
+                              <div className="h-40 w-num-360 rounded-num-16 bg-white border-whitesmoke-200 border-solid border box-border flex flex-col items-center justify-center">
                                 <div className="self-stretch flex items-center py-num-10 px-num-24">
                                   <b className="relative tracking-num--0_01">
                                     Listing
@@ -257,7 +257,7 @@ const TermsOfUse: FunctionComponent = () => {
                                   </div>
                                 </div>
                               </div>
-                              <div className="h-40 w-num-360 rounded-num-16 bg-white border-whitesmoke-200 border-solid border-[1px] box-border flex flex-col items-center justify-center">
+                              <div className="h-40 w-num-360 rounded-num-16 bg-white border-whitesmoke-200 border-solid border box-border flex flex-col items-center justify-center">
                                 <div className="self-stretch flex items-center py-num-10 px-num-24">
                                   <b className="relative tracking-num--0_01">
                                     ATLAS
@@ -272,7 +272,7 @@ const TermsOfUse: FunctionComponent = () => {
                               </div>
                             </div>
                             <div className="flex items-start gap-2.5">
-                              <div className="h-40 w-num-360 rounded-num-16 bg-white border-whitesmoke-200 border-solid border-[1px] box-border flex flex-col items-center justify-center">
+                              <div className="h-40 w-num-360 rounded-num-16 bg-white border-whitesmoke-200 border-solid border box-border flex flex-col items-center justify-center">
                                 <div className="self-stretch flex items-center py-num-10 px-num-24">
                                   <b className="relative tracking-num--0_01">
                                     ATLAS
@@ -285,7 +285,7 @@ const TermsOfUse: FunctionComponent = () => {
                                   </div>
                                 </div>
                               </div>
-                              <div className="h-40 w-num-360 rounded-num-16 bg-white border-whitesmoke-200 border-solid border-[1px] box-border flex flex-col items-center justify-center">
+                              <div className="h-40 w-num-360 rounded-num-16 bg-white border-whitesmoke-200 border-solid border box-border flex flex-col items-center justify-center">
                                 <div className="self-stretch flex items-center py-num-10 px-num-24">
                                   <b className="relative tracking-num--0_01">
                                     ATLAS
@@ -348,8 +348,8 @@ const TermsOfUse: FunctionComponent = () => {
                                 </li>
                               </ul>
                             </div>
-                            <div className="w-num-740 h-20 rounded-num-16 [background:linear-gradient(0deg,_#ffc273,_#fa7900)_border-box] [border-left:4px_solid_transparent] box-border flex items-center justify-center">
-                              <div className="h-20 w-num-740 rounded-num-16 border-whitesmoke-200 border-solid border-t-[1px] border-r-[1px] border-b-[1px] box-border flex items-start justify-center">
+                            <div className="w-num-740 h-20 rounded-num-16 [background:linear-gradient(0deg,#ffc273,#fa7900)_border-box] [border-left:4px_solid_transparent] box-border flex items-center justify-center">
+                              <div className="h-20 w-num-740 rounded-num-16 border-whitesmoke-200 border-solid border-t border-r border-b box-border flex items-start justify-center">
                                 <div className="h-20 w-num-700 flex items-center justify-center py-num-8 px-num-0 box-border">
                                   <div className="h-num-60 w-num-700 relative inline-block shrink-0">
                                     <span className="leading-num-24 font-medium">{`Account Sharing: `}</span>
@@ -395,8 +395,8 @@ const TermsOfUse: FunctionComponent = () => {
                               of the platform or its content without prior
                               written permission.
                             </div>
-                            <div className="w-num-740 h-20 rounded-num-16 [background:linear-gradient(89.89deg,_#0c8873_23.56%,_#40bc9c)_border-box] [border-left:4px_solid_transparent] box-border flex items-center justify-center">
-                              <div className="h-20 w-num-740 rounded-num-16 border-whitesmoke-200 border-solid border-t-[1px] border-r-[1px] border-b-[1px] box-border flex items-start justify-center">
+                            <div className="w-num-740 h-20 rounded-num-16 [background:linear-gradient(89.89deg,#0c8873_23.56%,#40bc9c)_border-box] [border-left:4px_solid_transparent] box-border flex items-center justify-center">
+                              <div className="h-20 w-num-740 rounded-num-16 border-whitesmoke-200 border-solid border-t border-r border-b box-border flex items-start justify-center">
                                 <div className="h-20 w-num-700 flex items-center justify-center py-num-8 px-num-0 box-border">
                                   <div className="h-num-60 w-num-700 relative inline-block shrink-0">
                                     <span className="leading-num-24 font-medium">{`Permitted use includes: `}</span>
@@ -514,8 +514,8 @@ const TermsOfUse: FunctionComponent = () => {
                                 </li>
                               </ul>
                             </div>
-                            <div className="w-num-740 h-20 rounded-num-16 border-lightcyan border-solid border-l-[4px] box-border flex items-center justify-center">
-                              <div className="h-20 w-num-740 rounded-num-16 border-whitesmoke-200 border-solid border-t-[1px] border-r-[1px] border-b-[1px] box-border flex items-start justify-center">
+                            <div className="w-num-740 h-20 rounded-num-16 border-lightcyan border-solid border-l-4 box-border flex items-center justify-center">
+                              <div className="h-20 w-num-740 rounded-num-16 border-whitesmoke-200 border-solid border-t border-r border-b box-border flex items-start justify-center">
                                 <div className="h-20 w-num-700 flex items-center justify-center py-num-8 px-num-0 box-border">
                                   <div className="h-num-60 w-num-700 relative inline-block shrink-0">
                                     <span className="leading-num-24 font-medium">{`Zero Tolerance: `}</span>
@@ -654,14 +654,14 @@ const TermsOfUse: FunctionComponent = () => {
                                 </li>
                               </ul>
                             </div>
-                            <div className="w-num-740 h-20 rounded-num-16 [background:linear-gradient(89.89deg,_#0c8873_23.56%,_#40bc9c)_border-box] [border-left:4px_solid_transparent] box-border flex items-center justify-center text-dimgray font-lora">
-                              <div className="h-20 w-num-740 rounded-num-16 border-whitesmoke-200 border-solid border-t-[1px] border-r-[1px] border-b-[1px] box-border flex items-start justify-center">
+                            <div className="w-num-740 h-20 rounded-num-16 [background:linear-gradient(89.89deg,#0c8873_23.56%,#40bc9c)_border-box] [border-left:4px_solid_transparent] box-border flex items-center justify-center text-dimgray font-lora">
+                              <div className="h-20 w-num-740 rounded-num-16 border-whitesmoke-200 border-solid border-t border-r border-b box-border flex items-start justify-center">
                                 <div className="h-20 w-num-700 flex items-center justify-center py-num-8 px-num-0 box-border">
                                   <div className="h-num-60 w-num-700 relative font-medium inline-block shrink-0">
                                     For full details on data collection and
                                     processing, please refer to our separate
                                     <a
-                                      className="text-[inherit]"
+                                      className="text-inherit"
                                       href={`https://www.claudeusercontent.com/?domain=claude.ai&parentOrigin=https%3A%2F%2Fclaude.ai&errorReportingMode=parent&formattedSpreadsheets=true#`}
                                       target="_blank" rel="noopener"
                                     >
@@ -737,8 +737,8 @@ const TermsOfUse: FunctionComponent = () => {
                                 <div className="self-stretch h-0.5 relative bg-whitesmoke-100" />
                               </div>
                             </div>
-                            <div className="w-num-740 h-20 rounded-num-16 [background:linear-gradient(89.89deg,_#0c8873_23.56%,_#40bc9c)_border-box] [border-left:4px_solid_transparent] box-border flex items-center justify-center">
-                              <div className="h-20 w-num-740 rounded-num-16 border-whitesmoke-200 border-solid border-t-[1px] border-r-[1px] border-b-[1px] box-border flex items-start justify-center">
+                            <div className="w-num-740 h-20 rounded-num-16 [background:linear-gradient(89.89deg,#0c8873_23.56%,#40bc9c)_border-box] [border-left:4px_solid_transparent] box-border flex items-center justify-center">
+                              <div className="h-20 w-num-740 rounded-num-16 border-whitesmoke-200 border-solid border-t border-r border-b box-border flex items-start justify-center">
                                 <div className="h-20 w-num-700 flex items-center justify-center py-num-8 px-num-0 box-border">
                                   <div className="h-num-60 w-num-700 relative inline-block shrink-0">
                                     <span className="leading-num-24 font-medium">

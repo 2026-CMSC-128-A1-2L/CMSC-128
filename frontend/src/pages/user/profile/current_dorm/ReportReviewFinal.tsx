@@ -16,17 +16,17 @@ const ReportReviewFinal: FunctionComponent = () => {
   return (
     <div className="w-full h-[1024px] relative overflow-y-auto flex flex-col items-start isolate gap-2.5 text-left text-num-14 text-darkslategray-100 font-lora">
       <img
-        className="w-[1440px] h-[1192px] absolute !!m-[0 important] top-[0px] left-[0px] shrink-0 z-[0]"
+        className="w-[1440px] h-[1192px] absolute !!m-[0 important] top-0 left-0 shrink-0 z-0"
         alt=""
       />
-      <div className="w-[1440px] h-[1192px] overflow-hidden shrink-0 flex flex-col items-start z-[1]">
+      <div className="w-[1440px] h-[1192px] overflow-hidden shrink-0 flex flex-col items-start z-1">
         <div className="self-stretch flex-1 overflow-hidden flex flex-col items-start">
           <div className="self-stretch flex-1 flex items-center">
             <div className="self-stretch w-[200px] flex items-start">
               <SideBar />
             </div>
             <div className="h-[1112px] hidden flex-col items-center">
-              <div className="w-[106px] h-[924px] bg-white border-whitesmoke-200 border-solid border-[1px] box-border overflow-hidden shrink-0 flex flex-col items-center py-num-32 pl-num-32 pr-num-10" />
+              <div className="w-[106px] h-[924px] bg-white border-whitesmoke-200 border-solid border box-border overflow-hidden shrink-0 flex flex-col items-center py-num-32 pl-num-32 pr-num-10" />
             </div>
             <div className="self-stretch w-[1128px] flex flex-col items-start justify-between gap-0">
               <div className="self-stretch flex flex-col items-start py-num-0 pl-num-32 pr-20">
@@ -55,10 +55,10 @@ const ReportReviewFinal: FunctionComponent = () => {
                     </b>
                   </div>
                 </div>
-                <div className="self-stretch h-[800px] rounded-num-16 bg-white border-whitesmoke-200 border-solid border-[1px] box-border flex flex-col items-start py-num-32 px-num-0 gap-[21px] text-black">
+                <div className="self-stretch h-[800px] rounded-num-16 bg-white border-whitesmoke-200 border-solid border box-border flex flex-col items-start py-num-32 px-num-0 gap-[21px] text-black">
                   <div className="self-stretch h-[349px] flex flex-col items-start gap-3 shrink-0">
                     <div className="w-[1128px] h-[196px] flex items-center justify-center py-num-0 px-[100px] box-border shrink-0">
-                      <div className="h-[195px] w-[928px] rounded-xl border-whitesmoke-200 border-solid border-[1px] box-border flex items-center gap-2.5">
+                      <div className="h-[195px] w-[928px] rounded-xl border-whitesmoke-200 border-solid border box-border flex items-center gap-2.5">
                         <img
                           className="h-[195px] w-[305px] rounded-tl-xl rounded-tr-none rounded-br-none rounded-bl-xl object-cover"
                           alt=""
@@ -149,12 +149,12 @@ const ReportReviewFinal: FunctionComponent = () => {
                   <div className="self-stretch h-[405px] flex flex-col items-center gap-[18px] shrink-0 text-darkslategray-100 font-inter">
                     <div className="self-stretch flex flex-col items-start">
                       <div className="self-stretch flex flex-col items-center justify-center py-num-0 px-num-32">
-                        <div className="w-[916px] rounded-num-16 bg-white border-whitesmoke-200 border-solid border-[1px] box-border overflow-hidden flex flex-col items-start justify-center py-num-10 px-num-32 gap-2.5">
+                        <div className="w-[916px] rounded-num-16 bg-white border-whitesmoke-200 border-solid border box-border overflow-hidden flex flex-col items-start justify-center py-num-10 px-num-32 gap-2.5">
                           <div className="self-stretch flex items-center py-num-0 pl-num-0 pr-6">
                             <div className="flex-1 flex items-center gap-8">
                               <b className="relative">Review Photo 1</b>
                               <div className="h-8 w-[118px] rounded-num-16 bg-aliceblue flex items-center justify-center py-num-0 px-num-12 box-border text-center">
-                                <b className="relative text-transparent !bg-clip-text [background:linear-gradient(0deg,_#ffc273,_#fa7900)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] shrink-0">
+                                <b className="relative text-transparent bg-clip-text! [background:linear-gradient(0deg,#ffc273,#fa7900)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] shrink-0">
                                   Not - Required
                                 </b>
                               </div>
@@ -164,7 +164,7 @@ const ReportReviewFinal: FunctionComponent = () => {
                               <img className="h-6 w-6 relative" alt="" src={Qlementine} />
                             </div>
                           </div>
-                          <div className="w-[852px] h-[88px] rounded-num-16 border-dimgray border-dashed border-[1px] box-border overflow-hidden shrink-0 flex items-center py-num-12 px-4 text-black">
+                          <div className="w-[852px] h-[88px] rounded-num-16 border-dimgray border-dashed border box-border overflow-hidden shrink-0 flex items-center py-num-12 px-4 text-black">
                             <div className="h-16 flex items-center gap-6">
                               <img className="h-16 w-16 relative" alt="" src={Icons8} />
                               <div className="flex flex-col items-start justify-center gap-2">
@@ -177,12 +177,12 @@ const ReportReviewFinal: FunctionComponent = () => {
                       </div>
                     </div>
                     <div className="self-stretch flex flex-col items-center justify-center py-num-0 px-num-32">
-                      <div className="w-[916px] rounded-num-16 bg-white border-whitesmoke-200 border-solid border-[1px] box-border overflow-hidden flex flex-col items-start justify-center py-num-10 px-num-32 gap-2.5">
+                      <div className="w-[916px] rounded-num-16 bg-white border-whitesmoke-200 border-solid border box-border overflow-hidden flex flex-col items-start justify-center py-num-10 px-num-32 gap-2.5">
                         <div className="self-stretch flex items-center py-num-0 pl-num-0 pr-6">
                           <div className="flex-1 flex items-center gap-8">
                             <b className="relative">Review Photo 2</b>
                             <div className="h-8 w-[118px] rounded-num-16 bg-aliceblue flex items-center justify-center py-num-0 px-num-12 box-border text-center">
-                              <b className="relative text-transparent !bg-clip-text [background:linear-gradient(0deg,_#ffc273,_#fa7900)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] shrink-0">
+                              <b className="relative text-transparent bg-clip-text! [background:linear-gradient(0deg,#ffc273,#fa7900)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] shrink-0">
                                 Not - Required
                               </b>
                             </div>
@@ -192,7 +192,7 @@ const ReportReviewFinal: FunctionComponent = () => {
                             <img className="h-6 w-6 relative" alt="" src={Qlementine} />
                           </div>
                         </div>
-                        <div className="w-[852px] h-[88px] rounded-num-16 border-dimgray border-dashed border-[1px] box-border overflow-hidden shrink-0 flex items-center py-num-12 px-4 text-black">
+                        <div className="w-[852px] h-[88px] rounded-num-16 border-dimgray border-dashed border box-border overflow-hidden shrink-0 flex items-center py-num-12 px-4 text-black">
                           <div className="h-16 flex items-center gap-6">
                             <img className="h-16 w-16 relative" alt="" src={Icons8} />
                             <div className="flex flex-col items-start justify-center gap-2">

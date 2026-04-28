@@ -85,7 +85,7 @@ const AddBuilding: FunctionComponent = () => {
       </div>
       {/* ======= FLOATING ICON ========== */}
       <div
-        className="fixed bottom-10 right-10 z-[1000] cursor-pointer transition-all hover:scale-110 active:scale-95"
+        className="fixed bottom-10 right-10 z-1000 cursor-pointer transition-all hover:scale-110 active:scale-95"
         onClick={() => setShowHelp(!showHelp)}
       >
         <img
