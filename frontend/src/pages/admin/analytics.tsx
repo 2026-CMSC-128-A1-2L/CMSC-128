@@ -1,4 +1,3 @@
-import NavBarAdmin from '../../components/admin/NavBarAdmin';
 import SideBarAdmin from '../../components/admin/SideBarAdmin';
 import AdminPageTransition from '../../components/admin/AdminPageTransition';
 import { Icon } from '@iconify/react';
@@ -45,7 +44,6 @@ function Analytics() {
   return (
     <AdminPageTransition>
       <div className="relative -mx-[calc((100vw-100%)/2)] flex w-screen flex-col min-h-screen">
-        <NavBarAdmin />
         <div className="flex flex-1">
           <SideBarAdmin activeItem="analytics" />
           <div className="flex-1 bg-white px-10 py-8">
