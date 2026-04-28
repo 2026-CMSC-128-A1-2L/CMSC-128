@@ -2,6 +2,7 @@ import { useState, type MouseEventHandler } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import AtlasLogoText from '../../../assets/logo_atlas_text.svg?react';
+import AtlasLogoMin from '../../../assets/atlas logo (for white bg).png';
 import dark_icon from '../../../assets/sidebar_darkmode.svg';
 import search_icon from '../../../assets/sidebar_search.svg';
 import SideBarButton, { type SideBarButtonState } from './SideBarButton';
@@ -44,7 +45,7 @@ const SideBar = ({
 
   return (
     <div className={[
-      'h-full relative flex shrink-0 flex-col items-center border border-solid border-[#f0f0f0] bg-white py-8 gap-8 transition-[width] duration-200 min-h-screen',
+      'h-full relative flex shrink-0 flex-col items-center border border-solid border-[#f0f0f0] py-8 gap-8 transition-[width] duration-200 min-h-screen',
       collapsed ? 'w-[68px]' : 'w-[200px]',
       className,
     ].join(' ')}>
@@ -65,7 +66,7 @@ const SideBar = ({
       {/* Logo */}
       <div className="flex items-center justify-center px-4 w-full">
         {collapsed
-          ? <Icon icon="mdi:home" className="w-7 h-7 text-[#2d3748]" aria-label="Atlas" />
+          ? <img src={AtlasLogoMin} className="w-7 h-7 text-[#2d3748]" aria-label="Atlas" />
           : <AtlasLogoText className="fill-[#2d3748] w-32 h-auto" />
         }
       </div>

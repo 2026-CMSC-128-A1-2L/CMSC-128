@@ -51,7 +51,7 @@ const SideBarLandlord = ({
 
   return (
     <aside className={[
-      'h-full relative flex shrink-0 flex-col items-center gap-[32px] border border-solid border-[#f0f0f0] bg-white pt-[24px] pb-[30px] transition-[width] duration-200 min-h-screen',
+      'h-full relative flex shrink-0 flex-col items-center gap-[32px] border border-solid border-[#f0f0f0] pt-[24px] pb-[30px] transition-[width] duration-200 min-h-screen',
       w, className,
     ].join(' ')}>
 
