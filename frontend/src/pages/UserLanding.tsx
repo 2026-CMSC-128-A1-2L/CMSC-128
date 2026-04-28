@@ -43,7 +43,7 @@ const UserLanding: FunctionComponent = () => {
                     
                   </b>
                 </div>
-                <div className="self-stretch flex items-center justify-center py-0 px-1">
+                <div className="self-stretch flex items-center justify-center py-0 px-1 pr-16">
                   <Link to="/contact-us">
                     <b className="relative tracking-num--0_01">Contact Us</b>
                   </Link>
