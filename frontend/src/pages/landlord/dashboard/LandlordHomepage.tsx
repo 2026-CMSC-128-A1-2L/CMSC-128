@@ -1,6 +1,7 @@
-import { FunctionComponent, useCallback } from 'react';
-import SideBar from '../../../components/user/SideBar';
-import Footer from '../../../components/general/Footer';
+import { type FunctionComponent, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import SideBarLandlord from '../../../components/landlord/SideBarLandlord';
+import LandlordFooter from '../../../components/landlord/LandlordFooter';
 import { Icon } from '@iconify/react';
 import send from '../../../../assets/send.svg';
 import DefaultAvatar from '../../../../assets/default_avatar.svg';
@@ -12,12 +13,13 @@ import house from '../../../../assets/House.svg';
 import balance from '../../../../assets/outstandingBalance.svg';
 import income from '../../../../assets/incomeIcon.svg';
 import view from '../../../../assets/View More.svg';
-import help from '../../../../assets/helpChatIcon.svg';
 import sapphire1 from '../../../../assets/sapphire1.jpg';
 import sapphire2 from '../../../../assets/sapphire2.jpg';
 import sapphire3 from '../../../../assets/sapphire3.png';
 
 const LandlordHomepage: FunctionComponent = () => {
+  const navigate = useNavigate();
+
   const onHeaderContainerClick = useCallback(() => {
     // Add your code here
   }, []);
@@ -33,7 +35,11 @@ const LandlordHomepage: FunctionComponent = () => {
           <div className="self-stretch flex-1 overflow-hidden flex flex-col items-start relative isolate">
             <div className="self-stretch flex-1 flex items-center gap-8 z-[0]">
               <div className="sticky top-0 self-stretch w-[200px] flex items-start">
-                <SideBar />
+                <SideBarLandlord
+                  activeItem="dashboard"
+                  onProfileClick={() => navigate('/landlord/profile')}
+                  onAddListing={() => navigate('/landlord/properties/new')}
+                />
                 <div className="h-[924px] flex-1 border-whitesmoke border-solid border-[1px] box-border flex flex-col items-start" />
               </div>
               <div className="h-[1112px] w-[106px] bg-white border-whitesmoke border-solid border-[1px] box-border overflow-hidden shrink-0 hidden flex-col items-center pt-num-24 pb-[30px] pl-num-32 pr-2.5" />
@@ -57,7 +63,6 @@ const LandlordHomepage: FunctionComponent = () => {
                             <Icon
                               icon="radix-icons:arrow-top-right"
                               className="w-4 relative max-h-full"
-                              alt=""
                             />
                           </div>
                         </div>
@@ -282,7 +287,6 @@ const LandlordHomepage: FunctionComponent = () => {
                           <Icon
                             icon="radix-icons:arrow-top-right"
                             className="w-5 relative max-h-full"
-                            alt=""
                           />
                         </div>
                         <div className="self-stretch flex flex-col items-start py-0 px-num-24">
@@ -319,17 +323,17 @@ const LandlordHomepage: FunctionComponent = () => {
                         </div>
                       </div>
                       <div className="h-[274px] flex-1 rounded-xl border-whitesmoke border-solid border-[1px] box-border overflow-hidden flex flex-col items-center pt-num-24 px-0 pb-num-32 gap-2.5">
-                        <div
-                          className="self-stretch overflow-hidden flex items-center py-0 px-num-24 gap-2 cursor-pointer"
+                        <button
+                          type="button"
+                          className="self-stretch overflow-hidden flex items-center py-0 px-num-24 gap-2 cursor-pointer text-left"
                           onClick={onHeaderContainerClick}
                         >
                           <b className="relative tracking-num--0_01">Scheduled Visits</b>
                           <Icon
                             icon="radix-icons:arrow-top-right"
                             className="w-5 relative max-h-full"
-                            alt=""
                           />
-                        </div>
+                        </button>
                         <div className="self-stretch flex flex-col items-start py-0 px-num-24">
                           <div className="self-stretch h-0.5 rounded-num-100 bg-whitesmoke overflow-hidden shrink-0 flex flex-col items-start pt-2.5 px-2.5 pb-0 box-border" />
                         </div>
@@ -447,8 +451,8 @@ const LandlordHomepage: FunctionComponent = () => {
                 </div>
               </div>
             </div>
-            <div className="self-stretch h-20 overflow-hidden shrink-0 flex flex-col items-start z-[1] pl-50">
-              <Footer />
+            <div className="self-stretch h-20 overflow-hidden shrink-0 flex flex-col items-stretch z-[1]">
+              <LandlordFooter />
             </div>
           </div>
         </div>

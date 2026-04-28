@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import type { FunctionComponent } from 'react';
 import SideBar from '../../../../components/user/SideBar';
-import Footer from '../../../../components/general/Footer';
+import LandlordFooter from '../../../../components/landlord/LandlordFooter';
 import { Icon } from '@iconify/react';
 import VerifiedBadge from '../../assets/verified_badge.svg';
 
@@ -223,7 +223,7 @@ const LandlordVerif: FunctionComponent = () => {
                     </div>
                   </div>
                   <footer>
-                    <Footer />
+                    <LandlordFooter />
                   </footer>
                   <div className="w-[1440px] h-20 bg-white overflow-hidden shrink-0 hidden flex-col items-center justify-center">
                     <div className="w-[1273px] h-[82px] bg-whitesmoke-100 overflow-hidden shrink-0 flex items-center py-[19px] pl-[200px] pr-20 box-border" />
