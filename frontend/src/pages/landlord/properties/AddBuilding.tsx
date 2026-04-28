@@ -88,10 +88,20 @@ const AddBuilding: FunctionComponent = () => {
         className="fixed bottom-10 right-10 z-[1000] cursor-pointer transition-all hover:scale-110 active:scale-95"
         onClick={() => setShowHelp(!showHelp)}
       >
-        <img
+        {/* <img
           src={TutorialIcon}
           alt="Help"
           className="w-16 h-16 drop-shadow-lg"
+        /> */}
+        {/* di ko mabago kulay ng Iconify na to */}
+        {/* <Icon icon="streamline-sharp-color:help-chat-2-flat" className="w-16 h-16 drop-shadow-lg" /> */}
+        <div
+          className="w-16 h-16 drop-shadow-lg"
+          style={{
+            background: "linear-gradient(135deg, #096C5B, #16917C)",
+            WebkitMask: "url('https://api.iconify.design/iconoir/chat-bubble-question-solid.svg') no-repeat center / contain",
+            mask: "url('https://api.iconify.design/iconoir/chat-bubble-question-solid.svg') no-repeat center / contain",
+          }}
         />
       </div>
     </div>
