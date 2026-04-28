@@ -1,7 +1,7 @@
 import axios from "axios";
 import z from "zod";
 import { GetBookingsQuerySchema } from "shared";
-import type { GetBookmarksQuery, CreateBookmarkBody } from "../interface/bookmark";
+import type { GetBookmarksQuery } from "../interface/bookmark";
 import { API_URL } from "./constant";
 
 
@@ -46,7 +46,10 @@ export const BookmarkService = {
   async deleteBookmark(listingId: string) {
     try {
       const response = await axios.delete(
-        `${API_URL}/api/bookmarks/${listingId}`
+        `${API_URL}/api/bookmarks/${listingId}`,
+        {
+          //headers
+        }
       );
       return response.data;
     } catch (error) {
