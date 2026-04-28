@@ -46,12 +46,12 @@ const AddBuilding: FunctionComponent = () => {
       <div className="px-20 pt-4 pb-12">
         <div className="flex items-center gap-1.5 py-4 cursor-pointer w-full" onClick={onCancelClick}>
           <Icon icon='material-symbols-light:chevron-left' className='w-7 h-7' />
-          <span className="text-sm font-semibold text-gray-700">Cancel</span>
+          <span className="text-sm font-semibold text-black">Cancel</span>
         </div>
 
-        <div className="rounded-3xl border border-gray-200 px-10 pt-8 pb-10">
+        <div className="rounded-3xl border border-whitesmoke px-10 pt-8 pb-10">
           <h1 className="text-2xl font-bold" style={{ color: '#1a5c50' }}>Add a New Building</h1>
-          <p className="text-sm font-semibold text-gray-500 mt-1">Follow 3 simple steps and you're ready to go!</p>
+          <p className="text-sm font-semibold text-black mt-1">Follow 3 simple steps and you're ready to go!</p>
 
           <div className="w-full h-px my-6" />
 
@@ -98,4 +98,4 @@ const AddBuilding: FunctionComponent = () => {
   );
 };
 
-      export default AddBuilding;
+export default AddBuilding;
