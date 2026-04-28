@@ -1,13 +1,27 @@
-import LandlordUnderConstruction from '../../../components/landlord/LandlordUnderConstruction';
+import type { FunctionComponent } from 'react';
+import LandlordLayout from '../../../components/landlord/LandlordLayout';
+import PropertyTabs from '../../../components/user/unitdetails/PropertyTabs';
+import PropertyTab from '../../../components/user/unitdetails/PropertyTab';
+import General from '../../user/setting/General';
+import Security from '../../user/setting/Security';
+import Notification from '../../user/setting/Notification';
+import Preferences from '../../user/setting/Preferences';
 
-const LandlordSettings = () => {
+const LandlordSettings: FunctionComponent = () => {
   return (
-    <LandlordUnderConstruction
+    <LandlordLayout
       activeSidebarItem="settings"
       breadcrumbs={[{ label: 'Settings' }]}
-      icon="solar:settings-bold-duotone"
-      title="Settings coming soon"
-    />
+    >
+      <div className="flex flex-col items-start gap-3 w-full pt-6 px-8">
+        <PropertyTabs>
+          <PropertyTab text="General" element={<General />} />
+          <PropertyTab text="Security" element={<Security />} />
+          <PropertyTab text="Notification" element={<Notification />} />
+          <PropertyTab text="Preferences" element={<Preferences />} />
+        </PropertyTabs>
+      </div>
+    </LandlordLayout>
   );
 };
 
