@@ -1,6 +1,15 @@
 import mongoose from 'mongoose';
 import { documentSchema, type DocumentType } from '../document/document.model';
-import { UserStatus, UserTypeType, USER_STATUS, USER_TYPE } from 'shared';
+import {
+  UserStatus,
+  UserTypeType,
+  USER_STATUS,
+  USER_TYPE,
+  UTILITY_PREFERENCES,
+  AMENITY_PREFERENCES,
+  NEIGHBORHOOD_FEATURES,
+  GENDER_POLICIES,
+} from 'shared';
 
 export type UserType = {
   _id: mongoose.Types.ObjectId;
@@ -115,6 +124,28 @@ export const Student = User.discriminator(
   new mongoose.Schema({
     studentNumber: { type: String, required: true },
     degreeProgram: String,
+    preferences: {
+      type: {
+        utilities: {
+          type: [{ type: String, enum: UTILITY_PREFERENCES }],
+          default: [],
+        },
+        buildingAmenities: {
+          type: [{ type: String, enum: AMENITY_PREFERENCES }],
+          default: [],
+        },
+        neighborhoodFeatures: {
+          type: [{ type: String, enum: NEIGHBORHOOD_FEATURES }],
+          default: [],
+        },
+        genderPolicy: {
+          type: String,
+          enum: [...GENDER_POLICIES, null],
+          default: null,
+        },
+      },
+      default: {},
+    },
   }),
 );
 

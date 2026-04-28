@@ -1,11 +1,21 @@
 import z from 'zod';
 import { ObjectIdSchema, QuerySchema } from './common.js';
-import { USER_TYPES } from '../constants.js';
+import {
+  USER_TYPES,
+  UTILITY_PREFERENCES,
+  AMENITY_PREFERENCES,
+  NEIGHBORHOOD_FEATURES,
+  GENDER_POLICIES,
+} from '../constants.js';
 
-const StudentPreferenceSchema = z.record(
-  z.string(),
-  z.union([z.string(), z.number(), z.boolean()]),
-);
+const StudentPreferenceSchema = z.object({
+  utilities: z.array(z.enum(UTILITY_PREFERENCES)).default([]),
+  buildingAmenities: z.array(z.enum(AMENITY_PREFERENCES)).default([]),
+  neighborhoodFeatures: z.array(z.enum(NEIGHBORHOOD_FEATURES)).default([]),
+  genderPolicy: z.enum(GENDER_POLICIES).nullable().default(null),
+});
+
+export type StudentPreferences = z.infer<typeof StudentPreferenceSchema>;
 const ScheduleSchema = z.object({});
 
 const BaseProfileSchema = z.object({
