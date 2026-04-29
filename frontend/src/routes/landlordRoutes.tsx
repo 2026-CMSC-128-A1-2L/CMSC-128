@@ -63,9 +63,10 @@ const landlordRoutes = [
     path="/landlord/properties/edit/:propertyId"
     element={<EditBuilding />}
   />,
+
   <Route
     key="landlord-properties-building-info"
-    path="/landlord/properties/building-info/:propertyId"
+    path="/landlord/properties/:id"
     element={<BuildingInfo />}
   />,
   <Route
