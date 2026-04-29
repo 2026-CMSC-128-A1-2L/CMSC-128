@@ -3,7 +3,7 @@ import {
   PaginationRequestSchema,
   PaginationResponseSchema,
   QuerySchema,
-} from './common';
+} from "./common.js";
 import z from 'zod';
 
 export const NotificationFilterSchema = z

@@ -20,7 +20,7 @@ import {
   searchFacilities,
   getMonthlyIncomeByLandlord,
   getOverdueTenantsByLandlord,
-} from './facility.service';
+} from "./facility.service.js";
 import assert from 'node:assert';
 
 // GET /facilities: routeGetFacilities

@@ -1,10 +1,10 @@
 import type mongoose from 'mongoose';
-import { AppError } from '../../error';
-import { Listing } from '../listing/listing.model';
-import { Rental } from '../rental/rental.model';
-import { Unit } from '../unit/unit.model';
-import { User } from '../user/user.model';
-import { Report, ListingReport, UserReport } from './report.model';
+import { AppError } from "../../error.js";
+import { Listing } from "../listing/listing.model.js";
+import { Rental } from "../rental/rental.model.js";
+import { Unit } from "../unit/unit.model.js";
+import { User } from "../user/user.model.js";
+import { Report, ListingReport, UserReport } from "./report.model.js";
 
 export type CreateListingReportArgs = {
   userId: mongoose.Types.ObjectId;

@@ -1,11 +1,11 @@
 import type { RequestHandler } from 'express';
 import { ObjectIdSchema } from 'shared';
-import { sendNotification } from '../notification/notification.service';
+import { sendNotification } from "../notification/notification.service.js";
 import {
   getTransferRequests,
   approveTransferRequest,
   rejectTransferRequest,
-} from './transfer.service';
+} from "./transfer.service.js";
 
 export const routeGetTransferRequests: RequestHandler = async (req, res, next) => {
   const transferRequests = await getTransferRequests(req.user!._id);

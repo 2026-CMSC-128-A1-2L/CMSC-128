@@ -5,7 +5,7 @@ import {
   MANAGER_PERMISSIONS,
   type FacilityType,
 } from 'shared';
-import { documentSchema, type DocumentType } from '../document/document.model';
+import { documentSchema, type DocumentType } from "../document/document.model.js";
 import z from 'zod';
 
 export type ManagerPermissionType = z.infer<typeof ManagerPermissionSchema>;

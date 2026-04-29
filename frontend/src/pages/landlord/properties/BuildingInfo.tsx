@@ -168,7 +168,7 @@ const BuildingInfo = () => {
    * links still work (e.g. refresh, shared link).
    */
   const building: Building | undefined =
-    (location.state as Building) ?? BUILDINGS.find((b) => b.id === Number(id));
+    (location.state as Building) ?? BUILDINGS.find((b) => b.id === id);
 
   if (!building) {
     return (
@@ -213,7 +213,10 @@ const BuildingInfo = () => {
           <div className="w-full flex py-4 items-center gap-10 text-2xl text-gray border-b-2 border-b-whitesmoke">
             <b>{name}</b>
             <div className="flex items-center gap-4 text-center text-sm text-teal">
-              <Button text="Edit Details" onClick={() => navigate(`/landlord/properties/edit/${id}`)}>
+              <Button
+                text="Edit Details"
+                onClick={() => navigate(`/landlord/properties/edit/${id}`)}
+              >
                 <Icon icon="iconamoon:edit" className="w-5 h-5" />
               </Button>
               <Button text="View As Student" onClick={() => {}}>
@@ -291,7 +294,7 @@ const BuildingInfo = () => {
                 {photos.map((photo, index) => (
                   <div
                     key={index}
-                    className="min-h-25 min-w-25 rounded-num-12 border-whitesmoke-200 border-solid border box-border overflow-hidden shrink-0"
+                    className="max-h-25 max-w-25 rounded-num-12 border-whitesmoke-200 border-solid border box-border overflow-hidden shrink-0"
                   >
                     <img
                       src={photo}

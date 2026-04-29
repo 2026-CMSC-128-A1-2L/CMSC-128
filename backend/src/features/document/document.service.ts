@@ -1,8 +1,8 @@
 import type mongoose from 'mongoose';
 import type { Model, QueryFilter } from 'mongoose';
-import { File } from '../file/file.model';
-import { AppError } from '../../error';
-import { combineFilters } from '../../middleware';
+import { File } from "../file/file.model.js";
+import { AppError } from "../../error.js";
+import { combineFilters } from "../../middleware.js";
 
 export type WithDocument = {
   documents: {

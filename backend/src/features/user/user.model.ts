@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { documentSchema, type DocumentType } from '../document/document.model';
+import { documentSchema, type DocumentType } from "../document/document.model.js";
 import {
   UserStatus,
   UserTypeType,

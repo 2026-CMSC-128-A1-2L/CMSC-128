@@ -1,6 +1,6 @@
 import z from 'zod';
-import { ObjectIdSchema, QuerySchema } from './common';
-import { ROOM_TYPES } from '../constants';
+import { ObjectIdSchema, QuerySchema } from "./common.js";
+import { ROOM_TYPES } from "../constants.js";
 
 // GET /listings
 // Schema for filtering for tag values

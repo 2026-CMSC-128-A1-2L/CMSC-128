@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "skipLibCheck": true,
+    "rootDir": ".",
+    "noEmit": true,
+    "outDir": "./dist",
+    "paths": {
+      "shared": ["./shared/src/index.ts"]
+    }
+  },
+  "include": ["api/index.ts", "./backend/src/index.d.ts"]
+}

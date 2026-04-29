@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { routeGetMessages, routeGetUserMessages, routeSendMessage } from './message.controller';
-import { isVerifiedCheck } from '../../middleware';
+import { routeGetMessages, routeGetUserMessages, routeSendMessage } from "./message.controller.js";
+import { isVerifiedCheck } from "../../middleware.js";
 
 const router = Router();
 

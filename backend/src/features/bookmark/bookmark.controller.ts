@@ -1,6 +1,6 @@
 import type { RequestHandler } from 'express';
 import { ObjectIdSchema, GetBookmarksQuerySchema } from 'shared';
-import { getBookmarksByUser, createBookmark, deleteBookmark } from './bookmark.service';
+import { getBookmarksByUser, createBookmark, deleteBookmark } from "./bookmark.service.js";
 
 export const routeGetBookmarkedUnits: RequestHandler = async (req, res, next) => {
   const userId = req.user!._id;
