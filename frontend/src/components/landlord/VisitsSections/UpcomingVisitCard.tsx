@@ -4,6 +4,7 @@ type UpcomingVisitCardProps = {
   propertyName: string;
   visitCount: number;
   icon?: ReactNode;
+  onClick?: () => void;
 };
 
 const getColorForProperty = (name: string): string => {
@@ -17,11 +18,15 @@ export default function UpcomingVisitCard({
   propertyName,
   visitCount,
   icon,
+  onClick,
 }: UpcomingVisitCardProps) {
   const bgColor = getColorForProperty(propertyName);
 
   return (
-    <div className="w-full h-12 rounded-num-8 border border-whitesmoke-200 box-border overflow-hidden flex items-center p-3 gap-2 hover:bg-whitesmoke-200 transition-colors cursor-pointer font-inter">
+    <div 
+      onClick={onClick}
+      className="w-full h-12 rounded-num-8 border border-whitesmoke-200 box-border overflow-hidden flex items-center p-3 gap-2 hover:bg-whitesmoke-200 transition-colors cursor-pointer font-inter"
+    >
       <div className={`w-6 h-6 rounded shrink-0 ${bgColor}`}>
         {icon}
       </div>

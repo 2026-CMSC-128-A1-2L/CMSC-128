@@ -8,6 +8,7 @@ type UpcomingVisit = {
 
 type UpcomingVisitsSectionProps = {
   visits: UpcomingVisit[];
+  onVisitClick?: (visitId: string) => void;
 };
 
 const defaultVisits: UpcomingVisit[] = [
@@ -30,6 +31,7 @@ const defaultVisits: UpcomingVisit[] = [
 
 export default function UpcomingVisitsSection({
   visits = defaultVisits,
+  onVisitClick,
 }: UpcomingVisitsSectionProps) {
   return (
     <div className="w-full flex flex-col items-start gap-2">
@@ -40,6 +42,7 @@ export default function UpcomingVisitsSection({
             key={visit.id}
             propertyName={visit.propertyName}
             visitCount={visit.visitCount}
+            onClick={() => onVisitClick?.(visit.id)}
           />
         ))}
       </div>

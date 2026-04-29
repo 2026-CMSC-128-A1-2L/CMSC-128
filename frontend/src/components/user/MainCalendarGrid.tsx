@@ -1,5 +1,5 @@
 import { type FunctionComponent, useEffect, useState } from "react";
-import { CalendarService, type CalendarEvent } from "../../../service/CalendarService";
+import { CalendarService, type CalendarEvent } from "../../service/CalendarService";
 
 interface MainCalendarGridProps {
   currentDate: Date;
@@ -94,21 +94,23 @@ const MainCalendarGrid: FunctionComponent<MainCalendarGridProps> = ({
   });
 
   return (
-    <div className="w-full flex flex-col bg-white">
+    <div className="w-full rounded-[14px] overflow-hidden flex flex-col bg-white">
       {/* Month header */}
-      <div className="flex items-center justify-center px-4 py-4 text-xl sm:text-2xl font-bold text-dimgray">
-        {monthName}
+      <div className="flex items-center justify-center px-4 py-4 border-b border-whitesmoke-200">
+        <div className="text-base font-semibold tracking-tight">{monthName}</div>
       </div>
 
       {/* Day labels */}
-      <div className="grid grid-cols-7 gap-1 sm:gap-2 px-3 sm:px-6 py-3 text-center text-xs sm:text-num-14 font-semibold text-dimgray">
-        {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => (
-          <div key={d}>{d}</div>
+      <div className="grid grid-cols-7 bg-blue-50 text-dimgray text-[9px] font-medium">
+        {DAYS.map((d) => (
+          <div key={d} className="border border-whitesmoke-200 p-1.5">
+            {d}
+          </div>
         ))}
       </div>
 
       {/* Date cells */}
-      <div className="grid grid-cols-7 gap-1 sm:gap-2 px-3 sm:px-6 pb-6">
+      <div className="grid grid-cols-7 flex-1">
         {calendarDays.map((item, i) => {
           const { day, inactive } = item;
           const isTodayDay =
@@ -118,42 +120,32 @@ const MainCalendarGrid: FunctionComponent<MainCalendarGridProps> = ({
           return (
             <div
               key={i}
-              className={`min-h-20 sm:min-h-28 p-1 sm:p-3 rounded border cursor-pointer transition-colors ${
+              className={[
+                "border border-whitesmoke-200 flex flex-col items-start p-1 gap-1 min-h-[60px] sm:min-h-[80px] md:min-h-[100px]",
                 inactive
-                  ? "bg-whitesmoke-100 border-whitesmoke-200"
+                  ? "bg-whitesmoke-200 text-dimgray"
                   : isTodayDay
-                    ? "bg-lightcyan border-teal hover:border-teal"
-                    : "bg-white border-whitesmoke-200 hover:bg-whitesmoke-50"
-              }`}
-              onClick={() => {
-                if (!inactive) {
-                  // Could open day view popup here if needed
-                }
-              }}
+                    ? "bg-lightcyan-200 text-teal-100"
+                    : "bg-white",
+              ].join(" ")}
             >
-              <div className="text-xs sm:text-num-14 font-semibold text-dimgray mb-1">
-                {day}
-              </div>
-              <div className="flex flex-col gap-0.5 sm:gap-1 text-xs">
-                {dayEvents.slice(0, 1).map((event) => (
+              <b className="text-[10px] sm:text-xs">{day}</b>
+              <div className="w-full flex flex-col gap-0.5">
+                {dayEvents.map((event) => (
                   <button
                     key={event.referenceId}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onEventClick?.(event);
-                    }}
-                    className="w-full text-left px-1 sm:px-1.5 py-0.5 rounded bg-gradient-to-r from-blue-100 to-blue-50 hover:from-blue-200 hover:to-blue-100 transition-colors truncate"
+                    onClick={() => onEventClick?.(event)}
+                    className="w-full rounded-sm bg-blue-50 py-0.5 px-1 opacity-80 hover:opacity-100 transition-opacity text-left"
                   >
-                    <span className="font-semibold text-xs truncate block">
+                    <b
+                      className={`text-[9px] sm:text-[11px] bg-gradient-to-b ${getEventColor(
+                        event.type
+                      )} bg-clip-text text-transparent`}
+                    >
                       {event.title}
-                    </span>
+                    </b>
                   </button>
                 ))}
-                {dayEvents.length > 1 && (
-                  <div className="text-xs text-teal font-semibold">
-                    +{dayEvents.length - 1}
-                  </div>
-                )}
               </div>
             </div>
           );
