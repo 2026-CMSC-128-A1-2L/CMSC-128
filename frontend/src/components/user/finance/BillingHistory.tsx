@@ -19,7 +19,7 @@ const BillingHistory: FunctionComponent<BillingHistoryProps> = ({ history }) => 
       {data.map((item) => (
         <div
           key={item.id}
-          className="self-stretch rounded-lg border-whitesmoke-200 border-solid border-[1px] overflow-hidden flex items-center py-1 px-3"
+          className="self-stretch rounded-lg border-whitesmoke-200 border-solid border overflow-hidden flex items-center py-1 px-3"
         >
           <div className="self-stretch overflow-hidden flex flex-col items-start py-1 pl-0 pr-2.5 gap-1">
             <div className="font-semibold">{item.date}</div>

@@ -28,7 +28,7 @@ const LandlordUnderConstruction = ({
           <h1 className="font-['Lora',serif] text-[28px] font-bold leading-[1.2] text-[#2f3136]">
             {title}
           </h1>
-          <p className="font-['Inter',sans-serif] text-[15px] leading-[1.5] text-[#6b7280]">
+          <p className="font-['Inter',sans-serif] text-[15px] leading-normal text-[#6b7280]">
             {description}
           </p>
           <Link

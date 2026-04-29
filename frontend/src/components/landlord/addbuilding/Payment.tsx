@@ -81,7 +81,7 @@ const DetailForm: FunctionComponent<DetailFormProps> = ({
           className="rounded-xl overflow-hidden flex items-center justify-center p-2.5 text-center text-num-14 cursor-pointer hover:opacity-75 transition-opacity"
           onClick={onCancel}
         >
-          <div className="relative leading-6 font-medium text-transparent !bg-clip-text [background:linear-gradient(180deg,_#c00f0f,_#e44f4f)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">
+          <div className="relative leading-6 font-medium text-transparent bg-clip-text! [background:linear-gradient(180deg,#c00f0f,#e44f4f)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">
             Cancel
           </div>
         </div>
@@ -91,7 +91,7 @@ const DetailForm: FunctionComponent<DetailFormProps> = ({
       <div className="self-stretch flex items-start gap-10 text-black">
         <div className="flex-1 flex flex-col items-start gap-3">
           <b className="relative">Name</b>
-          <div className="self-stretch rounded-xl bg-aliceblue border-whitesmoke border-solid border-[1px] flex items-center py-3 px-4">
+          <div className="self-stretch rounded-xl bg-aliceblue border-whitesmoke border-solid border flex items-center py-3 px-4">
             <input
               {...register('name')}
               placeholder="Aa"
@@ -103,7 +103,7 @@ const DetailForm: FunctionComponent<DetailFormProps> = ({
           <b className="self-stretch h-[15.2px] relative flex items-center shrink-0">
             {accountLabel}
           </b>
-          <div className="self-stretch rounded-xl bg-aliceblue border-whitesmoke border-solid border-[1px] flex items-center py-3 px-4">
+          <div className="self-stretch rounded-xl bg-aliceblue border-whitesmoke border-solid border flex items-center py-3 px-4">
             <input
               {...register('accountNumber')}
               placeholder="09"
@@ -115,7 +115,7 @@ const DetailForm: FunctionComponent<DetailFormProps> = ({
 
       {/* QR Upload */}
       <div
-        className="self-stretch rounded-2xl border-dimgray border-dashed border-[1px] overflow-hidden flex items-center py-3 px-4 text-black cursor-pointer hover:bg-gray-50 transition-colors"
+        className="self-stretch rounded-2xl border-dimgray border-dashed border overflow-hidden flex items-center py-3 px-4 text-black cursor-pointer hover:bg-gray-50 transition-colors"
         onClick={() => qrInputRef.current?.click()}
       >
         {qrPreview ? (
@@ -188,7 +188,7 @@ const Payments: FunctionComponent = () => {
 
   return (
     <div
-      className={`w-full relative rounded-[11.8px] flex flex-col items-start py-4 px-3 box-border [transform:_rotate(-0.3deg)] [transform-origin:0_0] text-left text-[17.7px] font-inter transition-all ${payment.enabled ? 'gap-[15.7px] text-teal-200' : 'text-teal'
+      className={`w-full relative rounded-[11.8px] flex flex-col items-start py-4 px-3 box-border transform-[rotate(-0.3deg)] origin-top-left text-left text-[17.7px] font-inter transition-all ${payment.enabled ? 'gap-[15.7px] text-teal-200' : 'text-teal'
         }`}
     >
       {/* Header & Toggle */}

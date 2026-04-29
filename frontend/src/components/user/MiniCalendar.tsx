@@ -14,7 +14,9 @@ const WEEKS = [
   [26, 27, 28, 29, 30, null, null],
 ];
 
-const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({ onEventClick }) => {
+const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
+  onEventClick,
+}) => {
   const onNav = useCallback(() => {}, []);
 
   return (
@@ -23,7 +25,10 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({ onEventClick }) =>
       <div className="rounded-xl bg-white border border-whitesmoke-200 flex flex-col items-center p-4 gap-4">
         {/* Nav */}
         <div className="self-stretch flex items-center gap-3">
-          <button onClick={onNav} className="rounded-full p-2 hover:bg-whitesmoke-100 transition-colors">
+          <button
+            onClick={onNav}
+            className="rounded-full p-2 hover:bg-whitesmoke-100 transition-colors"
+          >
             <Icon icon="ic:round-chevron-left" className="h-5 w-5" />
           </button>
           <div className="flex-1 flex gap-2">
@@ -36,7 +41,10 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({ onEventClick }) =>
               <Icon icon="ic:round-keyboard-arrow-down" className="h-4 w-4" />
             </div>
           </div>
-          <button onClick={onNav} className="rounded-full p-2 hover:bg-whitesmoke-100 transition-colors">
+          <button
+            onClick={onNav}
+            className="rounded-full p-2 hover:bg-whitesmoke-100 transition-colors"
+          >
             <Icon icon="ic:round-chevron-right" className="h-5 w-5" />
           </button>
         </div>
@@ -44,7 +52,11 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({ onEventClick }) =>
         {/* Day labels */}
         <div className="self-stretch flex flex-col gap-0.5 text-center">
           <div className="grid grid-cols-7 text-xs text-gray font-inter">
-            {DAYS.map(d => <div key={d} className="flex items-center justify-center py-1">{d}</div>)}
+            {DAYS.map((d) => (
+              <div key={d} className="flex items-center justify-center py-1">
+                {d}
+              </div>
+            ))}
           </div>
 
           {/* Date grid */}
@@ -56,7 +68,9 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({ onEventClick }) =>
                     key={di}
                     className={[
                       "rounded-md flex items-center justify-center p-2 aspect-square",
-                      day === 3 ? "bg-lightcyan-100 text-teal-200 font-bold" : "",
+                      day === 3
+                        ? "bg-lightcyan-100 text-teal-200 font-bold"
+                        : "",
                     ].join(" ")}
                   >
                     {day ?? ""}
@@ -78,7 +92,9 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({ onEventClick }) =>
           <Icon icon="ic:round-circle" className="h-6 w-6 shrink-0" />
           <div className="flex flex-col gap-1">
             <div className="text-xs font-medium">Ocular Visit</div>
-            <div className="text-[11px] font-medium font-lora text-dimgray tracking-wide">April 7, 2026</div>
+            <div className="text-[11px] font-medium font-lora text-dimgray tracking-wide">
+              April 7, 2026
+            </div>
           </div>
         </div>
       </div>

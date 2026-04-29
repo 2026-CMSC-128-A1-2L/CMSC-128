@@ -120,7 +120,7 @@ const AddManager1: FunctionComponent<Props> = ({ onCancel, onSend }) => {
     <div className="relative rounded-tl-[26px] bg-white w-[490px] flex flex-col items-center pb-[48px] gap-[34px]">
 
       {/* ── Header ── */}
-      <div className="self-stretch rounded-tl-[26px] bg-gradient-to-b from-[#096c5b] to-[#16917c] flex flex-col items-start justify-center py-[10px] pl-[46px] pr-[26px]">
+      <div className="self-stretch rounded-tl-[26px] bg-linear-to-b from-[#096c5b] to-[#16917c] flex flex-col items-start justify-center py-[10px] pl-[46px] pr-[26px]">
         <div className="flex flex-col items-start pt-[26px] pb-[6px] gap-[4px]">
           <b className="font-['Poppins',sans-serif] text-[28px] text-white">Add Dorm Manager</b>
           <b className="font-['Inter',sans-serif] text-[15px] tracking-[-0.01em] text-[#e8f4f8]">

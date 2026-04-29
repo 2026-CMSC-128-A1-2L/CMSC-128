@@ -67,7 +67,7 @@ const ImageCarousel: React.FC<Props> = ({ images }) => {
 
       <img
         onClick={() => !isAnimating && setIsLightboxOpen(true)}
-        className={`absolute h-full w-[91.66%] top-0 left-[4.17%] z-[2]
+        className={`absolute h-full w-[91.66%] top-0 left-[4.17%] z-2
           shadow-2xl rounded-[20.43px] object-cover cursor-zoom-in
           ${transitionClass} ${isAnimating ? 'scale-[0.98] opacity-90' : 'scale-100 opacity-100'}`}
         alt="Main View"

@@ -27,7 +27,7 @@ export default function VisitRequestCard({
         <div className="text-num-14 text-dimgray">{buildingName}</div>
       </div>
       
-      <div className="flex items-center gap-2 flex-shrink-0">
+      <div className="flex items-center gap-2 shrink-0">
         <button
           onClick={onReject}
           className="rounded-num-8 overflow-hidden flex items-center justify-center py-2 px-4"

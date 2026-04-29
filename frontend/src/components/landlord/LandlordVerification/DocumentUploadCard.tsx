@@ -73,7 +73,7 @@ const DocumentUploadCard = ({
           <span
             className={[
               'flex h-[32px] w-[96px] items-center justify-center rounded-[16px] bg-white px-[12px]',
-              'bg-clip-text bg-gradient-to-b font-["Inter",sans-serif] text-[14px] font-bold text-transparent whitespace-nowrap',
+              'bg-clip-text bg-linear-to-b font-["Inter",sans-serif] text-[14px] font-bold text-transparent whitespace-nowrap',
               gradientClass,
             ].join(' ')}
           >

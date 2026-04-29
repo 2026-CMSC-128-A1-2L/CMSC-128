@@ -39,7 +39,11 @@ const MyCalendar: FunctionComponent = () => {
         </div>
       </div>
       {isEventPopoutOpen && (
-        <PortalPopup overlayColor="rgba(0, 0, 0, 0.25)" placement="Centered" onOutsideClick={closeEventPopout}>
+        <PortalPopup
+          overlayColor="rgba(0, 0, 0, 0.25)"
+          placement="Centered"
+          onOutsideClick={closeEventPopout}
+        >
           <EventPopout onClose={closeEventPopout} />
         </PortalPopup>
       )}

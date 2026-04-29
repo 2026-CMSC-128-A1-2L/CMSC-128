@@ -31,7 +31,7 @@ const FinalizeApplication: FunctionComponent<Props> = ({ onContinue }) => {
             
             <p className="mt-4">
               To keep your unit, submit all required documents within{' '}
-              <span className="inline-block font-bold bg-gradient-to-b from-[#c00f0f] to-[#e44f4f] bg-clip-text text-transparent">
+              <span className="inline-block font-bold bg-linear-to-b from-[#c00f0f] to-[#e44f4f] bg-clip-text text-transparent">
                 7 days
               </span>
               . Unconfirmed slots will be automatically released after this period.

@@ -18,7 +18,6 @@ import {
 } from './user.service';
 import { AppError } from '../../error';
 import assert from 'node:assert';
-import { UserType } from './user.model';
 
 export const routeGetUsers: RequestHandler = async (req, res, _next) => {
   const params = GetUsersQuerySchema.parse(req.query);
@@ -59,12 +58,7 @@ export const routeOnboardSelf: RequestHandler = async (req, res, _next) => {
   const userId = req.user._id;
   if (req.user.status !== 'setup') throw new AppError(422, 'Already done onboarding.');
   const body = OnboardSelfRequestBodySchema.parse(req.body);
-  let user: UserType | undefined | null;
-  if (body.userType === 'Student') {
-    user = await onboardSelf(userId, body);
-  } else {
-    user = await onboardSelf(userId, body);
-  }
+  const user = await onboardSelf(userId, body);
   if (!user) throw new AppError(404, 'User not found.');
   res.status(200).json({ data: user });
 };

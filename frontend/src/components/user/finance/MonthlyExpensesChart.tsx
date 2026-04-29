@@ -33,7 +33,7 @@ const MonthlyExpensesChart: FunctionComponent = () => {
   };
 
   return (
-    <div className="w-full h-[280px] rounded-[16px] bg-white border-whitesmoke-200 border-solid border-[1px] box-border flex flex-col items-center justify-center py-6 px-4 relative gap-2.5">
+    <div className="w-full h-[280px] rounded-[16px] bg-white border-whitesmoke-200 border-solid border box-border flex flex-col items-center justify-center py-6 px-4 relative gap-2.5">
       {/* Header with Toggle Button */}
       <div className="w-full flex items-center justify-center gap-3 z-10">
         <b className="h-6 flex-1 text-[18px] tracking-[-0.01em] flex items-center">Monthly Expenses</b>

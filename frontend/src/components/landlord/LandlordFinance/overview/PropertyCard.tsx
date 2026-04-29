@@ -45,7 +45,7 @@ const PropertyCard: FunctionComponent<PropertyCardProps> = ({
           isHovered ? 'scale-[1.02]' : 'scale-100'
         }`}
       >
-        <div className="h-[360px] w-[348px] [filter:drop-shadow(0px_4px_20px_rgba(0,_0,_0,_0.15))] relative">
+        <div className="h-[360px] w-[348px] filter-[drop-shadow(0px_4px_20px_rgba(0,0,0,0.15))] relative">
           {/* White background */}
           <div className="absolute inset-0 rounded-[25px] bg-white z-0" />
           
@@ -90,7 +90,7 @@ const PropertyCard: FunctionComponent<PropertyCardProps> = ({
                 </div>
               </div>
               <div className="w-[100px]">
-                <b className="text-[16px] bg-gradient-to-b from-[#5dc2a8] to-[#0c8873] bg-clip-text text-transparent">
+                <b className="text-[16px] bg-linear-to-b from-[#5dc2a8] to-[#0c8873] bg-clip-text text-transparent">
                   ₱{income.toLocaleString()}
                 </b>
                 <div className="text-[12px] tracking-[0.02em] font-semibold font-lora text-silver">
@@ -100,7 +100,7 @@ const PropertyCard: FunctionComponent<PropertyCardProps> = ({
               <div className="w-[100px]">
                 <b className={`text-[16px] ${
                   outstanding > 0 
-                    ? 'bg-gradient-to-b from-[#c29722] to-[#f6b709] bg-clip-text text-transparent'
+                    ? 'bg-linear-to-b from-[#c29722] to-[#f6b709] bg-clip-text text-transparent'
                     : 'text-silver'
                 }`}>
                   ₱{outstanding.toLocaleString()}

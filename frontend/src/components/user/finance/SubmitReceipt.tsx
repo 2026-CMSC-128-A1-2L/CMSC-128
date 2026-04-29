@@ -99,14 +99,14 @@ const SubmitReceipt: FunctionComponent<SubmitReceiptType> = ({
                 value={referenceNo}
                 onChange={(e) => setReferenceNo(e.target.value)}
                 placeholder="Reference/Transaction No."
-                className="w-full rounded-num-8 bg-white border-whitesmoke-200 border-solid border-[2px] p-3 focus:outline-none focus:border-teal transition-colors"
+                className="w-full rounded-num-8 bg-white border-whitesmoke-200 border-solid border-2 p-3 focus:outline-none focus:border-teal transition-colors"
               />
 
               {/* Payment Method Dropdown */}
               <div className="relative w-full">
                 <div
                   onClick={() => setIsMethodDropdownOpen(!isMethodDropdownOpen)}
-                  className="w-full rounded-num-8 bg-white border-whitesmoke-200 border-solid border-[2px] flex items-center justify-between p-3 cursor-pointer hover:border-teal transition-colors"
+                  className="w-full rounded-num-8 bg-white border-whitesmoke-200 border-solid border-2 flex items-center justify-between p-3 cursor-pointer hover:border-teal transition-colors"
                 >
                   <div
                     className={paymentMethod ? "text-black" : "text-dimgray"}
@@ -146,7 +146,7 @@ const SubmitReceipt: FunctionComponent<SubmitReceiptType> = ({
           </div>
 
           {/* Upload Receipt */}
-          <div className="w-full rounded-num-16 bg-white border-whitesmoke-200 border-dashed border-[2px] flex flex-col items-center py-6 px-0 gap-1 text-silver cursor-pointer hover:border-teal transition-all duration-200 hover:scale-[1.02] active:scale-95">
+          <div className="w-full rounded-num-16 bg-white border-whitesmoke-200 border-dashed border-2 flex flex-col items-center py-6 px-0 gap-1 text-silver cursor-pointer hover:border-teal transition-all duration-200 hover:scale-[1.02] active:scale-95">
             <div className="overflow-hidden flex flex-col items-start">
               <Icon icon="mdi-light:cloud-upload" className="w-10 h-10" />
             </div>

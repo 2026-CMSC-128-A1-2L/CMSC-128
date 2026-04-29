@@ -5,6 +5,7 @@ import { AppError } from '../../error';
 import { sendNotification } from '../notification/notification.service';
 import assert from 'node:assert';
 import { UserTypeType } from 'shared';
+import type { StudentPreferences } from 'shared';
 
 export type CreateUserParams = {
   firstName: string;
@@ -21,10 +22,10 @@ export const createUser = async (params: CreateUserParams) => {
   const userResult = await User.findOne({
     emails: params.email,
     status: { $in: ['setup', 'verified', 'unverified'] },
-  });
+  }).lean();
 
   if (userResult) {
-    throw new AppError(409, 'User with this email already exists.');
+    return userResult;
   }
 
   const newUser = new User({
@@ -85,14 +86,14 @@ export const deleteUser = async (userId: mongoose.Types.ObjectId) => {
 };
 
 type GetUsersArguments = {
-  userID?: mongoose.Types.ObjectId | null;
+  userId?: mongoose.Types.ObjectId | null;
   userType?: UserTypeType;
 };
 
 export const getUsers = async (params: GetUsersArguments) => {
   const filter: QueryFilter<typeof User> = {};
-  if (params.userID) {
-    filter._id = params.userID;
+  if (params.userId) {
+    filter._id = params.userId;
   }
   if (params.userType) {
     filter.userType = params.userType;
@@ -138,7 +139,7 @@ export const approveUser = async (userId: mongoose.Types.ObjectId, params?: Appr
     const student = Student.hydrate(user.toObject());
     student.degreeProgram = params.degreeProgram;
     student.studentNumber = params.studentNumber;
-    await user.save();
+    await student.save();
   } else if (user.userType === 'Landlord') {
     user.verificationStatus = 'approved';
     user.status = 'verified';
@@ -190,7 +191,7 @@ type UpdateUserParameters = Partial<{
 }>;
 
 type UpdateStudentParameters = UpdateUserParameters & {
-  preferences?: Record<string, string | number | boolean>;
+  preferences?: StudentPreferences;
 };
 
 // TODO: handle additional landlord and manager parameters
@@ -198,7 +199,7 @@ type UpdateManagerParameters = UpdateUserParameters;
 
 type OnboardStudentParameters = UpdateUserParameters & {
   userType: 'Student';
-  preferences?: Record<string, string | number | boolean>;
+  preferences?: StudentPreferences;
 };
 
 type OnboardManagerParameters = UpdateUserParameters & {

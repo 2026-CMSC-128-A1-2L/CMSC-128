@@ -5,17 +5,26 @@ interface MainCalendarGridProps {
 }
 
 const DAYS = ["SUN", "MON", "TUE", "WED", "THUR", "FRI", "SAT"];
-const DATES = [29, 30, 31, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 1, 2];
+const DATES = [
+  29, 30, 31, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+  20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 1, 2,
+];
 
-const MainCalendarGrid: FunctionComponent<MainCalendarGridProps> = ({ onEventClick }) => (
+const MainCalendarGrid: FunctionComponent<MainCalendarGridProps> = ({
+  onEventClick,
+}) => (
   <div className="w-full rounded-[14px] overflow-hidden flex flex-col bg-white">
     {/* Month header */}
-    <div className="px-3 py-4 text-base font-semibold tracking-tight text-center">April 2026</div>
+    <div className="px-3 py-4 text-base font-semibold tracking-tight text-center">
+      April 2026
+    </div>
 
     {/* Day labels */}
     <div className="grid grid-cols-7 bg-blue-50 text-dimgray text-[9px] font-medium">
-      {DAYS.map(d => (
-        <div key={d} className="border border-whitesmoke-200 p-1.5">{d}</div>
+      {DAYS.map((d) => (
+        <div key={d} className="border border-whitesmoke-200 p-1.5">
+          {d}
+        </div>
       ))}
     </div>
 
@@ -29,7 +38,11 @@ const MainCalendarGrid: FunctionComponent<MainCalendarGridProps> = ({ onEventCli
             key={i}
             className={[
               "border border-whitesmoke-200 flex flex-col items-start p-1 gap-1 min-h-[60px] sm:min-h-[80px] md:min-h-[100px]",
-              inactive ? "bg-whitesmoke-200 text-dimgray" : today ? "bg-lightcyan-200 text-teal-100" : "bg-white",
+              inactive
+                ? "bg-whitesmoke-200 text-dimgray"
+                : today
+                  ? "bg-lightcyan-200 text-teal-100"
+                  : "bg-white",
             ].join(" ")}
           >
             <b className="text-[10px] sm:text-xs">{day}</b>

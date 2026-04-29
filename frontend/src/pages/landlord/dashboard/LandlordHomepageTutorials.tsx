@@ -1,4 +1,4 @@
-import { FunctionComponent, useState } from 'react';
+import { type FunctionComponent, useState } from 'react';
 import { Icon } from '@iconify/react';
 
 interface TutorialBubbleProps {
@@ -113,7 +113,7 @@ const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose 
 
   return (
     <div
-      className={`absolute ${current.position} z-[999] flex flex-col items-start animate-in fade-in zoom-in duration-200 transition-all`}
+      className={`absolute ${current.position} z-999 flex flex-col items-start animate-in fade-in zoom-in duration-200 transition-all`}
     >
       <div className="w-[232px] flex flex-row items-center">
         <Icon icon="ph:caret-left-fill" className="text-aliceblue w-14 h-15 mr-[-23px] z-10" />

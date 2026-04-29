@@ -19,7 +19,7 @@ const CheckboxItem: React.FC<CheckboxItemProps> = ({ label, isChecked, onToggle,
         >
         {/* Custom Checkbox Square */}
         <div 
-            className={`w-[24px] h-[24px] border-3  mr-[16px] flex justify-center items-center flex-shrink-0 transition-colors ${
+            className={`w-[24px] h-[24px] border-3  mr-[16px] flex justify-center items-center shrink-0 transition-colors ${
             isChecked ? 'bg-darkslategray border-darkslategray' : 'border-darkslategray bg-white'
             }`}
         >

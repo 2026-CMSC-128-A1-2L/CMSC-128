@@ -45,7 +45,7 @@ const SideBarAdminButton = ({
       <span className="flex h-[42px] w-[37px] items-center justify-center text-black">{icon}</span>
       <span
         className={[
-          "font-['Outfit',sans-serif] text-[32px] font-semibold leading-[1.5] text-black",
+          "font-['Outfit',sans-serif] text-[32px] font-semibold leading-normal text-black",
           'overflow-hidden whitespace-nowrap transition-all duration-300 ease-in-out',
           collapsed ? 'max-w-0 opacity-0' : 'max-w-[220px] opacity-100',
         ].join(' ')}
