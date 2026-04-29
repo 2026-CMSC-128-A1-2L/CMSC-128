@@ -1,7 +1,7 @@
-import type { MouseEventHandler } from 'react';
-import { Icon } from '@iconify/react';
+import type { MouseEventHandler } from "react";
+import { Icon } from "@iconify/react";
 
-export type SideBarAdminButtonState = 'default' | 'hovered' | 'clicked';
+export type SideBarAdminButtonState = "default" | "hovered" | "clicked";
 
 type SideBarAdminButtonProps = {
   icon: string;
@@ -12,65 +12,65 @@ type SideBarAdminButtonProps = {
 };
 
 const getHighlightClasses = (state: SideBarAdminButtonState): string => {
-  if (state === 'clicked') return 'bg-[#096c5b]';
-  if (state === 'hovered') return 'bg-[#BEEDE1]';
-  return 'bg-white';
+  if (state === "clicked") return "bg-[#096c5b]";
+  if (state === "hovered") return "bg-[#BEEDE1]";
+  return "bg-white";
 };
 
 const getTextClasses = (state: SideBarAdminButtonState): string => {
-  if (state === 'clicked') return 'text-[#096c5b]';
-  return 'text-[#001d18]';
+  if (state === "clicked") return "text-[#096c5b]";
+  return "text-[#001d18]";
 };
 
 const SideBarAdminButton = ({
   icon,
   label,
-  state = 'default',
+  state = "default",
   onClick,
-  iconClassName = 'h-[24px] w-[24px]',
+  iconClassName = "h-[24px] w-[24px]",
 }: SideBarAdminButtonProps) => {
   return (
     <button
       type="button"
       onClick={onClick}
       aria-label={label}
-      aria-current={state === 'clicked' ? 'page' : undefined}
+      aria-current={state === "clicked" ? "page" : undefined}
       className={[
-        'group flex w-[180px] cursor-pointer items-center gap-[24px] pr-[20px]',
-        'transition-colors duration-200 ease-in-out',
-      ].join(' ')}
+        "group flex w-[180px] cursor-pointer items-center gap-[24px] pr-[20px]",
+        "transition-colors duration-200 ease-in-out",
+      ].join(" ")}
     >
       <span
         aria-hidden="true"
         className={[
-          'h-[44px] w-[8px] shrink-0 rounded-[4px] transition-colors duration-200 ease-in-out',
+          "h-[44px] w-[8px] shrink-0 rounded-[4px] transition-colors duration-200 ease-in-out",
           getHighlightClasses(state),
-          state === 'default' ? 'group-hover:bg-[#BEEDE1]' : '',
-        ].join(' ')}
+          state === "default" ? "group-hover:bg-[#BEEDE1]" : "",
+        ].join(" ")}
       />
 
       <span
         className={[
-          'flex h-[44px] flex-1 items-center gap-[16px] rounded-[12px] px-[4px]',
-          'transition-colors duration-200 ease-in-out',
-          state === 'default' ? 'group-hover:bg-[#F0FAF6]' : '',
-        ].join(' ')}
+          "flex h-[44px] flex-1 items-center gap-[16px] rounded-[12px] px-[4px]",
+          "transition-colors duration-200 ease-in-out",
+          state === "default" ? "group-hover:bg-[#F0FAF6]" : "",
+        ].join(" ")}
       >
         <span
           className={[
-            'flex h-[24px] w-[24px] shrink-0 items-center justify-center',
-            'transition-colors duration-200 ease-in-out',
+            "flex h-[24px] w-[24px] shrink-0 items-center justify-center",
+            "transition-colors duration-200 ease-in-out",
             getTextClasses(state),
-          ].join(' ')}
+          ].join(" ")}
         >
           <Icon icon={icon} className={iconClassName} aria-hidden="true" />
         </span>
         <span
           className={[
             "font-['Inter',sans-serif] text-[14px] font-semibold leading-[normal]",
-            'transition-colors duration-200 ease-in-out',
+            "transition-colors duration-200 ease-in-out",
             getTextClasses(state),
-          ].join(' ')}
+          ].join(" ")}
         >
           {label}
         </span>

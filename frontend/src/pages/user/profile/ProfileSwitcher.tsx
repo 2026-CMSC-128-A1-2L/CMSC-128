@@ -54,7 +54,7 @@ const ProfileSwitcher = () => {
               </div>
               {/* ======= SCROLL UP ICON ======= */}
               <div
-                className="fixed bottom-32 right-10 w-[60px] h-[60px] rounded-[30px] [background:linear-gradient(183.48deg,_#096c5b,_#16917c)] flex items-center justify-center cursor-pointer z-[1000] shadow-lg transition-all hover:scale-110 active:scale-95"
+                className="fixed bottom-32 right-10 w-[60px] h-[60px] rounded-[30px] [background:linear-gradient(183.48deg,#096c5b,#16917c)] flex items-center justify-center cursor-pointer z-1000 shadow-lg transition-all hover:scale-110 active:scale-95"
                 onClick={onArrowUpClick}
               >
                 <Icon icon="mdi:arrow-up" className="w-[27.7px] h-[27.7px] text-white" />

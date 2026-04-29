@@ -1,4 +1,4 @@
-import { type MouseEvent } from 'react';
+import type { MouseEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import type { PaymentStatus, Tenant } from '../../../data/landlordTenants';
@@ -21,14 +21,14 @@ const STATUS_MAP: Record<PaymentStatus, StatusDescriptor> = {
   pending: {
     label: 'Pending',
     textClass:
-      'bg-gradient-to-b from-[#c29722] to-[#f6b709] bg-clip-text text-transparent',
+      'bg-linear-to-b from-[#c29722] to-[#f6b709] bg-clip-text text-transparent',
     icon: 'material-symbols:pending-outline',
     iconClass: 'text-[#c29722]',
   },
   overdue: {
     label: 'Overdue',
     textClass:
-      'bg-gradient-to-b from-[#c00f0f] to-[#e44f4f] bg-clip-text text-transparent',
+      'bg-linear-to-b from-[#c00f0f] to-[#e44f4f] bg-clip-text text-transparent',
     icon: 'material-symbols:cancel-outline',
     iconClass: 'text-[#c00f0f]',
   },

@@ -27,7 +27,7 @@ const ListingCard = (props: { facilityName: string; listingName: string; image?:
 
   return (
     <div
-      className={`relative bg-aliceblue border-whitesmoke border-solid border-[1px] box-border overflow-hidden flex flex-col items-start text-left text-black font-inter transition-all duration-300
+      className={`relative bg-aliceblue border-whitesmoke border-solid border box-border overflow-hidden flex flex-col items-start text-left text-black font-inter transition-all duration-300
         ${isExpanded ? 'w-66 h-fit rounded-num-16 shadow-sm' : 'w-66 h-56 rounded-[15.31px]'}`}
     >
       <img className="w-66 h-30 object-cover" src={image} alt={facilityName} />
@@ -90,22 +90,22 @@ type Manager = {
 };
 
 const ManagerList = (props: { managers: Manager[] }) => (
-  <div className="self-stretch h-[9.5rem] overflow-hidden shrink-0 flex flex-col items-start py-[0.625rem] px-[0rem] box-border gap-[0.625rem]">
+  <div className="self-stretch h-38 overflow-hidden shrink-0 flex flex-col items-start py-2.5 px-0 box-border gap-2.5">
     <div className="self-stretch flex items-center">
       <b className="relative tracking-num--0_01">Managers</b>
     </div>
-    <div className="self-stretch flex flex-col items-start gap-[0.5rem] text-left text-[0.875rem] text-black">
+    <div className="self-stretch flex flex-col items-start gap-2 text-left text-[0.875rem] text-black">
       <table>
         {props.managers.map((manager, index) => {
           const { name, availability } = manager;
 
           return (
             // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-            <div key={index} className="self-stretch flex items-center gap-[0.625rem]">
-              <div className="w-[22.5rem] relative leading-[1.5rem] font-medium flex items-center shrink-0">
+            <div key={index} className="self-stretch flex items-center gap-2.5">
+              <div className="w-90 relative leading-6 font-medium flex items-center shrink-0">
                 {name}
               </div>
-              <div className="relative leading-[1.5rem] font-medium">{availability}</div>
+              <div className="relative leading-6 font-medium">{availability}</div>
             </div>
           );
         })}
@@ -120,22 +120,22 @@ type Tenant = {
 };
 
 const TenantList = (props: { tenants: Tenant[] }) => (
-  <div className="self-stretch overflow-hidden flex flex-col items-start py-[0.625rem] px-[0rem] gap-[0.625rem]">
+  <div className="self-stretch overflow-hidden flex flex-col items-start py-2.5 px-0 gap-2.5">
     <div className="self-stretch flex items-center">
       <b className="relative tracking-num--0_01">Tenants</b>
     </div>
-    <div className="self-stretch flex flex-col items-start gap-[0.5rem] text-left text-[0.875rem] text-black">
+    <div className="self-stretch flex flex-col items-start gap-2 text-left text-[0.875rem] text-black">
       <table>
         {props.tenants.map((tenant, index) => {
           const { name, roomNumber } = tenant;
 
           return (
             // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-            <div key={index} className="self-stretch flex items-center gap-[0.625rem]">
-              <div className="w-[22.5rem] relative leading-[1.5rem] font-medium flex items-center shrink-0">
+            <div key={index} className="self-stretch flex items-center gap-2.5">
+              <div className="w-90 relative leading-6 font-medium flex items-center shrink-0">
                 {name}
               </div>
-              <div className="relative leading-[1.5rem] font-medium">{roomNumber}</div>
+              <div className="relative leading-6 font-medium">{roomNumber}</div>
             </div>
           );
         })}
@@ -178,7 +178,7 @@ const AddListingCard = () => (
 );
 
 const BuildingInfo = () => {
-  const [data, setData] = useState<BuildingInformation>({
+  const [data, _setData] = useState<BuildingInformation>({
     name: 'Two Sapphire Place',
     buildingType: 'maganda',
     status: 'Active',
@@ -295,7 +295,7 @@ const BuildingInfo = () => {
             <div className="flex flex-col p-2.5 gap-2.5">
               <b>Photos</b>
               <div className="flex flex-wrap gap-2.5">
-                {photos.map((x, index) => (
+                {photos.map((_x, index) => (
                   <div
                     // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                     key={index}
@@ -304,7 +304,7 @@ const BuildingInfo = () => {
                 ))}
               </div>
             </div>
-            <div className="self-stretch flex flex-col items-start justify-center gap-[2rem]">
+            <div className="self-stretch flex flex-col items-start justify-center gap-8">
               <div className="flex flex-col items-start gap-4">
                 <b className="relative tracking-num--0_01">Room Types</b>
                 <div className="w-full flex items-center justify-between gap-4 text-left text-black">

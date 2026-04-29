@@ -3,7 +3,7 @@ import z from 'zod';
 export const ReportListingBodySchema = z.object({
   description: z.string().min(1).max(200),
   flags: z.array(z.string()).min(1),
-  evidence: z.array(z.string()).default([]),
+  evidence: z.array(z.string()).max(2).default([]),
 });
 
 export const ReportUserBodySchema = z.object({

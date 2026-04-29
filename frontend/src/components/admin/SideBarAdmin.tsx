@@ -1,18 +1,26 @@
-import { useCallback, useEffect, useRef, useState, type MouseEventHandler } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Icon } from '@iconify/react';
-import AtlasLogo from '../../../assets/logo_atlas_text.svg?react';
-import SideBarAdminButton from './SideBarAdminButton';
-import SideBarAdminMessagesView, { type MessageItem } from './SideBarAdminMessagesView';
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type MouseEventHandler,
+} from "react";
+import { useNavigate } from "react-router-dom";
+import { Icon } from "@iconify/react";
+import AtlasLogo from "../../../assets/logo_atlas_text.svg?react";
+import SideBarAdminButton from "./SideBarAdminButton";
+import SideBarAdminMessagesView, {
+  type MessageItem,
+} from "./SideBarAdminMessagesView";
 
-export type SideBarAdminView = 'nav' | 'messages_tab';
+export type SideBarAdminView = "nav" | "messages_tab";
 export type SideBarAdminItemKey =
-  | 'applications'
-  | 'reports'
-  | 'listings'
-  | 'analytics'
-  | 'messages'
-  | 'announce';
+  | "applications"
+  | "reports"
+  | "listings"
+  | "analytics"
+  | "messages"
+  | "announce";
 
 type AdminInfo = {
   name: string;
@@ -49,96 +57,96 @@ const navItems: Array<{
   route: string;
 }> = [
   {
-    key: 'applications',
-    label: 'Applications',
-    iconName: 'solar:laptop-outline',
-    route: '/admin/applications',
+    key: "applications",
+    label: "Applications",
+    iconName: "solar:laptop-outline",
+    route: "/admin/applications",
   },
   {
-    key: 'reports',
-    label: 'Reports',
-    iconName: 'material-symbols:report',
-    route: '/admin/reports',
+    key: "reports",
+    label: "Reports",
+    iconName: "material-symbols:report",
+    route: "/admin/reports",
   },
   {
-    key: 'listings',
-    label: 'Listings',
-    iconName: 'roentgen:apartments-4-story',
-    route: '/admin/listings',
+    key: "listings",
+    label: "Listings",
+    iconName: "roentgen:apartments-4-story",
+    route: "/admin/listings",
   },
   {
-    key: 'analytics',
-    label: 'Analytics',
-    iconName: 'solar:chart-outline',
-    route: '/admin/analytics',
+    key: "analytics",
+    label: "Analytics",
+    iconName: "solar:chart-outline",
+    route: "/admin/analytics",
   },
   {
-    key: 'messages',
-    label: 'Messages',
-    iconName: 'solar:chat-round-dots-outline',
-    route: '/admin/messages',
+    key: "messages",
+    label: "Messages",
+    iconName: "solar:chat-round-dots-outline",
+    route: "/admin/messages",
   },
   {
-    key: 'announce',
-    label: 'Announce',
-    iconName: 'grommet-icons:announce',
-    route: '/admin/announce',
+    key: "announce",
+    label: "Announce",
+    iconName: "grommet-icons:announce",
+    route: "/admin/announce",
   },
 ];
 
 // Default mock data so the Messages Tab has something to show out-of-the-box.
 const defaultMessages: MessageItem[] = [
   {
-    id: 'msg-1',
-    sender: 'Three Sapphire Place',
-    preview: 'Hi Daphne! Your application is being reviewed by our do...',
-    timeLabel: '1hr ago',
+    id: "msg-1",
+    sender: "Three Sapphire Place",
+    preview: "Hi Daphne! Your application is being reviewed by our do...",
+    timeLabel: "1hr ago",
     unread: true,
   },
   {
-    id: 'msg-2',
-    sender: 'Three Sapphire Place',
-    preview: 'Hi Daphne! Your application is being reviewed by our do...',
-    timeLabel: '1hr ago',
+    id: "msg-2",
+    sender: "Three Sapphire Place",
+    preview: "Hi Daphne! Your application is being reviewed by our do...",
+    timeLabel: "1hr ago",
     unread: true,
   },
   {
-    id: 'msg-3',
-    sender: 'Three Sapphire Place',
-    preview: 'Hi Daphne! Your application is being reviewed by our do...',
-    timeLabel: '1hr ago',
+    id: "msg-3",
+    sender: "Three Sapphire Place",
+    preview: "Hi Daphne! Your application is being reviewed by our do...",
+    timeLabel: "1hr ago",
     unread: true,
   },
   {
-    id: 'msg-4',
-    sender: 'Three Sapphire Place',
-    preview: 'Hi Daphne! Your application is being reviewed by our do...',
-    timeLabel: '1hr ago',
+    id: "msg-4",
+    sender: "Three Sapphire Place",
+    preview: "Hi Daphne! Your application is being reviewed by our do...",
+    timeLabel: "1hr ago",
     unread: false,
   },
   {
-    id: 'msg-5',
-    sender: 'Three Sapphire Place',
-    preview: 'Hi Daphne! Your application is being reviewed by our do...',
-    timeLabel: '1hr ago',
+    id: "msg-5",
+    sender: "Three Sapphire Place",
+    preview: "Hi Daphne! Your application is being reviewed by our do...",
+    timeLabel: "1hr ago",
     unread: false,
   },
 ];
 
 const defaultAdmin: AdminInfo = {
-  name: 'Kopiko',
-  role: 'Admin',
+  name: "Kopiko",
+  role: "Admin",
 };
 
 const SideBarAdmin = ({
-  activeItem = 'analytics',
+  activeItem = "analytics",
   hoveredItem,
   onItemClick,
   onSignOut,
   onProfileClick,
   admin = defaultAdmin,
-  className = '',
-  initialView = 'nav',
+  className = "",
+  initialView = "nav",
   messages = defaultMessages,
   activeMessageId,
   onSelectMessage,
@@ -148,27 +156,29 @@ const SideBarAdmin = ({
   const navigate = useNavigate();
   const [view, setView] = useState<SideBarAdminView>(initialView);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
-  const [profileMenuPlacement, setProfileMenuPlacement] = useState<'top' | 'bottom'>('top');
+  const [profileMenuPlacement, setProfileMenuPlacement] = useState<
+    "top" | "bottom"
+  >("top");
   const profileMenuRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     setView(initialView);
   }, [initialView]);
 
-  const isMessagesTab = view === 'messages_tab';
+  const isMessagesTab = view === "messages_tab";
 
   const handleNavItemClick = (item: (typeof navItems)[number]) => {
     onItemClick?.(item.key);
-    if (item.key === 'messages') {
+    if (item.key === "messages") {
       // Swap in place. Route stays the same so the user keeps their context.
-      setView('messages_tab');
+      setView("messages_tab");
       return;
     }
     navigate(item.route);
   };
 
   const handleBackFromMessages = () => {
-    setView('nav');
+    setView("nav");
     onBackFromMessages?.();
   };
 
@@ -192,8 +202,9 @@ const SideBarAdmin = ({
     const profileRect = profileMenuRef.current.getBoundingClientRect();
 
     const canOpenBelow =
-      profileRect.bottom + menuGap + menuHeight <= window.innerHeight - viewportPadding;
-    setProfileMenuPlacement(canOpenBelow ? 'bottom' : 'top');
+      profileRect.bottom + menuGap + menuHeight <=
+      window.innerHeight - viewportPadding;
+    setProfileMenuPlacement(canOpenBelow ? "bottom" : "top");
   }, []);
 
   const handleProfileButtonClick: MouseEventHandler<HTMLButtonElement> = () => {
@@ -203,7 +214,9 @@ const SideBarAdmin = ({
     setIsProfileMenuOpen((prev) => !prev);
   };
 
-  const handleViewProfileClick: MouseEventHandler<HTMLButtonElement> = (event) => {
+  const handleViewProfileClick: MouseEventHandler<HTMLButtonElement> = (
+    event,
+  ) => {
     setIsProfileMenuOpen(false);
     onProfileClick?.(event);
   };
@@ -226,7 +239,7 @@ const SideBarAdmin = ({
     };
 
     const handleEscapeKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
+      if (event.key === "Escape") {
         setIsProfileMenuOpen(false);
       }
     };
@@ -235,25 +248,25 @@ const SideBarAdmin = ({
       resolveProfileMenuPlacement();
     };
 
-    window.addEventListener('mousedown', handleDocumentClick);
-    window.addEventListener('keydown', handleEscapeKey);
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("mousedown", handleDocumentClick);
+    window.addEventListener("keydown", handleEscapeKey);
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      window.removeEventListener('mousedown', handleDocumentClick);
-      window.removeEventListener('keydown', handleEscapeKey);
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("mousedown", handleDocumentClick);
+      window.removeEventListener("keydown", handleEscapeKey);
+      window.removeEventListener("resize", handleResize);
     };
   }, [isProfileMenuOpen, resolveProfileMenuPlacement]);
 
   return (
     <aside
       className={[
-        'flex shrink-0 overflow-hidden border border-solid border-[#f0f0f0] bg-white',
-        'transition-[width] duration-300 ease-in-out',
-        isMessagesTab ? 'w-[336px]' : 'w-[200px]',
+        "flex shrink-0 overflow-hidden border border-solid border-[#f0f0f0] bg-white",
+        "transition-[width] duration-300 ease-in-out",
+        isMessagesTab ? "w-[336px]" : "w-[200px]",
         className,
-      ].join(' ')}
+      ].join(" ")}
     >
       {isMessagesTab ? (
         <SideBarAdminMessagesView
@@ -273,10 +286,10 @@ const SideBarAdmin = ({
             {navItems.map((item) => {
               const state =
                 item.key === activeItem
-                  ? 'clicked'
+                  ? "clicked"
                   : item.key === hoveredItem
-                    ? 'hovered'
-                    : 'default';
+                    ? "hovered"
+                    : "default";
 
               return (
                 <div key={item.key} className="duration-200 hover:bg-[#F0FAF6]">
@@ -300,11 +313,11 @@ const SideBarAdmin = ({
               {isProfileMenuOpen && (
                 <div
                   className={[
-                    'absolute left-[20px] z-30 flex h-[68px] w-[171px] flex-col gap-[7px] rounded-[9px] border border-solid border-[#f0f0f0] bg-[#f7f7f7] px-[11px] py-[9px] shadow-[0_4px_18px_rgba(0,0,0,0.1)]',
-                    profileMenuPlacement === 'bottom'
-                      ? 'top-full mt-[8px]'
-                      : 'bottom-full mb-[8px]',
-                  ].join(' ')}
+                    "absolute left-[20px] z-30 flex h-[68px] w-[171px] flex-col gap-[7px] rounded-[9px] border border-solid border-[#f0f0f0] bg-[#f7f7f7] px-[11px] py-[9px] shadow-[0_4px_18px_rgba(0,0,0,0.1)]",
+                    profileMenuPlacement === "bottom"
+                      ? "top-full mt-[8px]"
+                      : "bottom-full mb-[8px]",
+                  ].join(" ")}
                 >
                   <button
                     type="button"
@@ -333,9 +346,17 @@ const SideBarAdmin = ({
               >
                 <span className="flex h-[48px] w-[44px] shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#e5e7eb] text-[#9ca3af]">
                   {admin.avatarUrl ? (
-                    <img src={admin.avatarUrl} alt="" className="h-full w-full object-cover" />
+                    <img
+                      src={admin.avatarUrl}
+                      alt=""
+                      className="h-full w-full object-cover"
+                    />
                   ) : (
-                    <Icon icon="solar:user-bold" className="h-[28px] w-[28px]" aria-hidden="true" />
+                    <Icon
+                      icon="solar:user-bold"
+                      className="h-[28px] w-[28px]"
+                      aria-hidden="true"
+                    />
                   )}
                 </span>
                 <span className="flex flex-col items-start justify-center gap-[4px] overflow-hidden">

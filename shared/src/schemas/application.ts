@@ -15,7 +15,7 @@ export const ApplicationFilterSchema = z
     userId: ObjectIdSchema.nullish(),
     listingId: ObjectIdSchema.nullish(),
     facilityId: ObjectIdSchema.nullish(),
-    status: z.enum(['pending', 'rejected', 'waitlisted', 'approved', 'contract-signed']).nullish(),
+    status: z.enum(['pending', 'rejected', 'waitlisted', 'approved', 'finalized']).nullish(),
     leaseDuration: z.enum(['6-months', '12-months']).nullish(),
     moveInDate: z
       .object({

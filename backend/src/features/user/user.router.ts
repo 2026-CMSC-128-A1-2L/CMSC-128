@@ -6,8 +6,8 @@ import {
   setUserId,
   getUserId,
   selfFilter,
-  isVerifiedStudent,
   isLoggedIn,
+  isVerifiedCheck,
 } from '../../middleware';
 import {
   routeGetUsers,
@@ -25,7 +25,7 @@ import { routeGetApplicationsByStudent } from '../application/application.contro
 import { routeGetRentalsByUser } from '../rental/rental.controller';
 import { routeGetUserBillings } from '../billing/billing.controller';
 import { routeGetVisitBookingsByStudent } from '../booking/booking.controller';
-import { routeReportUser } from '../report/report.controller';
+import { routeReportUser, routeGetMyReports } from '../report/report.controller';
 
 const router = Router();
 
@@ -133,13 +133,21 @@ router.use(
 );
 
 // ============================================================================
+// GET /api/users/me/reports
+//
+// Returns the logged-in user's own submitted reports and their statuses.
+// Used by students and landlords to track "Report Updates".
+// ============================================================================
+router.get('/me/reports', isVerifiedCheck, routeGetMyReports);
+
+// ============================================================================
 // POST /api/users/:userId/report
 //
-// TODO:
-//   User is to be reported by manager/landlord make filter for that
-//
+// - Students can report managers or landlords.
+// - Landlords and managers can report tenants.
+// Role enforcement is handled in the service.
 // ============================================================================
-router.post('/:userId/report', isVerifiedStudent, routeReportUser);
+router.post('/:userId/report', isVerifiedCheck, routeReportUser);
 
 // ============================================================================
 // These endpoints might be redundant.

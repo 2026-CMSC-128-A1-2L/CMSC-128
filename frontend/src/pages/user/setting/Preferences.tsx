@@ -1,11 +1,10 @@
-import { FunctionComponent, useCallback } from 'react';
-import { Icon } from '@iconify/react';
+import type { FunctionComponent, } from 'react';
 import checked_radio_button from '../../../../assets/checked_button.svg';
 import unchecked_radio_button from '../../../../assets/unchecked_button.svg';
 
 const Preferences: FunctionComponent = () => {
   return (
-    <div className="self-stretch rounded-t-num-0 rounded-b-num-16 border-whitesmoke-200 border-solid border-[1px] overflow-hidden flex flex-col items-start py-6 px-6 sm:px-num-32 gap-6 text-center text-[24px] text-black">
+    <div className="self-stretch rounded-t-num-0 rounded-b-num-16 border-whitesmoke-200 border-solid border overflow-hidden flex flex-col items-start py-6 px-6 sm:px-num-32 gap-6 text-center text-[24px] text-black">
       <div className="self-stretch flex flex-col items-start">
         <b className="relative leading-8">Display</b>
       </div>
@@ -21,7 +20,7 @@ const Preferences: FunctionComponent = () => {
         </div>
         <div className="w-full overflow-hidden flex flex-col lg:flex-row items-center justify-center py-num-10 px-0 box-border gap-9">
           <div className="w-full lg:w-1/2 flex flex-col items-start gap-2.5">
-            <div className="self-stretch h-[220px] rounded-num-16 bg-white border-whitesmoke-200 border-solid border-[1px] box-border overflow-hidden shrink-0 flex flex-col items-start gap-2">
+            <div className="self-stretch h-[220px] rounded-num-16 bg-white border-whitesmoke-200 border-solid border box-border overflow-hidden shrink-0 flex flex-col items-start gap-2">
               <div className="self-stretch h-10 rounded-t-num-16 rounded-b-num-0 bg-darkslategray-200 overflow-hidden shrink-0 flex items-start p-num-10 box-border" />
               <div className="self-stretch flex flex-col items-start">
                 <div className="self-stretch flex items-start py-0 px-5">
@@ -59,7 +58,7 @@ const Preferences: FunctionComponent = () => {
             </div>
           </div>
           <div className="w-full lg:w-1/2 flex flex-col items-start gap-2.5">
-            <div className="self-stretch h-[220px] rounded-num-16 bg-black border-black border-solid border-[1px] box-border overflow-hidden shrink-0 flex flex-col items-start gap-2">
+            <div className="self-stretch h-[220px] rounded-num-16 bg-black border-black border-solid border box-border overflow-hidden shrink-0 flex flex-col items-start gap-2">
               <div className="self-stretch h-10 rounded-t-num-16 rounded-b-num-0 bg-darkslategray-200 overflow-hidden shrink-0 flex items-start p-num-10 box-border" />
               <div className="self-stretch flex flex-col items-start">
                 <div className="self-stretch flex items-start py-0 px-5">
