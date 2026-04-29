@@ -95,21 +95,9 @@ const MainCalendarGrid: FunctionComponent<MainCalendarGridProps> = ({
 
   return (
     <div className="w-full rounded-[14px] overflow-hidden flex flex-col bg-white">
-      {/* Month header with navigation */}
-      <div className="flex items-center justify-between px-4 py-4 border-b border-whitesmoke-200">
-        <button
-          onClick={onPrevMonth}
-          className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-        >
-          ←
-        </button>
+      {/* Month header */}
+      <div className="flex items-center justify-center px-4 py-4 border-b border-whitesmoke-200">
         <div className="text-base font-semibold tracking-tight">{monthName}</div>
-        <button
-          onClick={onNextMonth}
-          className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-        >
-          →
-        </button>
       </div>
 
       {/* Day labels */}

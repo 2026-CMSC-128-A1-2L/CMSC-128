@@ -6,10 +6,40 @@ interface MiniCalendarProps {
   currentDate: Date;
   onPrevMonth?: () => void;
   onNextMonth?: () => void;
+  onDateChange?: (date: Date) => void;
+  onDateClick?: (date: Date, events: CalendarEvent[]) => void;
   onEventClick?: (event: CalendarEvent) => void;
 }
 
 const DAYS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
+const MONTHS = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+const MONTH_SHORT = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
 
 const getEventIcon = (type: CalendarEvent["type"]) => {
   switch (type) {
@@ -30,10 +60,15 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
   currentDate,
   onPrevMonth,
   onNextMonth,
+  onDateChange,
+  onDateClick,
   onEventClick,
 }) => {
   const [upcomingEvents, setUpcomingEvents] = useState<CalendarEvent[]>([]);
+  const [allEvents, setAllEvents] = useState<CalendarEvent[]>([]);
   const [loading, setLoading] = useState(false);
+  const [showMonthDropdown, setShowMonthDropdown] = useState(false);
+  const [showYearDropdown, setShowYearDropdown] = useState(false);
 
   useEffect(() => {
     const fetchUpcomingEvents = async () => {
@@ -50,6 +85,23 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
 
     fetchUpcomingEvents();
   }, []);
+
+  // Fetch all events for current month
+  useEffect(() => {
+    const fetchAllEvents = async () => {
+      try {
+        const response = await CalendarService.getCalendarEvents(
+          currentDate.getFullYear(),
+          currentDate.getMonth() + 1
+        );
+        setAllEvents(response.data);
+      } catch (error) {
+        console.error("Failed to load all events:", error);
+      }
+    };
+
+    fetchAllEvents();
+  }, [currentDate]);
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
@@ -83,6 +135,20 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
   });
   const yearStr = currentDate.getFullYear().toString();
 
+  const handleMonthSelect = (monthIndex: number) => {
+    const newDate = new Date(year, monthIndex);
+    onDateChange?.(newDate);
+    setShowMonthDropdown(false);
+  };
+
+  const handleYearSelect = (selectedYear: number) => {
+    const newDate = new Date(selectedYear, month);
+    onDateChange?.(newDate);
+    setShowYearDropdown(false);
+  };
+
+  const yearRange = Array.from({ length: 21 }, (_, i) => year - 10 + i);
+
   const formatEventDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-US", {
@@ -90,6 +156,24 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
       day: "numeric",
       year: "numeric",
     });
+  };
+
+  const getEventsForDay = (day: number) => {
+    return allEvents.filter((event) => {
+      const eventDate = new Date(event.date);
+      return (
+        eventDate.getDate() === day &&
+        eventDate.getMonth() === month &&
+        eventDate.getFullYear() === year
+      );
+    });
+  };
+
+  const handleDateClick = (day: number | null) => {
+    if (day === null) return;
+    const clickedDate = new Date(year, month, day);
+    const dayEvents = getEventsForDay(day);
+    onDateClick?.(clickedDate, dayEvents);
   };
 
   return (
@@ -104,14 +188,67 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
           >
             <Icon icon="ic:round-chevron-left" className="h-5 w-5" />
           </button>
-          <div className="flex-1 flex gap-2">
-            <div className="flex-1 rounded-md border border-gainsboro flex items-center p-2 gap-1 text-xs">
-              <span className="flex-1">{monthName}</span>
-              <Icon icon="ic:round-keyboard-arrow-down" className="h-4 w-4" />
+          <div className="flex-1 flex gap-2 relative">
+            {/* Month Dropdown */}
+            <div className="flex-1 relative">
+              <button
+                onClick={() => setShowMonthDropdown(!showMonthDropdown)}
+                className="w-full rounded-md border border-gainsboro flex items-center p-2 gap-1 text-xs hover:bg-gray-50"
+              >
+                <span className="flex-1">{monthName}</span>
+                <Icon
+                  icon="ic:round-keyboard-arrow-down"
+                  className={`h-4 w-4 transition-transform ${
+                    showMonthDropdown ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+              {showMonthDropdown && (
+                <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gainsboro rounded-md z-10 shadow-lg max-h-48 overflow-y-auto">
+                  {MONTH_SHORT.map((m, idx) => (
+                    <button
+                      key={m}
+                      onClick={() => handleMonthSelect(idx)}
+                      className={`w-full text-left px-3 py-2 text-xs hover:bg-blue-50 ${
+                        idx === month ? "bg-lightcyan-100 font-bold" : ""
+                      }`}
+                    >
+                      {m}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
-            <div className="flex-1 rounded-md border border-gainsboro flex items-center p-2 gap-1 text-xs">
-              <span className="flex-1">{yearStr}</span>
-              <Icon icon="ic:round-keyboard-arrow-down" className="h-4 w-4" />
+
+            {/* Year Dropdown */}
+            <div className="flex-1 relative">
+              <button
+                onClick={() => setShowYearDropdown(!showYearDropdown)}
+                className="w-full rounded-md border border-gainsboro flex items-center p-2 gap-1 text-xs hover:bg-gray-50"
+              >
+                <span className="flex-1">{yearStr}</span>
+                <Icon
+                  icon="ic:round-keyboard-arrow-down"
+                  className={`h-4 w-4 transition-transform ${
+                    showYearDropdown ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+              {showYearDropdown && (
+                <div className="absolute top-full right-0 left-0 mt-1 bg-white border border-gainsboro rounded-md z-10 shadow-lg max-h-48 overflow-y-auto">
+                  {yearRange.map((y) => (
+                    <button
+                      key={y}
+                      onClick={() => handleYearSelect(y)}
+                      className={`w-full text-left px-3 py-2 text-xs hover:bg-blue-50 ${
+                        y === year ? "bg-lightcyan-100 font-bold" : ""
+                      }`}
+                    >
+                      {y}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
           <button
@@ -140,17 +277,20 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
                   const isTodayDay =
                     isCurrentMonth && day === today.getDate() && day !== null;
                   return (
-                    <div
+                    <button
                       key={di}
+                      onClick={() => handleDateClick(day)}
+                      disabled={day === null}
                       className={[
-                        "rounded-md flex items-center justify-center p-2 aspect-square",
+                        "rounded-md flex items-center justify-center p-2 aspect-square transition-colors",
+                        day === null ? "cursor-default" : "cursor-pointer hover:bg-gray-100",
                         isTodayDay
-                          ? "bg-lightcyan-100 text-teal-200 font-bold"
+                          ? "bg-lightcyan-100 text-teal-200 font-bold hover:bg-lightcyan-200"
                           : "",
                       ].join(" ")}
                     >
                       {day ?? ""}
-                    </div>
+                    </button>
                   );
                 })}
               </div>

@@ -3,13 +3,17 @@ import Footer from "../../../components/general/Footer";
 import SideBar from "../../../components/user/SideBar";
 import MiniCalendar from "../../../components/user/MiniCalendar";
 import EventPopout from "../../../components/user/EventPopout";
+import DayEventsPopout from "../../../components/user/DayEventsPopout";
 import PortalPopup from "../../../components/general/PortalPopup";
 import MainCalendarGrid from "../../../components/user/MainCalendarGrid";
 import type { CalendarEvent } from "../../../service/CalendarService";
 
 const MyCalendar: FunctionComponent = () => {
   const [isEventPopoutOpen, setEventPopoutOpen] = useState(false);
+  const [isDayPopoutOpen, setDayPopoutOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [selectedDayEvents, setSelectedDayEvents] = useState<CalendarEvent[]>([]);
   const [currentDate, setCurrentDate] = useState(new Date());
 
   const openEventPopout = useCallback((event: CalendarEvent) => {
@@ -22,6 +26,21 @@ const MyCalendar: FunctionComponent = () => {
     setSelectedEvent(null);
   }, []);
 
+  const openDayPopout = useCallback(
+    (date: Date, events: CalendarEvent[]) => {
+      setSelectedDate(date);
+      setSelectedDayEvents(events);
+      setDayPopoutOpen(true);
+    },
+    []
+  );
+
+  const closeDayPopout = useCallback(() => {
+    setDayPopoutOpen(false);
+    setSelectedDate(null);
+    setSelectedDayEvents([]);
+  }, []);
+
   const handlePrevMonth = useCallback(() => {
     setCurrentDate(
       (prev) => new Date(prev.getFullYear(), prev.getMonth() - 1)
@@ -32,6 +51,10 @@ const MyCalendar: FunctionComponent = () => {
     setCurrentDate(
       (prev) => new Date(prev.getFullYear(), prev.getMonth() + 1)
     );
+  }, []);
+
+  const handleDateChange = useCallback((date: Date) => {
+    setCurrentDate(date);
   }, []);
 
   return (
@@ -50,6 +73,8 @@ const MyCalendar: FunctionComponent = () => {
                     currentDate={currentDate}
                     onPrevMonth={handlePrevMonth}
                     onNextMonth={handleNextMonth}
+                    onDateChange={handleDateChange}
+                    onDateClick={openDayPopout}
                     onEventClick={openEventPopout}
                   />
                   <MainCalendarGrid
@@ -72,6 +97,19 @@ const MyCalendar: FunctionComponent = () => {
           onOutsideClick={closeEventPopout}
         >
           <EventPopout event={selectedEvent} onClose={closeEventPopout} />
+        </PortalPopup>
+      )}
+      {isDayPopoutOpen && selectedDate && (
+        <PortalPopup
+          overlayColor="rgba(0, 0, 0, 0.25)"
+          placement="Centered"
+          onOutsideClick={closeDayPopout}
+        >
+          <DayEventsPopout
+            date={selectedDate}
+            events={selectedDayEvents}
+            onClose={closeDayPopout}
+          />
         </PortalPopup>
       )}
     </>
