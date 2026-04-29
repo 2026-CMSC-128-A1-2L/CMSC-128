@@ -1,9 +1,13 @@
 import { Icon } from '@iconify/react';
 import type { FunctionComponent } from 'react';
 
-const InboxMessage: FunctionComponent = () => {
+interface InboxMessageProps {
+  className?: string;
+}
+
+const InboxMessage: FunctionComponent<InboxMessageProps> = ({ className = "" }) => {
   return (
-    <div className="w-[180px] relative rounded-xl bg-white border-whitesmoke border-solid border box-border flex items-start pt-2 px-3 pb-4 gap-2 text-right text-[0.5rem] text-slategray font-lora">
+    <div className={`w-full relative rounded-xl bg-white border-whitesmoke border-solid border box-border flex items-start pt-2 px-3 pb-4 gap-2 text-right text-[0.5rem] text-slategray font-lora shadow-sm hover:shadow-md transition-shadow ${className}`}>
       <div className="self-stretch flex items-center">
         <img className="w-[0.313rem] relative max-h-full" alt="" />
       </div>
