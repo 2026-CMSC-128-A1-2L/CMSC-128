@@ -1,6 +1,6 @@
 import { type FunctionComponent, useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
-import { CalendarService, type CalendarEvent } from "../../service/CalendarService";
+import { CalendarService, type CalendarEvent } from "../../../service/CalendarService";
 
 interface MiniCalendarProps {
   currentDate: Date;

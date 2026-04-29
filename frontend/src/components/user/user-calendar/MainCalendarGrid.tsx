@@ -1,5 +1,5 @@
 import { type FunctionComponent, useEffect, useState } from "react";
-import { CalendarService, type CalendarEvent } from "../../service/CalendarService";
+import { CalendarService, type CalendarEvent } from "../../../service/CalendarService";
 
 interface MainCalendarGridProps {
   currentDate: Date;

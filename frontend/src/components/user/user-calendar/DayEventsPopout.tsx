@@ -1,6 +1,6 @@
 import type { FunctionComponent } from "react";
 import { Icon } from "@iconify/react";
-import type { CalendarEvent } from "../../service/CalendarService";
+import type { CalendarEvent } from "../../../service/CalendarService";
 
 export type DayEventsPopoutType = {
   className?: string;

@@ -1,11 +1,11 @@
 import { type FunctionComponent, useState, useCallback } from "react";
 import Footer from "../../../components/general/Footer";
 import SideBar from "../../../components/user/SideBar";
-import MiniCalendar from "../../../components/user/MiniCalendar";
+import MiniCalendar from "../../../components/user/user-calendar/MiniCalendar";
 import EventPopout from "../../../components/user/EventPopout";
-import DayEventsPopout from "../../../components/user/DayEventsPopout";
+import DayEventsPopout from "../../../components/user/user-calendar/DayEventsPopout";
 import PortalPopup from "../../../components/general/PortalPopup";
-import MainCalendarGrid from "../../../components/user/MainCalendarGrid";
+import MainCalendarGrid from "../../../components/user/user-calendar/MainCalendarGrid";
 import type { CalendarEvent } from "../../../service/CalendarService";
 
 const MyCalendar: FunctionComponent = () => {
