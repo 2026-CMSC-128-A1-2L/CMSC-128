@@ -1,4 +1,5 @@
 import { FunctionComponent } from 'react';
+import checkIcon from '../../../../assets/check_icon.svg';
 
 
 export type JoinedDormitoryPopupType = {
@@ -12,7 +13,9 @@ const JoinedDormitoryPopup: FunctionComponent<JoinedDormitoryPopupType> = ({ cla
 			<div className="self-stretch h-[436px] overflow-hidden shrink-0 flex flex-col items-center pt-[65px] px-num-10 pb-6 box-border gap-6">
 				<div className="self-stretch flex flex-col items-start">
 					<div className="self-stretch bg-white overflow-hidden flex items-center justify-center py-[5px] px-[3px]">
-						<img className="h-[84px] w-[84px] relative" alt="" />
+						<div className="flex items-center justify-center w-[100px] h-[100px] rounded-full bg-lightcyan">
+							<img className="h-[72px] w-[72px] relative" src={checkIcon} alt="Success Checkmark" />
+						</div>
 					</div>
 					<div className="self-stretch overflow-hidden flex flex-col items-center justify-center p-num-10 gap-2.5">
 						<b className="self-stretch relative leading-num-32">Successfully joined dormitory!</b>
