@@ -5,16 +5,33 @@ import MiniCalendar from "../../../components/user/MiniCalendar";
 import EventPopout from "../../../components/user/EventPopout";
 import PortalPopup from "../../../components/general/PortalPopup";
 import MainCalendarGrid from "../../../components/user/MainCalendarGrid";
+import type { CalendarEvent } from "../../../service/CalendarService";
 
 const MyCalendar: FunctionComponent = () => {
   const [isEventPopoutOpen, setEventPopoutOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
+  const [currentDate, setCurrentDate] = useState(new Date());
 
-  const openEventPopout = useCallback(() => {
+  const openEventPopout = useCallback((event: CalendarEvent) => {
+    setSelectedEvent(event);
     setEventPopoutOpen(true);
   }, []);
 
   const closeEventPopout = useCallback(() => {
     setEventPopoutOpen(false);
+    setSelectedEvent(null);
+  }, []);
+
+  const handlePrevMonth = useCallback(() => {
+    setCurrentDate(
+      (prev) => new Date(prev.getFullYear(), prev.getMonth() - 1)
+    );
+  }, []);
+
+  const handleNextMonth = useCallback(() => {
+    setCurrentDate(
+      (prev) => new Date(prev.getFullYear(), prev.getMonth() + 1)
+    );
   }, []);
 
   return (
@@ -29,8 +46,18 @@ const MyCalendar: FunctionComponent = () => {
               <b className="text-2xl leading-8">My Calendar</b>
               <div className="self-stretch flex-1 rounded-2xl bg-white border border-whitesmoke-200 flex flex-col">
                 <div className="flex-1 flex flex-col lg:flex-row items-start overflow-auto px-6 py-6 gap-6">
-                  <MiniCalendar onEventClick={openEventPopout} />
-                  <MainCalendarGrid onEventClick={openEventPopout} />
+                  <MiniCalendar
+                    currentDate={currentDate}
+                    onPrevMonth={handlePrevMonth}
+                    onNextMonth={handleNextMonth}
+                    onEventClick={openEventPopout}
+                  />
+                  <MainCalendarGrid
+                    currentDate={currentDate}
+                    onPrevMonth={handlePrevMonth}
+                    onNextMonth={handleNextMonth}
+                    onEventClick={openEventPopout}
+                  />
                 </div>
               </div>
             </div>
@@ -38,13 +65,13 @@ const MyCalendar: FunctionComponent = () => {
           <Footer />
         </div>
       </div>
-      {isEventPopoutOpen && (
+      {isEventPopoutOpen && selectedEvent && (
         <PortalPopup
           overlayColor="rgba(0, 0, 0, 0.25)"
           placement="Centered"
           onOutsideClick={closeEventPopout}
         >
-          <EventPopout onClose={closeEventPopout} />
+          <EventPopout event={selectedEvent} onClose={closeEventPopout} />
         </PortalPopup>
       )}
     </>

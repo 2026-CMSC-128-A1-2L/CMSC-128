@@ -1,23 +1,96 @@
-import { type FunctionComponent, useCallback } from "react";
+import { type FunctionComponent, useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
+import { CalendarService, type CalendarEvent } from "../../service/CalendarService";
 
 interface MiniCalendarProps {
-  onEventClick?: () => void;
+  currentDate: Date;
+  onPrevMonth?: () => void;
+  onNextMonth?: () => void;
+  onEventClick?: (event: CalendarEvent) => void;
 }
 
 const DAYS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
-const WEEKS = [
-  [null, null, null, 1, 2, 3, 4],
-  [5, 6, 7, 8, 9, 10, 11],
-  [12, 13, 14, 15, 16, 17, 18],
-  [19, 20, 21, 22, 23, 24, 25],
-  [26, 27, 28, 29, 30, null, null],
-];
+
+const getEventIcon = (type: CalendarEvent["type"]) => {
+  switch (type) {
+    case "booking":
+      return "ic:round-calendar-today";
+    case "billing":
+      return "ic:round-receipt";
+    case "move-in":
+      return "ic:round-home";
+    case "move-out":
+      return "ic:round-logout";
+    default:
+      return "ic:round-circle";
+  }
+};
 
 const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
+  currentDate,
+  onPrevMonth,
+  onNextMonth,
   onEventClick,
 }) => {
-  const onNav = useCallback(() => {}, []);
+  const [upcomingEvents, setUpcomingEvents] = useState<CalendarEvent[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchUpcomingEvents = async () => {
+      setLoading(true);
+      try {
+        const response = await CalendarService.getUpcomingEvents();
+        setUpcomingEvents(response.data.slice(0, 3)); // Show only first 3 upcoming events
+      } catch (error) {
+        console.error("Failed to load upcoming events:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUpcomingEvents();
+  }, []);
+
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth();
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+  const weeks: (number | null)[][] = [];
+  let week: (number | null)[] = new Array(firstDay).fill(null);
+
+  for (let day = 1; day <= daysInMonth; day++) {
+    week.push(day);
+    if (week.length === 7) {
+      weeks.push(week);
+      week = [];
+    }
+  }
+
+  if (week.length > 0) {
+    while (week.length < 7) {
+      week.push(null);
+    }
+    weeks.push(week);
+  }
+
+  const today = new Date();
+  const isCurrentMonth =
+    today.getFullYear() === year && today.getMonth() === month;
+
+  const monthName = currentDate.toLocaleDateString("en-US", {
+    month: "short",
+  });
+  const yearStr = currentDate.getFullYear().toString();
+
+  const formatEventDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  };
 
   return (
     <div className="w-full lg:w-72 shrink-0 flex flex-col gap-6 pb-4">
@@ -26,23 +99,23 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
         {/* Nav */}
         <div className="self-stretch flex items-center gap-3">
           <button
-            onClick={onNav}
+            onClick={onPrevMonth}
             className="rounded-full p-2 hover:bg-whitesmoke-100 transition-colors"
           >
             <Icon icon="ic:round-chevron-left" className="h-5 w-5" />
           </button>
           <div className="flex-1 flex gap-2">
             <div className="flex-1 rounded-md border border-gainsboro flex items-center p-2 gap-1 text-xs">
-              <span className="flex-1">Apr</span>
+              <span className="flex-1">{monthName}</span>
               <Icon icon="ic:round-keyboard-arrow-down" className="h-4 w-4" />
             </div>
             <div className="flex-1 rounded-md border border-gainsboro flex items-center p-2 gap-1 text-xs">
-              <span className="flex-1">2026</span>
+              <span className="flex-1">{yearStr}</span>
               <Icon icon="ic:round-keyboard-arrow-down" className="h-4 w-4" />
             </div>
           </div>
           <button
-            onClick={onNav}
+            onClick={onNextMonth}
             className="rounded-full p-2 hover:bg-whitesmoke-100 transition-colors"
           >
             <Icon icon="ic:round-chevron-right" className="h-5 w-5" />
@@ -61,21 +134,25 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
 
           {/* Date grid */}
           <div className="flex flex-col gap-0.5 text-xs text-black">
-            {WEEKS.map((week, wi) => (
+            {weeks.map((week, wi) => (
               <div key={wi} className="grid grid-cols-7 gap-0.5">
-                {week.map((day, di) => (
-                  <div
-                    key={di}
-                    className={[
-                      "rounded-md flex items-center justify-center p-2 aspect-square",
-                      day === 3
-                        ? "bg-lightcyan-100 text-teal-200 font-bold"
-                        : "",
-                    ].join(" ")}
-                  >
-                    {day ?? ""}
-                  </div>
-                ))}
+                {week.map((day, di) => {
+                  const isTodayDay =
+                    isCurrentMonth && day === today.getDate() && day !== null;
+                  return (
+                    <div
+                      key={di}
+                      className={[
+                        "rounded-md flex items-center justify-center p-2 aspect-square",
+                        isTodayDay
+                          ? "bg-lightcyan-100 text-teal-200 font-bold"
+                          : "",
+                      ].join(" ")}
+                    >
+                      {day ?? ""}
+                    </div>
+                  );
+                })}
               </div>
             ))}
           </div>
@@ -85,18 +162,30 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
       {/* Upcoming events */}
       <div className="flex flex-col gap-2 text-sm">
         <b className="font-semibold">Upcoming Events</b>
-        <div
-          onClick={onEventClick}
-          className="rounded-2xl border border-whitesmoke-200 flex items-center p-4 gap-2 cursor-pointer hover:bg-gray-50 transition-colors"
-        >
-          <Icon icon="ic:round-circle" className="h-6 w-6 shrink-0" />
-          <div className="flex flex-col gap-1">
-            <div className="text-xs font-medium">Ocular Visit</div>
-            <div className="text-[11px] font-medium font-lora text-dimgray tracking-wide">
-              April 7, 2026
+        {loading ? (
+          <div className="text-xs text-dimgray">Loading events...</div>
+        ) : upcomingEvents.length > 0 ? (
+          upcomingEvents.map((event) => (
+            <div
+              key={event.referenceId}
+              onClick={() => onEventClick?.(event)}
+              className="rounded-2xl border border-whitesmoke-200 flex items-center p-4 gap-2 cursor-pointer hover:bg-gray-50 transition-colors"
+            >
+              <Icon
+                icon={getEventIcon(event.type)}
+                className="h-6 w-6 shrink-0"
+              />
+              <div className="flex flex-col gap-1">
+                <div className="text-xs font-medium">{event.title}</div>
+                <div className="text-[11px] font-medium font-lora text-dimgray tracking-wide">
+                  {formatEventDate(event.date)}
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+          ))
+        ) : (
+          <div className="text-xs text-dimgray">No upcoming events</div>
+        )}
       </div>
     </div>
   );
