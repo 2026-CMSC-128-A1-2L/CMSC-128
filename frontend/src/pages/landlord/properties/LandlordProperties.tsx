@@ -3,6 +3,7 @@ import { Icon } from '@iconify/react';
 import LandlordLayout from '../../../components/landlord/LandlordLayout';
 import PropertiesCard from '../../../components/landlord/LandlordProperties/PropertiesCard';
 import { BUILDINGS } from '../../../data/buildings';
+import { useNavigate } from 'react-router-dom';
 
 // Assets
 import sapphire from '../../../../assets/sapphire.jpg';
@@ -11,6 +12,8 @@ import search from '../../../../assets/search_green.svg';
 import plus from '../../../../assets/green_plus.svg';
 
 const LandlordProperties: FunctionComponent = () => {
+  const navigate = useNavigate();
+
   const onAddBuildingContainerClick = useCallback(() => {
     // Add your code here
     console.log('Add listing clicked');

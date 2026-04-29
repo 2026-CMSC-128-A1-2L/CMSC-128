@@ -25,7 +25,7 @@ import { StudentRoute } from './ProtectedRoute';
 
 const userRoutes = [
   <Route key="student-route" element={<StudentRoute />}>
-    <Route key="home" path="/home" element={<HomePage />} />
+  <Route key="home" path="/home" element={<HomePage />} />
   </Route>,
   <Route key="test" path="/test" element={<TestPage />} />,
   <Route key="filter" path="/filter" element={<Filter />} />,

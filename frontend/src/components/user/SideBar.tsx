@@ -7,6 +7,8 @@ import dark_icon from '../../../assets/sidebar_darkmode.svg';
 import search_icon from '../../../assets/sidebar_search.svg';
 import SideBarButton, { type SideBarButtonState } from './SideBarButton';
 import { useAuthStore } from '../../store/useAuthStore';
+import UserMenuPopup from './UserMenuPopup';
+import { useNavigate } from 'react-router-dom';
 
 export type SideBarItemKey =
   | 'home'
@@ -80,12 +82,15 @@ const SideBar = ({
   const [collapsed, setCollapsed] = useState(false);
   const [internalHover, setInternalHover] = useState<SideBarItemKey>();
   const location = useLocation();
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
 
   const resolvedActive: SideBarItemKey | undefined =
     activeItem ?? navItems.find((item) => location.pathname.startsWith(item.route))?.key;
 
   const { user } = useAuthStore();
   const username = user ? `${user.firstName} ${user.lastName}` : null;
+  const navigate = useNavigate();
+  onProfileClick = (()=>{setProfileMenuOpen(!profileMenuOpen)})
 
   return (
     <div
@@ -211,7 +216,8 @@ const SideBar = ({
         </div>
 
         {/* Profile */}
-        <button
+        <div className="relative flex flex-row">
+<button
           type="button"
           onClick={onProfileClick}
           aria-label={username ?? 'Sign In'}
@@ -236,6 +242,16 @@ const SideBar = ({
             </div>
           )}
         </button>
+          <div className="absolute right-0 -top-full">
+
+          
+          {profileMenuOpen && <UserMenuPopup  isOpen={profileMenuOpen} onViewProfile={()=>{
+            navigate('/profile-switcher');
+  }} onLogOut={()=>{}} />}
+          </div>
+        </div>
+        
+
       </div>
     </div>
   );
