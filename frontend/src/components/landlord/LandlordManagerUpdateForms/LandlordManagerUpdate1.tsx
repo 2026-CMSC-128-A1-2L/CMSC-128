@@ -53,9 +53,10 @@ const UpdateManager1: FunctionComponent<Props> = ({ onCancel, onSave }) => {
   );
 
   return (
-    <div className="relative rounded-tl-[25.6px] bg-white w-[490px] flex flex-col items-center pb-[48px] gap-[33.6px]">
+    <div className="relative rounded-[25.6px] bg-white w-[490px] flex flex-col items-center overflow-hidden max-h-[90vh]">
+
       {/* Header */}
-      <div className="self-stretch rounded-tl-[25.6px] bg-linear-to-b from-[#096c5b] to-[#16917c] flex flex-col items-start justify-center py-[9.6px] pl-[45.6px] pr-[25.6px]">
+      <div className="self-stretch bg-linear-to-b from-[#096c5b] to-[#16917c] flex flex-col items-start justify-center py-[9.6px] pl-[45.6px] pr-[25.6px]">
         <div className="flex flex-col items-start pt-[25.6px] pb-[6.4px] gap-[4px]">
           <b className="font-['Poppins',sans-serif] text-[32px] text-white">Update Permissions</b>
           <b className="font-['Inter',sans-serif] text-[18px] tracking-[-0.01em] text-[#e8f4f8]">
@@ -64,8 +65,9 @@ const UpdateManager1: FunctionComponent<Props> = ({ onCancel, onSave }) => {
         </div>
       </div>
 
-      {/* Body */}
-      <div className="self-stretch flex flex-col items-start px-[38.4px] pb-[16px] gap-[17.6px]">
+      {/* Scrollable Body */}
+      <div className="self-stretch flex flex-col items-start px-[38.4px] gap-[17.6px] overflow-y-auto flex-1 pt-[22px] pb-[10px]">
+
         {/* Email */}
         <div className="self-stretch flex flex-col items-start gap-[6.4px]">
           <b className="font-['Inter',sans-serif] text-[14px] text-[#666]">Email Address</b>
@@ -118,16 +120,23 @@ const UpdateManager1: FunctionComponent<Props> = ({ onCancel, onSave }) => {
             </div>
           );
         })}
-      </div>
 
-      {/* Footer */}
-      <div className="flex items-center gap-[12.8px]">
-        <button onClick={onCancel} className="rounded-[9.6px] py-[6.4px] px-[19.2px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#dc143c] transition-opacity hover:opacity-70">
-          Cancel
-        </button>
-        <button onClick={onSave} className="rounded-[9.6px] bg-[#e0f7f4] py-[6.4px] px-[19.2px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] transition-opacity hover:opacity-80">
-          Save
-        </button>
+        {/* Footer buttons — inline with scroll */}
+        <div className="self-stretch flex items-center justify-center gap-[12.8px] pt-[8px] pb-[42px]">
+          <button
+            onClick={onCancel}
+            className="rounded-[9.6px] py-[6.4px] px-[19.2px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#dc143c] transition-opacity hover:opacity-70"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={onSave}
+            className="rounded-[9.6px] bg-[#e0f7f4] py-[6.4px] px-[19.2px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] transition-opacity hover:opacity-80"
+          >
+            Save
+          </button>
+        </div>
+
       </div>
     </div>
   );
