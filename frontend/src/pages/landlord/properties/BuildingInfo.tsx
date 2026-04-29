@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
 import LandlordLayout from '../../../components/landlord/LandlordLayout';
+import { Link } from 'react-router-dom';
 
 const Button = (props: {
   text: string;
@@ -145,6 +146,7 @@ const TenantList = (props: { tenants: Tenant[] }) => (
 );
 
 type BuildingInformation = {
+  id: string,
   name: string;
   buildingType: string;
   status: string;
@@ -163,8 +165,10 @@ type BuildingInformation = {
 };
 
 const AddListingCard = () => (
-  <div className="self-stretch w-66 shadow-[0px_4px_4px_rgba(0,0,0,0.25)] rounded-num-10 bg-silver-100 border-silver-200 border-dashed border-2 box-border flex flex-col items-center justify-center py-4 px-8 text-center text-teal">
-    {/* TODO: fix link */}
+  <Link
+    to="/landlord/properties/new"
+    className="group flex self-stretch w-66 shadow-[0px_4px_4px_rgba(0,0,0,0.25)] rounded-num-10 bg-silver-100 border-silver-200 border-dashed border-2 box-border flex-col items-center justify-center py-4 px-8 text-center text-teal no-underline transition-all hover:bg-silver-200 hover:border-teal/50"
+  >
     <div className="w-44 flex flex-col items-center gap-4">
       <Icon icon="material-symbols:add-rounded" className="w-15 h-15" />
       <div className="flex flex-col items-center gap-1">
@@ -174,11 +178,12 @@ const AddListingCard = () => (
         </div>
       </div>
     </div>
-  </div>
+  </Link>
 );
 
 const BuildingInfo = () => {
   const [data, _setData] = useState<BuildingInformation>({
+    id: "1",
     name: 'Two Sapphire Place',
     buildingType: 'maganda',
     status: 'Active',
@@ -217,6 +222,7 @@ const BuildingInfo = () => {
   });
 
   const {
+    id,
     name,
     buildingType,
     status,
@@ -244,7 +250,7 @@ const BuildingInfo = () => {
             <b>{name}</b>
             <div className="flex items-center gap-4 text-center text-sm text-teal">
               {/* TODO: correct navigation */}
-              <Button text="Edit Details" onClick={() => navigate('/')}>
+              <Button text="Edit Details" onClick={() => navigate(`/landlord/properties/edit/${id}`)}>
                 <Icon icon="iconamoon:edit" className="w-5 h-5" />
               </Button>
               <Button text="View As Student" onClick={() => {}}>

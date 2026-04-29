@@ -19,6 +19,7 @@ import LandlordManagersSpecific from "../pages/landlord/managers/LandlordManager
 
 import { Route } from "react-router-dom";
 import LandlordPropertyFinance from "../pages/landlord/finance/LandlordPropertyFinance";
+import EditBuilding from "../pages/landlord/properties/EditBuilding";
 
 const landlordRoutes = [
   <Route
@@ -55,6 +56,11 @@ const landlordRoutes = [
     key="landlord-properties-new"
     path="/landlord/properties/new"
     element={<LandlordNewListing />}
+  />,
+  <Route
+    key="landlord-properties-edit"
+    path="/landlord/properties/edit/:propertyId"
+    element={<EditBuilding />}
   />,
   <Route
     key="landlord-properties-building-info"
