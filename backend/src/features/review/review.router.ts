@@ -1,12 +1,12 @@
 import { Router } from 'express';
-import { isSuperAdmin, listingViewFilter, selfFilter } from '../../middleware';
+import { isSuperAdmin, listingViewFilter, selfFilter } from "../../middleware.js";
 import {
   routeGetReviews,
   routeUpdateReview,
   routeDeleteReview,
   routeApproveReview,
   routeRejectReview,
-} from './review.controller';
+} from "./review.controller.js";
 
 const router = Router();
 

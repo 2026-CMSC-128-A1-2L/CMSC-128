@@ -1,4 +1,4 @@
-import { type FunctionComponent, useState, useEffect } from 'react';
+import { type FunctionComponent, useState, useEffect, useCallback } from 'react';
 import { Icon } from '@iconify/react';
 import BillingRow from './BillingRow';
 import AddBillingPopup from './AddBillingPopup';
@@ -16,104 +16,158 @@ const TABLE_COLUMNS = [
   { label: 'Status', className: 'w-[18%] min-w-[120px]' },
 ];
 
-// Mock data - replace with API call
-const fetchBillings = async (_month: Date): Promise<Billing[]> => {
-  const mockBillings: Billing[] = [
-    {
-      _id: '1',
-      userId: 'user1',
-      unitId: 'unit1',
-      facilityId: 'facility1',
-      dueDate: '2024-03-31',
-      paymentDate: '2024-03-15',
-      paidAmount: 4500,
-      totalAmount: 4500,
-      paymentStatus: 'paid',
-      documents: [],
-      breakdown: [
-        { name: 'Rent', amount: 3000 },
-        { name: 'Utilities', amount: 1500 },
-        { name: 'Misc. Fees', amount: 0 },
-      ],
-      createdAt: '2024-03-01',
-      updatedAt: '2024-03-15',
-    },
-    {
-      _id: '2',
-      userId: 'user2',
-      unitId: 'unit2',
-      facilityId: 'facility1',
-      dueDate: '2024-03-31',
-      paymentDate: null,
-      paidAmount: 1850,
-      totalAmount: 4850,
-      paymentStatus: 'partially_paid',
-      documents: [],
-      breakdown: [
-        { name: 'Rent', amount: 3000 },
-        { name: 'Utilities', amount: 1700 },
-        { name: 'Misc. Fees', amount: 150 },
-      ],
-      createdAt: '2024-03-01',
-      updatedAt: '2024-03-10',
-    },
-    {
-      _id: '3',
-      userId: 'user3',
-      unitId: 'unit3',
-      facilityId: 'facility1',
-      dueDate: '2024-03-31',
-      paymentDate: null,
-      paidAmount: null,
-      totalAmount: 4300,
-      paymentStatus: 'unpaid',
-      documents: [],
-      breakdown: [
-        { name: 'Rent', amount: 3000 },
-        { name: 'Utilities', amount: 1300 },
-        { name: 'Misc. Fees', amount: 0 },
-      ],
-      createdAt: '2024-03-01',
-      updatedAt: '2024-03-01',
-    },
-    {
-      _id: '4',
-      userId: 'user4',
-      unitId: 'unit4',
-      facilityId: 'facility1',
-      dueDate: '2024-03-31',
-      paymentDate: null,
-      paidAmount: null,
-      totalAmount: 4500,
-      paymentStatus: 'unpaid',
-      documents: [],
-      breakdown: [
-        { name: 'Rent', amount: 3000 },
-        { name: 'Utilities', amount: 1450 },
-        { name: 'Misc. Fees', amount: 50 },
-      ],
-      createdAt: '2024-03-01',
-      updatedAt: '2024-03-01',
-    },
-  ];
+// Mock data by month - replace with API call
+const fetchBillingsByMonth = async (month: string, year: number): Promise<Billing[]> => {
+  const mockData: Record<string, Billing[]> = {
+    'March 2026': [
+      {
+        _id: '1',
+        userId: 'user1',
+        unitId: 'unit1',
+        facilityId: 'facility1',
+        dueDate: '2026-03-31',
+        paymentDate: '2026-03-15',
+        paidAmount: 4500,
+        totalAmount: 4500,
+        paymentStatus: 'paid',
+        documents: [],
+        breakdown: [
+          { name: 'Rent', amount: 3000 },
+          { name: 'Utilities', amount: 1500 },
+          { name: 'Misc. Fees', amount: 0 },
+        ],
+        createdAt: '2026-03-01',
+        updatedAt: '2026-03-15',
+      },
+      {
+        _id: '2',
+        userId: 'user2',
+        unitId: 'unit2',
+        facilityId: 'facility1',
+        dueDate: '2026-03-31',
+        paymentDate: null,
+        paidAmount: 1850,
+        totalAmount: 4850,
+        paymentStatus: 'partially_paid',
+        documents: [],
+        breakdown: [
+          { name: 'Rent', amount: 3000 },
+          { name: 'Utilities', amount: 1700 },
+          { name: 'Misc. Fees', amount: 150 },
+        ],
+        createdAt: '2026-03-01',
+        updatedAt: '2026-03-10',
+      },
+      {
+        _id: '3',
+        userId: 'user3',
+        unitId: 'unit3',
+        facilityId: 'facility1',
+        dueDate: '2026-03-31',
+        paymentDate: null,
+        paidAmount: null,
+        totalAmount: 4300,
+        paymentStatus: 'unpaid',
+        documents: [],
+        breakdown: [
+          { name: 'Rent', amount: 3000 },
+          { name: 'Utilities', amount: 1300 },
+          { name: 'Misc. Fees', amount: 0 },
+        ],
+        createdAt: '2026-03-01',
+        updatedAt: '2026-03-01',
+      },
+      {
+        _id: '4',
+        userId: 'user4',
+        unitId: 'unit4',
+        facilityId: 'facility1',
+        dueDate: '2026-03-31',
+        paymentDate: null,
+        paidAmount: null,
+        totalAmount: 4500,
+        paymentStatus: 'unpaid',
+        documents: [],
+        breakdown: [
+          { name: 'Rent', amount: 3000 },
+          { name: 'Utilities', amount: 1450 },
+          { name: 'Misc. Fees', amount: 50 },
+        ],
+        createdAt: '2026-03-01',
+        updatedAt: '2026-03-01',
+      },
+    ],
+    'February 2026': [
+      {
+        _id: '5',
+        userId: 'user1',
+        unitId: 'unit1',
+        facilityId: 'facility1',
+        dueDate: '2026-02-28',
+        paymentDate: '2026-02-20',
+        paidAmount: 4500,
+        totalAmount: 4500,
+        paymentStatus: 'paid',
+        documents: [],
+        breakdown: [
+          { name: 'Rent', amount: 3000 },
+          { name: 'Utilities', amount: 1500 },
+          { name: 'Misc. Fees', amount: 0 },
+        ],
+        createdAt: '2026-02-01',
+        updatedAt: '2026-02-20',
+      },
+      {
+        _id: '6',
+        userId: 'user2',
+        unitId: 'unit2',
+        facilityId: 'facility1',
+        dueDate: '2026-02-28',
+        paymentDate: '2026-02-25',
+        paidAmount: 4500,
+        totalAmount: 4500,
+        paymentStatus: 'paid',
+        documents: [],
+        breakdown: [
+          { name: 'Rent', amount: 3000 },
+          { name: 'Utilities', amount: 1500 },
+          { name: 'Misc. Fees', amount: 0 },
+        ],
+        createdAt: '2026-02-01',
+        updatedAt: '2026-02-25',
+      },
+    ],
+    'January 2026': [
+      {
+        _id: '7',
+        userId: 'user1',
+        unitId: 'unit1',
+        facilityId: 'facility1',
+        dueDate: '2026-01-31',
+        paymentDate: '2026-01-25',
+        paidAmount: 4500,
+        totalAmount: 4500,
+        paymentStatus: 'paid',
+        documents: [],
+        breakdown: [
+          { name: 'Rent', amount: 3000 },
+          { name: 'Utilities', amount: 1500 },
+          { name: 'Misc. Fees', amount: 0 },
+        ],
+        createdAt: '2026-01-01',
+        updatedAt: '2026-01-25',
+      },
+    ],
+  };
 
-  return mockBillings;
+  const key = `${month} ${year}`;
+  return mockData[key] || [];
 };
 
 const getAvailableMonths = () => {
   const months = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
   ];
 
   const currentDate = new Date();
@@ -180,21 +234,21 @@ const TenantBillingsTab: FunctionComponent = () => {
   const [isMonthDropdownOpen, setIsMonthDropdownOpen] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState(getAvailableMonths()[0]);
 
-  useEffect(() => {
-    const loadBillings = async () => {
-      setIsLoading(true);
-      try {
-        const data = await fetchBillings(selectedMonth.startDate);
-        setBillings(data);
-      } catch (error) {
-        console.error('Failed to load billings:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadBillings();
+  const loadBillings = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const data = await fetchBillingsByMonth(selectedMonth.name, selectedMonth.year);
+      setBillings(data);
+    } catch (error) {
+      console.error('Failed to load billings:', error);
+    } finally {
+      setIsLoading(false);
+    }
   }, [selectedMonth]);
+
+  useEffect(() => {
+    loadBillings();
+  }, [loadBillings]);
 
   const handleStatusChange = async (billingId: string, status: Billing['paymentStatus']) => {
     console.log(`Billing ${billingId} status changed to ${status}`);
@@ -234,7 +288,10 @@ const TenantBillingsTab: FunctionComponent = () => {
     miscFees: number;
   }) => {
     console.log('Add billing:', data);
+    // replace w/ actual API call to add billing
     handleCloseAddPopup();
+    // refresh list
+    await loadBillings();
   };
 
   const handleMonthSelect = (month: any) => {
@@ -279,10 +336,7 @@ const TenantBillingsTab: FunctionComponent = () => {
 
               {isMonthDropdownOpen && (
                 <>
-                  <div
-                    className="fixed inset-0 z-10"
-                    onClick={() => setIsMonthDropdownOpen(false)}
-                  />
+                  <div key="backdrop" className="fixed inset-0 z-10" onClick={() => setIsMonthDropdownOpen(false)} />
                   <div className="absolute top-full right-0 mt-1 w-[150px] z-20 bg-white border border-whitesmoke-200 rounded-lg shadow-lg overflow-hidden">
                     {availableMonths.map((month, index) => (
                       <div
@@ -291,7 +345,7 @@ const TenantBillingsTab: FunctionComponent = () => {
                         className={`w-full px-3 py-2 text-[12px] font-semibold text-center cursor-pointer transition-colors font-inter ${
                           selectedMonth.displayName === month.displayName
                             ? 'bg-darkslategray-200 text-white'
-                            : 'text-darkslategray-100 hover:bg-gray-100'
+                            : 'text-darkslategray-100 hover:bg-whitesmoke-100 hover:text-darkslategray-200'
                         } ${index !== availableMonths.length - 1 ? 'border-b border-whitesmoke-200' : ''}`}
                       >
                         {month.displayName}

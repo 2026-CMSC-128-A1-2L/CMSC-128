@@ -1,17 +1,17 @@
 import type mongoose from 'mongoose';
 import type { QueryFilter } from 'mongoose';
-import { AppError } from '../../error';
+import { AppError } from "../../error.js";
 import {
   ApplicationForm,
   type ApplicationStatusType,
   type ApplicationType,
-} from './application.model';
-import { sendNotification } from '../notification/notification.service';
-import { buildQuery, type NullablePartial } from '../../utils';
+} from "./application.model.js";
+import { sendNotification } from "../notification/notification.service.js";
+import { buildQuery, type NullablePartial } from "../../utils.js";
 import z from 'zod';
 import { DateTimeSchema, ObjectIdSchema } from 'shared';
-import { combineFilters } from '../../middleware';
-import { isUnitFull } from '../unit/unit.service';
+import { combineFilters } from "../../middleware.js";
+import { isUnitFull } from "../unit/unit.service.js";
 
 export type GetApplicationsArguments = NullablePartial<{
   userId: mongoose.Types.ObjectId;

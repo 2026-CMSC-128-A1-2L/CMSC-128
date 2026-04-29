@@ -1,4 +1,11 @@
-import dorm from "../../assets/one_sapphire.png";
+import sapphire from "../../assets/sapphire.jpg";
+import s1 from "../../assets/sample1.jpg";
+import s2 from "../../assets/sample2.jpg";
+import s3 from "../../assets/sample3.jpg";
+import s4 from "../../assets/sample4.jpg";
+import s5 from "../../assets/sample5.jpg";
+
+import sapphire2 from "../../assets/sapphire1.jpg";
 
 export type RoomType = {
   id: string;
@@ -18,7 +25,7 @@ export type Tenant = {
 };
 
 export type Building = {
-  id: number;
+  id: string;
   // PropertiesCard fields
   name: string;
   address: string;
@@ -42,7 +49,7 @@ export type Building = {
 
 export const BUILDINGS: Building[] = [
   {
-    id: 1,
+    id: "one-sapphire",
     name: "One Sapphire Place",
     address: "10247 Ruby St, Los Baños, Laguna",
     totalUnits: 24,
@@ -51,17 +58,17 @@ export const BUILDINGS: Building[] = [
     outstanding: "12,600.00",
     status: "Active",
     month: "MAR",
-    img: dorm,
+    img: sapphire,
     url: "/landlord/properties/1",
     buildingType: "Dormitory",
     capacity: 24,
     about:
       "One Sapphire Place is a fully air-conditioned dormitory located near the University of the Philippines Los Baños campus. It offers a safe and conducive environment for students with 24/7 security, high-speed Wi-Fi, and modern amenities.",
-    photos: [dorm, dorm, dorm],
+    photos: [s1, s2, s3],
     roomTypes: [
-      { id: "10", name: "2 Pax - Aircon", image: dorm, status: "approved" },
-      { id: "11", name: "2 Pax - Non-Aircon", image: dorm, status: "approved" },
-      { id: "12", name: "1 Pax", image: dorm, status: "pending" },
+      { id: "10", name: "2 Pax - Aircon", image: s1, status: "approved" },
+      { id: "11", name: "2 Pax - Non-Aircon", image: s2, status: "approved" },
+      { id: "12", name: "1 Pax", image: s3, status: "pending" },
     ],
     managers: [
       { name: "Maria Santos", availability: "Mon–Fri" },
@@ -74,7 +81,7 @@ export const BUILDINGS: Building[] = [
     ],
   },
   {
-    id: 2,
+    id: "emerald-heights",
     name: "Emerald Heights",
     address: "Agapita St., Los Baños, Laguna",
     totalUnits: 15,
@@ -83,16 +90,16 @@ export const BUILDINGS: Building[] = [
     outstanding: "5,000.00",
     status: "Active",
     month: "MAR",
-    img: dorm,
+    img: sapphire2,
     url: "/landlord/properties/2",
     buildingType: "Apartment",
     capacity: 15,
     about:
       "Emerald Heights is a modern apartment building offering spacious rooms with complete furnishings. Strategically located along Agapita St., residents enjoy easy access to public transport, wet market, and commercial establishments.",
-    photos: [dorm, dorm],
+    photos: [s4, s3],
     roomTypes: [
-      { id: "20", name: "Studio Unit", image: dorm, status: "approved" },
-      { id: "21", name: "1BR Unit", image: dorm, status: "pending" },
+      { id: "20", name: "Studio Unit", image: s4, status: "approved" },
+      { id: "21", name: "1BR Unit", image: s3, status: "pending" },
     ],
     managers: [{ name: "Lorna Diaz", availability: "Mon–Sun" }],
     tenants: [

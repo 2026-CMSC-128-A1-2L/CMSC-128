@@ -1,9 +1,9 @@
 import type mongoose from 'mongoose';
-import { AppError } from '../../error';
-import { combineFilters } from '../../middleware';
-import { ApplicationForm } from '../application/application.model';
-import { Rental } from './rental.model';
-import { Unit } from '../unit/unit.model';
+import { AppError } from "../../error.js";
+import { combineFilters } from "../../middleware.js";
+import { ApplicationForm } from "../application/application.model.js";
+import { Rental } from "./rental.model.js";
+import { Unit } from "../unit/unit.model.js";
 import { UnitFilterSchema } from 'shared';
 
 // TODO: verify if actual move-in/out dates are needed

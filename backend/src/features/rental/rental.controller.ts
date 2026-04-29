@@ -17,7 +17,7 @@ import {
   getRentalsByUnitId,
   moveIn,
   moveOut,
-} from './rental.service';
+} from "./rental.service.js";
 
 export const routeGetRentals: RequestHandler = async (req, res, next) => {
   const filters = GetRentalsQuerySchema.parse(req.query);

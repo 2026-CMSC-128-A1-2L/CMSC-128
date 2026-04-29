@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import 'vitest';
-import { DocumentType } from './features/document/document.model';
+import { DocumentType } from './features/document/document.model.ts';
 
 declare global {
   namespace Express {

@@ -13,8 +13,8 @@ import {
   routeDeleteDocument,
   routeAcceptDocument,
   routeRejectDocument,
-} from './document.controller';
-import type { ModelWithDocument } from './document.service';
+} from "./document.controller.js";
+import type { ModelWithDocument } from "./document.service.js";
 
 // The model this handles should have a documents array.
 // Middleware preceding this router should be added which includes the id of the parent.

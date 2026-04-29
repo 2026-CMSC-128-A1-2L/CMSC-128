@@ -1,5 +1,5 @@
 import z from 'zod';
-import { DateTimeSchema, ObjectIdSchema, QuerySchema, RangeSchema } from './common';
+import { DateTimeSchema, ObjectIdSchema, QuerySchema, RangeSchema } from './common.js';
 import {
   DOCUMENT_STATUS,
   FACILITY_TYPES,
@@ -7,7 +7,7 @@ import {
   type ManagerPermission,
   type FacilityType,
   ROOM_TYPES,
-} from '../constants';
+} from '../constants.js';
 
 const FacilityTypeSchema: z.ZodType<FacilityType> = z.enum(FACILITY_TYPES);
 
@@ -75,10 +75,10 @@ const BaseUserFacilitySchema = z.object({
 const UserFacilitySchema = BaseUserFacilitySchema.extend({
   averageRating: z.number(),
   image: z.string().optional(),
-  price: {
+  price: z.object({
     min: z.number(),
     max: z.number(),
-  },
+  }),
 });
 
 const UserListing = z.object({
@@ -113,11 +113,11 @@ export const UserFacilityDetailedSchema = BaseUserFacilitySchema.extend({
     z.object({
       description: z.string().optional(),
       tags: z.map(z.string(), z.union([z.string(), z.number(), z.boolean()])),
-      cost: {
+      cost: z.object({
         rent: z.number(),
         estimatedUtilities: z.number(),
         securityDeposit: z.number(),
-      },
+      }),
       media: z.array(
         z.object({
           sourceType: z.string(),

@@ -8,14 +8,14 @@ import {
   routeApproveApplication,
   routeRejectApplication,
   routeFinalizeApplication,
-} from './application.controller';
+} from "./application.controller.js";
 import {
   includeSelf,
   isSuperAdmin,
   isVerifiedStudent,
   manageApplicationsFilter,
   selfFilter,
-} from '../../middleware';
+} from "../../middleware.js";
 
 const router = Router();
 

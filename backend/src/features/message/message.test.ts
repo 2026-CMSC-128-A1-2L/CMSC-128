@@ -2,7 +2,7 @@ import '../../config.js';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { studentAgent, guestAgent, student, manager } from '../../test/setup.js';
 import mongoose from 'mongoose';
-import { Message } from './message.model';
+import { Message } from "./message.model.js";
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 

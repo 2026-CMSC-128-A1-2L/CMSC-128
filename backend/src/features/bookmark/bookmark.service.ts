@@ -1,5 +1,5 @@
 import type mongoose from 'mongoose';
-import { Bookmark } from './bookmark.model';
+import { Bookmark } from "./bookmark.model.js";
 
 export const createBookmark = async (
   userId: mongoose.Types.ObjectId,

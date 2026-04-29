@@ -1,6 +1,6 @@
-import { AppError } from '../../error';
-import { combineFilters } from '../../middleware';
-import { Tag } from './tag.model';
+import { AppError } from "../../error.js";
+import { combineFilters } from "../../middleware.js";
+import { Tag } from "./tag.model.js";
 
 export type CreateTagArguments = {
   name: string;

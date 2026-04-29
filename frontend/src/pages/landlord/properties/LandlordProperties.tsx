@@ -1,11 +1,12 @@
-import { FunctionComponent, useCallback } from "react";
-import { Icon } from "@iconify/react";
+import { type FunctionComponent, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { Icon } from "@iconify/react";
 import LandlordLayout from "../../../components/landlord/LandlordLayout";
 import PropertiesCard from "../../../components/landlord/LandlordProperties/PropertiesCard";
 import { BUILDINGS } from "../../../data/buildings";
 
 // Assets
+
 import search from "../../../../assets/search_green.svg";
 import plus from "../../../../assets/green_plus.svg";
 
@@ -13,8 +14,38 @@ const LandlordProperties: FunctionComponent = () => {
   const navigate = useNavigate();
 
   const onAddBuildingContainerClick = useCallback(() => {
-    console.log("Add listing clicked");
-  }, []);
+    navigate("/landlord/add-building");
+  }, [navigate]);
+
+  // Mock data
+  // const PROPERTIES_LIST = [
+  //   {
+  //     id: 1,
+  //     name: "One Sapphire Place",
+  //     address: "10247 Ruby St, Los Baños, Laguna",
+  //     totalUnits: 24,
+  //     occupiedUnits: 24,
+  //     income: "89,400.00",
+  //     outstanding: "12,600.00",
+  //     status: "Active" as const,
+  //     month: "MAR",
+  //     img: sapphire,
+  //     url: "/properties/one-sapphire",
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "Emerald Heights",
+  //     address: "Agapita St., Los Baños, Laguna",
+  //     totalUnits: 15,
+  //     occupiedUnits: 12,
+  //     income: "45,000.00",
+  //     outstanding: "5,000.00",
+  //     status: "Active" as const,
+  //     month: "MAR",
+  //     img: sapphire2,
+  //     url: "/properties/one-sapphire",
+  //   },
+  // ];
 
   return (
     <LandlordLayout activeSidebarItem="properties" breadcrumbs={[]}>
@@ -58,20 +89,20 @@ const LandlordProperties: FunctionComponent = () => {
 
         {/* Properties List Section */}
         <section className="flex flex-col gap-[24px]">
-          {BUILDINGS.map((building) => (
+          {BUILDINGS.map((property) => (
             <PropertiesCard
-              key={building.id}
-              name={building.name}
-              address={building.address}
-              totalUnits={building.totalUnits}
-              occupiedUnits={building.occupiedUnits}
-              income={building.income}
-              outstanding={building.outstanding}
-              status={building.status}
-              month={building.month}
-              imageSrc={building.img}
-              url={building.url}
-              onClick={() => navigate(building.url, { state: building })}
+              key={property.id}
+              name={property.name}
+              address={property.address}
+              totalUnits={property.totalUnits}
+              occupiedUnits={property.occupiedUnits}
+              income={property.income}
+              outstanding={property.outstanding}
+              status={property.status}
+              month={property.month}
+              imageSrc={property.img}
+              url={property.url}
+              onClick={() => navigate(`/landlord/properties/${property.id}`)}
             />
           ))}
 
@@ -83,7 +114,7 @@ const LandlordProperties: FunctionComponent = () => {
             <img src={plus} alt="plus" className="w-8" />
             <div className="flex flex-col items-center">
               <b className="font-['Inter',sans-serif] text-[16px] text-[#5dc2a8]">
-                Add New Listing
+                Add New Building
               </b>
               <span className="text-[14px] font-medium text-[#666]">
                 Register a building, room, etc.

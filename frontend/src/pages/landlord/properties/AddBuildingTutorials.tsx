@@ -13,49 +13,49 @@ const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose 
     {
       title: 'Requirements',
       text: 'To add a building, we need to verify your ownership and business legitimacy. Please prepare the following documents listed on the right.',
-      position: 'top-[-75px] left-[220px]',
+      position: 'top-[-85px] left-[220px]',
       total: 3,
       currentStep: 1,
     },
     {
       title: 'Requirements',
       text: 'Additionally, please ensure your DTI Registration and BIR Certificate are up to date. These documents are crucial for the verification process.',
-      position: 'top-[-75px] left-[220px]',
+      position: 'top-[-85px] left-[220px]',
       total: 3,
       currentStep: 2,
     },
     {
       title: 'Requirements',
       text: 'Upload your Tenancy Contract Template. This will be used to generate digital agreements once a student chooses your building. Make sure it includes all your standard dorm policies!',
-      position: 'top-[-75px] left-[220px]',
+      position: 'top-[-95px] left-[220px]',
       total: 3,
       currentStep: 3,
     },
     {
       title: 'Building Information',
       text: 'Start adding your building information!',
-      position: 'top-[140px] left-[220px]',
+      position: 'top-[130px] left-[260px]',
       total: 2,
       currentStep: 1,
     },
     {
       title: 'Building Information',
       text: 'Fill out all the necessary details about your building. The more information you provide, the easier it will be for students to choose your property.',
-      position: 'top-[140px] left-[220px]',
+      position: 'top-[95px] left-[260px]',
       total: 2,
       currentStep: 2,
     },
     {
       title: 'Finalize',
       text: 'Finalize your information by reviewing all the details on the right.',
-      position: 'top-[300px] left-[220px]',
+      position: 'top-[300px] left-[180px]',
       total: 2,
       currentStep: 1,
     },
     {
       title: 'Finalize',
       text: 'Once you finish reviewing, you may click submit! Your building can now be viewed by potential tenants.',
-      position: 'top-[300px] left-[220px]',
+      position: 'top-[295px] left-[180px]',
       total: 2,
       currentStep: 2,
     },
@@ -65,16 +65,20 @@ const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose 
 
   const current = helpContent[step - 1];
   const totalSteps = helpContent.length;
+  const isLastStep = step === totalSteps;
 
   const handleNext = () => {
-    if (step < totalSteps) setStep(step + 1);
+    if (step < totalSteps) {
+      setStep(step + 1);
+    } else {
+      onClose();
+      setStep(1);
+    }
   };
 
   const handleBack = () => {
     if (step > 1) setStep(step - 1);
   };
-
-  const isLastStep = step === totalSteps;
 
   return (
     <div
@@ -120,14 +124,12 @@ const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose 
                   </button>
                 )}
 
-                {!isLastStep && (
-                  <button
-                    onClick={handleNext}
-                    className="w-[54px] rounded-lg bg-[#d0dbe3] py-1 text-[12px] text-[#2f3136] font-semibold font-lora text-center cursor-pointer hover:brightness-95 transition-all"
-                  >
-                    Next
-                  </button>
-                )}
+                <button
+                  onClick={handleNext}
+                  className="w-[54px] rounded-lg bg-[#d0dbe3] py-1 text-[12px] text-[#2f3136] font-semibold font-lora text-center cursor-pointer hover:brightness-95 transition-all"
+                >
+                  {isLastStep ? 'Finish' : 'Next'}
+                </button>
               </div>
             </div>
           </div>

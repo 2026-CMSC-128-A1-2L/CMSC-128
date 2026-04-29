@@ -7,8 +7,8 @@ import multerS3 from 'multer-s3';
 
 import { S3Client } from '@aws-sdk/client-s3';
 import path from 'path';
-import { isLoggedIn } from '../../middleware';
-import { routeUploadFile } from './file.controller';
+import { isLoggedIn } from "../../middleware.js";
+import { routeUploadFile } from "./file.controller.js";
 
 if (
   !process.env.R2_ENDPOINT ||

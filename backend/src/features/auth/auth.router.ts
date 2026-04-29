@@ -1,7 +1,7 @@
 import { type RequestHandler, Router } from 'express';
-import passportGoogle from './google';
-import { isDevelopment } from '../../middleware';
-import { routeTestRegister, routeTestLogin } from './auth.controller';
+import passportGoogle from "./google.js";
+import { isDevelopment } from "../../middleware.js";
+import { routeTestRegister, routeTestLogin } from "./auth.controller.js";
 
 const router = Router();
 
@@ -11,7 +11,8 @@ router.get(
 );
 
 router.get('/google/callback', (req, res, next) => {
-  passportGoogle.authenticate('google', (err, user, info) => {
+  // biome-ignore lint/suspicious/noExplicitAny: idk the type of this
+  passportGoogle.authenticate('google', (err: any, user: any, info: any) => {
     if (err) {
       return next(err);
     }

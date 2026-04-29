@@ -5,8 +5,8 @@ import {
   ObjectIdSchema,
   UpdateBookingStatusBodySchema,
 } from 'shared';
-import { createBooking, getBookings, cancelBooking, updateBookingStatus } from './booking.service';
-import { AppError } from '../../error';
+import { createBooking, getBookings, cancelBooking, updateBookingStatus } from "./booking.service.js";
+import { AppError } from "../../error.js";
 
 export const routeCreateBooking: RequestHandler = async (req, res, next) => {
   const userId = req.user!._id;

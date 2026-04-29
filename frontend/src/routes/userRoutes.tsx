@@ -21,8 +21,15 @@ import { Route } from "react-router-dom";
 import Settings from "../pages/user/setting/Settings";
 import TestPage from "../pages/utilities/TestPage";
 import Registration from "../pages/Registration";
+// import { StudentRoute } from './ProtectedRoute';
+/* <Route key="student-route" element={<StudentRoute />}> */
+/*   <Route key="home" path="/home" element={<HomePage />} /> */
+/* </Route>, */
 
 const userRoutes = [
+  // <Route key="student-route" element={<StudentRoute />}>
+  // <Route key="home" path="/home" element={<HomePage />} />
+  // </Route>,
   <Route key="home" path="/home" element={<HomePage />} />,
   <Route key="test" path="/test" element={<TestPage />} />,
   <Route key="filter" path="/filter" element={<Filter />} />,
@@ -62,8 +69,11 @@ const userRoutes = [
     element={<ProfileSwitcher />}
   />,
   <Route key="settings" path="/settings" element={<Settings />} />,
-  <Route key="pendingapplication" path="/finappli" element={<FinalizedApplicationPage1a />} />,
-
+  <Route
+    key="pendingapplication"
+    path="/finappli"
+    element={<FinalizedApplicationPage1a />}
+  />,
 
   <Route key="registration" path="/registration" element={<Registration />} />,
 ];
