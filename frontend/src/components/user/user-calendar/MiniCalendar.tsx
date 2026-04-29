@@ -83,12 +83,10 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
     const fetchUpcomingEvents = async () => {
       setLoading(true);
       try {
-        // Try to fetch from API first, fall back to sample events if CORS error
         const response = await CalendarService.getUpcomingEvents();
         setUpcomingEvents(response.data.slice(0, 3));
       } catch (error) {
         console.error("Failed to load upcoming events, using sample data:", error);
-        // Use sample events as fallback
         setUpcomingEvents(SAMPLE_EVENTS.slice(0, 3));
       } finally {
         setLoading(false);
@@ -109,7 +107,6 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
         setAllEvents(response.data);
       } catch (error) {
         console.error("Failed to load all events, using sample data:", error);
-        // Use sample events as fallback
         const sampleForMonth = SAMPLE_EVENTS.filter(event => {
           const eventDate = new Date(event.date);
           return eventDate.getMonth() === currentDate.getMonth() && 
@@ -196,7 +193,7 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
   };
 
   return (
-    <div className="w-full lg:w-72 shrink-0 flex flex-col gap-6 pb-4">
+    <div className="w-full flex flex-col gap-4">
       {/* Mini calendar */}
       <div className="rounded-xl bg-white border border-whitesmoke-200 flex flex-col items-center p-4 gap-4">
         {/* Nav */}
@@ -318,30 +315,35 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
         </div>
       </div>
 
-      {/* Upcoming events */}
-      <div className="flex flex-col gap-2 text-sm">
-        <b className="font-semibold">Upcoming Events</b>
+      {/* Upcoming events - moved outside mini calendar container */}
+      <div className="flex flex-col gap-2">
+        <b className="text-num-14 font-bold text-darkslategray-100 font-inter">Upcoming Events</b>
         {loading ? (
           <div className="text-xs text-dimgray">Loading events...</div>
         ) : upcomingEvents.length > 0 ? (
-          upcomingEvents.map((event) => (
-            <div
-              key={event.referenceId}
-              onClick={() => onEventClick?.(event)}
-              className="rounded-2xl border border-whitesmoke-200 flex items-center p-4 gap-2 cursor-pointer hover:bg-gray-50 transition-colors"
-            >
-              <Icon
-                icon={getEventIcon(event.type)}
-                className="h-6 w-6 shrink-0"
-              />
-              <div className="flex flex-col gap-1">
-                <div className="text-xs font-medium">{event.title}</div>
-                <div className="text-[11px] font-medium font-lora text-dimgray tracking-wide">
-                  {formatEventDate(event.date)}
+          <div className="flex flex-col gap-2">
+            {upcomingEvents.map((event) => (
+              <button
+                key={event.referenceId}
+                onClick={() => {
+                  // Click on upcoming event should show day popup with all events for that date
+                  const eventDate = new Date(event.date);
+                  const dayEvents = getEventsForDay(eventDate.getDate());
+                  onDateClick?.(eventDate, dayEvents);
+                }}
+                className="w-full h-12 rounded-num-8 border border-whitesmoke-200 box-border overflow-hidden flex items-center p-3 gap-2 hover:bg-whitesmoke-200 transition-colors cursor-pointer font-inter"
+              >
+                <Icon
+                  icon={getEventIcon(event.type)}
+                  className="h-6 w-6 shrink-0 text-teal"
+                />
+                <div className="flex-1 flex items-center justify-between min-w-0 gap-2">
+                  <div className="text-num-14 font-medium text-dimgray truncate">{event.title}</div>
+                  <div className="text-xs text-dimgray shrink-0">{formatEventDate(event.date)}</div>
                 </div>
-              </div>
-            </div>
-          ))
+              </button>
+            ))}
+          </div>
         ) : (
           <div className="text-xs text-dimgray">No upcoming events</div>
         )}

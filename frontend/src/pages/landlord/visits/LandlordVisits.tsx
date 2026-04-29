@@ -164,38 +164,39 @@ const Visits: FunctionComponent = () => {
             </button>
 
             {/* Mini Calendar */}
-            <div className="bg-white rounded-num-8 p-3 sm:p-4 border border-whitesmoke-200 w-full overflow-hidden">
-              {/* Calendar Header */}
-              <div className="flex items-center justify-between mb-4 gap-2">
+            <div className="rounded-xl bg-white border border-whitesmoke-200 flex flex-col items-center p-4 gap-4 w-full overflow-hidden">
+              {/* Nav */}
+              <div className="self-stretch flex items-center gap-3">
                 <button
                   onClick={handlePrevMonth}
-                  className="p-1 hover:bg-whitesmoke-200 rounded shrink-0"
+                  className="rounded-full p-2 hover:bg-whitesmoke-100 transition-colors"
                 >
-                  <Icon icon="ic:baseline-chevron-left" width={16} height={16} className="sm:w-5 sm:h-5" color="#2f3136" />
+                  <Icon icon="ic:round-chevron-left" className="h-5 w-5" />
                 </button>
-                <div className="flex gap-0.5 sm:gap-1 relative">
+                <div className="flex-1 flex gap-2 relative">
                   {/* Month Dropdown */}
-                  <div className="relative">
+                  <div className="flex-1 relative">
                     <button
                       onClick={() => setShowMonthDropdown(!showMonthDropdown)}
-                      className="px-1.5 py-0.5 border border-whitesmoke-200 rounded text-xs font-inter text-dimgray flex items-center gap-0.5 hover:bg-whitesmoke-200 whitespace-nowrap"
+                      className="w-full rounded-md border border-gainsboro flex items-center p-2 gap-1 text-xs hover:bg-gray-50"
                     >
-                      <span>{MONTH_SHORT[month]}</span>
+                      <span className="flex-1">{MONTHS[month].substring(0, 3)}</span>
                       <Icon
-                        icon="ic:baseline-keyboard-arrow-down"
-                        width={10}
-                        height={10}
-                        className="shrink-0"
-                        style={{ transform: showMonthDropdown ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}
+                        icon="ic:round-keyboard-arrow-down"
+                        className={`h-4 w-4 transition-transform ${
+                          showMonthDropdown ? 'rotate-180' : ''
+                        }`}
                       />
                     </button>
                     {showMonthDropdown && (
-                      <div className="absolute top-full left-0 mt-1 bg-white border border-whitesmoke-200 rounded shadow-lg z-10 w-20 max-h-56 overflow-y-auto">
-                        {MONTH_SHORT.map((m, idx) => (
+                      <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gainsboro rounded-md z-10 shadow-lg max-h-48 overflow-y-auto">
+                        {MONTHS.map((m, idx) => (
                           <button
                             key={m}
                             onClick={() => handleMonthSelect(idx)}
-                            className="w-full text-center px-1.5 py-0.5 hover:bg-lightcyan text-xs font-inter border-b border-whitesmoke-100 last:border-b-0"
+                            className={`w-full text-left px-3 py-2 text-xs hover:bg-blue-50 ${
+                              idx === month ? 'bg-lightcyan-100 font-bold' : ''
+                            }`}
                           >
                             {m}
                           </button>
@@ -205,27 +206,28 @@ const Visits: FunctionComponent = () => {
                   </div>
 
                   {/* Year Dropdown */}
-                  <div className="relative">
+                  <div className="flex-1 relative">
                     <button
                       onClick={() => setShowYearDropdown(!showYearDropdown)}
-                      className="px-1.5 py-0.5 border border-whitesmoke-200 rounded text-xs font-inter text-dimgray flex items-center gap-0.5 hover:bg-whitesmoke-200 whitespace-nowrap"
+                      className="w-full rounded-md border border-gainsboro flex items-center p-2 gap-1 text-xs hover:bg-gray-50"
                     >
-                      <span>{year}</span>
+                      <span className="flex-1">{year}</span>
                       <Icon
-                        icon="ic:baseline-keyboard-arrow-down"
-                        width={10}
-                        height={10}
-                        className="shrink-0"
-                        style={{ transform: showYearDropdown ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}
+                        icon="ic:round-keyboard-arrow-down"
+                        className={`h-4 w-4 transition-transform ${
+                          showYearDropdown ? 'rotate-180' : ''
+                        }`}
                       />
                     </button>
                     {showYearDropdown && (
-                      <div className="absolute top-full left-0 mt-1 bg-white border border-whitesmoke-200 rounded shadow-lg z-10 w-16 max-h-56 overflow-y-auto">
+                      <div className="absolute top-full right-0 left-0 mt-1 bg-white border border-gainsboro rounded-md z-10 shadow-lg max-h-48 overflow-y-auto">
                         {Array.from({ length: 21 }, (_, i) => year - 10 + i).map((y) => (
                           <button
                             key={y}
                             onClick={() => handleYearSelect(y)}
-                            className="w-full text-center px-1.5 py-0.5 hover:bg-lightcyan text-xs font-inter border-b border-whitesmoke-100 last:border-b-0"
+                            className={`w-full text-left px-3 py-2 text-xs hover:bg-blue-50 ${
+                              y === year ? 'bg-lightcyan-100 font-bold' : ''
+                            }`}
                           >
                             {y}
                           </button>
@@ -236,47 +238,77 @@ const Visits: FunctionComponent = () => {
                 </div>
                 <button
                   onClick={handleNextMonth}
-                  className="p-1 hover:bg-whitesmoke-200 rounded shrink-0"
+                  className="rounded-full p-2 hover:bg-whitesmoke-100 transition-colors"
                 >
-                  <Icon icon="ic:baseline-chevron-right" width={16} height={16} className="sm:w-5 sm:h-5" color="#2f3136" />
+                  <Icon icon="ic:round-chevron-right" className="h-5 w-5" />
                 </button>
               </div>
 
-              {/* Day Headers */}
-              <div className="grid grid-cols-7 gap-0.5 sm:gap-1 mb-1 sm:mb-2 text-center text-xs sm:text-num-12 font-semibold text-dimgray font-inter">
-                <div>Su</div>
-                <div>Mo</div>
-                <div>Tu</div>
-                <div>We</div>
-                <div>Th</div>
-                <div>Fr</div>
-                <div>Sa</div>
-              </div>
+              {/* Day labels */}
+              <div className="self-stretch flex flex-col gap-0.5 text-center">
+                <div className="grid grid-cols-7 text-xs text-gray font-inter">
+                  {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map((d) => (
+                    <div key={d} className="flex items-center justify-center py-1">
+                      {d}
+                    </div>
+                  ))}
+                </div>
 
-              {/* Calendar Days */}
-              <div className="grid grid-cols-7 gap-0.5 sm:gap-1 text-xs sm:text-num-14 text-center font-inter">
-                {getDaysForCalendar().map((day, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => {
-                      if (day !== null) {
-                        const clickedDate = new Date(year, month, day);
-                        const dayVisits = getVisitsForDay(day);
-                        openDayPopout(clickedDate, dayVisits);
+                {/* Date grid */}
+                <div className="flex flex-col gap-0.5 text-xs text-black">
+                  {(() => {
+                    const daysInMonth = getDaysInMonth(month, year);
+                    const firstDay = getFirstDayOfMonth(month, year);
+                    const weeks: (number | null)[][] = [];
+                    let week: (number | null)[] = new Array(firstDay).fill(null);
+                    for (let day = 1; day <= daysInMonth; day++) {
+                      week.push(day);
+                      if (week.length === 7) {
+                        weeks.push(week);
+                        week = [];
                       }
-                    }}
-                    disabled={day === null}
-                    className={`py-1 sm:py-2 px-0.5 rounded transition-colors text-xs sm:text-base ${
-                      day === null
-                        ? 'text-whitesmoke-300 cursor-default'
-                        : day === new Date().getDate() && month === new Date().getMonth() && year === new Date().getFullYear()
-                        ? 'bg-lightcyan text-teal font-bold'
-                        : 'hover:bg-whitesmoke-200 cursor-pointer text-dimgray'
-                    }`}
-                  >
-                    {day}
-                  </button>
-                ))}
+                    }
+                    if (week.length > 0) {
+                      while (week.length < 7) {
+                        week.push(null);
+                      }
+                      weeks.push(week);
+                    }
+                    const today = new Date();
+                    const isCurrentMonth =
+                      today.getFullYear() === year && today.getMonth() === month;
+                    return weeks.map((weekDays, wi) => (
+                      <div key={wi} className="grid grid-cols-7 gap-0.5">
+                        {weekDays.map((day, di) => {
+                          const isTodayDay =
+                            isCurrentMonth && day === today.getDate() && day !== null;
+                          return (
+                            <button
+                              key={di}
+                              onClick={() => {
+                                if (day !== null) {
+                                  const clickedDate = new Date(year, month, day);
+                                  const dayVisits = getVisitsForDay(day);
+                                  openDayPopout(clickedDate, dayVisits);
+                                }
+                              }}
+                              disabled={day === null}
+                              className={[
+                                'rounded-md flex items-center justify-center p-2 aspect-square transition-colors',
+                                day === null ? 'cursor-default' : 'cursor-pointer hover:bg-gray-100',
+                                isTodayDay
+                                  ? 'bg-lightcyan-100 text-teal-200 font-bold hover:bg-lightcyan-200'
+                                  : '',
+                              ].join(' ')}
+                            >
+                              {day ?? ''}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    ));
+                  })()}
+                </div>
               </div>
             </div>
 
@@ -290,7 +322,7 @@ const Visits: FunctionComponent = () => {
           <div className="flex-1 flex flex-col gap-4 sm:gap-6 min-w-0">
             {/* Calendar Header - Month and Year only */}
             <div className="flex items-center justify-center px-2">
-              <h2 className="text-xl sm:text-2xl font-bold text-dimgray font-inter">
+              <h2 className="text-xl sm:text-2xl font-bold text-black font-inter">
                 {MONTHS[month]} {year}
               </h2>
             </div>

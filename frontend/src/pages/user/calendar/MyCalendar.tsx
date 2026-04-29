@@ -17,8 +17,12 @@ const MyCalendar: FunctionComponent = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
 
   const openEventPopout = useCallback((event: CalendarEvent) => {
-    setSelectedEvent(event);
-    setEventPopoutOpen(true);
+    // Instead of showing individual event, show all events for that day
+    const eventDate = new Date(event.date);
+    // Find all events for this date
+    setSelectedDate(eventDate);
+    setSelectedDayEvents([event]); // Will be populated with full day events in the popout
+    setDayPopoutOpen(true);
   }, []);
 
   const closeEventPopout = useCallback(() => {
@@ -41,12 +45,10 @@ const MyCalendar: FunctionComponent = () => {
     setSelectedDayEvents([]);
   }, []);
 
-  // Only open day popout if there are events
+  // Always open day popout when clicking on mini calendar date
   const handleDayPopout = useCallback(
     (date: Date, events: CalendarEvent[]) => {
-      if (events.length > 0) {
-        openDayPopout(date, events);
-      }
+      openDayPopout(date, events);
     },
     [openDayPopout]
   );
@@ -86,7 +88,8 @@ const MyCalendar: FunctionComponent = () => {
               <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
                 {/* LEFT SIDEBAR */}
                 <div className="w-full lg:w-72 flex flex-col gap-6 shrink-0">
-                  <div className="rounded-2xl bg-white border border-whitesmoke-200 p-6">
+                  {/* Mini Calendar Container */}
+                  <div className="bg-white rounded-num-8 p-3 sm:p-4 border border-whitesmoke-200 w-full overflow-hidden">
                     <MiniCalendar
                       currentDate={currentDate}
                       onPrevMonth={handlePrevMonth}

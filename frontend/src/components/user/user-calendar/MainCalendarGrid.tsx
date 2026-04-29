@@ -164,7 +164,7 @@ const MainCalendarGrid: FunctionComponent<MainCalendarGridProps> = ({
   return (
     <div className="w-full flex flex-col bg-white">
       {/* Month header */}
-      <div className="flex items-center justify-center px-4 py-4 text-xl sm:text-2xl font-bold text-dimgray">
+      <div className="flex items-center justify-center px-4 py-4 text-xl sm:text-2xl font-bold text-black">
         {monthName}
       </div>
 
@@ -206,6 +206,7 @@ const MainCalendarGrid: FunctionComponent<MainCalendarGridProps> = ({
                     key={event.referenceId}
                     onClick={(e) => {
                       e.stopPropagation();
+                      // Show all events for this day instead of individual event
                       onEventClick?.(event);
                     }}
                     className="w-full text-left px-1 sm:px-1.5 py-0.5 rounded bg-gradient-to-r from-blue-100 to-blue-50 hover:from-blue-200 hover:to-blue-100 transition-colors truncate cursor-pointer"
