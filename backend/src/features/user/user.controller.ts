@@ -18,6 +18,7 @@ import {
 } from './user.service';
 import { AppError } from '../../error';
 import assert from 'node:assert';
+import { UserType } from './user.model';
 
 export const routeGetUsers: RequestHandler = async (req, res, _next) => {
   const params = GetUsersQuerySchema.parse(req.query);

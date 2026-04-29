@@ -20,7 +20,8 @@ import { AppError } from '../../error';
 
 export const routeGetListings: RequestHandler = async (req, res, _next) => {
   const params = GetListingsQuerySchema.parse(req.query);
-  const listings = await getListings(params, res.locals.filters);
+  // biome-ignore lint/suspicious/noExplicitAny: ayaw ih pero tama yan
+  const listings = await getListings(params as any, res.locals.filters);
   res.status(200).json({ data: listings });
 };
 

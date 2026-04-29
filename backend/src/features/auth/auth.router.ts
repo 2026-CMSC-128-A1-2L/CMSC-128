@@ -11,7 +11,8 @@ router.get(
 );
 
 router.get('/google/callback', (req, res, next) => {
-  passportGoogle.authenticate('google', (err, user, info) => {
+  // biome-ignore lint/suspicious/noExplicitAny: idk the type of this
+  passportGoogle.authenticate('google', (err: any, user: any, info: any) => {
     if (err) {
       return next(err);
     }
