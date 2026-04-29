@@ -1,4 +1,4 @@
-import { type FunctionComponent, useState, useEffect } from 'react';
+import { type FunctionComponent, useState, useEffect, useCallback } from 'react';
 
 interface MonthlyData {
   month: string;
@@ -7,29 +7,6 @@ interface MonthlyData {
   totalIncome: number;
 }
 
-{/*interface MonthToShow {
-  monthIndex: number;
-  year: number;
-}
-
-
-const _ALL_MONTHS = [
-  'JAN',
-  'FEB',
-  'MAR',
-  'APR',
-  'MAY',
-  'JUN',
-  'JUL',
-  'AUG',
-  'SEP',
-  'OCT',
-  'NOV',
-  'DEC',
-];
-
-*/}
-
 type TimeRange = '12' | '6';
 
 const MonthlyIncomeChart: FunctionComponent = () => {
@@ -37,7 +14,7 @@ const MonthlyIncomeChart: FunctionComponent = () => {
   const [monthlyData, setMonthlyData] = useState<MonthlyData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const fetchMonthlyIncome = async () => {
+  const fetchMonthlyIncome = useCallback(async () => {
     setIsLoading(true);
     try {
       const completeData: MonthlyData[] = [
@@ -73,7 +50,7 @@ const MonthlyIncomeChart: FunctionComponent = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [selectedRange]);
 
   useEffect(() => {
     fetchMonthlyIncome();

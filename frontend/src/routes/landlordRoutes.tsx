@@ -84,14 +84,14 @@ const landlordRoutes = [
     element={<LandlordVisits />}
   />,
   <Route
-    key="landlord-finance"
-    path="/landlord/finance"
-    element={<LandlordFinance />}
-  />,
-  <Route
     key="landlord-property-finance"
     path="/landlord/finance/property/:propertyId"
     element={<LandlordPropertyFinance />}
+  />,
+  <Route
+    key="landlord-finance"
+    path="/landlord/finance"
+    element={<LandlordFinance />}
   />,
   <Route
     key="landlord-settings"
