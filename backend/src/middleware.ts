@@ -9,6 +9,7 @@ import {
   type HousingFacilityType,
 } from './features/facility/facility.model';
 import { isVerified } from './features/user/user.model';
+import assert from 'node:assert';
 
 // Adds filters for private/public listings for unverified/verified users. Used for read actions on listings.
 export const listingViewFilter: RequestHandler = (req, res, next) => {

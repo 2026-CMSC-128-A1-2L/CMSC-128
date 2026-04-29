@@ -11,6 +11,7 @@ import {
 } from './document.service';
 import type mongoose from 'mongoose';
 import type { QueryFilter } from 'mongoose';
+import assert from 'node:assert';
 
 // GET ../documents
 export const routeGetDocuments = (model: ModelWithDocument): RequestHandler => {

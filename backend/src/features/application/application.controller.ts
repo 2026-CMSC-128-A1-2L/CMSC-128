@@ -23,6 +23,7 @@ import {
 import type { QueryFilter } from 'mongoose';
 import type { ApplicationType } from './application.model';
 import { AppError } from '../../error';
+import assert from 'node:assert';
 
 export const routeCreateApplication: RequestHandler = async (req, res, _next) => {
   assert.ok(req.user);
@@ -132,7 +133,8 @@ export const routeFinalizeApplication: ApplicationHandler = async (req, res, _ne
   const applicationId = ObjectIdSchema.parse(req.params.applicationId);
   let updatedApplication: ApplicationType | undefined;
   updatedApplication = await finalizeApplication(applicationId, res.locals.filters);
-  
+
   if (!updatedApplication) throw new AppError(404, 'Application not found.');
   res.status(200).send(updatedApplication);
 };
+
