@@ -1,6 +1,6 @@
 import LandlordHomepage from "../pages/landlord/dashboard/LandlordHomepage";
 import LandlordProfile from "../pages/landlord/profile/LandlordProfile";
-import LandlordVerif from "../pages/landlord/profile/verification/LandlordVerif";
+import LandlordVerif from "../pages/landlord/profile/verification/LandlordProfileVerification";
 import LandlordDashboard from "../pages/landlord/dashboard/LandlordHomepage";
 import LandlordMessages from "../pages/landlord/messages/LandlordMessages";
 import LandlordProperties from "../pages/landlord/properties/LandlordProperties";
@@ -97,7 +97,6 @@ const landlordRoutes = [
     path="/landlord/add-building"
     element={<AddBuilding />}
   />,
-
 
   <Route
     key="landlord-tenants-unvalidated"

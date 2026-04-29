@@ -98,17 +98,30 @@ const HomePage: FunctionComponent = () => {
                         <Icon icon="radix-icons:arrow-top-right" className="w-3 h-3"></Icon>
                       </div>
                     </div>
-                    <div className="self-stretch w-fit flex items-center gap-1">
-                      <div className="rounded-num-100 bg-lightcyan-100 overflow-hidden flex items-center py-[0.437rem] px-[0.562rem]">
-                        <Icon icon="material-symbols-light:chevron-left" className="w-5 h-5"></Icon>
-                      </div>
-                      <div className="rounded-num-100 bg-lightcyan-100 overflow-hidden flex items-center py-[0.437rem] px-[0.562rem]">
-                        <Icon
-                          icon="material-symbols-light:chevron-right"
-                          className="w-5 h-5"
-                        ></Icon>
-                      </div>
-                    </div>
+                   <div className="flex items-center gap-[8px]">
+                <button
+                  // onClick={() => scrollTo(current - 1)}
+                  // disabled={current === 0}
+                  className="flex h-[32px] w-[32px] items-center justify-center rounded-full border border-[#f0f0f0] bg-white transition-opacity hover:opacity-70 disabled:opacity-30"
+                  aria-label="Previous property"
+                >
+                  <Icon
+                    icon="solar:arrow-left-bold"
+                    className="h-[16px] w-[16px] text-[#2f3136]"
+                  />
+                </button>
+                <button
+                  // onClick={() => scrollTo(current + 1)}
+                  // disabled={current === total - 1}
+                  className="flex h-[32px] w-[32px] items-center justify-center rounded-full bg-[#e0f7f4] transition-opacity hover:opacity-70 disabled:opacity-30"
+                  aria-label="Next property"
+                >
+                  <Icon
+                    icon="solar:arrow-right-bold"
+                    className="h-[16px] w-[16px] text-[#096c5b]"
+                  />
+                </button>
+              </div>
                   </div>
                   <div className="h-full w-full overflow-x-auto flex py-1 box-border gap-3">
                     <div className="flex flex-wrap gap-6">
@@ -144,17 +157,30 @@ const HomePage: FunctionComponent = () => {
                         <Icon icon="radix-icons:arrow-top-right" className="w-3 h-3"></Icon>
                       </div>
                     </div>
-                    <div className="self-stretch w-fit flex items-center gap-1">
-                      <div className="rounded-num-100 bg-lightcyan-100 overflow-hidden flex items-center py-[0.437rem] px-[0.562rem]">
-                        <Icon icon="material-symbols-light:chevron-left" className="w-5 h-5"></Icon>
-                      </div>
-                      <div className="rounded-num-100 bg-lightcyan-100 overflow-hidden flex items-center py-[0.437rem] px-[0.562rem]">
-                        <Icon
-                          icon="material-symbols-light:chevron-right"
-                          className="w-5 h-5"
-                        ></Icon>
-                      </div>
-                    </div>
+                    <div className="flex items-center gap-[8px]">
+                <button
+                  // onClick={() => scrollTo(current - 1)}
+                  // disabled={current === 0}
+                  className="flex h-[32px] w-[32px] items-center justify-center rounded-full border border-[#f0f0f0] bg-white transition-opacity hover:opacity-70 disabled:opacity-30"
+                  aria-label="Previous property"
+                >
+                  <Icon
+                    icon="solar:arrow-left-bold"
+                    className="h-[16px] w-[16px] text-[#2f3136]"
+                  />
+                </button>
+                <button
+                  // onClick={() => scrollTo(current + 1)}
+                  // disabled={current === total - 1}
+                  className="flex h-[32px] w-[32px] items-center justify-center rounded-full bg-[#e0f7f4] transition-opacity hover:opacity-70 disabled:opacity-30"
+                  aria-label="Next property"
+                >
+                  <Icon
+                    icon="solar:arrow-right-bold"
+                    className="h-[16px] w-[16px] text-[#096c5b]"
+                  />
+                </button>
+              </div>
                   </div>
                   <div className="h-full w-full overflow-x-auto flex py-1 box-border gap-3">
                     <div className="flex flex-wrap gap-6">
@@ -190,17 +216,30 @@ const HomePage: FunctionComponent = () => {
                         <Icon icon="radix-icons:arrow-top-right" className="w-3 h-3"></Icon>
                       </div>
                     </div>
-                    <div className="self-stretch w-fit flex items-center gap-1">
-                      <div className="rounded-num-100 bg-lightcyan-100 overflow-hidden flex items-center py-[0.437rem] px-[0.562rem]">
-                        <Icon icon="material-symbols-light:chevron-left" className="w-5 h-5"></Icon>
-                      </div>
-                      <div className="rounded-num-100 bg-lightcyan-100 overflow-hidden flex items-center py-[0.437rem] px-[0.562rem]">
-                        <Icon
-                          icon="material-symbols-light:chevron-right"
-                          className="w-5 h-5"
-                        ></Icon>
-                      </div>
-                    </div>
+                    <div className="flex items-center gap-[8px]">
+                <button
+                  // onClick={() => scrollTo(current - 1)}
+                  // disabled={current === 0}
+                  className="flex h-[32px] w-[32px] items-center justify-center rounded-full border border-[#f0f0f0] bg-white transition-opacity hover:opacity-70 disabled:opacity-30"
+                  aria-label="Previous property"
+                >
+                  <Icon
+                    icon="solar:arrow-left-bold"
+                    className="h-[16px] w-[16px] text-[#2f3136]"
+                  />
+                </button>
+                <button
+                  // onClick={() => scrollTo(current + 1)}
+                  // disabled={current === total - 1}
+                  className="flex h-[32px] w-[32px] items-center justify-center rounded-full bg-[#e0f7f4] transition-opacity hover:opacity-70 disabled:opacity-30"
+                  aria-label="Next property"
+                >
+                  <Icon
+                    icon="solar:arrow-right-bold"
+                    className="h-[16px] w-[16px] text-[#096c5b]"
+                  />
+                </button>
+              </div>
                   </div>
                   <div className="h-full w-full overflow-x-auto flex py-1 box-border gap-3">
                     <div className="flex flex-wrap gap-6">
@@ -236,17 +275,30 @@ const HomePage: FunctionComponent = () => {
                         <Icon icon="radix-icons:arrow-top-right" className="w-3 h-3"></Icon>
                       </div>
                     </div>
-                    <div className="self-stretch w-fit flex items-center gap-1">
-                      <div className="rounded-num-100 bg-lightcyan-100 overflow-hidden flex items-center py-[0.437rem] px-[0.562rem]">
-                        <Icon icon="material-symbols-light:chevron-left" className="w-5 h-5"></Icon>
-                      </div>
-                      <div className="rounded-num-100 bg-lightcyan-100 overflow-hidden flex items-center py-[0.437rem] px-[0.562rem]">
-                        <Icon
-                          icon="material-symbols-light:chevron-right"
-                          className="w-5 h-5"
-                        ></Icon>
-                      </div>
-                    </div>
+                   <div className="flex items-center gap-[8px]">
+                <button
+                  // onClick={() => scrollTo(current - 1)}
+                  // disabled={current === 0}
+                  className="flex h-[32px] w-[32px] items-center justify-center rounded-full border border-[#f0f0f0] bg-white transition-opacity hover:opacity-70 disabled:opacity-30"
+                  aria-label="Previous property"
+                >
+                  <Icon
+                    icon="solar:arrow-left-bold"
+                    className="h-[16px] w-[16px] text-[#2f3136]"
+                  />
+                </button>
+                <button
+                  // onClick={() => scrollTo(current + 1)}
+                  // disabled={current === total - 1}
+                  className="flex h-[32px] w-[32px] items-center justify-center rounded-full bg-[#e0f7f4] transition-opacity hover:opacity-70 disabled:opacity-30"
+                  aria-label="Next property"
+                >
+                  <Icon
+                    icon="solar:arrow-right-bold"
+                    className="h-[16px] w-[16px] text-[#096c5b]"
+                  />
+                </button>
+              </div>
                   </div>
                   <div className="h-full w-full overflow-x-auto flex py-1 box-border gap-3">
                     <div className="flex flex-wrap gap-6">

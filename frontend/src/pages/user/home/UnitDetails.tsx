@@ -29,11 +29,11 @@ const UnitDetails: FunctionComponent = () => {
     <div className="w-full h-[1024px] relative overflow-y-auto flex flex-col items-start isolate gap-2.5 text-left text-num-14 text-darkslategray-100 font-lora">
       <div className="w-[1440px] overflow-hidden shrink-0 flex flex-col items-start justify-center z-0">
         <div className="w-[1440px] h-[2100px] overflow-hidden shrink-0 flex flex-col items-start justify-center py-0 pl-0 pr-20 box-border">
-          <div className="w-[1440px] flex-1 flex items-center py-0 pl-0 pr-20 box-border shrink-0">
-            <div className="fixed top-0 left-0 h-full w-[200px] hidden md:block z-10">
+          <div className="w-[1440px] flex-1 flex items-center py-0 pl-0 pr-20 box-border shrink-0 font-inter text-black">
+            <div className="fixed top-0 left-0 h-screen w-[200px] z-10">
               <SideBar />
             </div>
-            <div className="w-[200px] shrink-0 hidden md:block" />
+            <div className="w-[200px] shrink-0" />
             <div className="self-stretch w-[1238px] overflow-hidden shrink-0 flex flex-col items-center justify-between gap-2.5">
               <div className="self-stretch flex flex-col items-start pt-8 pb-0 pl-8 pr-20">
                 <div className="self-stretch flex flex-col items-start gap-3">
