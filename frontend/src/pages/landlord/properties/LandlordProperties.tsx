@@ -83,7 +83,7 @@ const LandlordProperties: FunctionComponent = () => {
             <img src={plus} alt="plus" className="w-8" />
             <div className="flex flex-col items-center">
               <b className="font-['Inter',sans-serif] text-[16px] text-[#5dc2a8]">
-                Add New Listing
+                Add New Building
               </b>
               <span className="text-[14px] font-medium text-[#666]">
                 Register a building, room, etc.
