@@ -33,7 +33,7 @@ export default function Reportv2() {
           <BreadcrumbHeader
             routes={[
               { name: "User Profile", url: "/profile-switcher" },
-              { name: "Current Dorm", url: "/current-dorm" },
+              { name: "Current Dorm", url: "/profile-switcher" },
               { name: "Report" },
             ]}
           />

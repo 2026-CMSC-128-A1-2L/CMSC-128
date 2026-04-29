@@ -5,8 +5,12 @@ interface ReasonContentProps{
     setLeaseTransferStages:any,
 }
 
+import { useNavigate } from 'react-router-dom'
+
 export default function ReasonContent(props:ReasonContentProps) {
     const {leaseTransferStages,setLeaseTransferStages}=props
+    const navigate = useNavigate()
+
 return (
     <>
     <div className="flex text-lora font-bold items-end px-15 gap-2 mb-2">
@@ -71,6 +75,7 @@ return (
             <div className="flex gap-10  font-inter font-bold py-20 justify-center">
                             <button className="px-4 py-1 cursor-pointer text-crimson rounded-full" onClick={()=>{
                                 // ideally route back to Current Dorm page
+                                navigate(-1)
                             }}>Go Back</button>
                             <button className="px-4 py-1 cursor-pointer text-[#096c5b] bg-[#f1f5f9] rounded-full" onClick={()=>{
                                 setLeaseTransferStages(leaseTransferStages+1)
