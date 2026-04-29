@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { documentSchema, type DocumentType } from '../document/document.model';
+import { documentSchema, type DocumentType } from "../document/document.model.js";
 
 const PAYMENT_STATUS = ['unpaid', 'paid', 'overdue'];
 const PAYMENT_METHODS = ['gcash', 'bank_transfer'];

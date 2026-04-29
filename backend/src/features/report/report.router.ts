@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { isSuperAdmin } from '../../middleware';
-import { routeGetReports, routeGetReport, routeResolveReport } from './report.controller';
+import { isSuperAdmin } from "../../middleware.js";
+import { routeGetReports, routeGetReport, routeResolveReport } from "./report.controller.js";
 
 const router = Router();
 

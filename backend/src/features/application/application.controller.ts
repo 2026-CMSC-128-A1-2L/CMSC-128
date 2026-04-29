@@ -19,10 +19,10 @@ import {
   rejectFinalApplication,
   rejectInitialApplication,
   finalizeApplication,
-} from './application.service';
+} from "./application.service.js";
 import type { QueryFilter } from 'mongoose';
-import type { ApplicationType } from './application.model';
-import { AppError } from '../../error';
+import type { ApplicationType } from "./application.model.js";
+import { AppError } from "../../error.js";
 import assert from 'node:assert';
 
 export const routeCreateApplication: RequestHandler = async (req, res, _next) => {

@@ -2,8 +2,8 @@
   "compilerOptions": {
     "target": "esnext",
     "lib": ["ESNext"],
-    "module": "ESNext",
-    "moduleResolution": "bundler",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "strict": true,
     "esModuleInterop": true,
     "outDir": "./dist",

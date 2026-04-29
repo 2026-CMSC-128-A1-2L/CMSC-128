@@ -1,7 +1,7 @@
 import { type RequestHandler, Router } from 'express';
-import passportGoogle from './google';
-import { isDevelopment } from '../../middleware';
-import { routeTestRegister, routeTestLogin } from './auth.controller';
+import passportGoogle from "./google.js";
+import { isDevelopment } from "../../middleware.js";
+import { routeTestRegister, routeTestLogin } from "./auth.controller.js";
 
 const router = Router();
 

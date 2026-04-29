@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { isLoggedIn } from '../../middleware';
-import { routeGetCalendar, routeGetUpcomingEvents } from './calendar.controller';
+import { isLoggedIn } from "../../middleware.js";
+import { routeGetCalendar, routeGetUpcomingEvents } from "./calendar.controller.js";
 
 const router = Router();
 

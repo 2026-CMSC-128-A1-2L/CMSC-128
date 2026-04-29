@@ -1,18 +1,18 @@
 import type { FacilityType, USER_TYPES } from 'shared';
 import type { QueryFilter } from 'mongoose';
-import { AppError } from '../../error';
-import { combineFilters } from '../../middleware';
-import { Listing } from '../listing/listing.model';
+import { AppError } from "../../error.js";
+import { combineFilters } from "../../middleware.js";
+import { Listing } from "../listing/listing.model.js";
 import {
   HousingFacility,
   type HousingFacilityType,
   type ManagerPermissionType,
-} from './facility.model';
-import { inviteManager } from '../invite/invite.service';
+} from "./facility.model.js";
+import { inviteManager } from "../invite/invite.service.js";
 import type mongoose from 'mongoose';
-import { getAllRentals } from '../rental/rental.service';
-import { getUnits } from '../unit/unit.service';
-import { getBillings } from '../billing/billing.service';
+import { getAllRentals } from "../rental/rental.service.js";
+import { getUnits } from "../unit/unit.service.js";
+import { getBillings } from "../billing/billing.service.js";
 
 type FacilityFilters = {
   name?: string;

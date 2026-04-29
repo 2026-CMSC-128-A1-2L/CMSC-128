@@ -1,13 +1,13 @@
 import type mongoose from 'mongoose';
 import type { QueryFilter } from 'mongoose';
-import { AppError } from '../../error';
-import { Unit, type UnitType } from './unit.model';
-import { Listing, type ListingType } from '../listing/listing.model';
-import { getListingById } from '../listing/listing.service';
-import { Rental } from '../rental/rental.model';
-import { combineFilters } from '../../middleware';
-import { Student } from '../user/user.model';
-import { createRental } from '../rental/rental.service';
+import { AppError } from "../../error.js";
+import { Unit, type UnitType } from "./unit.model.js";
+import { Listing, type ListingType } from "../listing/listing.model.js";
+import { getListingById } from "../listing/listing.service.js";
+import { Rental } from "../rental/rental.model.js";
+import { combineFilters } from "../../middleware.js";
+import { Student } from "../user/user.model.js";
+import { createRental } from "../rental/rental.service.js";
 import { TagFilterSchema } from 'shared';
 
 export type CreateUnitArguments = {

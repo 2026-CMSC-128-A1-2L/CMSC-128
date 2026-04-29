@@ -6,9 +6,9 @@ import {
   routeDeclineInvite,
   routeGetInviteById,
   routeDeleteInvite
-} from './invite.controller';
-import { isLandlord, isLoggedIn } from '../../middleware';
-import { inviteFilter, isManagerOnly } from './invite.middleware';
+} from "./invite.controller.js";
+import { isLandlord, isLoggedIn } from "../../middleware.js";
+import { inviteFilter, isManagerOnly } from "./invite.middleware.js";
 
 const router = Router();
 

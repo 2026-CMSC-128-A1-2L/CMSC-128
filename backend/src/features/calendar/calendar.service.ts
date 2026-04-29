@@ -1,10 +1,10 @@
 import type mongoose from 'mongoose';
-import { Billing } from '../billing/billing.model';
-import { VisitBooking } from '../booking/booking.model';
-import { HousingFacility } from '../facility/facility.model';
-import { Listing } from '../listing/listing.model';
-import { Rental } from '../rental/rental.model';
-import { Unit } from '../unit/unit.model';
+import { Billing } from "../billing/billing.model.js";
+import { VisitBooking } from "../booking/booking.model.js";
+import { HousingFacility } from "../facility/facility.model.js";
+import { Listing } from "../listing/listing.model.js";
+import { Rental } from "../rental/rental.model.js";
+import { Unit } from "../unit/unit.model.js";
 
 export type CalendarEvent = {
   type: 'booking' | 'billing' | 'move-in' | 'move-out';

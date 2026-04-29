@@ -1,10 +1,10 @@
 import type mongoose from 'mongoose';
 import type { QueryFilter } from 'mongoose';
-import { AppError } from '../../error';
-import { combineFilters } from '../../middleware';
-import { HousingFacility, type HousingFacilityType } from '../facility/facility.model';
-import { type BookingType, VisitBooking } from './booking.model';
-import { buildQuery } from '../../utils';
+import { AppError } from "../../error.js";
+import { combineFilters } from "../../middleware.js";
+import { HousingFacility, type HousingFacilityType } from "../facility/facility.model.js";
+import { type BookingType, VisitBooking } from "./booking.model.js";
+import { buildQuery } from "../../utils.js";
 import type { BookingStatusType } from 'shared';
 
 export type CreateBookingArguments = {
