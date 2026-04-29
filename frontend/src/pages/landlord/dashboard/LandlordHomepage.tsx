@@ -138,7 +138,7 @@ const LandlordHomepage: FunctionComponent = () => {
           {/* Search */}
           <div className="flex w-full items-center gap-[10px] rounded-[12px] bg-[#f0f7ff] px-[24px] py-[10px]">
             <Icon
-              icon="solar:magnifer-bold"
+              icon="heroicons:magnifying-glass"
               className="h-[24px] w-[24px] text-[#666]"
               aria-hidden="true"
             />
