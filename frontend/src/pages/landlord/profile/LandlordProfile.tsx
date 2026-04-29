@@ -73,13 +73,11 @@ const AvailabilityLine = ({ days, hours }: { days: string; hours: string }) => (
 );
 
 const PropertyCard = ({ property }: { property: Property }) => (
-  <article className="group flex flex-col overflow-hidden rounded-[12px] bg-white shadow-[0_1px_4px_0_rgba(0,0,0,0.08)] ring-1 ring-[#f0f0f0] transition-shadow duration-200 hover:shadow-[0_4px_12px_0_rgba(0,0,0,0.12)]">
-    <Link 
-      to={`/landlord/properties/building-info/${property.id}`} 
-      className="absolute inset-0 z-10"
-      aria-label={`View details for ${property.name}`}
-    />
-
+  <Link
+    to={`/landlord/properties/building-info/${property.id}`}
+    className="group flex flex-col overflow-hidden rounded-[12px] bg-white shadow-[0_1px_4px_0_rgba(0,0,0,0.08)] ring-1 ring-[#f0f0f0] transition-shadow duration-200 hover:shadow-[0_4px_12px_0_rgba(0,0,0,0.12)] no-underline"
+  >
+    
     <div className="relative aspect-4/3 w-full overflow-hidden">
       <img
         src={property.image}
@@ -135,7 +133,7 @@ const PropertyCard = ({ property }: { property: Property }) => (
         </button>
       </div>
     </div>
-  </article>
+  </Link>
 );
 
 type SectionHeaderProps = {
