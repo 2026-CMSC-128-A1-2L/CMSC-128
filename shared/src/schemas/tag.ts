@@ -1,5 +1,5 @@
 import z from 'zod';
-import { ObjectIdSchema } from './common';
+import { ObjectIdSchema } from "./common.js";
 
 export const DataTypeSchema = z.discriminatedUnion('name', [
   z.object({

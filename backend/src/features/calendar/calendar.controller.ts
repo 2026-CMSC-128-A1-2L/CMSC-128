@@ -1,6 +1,6 @@
 import type { RequestHandler } from 'express';
 import z from 'zod';
-import { getCalendar } from './calendar.service';
+import { getCalendar } from "./calendar.service.js";
 
 export const routeGetCalendar: RequestHandler = async (req, res, next) => {
   const params = z

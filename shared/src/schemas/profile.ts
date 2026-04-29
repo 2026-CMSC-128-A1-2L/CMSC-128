@@ -1,5 +1,5 @@
 import z from 'zod';
-import { ObjectIdSchema } from './common';
+import { ObjectIdSchema } from "./common.js";
 
 const BaseProfileSchema = z.object({
   id: ObjectIdSchema,

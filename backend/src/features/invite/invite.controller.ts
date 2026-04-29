@@ -1,9 +1,9 @@
 import type { RequestHandler } from 'express';
 import { CreateInviteManagerBodySchema } from 'shared';
-import { sendNotification } from '../notification/notification.service';
-import { inviteManager, acceptInvite, declineInvite, getInvites } from './invite.service';
-import { AppError } from '../../error';
-import { Invite } from './invite.model';
+import { sendNotification } from "../notification/notification.service.js";
+import { inviteManager, acceptInvite, declineInvite, getInvites } from "./invite.service.js";
+import { AppError } from "../../error.js";
+import { Invite } from "./invite.model.js";
 import z from 'zod';
 import assert from 'node:assert';
 

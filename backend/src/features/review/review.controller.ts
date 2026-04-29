@@ -1,6 +1,6 @@
 import type { RequestHandler } from 'express';
 import { CreateReviewBodySchema, ObjectIdSchema, UpdateReviewBodySchema } from 'shared';
-import { AppError } from '../../error';
+import { AppError } from "../../error.js";
 import {
   getReviews,
   getListingReviews,
@@ -10,7 +10,7 @@ import {
   deleteReview,
   updateReview,
   updateReviewStatus,
-} from './review.service';
+} from "./review.service.js";
 import assert from 'node:assert';
 
 export const routeCreateReview: RequestHandler = async (req, res) => {

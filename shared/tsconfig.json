@@ -5,10 +5,10 @@
     "declarationMap": true,
     "target": "esnext",
     "lib": ["ESNext"],
-    "module": "ESNext",
+    "module": "nodenext",
     "rootDir": "src",
     "outDir": "dist",
-    "moduleResolution": "bundler",
+    "moduleResolution": "nodenext",
     "skipLibCheck": true
   },
   "include": ["src/**/*.ts"],

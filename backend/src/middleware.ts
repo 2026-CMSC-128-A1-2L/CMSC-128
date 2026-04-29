@@ -1,14 +1,14 @@
 import type { RequestHandler } from 'express';
 import type mongoose from 'mongoose';
 import type { QueryFilter } from 'mongoose';
-import { AppError } from './error';
+import { AppError } from './error.js';
 import { ManagerPermission, ObjectIdSchema } from 'shared';
 import {
   HousingFacility,
   ManagerPermissionType,
   type HousingFacilityType,
-} from './features/facility/facility.model';
-import { isVerified } from './features/user/user.model';
+} from './features/facility/facility.model.js';
+import { isVerified } from './features/user/user.model.js';
 import assert from 'node:assert';
 
 // Adds filters for private/public listings for unverified/verified users. Used for read actions on listings.

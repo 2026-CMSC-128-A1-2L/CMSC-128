@@ -1,5 +1,5 @@
 import z, { file } from 'zod';
-import { ObjectIdSchema, QuerySchema, RangeSchema } from './common';
+import { ObjectIdSchema, QuerySchema, RangeSchema } from "./common.js";
 
 // POST /billings
 export const CreateBillingBodySchema = z.object({
