@@ -9,6 +9,7 @@ type User = {
   firstName: string;
   lastName: string;
   status: 'setup' | 'unverified' | 'verified' | 'inactive' | 'disabled';
+  profilePicture?: string | null;
 };
 
 type AuthState = {
@@ -27,7 +28,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     try {
       set({ isLoading: true });
       const { data } = await axios.get('/api/users/me');
-      set({ user: data, isInitialized: true });
+      set({ user: data.data, isInitialized: true });
     } catch (error) {
       set({ user: null, isInitialized: true });
     } finally {
