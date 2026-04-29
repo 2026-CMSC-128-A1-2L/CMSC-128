@@ -1,4 +1,5 @@
 import axios from 'axios';
+import type { UserTypeType } from 'shared';
 import { create } from 'zustand';
 
 type User = {
@@ -10,6 +11,7 @@ type User = {
   lastName: string;
   status: 'setup' | 'unverified' | 'verified' | 'inactive' | 'disabled';
   profilePicture?: string | null;
+  userType?: UserTypeType;
 };
 
 type AuthState = {
