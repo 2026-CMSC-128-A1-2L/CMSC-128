@@ -38,7 +38,7 @@ const SideBar: FunctionComponent = () => {
 const [isMenuOpen, setIsMenuOpen] = useState(false);  
 const navigate= useNavigate();
   return (
-    <div className="w-50 border-whitesmoke border-solid border box-border flex flex-col items-center py-8 px-num-0 gap-8 text-left text-darkslategray font-buhun-retro-two-free">
+    <div className="w-50 border-transparent border-r hover:border-r hover:border-whitesmoke-300 flex flex-col items-center py-8 px-num-0 gap-8 text-left text-darkslategray font-buhun-retro-two-free h-screen">
       <AtlasLogoText className="fill-darkslategray w-32 h-auto" />
       <div className="mx-4 flex flex-col items-center gap-8 shrink-0 text-num-14 text-gray font-inter">
         <div className="w-full h-10 rounded-full bg-whitesmoke overflow-hidden shrink-0 flex items-center py-1 px-3 box-border text-[10px]">
@@ -111,7 +111,7 @@ const navigate= useNavigate();
             <div className="h-px bg-whitesmoke shrink-0" />
           </div>
           
-          <div className="relative">
+          <div className="relative flex flex-row">
             <div className="overflow-hidden flex items-center py-num-10 pl-8 pr-num-20 gap-2 group cursor-pointer"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
@@ -121,10 +121,11 @@ const navigate= useNavigate();
                 <div className="w-[76px] flex items-center">
                   <b className="relative inline-block max-w-[196px] group-hover:text-[#5DC2A8]">Sign In</b>
                 </div>
-                <div className="flex items-start text-[10px] text-silver">
+                <div className="flex items-start text-[10px] text-black">
                   <b className="relative">to continue</b>
                 </div>
               </div>
+            
             </div>
               <UserMenuPopup 
               isOpen={isMenuOpen} 
