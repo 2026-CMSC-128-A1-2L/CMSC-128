@@ -1,25 +1,40 @@
-import { useEffect, useState, type MouseEventHandler } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Icon } from '@iconify/react';
-import SideBarAdminButton from './SideBarAdminButton';
-import SideBarAdminMessagesView, { type MessageItem } from './SideBarAdminMessagesView';
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type MouseEventHandler,
+} from "react";
+import { useNavigate } from "react-router-dom";
+import { Icon } from "@iconify/react";
+import AtlasLogo from "../../../assets/logo_atlas_text.svg?react";
+import SideBarAdminButton from "./SideBarAdminButton";
+import SideBarAdminMessagesView, {
+  type MessageItem,
+} from "./SideBarAdminMessagesView";
 
-export type SideBarAdminMode = 'expanded' | 'minimized';
-export type SideBarAdminView = 'nav' | 'messages_tab';
+export type SideBarAdminView = "nav" | "messages_tab";
 export type SideBarAdminItemKey =
-  | 'applications'
-  | 'reports'
-  | 'listings'
-  | 'analytics'
-  | 'messages'
-  | 'announce';
+  | "applications"
+  | "reports"
+  | "listings"
+  | "analytics"
+  | "messages"
+  | "announce";
+
+type AdminInfo = {
+  name: string;
+  role?: string;
+  avatarUrl?: string;
+};
 
 type SideBarAdminProps = {
-  mode?: SideBarAdminMode;
   activeItem?: SideBarAdminItemKey;
   hoveredItem?: SideBarAdminItemKey;
   onItemClick?: (item: SideBarAdminItemKey) => void;
   onSignOut?: MouseEventHandler<HTMLButtonElement>;
+  onProfileClick?: MouseEventHandler<HTMLButtonElement>;
+  admin?: AdminInfo;
   className?: string;
   /** Initial view of the sidebar: the nav list or the messages tab panel. */
   initialView?: SideBarAdminView;
@@ -42,90 +57,96 @@ const navItems: Array<{
   route: string;
 }> = [
   {
-    key: 'applications',
-    label: 'Applications',
-    iconName: 'solar:laptop-outline',
-    route: '/admin/applications',
+    key: "applications",
+    label: "Applications",
+    iconName: "solar:laptop-outline",
+    route: "/admin/applications",
   },
   {
-    key: 'reports',
-    label: 'Reports',
-    iconName: 'material-symbols:report',
-    route: '/admin/reports',
+    key: "reports",
+    label: "Reports",
+    iconName: "material-symbols:report",
+    route: "/admin/reports",
   },
   {
-    key: 'listings',
-    label: 'Listings',
-    iconName: 'roentgen:apartments-4-story',
-    route: '/admin/listings',
+    key: "listings",
+    label: "Listings",
+    iconName: "roentgen:apartments-4-story",
+    route: "/admin/listings",
   },
   {
-    key: 'analytics',
-    label: 'Analytics',
-    iconName: 'solar:chart-outline',
-    route: '/admin/analytics',
+    key: "analytics",
+    label: "Analytics",
+    iconName: "solar:chart-outline",
+    route: "/admin/analytics",
   },
   {
-    key: 'messages',
-    label: 'Messages',
-    iconName: 'solar:chat-round-dots-outline',
-    route: '/admin/messages',
+    key: "messages",
+    label: "Messages",
+    iconName: "solar:chat-round-dots-outline",
+    route: "/admin/messages",
   },
   {
-    key: 'announce',
-    label: 'Announce',
-    iconName: 'grommet-icons:announce',
-    route: '/admin/announce',
+    key: "announce",
+    label: "Announce",
+    iconName: "grommet-icons:announce",
+    route: "/admin/announce",
   },
 ];
 
 // Default mock data so the Messages Tab has something to show out-of-the-box.
 const defaultMessages: MessageItem[] = [
   {
-    id: 'msg-1',
-    sender: 'Three Sapphire Place',
-    preview: 'Hi Daphne! Your application is being reviewed by our do...',
-    timeLabel: '1hr ago',
+    id: "msg-1",
+    sender: "Three Sapphire Place",
+    preview: "Hi Daphne! Your application is being reviewed by our do...",
+    timeLabel: "1hr ago",
     unread: true,
   },
   {
-    id: 'msg-2',
-    sender: 'Three Sapphire Place',
-    preview: 'Hi Daphne! Your application is being reviewed by our do...',
-    timeLabel: '1hr ago',
+    id: "msg-2",
+    sender: "Three Sapphire Place",
+    preview: "Hi Daphne! Your application is being reviewed by our do...",
+    timeLabel: "1hr ago",
     unread: true,
   },
   {
-    id: 'msg-3',
-    sender: 'Three Sapphire Place',
-    preview: 'Hi Daphne! Your application is being reviewed by our do...',
-    timeLabel: '1hr ago',
+    id: "msg-3",
+    sender: "Three Sapphire Place",
+    preview: "Hi Daphne! Your application is being reviewed by our do...",
+    timeLabel: "1hr ago",
     unread: true,
   },
   {
-    id: 'msg-4',
-    sender: 'Three Sapphire Place',
-    preview: 'Hi Daphne! Your application is being reviewed by our do...',
-    timeLabel: '1hr ago',
+    id: "msg-4",
+    sender: "Three Sapphire Place",
+    preview: "Hi Daphne! Your application is being reviewed by our do...",
+    timeLabel: "1hr ago",
     unread: false,
   },
   {
-    id: 'msg-5',
-    sender: 'Three Sapphire Place',
-    preview: 'Hi Daphne! Your application is being reviewed by our do...',
-    timeLabel: '1hr ago',
+    id: "msg-5",
+    sender: "Three Sapphire Place",
+    preview: "Hi Daphne! Your application is being reviewed by our do...",
+    timeLabel: "1hr ago",
     unread: false,
   },
 ];
 
+const defaultAdmin: AdminInfo = {
+  name: "Kopiko",
+  role: "Admin",
+};
+
 const SideBarAdmin = ({
-  mode,
-  activeItem = 'analytics',
+  activeItem = "analytics",
   hoveredItem,
   onItemClick,
   onSignOut,
-  className = '',
-  initialView = 'nav',
+  onProfileClick,
+  admin = defaultAdmin,
+  className = "",
+  initialView = "nav",
   messages = defaultMessages,
   activeMessageId,
   onSelectMessage,
@@ -133,38 +154,31 @@ const SideBarAdmin = ({
   onViewArchivedMessages,
 }: SideBarAdminProps) => {
   const navigate = useNavigate();
-  const [currentMode, setCurrentMode] = useState<SideBarAdminMode>(mode ?? 'expanded');
   const [view, setView] = useState<SideBarAdminView>(initialView);
-
-  useEffect(() => {
-    if (mode) {
-      setCurrentMode(mode);
-    }
-  }, [mode]);
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const [profileMenuPlacement, setProfileMenuPlacement] = useState<
+    "top" | "bottom"
+  >("top");
+  const profileMenuRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     setView(initialView);
   }, [initialView]);
 
-  const collapsed = currentMode === 'minimized';
-  const isMessagesTab = view === 'messages_tab';
-
-  const toggleSidebarMode = () => {
-    setCurrentMode((prev) => (prev === 'expanded' ? 'minimized' : 'expanded'));
-  };
+  const isMessagesTab = view === "messages_tab";
 
   const handleNavItemClick = (item: (typeof navItems)[number]) => {
     onItemClick?.(item.key);
-    if (item.key === 'messages') {
+    if (item.key === "messages") {
       // Swap in place. Route stays the same so the user keeps their context.
-      setView('messages_tab');
+      setView("messages_tab");
       return;
     }
     navigate(item.route);
   };
 
   const handleBackFromMessages = () => {
-    setView('nav');
+    setView("nav");
     onBackFromMessages?.();
   };
 
@@ -177,143 +191,200 @@ const SideBarAdmin = ({
     navigate(`/admin/messages?id=${encodeURIComponent(id)}`);
   };
 
+  const resolveProfileMenuPlacement = useCallback(() => {
+    if (!profileMenuRef.current) {
+      return;
+    }
+
+    const menuHeight = 76;
+    const menuGap = 8;
+    const viewportPadding = 8;
+    const profileRect = profileMenuRef.current.getBoundingClientRect();
+
+    const canOpenBelow =
+      profileRect.bottom + menuGap + menuHeight <=
+      window.innerHeight - viewportPadding;
+    setProfileMenuPlacement(canOpenBelow ? "bottom" : "top");
+  }, []);
+
+  const handleProfileButtonClick: MouseEventHandler<HTMLButtonElement> = () => {
+    if (!isProfileMenuOpen) {
+      resolveProfileMenuPlacement();
+    }
+    setIsProfileMenuOpen((prev) => !prev);
+  };
+
+  const handleViewProfileClick: MouseEventHandler<HTMLButtonElement> = (
+    event,
+  ) => {
+    setIsProfileMenuOpen(false);
+    onProfileClick?.(event);
+  };
+
+  const handleSignOutClick: MouseEventHandler<HTMLButtonElement> = (event) => {
+    setIsProfileMenuOpen(false);
+    onSignOut?.(event);
+  };
+
+  useEffect(() => {
+    if (!isProfileMenuOpen) {
+      return;
+    }
+
+    const handleDocumentClick = (event: MouseEvent) => {
+      if (profileMenuRef.current?.contains(event.target as Node)) {
+        return;
+      }
+      setIsProfileMenuOpen(false);
+    };
+
+    const handleEscapeKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsProfileMenuOpen(false);
+      }
+    };
+
+    const handleResize = () => {
+      resolveProfileMenuPlacement();
+    };
+
+    window.addEventListener("mousedown", handleDocumentClick);
+    window.addEventListener("keydown", handleEscapeKey);
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("mousedown", handleDocumentClick);
+      window.removeEventListener("keydown", handleEscapeKey);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [isProfileMenuOpen, resolveProfileMenuPlacement]);
+
   return (
     <aside
       className={[
-        'relative h-auto min-h-full shrink-0 overflow-hidden',
-        'transition-[width] duration-300 ease-in-out',
-        // In messages tab view we always keep the full width so the tab panel fits.
-        isMessagesTab ? 'w-[336px]' : collapsed ? 'w-[108px]' : 'w-[336px]',
+        "flex shrink-0 overflow-hidden border border-solid border-[#f0f0f0] bg-white",
+        "transition-[width] duration-300 ease-in-out",
+        isMessagesTab ? "w-[336px]" : "w-[200px]",
         className,
-      ].join(' ')}
+      ].join(" ")}
     >
-      <div
-        className={[
-          'relative z-10 flex min-h-full w-full flex-col rounded-r-[20px] bg-[#ebebeb]',
-          'shadow-[0_4px_100px_rgba(0,0,0,0.25)]',
-          'transition-[padding] duration-300 ease-in-out',
-          isMessagesTab
-            ? 'px-0 pb-0 pt-0'
-            : collapsed
-              ? 'px-[12px] pb-[36px] pt-[24px]'
-              : 'px-[17px] pb-[35px] pt-[24px]',
-        ].join(' ')}
-      >
-        {/* Layered content: nav view + messages tab view cross-fade/slide */}
-        <div className="relative flex min-h-[1024px] flex-1">
-          {/* NAV VIEW */}
-          <div
-            aria-hidden={isMessagesTab}
-            className={[
-              'absolute inset-0 flex flex-col',
-              'transition-[transform,opacity] duration-300 ease-out',
-              isMessagesTab
-                ? 'pointer-events-none -translate-x-6 opacity-0'
-                : 'translate-x-0 opacity-100',
-            ].join(' ')}
-          >
-            <button
-              type="button"
-              onClick={toggleSidebarMode}
-              aria-label={collapsed ? 'Expand sidebar' : 'Minimize sidebar'}
-              title={collapsed ? 'Expand sidebar' : 'Minimize sidebar'}
-              className={[
-                'mb-[16px] flex h-[68px] cursor-pointer items-center rounded-[10px] border-[5px] border-transparent text-black',
-                collapsed ? 'w-[84px] justify-center' : 'w-full justify-end pr-[12px]',
-              ].join(' ')}
-            >
-              <span
-                className={[
-                  'flex h-[42px] w-[37px] items-center justify-center transition-transform duration-300 ease-in-out',
-                  collapsed ? 'rotate-180' : 'rotate-0',
-                ].join(' ')}
-              >
-                <Icon
-                  icon="solar:hamburger-menu-outline"
-                  className="h-[38px] w-[38px]"
-                  aria-hidden="true"
-                />
-              </span>
-            </button>
+      {isMessagesTab ? (
+        <SideBarAdminMessagesView
+          messages={messages}
+          activeMessageId={activeMessageId}
+          onSelectMessage={handleSelectMessage}
+          onBack={handleBackFromMessages}
+          onViewArchived={onViewArchivedMessages}
+        />
+      ) : (
+        <div className="flex min-h-screen w-full flex-col items-center gap-[32px] pt-[24px] pb-[30px]">
+          <div className="flex h-[60px] w-[128px] items-center justify-center overflow-hidden">
+            <AtlasLogo className="h-full w-full" aria-label="Atlas" />
+          </div>
 
-            <div className="flex flex-col gap-[12px]">
-              {navItems.map((item) => {
-                const state =
-                  item.key === activeItem
-                    ? 'clicked'
-                    : item.key === hoveredItem
-                      ? 'hovered'
-                      : 'default';
+          <nav className="flex w-full flex-col gap-[12px]">
+            {navItems.map((item) => {
+              const state =
+                item.key === activeItem
+                  ? "clicked"
+                  : item.key === hoveredItem
+                    ? "hovered"
+                    : "default";
 
-                return (
+              return (
+                <div key={item.key} className="duration-200 hover:bg-[#F0FAF6]">
                   <SideBarAdminButton
-                    key={item.key}
-                    icon={
-                      <Icon icon={item.iconName} className="h-[34px] w-[34px]" aria-hidden="true" />
-                    }
+                    icon={item.iconName}
                     label={item.label}
-                    collapsed={collapsed}
                     state={state}
                     onClick={() => handleNavItemClick(item)}
                   />
-                );
-              })}
+                </div>
+              );
+            })}
+          </nav>
+
+          <div className="flex flex-1 w-full flex-col justify-end gap-[12px]">
+            <div className="flex w-full flex-col items-start px-[20px]">
+              <div className="h-[2px] w-full rounded-[100px] bg-[#f0f0f0]" />
             </div>
 
-            <div className="flex-1" />
+            <div ref={profileMenuRef} className="relative w-full">
+              {isProfileMenuOpen && (
+                <div
+                  className={[
+                    "absolute left-[20px] z-30 flex h-[68px] w-[171px] flex-col gap-[7px] rounded-[9px] border border-solid border-[#f0f0f0] bg-[#f7f7f7] px-[11px] py-[9px] shadow-[0_4px_18px_rgba(0,0,0,0.1)]",
+                    profileMenuPlacement === "bottom"
+                      ? "top-full mt-[8px]"
+                      : "bottom-full mb-[8px]",
+                  ].join(" ")}
+                >
+                  <button
+                    type="button"
+                    onClick={handleViewProfileClick}
+                    className="h-[21px] w-full cursor-pointer rounded-[9px] bg-[#cbf6ed] text-center font-['Inter',sans-serif] text-[11px] font-medium text-[#096c5b] transition-colors duration-150 hover:brightness-95"
+                  >
+                    View Profile
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleSignOutClick}
+                    className="h-[21px] w-full cursor-pointer rounded-[9px] border border-solid border-[#f0f0f0] bg-white bg-gradient-to-b from-[#c00f0f] to-[#e44f4f] bg-clip-text text-center font-['Inter',sans-serif] text-[11px] font-medium text-transparent transition-colors duration-150 hover:bg-[#f9f9f9]"
+                  >
+                    Log Out
+                  </button>
+                </div>
+              )}
 
-            <div
-              className={[
-                'mx-auto mb-[24px] h-[3px] rounded-full bg-[#bebebe]',
-                collapsed ? 'w-[58px]' : 'w-[276px]',
-              ].join(' ')}
-            />
-
-            <button
-              type="button"
-              onClick={onSignOut}
-              aria-label="Sign Out"
-              className={[
-                'flex h-[68px] cursor-pointer items-center rounded-[10px] border-[5px] border-transparent text-black transition-all duration-300 ease-in-out',
-                collapsed ? 'w-[84px] justify-center' : 'w-[290px] gap-[18px] px-[12px]',
-              ].join(' ')}
-            >
-              <span className="flex h-[42px] w-[37px] items-center justify-center">
-                <Icon icon="uil:signout" className="h-[34px] w-[34px]" aria-hidden="true" />
-              </span>
-              <span
-                className={[
-                  "font-['Outfit',sans-serif] text-[32px] font-semibold leading-normal text-black",
-                  'overflow-hidden whitespace-nowrap transition-all duration-300 ease-in-out',
-                  collapsed ? 'max-w-0 opacity-0' : 'max-w-[200px] opacity-100',
-                ].join(' ')}
+              <button
+                type="button"
+                onClick={handleProfileButtonClick}
+                aria-haspopup="menu"
+                aria-expanded={isProfileMenuOpen}
+                aria-label={`${admin.name} profile`}
+                className="flex w-[200px] cursor-pointer items-center gap-[8px] overflow-hidden pl-[32px] pr-[20px] py-[10px] transition-colors duration-200 ease-in-out hover:bg-[#F0FAF6]"
               >
-                Sign Out
-              </span>
-            </button>
-          </div>
-
-          {/* MESSAGES TAB VIEW */}
-          <div
-            aria-hidden={!isMessagesTab}
-            className={[
-              'absolute inset-0 flex flex-col',
-              'transition-[transform,opacity] duration-300 ease-out',
-              isMessagesTab
-                ? 'translate-x-0 opacity-100'
-                : 'pointer-events-none translate-x-6 opacity-0',
-            ].join(' ')}
-          >
-            <SideBarAdminMessagesView
-              messages={messages}
-              activeMessageId={activeMessageId}
-              onSelectMessage={handleSelectMessage}
-              onBack={handleBackFromMessages}
-              onViewArchived={onViewArchivedMessages}
-            />
+                <span className="flex h-[48px] w-[44px] shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#e5e7eb] text-[#9ca3af]">
+                  {admin.avatarUrl ? (
+                    <img
+                      src={admin.avatarUrl}
+                      alt=""
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <Icon
+                      icon="solar:user-bold"
+                      className="h-[28px] w-[28px]"
+                      aria-hidden="true"
+                    />
+                  )}
+                </span>
+                <span className="flex flex-col items-start justify-center gap-[4px] overflow-hidden">
+                  <span className="font-['Inter',sans-serif] text-[14px] font-bold leading-[normal] text-[#096c5b] whitespace-nowrap">
+                    {admin.name}
+                  </span>
+                  {admin.role && (
+                    <span className="flex items-center gap-[4px]">
+                      <span className="bg-gradient-to-b from-[#5dc2a8] to-[#0c8873] bg-clip-text font-['Inter',sans-serif] text-[10px] font-bold leading-[normal] text-transparent whitespace-nowrap">
+                        {admin.role}
+                      </span>
+                      <span
+                        aria-hidden="true"
+                        className="flex h-[13.6px] w-[12px] items-center justify-center text-[#0c8873]"
+                      >
+                        <Icon
+                          icon="material-symbols:admin-panel-settings"
+                          className="h-[10px] w-[10px]"
+                        />
+                      </span>
+                    </span>
+                  )}
+                </span>
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </aside>
   );
 };

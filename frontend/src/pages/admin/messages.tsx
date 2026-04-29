@@ -1,7 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Icon } from '@iconify/react';
-import NavBarAdmin from '../../components/admin/NavBarAdmin';
 import SideBarAdmin from '../../components/admin/SideBarAdmin';
 import AdminPageTransition from '../../components/admin/AdminPageTransition';
 import type { MessageItem } from '../../components/admin/SideBarAdminMessagesView';
@@ -109,7 +108,6 @@ function Messages() {
   return (
     <AdminPageTransition>
       <div className="relative -mx-[calc((100vw-100%)/2)] flex w-screen flex-col min-h-screen">
-        <NavBarAdmin />
         <div className="flex flex-1">
           <SideBarAdmin
             activeItem="messages"
@@ -121,7 +119,7 @@ function Messages() {
 
           {/* Main body: chat thread */}
           <div className="flex flex-1 items-start justify-center bg-white px-[32px] py-[24px]">
-            <div className="flex h-[calc(100vh-170px)] min-h-[600px] w-full max-w-[1036px] flex-col overflow-hidden rounded-[12px] border border-solid border-[#F0F0F0] bg-white shadow-[0px_2px_20px_0px_rgba(0,0,0,0.06)]">
+            <div className="flex h-[calc(100vh-48px)] min-h-[600px] w-full max-w-[1036px] flex-col overflow-hidden rounded-[12px] border border-solid border-[#F0F0F0] bg-white shadow-[0px_2px_20px_0px_rgba(0,0,0,0.06)]">
               {conversation ? (
                 <>
                   {/* Conversation header */}
