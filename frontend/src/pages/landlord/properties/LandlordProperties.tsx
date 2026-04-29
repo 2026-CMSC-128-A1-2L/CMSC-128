@@ -2,11 +2,13 @@ import { type FunctionComponent, useCallback } from 'react';
 import { Icon } from '@iconify/react';
 import LandlordLayout from '../../../components/landlord/LandlordLayout';
 import PropertiesCard from '../../../components/landlord/LandlordProperties/PropertiesCard';
+import { BUILDINGS } from '../../../data/buildings';
 
 // Assets
+import sapphire from '../../../../assets/sapphire.jpg';
+import sapphire2 from '../../../../assets/sapphire1.jpg';
 import search from '../../../../assets/search_green.svg';
 import plus from '../../../../assets/green_plus.svg';
-import dorm from '../../../../assets/one_sapphire.png';
 
 const LandlordProperties: FunctionComponent = () => {
   const onAddBuildingContainerClick = useCallback(() => {
@@ -26,7 +28,7 @@ const LandlordProperties: FunctionComponent = () => {
       outstanding: '12,600.00',
       status: 'Active' as const,
       month: 'MAR',
-      img: dorm,
+      img: sapphire,
       url: '/properties/one-sapphire',
     },
     {
@@ -39,7 +41,7 @@ const LandlordProperties: FunctionComponent = () => {
       outstanding: '5,000.00',
       status: 'Active' as const,
       month: 'MAR',
-      img: dorm,
+      img: sapphire2,
       url: '/properties/one-sapphire',
     },
   ];
@@ -58,9 +60,7 @@ const LandlordProperties: FunctionComponent = () => {
                 <h2 className="font-['Inter',sans-serif] text-[24px] font-bold text-black">
                   My Accommodations
                 </h2>
-                <span className="text-[24px] font-bold text-[#5dc2a8]">
-                  {PROPERTIES_LIST.length}
-                </span>
+                <span className="text-[24px] font-bold text-[#5dc2a8]">{BUILDINGS.length}</span>
               </div>
 
               <div className="flex items-center gap-[16px]">
@@ -123,4 +123,3 @@ const LandlordProperties: FunctionComponent = () => {
 };
 
 export default LandlordProperties;
-

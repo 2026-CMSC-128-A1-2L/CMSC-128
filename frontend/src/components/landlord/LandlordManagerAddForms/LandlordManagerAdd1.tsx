@@ -117,8 +117,8 @@ const AddManager1: FunctionComponent<Props> = ({ onCancel, onSend }) => {
   };
 
   return (
-    <div className="relative rounded-tl-[26px] bg-white w-[490px] flex flex-col items-center pb-[48px] gap-[34px]">
-
+    // AFTER
+    <div className="relative rounded-[26px] bg-white w-[490px] flex flex-col items-center overflow-hidden max-h-[90vh]">
       {/* ── Header ── */}
       <div className="self-stretch rounded-tl-[26px] bg-linear-to-b from-[#096c5b] to-[#16917c] flex flex-col items-start justify-center py-[10px] pl-[46px] pr-[26px]">
         <div className="flex flex-col items-start pt-[26px] pb-[6px] gap-[4px]">
@@ -128,13 +128,12 @@ const AddManager1: FunctionComponent<Props> = ({ onCancel, onSend }) => {
           </b>
         </div>
       </div>
-
       {/* ── Body ── */}
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="self-stretch flex flex-col items-start px-[38px] pb-[16px] gap-[18px]"
+        className="self-stretch flex flex-col items-start px-[38px] pb-[6px] gap-[18px] overflow-y-auto max-h-full flex-1"
       >
-
+        <div className="pb-[32px]" />
         {/* Email */}
         <div className="self-stretch flex flex-col items-start gap-[6px]">
           <b className="font-['Inter',sans-serif] text-[13px] text-[#666]">Email Address</b>
@@ -229,7 +228,7 @@ const AddManager1: FunctionComponent<Props> = ({ onCancel, onSend }) => {
             Send Invite
           </button>
         </div>
-
+        <div className="pb-[32px]" />
       </form>
     </div>
   );
