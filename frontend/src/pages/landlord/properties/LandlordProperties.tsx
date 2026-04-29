@@ -13,7 +13,7 @@ const LandlordProperties: FunctionComponent = () => {
   const navigate = useNavigate();
 
   const onAddBuildingContainerClick = useCallback(() => {
-    console.log("Add listing clicked");
+    navigate("/landlord/add-building");
   }, []);
 
   return (

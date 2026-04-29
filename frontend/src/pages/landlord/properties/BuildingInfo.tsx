@@ -213,7 +213,7 @@ const BuildingInfo = () => {
           <div className="w-full flex py-4 items-center gap-10 text-2xl text-gray border-b-2 border-b-whitesmoke">
             <b>{name}</b>
             <div className="flex items-center gap-4 text-center text-sm text-teal">
-              <Button text="Edit Details" onClick={() => navigate("edit")}>
+              <Button text="Edit Details" onClick={() => navigate(`/landlord/properties/edit/${id}`)}>
                 <Icon icon="iconamoon:edit" className="w-5 h-5" />
               </Button>
               <Button text="View As Student" onClick={() => {}}>
