@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import type { FunctionComponent } from 'react';
 
 interface ProgressBarProps {
   currentStep: number;
@@ -13,14 +13,14 @@ const ProgressBar: FunctionComponent<ProgressBarProps> = ({ currentStep }) => {
         <div
           className={`absolute h-[9.2%] w-[32.64%] top-[29.89%] left-[11.07%] rounded-[34.55px] ${
             currentStep >= 1
-              ? '[background:linear-gradient(90deg,_rgba(2,_67,_56,_0.8),_#b5c8c5_99.99%)]'
+              ? '[background:linear-gradient(90deg,rgba(2,67,56,0.8),#b5c8c5_99.99%)]'
               : 'bg-[#B5C8C5]'
           }`}
         />
         <div
           className={`absolute h-[9.2%] w-[34.44%] top-[26.44%] left-[54.91%] rounded-[34.55px] ${
             currentStep >= 2
-              ? '[background:linear-gradient(90deg,_rgba(2,_67,_56,_0.8),_#b5c8c5_99.99%)]'
+              ? '[background:linear-gradient(90deg,rgba(2,67,56,0.8),#b5c8c5_99.99%)]'
               : 'bg-[#B5C8C5]'
           }`}
         />

@@ -21,7 +21,8 @@ export const routeGetMessages: RequestHandler = async (req, res) => {
         firstName: convo.otherUser.firstName,
         middleName: convo.otherUser.middleName,
         lastName: convo.otherUser.lastName,
-        userType: convo.otherUser.userType,
+        // biome-ignore lint/style/noNonNullAssertion: for a user to be able to be messaged, userType should be defined.
+        userType: convo.otherUser.userType!,
       },
       message: {
         userId: convo.latestMessage.senderId,
@@ -51,7 +52,8 @@ export const routeGetUserMessages: RequestHandler = async (req, res) => {
       firstName: otherUser.firstName,
       middleName: otherUser.middleName,
       lastName: otherUser.lastName,
-      userType: otherUser.userType,
+      // biome-ignore lint/style/noNonNullAssertion: for a user to be able to be messaged, userType should be defined.
+      userType: otherUser.userType!,
     },
     messages: messages.map((msg) => ({
       userId: msg.senderId,
@@ -73,5 +75,6 @@ export const routeSendMessage: RequestHandler = async (req, res) => {
   const { text } = req.body;
   if (!text) throw new AppError(400, 'Message text is required.');
 
-  res.status(201).json({ data: await sendMessage(req.user.userType, userId, otherId, text) });
+  // biome-ignore lint/style/noNonNullAssertion: for a user to be able to be messaged, userType should be defined.
+  res.status(201).json({ data: await sendMessage(req.user.userType!, userId, otherId, text) });
 };

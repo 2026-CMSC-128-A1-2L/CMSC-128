@@ -1,5 +1,4 @@
-import { FunctionComponent, useState, useEffect } from 'react';
-import type { Billing } from '../billings/types/billing';
+import { type FunctionComponent, useState, useEffect } from 'react';
 
 interface MonthlyData {
   month: string;
@@ -8,12 +7,13 @@ interface MonthlyData {
   totalIncome: number;
 }
 
-interface MonthToShow {
+{/*interface MonthToShow {
   monthIndex: number;
   year: number;
 }
 
-const ALL_MONTHS = [
+
+const _ALL_MONTHS = [
   'JAN',
   'FEB',
   'MAR',
@@ -27,6 +27,8 @@ const ALL_MONTHS = [
   'NOV',
   'DEC',
 ];
+
+*/}
 
 type TimeRange = '12' | '6';
 
@@ -75,7 +77,7 @@ const MonthlyIncomeChart: FunctionComponent = () => {
 
   useEffect(() => {
     fetchMonthlyIncome();
-  }, [selectedRange]);
+  }, [fetchMonthlyIncome]);
 
   const getChartData = () => {
     if (monthlyData.length === 0) {
@@ -98,14 +100,14 @@ const MonthlyIncomeChart: FunctionComponent = () => {
 
   if (isLoading) {
     return (
-      <div className="w-full max-w-[848px] rounded-2xl bg-white border-whitesmoke-200 border-solid border-[1px] box-border flex flex-col items-center justify-center py-6 px-4 gap-2.5">
+      <div className="w-full max-w-[848px] rounded-2xl bg-white border-whitesmoke-200 border-solid border box-border flex flex-col items-center justify-center py-6 px-4 gap-2.5">
         <div className="w-full h-[200px] bg-gray-100 animate-pulse rounded-lg" />
       </div>
     );
   }
 
   return (
-    <div className="w-full max-w-[848px] rounded-2xl bg-white border-whitesmoke-200 border-solid border-[1px] box-border flex flex-col items-center justify-center py-6 px-4 gap-2.5">
+    <div className="w-full max-w-[848px] rounded-2xl bg-white border-whitesmoke-200 border-solid border box-border flex flex-col items-center justify-center py-6 px-4 gap-2.5">
       {/* Header */}
       <div className="self-stretch flex flex-col sm:flex-row items-center justify-center gap-3">
         <b className="h-6 flex-1 relative tracking-[-0.01em] flex items-center text-[16px] sm:text-[18px] text-gray font-inter text-center sm:text-left">

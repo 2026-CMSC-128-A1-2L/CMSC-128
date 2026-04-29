@@ -1,8 +1,8 @@
 import {
-  CSSProperties,
-  RefObject,
-  FunctionComponent,
-  ReactNode,
+  type CSSProperties,
+  type RefObject,
+  type FunctionComponent,
+  type ReactNode,
   useMemo,
   useCallback,
   useState,
@@ -121,7 +121,7 @@ const FinancePopup: FunctionComponent<PopupProps> = ({
       style.maxHeight = '90%';
       setRelativeStyle(style);
     }
-  }, [left, right, top, bottom, placement, relativeLayerRef?.current, relContainerRef?.current]);
+  }, [left, right, top, bottom, placement, relativeLayerRef?.current]);
 
   useEffect(() => {
     setPosition();

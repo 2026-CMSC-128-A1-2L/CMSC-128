@@ -68,7 +68,7 @@ const MessageCard = ({
           >
             {sender}
           </p>
-          <p className="line-clamp-2 font-['Lora'] text-[12px] font-semibold leading-[1.25] tracking-[0.24px] text-[#666]">
+          <p className="line-clamp-2 font-['Lora'] text-[12px] font-semibold leading-tight tracking-[0.24px] text-[#666]">
             {preview}
           </p>
         </div>

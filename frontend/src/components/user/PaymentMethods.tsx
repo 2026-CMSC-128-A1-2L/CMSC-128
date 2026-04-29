@@ -1,5 +1,5 @@
 import { Icon } from '@iconify/react';
-import { FunctionComponent } from 'react';
+import type { FunctionComponent } from 'react';
 
 export type PaymentMethodsType = {
   className?: string;
@@ -15,7 +15,7 @@ const PaymentMethods: FunctionComponent<PaymentMethodsType> = ({ className = '' 
           <div className="flex items-center">
             <div className="w-96 flex items-center gap-2.5">
               <div className="overflow-hidden flex flex-col items-center justify-center relative isolate gap-2.5">
-                <Icon icon="fluent:payment-16-regular" className="w-5 h-5 relative z-[0]" />
+                <Icon icon="fluent:payment-16-regular" className="w-5 h-5 relative z-0" />
               </div>
               <b className="relative leading-num-32">Payment Methods</b>
             </div>
@@ -34,7 +34,7 @@ const PaymentMethods: FunctionComponent<PaymentMethodsType> = ({ className = '' 
                 <b className="relative tracking-num--0_01">GCASH QR CODE</b>
               </div>
             </div>
-            <div className="w-96 rounded-num-16 bg-white border-whitesmoke-200 border-solid border-[2px] box-border flex flex-col items-center py-6 px-num-0 gap-3 text-center text-num-24 text-gray">
+            <div className="w-96 rounded-num-16 bg-white border-whitesmoke-200 border-solid border-2 box-border flex flex-col items-center py-6 px-num-0 gap-3 text-center text-num-24 text-gray">
               <div className="self-stretch overflow-hidden flex items-center justify-center">
                 <Icon icon="grommet-icons:qr" className="w-20 h-20 relative" />
               </div>
@@ -54,7 +54,7 @@ const PaymentMethods: FunctionComponent<PaymentMethodsType> = ({ className = '' 
                 <b className="relative tracking-num--0_01">BANK TRANSFER</b>
               </div>
             </div>
-            <div className="self-stretch rounded-num-16 bg-white border-whitesmoke-200 border-solid border-[1px] flex flex-col items-start py-3 px-1.5 text-num-14 text-silver">
+            <div className="self-stretch rounded-num-16 bg-white border-whitesmoke-200 border-solid border flex flex-col items-start py-3 px-1.5 text-num-14 text-silver">
               <div className="self-stretch h-[85px] flex flex-col items-center justify-between gap-2">
                 <div className="w-[348px] flex flex-col items-start gap-1">
                   <div className="self-stretch flex items-center justify-between gap-5">
@@ -103,13 +103,13 @@ const PaymentMethods: FunctionComponent<PaymentMethodsType> = ({ className = '' 
               </div>
             </div>
             <div className="self-stretch flex flex-col items-start gap-[13px] text-num-14 text-dimgray font-lora">
-              <div className="self-stretch rounded-num-8 bg-white border-whitesmoke-200 border-solid border-[2px] flex items-center p-2">
+              <div className="self-stretch rounded-num-8 bg-white border-whitesmoke-200 border-solid border-2 flex items-center p-2">
                 <div className="relative font-medium">Account Name</div>
               </div>
-              <div className="self-stretch rounded-num-8 bg-white border-whitesmoke-200 border-solid border-[2px] flex items-center p-2">
+              <div className="self-stretch rounded-num-8 bg-white border-whitesmoke-200 border-solid border-2 flex items-center p-2">
                 <div className="relative font-medium">Reference/Transaction No.</div>
               </div>
-              <div className="self-stretch rounded-num-8 bg-white border-whitesmoke-200 border-solid border-[2px] flex items-center justify-between p-2 gap-5">
+              <div className="self-stretch rounded-num-8 bg-white border-whitesmoke-200 border-solid border-2 flex items-center justify-between p-2 gap-5">
                 <div className="flex items-center justify-center py-px px-num-0">
                   <div className="relative font-medium">Payment Method Used</div>
                 </div>

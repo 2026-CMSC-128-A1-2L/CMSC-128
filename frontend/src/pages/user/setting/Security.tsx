@@ -1,10 +1,10 @@
-import { FunctionComponent, useCallback } from 'react';
+import type { FunctionComponent, } from 'react';
 import { Icon } from '@iconify/react';
 import footer_logo from '../../../../assets/footer_logo.svg';
 
 const Security: FunctionComponent = () => {
   return (
-    <div className="self-stretch rounded-t-none rounded-b-num-16 border-whitesmoke-200 border-solid border-[1px] overflow-hidden flex flex-col items-start py-6 px-8 gap-6 text-center text-[24px] text-black">
+    <div className="self-stretch rounded-t-none rounded-b-num-16 border-whitesmoke-200 border-solid border overflow-hidden flex flex-col items-start py-6 px-8 gap-6 text-center text-[24px] text-black">
       <div className="flex flex-col items-start">
         <b className="relative leading-8">Security Settings</b>
       </div>
@@ -15,15 +15,15 @@ const Security: FunctionComponent = () => {
               <b className="relative">Linked Accounts</b>
               <Icon icon="ic:baseline-link" className="h-6 w-6 relative"></Icon>
             </div>
-            <div className="self-stretch flex-1 rounded-num-16 border-whitesmoke-200 border-solid border-[1px] overflow-hidden flex flex-col items-start justify-center py-num-10 px-6 gap-2.5 text-left">
+            <div className="self-stretch flex-1 rounded-num-16 border-whitesmoke-200 border-solid border overflow-hidden flex flex-col items-start justify-center py-num-10 px-6 gap-2.5 text-left">
               <div className="flex items-center gap-2.5 text-center text-[24px] text-teal">
                 <Icon icon="flat-color-icons:google" className="h-6 w-6 relative"></Icon>
                 <b className="relative leading-8">Logged in via Google</b>
               </div>
               <a
-                className="self-stretch relative [text-decoration:underline] font-medium text-[inherit]"
+                className="self-stretch relative [text-decoration:underline] font-medium text-inherit"
                 href="mailto:dcanape@up.edu.ph"
-                target="_blank"
+                target="_blank" rel="noopener"
               >
                 dcanape@up.edu.ph
               </a>
@@ -38,7 +38,7 @@ const Security: FunctionComponent = () => {
             </div>
             <div className="self-stretch flex flex-col items-start justify-center gap-3 text-num-12">
               <div className="self-stretch flex flex-col items-start">
-                <div className="self-stretch h-[68px] rounded-num-16 border-whitesmoke-200 border-solid border-[1px] box-border overflow-hidden shrink-0 flex flex-col items-start justify-center py-num-4 px-num-10">
+                <div className="self-stretch h-[68px] rounded-num-16 border-whitesmoke-200 border-solid border box-border overflow-hidden shrink-0 flex flex-col items-start justify-center py-num-4 px-num-10">
                   <div className="self-stretch flex items-center gap-2.5">
                     <div className="flex-1 flex items-center gap-3">
                       <Icon icon="wordpress:desktop" className="w-12 relative h-12"></Icon>
@@ -59,7 +59,7 @@ const Security: FunctionComponent = () => {
                   </div>
                 </div>
               </div>
-              <div className="self-stretch h-[68px] rounded-num-16 border-whitesmoke-200 border-solid border-[1px] box-border overflow-hidden shrink-0 flex flex-col items-start justify-center py-num-4 px-num-10">
+              <div className="self-stretch h-[68px] rounded-num-16 border-whitesmoke-200 border-solid border box-border overflow-hidden shrink-0 flex flex-col items-start justify-center py-num-4 px-num-10">
                 <div className="self-stretch flex items-center gap-2.5">
                   <div className="flex-1 flex items-center gap-3">
                     <Icon icon="wordpress:desktop" className="w-12 h-12 relative"></Icon>
@@ -89,7 +89,7 @@ const Security: FunctionComponent = () => {
                 <b className="relative">App Permissions</b>
               </div>
             </div>
-            <div className="self-stretch flex-1 rounded-num-16 border-whitesmoke-200 border-solid border-[1px] overflow-hidden flex flex-col items-start justify-center py-4 px-6 gap-2.5 text-[24px] text-teal">
+            <div className="self-stretch flex-1 rounded-num-16 border-whitesmoke-200 border-solid border overflow-hidden flex flex-col items-start justify-center py-4 px-6 gap-2.5 text-[24px] text-teal">
               <div className="flex items-center gap-1">
                 <img
                   className="w-[52px] relative max-h-full object-cover"
@@ -120,7 +120,7 @@ const Security: FunctionComponent = () => {
               <div className="self-stretch flex flex-col items-start">
                 <b className="relative">{`Authentication Method `}</b>
               </div>
-              <div className="self-stretch rounded-lg bg-aliceblue border-whitesmoke-200 border-solid border-[1px] overflow-hidden flex items-start py-num-10 px-3 text-left text-teal">
+              <div className="self-stretch rounded-lg bg-aliceblue border-whitesmoke-200 border-solid border overflow-hidden flex items-start py-num-10 px-3 text-left text-teal">
                 <div className="w-[534px] relative leading-6 font-medium inline-block shrink-0">
                   External OAuth (Google)
                 </div>

@@ -1,4 +1,4 @@
-import { FunctionComponent, useState, useEffect } from 'react';
+import { type FunctionComponent, useState, useEffect } from 'react';
 import type { Billing } from '../types/billing';
 import PortalPopup from '../../../general/PortalPopout';
 
@@ -90,8 +90,8 @@ const EditBillingPopup: FunctionComponent<EditBillingPopupProps> = ({
       onOutsideClick={onClose}
       zIndex={100}
     >
-      <div className="relative w-full max-w-[612px] bg-white rounded-[32px] shadow-[0px_4px_20px_rgba(0,_0,_0,_0.15)] overflow-hidden">
-        <div className="bg-gradient-to-b from-[#c29722] to-[#f6b709] px-[40px] sm:px-[57px] pt-[30px] pb-[40px]">
+      <div className="relative w-full max-w-[612px] bg-white rounded-[32px] shadow-[0px_4px_20px_rgba(0,0,0,0.15)] overflow-hidden">
+        <div className="bg-linear-to-b from-[#c29722] to-[#f6b709] px-[40px] sm:px-[57px] pt-[30px] pb-[40px]">
           <b className="block text-[24px] sm:text-[32px] text-white mb-2">Edit Billing</b>
           <b className="block text-[14px] sm:text-[18px] tracking-[-0.01em] font-inter text-white">
             Edit existing billing of your tenant for this month!
@@ -103,7 +103,7 @@ const EditBillingPopup: FunctionComponent<EditBillingPopupProps> = ({
             <b className="block text-[12px] sm:text-[14px] font-inter text-darkslategray-100 mb-2">
               Room
             </b>
-            <div className="shadow-[0px_0px_5px_rgba(0,_0,_0,_0.25)] rounded-md bg-whitesmoke-100 h-10 w-full">
+            <div className="shadow-[0px_0px_5px_rgba(0,0,0,0.25)] rounded-md bg-whitesmoke-100 h-10 w-full">
               <div className="w-full h-full px-4 flex items-center text-[12px] sm:text-[14px] font-medium font-inter text-darkslategray-100">
                 {billing ? `Room ${getRoomNumber(billing.unitId)}` : 'Select a room'}
               </div>
@@ -115,7 +115,7 @@ const EditBillingPopup: FunctionComponent<EditBillingPopupProps> = ({
             <b className="block text-[12px] sm:text-[14px] font-inter text-darkslategray-100 mb-2">
               FULL NAME
             </b>
-            <div className="shadow-[0px_0px_5px_rgba(0,_0,_0,_0.25)] rounded-md bg-white h-10 w-full border border-whitesmoke-200">
+            <div className="shadow-[0px_0px_5px_rgba(0,0,0,0.25)] rounded-md bg-white h-10 w-full border border-whitesmoke-200">
               <input
                 type="text"
                 value={fullName}
@@ -132,7 +132,7 @@ const EditBillingPopup: FunctionComponent<EditBillingPopupProps> = ({
               <b className="block text-[12px] sm:text-[14px] font-inter text-darkslategray-100 mb-2">
                 RENT
               </b>
-              <div className="shadow-[0px_0px_5px_rgba(0,_0,_0,_0.25)] rounded-md bg-white h-10 w-full border border-whitesmoke-200">
+              <div className="shadow-[0px_0px_5px_rgba(0,0,0,0.25)] rounded-md bg-white h-10 w-full border border-whitesmoke-200">
                 <input
                   type="number"
                   value={rent}
@@ -146,7 +146,7 @@ const EditBillingPopup: FunctionComponent<EditBillingPopupProps> = ({
               <b className="block text-[12px] sm:text-[14px] font-inter text-darkslategray-100 mb-2">
                 UTILITIES
               </b>
-              <div className="shadow-[0px_0px_5px_rgba(0,_0,_0,_0.25)] rounded-md bg-white h-10 w-full border border-whitesmoke-200">
+              <div className="shadow-[0px_0px_5px_rgba(0,0,0,0.25)] rounded-md bg-white h-10 w-full border border-whitesmoke-200">
                 <input
                   type="number"
                   value={utilities}
@@ -164,7 +164,7 @@ const EditBillingPopup: FunctionComponent<EditBillingPopupProps> = ({
               <b className="block text-[12px] sm:text-[14px] font-inter text-darkslategray-100 mb-2">
                 MISC. FEES
               </b>
-              <div className="shadow-[0px_0px_5px_rgba(0,_0,_0,_0.25)] rounded-md bg-white h-10 w-full border border-whitesmoke-200">
+              <div className="shadow-[0px_0px_5px_rgba(0,0,0,0.25)] rounded-md bg-white h-10 w-full border border-whitesmoke-200">
                 <input
                   type="number"
                   value={miscFees}
@@ -178,7 +178,7 @@ const EditBillingPopup: FunctionComponent<EditBillingPopupProps> = ({
               <b className="block text-[12px] sm:text-[14px] font-inter text-darkslategray-100 mb-2 whitespace-nowrap">
                 AMOUNT PAID
               </b>
-              <div className="shadow-[0px_0px_5px_rgba(0,_0,_0,_0.25)] rounded-md bg-white h-10 w-full border border-whitesmoke-200">
+              <div className="shadow-[0px_0px_5px_rgba(0,0,0,0.25)] rounded-md bg-white h-10 w-full border border-whitesmoke-200">
                 <input
                   type="number"
                   value={amountPaid}
@@ -194,7 +194,7 @@ const EditBillingPopup: FunctionComponent<EditBillingPopupProps> = ({
           <div className="flex flex-col sm:flex-row gap-4 justify-between">
             <button
               onClick={handleCancel}
-              className="w-full sm:w-[220px] h-10 rounded-md border-whitesmoke-200 border-solid border-[2px] bg-white text-crimson font-inter text-[12px] sm:text-[14px] font-medium hover:opacity-80 transition-opacity cursor-pointer"
+              className="w-full sm:w-[220px] h-10 rounded-md border-whitesmoke-200 border-solid border-2 bg-white text-crimson font-inter text-[12px] sm:text-[14px] font-medium hover:opacity-80 transition-opacity cursor-pointer"
             >
               CANCEL
             </button>

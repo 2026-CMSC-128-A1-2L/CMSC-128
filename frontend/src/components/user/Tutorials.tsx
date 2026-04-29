@@ -1,4 +1,4 @@
-import { FunctionComponent, useState } from 'react';
+import { type FunctionComponent, useState } from 'react';
 import { Icon } from '@iconify/react';
 
 interface TutorialBubbleProps {
@@ -86,9 +86,11 @@ const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose 
     if (step > 1) setStep(step - 1);
   };
 
+  const isLastStep = step === totalSteps;
+  
   return (
     <div
-      className={`absolute ${current.position} z-[999] flex flex-col items-start animate-in fade-in zoom-in duration-200 transition-all`}
+      className={`absolute ${current.position} z-999 flex flex-col items-start animate-in fade-in zoom-in duration-200 transition-all`}
     >
       <div className="w-[232px] flex flex-col items-center">
         <Icon icon="ph:caret-up-fill" className="text-aliceblue w-14 h-15 mb-[-23px] z-10" />
@@ -121,7 +123,7 @@ const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose 
               </div>
 
               <div className="flex gap-2">
-                {step > 1 && step < totalSteps && (
+                {step > 1 && (
                   <button
                     onClick={handleBack}
                     className="w-[50px] rounded-lg bg-[#d0dbe3] py-1 text-[12px] text-[#2f3136] font-semibold font-lora text-center cursor-pointer hover:brightness-95 transition-all"
@@ -130,13 +132,14 @@ const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose 
                   </button>
                 )}
 
-                {/* last step*/}
-                <button
-                  onClick={handleNext}
-                  className="w-[54px] rounded-lg bg-[#b0bdc6] py-1 text-[12px] text-[#2f3136] font-semibold font-lora text-center cursor-pointer hover:brightness-95 transition-all"
-                >
-                  {step === totalSteps ? 'Finish' : 'Next'}
-                </button>
+                {!isLastStep && (
+                  <button
+                    onClick={handleNext}
+                    className="w-[54px] rounded-lg bg-[#d0dbe3] py-1 text-[12px] text-[#2f3136] font-semibold font-lora text-center cursor-pointer hover:brightness-95 transition-all"
+                  >
+                    Next
+                  </button>
+                )}
               </div>
             </div>
           </div>

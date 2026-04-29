@@ -1,4 +1,4 @@
-import { FunctionComponent, useState } from 'react';
+import { type FunctionComponent, useState } from 'react';
 
 const ReportTenant5: FunctionComponent = () => {
   const [isDeclared, setIsDeclared] = useState(false);
@@ -22,7 +22,7 @@ const ReportTenant5: FunctionComponent = () => {
       <div className="w-[612px] flex flex-col items-center justify-center pt-0 px-0 pb-8 box-border gap-[42px]">
         <div className="self-stretch flex flex-col items-center">
           {/* Header Section */}
-          <div className="self-stretch rounded-tl-[32px] rounded-tr-none rounded-b-none [background:linear-gradient(183.48deg,_#096c5b,_#16917c)] flex flex-col items-start justify-center py-3 pl-[57px] pr-8">
+          <div className="self-stretch rounded-tl-[32px] rounded-tr-none rounded-b-none [background:linear-gradient(183.48deg,#096c5b,#16917c)] flex flex-col items-start justify-center py-3 pl-[57px] pr-8">
             <div className="w-[533px] flex flex-col items-start justify-center pt-8 px-0 pb-2 box-border shrink-0">
               <b className="self-stretch relative text-[32px] text-white">Report Tenant</b>
               <b className="self-stretch relative text-lg tracking-[-0.01em] font-inter text-aliceblue font-bold">
@@ -40,7 +40,7 @@ const ReportTenant5: FunctionComponent = () => {
               <div className="flex items-start py-1 px-0">
                 <div className="h-[18px] w-[18px] relative overflow-hidden shrink-0">
                   <div
-                    className={`absolute h-full w-full top-0 right-0 bottom-0 left-0 shadow-[0px_0px_2px_rgba(0,_0,_0,_0.25)] rounded transition-colors ${
+                    className={`absolute h-full w-full top-0 right-0 bottom-0 left-0 shadow-[0px_0px_2px_rgba(0,0,0,0.25)] rounded transition-colors ${
                       isDeclared ? 'bg-teal' : 'bg-whitesmoke-100 border border-whitesmoke-200'
                     }`}
                   />

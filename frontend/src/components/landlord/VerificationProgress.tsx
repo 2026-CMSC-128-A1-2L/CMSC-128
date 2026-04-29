@@ -58,7 +58,7 @@ const VerificationProgress = ({ currentStep }: VerificationProgressProps) => {
                     idx < currentIdx
                       ? 'w-full bg-[#096c5b]'
                       : idx === currentIdx
-                        ? 'w-1/2 bg-gradient-to-r from-[rgba(2,67,56,0.8)] to-[#b5c8c5]'
+                        ? 'w-1/2 bg-linear-to-r from-[rgba(2,67,56,0.8)] to-[#b5c8c5]'
                         : 'w-0',
                   ].join(' ')}
                 />

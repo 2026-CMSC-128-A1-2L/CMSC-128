@@ -1,4 +1,4 @@
-import { FunctionComponent, useState } from 'react';
+import { type FunctionComponent, useState } from 'react';
 import { Icon } from '@iconify/react';
 import Tags from '../Filter/Tags';
 import Distance from '../Filter/DistanceMap';
@@ -29,7 +29,7 @@ const Filter: FunctionComponent = () => {
 
   return (
     <div className="relative rounded-[14.1px] bg-white w-130 h-fit overflow-hidden flex flex-col items-start py-[2.643rem] px-[1.762rem] box-border gap-[0.881rem] text-left text-[0.771rem] text-teal font-inter shadow-lg">
-      <div className="w-full overflow-hidden flex items-center py-[0rem] pl-[0rem] pr-[0.662rem] gap-[0.55rem] text-center text-[1.322rem] text-gray">
+      <div className="w-full overflow-hidden flex items-center py-0 pl-0 pr-[0.662rem] gap-[0.55rem] text-center text-[1.322rem] text-gray">
         <div className="flex-1 flex items-center">
           <b className="relative leading-[1.763rem] text-black">Select filter</b>
         </div>
@@ -43,9 +43,9 @@ const Filter: FunctionComponent = () => {
 
       {/* property type */}
       <div className="w-full flex flex-col items-start gap-[1.1rem]">
-        <div className="w-full flex flex-col items-start py-[0.55rem] px-[0rem] gap-[0.55rem]">
+        <div className="w-full flex flex-col items-start py-[0.55rem] px-0 gap-[0.55rem]">
           <div className="w-full flex flex-col items-start text-center text-dimgray">
-            <div className="w-full overflow-hidden flex flex-col items-start py-[0.55rem] px-[0rem] gap-[0.55rem]">
+            <div className="w-full overflow-hidden flex flex-col items-start py-[0.55rem] px-0 gap-[0.55rem]">
               <div className="self-stretch flex items-center">
                 <b className="relative text-darkgreen text-num-14">Property Type</b>
               </div>
@@ -94,7 +94,7 @@ const Filter: FunctionComponent = () => {
               >
                 <Icon icon="lsicon:minus-outline" className="w-4 h-4 text-teal" />
               </button>
-              <div className="overflow-hidden flex flex-col items-center justify-center py0 px-[0.218rem] min-w-[2rem]">
+              <div className="overflow-hidden flex flex-col items-center justify-center py0 px-[0.218rem] min-w-8">
                 <b className="self-stretch relative text-center">{pax}</b>
               </div>
               <button
@@ -127,8 +127,8 @@ const Filter: FunctionComponent = () => {
         </div>
 
         <div className="self-stretch flex items-center justify-center gap-[0.881rem] text-[0.661rem] text-dimgray font-lora">
-          <div className="flex-1 flex flex-col items-start py-[0.218rem] px-[0rem] gap-[0.218rem]">
-            <div className="self-stretch tracking-num-0_02 font-semibold text-num-12">
+          <div className="flex-1 flex flex-col items-start py-[0.218rem] px-0 gap-[0.218rem]">
+            <div className="self-stretch tracking-num-0.02 font-semibold text-num-12">
               Min Price
             </div>
             <div className="w-full h-fit text-num-12 font-inter rounded-num-8 border-whitesmoke border-solid border box-border flex items-center py-2 px-2 bg-unavailable_action">
@@ -137,7 +137,7 @@ const Filter: FunctionComponent = () => {
           </div>
 
           <div className="flex-1 flex flex-col items-end justify-center py-[0.218rem] px-0 gap-[0.218rem] text-right">
-            <div className="self-stretch tracking-num-0_02 font-semibold text-num-12">
+            <div className="self-stretch tracking-num-0.02 font-semibold text-num-12">
               Max Price
             </div>
             <div className="w-full h-fit text-num-12 font-inter rounded-num-8 border-whitesmoke border-solid border box-border flex justify-end py-2 px-2 bg-unavailable_action">

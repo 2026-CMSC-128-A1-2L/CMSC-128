@@ -1,4 +1,4 @@
-import { FunctionComponent, useState, useEffect, useRef } from 'react';
+import { type FunctionComponent, useState, useEffect, useRef } from 'react';
 import type { Billing } from '../types/billing';
 
 interface BillingRowProps {
@@ -31,10 +31,10 @@ const getStatusDisplay = (status: PaymentStatus): string => {
 const php = (n: number) => `₱${n.toFixed(2)}`;
 
 const statusGradients: Record<PaymentStatus, string> = {
-  paid: 'bg-gradient-to-b from-[#5dc2a8] to-[#0c8873]',
-  partially_paid: 'bg-gradient-to-t from-[#fa7900] to-[#ffc273]',
-  unpaid: 'bg-gradient-to-b from-[#c29722] to-[#f6b709]',
-  overdue: 'bg-gradient-to-b from-[#c00f0f] to-[#e44f4f]',
+  paid: 'bg-linear-to-b from-[#5dc2a8] to-[#0c8873]',
+  partially_paid: 'bg-linear-to-t from-[#fa7900] to-[#ffc273]',
+  unpaid: 'bg-linear-to-b from-[#c29722] to-[#f6b709]',
+  overdue: 'bg-linear-to-b from-[#c00f0f] to-[#e44f4f]',
 };
 
 const statusOptions: PaymentStatus[] = ['paid', 'partially_paid', 'unpaid', 'overdue'];
@@ -135,8 +135,8 @@ const BillingRow: FunctionComponent<BillingRowProps> = ({
           onClick={handleToggle}
           className={`w-[100px] rounded-lg ${
             hasStatus && selectedStatus
-              ? statusGradients[selectedStatus] + ' flex items-center justify-center'
-              : 'bg-white border-whitesmoke-200 border-solid border-[1px]'
+              ? `${statusGradients[selectedStatus]} flex items-center justify-center`
+              : 'bg-white border-whitesmoke-200 border-solid border'
           } py-[4.5px] px-2 font-inter cursor-pointer transition-all duration-300 hover:opacity-90 ${
             isChanging ? 'scale-95' : 'scale-100'
           }`}
@@ -152,7 +152,7 @@ const BillingRow: FunctionComponent<BillingRowProps> = ({
 
         {isOpen && (
           <>
-            <div className="fixed inset-0 z-10" onClick={() => onToggle && onToggle(billing._id)} />
+            <div className="fixed inset-0 z-10" onClick={() => onToggle?.(billing._id)} />
             <div className="absolute top-full left-1/2 -translate-x-1/2 mt-1 w-[100px] z-50 bg-white border border-whitesmoke-200 rounded-lg shadow-lg overflow-hidden">
               {statusOptions.map((status) => {
                 const isSelected = selectedStatus === status;

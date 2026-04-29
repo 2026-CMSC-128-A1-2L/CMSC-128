@@ -1,12 +1,14 @@
 import { useCallback, useState } from 'react';
 import type { FunctionComponent } from 'react';
-import SideBar from '../../../../components/user/SideBar';
+import SideBar from '../../../../components/landlord/SideBarLandlord';
 import Footer from '../../../../components/general/Footer';
 import { Icon } from '@iconify/react';
-import VerifiedBadge from '../../assets/verified_badge.svg';
+import VerifiedBadge from '../../../../../assets/verified_badge.svg';
+import TutorialBubble from '../../../../components/landlord/TutorialsForLandlord';
+import TutorialIcon from '../../../../../assets/help-chat.svg';
 
 const LandlordVerif: FunctionComponent = () => {
-  const [verificationStep, setVerificationStep] = useState(2); // 0: submit, 1: reviewing, 2: finish
+  const [verificationStep, _setVerificationStep] = useState(2); // 0: submit, 1: reviewing, 2: finish
 
   const onArrowUpClick = useCallback(() => {
     const anchor = document.querySelector("[data-scroll-to='searchBarContainer']");
@@ -14,6 +16,8 @@ const LandlordVerif: FunctionComponent = () => {
       anchor.scrollIntoView({ block: 'start', behavior: 'smooth' });
     }
   }, []);
+
+  const [showHelp, setShowHelp] = useState(false);
 
   return (
     <div className="w-full h-screen flex flex-col font-lora text-darkslategray-100 overflow-hidden">
@@ -25,11 +29,11 @@ const LandlordVerif: FunctionComponent = () => {
         <div className="flex-1 flex flex-col overflow-hidden">
           <div className="flex-1 overflow-y-auto">
             <div className="w-full h-[1024px] relative flex flex-col items-start isolate gap-2.5 text-left text-num-14">
-              <div className="w-[1440px] h-[1512px] overflow-hidden shrink-0 flex flex-col items-start z-[1]">
+              <div className="w-[1440px] h-[1512px] overflow-hidden shrink-0 flex flex-col items-start z-1">
                 <div className="self-stretch flex-1 overflow-hidden flex flex-col items-start py-num-0 pl-num-0 pr-20">
                   <div className="self-stretch flex-1 flex items-center gap-8 shrink-0">
                     <div className="h-[1112px] hidden flex-col items-center">
-                      <div className="w-[106px] h-[924px] bg-white border-whitesmoke-200 border-solid border-[1px] box-border overflow-hidden shrink-0 flex flex-col items-center py-num-32 pl-num-32 pr-num-10" />
+                      <div className="w-[106px] h-[924px] bg-white border-whitesmoke-200 border-solid border box-border overflow-hidden shrink-0 flex flex-col items-center py-num-32 pl-num-32 pr-num-10" />
                     </div>
                     <div className="self-stretch flex-1 overflow-hidden flex flex-col items-start pt-num-0 px-num-0 pb-[140px]">
                       <div className="self-stretch flex-1 flex flex-col items-start">
@@ -108,7 +112,7 @@ const LandlordVerif: FunctionComponent = () => {
                                   </div>
                                   <div className="flex flex-col items-start gap-1">
                                     <b className="relative">Verification Status</b>
-                                    <b className="relative text-transparent !bg-clip-text [background:linear-gradient(180deg,_#c00f0f,_#e44f4f)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">
+                                    <b className="relative text-transparent bg-clip-text! [background:linear-gradient(180deg,#c00f0f,#e44f4f)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">
                                       Unverified
                                     </b>
                                   </div>
@@ -119,7 +123,7 @@ const LandlordVerif: FunctionComponent = () => {
                               <div className="self-stretch flex flex-col items-center justify-center text-darkslategray-200 font-poppins">
                                 <div className="w-[723px] h-[87px] relative">
                                   <div
-                                    className={`absolute h-[9.2%] w-[32.64%] top-[29.89%] right-[56.29%] bottom-[60.92%] left-[11.07%] rounded-[34.55px] ${verificationStep >= 1 ? '[background:linear-gradient(90deg,_rgba(2,_67,_56,_0.8),_#b5c8c5_99.99%)]' : '[background:linear-gradient(90deg,_rgba(2,_67,_56,_0.8),_#b5c8c5_99.99%)]'}`}
+                                    className={`absolute h-[9.2%] w-[32.64%] top-[29.89%] right-[56.29%] bottom-[60.92%] left-[11.07%] rounded-[34.55px] ${verificationStep >= 1 ? '[background:linear-gradient(90deg,rgba(2,67,56,0.8),#b5c8c5_99.99%)]' : '[background:linear-gradient(90deg,rgba(2,67,56,0.8),#b5c8c5_99.99%)]'}`}
                                   />
                                   <div className="absolute h-[37.93%] w-[13.42%] top-[51.72%] left-[0%] leading-8 font-semibold flex items-center justify-center">
                                     Submit
@@ -131,7 +135,7 @@ const LandlordVerif: FunctionComponent = () => {
                                     Reviewing
                                   </div>
                                   <div
-                                    className={`absolute h-[9.2%] w-[34.44%] top-[26.44%] right-[10.65%] bottom-[64.37%] left-[54.91%] rounded-[34.55px] ${verificationStep >= 2 ? '[background:linear-gradient(90deg,_rgba(2,_67,_56,_0.8),_#b5c8c5_99.99%)]' : 'bg-silver'}`}
+                                    className={`absolute h-[9.2%] w-[34.44%] top-[26.44%] right-[10.65%] bottom-[64.37%] left-[54.91%] rounded-[34.55px] ${verificationStep >= 2 ? '[background:linear-gradient(90deg,rgba(2,67,56,0.8),#b5c8c5_99.99%)]' : 'bg-silver'}`}
                                   />
                                   <div
                                     className={`absolute h-[37.93%] w-[4.56%] top-[12.64%] right-[48.41%] bottom-[49.43%] left-[47.03%] rounded-[50%] ${verificationStep >= 1 ? 'bg-darkslategray-200' : 'bg-silver'}`}
@@ -143,6 +147,9 @@ const LandlordVerif: FunctionComponent = () => {
                                 </div>
                               </div>
                             </div>
+
+                            <TutorialBubble show={showHelp} onClose={() => setShowHelp(false)} />
+
                             <div className="self-stretch flex items-center py-num-0 px-num-32 gap-6 shrink-0 text-[24px]">
                               <div className="flex-1 flex items-center">
                                 <div className="flex items-center gap-2">
@@ -160,12 +167,12 @@ const LandlordVerif: FunctionComponent = () => {
                               </div>
                             </div>
                             <div className="self-stretch flex flex-col items-center justify-center py-num-0 px-num-32 shrink-0 text-left">
-                              <div className="w-[916px] rounded-num-16 bg-white border-whitesmoke-200 border-solid border-[1px] box-border overflow-hidden flex flex-col items-start justify-center py-num-10 px-num-32 gap-2.5">
+                              <div className="w-[916px] rounded-num-16 bg-white border-whitesmoke-200 border-solid border box-border overflow-hidden flex flex-col items-start justify-center py-num-10 px-num-32 gap-2.5">
                                 <div className="self-stretch flex items-center justify-between py-num-0 pl-num-0 pr-6 gap-0">
                                   <div className="flex-1 flex items-center gap-4">
                                     <b className="relative">Valid ID</b>
                                     <div className="h-8 w-24 rounded-num-16 bg-white flex items-center justify-center py-num-0 px-num-12 box-border text-center">
-                                      <b className="relative text-transparent !bg-clip-text [background:linear-gradient(180deg,_#c00f0f,_#e44f4f)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">
+                                      <b className="relative text-transparent bg-clip-text! [background:linear-gradient(180deg,#c00f0f,#e44f4f)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">
                                         Missing
                                       </b>
                                     </div>
@@ -175,7 +182,7 @@ const LandlordVerif: FunctionComponent = () => {
                                     <Icon icon="mdi:delete" className="w-6 h-6" />
                                   </div>
                                 </div>
-                                <div className="w-[852px] rounded-num-16 border-dimgray border-dashed border-[1px] box-border overflow-hidden flex items-center py-num-12 px-4 text-black">
+                                <div className="w-[852px] rounded-num-16 border-dimgray border-dashed border box-border overflow-hidden flex items-center py-num-12 px-4 text-black">
                                   <div className="h-16 flex items-center gap-6">
                                     <Icon icon="mdi:cloud-upload" className="w-16 h-16" />
                                     <div className="flex flex-col items-start justify-center gap-2">
@@ -189,12 +196,12 @@ const LandlordVerif: FunctionComponent = () => {
                               </div>
                             </div>
                             <div className="self-stretch flex flex-col items-center justify-center py-num-0 px-num-32 shrink-0 text-left">
-                              <div className="w-[916px] rounded-num-16 bg-white border-whitesmoke-200 border-solid border-[1px] box-border overflow-hidden flex flex-col items-start justify-center py-num-10 px-num-32 gap-2.5">
+                              <div className="w-[916px] rounded-num-16 bg-white border-whitesmoke-200 border-solid border box-border overflow-hidden flex flex-col items-start justify-center py-num-10 px-num-32 gap-2.5">
                                 <div className="self-stretch flex items-center justify-between py-num-0 pl-num-0 pr-6 gap-0">
                                   <div className="flex-1 flex items-center gap-4">
                                     <b className="relative">Business Permit</b>
                                     <div className="h-8 w-24 rounded-num-16 bg-white flex items-center justify-center py-num-0 px-num-12 box-border text-center">
-                                      <b className="relative text-transparent !bg-clip-text [background:linear-gradient(180deg,_#c00f0f,_#e44f4f)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">
+                                      <b className="relative text-transparent bg-clip-text! [background:linear-gradient(180deg,#c00f0f,#e44f4f)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">
                                         Missing
                                       </b>
                                     </div>
@@ -204,7 +211,7 @@ const LandlordVerif: FunctionComponent = () => {
                                     <Icon icon="mdi:delete" className="w-6 h-6" />
                                   </div>
                                 </div>
-                                <div className="w-[852px] h-[88px] rounded-num-16 border-dimgray border-dashed border-[1px] box-border overflow-hidden shrink-0 flex items-center py-num-12 px-4 text-black">
+                                <div className="w-[852px] h-[88px] rounded-num-16 border-dimgray border-dashed border box-border overflow-hidden shrink-0 flex items-center py-num-12 px-4 text-black">
                                   <div className="h-16 flex items-center gap-6">
                                     <Icon icon="mdi:cloud-upload" className="w-16 h-16" />
                                     <div className="flex flex-col items-start justify-center gap-2">
@@ -231,7 +238,7 @@ const LandlordVerif: FunctionComponent = () => {
                 </div>
               </div>
               <div
-                className="w-[60px] h-[60px] !!m-[0 important] absolute top-[916px] left-[1318px] rounded-[30px] [background:linear-gradient(183.48deg,_#096c5b,_#16917c)] shrink-0 flex items-start p-[16.2px] box-border cursor-pointer z-[2]"
+                className="w-[60px] h-[60px] !!m-[0 important] absolute top-[916px] left-[1318px] rounded-[30px] [background:linear-gradient(183.48deg,#096c5b,#16917c)] shrink-0 flex items-start p-[16.2px] box-border cursor-pointer z-2"
                 onClick={onArrowUpClick}
               >
                 <Icon icon="mdi:arrow-up" className="w-[27.7px] h-[27.7px] text-white" />
@@ -240,6 +247,13 @@ const LandlordVerif: FunctionComponent = () => {
           </div>
         </div>
       </div>
+      {/* ======= FLOATING ICON FOR TUTORIAL ======= */}
+          <div
+            className="fixed bottom-10 right-10 z-1000 cursor-pointer transition-all hover:scale-110 active:scale-95"
+            onClick={() => setShowHelp(!showHelp)}
+          >
+            <img src={TutorialIcon} alt="Help" className="w-16 h-16 drop-shadow-lg" />
+          </div>
     </div>
   );
 };

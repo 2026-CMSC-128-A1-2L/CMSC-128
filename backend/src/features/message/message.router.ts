@@ -1,15 +1,15 @@
 import { Router } from 'express';
 import { routeGetMessages, routeGetUserMessages, routeSendMessage } from './message.controller';
-import { isLoggedIn } from '../../middleware';
+import { isVerifiedCheck } from '../../middleware';
 
 const router = Router();
 
 // Messages
 // GET /api/messages
-router.get('/', isLoggedIn, routeGetMessages);
+router.get('/', isVerifiedCheck, routeGetMessages);
 // GET /api/messages/:userId
-router.get('/:userId', isLoggedIn, routeGetUserMessages);
+router.get('/:userId', isVerifiedCheck, routeGetUserMessages);
 // POST /api/messages/:userId
-router.post('/:userId', isLoggedIn, routeSendMessage);
+router.post('/:userId', isVerifiedCheck, routeSendMessage);
 
 export default router;

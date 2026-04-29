@@ -9,7 +9,7 @@ declare global {
       firstName: string;
       middleName?: string | null;
       lastName: string;
-      userType: 'Admin' | 'Student' | 'Manager' | 'Landlord';
+      userType: 'Admin' | 'Student' | 'Manager' | 'Landlord' | undefined;
       emails: string[];
       auth: {
         google: string[];

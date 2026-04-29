@@ -104,3 +104,5 @@ router.get('/users/:userId/dashboard', selfFilter, routeGetUserBillingDashboard)
 // This is used by the tenant to submit their payment for a billing.
 // ============================================================================
 router.post('/:billingId/submit-payment', selfFilter, routeUpdateBillingPayment);
+
+export default router;

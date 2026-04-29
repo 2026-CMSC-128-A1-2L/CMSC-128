@@ -12,9 +12,9 @@ import {
 const BILLING_STATUS_CLASS: Record<PaymentStatus, string> = {
   paid: "text-[#096c5b]",
   pending:
-    "bg-gradient-to-b from-[#c29722] to-[#f6b709] bg-clip-text text-transparent",
+    "bg-linear-to-b from-[#c29722] to-[#f6b709] bg-clip-text text-transparent",
   overdue:
-    "bg-gradient-to-b from-[#c00f0f] to-[#e44f4f] bg-clip-text text-transparent",
+    "bg-linear-to-b from-[#c00f0f] to-[#e44f4f] bg-clip-text text-transparent",
 };
 
 const BILLING_STATUS_LABEL: Record<PaymentStatus, string> = {

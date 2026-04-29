@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import type { FunctionComponent } from 'react';
 import ReviewCard from './ReviewCard';
 import RatingBreakdown from './RatingBreakdown';
 
@@ -48,7 +48,7 @@ const ReviewDetails: FunctionComponent = () => {
 
         <div className="self-stretch flex flex-col items-start py-2.5 px-num-20 text-[14px]">
           <div className="self-stretch h-10 relative">
-            <div className="absolute h-full w-full top-0 right-0 bottom-0 left-0 shadow-[0px_0px_4px_rgba(0,_0,_0,_0.25)] rounded-[10px] bg-white" />
+            <div className="absolute h-full w-full top-0 right-0 bottom-0 left-0 shadow-[0px_0px_4px_rgba(0,0,0,0.25)] rounded-[10px] bg-white" />
             <div className="absolute h-[70%] w-[27.06%] top-[15%] left-[36.47%] leading-6 font-medium flex items-center justify-center">
               View all 12 reviews
             </div>
