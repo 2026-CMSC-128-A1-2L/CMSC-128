@@ -217,8 +217,7 @@ export const pendingApplications: PendingApplication[] = [
   },
 ];
 
-export const getTenantById = (id: string) =>
-  tenants.find((tenant) => tenant.id === id);
+export const getTenantById = (id: string) => tenants.find((tenant) => tenant.id === id);
 
 export const getPendingApplicationById = (id: string) =>
   pendingApplications.find((application) => application.id === id);

@@ -1,5 +1,7 @@
 import { type FunctionComponent, useState } from 'react';
-import AddManager1, { type AddManagerFormValues } from './LandlordManagerAddForms/LandlordManagerAdd1';
+import AddManager1, {
+  type AddManagerFormValues,
+} from './LandlordManagerAddForms/LandlordManagerAdd1';
 import AddManager2 from './LandlordManagerAddForms/LandlordManagerAdd2';
 import PortalPopup from './LandlordManagerPortal';
 

@@ -16,7 +16,6 @@ export const routeGetCalendar: RequestHandler = async (req, res, next) => {
   res.status(200).json({ data: events });
 };
 
-
 export const routeGetUpcomingEvents: RequestHandler = async (req, res, next) => {
   const user = req.user!;
   // get next 30 days of events

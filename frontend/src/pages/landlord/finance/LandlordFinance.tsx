@@ -227,4 +227,3 @@ const LandlordFinance: FunctionComponent = () => {
 };
 
 export default LandlordFinance;
-

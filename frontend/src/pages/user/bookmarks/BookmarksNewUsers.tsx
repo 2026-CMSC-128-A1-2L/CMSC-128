@@ -1,9 +1,9 @@
-import type { FunctionComponent } from "react";
-import { Icon } from "@iconify/react";
+import type { FunctionComponent } from 'react';
+import { Icon } from '@iconify/react';
 
-import SideBar from "../../../components/user/SideBar";
-import Footer from "../../../components/general/Footer";
-import { Link } from "react-router-dom";
+import SideBar from '../../../components/user/SideBar';
+import Footer from '../../../components/general/Footer';
+import { Link } from 'react-router-dom';
 
 const BookmarksNewUsers: FunctionComponent = () => {
   return (
@@ -28,10 +28,7 @@ const BookmarksNewUsers: FunctionComponent = () => {
                       </div>
                       <div className="flex items-end justify-end">
                         <div className="h-12 w-12 rounded-[100px] bg-whitesmoke-100 overflow-hidden flex items-center justify-center">
-                          <Icon
-                            icon="mage:filter"
-                            className="h-6 w-6 relative"
-                          />
+                          <Icon icon="mage:filter" className="h-6 w-6 relative" />
                         </div>
                       </div>
                     </div>
@@ -47,10 +44,7 @@ const BookmarksNewUsers: FunctionComponent = () => {
                       </b>
 
                       <Link to="/home">
-                        <Icon
-                          icon="radix-icons:arrow-top-right"
-                          className="h-6 w-6 relative"
-                        />
+                        <Icon icon="radix-icons:arrow-top-right" className="h-6 w-6 relative" />
                       </Link>
                     </div>
                   </div>

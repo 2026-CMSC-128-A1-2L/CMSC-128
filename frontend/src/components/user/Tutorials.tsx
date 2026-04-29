@@ -87,7 +87,7 @@ const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose 
   };
 
   const isLastStep = step === totalSteps;
-  
+
   return (
     <div
       className={`absolute ${current.position} z-999 flex flex-col items-start animate-in fade-in zoom-in duration-200 transition-all`}

@@ -1,6 +1,6 @@
-import { Icon } from "@iconify/react";
-import { type FunctionComponent, useState, useRef, useEffect } from "react";
-import PortalPopup from "../../../components/general/PortalPopup";
+import { Icon } from '@iconify/react';
+import { type FunctionComponent, useState, useRef, useEffect } from 'react';
+import PortalPopup from '../../../components/general/PortalPopup';
 
 export type PaymentMethodsType = {
   className?: string;
@@ -9,30 +9,27 @@ export type PaymentMethodsType = {
 };
 
 const PaymentMethods: FunctionComponent<PaymentMethodsType> = ({
-  className = "",
+  className = '',
   isOpen = false,
   onClose,
 }) => {
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("");
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('');
   const [isMethodDropdownOpen, setIsMethodDropdownOpen] = useState(false);
-  const [accountName, setAccountName] = useState("");
-  const [referenceNo, setReferenceNo] = useState("");
+  const [accountName, setAccountName] = useState('');
+  const [referenceNo, setReferenceNo] = useState('');
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const paymentMethods = ["GCash", "Bank Transfer", "Cash", "Maya"];
+  const paymentMethods = ['GCash', 'Bank Transfer', 'Cash', 'Maya'];
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsMethodDropdownOpen(false);
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   const handleSubmit = () => {
@@ -146,9 +143,7 @@ const PaymentMethods: FunctionComponent<PaymentMethodsType> = ({
           {/* Submit Payment Details Section */}
           <div className="flex flex-col items-start gap-2 w-full">
             <div className="flex items-center w-full">
-              <b className="text-num-18 tracking-num--0_01">
-                SUBMIT PAYMENT DETAILS
-              </b>
+              <b className="text-num-18 tracking-num--0_01">SUBMIT PAYMENT DETAILS</b>
             </div>
             <div className="w-full flex flex-col items-start gap-3 text-num-14 text-dimgray font-lora">
               <input
@@ -172,17 +167,10 @@ const PaymentMethods: FunctionComponent<PaymentMethodsType> = ({
                   onClick={() => setIsMethodDropdownOpen(!isMethodDropdownOpen)}
                   className="w-full rounded-num-8 bg-white border-whitesmoke-200 border-solid border-2 flex items-center justify-between p-3 cursor-pointer hover:border-teal transition-colors"
                 >
-                  <div
-                    className={
-                      selectedPaymentMethod ? "text-black" : "text-dimgray"
-                    }
-                  >
-                    {selectedPaymentMethod || "Payment Method Used"}
+                  <div className={selectedPaymentMethod ? 'text-black' : 'text-dimgray'}>
+                    {selectedPaymentMethod || 'Payment Method Used'}
                   </div>
-                  <Icon
-                    icon="mdi-light:chevron-down"
-                    className="h-5 w-5 text-gray-400"
-                  />
+                  <Icon icon="mdi-light:chevron-down" className="h-5 w-5 text-gray-400" />
                 </div>
 
                 {isMethodDropdownOpen && (

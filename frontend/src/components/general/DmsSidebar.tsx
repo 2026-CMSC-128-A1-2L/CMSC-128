@@ -1,7 +1,7 @@
-import type { FunctionComponent } from "react";
-import Message from "../general/InboxMessage";
-import { Icon } from "@iconify/react";
-import { useNavigate } from "react-router-dom";
+import type { FunctionComponent } from 'react';
+import Message from '../general/InboxMessage';
+import { Icon } from '@iconify/react';
+import { useNavigate } from 'react-router-dom';
 const DmsSidebar: FunctionComponent = () => {
   const navigate = useNavigate();
   return (
@@ -33,13 +33,8 @@ const DmsSidebar: FunctionComponent = () => {
             <Message></Message>
           </div>
           <div className="w-full flex items-center justify-center gap-1 text-center">
-            <div className="relative font-semibold text-num-12 text-teal">
-              View All
-            </div>
-            <Icon
-              icon="material-symbols-light:chevron-right"
-              className="w-5 h-5 text-teal"
-            ></Icon>
+            <div className="relative font-semibold text-num-12 text-teal">View All</div>
+            <Icon icon="material-symbols-light:chevron-right" className="w-5 h-5 text-teal"></Icon>
           </div>
         </div>
 
@@ -55,9 +50,7 @@ const DmsSidebar: FunctionComponent = () => {
               <b className="relative text-num-12 font-inter text-white">All</b>
             </div>
             <div className="h-fit rounded-[100px] bg-lightcyan flex items-center justify-center py-2 px-4 box-border">
-              <b className="relative text-num-12 font-inter text-teal">
-                Unread 1
-              </b>
+              <b className="relative text-num-12 font-inter text-teal">Unread 1</b>
             </div>
           </div>
           <div className="w-full h-full flex flex-col items-start gap-2 text-right text-[0.5rem]">
@@ -65,13 +58,8 @@ const DmsSidebar: FunctionComponent = () => {
             <Message></Message>
           </div>
           <div className="w-full flex items-center justify-center gap-1 text-center">
-            <div className="relative font-semibold text-num-12 text-teal">
-              View Archive
-            </div>
-            <Icon
-              icon="material-symbols-light:chevron-right"
-              className="w-5 h-5 text-teal"
-            ></Icon>
+            <div className="relative font-semibold text-num-12 text-teal">View Archive</div>
+            <Icon icon="material-symbols-light:chevron-right" className="w-5 h-5 text-teal"></Icon>
           </div>
         </div>
       </div>

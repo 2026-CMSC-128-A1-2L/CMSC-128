@@ -64,17 +64,13 @@ const defaultVisits: VisitSlot[] = [
   },
 ];
 
-export default function VisitsCalendarView({
-  visits = defaultVisits,
-}: VisitsCalendarViewProps) {
+export default function VisitsCalendarView({ visits = defaultVisits }: VisitsCalendarViewProps) {
   // Get unique times and sort them
-  const uniqueTimes = Array.from(new Set(visits.map((v) => v.time))).sort(
-    (a, b) => {
-      const timeA = new Date(`2000-01-01 ${a}`).getTime();
-      const timeB = new Date(`2000-01-01 ${b}`).getTime();
-      return timeA - timeB;
-    }
-  );
+  const uniqueTimes = Array.from(new Set(visits.map((v) => v.time))).sort((a, b) => {
+    const timeA = new Date(`2000-01-01 ${a}`).getTime();
+    const timeB = new Date(`2000-01-01 ${b}`).getTime();
+    return timeA - timeB;
+  });
 
   // Create a grid structure: timeSlots x days
   const timeSlots = uniqueTimes.map((time) => {
@@ -82,9 +78,7 @@ export default function VisitsCalendarView({
       time,
       dayVisits: Array(7)
         .fill(null)
-        .map((_, dayIndex) =>
-          visits.find((v) => v.time === time && v.dayOfWeek === dayIndex)
-        ),
+        .map((_, dayIndex) => visits.find((v) => v.time === time && v.dayOfWeek === dayIndex)),
     };
   });
 

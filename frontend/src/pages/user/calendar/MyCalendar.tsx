@@ -1,12 +1,12 @@
-import { type FunctionComponent, useState, useCallback } from "react";
-import Footer from "../../../components/general/Footer";
-import SideBar from "../../../components/user/SideBar";
-import MiniCalendar from "../../../components/user/user-calendar/MiniCalendar";
-import EventPopout from "../../../components/user/EventPopout";
-import DayEventsPopout from "../../../components/user/user-calendar/DayEventsPopout";
-import PortalPopup from "../../../components/general/PortalPopup";
-import MainCalendarGrid from "../../../components/user/user-calendar/MainCalendarGrid";
-import type { CalendarEvent } from "../../../service/CalendarService";
+import { type FunctionComponent, useState, useCallback } from 'react';
+import Footer from '../../../components/general/Footer';
+import SideBar from '../../../components/user/SideBar';
+import MiniCalendar from '../../../components/user/user-calendar/MiniCalendar';
+import EventPopout from '../../../components/user/EventPopout';
+import DayEventsPopout from '../../../components/user/user-calendar/DayEventsPopout';
+import PortalPopup from '../../../components/general/PortalPopup';
+import MainCalendarGrid from '../../../components/user/user-calendar/MainCalendarGrid';
+import type { CalendarEvent } from '../../../service/CalendarService';
 
 const MyCalendar: FunctionComponent = () => {
   const [isEventPopoutOpen, setEventPopoutOpen] = useState(false);
@@ -26,14 +26,11 @@ const MyCalendar: FunctionComponent = () => {
     setSelectedEvent(null);
   }, []);
 
-  const openDayPopout = useCallback(
-    (date: Date, events: CalendarEvent[]) => {
-      setSelectedDate(date);
-      setSelectedDayEvents(events);
-      setDayPopoutOpen(true);
-    },
-    []
-  );
+  const openDayPopout = useCallback((date: Date, events: CalendarEvent[]) => {
+    setSelectedDate(date);
+    setSelectedDayEvents(events);
+    setDayPopoutOpen(true);
+  }, []);
 
   const closeDayPopout = useCallback(() => {
     setDayPopoutOpen(false);
@@ -42,15 +39,11 @@ const MyCalendar: FunctionComponent = () => {
   }, []);
 
   const handlePrevMonth = useCallback(() => {
-    setCurrentDate(
-      (prev) => new Date(prev.getFullYear(), prev.getMonth() - 1)
-    );
+    setCurrentDate((prev) => new Date(prev.getFullYear(), prev.getMonth() - 1));
   }, []);
 
   const handleNextMonth = useCallback(() => {
-    setCurrentDate(
-      (prev) => new Date(prev.getFullYear(), prev.getMonth() + 1)
-    );
+    setCurrentDate((prev) => new Date(prev.getFullYear(), prev.getMonth() + 1));
   }, []);
 
   const handleDateChange = useCallback((date: Date) => {

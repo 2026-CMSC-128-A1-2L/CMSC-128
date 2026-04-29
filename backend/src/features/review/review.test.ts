@@ -2,7 +2,14 @@
 import '../../config.js';
 import { describe, it, expect, beforeAll } from 'vitest';
 import { buildHousingFacility } from '../../test/factories.js';
-import { landlord, landlordAgent, studentAgent, guestAgent, student, adminAgent } from '../../test/setup.js';
+import {
+  landlord,
+  landlordAgent,
+  studentAgent,
+  guestAgent,
+  student,
+  adminAgent,
+} from '../../test/setup.js';
 import { Listing } from '../listing/listing.model.js';
 import { Unit } from '../unit/unit.model.js';
 import { Rental } from '../rental/rental.model.js';

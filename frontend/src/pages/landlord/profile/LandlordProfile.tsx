@@ -17,7 +17,7 @@ const landlord: LandlordInfo = {
 };
 
 type Property = {
-  id: string,   // for routing to specific building info
+  id: string; // for routing to specific building info
   name: string;
   location: string;
   rating: number;
@@ -26,25 +26,26 @@ type Property = {
 
 const properties: Property[] = [
   {
-    id: "1",
+    id: '1',
     name: 'Tri-AD Hall Dormitory',
     location: 'Umali Subdivision, Los Baños',
     rating: 4.3,
     image: dorm1,
   },
   {
-    id: "2",
+    id: '2',
     name: 'Two Sapphire Place',
     location: 'Umali Subdivision, Los Baños',
     rating: 3.7,
     image: dorm2,
   },
-  { 
-    id: "3",
-    name: "Women's Dormitory", 
-    location: 'Inside UPLB', 
-    rating: 3.7, 
-    image: dorm3 },
+  {
+    id: '3',
+    name: "Women's Dormitory",
+    location: 'Inside UPLB',
+    rating: 3.7,
+    image: dorm3,
+  },
 ];
 
 type AvailabilityItemProps = {
@@ -77,7 +78,6 @@ const PropertyCard = ({ property }: { property: Property }) => (
     to={`/landlord/properties/building-info/${property.id}`}
     className="group flex flex-col overflow-hidden rounded-[12px] bg-white shadow-[0_1px_4px_0_rgba(0,0,0,0.08)] ring-1 ring-[#f0f0f0] transition-shadow duration-200 hover:shadow-[0_4px_12px_0_rgba(0,0,0,0.12)] no-underline"
   >
-    
     <div className="relative aspect-4/3 w-full overflow-hidden">
       <img
         src={property.image}

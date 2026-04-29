@@ -14,7 +14,7 @@ export type CreateUnitArguments = {
   listingId: mongoose.Types.ObjectId;
   roomNumber: string;
   price: number;
-  location?: string | null;   // location inside building
+  location?: string | null; // location inside building
   isAvailable: boolean;
   legacyTenants: number;
 };
@@ -28,22 +28,18 @@ export type GetUnitArguments = {
   isAvailable: boolean;
 };
 
-export const createUnit = async (
-  data: CreateUnitArguments,
-  filters: QueryFilter<ListingType>,
-) => {
+export const createUnit = async (data: CreateUnitArguments, filters: QueryFilter<ListingType>) => {
   const listing = await getListingById(data.listingId, filters);
   if (!listing) {
     throw new AppError(404, 'Listing not found.');
   }
-
 
   const unit = await new Unit({
     listingId: data.listingId,
     roomNumber: data.roomNumber,
     price: data.price,
     location: data.location,
-    
+
     // derived from listing
     facilityId: listing.facilityId,
     capacity: listing.capacity,
@@ -52,7 +48,6 @@ export const createUnit = async (
   // if there are legacy tenants
   if (data.legacyTenants && data.legacyTenants > 0) {
     for (let i = 0; i < data.legacyTenants; i++) {
-
       const student = await new Student({
         firstName: 'Legacy',
         lastName: 'Tenant',
@@ -66,9 +61,8 @@ export const createUnit = async (
       await createRental({
         userId: student._id,
         facilityId: listing.facilityId,
-        unitId: unit._id
+        unitId: unit._id,
       });
-
     }
   }
 
@@ -81,14 +75,11 @@ export function buildUnitQuery(args: Partial<GetUnitArguments>): QueryFilter<Uni
 
 export const getUnits = async (args: Partial<GetUnitArguments>, filter: QueryFilter<UnitType>) => {
   const query = buildUnitQuery(args);
-  return await Unit.find({...filter, ...query}).populate(getTenantNames);
+  return await Unit.find({ ...filter, ...query }).populate(getTenantNames);
 };
 
-export const getUnitById = async (
-  id: mongoose.Types.ObjectId,
-  filter: QueryFilter<UnitType>,
-) => {
-  return await Unit.findOne(combineFilters(filter, {_id: id})).populate(getTenantNames);
+export const getUnitById = async (id: mongoose.Types.ObjectId, filter: QueryFilter<UnitType>) => {
+  return await Unit.findOne(combineFilters(filter, { _id: id })).populate(getTenantNames);
 };
 
 export type UpdateUnitArguments = {
@@ -145,5 +136,5 @@ export const isUnitFull = async (
 // helper function to get the names instead of userIds for the currentRentals
 export const getTenantNames = {
   path: 'currentRentals',
-  populate: { path: 'userId', select: 'firstName lastName' }
+  populate: { path: 'userId', select: 'firstName lastName' },
 };

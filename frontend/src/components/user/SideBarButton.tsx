@@ -26,7 +26,11 @@ const SideBarButton = ({ icon, label, state = 'default', onClick }: SideBarButto
         aria-hidden="true"
         className={[
           'h-12 w-1.5 shrink-0 rounded-sm transition-colors duration-200',
-          active ? 'bg-[#096c5b]' : hovered ? 'bg-[#BEEDE1]' : 'bg-transparent group-hover:bg-[#BEEDE1]',
+          active
+            ? 'bg-[#096c5b]'
+            : hovered
+              ? 'bg-[#BEEDE1]'
+              : 'bg-transparent group-hover:bg-[#BEEDE1]',
         ].join(' ')}
       />
       <span
@@ -40,7 +44,12 @@ const SideBarButton = ({ icon, label, state = 'default', onClick }: SideBarButto
           className={['w-7 h-7', active ? 'text-[#096c5b]' : 'text-[#2d3748]'].join(' ')}
           aria-hidden="true"
         />
-        <span className={['font-semibold text-[14px]', active ? 'text-[#096c5b]' : 'text-[#2d3748]'].join(' ')}>
+        <span
+          className={[
+            'font-semibold text-[14px]',
+            active ? 'text-[#096c5b]' : 'text-[#2d3748]',
+          ].join(' ')}
+        >
           {label}
         </span>
       </span>

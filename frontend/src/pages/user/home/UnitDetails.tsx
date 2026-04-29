@@ -1,27 +1,25 @@
-import { type FunctionComponent, useCallback, } from "react";
-import SideBar from "../../../components/user/SideBar";
-import { Icon } from "@iconify/react";
-import PropertyTabs from "../../../components/user/unitdetails/PropertyTabs";
-import ImageCarousel from "../../../components/user/unitdetails/ImageCarousel";
-import pic from "../../../../assets/landing_contact.webp";
-import pic2 from "../../../../assets/landing_listing.webp";
-import pic3 from "../../../../assets/landing_contact.webp";
-import AboutDetails from "../../../components/user/unitdetails/AboutDetails";
-import AmenetiesDetails from "../../../components/user/unitdetails/AmenetiesDetails";
-import RulesDetails from "../../../components/user/unitdetails/RulesDetails";
-import LocationDetails from "../../../components/user/unitdetails/LocationDetails";
-import ReviewDetails from "../../../components/user/unitdetails/ReviewDetails";
-import PropertyTab from "../../../components/user/unitdetails/PropertyTab";
-import { Link } from "react-router-dom";
+import { type FunctionComponent, useCallback } from 'react';
+import SideBar from '../../../components/user/SideBar';
+import { Icon } from '@iconify/react';
+import PropertyTabs from '../../../components/user/unitdetails/PropertyTabs';
+import ImageCarousel from '../../../components/user/unitdetails/ImageCarousel';
+import pic from '../../../../assets/landing_contact.webp';
+import pic2 from '../../../../assets/landing_listing.webp';
+import pic3 from '../../../../assets/landing_contact.webp';
+import AboutDetails from '../../../components/user/unitdetails/AboutDetails';
+import AmenetiesDetails from '../../../components/user/unitdetails/AmenetiesDetails';
+import RulesDetails from '../../../components/user/unitdetails/RulesDetails';
+import LocationDetails from '../../../components/user/unitdetails/LocationDetails';
+import ReviewDetails from '../../../components/user/unitdetails/ReviewDetails';
+import PropertyTab from '../../../components/user/unitdetails/PropertyTab';
+import { Link } from 'react-router-dom';
 const UnitDetails: FunctionComponent = () => {
   const gallery = [`${pic}`, `${pic2}`, `${pic3}`];
 
   const onArrowUpClick = useCallback(() => {
-    const anchor = document.querySelector(
-      "[data-scroll-to='searchBarContainer']",
-    );
+    const anchor = document.querySelector("[data-scroll-to='searchBarContainer']");
     if (anchor) {
-      anchor.scrollIntoView({ block: "start", behavior: "smooth" });
+      anchor.scrollIntoView({ block: 'start', behavior: 'smooth' });
     }
   }, []);
 
@@ -42,32 +40,18 @@ const UnitDetails: FunctionComponent = () => {
                     data-scroll-to="searchBarContainer"
                   >
                     <div className="h-6 flex items-center py-0 px-1 box-border gap-1.5">
-                      <div className="relative font-semibold shrink-0">
-                        Home
-                      </div>
-                      <Icon
-                        icon="iconamoon:arrow-right-2"
-                        className="w-6 h-6 rounded-[100px]"
-                      />
+                      <div className="relative font-semibold shrink-0">Home</div>
+                      <Icon icon="iconamoon:arrow-right-2" className="w-6 h-6 rounded-[100px]" />
                       <div className="relative font-semibold shrink-0">{`Pasalo Units `}</div>
-                      <Icon
-                        icon="iconamoon:arrow-right-2"
-                        className="w-6 h-6 rounded-[100px]"
-                      />
+                      <Icon icon="iconamoon:arrow-right-2" className="w-6 h-6 rounded-[100px]" />
                       <div className="w-[141px] flex items-center justify-center shrink-0">
-                        <div className="relative font-semibold">
-                          Women’s Dormitory
-                        </div>
+                        <div className="relative font-semibold">Women’s Dormitory</div>
                       </div>
                     </div>
                     <div className="w-[704px] rounded-xl bg-aliceblue overflow-hidden flex items-center py-2.5 px-6 box-border gap-2.5 text-dimgray font-inter">
-                      <Icon
-                        icon="material-symbols:search"
-                        className="w-6 h-6 rounded-[100px]"
-                      />
+                      <Icon icon="material-symbols:search" className="w-6 h-6 rounded-[100px]" />
                       <b className="relative">
-                        Search for Dorms, Apartments, or Locations (e.g. UPLB,
-                        Umali Subdivision)
+                        Search for Dorms, Apartments, or Locations (e.g. UPLB, Umali Subdivision)
                       </b>
                     </div>
                   </div>
@@ -95,8 +79,8 @@ const UnitDetails: FunctionComponent = () => {
                             </div>
                           </div>
                           <div className="w-[797.9px] h-num-42.8 relative text-num-10.7 tracking-num-0.02 font-semibold font-lora whitespace-pre-wrap flex items-center shrink-0 mt-[-5.3px]">
-                            University of the Philippines Los Banos | 0.5 km
-                            from UPLB Main Gate | Listed 3 days ago
+                            University of the Philippines Los Banos | 0.5 km from UPLB Main Gate |
+                            Listed 3 days ago
                           </div>
                         </div>
                         <div className="w-[363.7px] h-[57.1px] relative text-center text-[24px] text-white">
@@ -179,9 +163,7 @@ const UnitDetails: FunctionComponent = () => {
                             <div className="w-[276.3px] h-[13.4px] relative font-medium flex items-center shrink-0">
                               <span className="w-full">
                                 <span>{`Message to Landlord `}</span>
-                                <span className="text-num-10.7 text-silver">
-                                  (optional)
-                                </span>
+                                <span className="text-num-10.7 text-silver">(optional)</span>
                               </span>
                             </div>
                             <div className="w-num-259.3 h-[57.1px] relative text-num-10.7 text-silver">
@@ -241,11 +223,8 @@ const UnitDetails: FunctionComponent = () => {
                           <Link to="/applications">
                             <div className="w-full h-[42.8px] relative rounded-[8.91px] bg-darkslategray-200 flex items-center py-[0.9px] pl-[46.4px] pr-[55.3px] box-border gap-[2.7px] text-left text-[14.26px] text-white font-poppins">
                               <div className="h-[41px] w-[140px] relative font-medium flex items-center shrink-0">{`Submit Application `}</div>
-                              <Icon
-                                icon="formkit:arrowright"
-                                className="h-6 w-6"
-                              />
-                            </div>{" "}
+                              <Icon icon="formkit:arrowright" className="h-6 w-6" />
+                            </div>{' '}
                           </Link>
 
                           <div className="self-stretch h-[26.7px] relative text-num-10.7 font-lora text-dimgray text-center flex items-center justify-center shrink-0">
@@ -254,7 +233,7 @@ const UnitDetails: FunctionComponent = () => {
                             Your info is kept private until approved.
                           </div>
                         </div>
-                      </div>{" "}
+                      </div>{' '}
                     </div>
                     <div className="self-stretch flex items-start gap-[23.2px] text-center text-num-14.26 text-darkslategray-200 font-lora">
                       <div className="flex-1 flex flex-col items-start gap-[29.4px]">
@@ -316,26 +295,11 @@ const UnitDetails: FunctionComponent = () => {
                         </div>
                         <div className="w-[816px] h-[697px] flex flex-col items-start shrink-0">
                           <PropertyTabs>
-                            <PropertyTab
-                              text="ABOUT"
-                              element={<AboutDetails />}
-                            />
-                            <PropertyTab
-                              text="AMENTITIES"
-                              element={<AmenetiesDetails />}
-                            />
-                            <PropertyTab
-                              text="RULES"
-                              element={<RulesDetails />}
-                            />
-                            <PropertyTab
-                              text="LOCATION"
-                              element={<LocationDetails />}
-                            />
-                            <PropertyTab
-                              text="REVIEWS"
-                              element={<ReviewDetails />}
-                            />
+                            <PropertyTab text="ABOUT" element={<AboutDetails />} />
+                            <PropertyTab text="AMENTITIES" element={<AmenetiesDetails />} />
+                            <PropertyTab text="RULES" element={<RulesDetails />} />
+                            <PropertyTab text="LOCATION" element={<LocationDetails />} />
+                            <PropertyTab text="REVIEWS" element={<ReviewDetails />} />
                           </PropertyTabs>
                         </div>
                       </div>
@@ -424,9 +388,7 @@ const UnitDetails: FunctionComponent = () => {
                         <div className="self-stretch flex flex-col items-start gap-[19.6px] text-left text-[21.4px]">
                           <div className="self-stretch flex items-center py-0 px-[8.9px] gap-[39.2px]">
                             <div className="w-[191.7px] flex items-center justify-center">
-                              <b className="relative leading-[28.53px]">
-                                You may also like
-                              </b>
+                              <b className="relative leading-[28.53px]">You may also like</b>
                             </div>
                             <div className="h-[28.5px] w-[28.5px] relative flex items-center justify-center">
                               <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] shadow-[0px_0px_3.57px_rgba(0,0,0,0.25)] rounded-[50%] bg-white" />
@@ -519,10 +481,7 @@ const UnitDetails: FunctionComponent = () => {
                   <div className="w-[1070px] flex items-center gap-20 shrink-0">
                     <div className="flex items-center gap-4">
                       <div className="flex items-center gap-2">
-                        <img
-                          className="w-12 relative max-h-full object-cover"
-                          alt=""
-                        />
+                        <img className="w-12 relative max-h-full object-cover" alt="" />
                         <div className="flex items-center gap-3">
                           <div className="flex items-center gap-1">
                             <img className="h-5 w-5 relative" alt="" />

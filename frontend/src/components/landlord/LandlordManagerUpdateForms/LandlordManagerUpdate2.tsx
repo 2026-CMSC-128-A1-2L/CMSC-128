@@ -11,12 +11,18 @@ const UpdateManager2: FunctionComponent<Props> = ({ onClose }) => {
       <div className="flex flex-col items-center gap-[24px]">
         {/* Icon */}
         <div className="flex h-[100px] w-[100px] items-center justify-center rounded-full bg-[#e0f7f4]">
-          <Icon icon="solar:check-circle-bold" className="h-[64px] w-[64px] text-[#096c5b]" aria-hidden="true" />
+          <Icon
+            icon="solar:check-circle-bold"
+            className="h-[64px] w-[64px] text-[#096c5b]"
+            aria-hidden="true"
+          />
         </div>
 
         {/* Text */}
         <div className="flex flex-col items-center gap-[10px]">
-          <b className="font-['Inter',sans-serif] text-[24px] leading-[32px] text-black">Permissions Updated!</b>
+          <b className="font-['Inter',sans-serif] text-[24px] leading-[32px] text-black">
+            Permissions Updated!
+          </b>
           <p className="font-['Inter',sans-serif] text-[14px] leading-[20px] text-black">
             <span className="font-medium">We've notified </span>
             <b>Nathaniel Cunanan</b>

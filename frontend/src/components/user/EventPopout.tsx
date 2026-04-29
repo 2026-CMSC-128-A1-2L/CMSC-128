@@ -1,6 +1,6 @@
-import type { FunctionComponent } from "react";
-import { Icon } from "@iconify/react";
-import type { CalendarEvent } from "../../service/CalendarService";
+import type { FunctionComponent } from 'react';
+import { Icon } from '@iconify/react';
+import type { CalendarEvent } from '../../service/CalendarService';
 
 export type EventPopoutType = {
   className?: string;
@@ -8,66 +8,62 @@ export type EventPopoutType = {
   event: CalendarEvent;
 };
 
-const getEventIcon = (type: CalendarEvent["type"]) => {
+const getEventIcon = (type: CalendarEvent['type']) => {
   switch (type) {
-    case "booking":
-      return "ic:round-calendar-today";
-    case "billing":
-      return "ic:round-receipt";
-    case "move-in":
-      return "ic:round-home";
-    case "move-out":
-      return "ic:round-logout";
+    case 'booking':
+      return 'ic:round-calendar-today';
+    case 'billing':
+      return 'ic:round-receipt';
+    case 'move-in':
+      return 'ic:round-home';
+    case 'move-out':
+      return 'ic:round-logout';
     default:
-      return "ic:round-circle";
+      return 'ic:round-circle';
   }
 };
 
-const getEventColor = (type: CalendarEvent["type"]) => {
+const getEventColor = (type: CalendarEvent['type']) => {
   switch (type) {
-    case "booking":
-      return "#c00f0f";
-    case "billing":
-      return "#ff9800";
-    case "move-in":
-      return "#4caf50";
-    case "move-out":
-      return "#2196f3";
+    case 'booking':
+      return '#c00f0f';
+    case 'billing':
+      return '#ff9800';
+    case 'move-in':
+      return '#4caf50';
+    case 'move-out':
+      return '#2196f3';
     default:
-      return "#c00f0f";
+      return '#c00f0f';
   }
 };
 
-const EventPopout: FunctionComponent<EventPopoutType> = ({
-  className = "",
-  onClose,
-  event,
-}) => {
+const EventPopout: FunctionComponent<EventPopoutType> = ({ className = '', onClose, event }) => {
   const eventDate = new Date(event.date);
-  const formattedDate = eventDate.toLocaleDateString("en-US", {
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-    year: "numeric",
+  const formattedDate = eventDate.toLocaleDateString('en-US', {
+    weekday: 'long',
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
   });
-  const formattedTime = eventDate.toLocaleTimeString("en-US", {
-    hour: "2-digit",
-    minute: "2-digit",
+  const formattedTime = eventDate.toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
     hour12: true,
   });
 
-  const getTypeLabel = (type: CalendarEvent["type"]) => {
+  const getTypeLabel = (type: CalendarEvent['type']) => {
     switch (type) {
-      case "booking":
-        return "Visit Booking";
-      case "billing":
-        return "Billing Due";
-      case "move-in":
-        return "Move In";
-      case "move-out":
-        return "Move Out";
+      case 'booking':
+        return 'Visit Booking';
+      case 'billing':
+        return 'Billing Due';
+      case 'move-in':
+        return 'Move In';
+      case 'move-out':
+        return 'Move Out';
       default:
-        return "Event";
+        return 'Event';
     }
   };
 
@@ -87,18 +83,12 @@ const EventPopout: FunctionComponent<EventPopoutType> = ({
         color={getEventColor(event.type)}
       />
 
-      <div className="absolute top-6 left-20 text-lg font-semibold">
-        {getTypeLabel(event.type)}
-      </div>
-      <div className="absolute top-14 left-20 text-sm text-dimgray">
-        {event.title}
-      </div>
+      <div className="absolute top-6 left-20 text-lg font-semibold">{getTypeLabel(event.type)}</div>
+      <div className="absolute top-14 left-20 text-sm text-dimgray">{event.title}</div>
       <div className="absolute top-20 left-20 whitespace-pre-wrap text-num-12">
         {formattedDate} at {formattedTime}
       </div>
-      <div className="absolute top-28 left-20 text-num-12 text-gray">
-        ID: {event.referenceId}
-      </div>
+      <div className="absolute top-28 left-20 text-num-12 text-gray">ID: {event.referenceId}</div>
     </div>
   );
 };

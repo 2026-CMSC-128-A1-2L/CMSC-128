@@ -2,20 +2,14 @@ import type { FunctionComponent } from 'react';
 import DormMap from '../../utilities/DormMap';
 
 const LocationDetails: FunctionComponent = () => {
-
   //temp data
-  const dormData = { lat: 14.16670, lng: 121.23908, name: "UPLB" };
+  const dormData = { lat: 14.1667, lng: 121.23908, name: 'UPLB' };
 
   return (
     <div className="w-full relative flex flex-col items-start gap-[29px] text-center text-num-18 text-gray font-inter">
       <div className="self-stretch flex flex-col items-start py-2.5 px-5 shrink-0">
-
         <div className="h-[300px] w-full">
-          <DormMap
-            latitude={dormData.lat}
-            longitude={dormData.lng}
-            dormName={dormData.name}
-          />
+          <DormMap latitude={dormData.lat} longitude={dormData.lng} dormName={dormData.name} />
         </div>
       </div>
 

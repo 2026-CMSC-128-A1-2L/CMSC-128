@@ -5,7 +5,7 @@ import {
   routeAcceptInvite,
   routeDeclineInvite,
   routeGetInviteById,
-  routeDeleteInvite
+  routeDeleteInvite,
 } from './invite.controller';
 import { isLandlord, isLoggedIn } from '../../middleware';
 import { inviteFilter, isManagerOnly } from './invite.middleware';
@@ -46,14 +46,12 @@ router.post('/:inviteId/accept', isLoggedIn, isManagerOnly, routeAcceptInvite);
 // ============================================================================
 router.post('/:inviteId/decline', isLoggedIn, isManagerOnly, routeDeclineInvite);
 
-
 // ============================================================================
 // GET /api/invites/:inviteId
 //
 // Get a specific invite
 // ============================================================================
 router.get('/:inviteId', isLoggedIn, inviteFilter, routeGetInviteById);
-
 
 // ============================================================================
 // DELETE /api/invites/:inviteId

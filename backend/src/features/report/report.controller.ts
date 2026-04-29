@@ -5,7 +5,14 @@ import {
   ReportListingBodySchema,
   ReportUserBodySchema,
 } from 'shared';
-import { getReports, getReport, getMyReports, resolveReport, reportListing, reportUser } from './report.service';
+import {
+  getReports,
+  getReport,
+  getMyReports,
+  resolveReport,
+  reportListing,
+  reportUser,
+} from './report.service';
 
 export const routeGetReports: RequestHandler = async (req, res, next) => {
   const reports = await getReports();

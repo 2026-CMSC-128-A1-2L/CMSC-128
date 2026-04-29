@@ -1,5 +1,5 @@
-import UserDocumentCard from "./UserDocumentCard";
-import type { UserDocumentSlot } from "./UserDocumentsData";
+import UserDocumentCard from './UserDocumentCard';
+import type { UserDocumentSlot } from './UserDocumentsData';
 
 interface UserDocumentsListProps {
   documents: UserDocumentSlot[];
@@ -16,8 +16,7 @@ const UserDocumentsList = ({
   onEdit,
   onDelete,
 }: UserDocumentsListProps) => {
-  const getStatus = (id: string): "uploaded" | "missing" =>
-    uploads[id] ? "uploaded" : "missing";
+  const getStatus = (id: string): 'uploaded' | 'missing' => (uploads[id] ? 'uploaded' : 'missing');
 
   return (
     <>

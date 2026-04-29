@@ -17,7 +17,7 @@ export const getProfile = async (userId: mongoose.Types.ObjectId) => {
   if (!user) {
     throw new AppError(404, 'User not found');
   }
-  
+
   if (user.userType === 'Manager') {
     const facilities = (await HousingFacility.find({
       managers: { $elemMatch: { userId } },

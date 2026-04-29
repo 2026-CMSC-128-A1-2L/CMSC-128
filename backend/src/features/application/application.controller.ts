@@ -137,4 +137,3 @@ export const routeFinalizeApplication: ApplicationHandler = async (req, res, _ne
   if (!updatedApplication) throw new AppError(404, 'Application not found.');
   res.status(200).send(updatedApplication);
 };
-

@@ -7,7 +7,8 @@ interface MonthlyData {
   totalIncome: number;
 }
 
-{/*interface MonthToShow {
+{
+  /*interface MonthToShow {
   monthIndex: number;
   year: number;
 }
@@ -28,7 +29,8 @@ const _ALL_MONTHS = [
   'DEC',
 ];
 
-*/}
+*/
+}
 
 type TimeRange = '12' | '6';
 

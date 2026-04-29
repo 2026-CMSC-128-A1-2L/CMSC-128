@@ -37,7 +37,6 @@ const AddRoom: FunctionComponent<AddRoomProps> = ({ roomType }) => {
 
   return (
     <div className="w-full rounded-xl border border-whitesmoke overflow-hidden flex flex-col items-start justify-center py-3 px-8 gap-6 text-sm text-black font-inter">
-
       {/* Room entry rows */}
       {roomType.rooms.map((room, index) => (
         <RoomItem
@@ -57,7 +56,6 @@ const AddRoom: FunctionComponent<AddRoomProps> = ({ roomType }) => {
         <b className="relative">Add More Rooms</b>
         <Icon icon="material-symbols:add-rounded" className="w-4 h-4" />
       </div>
-
     </div>
   );
 };

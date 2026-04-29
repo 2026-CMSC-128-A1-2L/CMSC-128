@@ -1,6 +1,6 @@
-import { type FunctionComponent, useState } from "react";
-import { Icon } from "@iconify/react";
-import PortalPopup from "../../../components/general/PortalPopup";
+import { type FunctionComponent, useState } from 'react';
+import { Icon } from '@iconify/react';
+import PortalPopup from '../../../components/general/PortalPopup';
 
 export type SubmitReceiptType = {
   className?: string;
@@ -16,18 +16,18 @@ export type SubmitReceiptType = {
 };
 
 const SubmitReceipt: FunctionComponent<SubmitReceiptType> = ({
-  className = "",
+  className = '',
   isOpen = false,
   onClose,
-  dueDate = "",
+  dueDate = '',
   dueAmount = 0,
   onSubmit,
 }) => {
-  const [referenceNo, setReferenceNo] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState("");
+  const [referenceNo, setReferenceNo] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState('');
   const [isMethodDropdownOpen, setIsMethodDropdownOpen] = useState(false);
 
-  const paymentMethods = ["GCash", "Bank Transfer", "Cash", "Maya"];
+  const paymentMethods = ['GCash', 'Bank Transfer', 'Cash', 'Maya'];
 
   const handleSubmit = () => {
     if (onSubmit) {
@@ -108,15 +108,10 @@ const SubmitReceipt: FunctionComponent<SubmitReceiptType> = ({
                   onClick={() => setIsMethodDropdownOpen(!isMethodDropdownOpen)}
                   className="w-full rounded-num-8 bg-white border-whitesmoke-200 border-solid border-2 flex items-center justify-between p-3 cursor-pointer hover:border-teal transition-colors"
                 >
-                  <div
-                    className={paymentMethod ? "text-black" : "text-dimgray"}
-                  >
-                    {paymentMethod || "Payment Method Used"}
+                  <div className={paymentMethod ? 'text-black' : 'text-dimgray'}>
+                    {paymentMethod || 'Payment Method Used'}
                   </div>
-                  <Icon
-                    icon="mdi-light:chevron-down"
-                    className="h-5 w-5 text-gray-400"
-                  />
+                  <Icon icon="mdi-light:chevron-down" className="h-5 w-5 text-gray-400" />
                 </div>
 
                 {isMethodDropdownOpen && (
@@ -161,9 +156,7 @@ const SubmitReceipt: FunctionComponent<SubmitReceiptType> = ({
               onClick={handleSubmit}
               className="w-full rounded-num-12 bg-lightcyan overflow-hidden flex items-center justify-center p-3 transition-all duration-200 ease-in-out hover:bg-teal hover:text-white hover:scale-[1.02] active:scale-95 cursor-pointer group"
             >
-              <div className="font-semibold group-hover:text-white transition-colors">
-                Submit
-              </div>
+              <div className="font-semibold group-hover:text-white transition-colors">Submit</div>
             </button>
           </div>
         </div>

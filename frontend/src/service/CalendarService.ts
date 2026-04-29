@@ -1,8 +1,8 @@
-import axios from "axios";
-import { API_URL } from "./constant";
+import axios from 'axios';
+import { API_URL } from './constant';
 
 export type CalendarEvent = {
-  type: "booking" | "billing" | "move-in" | "move-out";
+  type: 'booking' | 'billing' | 'move-in' | 'move-out';
   date: string;
   title: string;
   referenceId: string;
@@ -13,29 +13,24 @@ export type GetCalendarResponse = {
 };
 
 export const CalendarService = {
-  async getCalendarEvents(
-    year: number,
-    month: number
-  ): Promise<GetCalendarResponse> {
+  async getCalendarEvents(year: number, month: number): Promise<GetCalendarResponse> {
     try {
       const response = await axios.get<GetCalendarResponse>(
-        `${API_URL}/api/calendar?year=${year}&month=${month}`
+        `${API_URL}/api/calendar?year=${year}&month=${month}`,
       );
       return response.data;
     } catch (error) {
-      console.error("Failed to fetch calendar events:", error);
+      console.error('Failed to fetch calendar events:', error);
       throw error;
     }
   },
 
   async getUpcomingEvents(): Promise<GetCalendarResponse> {
     try {
-      const response = await axios.get<GetCalendarResponse>(
-        `${API_URL}/api/calendar/upcoming`
-      );
+      const response = await axios.get<GetCalendarResponse>(`${API_URL}/api/calendar/upcoming`);
       return response.data;
     } catch (error) {
-      console.error("Failed to fetch upcoming events:", error);
+      console.error('Failed to fetch upcoming events:', error);
       throw error;
     }
   },
