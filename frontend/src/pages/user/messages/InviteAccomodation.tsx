@@ -45,7 +45,7 @@ const InviteAccomodation: FunctionComponent = () => {
 								</div>
 								<div className="flex items-center text-center text-[18px] sm:text-[20.87px] text-crimson mt-2 sm:mt-4 w-full justify-center">
 									<div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-[23.9px] w-full sm:w-auto">
-										<div 
+										<div
 											className="w-full sm:w-[148px] rounded-[17.89px] flex items-center justify-center py-2.5 sm:py-[11.9px] px-[35.8px] box-border cursor-pointer transition-transform hover:scale-105 active:scale-95 font-inter"
 											onClick={() => navigate(-1)}
 										>
