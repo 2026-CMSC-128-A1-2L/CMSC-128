@@ -1,8 +1,11 @@
-import { useState } from 'react';
-import { Icon } from '@iconify/react';
-import { useNavigate } from 'react-router-dom';
-import LandlordLayout from '../../../components/landlord/LandlordLayout';
-import { Link } from 'react-router-dom';
+import { useState } from "react";
+import { Icon } from "@iconify/react";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
+import LandlordLayout from "../../../components/landlord/LandlordLayout";
+import { BUILDINGS } from "../../../data/buildings";
+import type { Building } from "../../../data/buildings";
+
+// ─── Sub-components ───────────────────────────────────────────────────────────
 
 const Button = (props: {
   text: string;
@@ -22,36 +25,42 @@ const Button = (props: {
   );
 };
 
-const ListingCard = (props: { facilityName: string; listingName: string; image?: string }) => {
+const ListingCard = (props: {
+  facilityName: string;
+  listingName: string;
+  image?: string;
+}) => {
   const { facilityName, listingName, image } = props;
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
     <div
       className={`relative bg-aliceblue border-whitesmoke border-solid border box-border overflow-hidden flex flex-col items-start text-left text-black font-inter transition-all duration-300
-        ${isExpanded ? 'w-66 h-fit rounded-num-16 shadow-sm' : 'w-66 h-56 rounded-[15.31px]'}`}
+        ${isExpanded ? "w-66 h-fit rounded-num-16 shadow-sm" : "w-66 h-56 rounded-[15.31px]"}`}
     >
       <img className="w-66 h-30 object-cover" src={image} alt={facilityName} />
-
       <div className="w-full flex flex-col py-2 px-3 gap-2">
-        {/* title + rating + price */}
         <div className="w-full flex flex-col items-start gap-0">
           <div className="w-full h-fit flex items-start gap-1">
-            <b className="w-full relative flex items-center text-num-16">{listingName}</b>
+            <b className="w-full relative flex items-center text-num-16">
+              {listingName}
+            </b>
           </div>
         </div>
-
-        {/* location + expanded details + chevron */}
         <div className="w-full h-fit flex flex-col gap-1">
           <div className="w-full h-fit flex justify-center items-end">
             <button
               type="button"
               onClick={() => setIsExpanded(!isExpanded)}
               className="hover:scale-125 transition-transform flex items-center justify-center"
-              aria-label={isExpanded ? 'Collapse' : 'Expand'}
+              aria-label={isExpanded ? "Collapse" : "Expand"}
             >
               <Icon
-                icon={isExpanded ? 'bi:chevron-compact-up' : 'bi:chevron-compact-down'}
+                icon={
+                  isExpanded
+                    ? "bi:chevron-compact-up"
+                    : "bi:chevron-compact-down"
+                }
                 className="w-6 h-6 text-teal"
               />
             </button>
@@ -80,189 +89,158 @@ const TextField = (props: {
         id={id}
         value={value}
         disabled={disabled}
+        readOnly
       />
     </div>
   );
 };
 
-type Manager = {
-  name: string;
-  availability: string;
-};
-
-const ManagerList = (props: { managers: Manager[] }) => (
+const ManagerList = (props: { managers: Building["managers"] }) => (
   <div className="self-stretch h-38 overflow-hidden shrink-0 flex flex-col items-start py-2.5 px-0 box-border gap-2.5">
     <div className="self-stretch flex items-center">
       <b className="relative tracking-num--0_01">Managers</b>
     </div>
     <div className="self-stretch flex flex-col items-start gap-2 text-left text-[0.875rem] text-black">
       <table>
-        {props.managers.map((manager, index) => {
-          const { name, availability } = manager;
-
-          return (
-            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-            <div key={index} className="self-stretch flex items-center gap-2.5">
-              <div className="w-90 relative leading-6 font-medium flex items-center shrink-0">
-                {name}
-              </div>
-              <div className="relative leading-6 font-medium">{availability}</div>
+        {props.managers.map((manager, index) => (
+          // biome-ignore lint/suspicious/noArrayIndexKey: list is static
+          <div key={index} className="self-stretch flex items-center gap-2.5">
+            <div className="w-90 relative leading-6 font-medium flex items-center shrink-0">
+              {manager.name}
             </div>
-          );
-        })}
+            <div className="relative leading-6 font-medium">
+              {manager.availability}
+            </div>
+          </div>
+        ))}
       </table>
     </div>
   </div>
 );
 
-type Tenant = {
-  name: string;
-  roomNumber: string;
-};
-
-const TenantList = (props: { tenants: Tenant[] }) => (
+const TenantList = (props: { tenants: Building["tenants"] }) => (
   <div className="self-stretch overflow-hidden flex flex-col items-start py-2.5 px-0 gap-2.5">
     <div className="self-stretch flex items-center">
       <b className="relative tracking-num--0_01">Tenants</b>
     </div>
     <div className="self-stretch flex flex-col items-start gap-2 text-left text-[0.875rem] text-black">
       <table>
-        {props.tenants.map((tenant, index) => {
-          const { name, roomNumber } = tenant;
-
-          return (
-            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-            <div key={index} className="self-stretch flex items-center gap-2.5">
-              <div className="w-90 relative leading-6 font-medium flex items-center shrink-0">
-                {name}
-              </div>
-              <div className="relative leading-6 font-medium">{roomNumber}</div>
+        {props.tenants.map((tenant, index) => (
+          // biome-ignore lint/suspicious/noArrayIndexKey: list is static
+          <div key={index} className="self-stretch flex items-center gap-2.5">
+            <div className="w-90 relative leading-6 font-medium flex items-center shrink-0">
+              {tenant.name}
             </div>
-          );
-        })}
+            <div className="relative leading-6 font-medium">
+              {tenant.roomNumber}
+            </div>
+          </div>
+        ))}
       </table>
     </div>
   </div>
 );
 
-type BuildingInformation = {
-  id: string,
-  name: string;
-  buildingType: string;
-  status: string;
-  capacity: number;
-  location: string;
-  about: string;
-  photos: string[];
-  roomTypes: {
-    id: string;
-    name: string;
-    image: string;
-    status: 'pending' | 'approved';
-  }[];
-  managers: Manager[];
-  tenants: Tenant[];
-};
-
 const AddListingCard = () => (
-  <Link
-    to="/landlord/properties/new"
-    className="group flex self-stretch w-66 shadow-[0px_4px_4px_rgba(0,0,0,0.25)] rounded-num-10 bg-silver-100 border-silver-200 border-dashed border-2 box-border flex-col items-center justify-center py-4 px-8 text-center text-teal no-underline transition-all hover:bg-silver-200 hover:border-teal/50"
-  >
+  <div className="self-stretch w-66 shadow-[0px_4px_4px_rgba(0,0,0,0.25)] rounded-num-10 bg-silver-100 border-silver-200 border-dashed border-2 box-border flex flex-col items-center justify-center py-4 px-8 text-center text-teal">
     <div className="w-44 flex flex-col items-center gap-4">
       <Icon icon="material-symbols:add-rounded" className="w-15 h-15" />
       <div className="flex flex-col items-center gap-1">
-        <b>Add New Listing</b>
+        <b>Add New Building</b>
         <div className="text-sm leading-6 font-medium text-dimgray">
-          Add a new listing/room type under this building
+          Add a new property
         </div>
       </div>
     </div>
-  </Link>
+  </div>
 );
 
+// ─── Main Component ───────────────────────────────────────────────────────────
+
 const BuildingInfo = () => {
-  const [data, _setData] = useState<BuildingInformation>({
-    id: "1",
-    name: 'Two Sapphire Place',
-    buildingType: 'maganda',
-    status: 'Active',
-    capacity: 72,
-    location: 'Aa',
-    about: 'lorem ipsum bla bla type shi '.repeat(20),
-    photos: ['hi', 'hello', 'whar'],
-    roomTypes: [
-      {
-        id: '10',
-        name: '2 Pax - Aircon',
-        image: 'bye',
-        status: 'pending',
-      },
-      {
-        id: '11',
-        name: '2 Pax - Non-Aircon',
-        image: 'bye',
-        status: 'approved',
-      },
-      {
-        id: '12',
-        name: '1 Pax',
-        image: 'bye',
-        status: 'approved',
-      },
-    ],
-    managers: [
-      { name: 'qj', availability: 'mon-thurs' },
-      { name: 'qj', availability: 'mon-thurs' },
-    ],
-    tenants: [
-      { name: 'qj', roomNumber: '3A' },
-      { name: 'qj', roomNumber: '3B' },
-    ],
-  });
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { id } = useParams<{ id: string }>();
+
+  /**
+   * Prefer data passed via navigation state (from PropertiesCard click).
+   * Fall back to looking up by URL param so direct /landlord/properties/:id
+   * links still work (e.g. refresh, shared link).
+   */
+  const building: Building | undefined =
+    (location.state as Building) ?? BUILDINGS.find((b) => b.id === Number(id));
+
+  if (!building) {
+    return (
+      <LandlordLayout
+        activeSidebarItem="properties"
+        breadcrumbs={[{ label: "Properties", to: "/landlord/properties" }]}
+      >
+        <div className="flex items-center justify-center h-64 text-gray-500">
+          Building not found.
+        </div>
+      </LandlordLayout>
+    );
+  }
 
   const {
-    id,
     name,
     buildingType,
     status,
     capacity,
-    location,
+    address,
     about,
     photos,
     roomTypes,
     managers,
     tenants,
-  } = data;
+  } = building;
 
-  const pendingRooms = roomTypes.filter((x) => x.status === 'pending');
-  const approvedRooms = roomTypes.filter((x) => x.status === 'approved');
+  const pendingRooms = roomTypes.filter((r) => r.status === "pending");
+  const approvedRooms = roomTypes.filter((r) => r.status === "approved");
 
-  const navigate = useNavigate();
   return (
     <LandlordLayout
-      activeSidebarItem={'properties'}
-      breadcrumbs={[{ label: 'Properties', to: '/landlord/properties' }, { label: name }]}
+      activeSidebarItem="properties"
+      breadcrumbs={[
+        { label: "Properties", to: "/landlord/properties" },
+        { label: name },
+      ]}
     >
       <div className="w-full h-fit flex flex-col items-start gap-8 text-dimgray font-inter pr-20">
         <div className="w-full flex flex-col items-start justify-center">
+          {/* Page header */}
           <div className="w-full flex py-4 items-center gap-10 text-2xl text-gray border-b-2 border-b-whitesmoke">
             <b>{name}</b>
             <div className="flex items-center gap-4 text-center text-sm text-teal">
-              {/* TODO: correct navigation */}
-              <Button text="Edit Details" onClick={() => navigate(`/landlord/properties/edit/${id}`)}>
+              <Button
+                text="Edit Details"
+                onClick={() => navigate(`/landlord/properties/edit/${id}`)}
+              >
                 <Icon icon="iconamoon:edit" className="w-5 h-5" />
               </Button>
               <Button text="View As Student" onClick={() => {}}>
-                <Icon icon="iconamoon:eye-light" className="w-5 h-5"></Icon>
+                <Icon icon="iconamoon:eye-light" className="w-5 h-5" />
               </Button>
             </div>
           </div>
+
+          {/* Body */}
           <div className="self-stretch flex flex-col gap-6 pl-2 py-6">
-            <div className="text-lg text-teal font-bold">Building Information</div>
+            <div className="text-lg text-teal font-bold">
+              Building Information
+            </div>
+
+            {/* Fields row 1 */}
             <div className="w-full flex flex-col gap-4 text-sm text-dimgray">
               <div className="w-full flex items-start gap-4">
-                <TextField disabled className="flex-4" text="Name" id="name" value={name} />
+                <TextField
+                  disabled
+                  className="flex-4"
+                  text="Name"
+                  id="name"
+                  value={name}
+                />
                 <TextField
                   disabled
                   className="flex-3"
@@ -270,81 +248,98 @@ const BuildingInfo = () => {
                   id="building-type"
                   value={buildingType}
                 />
-                <TextField disabled className="flex-2" text="Status" id="status" value={status} />
+                <TextField
+                  disabled
+                  className="flex-2"
+                  text="Status"
+                  id="status"
+                  value={status}
+                />
                 <TextField
                   disabled
                   className="flex-1"
                   text="Capacity"
-                  id="Capacity"
+                  id="capacity"
                   value={capacity.toString()}
                 />
               </div>
+
+              {/* Fields row 2 */}
               <div className="w-full flex items-start gap-4">
                 <TextField
                   disabled
                   className="flex-1"
                   text="Location"
                   id="location"
-                  value={location}
+                  value={address}
                 />
               </div>
             </div>
+
+            {/* About */}
             <div className="min-h-40 flex flex-col items-start py-2.5 px-0 box-border gap-2.5 text-dimgray">
               <b>About</b>
               <textarea
                 disabled
+                readOnly
+                value={about}
                 className="self-stretch flex-1 rounded-lg bg-aliceblue border-whitesmoke-200 border-solid border flex flex-col items-start py-3 px-4 text-left text-sm text-slategray leading-6 font-medium"
-              >
-                {about}
-              </textarea>
+              />
             </div>
+
+            {/* Photos */}
             <div className="flex flex-col p-2.5 gap-2.5">
               <b>Photos</b>
               <div className="flex flex-wrap gap-2.5">
-                {photos.map((_x, index) => (
+                {photos.map((photo, index) => (
                   <div
-                    // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                     key={index}
-                    className="min-h-25 min-w-25 rounded-num-12 border-whitesmoke-200 border-solid border box-border overflow-hidden shrink-0 flex flex-col items-center justify-center p-2.5"
-                  ></div>
+                    className="min-h-25 min-w-25 rounded-num-12 border-whitesmoke-200 border-solid border box-border overflow-hidden shrink-0"
+                  >
+                    <img
+                      src={photo}
+                      alt={`${name} photo ${index + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
                 ))}
               </div>
             </div>
+
+            {/* Room Types */}
             <div className="self-stretch flex flex-col items-start justify-center gap-8">
               <div className="flex flex-col items-start gap-4">
                 <b className="relative tracking-num--0_01">Room Types</b>
                 <div className="w-full flex items-center justify-between gap-4 text-left text-black">
-                  {approvedRooms.map((listing) => {
-                    const { id, name: listingName, image } = listing;
-                    return (
-                      <ListingCard
-                        key={id}
-                        facilityName={name}
-                        listingName={listingName}
-                        image={image}
-                      />
-                    );
-                  })}
+                  {approvedRooms.map((listing) => (
+                    <ListingCard
+                      key={listing.id}
+                      facilityName={name}
+                      listingName={listing.name}
+                      image={listing.image}
+                    />
+                  ))}
                   <AddListingCard />
                 </div>
               </div>
-              <div className="flex flex-col items-start justify-center gap-3 text-left text-dimgray">
-                <b>Pending</b>
-                <div className="flex items-center gap-4 text-black">
-                  {pendingRooms.map((listing) => {
-                    const { id, name: listingName, image } = listing;
-                    return (
+
+              {pendingRooms.length > 0 && (
+                <div className="flex flex-col items-start justify-center gap-3 text-left text-dimgray">
+                  <b>Pending</b>
+                  <div className="flex items-center gap-4 text-black">
+                    {pendingRooms.map((listing) => (
                       <ListingCard
-                        key={id}
+                        key={listing.id}
                         facilityName={name}
-                        listingName={listingName}
-                        image={image}
+                        listingName={listing.name}
+                        image={listing.image}
                       />
-                    );
-                  })}
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
+
             <ManagerList managers={managers} />
             <TenantList tenants={tenants} />
           </div>
