@@ -176,7 +176,7 @@ const ProfileInfo = () => {
           </div>
           <div className="flex flex-col items-start gap-1">
             <b className="relative">Verification Status</b>
-            <b className="relative text-transparent !bg-clip-text [background:linear-gradient(180deg,_#5dc2a8_27.88%,_#0c8873_84.13%)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">
+            <b className="relative text-transparent bg-clip-text! [background:linear-gradient(180deg,#5dc2a8_27.88%,#0c8873_84.13%)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">
               Verified
             </b>
           </div>

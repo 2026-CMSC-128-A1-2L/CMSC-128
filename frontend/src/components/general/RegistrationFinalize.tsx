@@ -18,7 +18,7 @@ const ReadOnlyField: FunctionComponent<{
   value: string;
   placeholder?: string;
 }> = ({ icon, value, placeholder = '—' }) => (
-  <div className="flex-1 self-stretch rounded-num-12 bg-aliceblue border-whitesmoke border-solid border-[1px] overflow-hidden flex items-center py-num-10 px-3 gap-2.5">
+  <div className="flex-1 self-stretch rounded-num-12 bg-aliceblue border-whitesmoke border-solid border overflow-hidden flex items-center py-num-10 px-3 gap-2.5">
     <Icon icon={icon} className="h-6 w-6 shrink-0 text-dimgray" />
     <span className="text-sm font-medium text-black leading-6">{value || placeholder}</span>
   </div>
@@ -56,7 +56,7 @@ const RegistrationFinalize: FunctionComponent<RegistrationFinalizeProps> = ({
 
   return (
     <div className="flex-1 w-full relative overflow-hidden flex items-start justify-center text-center text-num-14 text-dimgray font-inter">
-      <div className="w-[620px] rounded-num-12 border-whitesmoke border-solid border-[1px] box-border overflow-hidden flex flex-col items-start pt-3 px-4 pb-4 gap-4">
+      <div className="w-[620px] rounded-num-12 border-whitesmoke border-solid border box-border overflow-hidden flex flex-col items-start pt-3 px-4 pb-4 gap-4">
 
         {/* Review banner */}
         <div className="self-stretch rounded-xl bg-lightcyan border border-teal-100 flex items-center px-4 py-3 gap-3 text-left mt-2">
@@ -69,7 +69,7 @@ const RegistrationFinalize: FunctionComponent<RegistrationFinalizeProps> = ({
         <div className="self-stretch flex flex-col items-start gap-3 px-num-10">
 
           {/* Full Name */}
-          <div className="self-stretch h-11 rounded-num-12 bg-aliceblue border-whitesmoke border-solid border-[1px] box-border overflow-hidden flex items-center py-0 px-3 gap-2.5">
+          <div className="self-stretch h-11 rounded-num-12 bg-aliceblue border-whitesmoke border-solid border box-border overflow-hidden flex items-center py-0 px-3 gap-2.5">
             <div className="overflow-hidden flex items-center p-1 shrink-0">
               <Icon icon="material-symbols:person-outline-rounded" className="h-6 w-6 text-dimgray" />
             </div>
@@ -90,7 +90,7 @@ const RegistrationFinalize: FunctionComponent<RegistrationFinalizeProps> = ({
 
           {/* Role */}
           {data.role && (
-            <div className="self-stretch rounded-num-12 bg-aliceblue border-whitesmoke border-solid border-[1px] overflow-hidden flex items-center py-num-10 px-3 gap-2.5">
+            <div className="self-stretch rounded-num-12 bg-aliceblue border-whitesmoke border-solid border overflow-hidden flex items-center py-num-10 px-3 gap-2.5">
               <Icon icon={ROLE_ICONS[data.role]} className="h-6 w-6 shrink-0 text-teal-700" />
               <span className="text-sm font-medium text-black leading-6">
                 {ROLE_LABELS[data.role]}

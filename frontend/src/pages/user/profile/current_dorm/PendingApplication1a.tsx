@@ -12,10 +12,10 @@ const PendingApplication1a: FunctionComponent = () => {
   return (
     <div className="w-full h-screen relative overflow-y-auto flex flex-col items-start isolate gap-2.5 text-left text-num-14 text-darkslategray-100 font-lora">
       <img
-        className="w-[1440px] h-[1024px] absolute !!m-[0 important] top-[0px] left-[0px] shrink-0 z-[0]"
+        className="w-[1440px] h-[1024px] absolute !!m-[0 important] top-0 left-0 shrink-0 z-0"
         alt=""
       />
-      <div className="w-[1440px] h-[1312px] overflow-hidden shrink-0 flex flex-col items-start z-[1]">
+      <div className="w-[1440px] h-[1312px] overflow-hidden shrink-0 flex flex-col items-start z-1">
         <div className="self-stretch flex-1 overflow-hidden flex flex-col items-start py-num-0 pl-num-0 pr-20">
           <div className="w-[1440px] flex-1 flex items-center shrink-0 pr-20 gap-8">
             <div className="self-stretch w-[200px] flex items-start">
@@ -79,7 +79,7 @@ const PendingApplication1a: FunctionComponent = () => {
                         </div>
                         <div className="flex flex-col items-start gap-1">
                           <b className="relative">Verification Status</b>
-                          <b className="relative text-transparent !bg-clip-text [background:linear-gradient(180deg,_#5dc2a8_27.88%,_#0c8873_84.13%)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">
+                          <b className="relative text-transparent bg-clip-text! [background:linear-gradient(180deg,#5dc2a8_27.88%,#0c8873_84.13%)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">
                             Verified
                           </b>
                         </div>
@@ -132,8 +132,8 @@ const PendingApplication1a: FunctionComponent = () => {
                         </div>
                       </div>
                       <div className="self-stretch rounded-num-16_38 overflow-hidden flex flex-col items-start py-[24.6px] px-[32.8px] text-num-14_34 text-white">
-                        <div className="rounded-num-16 border-whitesmoke border-solid overflow-hidden w-full rounded-num-16_38 border-solid border-[1px] flex flex-col items-start">
-                          <div className="w-full h-12 bg-darkslategray-200 border-black border-solid border-[1px] box-border overflow-hidden shrink-0 flex flex-col items-start justify-center py-num-0 px-[24.6px]">
+                        <div className="rounded-num-16 border-whitesmoke border-solid overflow-hidden w-full rounded-num-16_38 border-solid border flex flex-col items-start">
+                          <div className="w-full h-12 bg-darkslategray-200 border-black border-solid border box-border overflow-hidden shrink-0 flex flex-col items-start justify-center py-num-0 px-[24.6px]">
                             <div className="w-full flex justify-between py-[4.1px] px-num-0 box-border ">
                               <div className="text-num-16 w-20 relative font-medium flex items-center justify-center shrink-0">
                                 <b>No.</b>

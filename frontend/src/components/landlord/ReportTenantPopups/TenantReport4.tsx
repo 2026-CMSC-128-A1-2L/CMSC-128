@@ -60,7 +60,7 @@ const ReportTenant4: FunctionComponent = () => {
     <div className="relative rounded-tl-[32px] rounded-tr-num-0 rounded-b-num-0 bg-white w-full flex items-center text-left text-[32px] text-white font-poppins">
       <div className="w-[612px] flex flex-col items-center justify-center pt-0 px-0 pb-8 box-border gap-[42px]">
         <div className="self-stretch flex flex-col items-center">
-          <div className="self-stretch rounded-tl-[32px] rounded-tr-num-0 rounded-b-num-0 [background:linear-gradient(183.48deg,_#096c5b,_#16917c)] flex flex-col items-start justify-center py-3 pl-[57px] pr-8">
+          <div className="self-stretch rounded-tl-[32px] rounded-tr-num-0 rounded-b-num-0 [background:linear-gradient(183.48deg,#096c5b,#16917c)] flex flex-col items-start justify-center py-3 pl-[57px] pr-8">
             <div className="w-[533px] flex flex-col items-start justify-center pt-8 px-0 pb-2 box-border shrink-0">
               <b className="self-stretch relative">Report Tenant</b>
               <b className="self-stretch relative text-[18px] tracking-[-0.01em] font-inter text-aliceblue">
@@ -72,7 +72,7 @@ const ReportTenant4: FunctionComponent = () => {
           <div className="self-stretch flex flex-col items-start pt-8 px-12 pb-5 gap-12 text-num-14 text-dimgray font-inter">
             <div className="self-stretch flex flex-col items-start gap-3">
               <b className="self-stretch relative">Email Address</b>
-              <div className="self-stretch h-12 rounded-num-12 border-whitesmoke-200 border-solid border-[1px] box-border flex flex-col items-start justify-center py-1 px-4 text-slategray">
+              <div className="self-stretch h-12 rounded-num-12 border-whitesmoke-200 border-solid border box-border flex flex-col items-start justify-center py-1 px-4 text-slategray">
                 <div className="relative leading-6 font-medium">ncunanan@gmail.com</div>
               </div>
               <div className="self-stretch flex items-center justify-center py-0 px-2 text-[18px] text-black">
@@ -94,7 +94,7 @@ const ReportTenant4: FunctionComponent = () => {
                   </div>
                   <div className="h-6 w-6 relative">
                     <div
-                      className={`absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] shadow-[0px_0px_2px_rgba(0,_0,_0,_0.25)] rounded ${
+                      className={`absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] shadow-[0px_0px_2px_rgba(0,0,0,0.25)] rounded ${
                         isAllSelected ? 'bg-teal' : 'bg-whitesmoke-100'
                       }`}
                     />
@@ -130,7 +130,7 @@ const ReportTenant4: FunctionComponent = () => {
                         </div>
                         <div className="h-6 w-6 relative overflow-hidden shrink-0">
                           <div
-                            className={`absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] shadow-[0px_0px_2px_rgba(0,_0,_0,_0.25)] rounded ${
+                            className={`absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] shadow-[0px_0px_2px_rgba(0,0,0,0.25)] rounded ${
                               isChecked ? 'bg-teal' : 'bg-whitesmoke-100'
                             }`}
                           />

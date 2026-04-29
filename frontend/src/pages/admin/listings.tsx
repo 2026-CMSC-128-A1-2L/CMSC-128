@@ -1,27 +1,20 @@
-import NavBarAdmin from '../../components/admin/NavBarAdmin';
 import SideBarAdmin from '../../components/admin/SideBarAdmin';
 import AdminPageTransition from '../../components/admin/AdminPageTransition';
 import { Icon } from '@iconify/react';
 
 const tableHeaders = ['Property Name', 'Landlord', 'Date Submitted', 'Details'];
 
-const tableData = [
-  { name: 'MCNT Residences', landlord: 'John Doe', date: 'January 1, 2026' },
-  { name: 'MCNT Residences', landlord: 'John Doe', date: 'January 1, 2026' },
-  { name: 'MCNT Residences', landlord: 'John Doe', date: 'January 1, 2026' },
-  { name: 'MCNT Residences', landlord: 'John Doe', date: 'January 1, 2026' },
-  { name: 'MCNT Residences', landlord: 'John Doe', date: 'January 1, 2026' },
-  { name: 'MCNT Residences', landlord: 'John Doe', date: 'January 1, 2026' },
-  { name: 'MCNT Residences', landlord: 'John Doe', date: 'January 1, 2026' },
-  { name: 'MCNT Residences', landlord: 'John Doe', date: 'January 1, 2026' },
-  { name: 'MCNT Residences', landlord: 'John Doe', date: 'January 1, 2026' },
-];
+const tableData = Array.from({ length: 9 }, (_, index) => ({
+  id: `listing-${index + 1}`,
+  name: 'MCNT Residences',
+  landlord: 'John Doe',
+  date: 'January 1, 2026',
+}));
 
 function Listings() {
   return (
     <AdminPageTransition>
       <div className="relative -mx-[calc((100vw-100%)/2)] flex w-screen flex-col min-h-screen">
-        <NavBarAdmin />
         <div className="flex flex-1">
           <SideBarAdmin activeItem="listings" />
           <div className="flex-1 bg-white px-10 py-8">
@@ -59,8 +52,8 @@ function Listings() {
                     </tr>
                   </thead>
                   <tbody>
-                    {tableData.map((row, i) => (
-                      <tr key={i} className="border-b border-[#f0f0f0]">
+                    {tableData.map((row) => (
+                      <tr key={row.id} className="border-b border-[#f0f0f0]">
                         <td className="px-6 py-3 font-['Poppins'] text-[20px] font-medium text-black">
                           {row.name}
                         </td>
@@ -71,7 +64,10 @@ function Listings() {
                           {row.date}
                         </td>
                         <td className="px-6 py-3">
-                          <button className="cursor-pointer bg-[#024338] px-6 py-2 font-['Poppins'] text-[20px] font-bold text-white">
+                          <button
+                            type="button"
+                            className="cursor-pointer bg-[#024338] px-6 py-2 font-['Poppins'] text-[20px] font-bold text-white"
+                          >
                             View
                           </button>
                         </td>

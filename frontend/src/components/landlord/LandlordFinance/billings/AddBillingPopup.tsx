@@ -77,8 +77,8 @@ const AddBillingPopup: FunctionComponent<AddBillingPopupProps> = ({
       onOutsideClick={onClose}
       zIndex={100}
     >
-      <div className="relative w-full max-w-[612px] bg-white rounded-[32px] shadow-[0px_4px_20px_rgba(0,_0,_0,_0.15)] overflow-hidden">
-        <div className="bg-gradient-to-b from-[#096c5b] to-[#16917c] px-[40px] sm:px-[57px] pt-[30px] pb-[40px]">
+      <div className="relative w-full max-w-[612px] bg-white rounded-[32px] shadow-[0px_4px_20px_rgba(0,0,0,0.15)] overflow-hidden">
+        <div className="bg-linear-to-b from-[#096c5b] to-[#16917c] px-[40px] sm:px-[57px] pt-[30px] pb-[40px]">
           <b className="block text-[24px] sm:text-[32px] text-white mb-2">Add Billing</b>
           <b className="block text-[14px] sm:text-[18px] tracking-[-0.01em] font-inter text-white">
             Add a new billing for your tenant for {selectedMonth}!
@@ -91,7 +91,7 @@ const AddBillingPopup: FunctionComponent<AddBillingPopupProps> = ({
             <b className="block text-[12px] sm:text-[14px] font-inter text-darkslategray-100 mb-2">
               Room
             </b>
-            <div className="shadow-[0px_0px_5px_rgba(0,_0,_0,_0.25)] rounded-md bg-white h-10 w-full border border-whitesmoke-200">
+            <div className="shadow-[0px_0px_5px_rgba(0,0,0,0.25)] rounded-md bg-white h-10 w-full border border-whitesmoke-200">
               <select
                 value={selectedRoom}
                 onChange={(e) => handleRoomChange(e.target.value)}
@@ -112,7 +112,7 @@ const AddBillingPopup: FunctionComponent<AddBillingPopupProps> = ({
             <b className="block text-[12px] sm:text-[14px] font-inter text-darkslategray-100 mb-2">
               FULL NAME
             </b>
-            <div className="shadow-[0px_0px_5px_rgba(0,_0,_0,_0.25)] rounded-md bg-white h-10 w-full border border-whitesmoke-200">
+            <div className="shadow-[0px_0px_5px_rgba(0,0,0,0.25)] rounded-md bg-white h-10 w-full border border-whitesmoke-200">
               <input
                 type="text"
                 value={fullName}
@@ -129,7 +129,7 @@ const AddBillingPopup: FunctionComponent<AddBillingPopupProps> = ({
               <b className="block text-[12px] sm:text-[14px] font-inter text-darkslategray-100 mb-2">
                 RENT
               </b>
-              <div className="shadow-[0px_0px_5px_rgba(0,_0,_0,_0.25)] rounded-md bg-white h-10 w-full border border-whitesmoke-200">
+              <div className="shadow-[0px_0px_5px_rgba(0,0,0,0.25)] rounded-md bg-white h-10 w-full border border-whitesmoke-200">
                 <input
                   type="number"
                   value={rent}
@@ -143,7 +143,7 @@ const AddBillingPopup: FunctionComponent<AddBillingPopupProps> = ({
               <b className="block text-[12px] sm:text-[14px] font-inter text-darkslategray-100 mb-2">
                 UTILITIES
               </b>
-              <div className="shadow-[0px_0px_5px_rgba(0,_0,_0,_0.25)] rounded-md bg-white h-10 w-full border border-whitesmoke-200">
+              <div className="shadow-[0px_0px_5px_rgba(0,0,0,0.25)] rounded-md bg-white h-10 w-full border border-whitesmoke-200">
                 <input
                   type="number"
                   value={utilities}
@@ -160,7 +160,7 @@ const AddBillingPopup: FunctionComponent<AddBillingPopupProps> = ({
             <b className="block text-[12px] sm:text-[14px] font-inter text-darkslategray-100 mb-2">
               MISC. FEES
             </b>
-            <div className="shadow-[0px_0px_5px_rgba(0,_0,_0,_0.25)] rounded-md bg-white h-10 w-full border border-whitesmoke-200">
+            <div className="shadow-[0px_0px_5px_rgba(0,0,0,0.25)] rounded-md bg-white h-10 w-full border border-whitesmoke-200">
               <input
                 type="number"
                 value={miscFees}
@@ -175,7 +175,7 @@ const AddBillingPopup: FunctionComponent<AddBillingPopupProps> = ({
           <div className="flex flex-col sm:flex-row gap-4 justify-between">
             <button
               onClick={handleCancel}
-              className="w-full sm:w-[220px] h-10 rounded-md border-whitesmoke-200 border-solid border-[2px] bg-white text-crimson font-inter text-[12px] sm:text-[14px] font-medium hover:opacity-80 transition-opacity cursor-pointer"
+              className="w-full sm:w-[220px] h-10 rounded-md border-whitesmoke-200 border-solid border-2 bg-white text-crimson font-inter text-[12px] sm:text-[14px] font-medium hover:opacity-80 transition-opacity cursor-pointer"
             >
               CANCEL
             </button>

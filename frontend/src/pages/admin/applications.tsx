@@ -1,81 +1,22 @@
-import NavBarAdmin from '../../components/admin/NavBarAdmin';
 import SideBarAdmin from '../../components/admin/SideBarAdmin';
 import AdminPageTransition from '../../components/admin/AdminPageTransition';
 import { Icon } from '@iconify/react';
 
 const tableHeaders = ['Name', 'Age', 'Sex', 'Province', 'Classification', 'Details'];
 
-const tableData = [
-  {
-    name: 'Vicencio, Erik',
-    age: 22,
-    sex: 'Male',
-    province: 'Laguna',
-    classification: 'Renter',
-  },
-  {
-    name: 'Vicencio, Erik',
-    age: 22,
-    sex: 'Male',
-    province: 'Laguna',
-    classification: 'Renter',
-  },
-  {
-    name: 'Vicencio, Erik',
-    age: 22,
-    sex: 'Male',
-    province: 'Laguna',
-    classification: 'Renter',
-  },
-  {
-    name: 'Vicencio, Erik',
-    age: 22,
-    sex: 'Male',
-    province: 'Laguna',
-    classification: 'Renter',
-  },
-  {
-    name: 'Vicencio, Erik',
-    age: 22,
-    sex: 'Male',
-    province: 'Laguna',
-    classification: 'Renter',
-  },
-  {
-    name: 'Vicencio, Erik',
-    age: 22,
-    sex: 'Male',
-    province: 'Laguna',
-    classification: 'Renter',
-  },
-  {
-    name: 'Vicencio, Erik',
-    age: 22,
-    sex: 'Male',
-    province: 'Laguna',
-    classification: 'Renter',
-  },
-  {
-    name: 'Vicencio, Erik',
-    age: 22,
-    sex: 'Male',
-    province: 'Laguna',
-    classification: 'Renter',
-  },
-  {
-    name: 'Vicencio, Erik',
-    age: 22,
-    sex: 'Male',
-    province: 'Laguna',
-    classification: 'Renter',
-  },
-];
+const tableData = Array.from({ length: 9 }, (_, index) => ({
+  id: `application-${index + 1}`,
+  name: 'Vicencio, Erik',
+  age: 22,
+  sex: 'Male',
+  province: 'Laguna',
+  classification: 'Renter',
+}));
 
 function Applications() {
   return (
     <AdminPageTransition>
       <div className="relative -mx-[calc((100vw-100%)/2)] flex w-screen flex-col min-h-screen">
-        <NavBarAdmin />
         <div className="flex flex-1">
           <SideBarAdmin activeItem="applications" />
           <div className="flex-1 bg-white px-10 py-8">
@@ -113,8 +54,8 @@ function Applications() {
                     </tr>
                   </thead>
                   <tbody>
-                    {tableData.map((row, i) => (
-                      <tr key={i} className="border-b border-[#f0f0f0]">
+                    {tableData.map((row) => (
+                      <tr key={row.id} className="border-b border-[#f0f0f0]">
                         <td className="px-6 py-3 font-['Poppins'] text-[20px] font-medium text-black">
                           {row.name}
                         </td>
@@ -131,7 +72,10 @@ function Applications() {
                           {row.classification}
                         </td>
                         <td className="px-6 py-3">
-                          <button className="cursor-pointer bg-[#024338] px-6 py-2 font-['Poppins'] text-[20px] font-bold text-white">
+                          <button
+                            type="button"
+                            className="cursor-pointer bg-[#024338] px-6 py-2 font-['Poppins'] text-[20px] font-bold text-white"
+                          >
                             View
                           </button>
                         </td>

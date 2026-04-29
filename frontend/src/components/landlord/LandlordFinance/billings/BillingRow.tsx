@@ -31,10 +31,10 @@ const getStatusDisplay = (status: PaymentStatus): string => {
 const php = (n: number) => `₱${n.toFixed(2)}`;
 
 const statusGradients: Record<PaymentStatus, string> = {
-  paid: 'bg-gradient-to-b from-[#5dc2a8] to-[#0c8873]',
-  partially_paid: 'bg-gradient-to-t from-[#fa7900] to-[#ffc273]',
-  unpaid: 'bg-gradient-to-b from-[#c29722] to-[#f6b709]',
-  overdue: 'bg-gradient-to-b from-[#c00f0f] to-[#e44f4f]',
+  paid: 'bg-linear-to-b from-[#5dc2a8] to-[#0c8873]',
+  partially_paid: 'bg-linear-to-t from-[#fa7900] to-[#ffc273]',
+  unpaid: 'bg-linear-to-b from-[#c29722] to-[#f6b709]',
+  overdue: 'bg-linear-to-b from-[#c00f0f] to-[#e44f4f]',
 };
 
 const statusOptions: PaymentStatus[] = ['paid', 'partially_paid', 'unpaid', 'overdue'];
@@ -136,7 +136,7 @@ const BillingRow: FunctionComponent<BillingRowProps> = ({
           className={`w-[100px] rounded-lg ${
             hasStatus && selectedStatus
               ? `${statusGradients[selectedStatus]} flex items-center justify-center`
-              : 'bg-white border-whitesmoke-200 border-solid border-[1px]'
+              : 'bg-white border-whitesmoke-200 border-solid border'
           } py-[4.5px] px-2 font-inter cursor-pointer transition-all duration-300 hover:opacity-90 ${
             isChanging ? 'scale-95' : 'scale-100'
           }`}

@@ -149,7 +149,7 @@ const LandlordUnvalidatedTenantDetail = () => {
                     onClick={handleReject}
                     className="flex cursor-pointer items-center justify-center rounded-[16px] bg-[#f1f5f9] px-[16px] py-[12px] font-['Inter',sans-serif] text-[14px] font-bold transition-colors duration-200 hover:bg-[#e5edf4]"
                   >
-                    <span className="bg-gradient-to-b from-[#c00f0f] to-[#e44f4f] bg-clip-text text-transparent">
+                    <span className="bg-linear-to-b from-[#c00f0f] to-[#e44f4f] bg-clip-text text-transparent">
                       Reject
                     </span>
                   </button>

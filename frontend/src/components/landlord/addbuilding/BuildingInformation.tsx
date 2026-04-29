@@ -108,7 +108,7 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
         className="relative w-full flex flex-col items-start justify-center gap-2.5 text-center text-num-18 text-teal-200 font-inter"
       >
         <div className="w-[880px] flex flex-col items-start">
-          <div className="w-[880px] rounded-2xl bg-white border-whitesmoke border-solid border-[1px] box-border flex flex-col items-start py-8 px-12 gap-3">
+          <div className="w-[880px] rounded-2xl bg-white border-whitesmoke border-solid border box-border flex flex-col items-start py-8 px-12 gap-3">
 
             {/* ── Building Information ── */}
             <div className="self-stretch flex flex-col items-start gap-6">
@@ -120,7 +120,7 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
                   <div className="flex-1 flex flex-col items-start gap-3">
                     <b className="relative">Name</b>
                     <div className="self-stretch flex flex-col gap-1">
-                      <div className="self-stretch rounded-num-12 bg-aliceblue border-whitesmoke border-solid border-[1px] flex items-center py-3 px-num-16">
+                      <div className="self-stretch rounded-num-12 bg-aliceblue border-whitesmoke border-solid border flex items-center py-3 px-num-16">
                         <input
                           {...register('name', { required: 'Building name is required' })}
                           placeholder="Aa"
@@ -133,7 +133,7 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
                   <div className="flex-1 flex flex-col items-start gap-3">
                     <b className="self-stretch h-[15.2px] relative flex items-center shrink-0">Type of Building</b>
                     <div className="self-stretch flex flex-col gap-1">
-                      <div className="self-stretch h-12 rounded-num-12 bg-aliceblue border-whitesmoke border-solid border-[1px] box-border flex items-center px-4">
+                      <div className="self-stretch h-12 rounded-num-12 bg-aliceblue border-whitesmoke border-solid border box-border flex items-center px-4">
                         <select
                           {...register('typeOfBuilding', { required: 'Please select a building type' })}
                           className="flex-1 bg-transparent text-sm text-black outline-none font-medium appearance-none cursor-pointer"
@@ -153,7 +153,7 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
                 <div className="self-stretch flex flex-col items-start gap-3">
                   <b className="relative">Location</b>
                   <div className="self-stretch flex flex-col gap-1">
-                    <div className="self-stretch rounded-num-12 bg-aliceblue border-whitesmoke border-solid border-[1px] flex items-center py-3 px-num-16">
+                    <div className="self-stretch rounded-num-12 bg-aliceblue border-whitesmoke border-solid border flex items-center py-3 px-num-16">
                       <input
                         {...register('location', { required: 'Location is required' })}
                         placeholder="Aa"
@@ -175,7 +175,7 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
                 {...register('about', { required: 'Please provide a description' })}
                 placeholder="Aa"
                 rows={5}
-                className="self-stretch rounded-num-12 bg-aliceblue border-whitesmoke border-solid border-[1px] py-3 px-num-16 text-left text-num-14 text-slategray outline-none font-medium resize-none leading-num-24"
+                className="self-stretch rounded-num-12 bg-aliceblue border-whitesmoke border-solid border py-3 px-num-16 text-left text-num-14 text-slategray outline-none font-medium resize-none leading-num-24"
               />
               {errors.about && <span className="text-xs text-red-500">{errors.about.message}</span>}
             </div>
@@ -187,7 +187,7 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
               </div>
               <div className="self-stretch overflow-hidden flex items-start flex-wrap content-start py-num-10 px-0 gap-2">
                 {images.map((src, index) => (
-                  <div key={index} className="relative group h-[100px] w-[100px] rounded-num-12 border-whitesmoke border-solid border-[1px] overflow-hidden bg-gray-50 shrink-0">
+                  <div key={index} className="relative group h-[100px] w-[100px] rounded-num-12 border-whitesmoke border-solid border overflow-hidden bg-gray-50 shrink-0">
                     <img
                       src={src}
                       alt={`Building preview ${index + 1}`}
@@ -205,7 +205,7 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
                 ))}
                 <div
                   onClick={() => fileInputRef.current?.click()}
-                  className="h-[100px] w-[100px] rounded-num-12 border-whitesmoke border-solid border-[1px] box-border overflow-hidden shrink-0 flex flex-col items-center justify-center p-num-10 cursor-pointer hover:bg-gray-50 transition-colors text-slategray"
+                  className="h-[100px] w-[100px] rounded-num-12 border-whitesmoke border-solid border box-border overflow-hidden shrink-0 flex flex-col items-center justify-center p-num-10 cursor-pointer hover:bg-gray-50 transition-colors text-slategray"
                 >
                   <Icon icon="material-symbols:add-photo-alternate-outline" className="w-8 h-8" />
                 </div>
@@ -267,7 +267,7 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
                 </div>
               )}
               <div
-                className="rounded-num-12 bg-aliceblue border-whitesmoke border-solid border-[1px] flex items-center py-2 px-num-16 gap-2.5 text-left text-num-14 text-slategray cursor-pointer hover:bg-blue-100 transition-colors"
+                className="rounded-num-12 bg-aliceblue border-whitesmoke border-solid border flex items-center py-2 px-num-16 gap-2.5 text-left text-num-14 text-slategray cursor-pointer hover:bg-blue-100 transition-colors"
                 onClick={() => setActivePopup('add1')}
               >
                 <div className="relative leading-num-24 font-medium">Invite Managers</div>

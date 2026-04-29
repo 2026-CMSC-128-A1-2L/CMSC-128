@@ -77,10 +77,10 @@ const ContactUs: FunctionComponent = () => {
                           <div className="flex flex-col items-start gap-1">
                             <div className="w-[351px] h-[74px] relative">
                               <LogoLike className="absolute top-[-7px] left-[224px] w-[108px] h-[81px] object-cover shrink-0 fill-darkslategray" />
-                              <div className="absolute w-[calc(100%_-_244px)] top-[34px] left-[100px] flex items-center justify-center shrink-0">
+                              <div className="absolute w-[calc(100%-244px)] top-[34px] left-[100px] flex items-center justify-center shrink-0">
                                 Nest
                               </div>
-                              <b className="absolute w-[calc(100%_-_89px)] top-[0px] left-[11px] text-[28px] flex font-inter text-teal-200 text-left items-center shrink-0">
+                              <b className="absolute w-[calc(100%-89px)] top-0 left-[11px] text-[28px] flex font-inter text-teal-200 text-left items-center shrink-0">
                                 Help us build a better
                               </b>
                             </div>
@@ -98,23 +98,23 @@ const ContactUs: FunctionComponent = () => {
                           </div>
                         </div>
                       </div>
-                      <div className="flex-1 rounded-num-12 border-whitesmoke-200 border-solid border-[1px] overflow-hidden flex flex-col items-start pt-3 px-num-16 pb-num-16 gap-4 text-num-14 text-dimgray font-inter">
+                      <div className="flex-1 rounded-num-12 border-whitesmoke-200 border-solid border overflow-hidden flex flex-col items-start pt-3 px-num-16 pb-num-16 gap-4 text-num-14 text-dimgray font-inter">
                         <div className="self-stretch flex flex-col items-start">
                           <div className="self-stretch flex items-start p-num-10 gap-4">
-                            <div className="flex-1 rounded-num-12 bg-aliceblue border-whitesmoke-200 border-solid border-[1px] overflow-hidden flex items-start py-num-10 px-3">
+                            <div className="flex-1 rounded-num-12 bg-aliceblue border-whitesmoke-200 border-solid border overflow-hidden flex items-start py-num-10 px-3">
                               <div className="relative leading-num-24 font-medium">First Name</div>
                             </div>
-                            <div className="flex-1 rounded-num-12 bg-aliceblue border-whitesmoke-200 border-solid border-[1px] overflow-hidden flex items-start py-num-10 px-3">
+                            <div className="flex-1 rounded-num-12 bg-aliceblue border-whitesmoke-200 border-solid border overflow-hidden flex items-start py-num-10 px-3">
                               <div className="relative leading-num-24 font-medium">Last Name</div>
                             </div>
                           </div>
                           <div className="self-stretch flex items-start p-num-10">
-                            <div className="flex-1 rounded-num-12 bg-aliceblue border-whitesmoke-200 border-solid border-[1px] overflow-hidden flex items-start py-num-10 px-3">
+                            <div className="flex-1 rounded-num-12 bg-aliceblue border-whitesmoke-200 border-solid border overflow-hidden flex items-start py-num-10 px-3">
                               <div className="relative leading-num-24 font-medium">Email</div>
                             </div>
                           </div>
                           <div className="self-stretch flex items-start p-num-10">
-                            <div className="h-[120px] flex-1 rounded-num-12 bg-aliceblue border-whitesmoke-200 border-solid border-[1px] box-border overflow-hidden flex items-start py-num-10 px-3 gap-6">
+                            <div className="h-[120px] flex-1 rounded-num-12 bg-aliceblue border-whitesmoke-200 border-solid border box-border overflow-hidden flex items-start py-num-10 px-3 gap-6">
                               <div className="relative leading-num-24 font-medium">Message</div>
                               <div className="relative leading-num-24 font-medium">
                                 (max. of 500 characters)
@@ -137,17 +137,17 @@ const ContactUs: FunctionComponent = () => {
                     {/* CTA banner */}
                     <div className="w-full overflow-hidden flex flex-col items-start relative isolate gap-2.5 text-left text-[32px]">
                       <img
-                        className="w-[602px] h-[587px] absolute !!m-[0 important] top-[-110.38px] left-[0px] opacity-[0.7] z-[0] shrink-0"
+                        className="w-[602px] h-[587px] absolute !!m-[0 important] top-[-110.38px] left-0 opacity-[0.7] z-0 shrink-0"
                         alt=""
                       />
-                      <div className="self-stretch rounded-num-12 bg-teal-300 overflow-hidden flex items-center py-num-32 px-[72px] gap-2.5 z-[1] shrink-0">
+                      <div className="self-stretch rounded-num-12 bg-teal-300 overflow-hidden flex items-center py-num-32 px-[72px] gap-2.5 z-1 shrink-0">
                         <div className="h-[290px] flex-1 relative">
                           <img
                             className="absolute top-[46.62px] left-[-24px] rounded-num-12 w-[321.5px] h-[296.2px] object-contain shrink-0"
                             alt=""
                           />
                           <img
-                            className="absolute top-[-0.5px] left-[49px] shadow-[0px_4px_20px_rgba(0,_0,_0,_0.25)] rounded-num-12 w-[454.5px] h-[428px] object-contain shrink-0"
+                            className="absolute top-[-0.5px] left-[49px] shadow-[0px_4px_20px_rgba(0,0,0,0.25)] rounded-num-12 w-[454.5px] h-[428px] object-contain shrink-0"
                             alt=""
                           />
                         </div>
@@ -184,7 +184,7 @@ const ContactUs: FunctionComponent = () => {
                               </div>
                             </div>
                             <div className="self-stretch flex flex-col items-center justify-center text-num-18 text-white font-inter">
-                              <div className="rounded-[45px] [background:linear-gradient(99.18deg,_#5dc2a8_27.88%,_0c8873_88.15%)] flex items-center justify-center py-3 px-num-16 gap-1">
+                              <div className="rounded-[45px] [background:linear-gradient(99.18deg,#5dc2a8_27.88%,0c8873_88.15%)] flex items-center justify-center py-3 px-num-16 gap-1">
                                 <b className="relative">Find my spot</b>
                                 <Icon icon="gg:arrow-right" className="w-6 h-6 relative" />
                               </div>

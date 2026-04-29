@@ -57,9 +57,9 @@ const CurrentDorm: FunctionComponent = () => {
 
   return (
     <div className="w-full h-screen relative overflow-y-auto flex flex-col items-start isolate gap-2.5 text-left text-num-14 text-darkslategray-100 font-lora">
-      {/* <img className="w-[1440px] h-[1192px] absolute !!m-[0 important] top-[0px] left-[0px] shrink-0 z-[0]" alt="" /> */}
-      <div className="w-full max-w-[1440px] h-[1536px] overflow-hidden shrink-0 flex flex-col items-start z-[1] mx-auto">
-        {/* <div className="w-full max-w-[1440px] min-h-screen overflow-hidden flex flex-col items-start z-[1] mx-auto"></div> */}
+      {/* <img className="w-[1440px] h-[1192px] absolute !!m-[0 important] top-0 left-0 shrink-0 z-0" alt="" /> */}
+      <div className="w-full max-w-[1440px] h-[1536px] overflow-hidden shrink-0 flex flex-col items-start z-1 mx-auto">
+        {/* <div className="w-full max-w-[1440px] min-h-screen overflow-hidden flex flex-col items-start z-1 mx-auto"></div> */}
 
         <div className="self-stretch flex-1 overflow-hidden flex flex-col items-start">
           <div className="self-stretch flex-1 flex items-center">
@@ -67,7 +67,7 @@ const CurrentDorm: FunctionComponent = () => {
               <Sidebar />
             </div>
             <div className="h-[1112px] hidden flex-col items-center">
-              <div className="w-[106px] h-[924px] bg-white border-whitesmoke-200 border-solid border-[1px] box-border overflow-hidden shrink-0 flex flex-col items-center py-num-32 pl-num-32 pr-num-10" />
+              <div className="w-[106px] h-[924px] bg-white border-whitesmoke-200 border-solid border box-border overflow-hidden shrink-0 flex flex-col items-center py-num-32 pl-num-32 pr-num-10" />
             </div>
             <div className="self-stretch w-[1240px] flex flex-col items-start justify-between gap-0">
               <div className="self-stretch flex flex-col items-start py-num-0 pl-num-32 pr-20">
@@ -235,7 +235,7 @@ const CurrentDorm: FunctionComponent = () => {
                         </div>
                         <div className="flex flex-col items-start gap-1">
                           <b className="relative">Verification Status</b>
-                          <b className="relative text-transparent !bg-clip-text [background:linear-gradient(180deg,_#5dc2a8_27.88%,_#0c8873_84.13%)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">
+                          <b className="relative text-transparent bg-clip-text! [background:linear-gradient(180deg,#5dc2a8_27.88%,#0c8873_84.13%)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">
                             Verified
                           </b>
                         </div>
@@ -279,7 +279,7 @@ const CurrentDorm: FunctionComponent = () => {
                     {/* {<Switch />} */}
                     <div className="self-stretch flex flex-col items-start gap-3 shrink-0 text-[24px] text-teal-200">
                       <div className="w-[1128px] h-[520px] bg-white flex flex-col items-center justify-center">
-                        <div className="w-[916px] h-[520px] rounded-num-12 border-whitesmoke-200 border-solid border-[1px] box-border flex flex-col items-start">
+                        <div className="w-[916px] h-[520px] rounded-num-12 border-whitesmoke-200 border-solid border box-border flex flex-col items-start">
                           <img
                             className="w-[916px] relative rounded-t-num-12 rounded-b-none max-h-full object-cover"
                             alt=""
@@ -292,7 +292,7 @@ const CurrentDorm: FunctionComponent = () => {
                               </b>
                             </div>
                             <div className="flex items-center py-num-0 px-[26px] gap-3 shrink-0 text-[18px]">
-                              <div className="h-20 w-[280px] rounded-num-12 bg-white border-whitesmoke-200 border-solid border-[1px] box-border flex flex-col items-center">
+                              <div className="h-20 w-[280px] rounded-num-12 bg-white border-whitesmoke-200 border-solid border box-border flex flex-col items-center">
                                 <div className="self-stretch flex items-center justify-center py-num-24 px-num-10">
                                   <b className="relative tracking-[-0.01em]">
                                     Room 31
@@ -304,7 +304,7 @@ const CurrentDorm: FunctionComponent = () => {
                                   </div>
                                 </div>
                               </div>
-                              <div className="h-20 w-[280px] rounded-num-12 bg-white border-whitesmoke-200 border-solid border-[1px] box-border flex flex-col items-center">
+                              <div className="h-20 w-[280px] rounded-num-12 bg-white border-whitesmoke-200 border-solid border box-border flex flex-col items-center">
                                 <div className="self-stretch flex items-center justify-center py-num-24 px-num-10">
                                   <b className="relative tracking-[-0.01em]">
                                     1 Year
@@ -316,7 +316,7 @@ const CurrentDorm: FunctionComponent = () => {
                                   </div>
                                 </div>
                               </div>
-                              <div className="h-20 w-[280px] rounded-num-12 bg-white border-whitesmoke-200 border-solid border-[1px] box-border flex flex-col items-center">
+                              <div className="h-20 w-[280px] rounded-num-12 bg-white border-whitesmoke-200 border-solid border box-border flex flex-col items-center">
                                 <div className="self-stretch flex items-center justify-center py-num-24 px-num-10">
                                   <b className="relative tracking-[-0.01em]">
                                     May 18, 2026
@@ -330,7 +330,7 @@ const CurrentDorm: FunctionComponent = () => {
                               </div>
                             </div>
                             <div className="w-[916px] flex items-center justify-center py-num-10 px-num-0 box-border shrink-0 text-[12px]">
-                              <div className="h-10 w-[863px] rounded-num-12 border-whitesmoke-200 border-solid border-[1px] box-border flex items-center justify-center">
+                              <div className="h-10 w-[863px] rounded-num-12 border-whitesmoke-200 border-solid border box-border flex items-center justify-center">
                                 <a
                                   href="#"
                                   onClick={(e) => e.preventDefault()}
@@ -351,7 +351,7 @@ const CurrentDorm: FunctionComponent = () => {
                       </div>
                       <div className="self-stretch flex items-start justify-center pt-num-24 px-num-32 pb-20 gap-6 text-num-14 text-black">
                         {/* left sidebar */}
-                        <div className="h-[168px] w-[280px] rounded-2xl border-whitesmoke-200 border-solid border-[1px] box-border overflow-hidden shrink-0 flex flex-col items-start py-3 px-4">
+                        <div className="h-[168px] w-[280px] rounded-2xl border-whitesmoke-200 border-solid border box-border overflow-hidden shrink-0 flex flex-col items-start py-3 px-4">
                           <div className="self-stretch flex flex-col items-end py-1 px-0 gap-1">
                             {/* contract info */}
                             <div
@@ -445,7 +445,7 @@ const CurrentDorm: FunctionComponent = () => {
                         </div>
 
                         {/* right sidebar: contents */}
-                        <div className="h-[168px] w-[612px] rounded-lg border-whitesmoke-200 border-solid border-[1px] box-border overflow-hidden shrink-0 flex items-center px-8 text-left">
+                        <div className="h-[168px] w-[612px] rounded-lg border-whitesmoke-200 border-solid border box-border overflow-hidden shrink-0 flex items-center px-8 text-left">
                           {activeTab === "Contract Information" && (
                             <div className="flex-1 flex items-center justify-between py-3">
                               <div className="flex items-center gap-4">

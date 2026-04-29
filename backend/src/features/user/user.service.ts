@@ -22,10 +22,10 @@ export const createUser = async (params: CreateUserParams) => {
   const userResult = await User.findOne({
     emails: params.email,
     status: { $in: ['setup', 'verified', 'unverified'] },
-  });
+  }).lean();
 
   if (userResult) {
-    throw new AppError(409, 'User with this email already exists.');
+    return userResult;
   }
 
   const newUser = new User({

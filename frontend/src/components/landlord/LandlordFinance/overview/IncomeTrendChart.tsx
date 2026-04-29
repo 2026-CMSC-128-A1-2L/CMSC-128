@@ -48,7 +48,7 @@ const IncomeTrendChart: FunctionComponent = () => {
   };
 
   return (
-    <div className="w-full rounded-2xl bg-white border-whitesmoke-200 border-solid border-[1px] flex flex-col">
+    <div className="w-full rounded-2xl bg-white border-whitesmoke-200 border-solid border flex flex-col">
       <div className="self-stretch flex items-center justify-between py-4 px-6">
         <b className="h-6 relative tracking-[-0.01em] flex items-center text-[18px] text-gray font-inter">
           Income Trend

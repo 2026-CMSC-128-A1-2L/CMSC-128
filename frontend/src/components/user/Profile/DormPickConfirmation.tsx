@@ -39,7 +39,7 @@ const DormPickConfirmation: FunctionComponent<Props> = ({ onConfirm, onCancel })
             onClick={onCancel}
             className="w-full rounded-xl py-3 px-6 bg-transparent border-none cursor-pointer transition-all active:scale-95 flex items-center justify-center"
           >
-            <span className="text-sm font-bold leading-6 bg-gradient-to-b from-[#c00f0f] to-[#e44f4f] bg-clip-text text-transparent">
+            <span className="text-sm font-bold leading-6 bg-linear-to-b from-[#c00f0f] to-[#e44f4f] bg-clip-text text-transparent">
               Cancel
             </span>
           </button>
