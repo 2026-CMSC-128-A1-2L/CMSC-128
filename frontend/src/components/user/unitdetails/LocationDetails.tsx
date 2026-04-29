@@ -19,7 +19,7 @@ const LocationDetails: FunctionComponent = () => {
         </div>
       </div>
 
-      <div className="flex flex-col pt-20 px-5 text-left text-num-14 w-[793px]">
+      <div className="flex flex-col pt-8 px-5 text-left text-sm w-full text-num-14 w-[793px]">
         <div
           className="grid py-3 text-[16px] text-darkslategray font-lora"
           style={{ gridTemplateColumns: '2fr 1fr 1fr' }}

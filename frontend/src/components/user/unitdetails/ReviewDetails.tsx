@@ -35,22 +35,23 @@ const ReviewDetails: FunctionComponent = () => {
           <div className="self-stretch h-[52px] flex items-center py-2.5 px-num-20 box-border">
             <b className="relative tracking-num--0_01">Reviews</b>
           </div>
-          <div className="self-stretch flex flex-col items-start py-[9px] px-[46px] text-center text-[48px] text-darkslategray font-lora">
+          <div className="self-stretch flex flex-col items-start py-2 px-4 sm:px-10 text-center text-[48px] text-darkslategray font-lora">
             <RatingBreakdown overallScore={4.7} totalReviews={12} rows={ratingRows} />
           </div>
         </div>
 
-        <div className="w-[776px] flex flex-col items-start gap-[35px] text-num-12 text-silver font-lora">
+        <div className="w-full flex flex-col items-start gap-8 px-4 text-num-12 text-silver font-lora">
           {reviews.map((review) => (
             <ReviewCard key={review.name} {...review} />
           ))}
         </div>
 
-        <div className="self-stretch flex flex-col items-start py-2.5 px-num-20 text-[14px]">
-          <div className="self-stretch h-10 relative">
-            <div className="absolute h-full w-full top-0 right-0 bottom-0 left-0 shadow-[0px_0px_4px_rgba(0,0,0,0.25)] rounded-[10px] bg-white" />
-            <div className="absolute h-[70%] w-[27.06%] top-[15%] left-[36.47%] leading-6 font-medium flex items-center justify-center">
-              View all 12 reviews
+        <div className="self-stretch flex flex-col items-start py-2 px-16 text-[14px]">
+          <div className="self-stretch relative">
+            <div className="relative h-max w-full py-2 shadow-[0px_0px_4px_rgba(0,0,0,0.25)] rounded-[10px] bg-white">
+              <div className="w-full flex items-center justify-center">
+                View all 12 reviews
+              </div>
             </div>
           </div>
         </div>
