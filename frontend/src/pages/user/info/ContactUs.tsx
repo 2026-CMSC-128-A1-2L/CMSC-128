@@ -3,6 +3,7 @@ import LogoLike from '../../../../assets/logo_like.svg?react';
 import SideBar from '../../../components/user/SideBar';
 import { Icon } from '@iconify/react';
 import Footer from '../../../components/general/Footer';
+import Banner from '../../../components/general/Banner';
 
 const ContactUs: FunctionComponent = () => {
   return (
@@ -123,7 +124,7 @@ const ContactUs: FunctionComponent = () => {
                           </div>
                         </div>
                         <div className="self-stretch overflow-hidden flex items-center justify-center py-num-0 px-num-10 text-white">
-                          <div className="rounded-[45px] bg-darkslategray-200 flex items-center justify-center py-2 px-num-32 gap-2.5">
+                          <div className="rounded-[45px] bg-darkslategray-200 flex items-center justify-center py-2 px-num-32 gap-2.5 cursor-pointer hover:bg-teal-200 transition-colors">
                             <b className="relative">Give us a hoot</b>
                             <Icon
                               icon="material-symbols-light:owl-rounded"
@@ -133,65 +134,8 @@ const ContactUs: FunctionComponent = () => {
                         </div>
                       </div>
                     </div>
-
-                    {/* CTA banner */}
-                    <div className="w-full overflow-hidden flex flex-col items-start relative isolate gap-2.5 text-left text-[32px]">
-                      <img
-                        className="w-[602px] h-[587px] absolute !!m-[0 important] top-[-110.38px] left-0 opacity-[0.7] z-0 shrink-0"
-                        alt=""
-                      />
-                      <div className="self-stretch rounded-num-12 bg-teal-300 overflow-hidden flex items-center py-num-32 px-[72px] gap-2.5 z-1 shrink-0">
-                        <div className="h-[290px] flex-1 relative">
-                          <img
-                            className="absolute top-[46.62px] left-[-24px] rounded-num-12 w-[321.5px] h-[296.2px] object-contain shrink-0"
-                            alt=""
-                          />
-                          <img
-                            className="absolute top-[-0.5px] left-[49px] shadow-[0px_4px_20px_rgba(0,0,0,0.25)] rounded-num-12 w-[454.5px] h-[428px] object-contain shrink-0"
-                            alt=""
-                          />
-                        </div>
-                        <div className="w-[432px] overflow-hidden shrink-0 flex flex-col items-start p-num-10 box-border gap-6">
-                          <div className="self-stretch flex flex-col items-start gap-1">
-                            <div className="self-stretch flex items-center">
-                              <b className="flex-1 relative">{`Built for students, by students. `}</b>
-                            </div>
-                            <b className="self-stretch relative text-num-18 text-teal-200">{`Discover a community-backed way to find your next home in Los Baños with transparency and ease. `}</b>
-                          </div>
-                          <div className="self-stretch flex flex-col items-center justify-center gap-4 text-[12px] text-teal-200 font-lora">
-                            <div className="self-stretch flex flex-col items-center justify-center">
-                              <div className="flex items-center gap-[19px]">
-                                <div className="w-[42.1px] flex flex-col items-end">
-                                  <Icon icon="ic:twotone-search" className="w-11 h-11 relative" />
-                                  <div className="self-stretch h-[15px] relative tracking-[0.02em] font-semibold inline-block shrink-0">
-                                    Search
-                                  </div>
-                                </div>
-                                <Icon icon="gg:arrow-right" className="w-6 h-6 relative" />
-                                <div className="w-10 flex flex-col items-center justify-center gap-[5px] text-center">
-                                  <Icon icon="boxicons:calendar" className="w-11 h-11 relative" />
-                                  <div className="self-stretch relative tracking-[0.02em] font-semibold">
-                                    Book
-                                  </div>
-                                </div>
-                                <Icon icon="gg:arrow-right" className="w-6 h-6 relative" />
-                                <div className="w-[47.2px] flex flex-col items-center gap-[7px]">
-                                  <Icon icon="solar:home-linear" className="w-11 h-11 relative" />
-                                  <div className="self-stretch relative tracking-[0.02em] font-semibold">
-                                    Move In
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="self-stretch flex flex-col items-center justify-center text-num-18 text-white font-inter">
-                              <div className="rounded-[45px] [background:linear-gradient(99.18deg,#5dc2a8_27.88%,0c8873_88.15%)] flex items-center justify-center py-3 px-num-16 gap-1">
-                                <b className="relative">Find my spot</b>
-                                <Icon icon="gg:arrow-right" className="w-6 h-6 relative" />
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+                    <div className="w-full mb-12">
+                      <Banner />
                     </div>
                   </div>
                 </div>
