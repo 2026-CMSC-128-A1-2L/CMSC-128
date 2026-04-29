@@ -26,6 +26,7 @@ const STATS = [
 
 const PROPERTIES = [
   {
+    id: "1",
     name: "Two Sapphire Place",
     img: sapphire1,
     occupied: "18/24",
@@ -33,6 +34,7 @@ const PROPERTIES = [
     balance: "₱12,600.00",
   },
   {
+    id: "2",
     name: "One Sapphire Place",
     img: sapphire2,
     occupied: "20/24",
@@ -40,6 +42,7 @@ const PROPERTIES = [
     balance: "₱12,600.00",
   },
   {
+    id: "3",
     name: "Three Sapphire Place",
     img: sapphire3,
     occupied: "18/24",
@@ -275,9 +278,10 @@ const LandlordHomepage: FunctionComponent = () => {
               className="flex gap-[16px] overflow-x-auto scroll-smooth pb-[8px] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             >
               {PROPERTIES.map((p) => (
-                <div
+                <Link
                   key={p.name}
-                  className="flex shrink-0 flex-col overflow-hidden rounded-[10px] bg-white shadow-[0px_4px_20px_rgba(0,0,0,0.15)]"
+                  to={`/landlord/properties/building-info/${p.id}`} // Dynamic Route
+                  className="flex shrink-0 flex-col overflow-hidden rounded-[10px] bg-white shadow-[0px_4px_20px_rgba(0,0,0,0.15)] transition-transform hover:scale-[1.02]"
                   style={{ width: CARD_WIDTH }}
                 >
                   <img
@@ -344,19 +348,17 @@ const LandlordHomepage: FunctionComponent = () => {
                           {p.balance}
                         </b>
                       </div>
-                      <Link
-                        to="/landlord/properties"
-                        className="transition-opacity hover:opacity-70"
-                      >
+                      {/* Changed eye icon from Link to simple Icon since parent is now a Link */}
+                      <div className="transition-opacity hover:opacity-70">
                         <Icon
                           icon="solar:eye-bold"
                           className="h-[24px] w-[24px] text-[#096c5b]"
                           aria-hidden="true"
                         />
-                      </Link>
+                      </div>
                     </div>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           </section>

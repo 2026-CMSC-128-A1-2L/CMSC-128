@@ -146,9 +146,9 @@ const AddListingCard = () => (
     <div className="w-44 flex flex-col items-center gap-4">
       <Icon icon="material-symbols:add-rounded" className="w-15 h-15" />
       <div className="flex flex-col items-center gap-1">
-        <b>Add New Listing</b>
+        <b>Add New Building</b>
         <div className="text-sm leading-6 font-medium text-dimgray">
-          Add a new listing/room type under this building
+          Add a new property
         </div>
       </div>
     </div>
@@ -213,7 +213,10 @@ const BuildingInfo = () => {
           <div className="w-full flex py-4 items-center gap-10 text-2xl text-gray border-b-2 border-b-whitesmoke">
             <b>{name}</b>
             <div className="flex items-center gap-4 text-center text-sm text-teal">
-              <Button text="Edit Details" onClick={() => navigate("edit")}>
+              <Button
+                text="Edit Details"
+                onClick={() => navigate(`/landlord/properties/edit/${id}`)}
+              >
                 <Icon icon="iconamoon:edit" className="w-5 h-5" />
               </Button>
               <Button text="View As Student" onClick={() => {}}>
