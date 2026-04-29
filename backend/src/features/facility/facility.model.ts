@@ -70,7 +70,7 @@ export type HousingFacilityType = {
     value: string;
   }[];
   landmarkDistances: {
-    landmark: string;
+    name: string;
     linearDistance: number;
     walkingDistance: number;
   }[];
@@ -148,16 +148,16 @@ const HousingFacilitySchema = new mongoose.Schema<HousingFacilityType>(
     landmarkDistances: {
       type: [
         {
-          landmark: { type: String, required: true },
+          name: { type: String, required: true },
           linearDistance: { type: Number, default: 0 },
           walkingDistance: { type: Number, default: 0 },
         },
       ],
       default: [
-        { landmark: 'cem', linearDistance: 0, walkingDistance: 0 },
-        { landmark: 'fpark', linearDistance: 0, walkingDistance: 0 },
-        { landmark: 'upHc', linearDistance: 0, walkingDistance: 0 },
-        { landmark: 'upGate', linearDistance: 0, walkingDistance: 0 },
+        { name: 'ceat', linearDistance: 0, walkingDistance: 0 },
+        { name: 'fpark', linearDistance: 0, walkingDistance: 0 },
+        { name: 'upHc', linearDistance: 0, walkingDistance: 0 },
+        { name: 'upGate', linearDistance: 0, walkingDistance: 0 },
       ],
     },
   },

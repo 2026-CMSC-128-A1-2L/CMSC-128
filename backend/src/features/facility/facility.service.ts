@@ -13,6 +13,7 @@ import type mongoose from 'mongoose';
 import { getAllRentals } from '../rental/rental.service';
 import { getUnits } from '../unit/unit.service';
 import { getBillings } from '../billing/billing.service';
+import { KeyObject } from 'node:crypto';
 
 type FacilityFilters = {
   name?: string;
@@ -191,6 +192,14 @@ export const createFacility = async (
   landlordId: mongoose.Types.ObjectId,
   data: CreateFacilityArguments,
 ) => {
+  // Hashmap of pre coded landmarks
+  const LANDMARKS: Record<string, { lat: number; long: number }> = {
+    ceat: { lat: 14.161746553008518, long: 121.24764110813705 },
+    fpark: { lat: 14.160334434617004, long: 121.24223716765796 },
+    upHc: { lat: 14.162464352218754, long: 121.2386194946442 },
+    upGate: { lat: 14.167633749045807, long: 121.24324900998684 },
+  };
+
   if (
     data.applicationCloseDate &&
     data.applicationOpenDate &&
@@ -199,6 +208,45 @@ export const createFacility = async (
     throw new AppError(422, 'Application close date should not be before application open date.');
   }
 
+  // Distance Computation Functioncs
+  const toRadians = (value: number) => {
+    return (value * Math.PI) / 180;
+  };
+  // Use haversine formula
+  const getDistance = (lat1: number, long1: number, lat2: number, long2: number) => {
+    const r = 6371;
+    const dLat = toRadians(lat1 - lat2) ?? 0;
+    const dLong = toRadians(long1 - long2) ?? 0;
+
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(toRadians(lat1) ?? 0) *
+        Math.cos(toRadians(lat2) ?? 0) *
+        Math.sin(dLong / 2) *
+        Math.sin(dLong / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return r * c;
+  };
+
+  const getWalkingTime = (distance: number) => {
+    const walkingAvarage = 3.2;
+    return (distance / walkingAvarage) * 60;
+  };
+  // Calculate and map landmark distances
+  // map using the hashmap above
+  const landmarkDistances = Object.entries(LANDMARKS).map(([key, values]) => {
+    const distnance = getDistance(
+      values.lat,
+      values.long,
+      data.location?.coordinates?.lat ?? 0,
+      data.location?.coordinates?.long ?? 0,
+    );
+    return {
+      name: key,
+      linearDistance: distnance,
+      walkingDistance: getWalkingTime(distnance),
+    };
+  });
   const newFacility = new HousingFacility({
     landlordId,
     managers: [
@@ -219,8 +267,8 @@ export const createFacility = async (
 
     applicationCloseDate: data.applicationCloseDate,
     applicationOpenDate: data.applicationOpenDate,
-
     capacity: 0,
+    landmarkDistances: landmarkDistances,
   });
 
   const newFacilitySaved = await newFacility.save();
