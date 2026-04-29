@@ -218,7 +218,7 @@ const PaymentMethods: FunctionComponent<PaymentMethodsType> = ({
           </div>
         </div>
 
-        {/* Submit Button - Fixed at bottom */}
+        {/* Submit Button */}
         <div className="w-full shrink-0 pt-4 mt-2 border-t border-whitesmoke-200">
           <button
             onClick={handleSubmit}

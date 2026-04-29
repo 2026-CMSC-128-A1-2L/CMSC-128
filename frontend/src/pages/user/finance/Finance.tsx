@@ -1,8 +1,9 @@
+// frontend/src/pages/user/finance/Finance.tsx
 import { type FunctionComponent, useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
 import SideBar from "../../../components/user/SideBar";
 import Footer from "../../../components/general/Footer";
-import PaymentMethodsDropdown from "../../../components/user/finance/PaymentMethodsDropdown";
+import DownloadBillings from "../../../components/user/finance/DownloadBillings";
 import SubmitReceipt from "../../../components/user/finance/SubmitReceipt";
 import MonthlyExpensesChart from "../../../components/user/finance/MonthlyExpensesChart";
 import type {
@@ -35,14 +36,32 @@ const fetchCurrentBilling = async (): Promise<TenantBilling | null> => {
 };
 
 const fetchUpcomingPayments = async (): Promise<UpcomingPayment[]> => {
+  const currentDate = new Date();
+  const currentMonth = currentDate.toLocaleString('default', { month: 'long' });
+  const currentYear = currentDate.getFullYear();
+  
   return [
-    {
-      id: "1",
-      dueDate: "April 15, 2026",
-      amount: 4950,
+    { 
+      id: "1", 
+      dueDate: `${currentMonth} 15, ${currentYear} (Current)`, 
+      amount: 4950, 
       billingId: "billing_1",
+      isCurrent: true
     },
-    { id: "2", dueDate: "May 15, 2026", amount: 4950, billingId: "billing_2" },
+    { 
+      id: "2", 
+      dueDate: `May 15, ${currentYear}`, 
+      amount: 4950, 
+      billingId: "billing_2",
+      isCurrent: false
+    },
+    { 
+      id: "3", 
+      dueDate: `June 15, ${currentYear}`, 
+      amount: 4950, 
+      billingId: "billing_3",
+      isCurrent: false
+    },
   ];
 };
 
@@ -122,8 +141,10 @@ const TenantFinancePage: FunctionComponent = () => {
     referenceNo: string;
     paymentMethod: string;
     receiptFile: File | null;
+    accountName?: string;
   }) => {
     console.log("Submitting receipt for payment:", selectedPayment, data);
+    // Here you would make an API call to submit the payment
     handleCloseSubmitReceipt();
   };
 
@@ -190,7 +211,10 @@ const TenantFinancePage: FunctionComponent = () => {
                 <b className="text-xl md:text-2xl font-inter">
                   One Sapphire Place
                 </b>
-                <PaymentMethodsDropdown />
+                <DownloadBillings 
+                  billingId={currentBilling?._id} 
+                  month={new Date().toLocaleString('default', { month: 'long', year: 'numeric' })}
+                />
               </div>
               <div className="flex items-start gap-2 px-2">
                 <Icon
@@ -287,10 +311,16 @@ const TenantFinancePage: FunctionComponent = () => {
                   {upcomingPayments.map((payment) => (
                     <div
                       key={payment.id}
-                      className="rounded-lg border border-whitesmoke-200 flex flex-col sm:flex-row items-start sm:items-center justify-between py-3 px-3 gap-3"
+                      className="rounded-lg border border-whitesmoke-200 flex flex-col sm:flex-row items-start sm:items-center justify-between py-3 px-3 gap-3 transition-all duration-200 hover:shadow-md"
                     >
                       <div className="flex items-center gap-2.5">
-                        <div className="h-5 w-5 rounded-[4px] bg-gradient-to-b from-[#c29722] to-[#f6b709] shrink-0" />
+                        <div
+                          className={`h-5 w-5 rounded-[4px] shrink-0 ${
+                            payment.isCurrent
+                              ? "bg-gradient-to-b from-[#024338] to-[#096c5b]"
+                              : "bg-gradient-to-b from-[#c29722] to-[#f6b709]"
+                          }`}
+                        />
                         <div className="flex flex-col gap-1">
                           <div className="font-semibold">{payment.dueDate}</div>
                           <div className="text-[11px] font-semibold font-lora text-dimgray">
@@ -309,13 +339,13 @@ const TenantFinancePage: FunctionComponent = () => {
                 </div>
               </div>
 
-              {/* Right — Overview */}
+              {/* Right — Billing History */}
               <div className="w-full lg:w-[180px] shrink-0 rounded-2xl border border-whitesmoke-200 flex flex-col py-2.5 gap-2">
                 <div className="rounded-2xl bg-white p-3">
-                  <b className="text-base md:text-xl">Overview</b>
+                  <b className="text-base md:text-xl">Billing History</b>
                 </div>
                 <div className="flex flex-col gap-2.5 px-0">
-                  <b className="text-sm md:text-base px-2">Billing History</b>
+                  <b className="text-sm md:text-base px-2">Past Bills</b>
                   <div className="flex flex-col gap-2 px-2 md:px-3 text-xs">
                     {[
                       ["January 15, 2026", 4500],
@@ -324,7 +354,7 @@ const TenantFinancePage: FunctionComponent = () => {
                     ].map(([date, amt]) => (
                       <div
                         key={date as string}
-                        className="rounded-lg border border-whitesmoke-200 flex flex-col py-2 px-3 gap-1"
+                        className="rounded-lg border border-whitesmoke-200 flex flex-col py-2 px-3 gap-1 transition-all duration-200 hover:shadow-sm"
                       >
                         <div className="font-semibold">{date}</div>
                         <div className="text-[10px] font-semibold font-lora text-dimgray">
