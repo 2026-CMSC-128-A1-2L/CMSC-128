@@ -25,45 +25,7 @@ const getEventColor = (type: CalendarEvent["type"]) => {
   }
 };
 
-// Sample event data for demonstration
-const SAMPLE_EVENTS: CalendarEvent[] = [
-  {
-    type: 'booking',
-    date: '2026-04-05',
-    title: 'Property Viewing',
-    referenceId: 'bk001',
-  },
-  {
-    type: 'billing',
-    date: '2026-04-10',
-    title: 'Monthly Rent',
-    referenceId: 'bl001',
-  },
-  {
-    type: 'move-in',
-    date: '2026-04-15',
-    title: 'Move-In Day',
-    referenceId: 'mi001',
-  },
-  {
-    type: 'booking',
-    date: '2026-04-18',
-    title: 'Maintenance Check',
-    referenceId: 'bk002',
-  },
-  {
-    type: 'move-out',
-    date: '2026-04-22',
-    title: 'Move-Out',
-    referenceId: 'mo001',
-  },
-  {
-    type: 'billing',
-    date: '2026-04-25',
-    title: 'Payment Due',
-    referenceId: 'bl002',
-  },
-];
+
 
 const MainCalendarGrid: FunctionComponent<MainCalendarGridProps> = ({
   currentDate,
@@ -83,10 +45,6 @@ const MainCalendarGrid: FunctionComponent<MainCalendarGridProps> = ({
         setEvents(response.data);
       } catch (error) {
         console.error("Failed to load calendar events:", error);
-        // Use sample events as fallback
-        if (currentDate.getMonth() === 3 && currentDate.getFullYear() === 2026) {
-          setEvents(SAMPLE_EVENTS);
-        }
       }
     };
 
@@ -137,28 +95,9 @@ const MainCalendarGrid: FunctionComponent<MainCalendarGridProps> = ({
     year: "numeric",
   });
 
-  // Sample events for demonstration
-  const SAMPLE_EVENTS: CalendarEvent[] = [
-    { type: 'booking', date: '2026-04-05', title: 'Property Viewing', referenceId: 'booking-1' },
-    { type: 'billing', date: '2026-04-10', title: 'Billing Due', referenceId: 'billing-1' },
-    { type: 'move-in', date: '2026-04-15', title: 'Move In', referenceId: 'move-in-1' },
-    { type: 'booking', date: '2026-04-20', title: 'Lease Signing', referenceId: 'booking-2' },
-    { type: 'move-out', date: '2026-04-25', title: 'Move Out', referenceId: 'move-out-1' },
-  ];
-
-  // Use sample events if API failed
+  // Get events for a specific day from API data
   const getEventsForDayWithFallback = (day: number) => {
-    const events = getEventsForDay(day);
-    if (events.length === 0) {
-      // Check sample events as fallback
-      return SAMPLE_EVENTS.filter(event => {
-        const eventDate = new Date(event.date);
-        return eventDate.getDate() === day && 
-               eventDate.getMonth() === currentDate.getMonth() && 
-               eventDate.getFullYear() === currentDate.getFullYear();
-      });
-    }
-    return events;
+    return getEventsForDay(day);
   };
 
   return (

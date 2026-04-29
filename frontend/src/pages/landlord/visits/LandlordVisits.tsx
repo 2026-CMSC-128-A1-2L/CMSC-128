@@ -23,14 +23,8 @@ const Visits: FunctionComponent = () => {
   const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   const MONTH_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   
-  // Sample visit data - can be replaced with API data
-  const allVisits: VisitSlot[] = [
-    { id: '1', time: '10:30 AM', visitorName: 'Espinocilla', backgroundColor: 'bg-lightcyan', dayOfWeek: 0 },
-    { id: '2', time: '9:00 AM', visitorName: 'Revilla', backgroundColor: 'bg-azure', dayOfWeek: 1 },
-    { id: '3', time: '10:00 AM', visitorName: 'Caduyac', backgroundColor: 'bg-aliceblue', dayOfWeek: 2 },
-    { id: '4', time: '3:30 PM', visitorName: 'Doroja', backgroundColor: 'bg-lightcyan', dayOfWeek: 2 },
-    { id: '5', time: '11:00 AM', visitorName: 'Santos', backgroundColor: 'bg-azure', dayOfWeek: 5 },
-  ];
+  // Fetch visit data from API (currently empty, waiting for backend integration)
+  const allVisits: VisitSlot[] = [];
   
   const month = currentDate.getMonth();
   const year = currentDate.getFullYear();

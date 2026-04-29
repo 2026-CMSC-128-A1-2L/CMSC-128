@@ -17,9 +17,7 @@ const MyCalendar: FunctionComponent = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
 
   const openEventPopout = useCallback((event: CalendarEvent) => {
-    // Instead of showing individual event, show all events for that day
     const eventDate = new Date(event.date);
-    // Find all events for this date
     setSelectedDate(eventDate);
     setSelectedDayEvents([event]); // Will be populated with full day events in the popout
     setDayPopoutOpen(true);
