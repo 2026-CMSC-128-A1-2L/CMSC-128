@@ -1,26 +1,35 @@
 import { motion } from "framer-motion";
-import { type ReactNode, type FunctionComponent } from "react";
+import { type ReactNode } from "react";
 
-const animations = {
-  initial: { x: 10, opacity: 0 },
-  animate: { x: 0, opacity: 1 },
-  exit: { x: -10, opacity: 0 },
-};
-
-const PageTransition: FunctionComponent<{ children: ReactNode }> = ({ children }) => {
+export default function PageTransition({ children }: { children: ReactNode }) {
   return (
-    <motion.div
-      variants={animations}
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      transition={{
-        duration: 0.4,
-        ease: [0.25, 1, 0.5, 1]
-      }}    >
-      {children}
-    </motion.div>
-  );
-};
+    <>
+      {/* Your page */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.2 }}
+      >
+        {children}
+      </motion.div>
 
-export default PageTransition;
+      {/* BIG overlay animation (you WILL see this) */}
+      <motion.div
+        initial={{ x: "100%" }}
+        animate={{ x: "100%" }}
+        exit={{ x: "0%" }}
+        transition={{ duration: 0.5, ease: "easeInOut" }}
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100vw",
+          height: "100vh",
+          background: "black",
+          zIndex: 9999,
+        }}
+      />
+    </>
+  );
+}

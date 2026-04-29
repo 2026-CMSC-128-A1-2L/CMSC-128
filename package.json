@@ -32,5 +32,8 @@
   "bugs": {
     "url": "https://github.com/2026-CMSC-128-A1-2L/CMSC-128/issues"
   },
-  "homepage": "https://github.com/2026-CMSC-128-A1-2L/CMSC-128"
+  "homepage": "https://github.com/2026-CMSC-128-A1-2L/CMSC-128",
+  "dependencies": {
+    "framer-motion": "^12.38.0"
+  }
 }
