@@ -31,11 +31,16 @@ const ProfileInfo = () => {
   );
 
   const handleSaveAddress = () => {
+    const cleaned = homeAddress.trim().replace(/\s\s+/g, ' ');
+    setHomeAddress(cleaned);
     setIsEditingAddress(false);
   };
 
   // save changes and exit editing mode
   const handleSave = () => {
+    if (contactNumber.length !== 11) {
+    return;
+    }
     setIsEditing(false);
   };
 
@@ -111,10 +116,23 @@ const ProfileInfo = () => {
             </div>
             <div className="w-[350px] min-h-[32px] flex items-center">
               {isEditing ? (
-                <input
+               <input
                   type="text"
                   value={contactNumber}
-                  onChange={(e) => setContactNumber(e.target.value)}
+                  placeholder="09*********"
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    const onlyNums = val.replace(/[^0-9]/g, "");
+
+                    // Requirement: Must start with 09 and limit to 11 digits
+                    if (onlyNums.length === 0) {
+                      setContactNumber("");
+                    } else if (onlyNums.length === 1) {
+                      if (onlyNums === "0") setContactNumber("0");
+                    } else if (onlyNums.startsWith("09") && onlyNums.length <= 11) {
+                      setContactNumber(onlyNums);
+                    }
+                  }}
                   className="border-b border-[#096C5B] text-[14px] bg-transparent outline-none w-[200px] py-1"
                   onKeyDown={(e) => e.key === "Enter" && handleSave()}
                 />
@@ -153,7 +171,11 @@ const ProfileInfo = () => {
                 <input
                   type="text"
                   value={homeAddress}
-                  onChange={(e) => setHomeAddress(e.target.value)}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    const isValidChar = /^[a-zA-Z0-9\s.,\-#]*$/.test(val);
+                    if (isValidChar && val.length <= 100) setHomeAddress(val);
+                  }}
                   className="border-b border-[#096C5B] text-[14px] bg-transparent outline-none w-[300px] py-1 text-black"
                   onKeyDown={(e) => e.key === "Enter" && handleSaveAddress()}
                 />

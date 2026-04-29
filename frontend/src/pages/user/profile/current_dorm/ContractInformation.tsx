@@ -4,16 +4,9 @@ import VerifiedBadge from "../../../../../assets/verified_badge.svg";
 import DefaultAvatar from "../../../../../assets/default_avatar.svg";
 import { useState, useRef } from "react";
 import Footer from "../../../../components/general/Footer";
-// import Switch from "../../../../components/user/CurrentDormToVerificationSwitch";
 import Sidebar from "../../../../components/user/SideBar";
-import placeholder from "../../../../../assets/logo_atlas_text.svg";
-import { Link } from "react-router-dom";
 
 const CurrentDorm: FunctionComponent = () => {
-  // const _onContractInformationContainerClick = useCallback(() => {
-  //   // Add your code here
-  // }, []);
-  //
   const [profileImage, setProfileImage] = useState<string>(DefaultAvatar);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -30,7 +23,7 @@ const CurrentDorm: FunctionComponent = () => {
 
   // contact number editing state
   const [isEditing, setIsEditing] = useState(false);
-  const [contactNumber, setContactNumber] = useState("09*********");
+  const [contactNumber, setContactNumber] = useState("09123456789");
 
   // home address editing state
   const [isEditingAddress, setIsEditingAddress] = useState(false);
@@ -44,30 +37,26 @@ const CurrentDorm: FunctionComponent = () => {
 
   // save changes and exit editing mode
   const handleSave = () => {
+    if (contactNumber.length !== 11) {
+    return;
+    }
     setIsEditing(false);
   };
 
   // redact contact number except for first 2 digits
   const redactContact = (number: string) => {
+    if (!number) return "";
     if (number.length < 2) return number;
-    return number.substring(0, 2) + "*".repeat(number.length - 2);
+    return number.substring(0, 2) + "*".repeat(Math.max(0, number.length - 2));
   };
-
-  const [activeTab, setActiveTab] = useState("Contract Information");
 
   return (
     <div className="w-full h-screen relative overflow-y-auto flex flex-col items-start isolate gap-2.5 text-left text-num-14 text-darkslategray-100 font-lora">
-      {/* <img className="w-[1440px] h-[1192px] absolute !!m-[0 important] top-0 left-0 shrink-0 z-0" alt="" /> */}
       <div className="w-full max-w-[1440px] h-[1536px] overflow-hidden shrink-0 flex flex-col items-start z-1 mx-auto">
-        {/* <div className="w-full max-w-[1440px] min-h-screen overflow-hidden flex flex-col items-start z-1 mx-auto"></div> */}
-
         <div className="self-stretch flex-1 overflow-hidden flex flex-col items-start">
           <div className="self-stretch flex-1 flex items-center">
             <div className="self-stretch w-[200px] flex items-start">
               <Sidebar />
-            </div>
-            <div className="h-[1112px] hidden flex-col items-center">
-              <div className="w-[106px] h-[924px] bg-white border-whitesmoke-200 border-solid border box-border overflow-hidden shrink-0 flex flex-col items-center py-num-32 pl-num-32 pr-num-10" />
             </div>
             <div className="self-stretch w-[1240px] flex flex-col items-start justify-between gap-0">
               <div className="self-stretch flex flex-col items-start py-num-0 pl-num-32 pr-20">
@@ -79,13 +68,6 @@ const CurrentDorm: FunctionComponent = () => {
                       className="h-6 w-6 relative"
                     />
                     <div className="relative font-semibold">Current Dorm</div>
-                  </div>
-                  <div className="w-[704px] rounded-num-12 bg-aliceblue overflow-hidden shrink-0 hidden items-center py-num-10 px-num-24 box-border gap-2.5 text-dimgray font-inter">
-                    <img className="h-6 w-6 relative" alt="" />
-                    <b className="relative">
-                      Search for Dorms, Apartments, or Locations (e.g. UPLB,
-                      Umali Subdivision)
-                    </b>
                   </div>
                 </div>
                 <div className="self-stretch h-[1280px] rounded-2xl bg-white flex flex-col items-start gap-3 text-center text-dimgray font-inter">
@@ -111,14 +93,11 @@ const CurrentDorm: FunctionComponent = () => {
                         className="relative cursor-pointer group w-[200px] h-[200px]"
                         onClick={() => fileInputRef.current?.click()}
                       >
-                        {/* profile image*/}
                         <img
                           className="w-full h-full rounded-full object-cover transition-all duration-300 group-hover:blur-sm"
                           alt="Profile"
                           src={profileImage}
                         />
-
-                        {/* hover */}
                         <div className="absolute inset-0 flex items-center justify-center rounded-full transition-all duration-300">
                           <Icon
                             icon="iconamoon:edit"
@@ -126,8 +105,6 @@ const CurrentDorm: FunctionComponent = () => {
                             color="#096C5B"
                           />
                         </div>
-
-                        {/* input change */}
                         <input
                           type="file"
                           ref={fileInputRef}
@@ -144,7 +121,6 @@ const CurrentDorm: FunctionComponent = () => {
                         <div className="flex flex-col gap-1">
                           <div className="flex items-center gap-2">
                             <b className="relative">Contact number</b>
-
                             <button
                               onClick={() =>
                                 isEditing ? handleSave() : setIsEditing(true)
@@ -167,13 +143,30 @@ const CurrentDorm: FunctionComponent = () => {
                               <input
                                 type="text"
                                 value={contactNumber}
-                                onChange={(e) =>
-                                  setContactNumber(e.target.value)
-                                }
-                                className="border-b border-[#096C5B] text-[14px] bg-transparent outline-none w-[200px] py-1"
+                                onChange={(e) => {
+                                  // Filters for numbers only to keep data clean
+                                  const val = e.target.value;
+                                  const onlyNums = val.replace(/[^0-9]/g, "");
+
+                                  if (onlyNums.length === 0) {
+                                    setContactNumber("");
+                                    return;
+                                  }
+
+                                  if (onlyNums.length === 1) {
+                                    if (onlyNums === "0") setContactNumber(onlyNums);
+                                    return;
+                                  }
+
+                                  if (onlyNums.startsWith("09") && onlyNums.length <= 11) {
+                                    setContactNumber(onlyNums);
+                                  }
+                                }}
+                                className="border-b border-[#096C5B] text-[14px] bg-transparent outline-none w-[200px] py-1 text-black"
                                 onKeyDown={(e) =>
                                   e.key === "Enter" && handleSave()
                                 }
+                                autoFocus
                               />
                             ) : (
                               <b className="relative text-black py-1 text-left">
@@ -185,7 +178,6 @@ const CurrentDorm: FunctionComponent = () => {
                         <div className="flex flex-col items-start gap-1">
                           <div className="flex items-center gap-2">
                             <b className="relative">Home Address</b>
-
                             <button
                               onClick={() =>
                                 isEditingAddress
@@ -210,11 +202,20 @@ const CurrentDorm: FunctionComponent = () => {
                               <input
                                 type="text"
                                 value={homeAddress}
-                                onChange={(e) => setHomeAddress(e.target.value)}
+                                onChange={(e) => {
+                                  const val = e.target.value;
+                                  // Regex allows: letters, numbers, spaces, and . , - # 
+                                  // This blocks emojis and special characters like $ % ^ *
+                                  const isValidChar = /^[a-zA-Z0-9\s.,\-#]*$/.test(val);
+                                  if (isValidChar && val.length <= 100) {
+                                    setHomeAddress(val);
+                                  }
+                                }}
                                 className="border-b border-[#096C5B] text-[14px] bg-transparent outline-none w-[300px] py-1 text-black"
                                 onKeyDown={(e) =>
                                   e.key === "Enter" && handleSaveAddress()
                                 }
+                                autoFocus
                               />
                             ) : (
                               <b className="relative text-black py-1 text-left">
@@ -251,8 +252,6 @@ const CurrentDorm: FunctionComponent = () => {
                           <b className="relative">Rent Fee</b>
                           <div className="self-stretch flex items-center gap-8 text-black">
                             <b className="relative">Paid</b>
-
-                            {/* wala pa sha pupuntahan. to be added soon */}
                             <a
                               href="#"
                               onClick={(e) => e.preventDefault()}
@@ -276,15 +275,11 @@ const CurrentDorm: FunctionComponent = () => {
                     </div>
                   </div>
                   <div className="self-stretch h-[680px] flex flex-col items-start gap-12 text-white">
-                    {/* {<Switch />} */}
-                    <div className="self-stretch flex flex-col items-start gap-3 shrink-0 text-[24px] text-teal-200">
-                      
-                     
-                    </div>
+                    <div className="self-stretch flex flex-col items-start gap-3 shrink-0 text-[24px] text-teal-200"></div>
                   </div>
                 </div>
               </div>
-              {<Footer />}
+              <Footer />
             </div>
           </div>
         </div>

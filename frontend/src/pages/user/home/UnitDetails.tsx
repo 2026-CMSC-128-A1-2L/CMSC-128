@@ -60,16 +60,19 @@ const UnitDetails: FunctionComponent = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="w-[704px] rounded-xl bg-aliceblue overflow-hidden flex items-center py-2.5 px-6 box-border gap-2.5 text-dimgray font-inter">
-                      <Icon
-                        icon="material-symbols:search"
-                        className="w-6 h-6 rounded-[100px]"
-                      />
-                      <b className="relative">
-                        Search for Dorms, Apartments, or Locations (e.g. UPLB,
-                        Umali Subdivision)
-                      </b>
-                    </div>
+                    <div className="w-[704px] rounded-xl bg-aliceblue overflow-hidden flex items-center py-2 px-6 box-border gap-2.5 text-dimgray font-inter transition-all duration-300 border border-transparent focus-within:bg-white focus-within:shadow-[0_8px_30px_rgb(0,0,0,0.04)] focus-within:border-whitesmoke-200">
+  <Icon
+    icon="material-symbols:search"
+    className="w-6 h-6 shrink-0 text-dimgray/60"
+  />
+  
+  <input
+    type="text"
+    placeholder="Search for Dorms, Apartments, or Locations (e.g. UPLB, Umali Subdivision)"
+    className="w-full bg-transparent border-none outline-none py-1 text-num-14 font-semibold text-darkslategray-200 placeholder:text-dimgray/50 placeholder:font-normal"
+    onChange={(e) => console.log(e.target.value)} // Replace with your search logic
+  />
+</div>
                   </div>
                   <div className="self-stretch flex flex-col items-center gap-[28.5px] text-[32px] text-black font-inter">
                     <div className="self-stretch flex items-center gap-[25px]">
