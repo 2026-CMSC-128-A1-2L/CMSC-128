@@ -67,7 +67,7 @@ const RemoveTenantPopup = ({ targetName, isOpen, onClose }: RemoveTenantPopupPro
       ) : (
         <div className="flex w-[612px] flex-col items-center gap-[42px] rounded-tl-[32px] bg-white pb-[32px]">
           <div className="flex w-full flex-col">
-            <div className="rounded-tl-[32px] bg-gradient-to-b from-[#096c5b] to-[#16917c] px-[57px] py-[12px]">
+            <div className="rounded-tl-[32px] bg-linear-to-b from-[#096c5b] to-[#16917c] px-[57px] py-[12px]">
               <div className="w-full py-[32px] pb-[8px]">
                 <h2 className="font-['Poppins',sans-serif] text-[32px] font-bold text-white">
                   Remove Tenant

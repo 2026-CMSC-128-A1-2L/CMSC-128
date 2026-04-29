@@ -13,7 +13,7 @@ const CurrentDorm: FunctionComponent = () => {
       {/* {<Switch />} */}
       <div className="self-stretch flex flex-col items-start gap-3 shrink-0 text-[24px] text-teal-200">
         <div className="w-[1128px] h-[520px] bg-white flex flex-col items-center justify-center">
-          <div className="w-[916px] h-[520px] rounded-num-12 border-whitesmoke-200 border-solid border-[1px] box-border flex flex-col items-start">
+          <div className="w-[916px] h-[520px] rounded-num-12 border-whitesmoke-200 border-solid border box-border flex flex-col items-start">
             <img
               className="w-[916px] relative rounded-t-num-12 rounded-b-none max-h-full object-cover"
               alt=""
@@ -24,7 +24,7 @@ const CurrentDorm: FunctionComponent = () => {
                 <b className="relative leading-8 shrink-0">One Sapphire Place</b>
               </div>
               <div className="flex items-center py-num-0 px-[26px] gap-3 shrink-0 text-[18px]">
-                <div className="h-20 w-[280px] rounded-num-12 bg-white border-whitesmoke-200 border-solid border-[1px] box-border flex flex-col items-center">
+                <div className="h-20 w-[280px] rounded-num-12 bg-white border-whitesmoke-200 border-solid border box-border flex flex-col items-center">
                   <div className="self-stretch flex items-center justify-center py-num-24 px-num-10">
                     <b className="relative tracking-[-0.01em]">Room 31</b>
                   </div>
@@ -32,7 +32,7 @@ const CurrentDorm: FunctionComponent = () => {
                     <div className="relative tracking-[0.04em] font-semibold">UNIT</div>
                   </div>
                 </div>
-                <div className="h-20 w-[280px] rounded-num-12 bg-white border-whitesmoke-200 border-solid border-[1px] box-border flex flex-col items-center">
+                <div className="h-20 w-[280px] rounded-num-12 bg-white border-whitesmoke-200 border-solid border box-border flex flex-col items-center">
                   <div className="self-stretch flex items-center justify-center py-num-24 px-num-10">
                     <b className="relative tracking-[-0.01em]">1 Year</b>
                   </div>
@@ -40,7 +40,7 @@ const CurrentDorm: FunctionComponent = () => {
                     <div className="relative tracking-[0.04em] font-semibold">Contract</div>
                   </div>
                 </div>
-                <div className="h-20 w-[280px] rounded-num-12 bg-white border-whitesmoke-200 border-solid border-[1px] box-border flex flex-col items-center">
+                <div className="h-20 w-[280px] rounded-num-12 bg-white border-whitesmoke-200 border-solid border box-border flex flex-col items-center">
                   <div className="self-stretch flex items-center justify-center py-num-24 px-num-10">
                     <b className="relative tracking-[-0.01em]">May 18, 2026</b>
                   </div>
@@ -50,7 +50,7 @@ const CurrentDorm: FunctionComponent = () => {
                 </div>
               </div>
               <div className="w-[916px] flex items-center justify-center py-num-10 px-num-0 box-border shrink-0 text-[12px]">
-                <div className="h-10 w-[863px] rounded-num-12 border-whitesmoke-200 border-solid border-[1px] box-border flex items-center justify-center">
+                <div className="h-10 w-[863px] rounded-num-12 border-whitesmoke-200 border-solid border box-border flex items-center justify-center">
                   <a
                     href="#"
                     onClick={(e) => e.preventDefault()}
@@ -65,7 +65,7 @@ const CurrentDorm: FunctionComponent = () => {
           </div>
         </div>
         <div className="self-stretch flex items-start justify-center pt-num-24 px-num-32 pb-20 gap-6 text-num-14 text-black">
-          <div className="w-[280px] rounded-2xl border-whitesmoke-200 border-solid border-[1px] box-border overflow-hidden shrink-0 flex flex-col items-start py-3 px-4">
+          <div className="w-[280px] rounded-2xl border-whitesmoke-200 border-solid border box-border overflow-hidden shrink-0 flex flex-col items-start py-3 px-4">
             <div className="self-stretch flex flex-col items-end py-3 px-num-0 gap-2">
               <Link to="/contract-information" className="cursor-pointer hover:underline">
                 <div
@@ -108,7 +108,7 @@ const CurrentDorm: FunctionComponent = () => {
               </Link>
             </div>
           </div>
-          <div className="h-[168px] w-[612px] rounded-lg border-whitesmoke-200 border-solid border-[1px] box-border overflow-hidden shrink-0 flex items-center px-8 text-left" />
+          <div className="h-[168px] w-[612px] rounded-lg border-whitesmoke-200 border-solid border box-border overflow-hidden shrink-0 flex items-center px-8 text-left" />
         </div>
       </div>
     </div>

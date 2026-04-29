@@ -15,7 +15,7 @@ const RecenterMap = ({ lat, lng }: RecenterMapProps) => {
   };
 
   return (
-    <div className="absolute bottom-5 right-5 z-[1000]">
+    <div className="absolute bottom-5 right-5 z-1000">
       <button
         onClick={handleRecenter}
         className="bg-white p-3 rounded-full shadow-lg border border-slate-200 hover:bg-slate-50 transition-colors flex items-center justify-center group"

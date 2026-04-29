@@ -6,8 +6,24 @@ import UserLanding from './pages/UserLanding';
 import userRoutes from './routes/userRoutes';
 import adminRoutes from './routes/adminRoutes';
 import landlordRoutes from './routes/landlordRoutes';
+import { useAuthStore } from './store/useAuthStore';
+import { useEffect } from 'react';
 
 function App() {
+  const fetchMe = useAuthStore((state) => state.fetchMe);
+  const isInitialized = useAuthStore((state) => state.isInitialized);
+  const user = useAuthStore((state) => state.user);
+
+  useEffect(() => {
+    fetchMe();
+  }, [fetchMe]);
+
+  if (!isInitialized) {
+    return 'loading';
+  } else {
+    console.log(user);
+  }
+
   return (
     <Router>
       <Routes>

@@ -12,7 +12,7 @@ const DmsLanding: FunctionComponent = () => {
 >>>>>>> af025055f14b35dfeb8093ed004226db6b313833
   return (
     <div className="w-full h-screen flex items-start font-inter overflow-hidden bg-white">
-      <div className="sticky top-0 h-full w-fit flex-shrink-0 border-r border-whitesmoke">
+      <div className="sticky top-0 h-full w-fit shrink-0 border-r border-whitesmoke">
         <DmsSidebar />
       </div>
       <TutorialBubble show={showHelp} onClose={() => setShowHelp(false)} />
@@ -36,7 +36,7 @@ const DmsLanding: FunctionComponent = () => {
       </div>
       {/* ======= FLOATING ICON ========== */}
       <div
-        className="fixed bottom-10 right-10 z-[1000] cursor-pointer transition-all hover:scale-110 active:scale-95"
+        className="fixed bottom-10 right-10 z-1000 cursor-pointer transition-all hover:scale-110 active:scale-95"
         onClick={() => setShowHelp(!showHelp)}
       >
         <img

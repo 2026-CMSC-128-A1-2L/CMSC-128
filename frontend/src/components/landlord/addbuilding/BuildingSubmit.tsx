@@ -21,7 +21,7 @@ interface BuildingSubmitProps {
 const ReadOnlyField: FunctionComponent<{ label: string; value: string }> = ({ label, value }) => (
   <div className="flex-1 flex flex-col items-start gap-3">
     <b className="relative text-num-14 text-dimgray">{label}</b>
-    <div className="self-stretch rounded-num-12 bg-aliceblue border-whitesmoke border-solid border-[1px] flex items-center py-3 px-4 text-left text-num-14 text-slategray">
+    <div className="self-stretch rounded-num-12 bg-aliceblue border-whitesmoke border-solid border flex items-center py-3 px-4 text-left text-num-14 text-slategray">
       <span className="font-medium leading-6">{value || '—'}</span>
     </div>
   </div>
@@ -222,7 +222,8 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
     <>
       <div className="relative w-full flex flex-col items-start justify-center gap-2.5 text-center text-num-18 text-teal-200 font-inter">
         <div className="w-[880px] flex flex-col items-start">
-          <div className="w-[880px] rounded-2xl bg-white border-whitesmoke border-solid border-[1px] box-border flex flex-col items-start py-8 px-12 gap-3">
+          <div className="w-[880px] rounded-2xl bg-white border-whitesmoke border-solid border box-border flex flex-col items-start py-8 px-12 gap-3">
+
             {/* Review Banner */}
             <div className="self-stretch rounded-xl bg-lightcyan border border-teal-100 flex items-center px-4 py-3 gap-3 text-left mb-2">
               <Icon
@@ -280,12 +281,7 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
             {/* About */}
             <div className="self-stretch flex flex-col items-start py-num-10 px-0 gap-2.5 text-left">
               <b className="relative tracking-num--0_01">About</b>
-              <div className="self-stretch rounded-num-12 bg-aliceblue border-whitesmoke border-solid border-[1px] py-3 px-4 text-left text-num-14 text-slategray font-medium min-h-[120px]">
-<<<<<<< HEAD
-                {buildingInfo.about || (
-                  <span className="italic text-gray-300">No description provided.</span>
-                )}
-=======
+              <div className="self-stretch rounded-num-12 bg-aliceblue border-whitesmoke border-solid border py-3 px-4 text-left text-num-14 text-slategray font-medium min-h-[120px]">
                 {buildingInfo.about || <span className="italic text-gray-100">No description provided.</span>}
 >>>>>>> af025055f14b35dfeb8093ed004226db6b313833
               </div>

@@ -50,10 +50,10 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
   return (
     <div className="w-full h-screen relative overflow-y-auto flex flex-col items-start isolate gap-2.5 text-left text-num-14 text-darkslategray-100 font-lora">
       <img
-        className="w-[1440px] h-[1024px] absolute !!m-[0 important] top-[0px] left-[0px] shrink-0 z-[0]"
+        className="w-[1440px] h-[1024px] absolute !!m-[0 important] top-0 left-0 shrink-0 z-0"
         alt=""
       />
-      <div className="w-[1440px] h-[1512px] overflow-hidden shrink-0 flex flex-col items-start z-[1]">
+      <div className="w-[1440px] h-[1512px] overflow-hidden shrink-0 flex flex-col items-start z-1">
         <div className="self-stretch flex-1 overflow-hidden flex flex-col items-start py-num-0 pl-num-0 pr-20">
           <div className="w-[1440px] flex-1 flex items-center shrink-0">
             <div className="self-stretch w-[200px] flex items-start">
@@ -135,9 +135,7 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
                             <b className="relative">Current Dorm</b>
                             <b className="relative text-black">One Sapphire Place</b>
                             <div className="flex items-center gap-1 text-num-12">
-                              <div className="relative font-medium text-transparent !bg-clip-text [background:linear-gradient(180deg,_#c29722,_#f6b709)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">
-                                Pending
-                              </div>
+                              <div className="relative font-medium text-transparent bg-clip-text! [background:linear-gradient(180deg,#c29722,#f6b709)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">Pending</div>
                               <Icon icon="solar:arrow-right-up-linear" className="w-4" />
                             </div>
                           </div>
@@ -168,17 +166,14 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
                         </div>
                         <div className="self-stretch h-8 flex items-center justify-center gap-6 text-[24px] text-darkslategray-100">
                           <b className="relative leading-8">Finalize Your Application</b>
-                          <div
-                            className={`relative text-num-12 font-medium cursor-pointer border-b border-solid transition-all 
-                              ${
-                                uploadedCount === 0
-                                  ? 'opacity-30 pointer-events-none border-slategray text-slategray'
-                                  : 'text-transparent !bg-clip-text [background:linear-gradient(180deg,_#c00f0f,_#e44f4f)] border-[#c00f0f] hover:opacity-80'
-                              }`}
-                            onClick={uploadedCount > 0 ? onCancelClick : undefined}
-                          >
-                            Cancel
-                          </div>
+                          <div className={`relative text-num-12 font-medium cursor-pointer border-b border-solid transition-all 
+                              ${uploadedCount === 0 
+                              ? "opacity-30 pointer-events-none border-slategray text-slategray" 
+                              : "text-transparent bg-clip-text! [background:linear-gradient(180deg,#c00f0f,#e44f4f)] border-[#c00f0f] hover:opacity-80"
+                                    }`}
+                              onClick={uploadedCount > 0 ? onCancelClick : undefined}>
+                                  Cancel
+                            </div>
                         </div>
                       </div>
 
@@ -217,14 +212,12 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
                       {/* Document 1: Official University ID */}
                       <div className="self-stretch flex flex-col items-center justify-center py-num-0 px-num-32 text-left">
                         {!isIdUploaded ? (
-                          <div className="w-[916px] rounded-num-16 bg-white border-whitesmoke border-solid border-[1px] box-border overflow-hidden flex flex-col items-start justify-center py-num-10 px-num-32 gap-2.5">
+                          <div className="w-[916px] rounded-num-16 bg-white border-whitesmoke border-solid border box-border overflow-hidden flex flex-col items-start justify-center py-num-10 px-num-32 gap-2.5">
                             <div className="self-stretch flex items-center justify-between pr-6">
                               <div className="flex-1 flex items-center gap-4">
                                 <b className="relative">Official University ID</b>
                                 <div className="h-8 w-24 rounded-num-16 bg-white flex items-center justify-center text-center">
-                                  <b className="relative text-transparent !bg-clip-text [background:linear-gradient(180deg,_#c00f0f,_#e44f4f)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">
-                                    Required
-                                  </b>
+                                  <b className="relative text-transparent bg-clip-text! [background:linear-gradient(180deg,#c00f0f,#e44f4f)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">Required</b>
                                 </div>
                               </div>
                               <div className="w-[72px] flex items-center gap-6">
@@ -235,10 +228,7 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
                                 />
                               </div>
                             </div>
-                            <div
-                              className="w-[852px] h-[88px] rounded-num-16 border-dimgray border-dashed border-[1px] box-border overflow-hidden shrink-0 flex items-center py-num-12 px-4 text-black cursor-pointer"
-                              onClick={() => setIsIdUploaded(true)}
-                            >
+                            <div className="w-[852px] h-[88px] rounded-num-16 border-dimgray border-dashed border box-border overflow-hidden shrink-0 flex items-center py-num-12 px-4 text-black cursor-pointer" onClick={() => setIsIdUploaded(true)}>
                               <div className="h-16 flex items-center gap-6">
                                 <Icon icon="icons8:upload-2" className="h-16 w-16 relative" />
                                 <div className="flex flex-col items-start justify-center gap-2">
@@ -251,7 +241,7 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
                             </div>
                           </div>
                         ) : (
-                          <div className="w-[916px] rounded-2xl bg-white border-whitesmoke border-solid border-[1px] box-border overflow-hidden flex flex-col items-start justify-center py-2.5 px-8 gap-2.5 font-inter text-sm text-darkslategray">
+                          <div className="w-[916px] rounded-2xl bg-white border-whitesmoke border-solid border box-border overflow-hidden flex flex-col items-start justify-center py-2.5 px-8 gap-2.5 font-inter text-sm text-darkslategray">
                             <div className="self-stretch flex items-center justify-between pr-6">
                               <div className="flex-1 flex items-center gap-4">
                                 <b className="relative">Official University ID</b>
@@ -283,19 +273,12 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
                       {/* Document 2: Parental Consent Form */}
                       <div className="self-stretch flex flex-col items-center justify-center py-num-0 px-num-32 mt-4 text-left">
                         {!isConsentUploaded ? (
-                          <div className="w-[916px] rounded-num-16 bg-white border-whitesmoke border-solid border-[1px] box-border overflow-hidden flex flex-col items-start justify-center py-num-10 px-num-32 gap-2.5">
+                          <div className="w-[916px] rounded-num-16 bg-white border-whitesmoke border-solid border box-border overflow-hidden flex flex-col items-start justify-center py-num-10 px-num-32 gap-2.5">
                             <div className="self-stretch flex items-center justify-between pr-6">
                               <div className="flex-1 flex items-center gap-6">
                                 <b className="relative">Parental Consent Form</b>
-                                <div className="h-8 w-24 rounded-num-16 bg-white flex items-center justify-center text-center">
-                                  <b className="relative text-transparent !bg-clip-text [background:linear-gradient(180deg,_#c00f0f,_#e44f4f)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">
-                                    Required
-                                  </b>
-                                </div>
-                                <div className="flex items-center gap-1 text-num-12 text-teal">
-                                  <b>Download Form</b>
-                                  <Icon icon="material-symbols:download-rounded" />
-                                </div>
+                                <div className="h-8 w-24 rounded-num-16 bg-white flex items-center justify-center text-center"><b className="relative text-transparent bg-clip-text! [background:linear-gradient(180deg,#c00f0f,#e44f4f)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">Required</b></div>
+                                <div className="flex items-center gap-1 text-num-12 text-teal"><b>Download Form</b><Icon icon="material-symbols:download-rounded" /></div>
                               </div>
                               <div className="flex items-center gap-6">
                                 <Icon icon="iconamoon:eye" className="h-6 w-6 relative" />
@@ -305,10 +288,7 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
                                 />
                               </div>
                             </div>
-                            <div
-                              className="w-[852px] h-[88px] rounded-num-16 border-dimgray border-dashed border-[1px] box-border flex items-center py-num-12 px-4 text-black cursor-pointer"
-                              onClick={() => setIsConsentUploaded(true)}
-                            >
+                            <div className="w-[852px] h-[88px] rounded-num-16 border-dimgray border-dashed border box-border flex items-center py-num-12 px-4 text-black cursor-pointer" onClick={() => setIsConsentUploaded(true)}>
                               <div className="h-16 flex items-center gap-6">
                                 <Icon icon="icons8:upload-2" className="h-16 w-16 relative" />
                                 <div className="flex flex-col items-start justify-center gap-2">
@@ -321,7 +301,7 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
                             </div>
                           </div>
                         ) : (
-                          <div className="w-[916px] rounded-2xl bg-white border-whitesmoke border-solid border-[1px] box-border overflow-hidden flex flex-col items-start justify-center py-2.5 px-8 gap-2.5 font-inter text-sm text-darkslategray">
+                          <div className="w-[916px] rounded-2xl bg-white border-whitesmoke border-solid border box-border overflow-hidden flex flex-col items-start justify-center py-2.5 px-8 gap-2.5 font-inter text-sm text-darkslategray">
                             <div className="self-stretch flex items-center justify-between pr-6">
                               <div className="flex-1 flex items-center gap-6">
                                 <b className="relative">Parental Consent Form</b>
@@ -360,19 +340,12 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
                       {/* Document 3: Tenancy Contract */}
                       <div className="self-stretch flex flex-col items-center justify-center py-num-0 px-num-32 mt-4 text-left">
                         {!isContractUploaded ? (
-                          <div className="w-[916px] rounded-num-16 bg-white border-whitesmoke border-solid border-[1px] box-border overflow-hidden flex flex-col items-start justify-center py-num-10 px-num-32 gap-2.5">
+                          <div className="w-[916px] rounded-num-16 bg-white border-whitesmoke border-solid border box-border overflow-hidden flex flex-col items-start justify-center py-num-10 px-num-32 gap-2.5">
                             <div className="self-stretch flex items-center justify-between pr-6 gap-5">
                               <div className="w-[492px] flex items-center gap-6">
                                 <b className="relative">Tenancy Contract</b>
-                                <div className="h-8 w-24 rounded-num-16 bg-white flex items-center justify-center text-center">
-                                  <b className="relative text-transparent !bg-clip-text [background:linear-gradient(180deg,_#c00f0f,_#e44f4f)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">
-                                    Required
-                                  </b>
-                                </div>
-                                <div className="flex items-center gap-1 text-num-12 text-teal">
-                                  <b>Download Contract</b>
-                                  <Icon icon="material-symbols:download-rounded" />
-                                </div>
+                                <div className="h-8 w-24 rounded-num-16 bg-white flex items-center justify-center text-center"><b className="relative text-transparent bg-clip-text! [background:linear-gradient(180deg,#c00f0f,#e44f4f)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">Required</b></div>
+                                <div className="flex items-center gap-1 text-num-12 text-teal"><b>Download Contract</b><Icon icon="material-symbols:download-rounded" /></div>
                               </div>
                               <div className="flex items-center gap-6">
                                 <Icon icon="iconamoon:eye" className="h-6 w-6 relative" />
@@ -382,10 +355,7 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
                                 />
                               </div>
                             </div>
-                            <div
-                              className="w-[852px] h-[88px] rounded-num-16 border-dimgray border-dashed border-[1px] flex items-center py-num-12 px-4 text-black cursor-pointer"
-                              onClick={() => setIsContractUploaded(true)}
-                            >
+                            <div className="w-[852px] h-[88px] rounded-num-16 border-dimgray border-dashed border flex items-center py-num-12 px-4 text-black cursor-pointer" onClick={() => setIsContractUploaded(true)}>
                               <div className="h-16 flex items-center gap-6">
                                 <Icon icon="icons8:upload-2" className="h-16 w-16 relative" />
                                 <div className="flex flex-col items-start justify-center gap-2">
@@ -398,7 +368,7 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
                             </div>
                           </div>
                         ) : (
-                          <div className="w-[916px] rounded-2xl bg-white border-whitesmoke border-solid border-[1px] box-border overflow-hidden flex flex-col items-start justify-center py-2.5 px-8 gap-2.5 font-inter text-sm text-darkslategray">
+                          <div className="w-[916px] rounded-2xl bg-white border-whitesmoke border-solid border box-border overflow-hidden flex flex-col items-start justify-center py-2.5 px-8 gap-2.5 font-inter text-sm text-darkslategray">
                             <div className="self-stretch flex items-center justify-between pr-6 gap-5">
                               <div className="w-[492px] flex items-center gap-6">
                                 <b className="relative">Tenancy Contract</b>
@@ -444,14 +414,14 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
           </div>
         </div>
         {isSubmitPopupVisible && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm">
-            <FinalizeApplication onContinue={() => setIsSubmitPopupVisible(false)} />
-          </div>
+          <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+           <FinalizeApplication onContinue={() => setIsSubmitPopupVisible(false)} />
+        </div>
         )}
       </div>
 
-      {cancelStage && (
-        <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+        {cancelStage && (
+        <div className="fixed inset-0 z-999 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
           {cancelStage === 'confirming' && (
             <CancelApplication1 onConfirm={handleConfirmCancellation} onBack={handleGoBack} />
           )}

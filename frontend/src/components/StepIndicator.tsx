@@ -40,8 +40,8 @@ export default function StepIndicator(props: StepIndicatorProps) {
                   isPast
                     ? 'bg-darkslategray'
                     : isActive
-                      ? 'bg-gradient-to-r from-darkslategray to-silver-100'
-                      : 'bg-silver-100'
+                    ? 'bg-linear-to-r from-darkslategray to-silver-100' 
+                    : 'bg-silver-100' 
                 }`}
               ></div>
             )}

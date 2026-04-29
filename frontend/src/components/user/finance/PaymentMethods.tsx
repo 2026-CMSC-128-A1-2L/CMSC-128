@@ -88,7 +88,7 @@ const PaymentMethods: FunctionComponent<PaymentMethodsType> = ({
             <div className="flex items-center w-full">
               <b className="text-num-18 tracking-num--0_01">GCASH QR CODE</b>
             </div>
-            <div className="w-full rounded-num-16 bg-white border-whitesmoke-200 border-solid border-[2px] flex flex-col items-center py-6 px-0 gap-3 text-center text-num-24 text-gray">
+            <div className="w-full rounded-num-16 bg-white border-whitesmoke-200 border-solid border-2 flex flex-col items-center py-6 px-0 gap-3 text-center text-num-24 text-gray">
               <div className="overflow-hidden flex items-center justify-center">
                 <Icon icon="grommet-icons:qr" className="w-20 h-20" />
               </div>
@@ -108,7 +108,7 @@ const PaymentMethods: FunctionComponent<PaymentMethodsType> = ({
             <div className="flex items-center w-full">
               <b className="text-num-18 tracking-num--0_01">BANK TRANSFER</b>
             </div>
-            <div className="w-full rounded-num-16 bg-white border-whitesmoke-200 border-solid border-[1px] flex flex-col items-start py-3 px-1.5 text-num-14 text-silver">
+            <div className="w-full rounded-num-16 bg-white border-whitesmoke-200 border-solid border flex flex-col items-start py-3 px-1.5 text-num-14 text-silver">
               <div className="w-full flex flex-col items-center justify-between gap-2">
                 <div className="w-full flex flex-col items-start gap-1">
                   <div className="flex items-center justify-between w-full">
@@ -157,21 +157,21 @@ const PaymentMethods: FunctionComponent<PaymentMethodsType> = ({
                 value={accountName}
                 onChange={(e) => setAccountName(e.target.value)}
                 placeholder="Account Name"
-                className="w-full rounded-num-8 bg-white border-whitesmoke-200 border-solid border-[2px] p-3 focus:outline-none focus:border-teal transition-colors"
+                className="w-full rounded-num-8 bg-white border-whitesmoke-200 border-solid border-2 p-3 focus:outline-none focus:border-teal transition-colors"
               />
               <input
                 type="text"
                 value={referenceNo}
                 onChange={(e) => setReferenceNo(e.target.value)}
                 placeholder="Reference/Transaction No."
-                className="w-full rounded-num-8 bg-white border-whitesmoke-200 border-solid border-[2px] p-3 focus:outline-none focus:border-teal transition-colors"
+                className="w-full rounded-num-8 bg-white border-whitesmoke-200 border-solid border-2 p-3 focus:outline-none focus:border-teal transition-colors"
               />
 
               {/* Payment Method Dropdown */}
               <div className="relative w-full" ref={dropdownRef}>
                 <div
                   onClick={() => setIsMethodDropdownOpen(!isMethodDropdownOpen)}
-                  className="w-full rounded-num-8 bg-white border-whitesmoke-200 border-solid border-[2px] flex items-center justify-between p-3 cursor-pointer hover:border-teal transition-colors"
+                  className="w-full rounded-num-8 bg-white border-whitesmoke-200 border-solid border-2 flex items-center justify-between p-3 cursor-pointer hover:border-teal transition-colors"
                 >
                   <div className={selectedPaymentMethod ? 'text-black' : 'text-dimgray'}>
                     {selectedPaymentMethod || 'Payment Method Used'}
@@ -201,7 +201,7 @@ const PaymentMethods: FunctionComponent<PaymentMethodsType> = ({
 
           {/* Upload Receipt Section */}
           <div className="w-full mt-4">
-            <div className="w-full rounded-num-16 bg-white border-whitesmoke-200 border-dashed border-[2px] flex flex-col items-center py-6 px-0 gap-1 text-silver cursor-pointer hover:border-teal transition-all duration-200 hover:scale-[1.02] active:scale-95">
+            <div className="w-full rounded-num-16 bg-white border-whitesmoke-200 border-dashed border-2 flex flex-col items-center py-6 px-0 gap-1 text-silver cursor-pointer hover:border-teal transition-all duration-200 hover:scale-[1.02] active:scale-95">
               <div className="overflow-hidden flex flex-col items-start">
                 <Icon icon="mdi-light:cloud-upload" className="w-10 h-10" />
               </div>

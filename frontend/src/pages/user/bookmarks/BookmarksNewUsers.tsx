@@ -9,7 +9,7 @@ const BookmarksNewUsers: FunctionComponent = () => {
   return (
     <div className="w-full h-screen flex flex-col font-inter text-black overflow-hidden">
       <div className="flex flex-1 overflow-hidden">
-        <div className="fixed top-0 left-0 h-full w-[200px] hidden md:block z-10">
+        <div className="sticky top-0 h-screen shrink-0 z-10">
           <SideBar />
         </div>
         <div className="w-[200px] shrink-0 hidden md:block" />

@@ -24,7 +24,7 @@ const LandlordUnvalidatedApplications = () => {
           <TenantsToolbar
             title="Unvalidated Applications"
             count={pendingApplications.length}
-            countClassName="bg-gradient-to-b from-[#c29722] to-[#f6b709] bg-clip-text text-transparent"
+            countClassName="bg-linear-to-b from-[#c29722] to-[#f6b709] bg-clip-text text-transparent"
           />
           <div className="h-[2px] w-full rounded-[100px] bg-[#f0f0f0]" />
         </section>

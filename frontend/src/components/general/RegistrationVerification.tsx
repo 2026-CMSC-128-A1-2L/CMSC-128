@@ -16,7 +16,7 @@ const RegistrationVerification: FunctionComponent<RegistrationVerificationProps>
 }) => {
   return (
     <div className="flex-1 w-full relative overflow-hidden flex items-start justify-center text-left text-num-14 text-dimgray font-inter">
-      <div className="w-[620px] rounded-xl border-whitesmoke border-solid border-[1px] box-border overflow-hidden flex flex-col items-start pt-3 px-4 pb-5 gap-6">
+      <div className="w-[620px] rounded-xl border-whitesmoke border-solid border box-border overflow-hidden flex flex-col items-start pt-3 px-4 pb-5 gap-6">
         <div className="w-full flex flex-col items-start p-3 box-border gap-3">
           {/* Title */}
           <div className="self-stretch flex items-center text-center text-[18px] text-black">
@@ -32,7 +32,7 @@ const RegistrationVerification: FunctionComponent<RegistrationVerificationProps>
           </div>
 
           {/* Info banner */}
-          <div className="self-stretch rounded-xl bg-lightcyan border-teal-100 border-solid border-[1px] box-border flex items-center py-0 px-6 gap-6 text-[12px] text-darkslategray font-lora">
+          <div className="self-stretch rounded-xl bg-lightcyan border-teal-100 border-solid border box-border flex items-center py-0 px-6 gap-6 text-[12px] text-darkslategray font-lora">
             <Icon icon="material-symbols:info-outline-rounded" className="h-6 w-6 shrink-0 my-4" />
             <div className="flex-1 flex items-center justify-center py-4">
               <div className="flex-1 relative tracking-[0.02em] font-semibold">
@@ -53,26 +53,23 @@ const RegistrationVerification: FunctionComponent<RegistrationVerificationProps>
           </div>
 
           {/* Valid ID */}
-          <div className="self-stretch h-[60px] rounded-xl bg-aliceblue border-whitesmoke border-solid border-[1px] box-border flex flex-col items-start justify-center py-0 px-6 gap-1">
+          <div className="self-stretch h-[60px] rounded-xl bg-aliceblue border-whitesmoke border-solid border box-border flex flex-col items-start justify-center py-0 px-6 gap-1">
             <div className="self-stretch flex items-center justify-center">
               <b className="flex-1 relative">Valid ID</b>
             </div>
             <div className="self-stretch flex items-center justify-center text-[12px] font-lora">
-              <div className="flex-1 relative tracking-[0.02em] font-semibold">
-                e.g. Passport, Driver’s License, etc.
-              </div>
+              <div className="flex-1 relative tracking-[0.02em] font-semibold">e.g. Passport, Driver’s License, etc.</div>
             </div>
           </div>
-          <div className="self-stretch h-[60px] rounded-xl bg-aliceblue border-whitesmoke border-solid border-[1px] box-border flex flex-col items-start justify-center py-0 px-6 gap-1">
+          <div className="self-stretch h-[60px] rounded-xl bg-aliceblue border-whitesmoke border-solid border box-border flex flex-col items-start justify-center py-0 px-6 gap-1">
             <div className="self-stretch flex items-center justify-center">
               <b className="flex-1 relative">Business Permit</b>
             </div>
             <div className="self-stretch flex items-center justify-center text-[12px] font-lora">
-              <div className="flex-1 relative tracking-[0.02em] font-semibold">
-                Current and valid local government permit to operate a rental business
-              </div>
+              <div className="flex-1 relative tracking-[0.02em] font-semibold">Current and valid local government permit to operate a rental business</div>
             </div>
           </div>
+
         </div>
 
         {/* Back / Proceed */}

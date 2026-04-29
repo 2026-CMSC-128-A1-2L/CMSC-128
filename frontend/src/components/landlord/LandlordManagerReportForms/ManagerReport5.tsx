@@ -8,7 +8,7 @@ const ReportManager5: FunctionComponent<Props> = ({ onSubmit, onCancel }) => {
 
   return (
     <div className="relative rounded-tl-[25.6px] bg-white w-[490px] flex flex-col items-center pb-[25.6px] gap-[33.6px]">
-      <div className="self-stretch rounded-tl-[25.6px] bg-gradient-to-b from-[#096c5b] to-[#16917c] flex flex-col items-start justify-center py-[9.6px] pl-[45.6px] pr-[25.6px]">
+      <div className="self-stretch rounded-tl-[25.6px] bg-linear-to-b from-[#096c5b] to-[#16917c] flex flex-col items-start justify-center py-[9.6px] pl-[45.6px] pr-[25.6px]">
         <div className="flex flex-col items-start pt-[25.6px] pb-[6.4px] gap-[4px]">
           <b className="font-['Poppins',sans-serif] text-[32px] text-white">Report Manager</b>
           <b className="font-['Inter',sans-serif] text-[18px] tracking-[-0.01em] text-[#e8f4f8]">

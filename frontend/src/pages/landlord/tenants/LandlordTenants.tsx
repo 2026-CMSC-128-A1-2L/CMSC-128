@@ -40,7 +40,7 @@ const LandlordTenants = () => {
               </span>
               <Link
                 to="/landlord/tenants/unvalidated"
-                className="font-['Inter',sans-serif] text-[14px] font-bold whitespace-nowrap bg-gradient-to-b from-[#c29722] to-[#f6b709] bg-clip-text text-transparent transition-opacity hover:opacity-80"
+                className="font-['Inter',sans-serif] text-[14px] font-bold whitespace-nowrap bg-linear-to-b from-[#c29722] to-[#f6b709] bg-clip-text text-transparent transition-opacity hover:opacity-80"
               >
                 See all
               </Link>

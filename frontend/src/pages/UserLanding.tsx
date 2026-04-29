@@ -15,7 +15,7 @@ const UserLanding: FunctionComponent = () => {
 
   return (
     <div className="w-full h-screen relative bg-white overflow-y-auto flex flex-col items-start isolate text-left text-[64px] text-teal-200 font-inter">
-      <div className="flex flex-col items-start z-[1] shrink-0">
+      <div className="flex flex-col items-start z-1 shrink-0">
         <div className="self-stretch h-[1244px] flex flex-col items-start text-num-18 text-darkslategray-200">
           <div className="bg-gray-900 flex flex-col items-start py-px px-0">
             <div className="w-screen flex items-center py-4 px-8 lg:px-16 box-border">
@@ -36,14 +36,14 @@ const UserLanding: FunctionComponent = () => {
                     <Link to="/about">About</Link>
                   </b>
                 </div>
-                <div className="self-stretch flex items-center justify-center py-0 px-1">
+                <div className="self-stretch flex items-center justify-center py-0 px-1 pr-16">
                   <Link to="/contact-us">
                     <b className="relative tracking-num--0_01">Contact Us</b>
                   </Link>
                 </div>
               </div>
               <button onClick={() => setShowSignIn(true)}>
-                <div className="rounded-[45px] [background:linear-gradient(99.18deg,_#5dc2a8_27.88%,_#0c8873_88.15%)] flex items-center justify-center py-3 px-4 gap-1 text-white cursor-pointer">
+                <div className="rounded-[45px] [background:linear-gradient(99.18deg,#5dc2a8_27.88%,#0c8873_88.15%)] flex items-center justify-center py-3 px-4 gap-1 text-white cursor-pointer">
                   Sign In
                   <Icon icon="si:arrow-right-duotone" className="w-7 h-7 relative" />
                 </div>
@@ -56,30 +56,30 @@ const UserLanding: FunctionComponent = () => {
           <div className="self-stretch h-[1149px] overflow-hidden shrink-0 flex flex-col items-start justify-center p-2.5 box-border text-center text-[32px] text-gray-800">
             <div className="self-stretch flex-1 flex items-center justify-end pt-[140px] px-num-80 pb-num-80 relative isolate gap-[140px]">
               <img
-                className="h-[916px] w-[1127.2px] absolute !!m-[0 important] top-[304px] left-[872px] object-contain z-[0] shrink-0"
+                className="h-[916px] w-[1127.2px] absolute !!m-[0 important] top-[304px] left-[872px] object-contain z-0 shrink-0"
                 alt=""
                 src={map}
               />
               <img
-                className="h-[1638.9px] w-[1335.8px] absolute !!m-[0 important] top-[75.46px] left-[-200.13px] [filter:blur(10px)] object-contain z-[1] shrink-0"
+                className="h-[1638.9px] w-[1335.8px] absolute !!m-[0 important] top-[75.46px] left-[-200.13px] filter-[blur(10px)] object-contain z-1 shrink-0"
                 alt=""
               />
               <img
-                className="h-[800px] w-[1190px] absolute !!m-[0 important] top-[259px] left-[-20px] object-cover z-[2] shrink-0"
+                className="h-[800px] w-[1190px] absolute !!m-[0 important] top-[259px] left-[-20px] object-cover z-2 shrink-0"
                 alt=""
                 src={landing_image}
               />
-              <div className="h-[658px] w-[535px] overflow-hidden hidden flex-col items-center py-num-32 px-2.5 box-border gap-4 z-[3] shrink-0">
+              <div className="h-[658px] w-[535px] overflow-hidden hidden flex-col items-center py-num-32 px-2.5 box-border gap-4 z-3 shrink-0">
                 <b className="relative tracking-num--0_01">Search Sharper</b>
                 <b className="relative tracking-num--0_01 text-gray-700">Live Better</b>
                 <b className="relative tracking-num--0_01 text-gray-600">Lease Smarter</b>
                 <b className="relative tracking-num--0_01 text-white">Hassle-Free</b>
               </div>
-              <div className="self-stretch flex flex-col items-end py-16 px-0 z-[4] shrink-0 text-[160px] font-buhun-retro-two-free">
-                <div className="w-[577px] relative tracking-[0.04em] text-transparent !bg-clip-text [background:linear-gradient(180deg,_#5dc2a8_27.88%,_#0c8873_84.13%)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] flex items-center justify-center">
+              <div className="self-stretch flex flex-col items-end py-16 px-0 z-4 shrink-0 text-[160px] font-buhun-retro-two-free">
+                <div className="w-[577px] relative tracking-[0.04em] text-transparent bg-clip-text! [background:linear-gradient(180deg,#5dc2a8_27.88%,#0c8873_84.13%)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] flex items-center justify-center">
                   ATLAS
                 </div>
-                <div className="relative text-[40px] font-semibold font-lora text-transparent !bg-clip-text [background:linear-gradient(180deg,_#5dc2a8_27.88%,_#0c8873_84.13%)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] text-right">
+                <div className="relative text-[40px] font-semibold font-lora text-transparent bg-clip-text! [background:linear-gradient(180deg,#5dc2a8_27.88%,#0c8873_84.13%)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] text-right">
                   Accommodation Tracking <br />
                   and Lodging Allocation System
                 </div>
@@ -90,11 +90,11 @@ const UserLanding: FunctionComponent = () => {
 
         <div className="self-stretch overflow-hidden flex flex-col items-start relative isolate gap-2.5">
           <img
-            className="w-[1722px] h-[434px] absolute !!m-[0 important] top-[758px] left-[0px] object-cover z-[0] shrink-0"
+            className="w-[1722px] h-[434px] absolute !!m-[0 important] top-[758px] left-0 object-cover z-0 shrink-0"
             alt=""
           />
 
-          <div className="self-stretch flex flex-col items-center justify-center z-[1] shrink-0">
+          <div className="self-stretch flex flex-col items-center justify-center z-1 shrink-0">
             <div className="self-stretch bg-white flex items-center py-16 px-num-80 gap-3">
               <div className="flex-1 flex flex-col items-start gap-3">
                 <b className="self-stretch relative">What is ATLAS?</b>
@@ -182,7 +182,7 @@ const UserLanding: FunctionComponent = () => {
 
           <div className="self-stretch bg-azure overflow-hidden flex flex-col items-start text-center text-[56px] text-gray-300">
             <div className="w-screen flex flex-col items-center justify-center pt-12 px-40 pb-6 box-border gap-[52px]">
-              <div className="relative font-extrabold text-transparent !bg-clip-text [background:linear-gradient(90deg,_#0c8873,_#5dc2a8_72.12%)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">
+              <div className="relative font-extrabold text-transparent bg-clip-text! [background:linear-gradient(90deg,#0c8873,#5dc2a8_72.12%)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">
                 Core features that set us
                 <br />
                 apart from the competition
@@ -265,7 +265,7 @@ const UserLanding: FunctionComponent = () => {
 
           <div className="self-stretch bg-darkslategray-100 overflow-hidden flex flex-col items-center justify-center py-20 px-6 md:px-20">
             <div className="h-20" />
-            <div className="w-full h-[59px] relative text-[50px] font-extrabold font-inter text-transparent !bg-clip-text [background:linear-gradient(90deg,_#0c8873,_#5dc2a8_72.12%)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] text-center flex items-center justify-center">
+            <div className="w-full h-[59px] relative text-[50px] font-extrabold font-inter text-transparent bg-clip-text! [background:linear-gradient(90deg,#0c8873,#5dc2a8_72.12%)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] text-center flex items-center justify-center">
               What is its PURPOSE?
             </div>
             <div className="h-10" />
@@ -282,7 +282,7 @@ const UserLanding: FunctionComponent = () => {
           </div>
 
           <div className="self-stretch bg-white overflow-hidden flex flex-col items-start pt-0 px-0 pb-num-80 relative isolate gap-2.5">
-            <div className="w-num-1440 h-[751px] absolute !!m-[0 important] top-[-14px] left-[0px] [filter:blur(10px)] overflow-hidden shrink-0 z-[0]">
+            <div className="w-num-1440 h-[751px] absolute !!m-[0 important] top-[-14px] left-0 filter-[blur(10px)] overflow-hidden shrink-0 z-0">
               <img
                 className="absolute top-[665px] left-[-206.68px] w-[921.8px] h-[627.3px] object-contain opacity-[0.75] shrink-0"
                 alt=""
@@ -296,21 +296,21 @@ const UserLanding: FunctionComponent = () => {
                 alt=""
               />
             </div>
-            <div className="w-screen h-[1087px] absolute !!m-[0 important] top-[584px] left-[0px] [filter:blur(10px)] overflow-hidden shrink-0 z-[1]">
+            <div className="w-screen h-[1087px] absolute !!m-[0 important] top-[584px] left-0 filter-[blur(10px)] overflow-hidden shrink-0 z-1">
               <img
                 className="absolute top-[665px] left-[-206.68px] w-[921.8px] h-[627.3px] object-contain opacity-[0.75] shrink-0"
                 alt=""
               />
             </div>
-            <div className="w-screen h-[1034px] flex flex-col items-center justify-center py-[111px] px-[118px] box-border gap-10 z-[2] shrink-0">
+            <div className="w-screen h-[1034px] flex flex-col items-center justify-center py-[111px] px-[118px] box-border gap-10 z-2 shrink-0">
               <div className="self-stretch relative leading-[60px] font-extrabold">
                 What does ATLAS provide?
               </div>
               <div className="w-[1173px] flex flex-col items-end text-center text-num-36 font-poppins">
                 <div className="w-num-1172 h-num-138 relative">
-                  <div className="absolute top-[0px] left-[0px] bg-white border-teal-200 border-solid border-b-[1px] box-border w-num-1172 h-num-138" />
+                  <div className="absolute top-0 left-0 bg-white border-teal-200 border-solid border-b box-border w-num-1172 h-num-138" />
                   <div className="absolute top-[46px] left-[28.08px] flex items-center gap-[67px]">
-                    <b className="h-num-37 w-num-48_7 relative flex items-center justify-center shrink-0">
+                    <b className="h-num-37 w-num-48.7 relative flex items-center justify-center shrink-0">
                       01
                     </b>
                     <b className="h-num-55 w-num-914 relative text-num-28 flex font-inter text-darkslategray-200 text-left items-center shrink-0">
@@ -320,9 +320,9 @@ const UserLanding: FunctionComponent = () => {
                   </div>
                 </div>
                 <div className="w-num-1172 h-num-138 relative">
-                  <div className="absolute top-[0px] left-[0px] bg-white border-teal-200 border-solid border-b-[1px] box-border w-num-1172 h-num-138" />
+                  <div className="absolute top-0 left-0 bg-white border-teal-200 border-solid border-b box-border w-num-1172 h-num-138" />
                   <div className="absolute top-[46px] left-[28.08px] flex items-center gap-[67px]">
-                    <b className="h-num-37 w-num-48_7 relative flex items-center justify-center shrink-0">
+                    <b className="h-num-37 w-num-48.7 relative flex items-center justify-center shrink-0">
                       02
                     </b>
                     <b className="h-num-55 w-num-914 relative text-num-28 flex font-inter text-darkslategray-200 text-left items-center shrink-0">
@@ -332,9 +332,9 @@ const UserLanding: FunctionComponent = () => {
                   </div>
                 </div>
                 <div className="w-num-1172 h-num-138 relative">
-                  <div className="absolute top-[0px] left-[0px] bg-white border-teal-200 border-solid border-b-[1px] box-border w-num-1172 h-num-138" />
+                  <div className="absolute top-0 left-0 bg-white border-teal-200 border-solid border-b box-border w-num-1172 h-num-138" />
                   <div className="absolute top-[46px] left-[28.08px] flex items-center gap-[67px]">
-                    <b className="h-num-37 w-num-48_7 relative flex items-center justify-center shrink-0">
+                    <b className="h-num-37 w-num-48.7 relative flex items-center justify-center shrink-0">
                       03
                     </b>
                     <b className="h-num-55 w-num-914 relative text-num-28 flex font-inter text-darkslategray-200 text-left items-center shrink-0">
@@ -344,9 +344,9 @@ const UserLanding: FunctionComponent = () => {
                   </div>
                 </div>
                 <div className="w-num-1172 h-num-138 relative">
-                  <div className="absolute top-[0px] left-[0px] bg-white border-teal-200 border-solid border-b-[1px] box-border w-num-1172 h-num-138" />
+                  <div className="absolute top-0 left-0 bg-white border-teal-200 border-solid border-b box-border w-num-1172 h-num-138" />
                   <div className="absolute top-[46px] left-[28.08px] flex items-center gap-[67px]">
-                    <b className="h-num-37 w-num-48_7 relative flex items-center justify-center shrink-0">
+                    <b className="h-num-37 w-num-48.7 relative flex items-center justify-center shrink-0">
                       04
                     </b>
                     <b className="h-num-55 w-num-914 relative text-num-28 flex font-inter text-darkslategray-200 text-left items-center shrink-0">
@@ -357,8 +357,8 @@ const UserLanding: FunctionComponent = () => {
                   </div>
                 </div>
                 <div className="w-num-1172 h-num-138 relative">
-                  <div className="absolute top-[0px] left-[0px] bg-white border-teal-200 border-solid border-b-[1px] box-border w-num-1172 h-num-138" />
-                  <b className="absolute top-[55px] left-[28.08px] flex items-center justify-center w-num-48_7 h-num-37">
+                  <div className="absolute top-0 left-0 bg-white border-teal-200 border-solid border-b box-border w-num-1172 h-num-138" />
+                  <b className="absolute top-[55px] left-[28.08px] flex items-center justify-center w-num-48.7 h-num-37">
                     05
                   </b>
                   <b className="absolute top-[46px] left-[127px] text-num-28 flex font-inter text-darkslategray-200 text-left items-center w-num-914 h-num-55">
@@ -372,13 +372,13 @@ const UserLanding: FunctionComponent = () => {
               </div>
             </div>
 
-            <div className="w-screen flex flex-col items-center py-0 px-[79px] box-border gap-[52px] z-[3] shrink-0 text-[100px] text-darkslategray-200">
+            <div className="w-screen flex flex-col items-center py-0 px-[79px] box-border gap-[52px] z-3 shrink-0 text-[100px] text-darkslategray-200">
               <div className="self-stretch h-[71px] w-screen relative">
                 <b className="flex items-center w-screen h-[71px]">FAQs</b>
               </div>
               <div className="w-[1280px] h-[504px] relative text-num-18 text-gray-300 font-lora">
                 <div className="absolute h-[13.49%] w-[99.69%] top-[19.05%] right-[0%] bottom-[67.46%] left-[0.31%]">
-                  <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] shadow-[0px_7px_20px_rgba(0,_0,_0,_0.1)] rounded-t-num-10 rounded-b-num-0 bg-gray-500 border-gray-500 border-solid border-[5px] box-border" />
+                  <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] shadow-[0px_7px_20px_rgba(0,0,0,0.1)] rounded-t-num-10 rounded-b-num-0 bg-gray-500 border-gray-500 border-solid border-[5px] box-border" />
                   <img
                     className="absolute h-[22.06%] w-[0.47%] top-[59.83%] right-[4.47%] bottom-[18.11%] left-[95.06%] max-w-full overflow-hidden max-h-full object-contain"
                     alt=""
@@ -388,7 +388,7 @@ const UserLanding: FunctionComponent = () => {
                   </b>
                 </div>
                 <div className="absolute h-[13.49%] w-[99.69%] top-[32.54%] right-[0%] bottom-[53.97%] left-[0.31%]">
-                  <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] shadow-[0px_7px_20px_rgba(0,_0,_0,_0.1)] bg-gray-500 border-gray-500 border-solid border-[5px] box-border" />
+                  <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] shadow-[0px_7px_20px_rgba(0,0,0,0.1)] bg-gray-500 border-gray-500 border-solid border-[5px] box-border" />
                   <img
                     className="absolute h-[22.06%] w-[0.47%] top-[59.83%] right-[4.47%] bottom-[18.11%] left-[95.06%] max-w-full overflow-hidden max-h-full object-contain"
                     alt=""
@@ -398,7 +398,7 @@ const UserLanding: FunctionComponent = () => {
                   </b>
                 </div>
                 <div className="absolute h-[13.49%] w-[99.69%] top-[46.03%] right-[0%] bottom-[40.48%] left-[0.31%]">
-                  <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] shadow-[0px_7px_20px_rgba(0,_0,_0,_0.1)] bg-gray-500 border-gray-500 border-solid border-[5px] box-border" />
+                  <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] shadow-[0px_7px_20px_rgba(0,0,0,0.1)] bg-gray-500 border-gray-500 border-solid border-[5px] box-border" />
                   <img
                     className="absolute h-[22.06%] w-[0.47%] top-[59.83%] right-[4.47%] bottom-[18.11%] left-[95.06%] max-w-full overflow-hidden max-h-full object-contain"
                     alt=""
@@ -408,7 +408,7 @@ const UserLanding: FunctionComponent = () => {
                   </b>
                 </div>
                 <div className="absolute h-[13.49%] w-[99.69%] top-[59.52%] right-[0%] bottom-[26.98%] left-[0.31%]">
-                  <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] shadow-[0px_7px_20px_rgba(0,_0,_0,_0.1)] bg-gray-500 border-gray-500 border-solid border-[5px] box-border" />
+                  <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] shadow-[0px_7px_20px_rgba(0,0,0,0.1)] bg-gray-500 border-gray-500 border-solid border-[5px] box-border" />
                   <img
                     className="absolute h-[22.06%] w-[0.47%] top-[59.83%] right-[4.47%] bottom-[18.11%] left-[95.06%] max-w-full overflow-hidden max-h-full object-contain"
                     alt=""
@@ -418,7 +418,7 @@ const UserLanding: FunctionComponent = () => {
                   </b>
                 </div>
                 <div className="absolute h-[13.49%] w-[99.69%] top-[73.02%] right-[0%] bottom-[13.49%] left-[0.31%]">
-                  <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] shadow-[0px_7px_20px_rgba(0,_0,_0,_0.1)] bg-gray-500 border-gray-500 border-solid border-[5px] box-border" />
+                  <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] shadow-[0px_7px_20px_rgba(0,0,0,0.1)] bg-gray-500 border-gray-500 border-solid border-[5px] box-border" />
                   <img
                     className="absolute h-[22.06%] w-[0.47%] top-[59.83%] right-[4.47%] bottom-[18.11%] left-[95.06%] max-w-full overflow-hidden max-h-full object-contain"
                     alt=""
@@ -428,7 +428,7 @@ const UserLanding: FunctionComponent = () => {
                   </b>
                 </div>
                 <div className="absolute h-[13.49%] w-[99.69%] top-[86.51%] right-[0%] bottom-[0%] left-[0.31%]">
-                  <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] shadow-[0px_7px_20px_rgba(0,_0,_0,_0.1)] rounded-t-num-0 rounded-b-num-10 bg-gray-500 border-gray-500 border-solid border-[5px] box-border" />
+                  <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] shadow-[0px_7px_20px_rgba(0,0,0,0.1)] rounded-t-num-0 rounded-b-num-10 bg-gray-500 border-gray-500 border-solid border-[5px] box-border" />
                   <img
                     className="absolute h-[22.06%] w-[0.47%] top-[59.83%] right-[4.47%] bottom-[18.11%] left-[95.06%] max-w-full overflow-hidden max-h-full object-contain"
                     alt=""
@@ -438,7 +438,7 @@ const UserLanding: FunctionComponent = () => {
                   </b>
                 </div>
                 <div className="absolute h-[16.47%] w-full top-[0%] right-[0%] bottom-[83.53%] left-[0%] text-center text-num-14 font-poppins">
-                  <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] shadow-[0px_7px_20px_rgba(0,_0,_0,_0.1)] rounded-num-10 bg-gray-500 border-gray-500 border-solid border-[5px] box-border" />
+                  <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] shadow-[0px_7px_20px_rgba(0,0,0,0.1)] rounded-num-10 bg-gray-500 border-gray-500 border-solid border-[5px] box-border" />
                   <div className="absolute h-[69.88%] w-[12.57%] top-[18.07%] right-[10.39%] bottom-[12.05%] left-[77.04%]">
                     <b className="absolute h-[48.28%] w-full top-[51.72%] left-[0%] flex items-center justify-center">
                       OTHERS
@@ -473,41 +473,56 @@ const UserLanding: FunctionComponent = () => {
           </div>
         </div>
 
-        <div className="w-screen h-[150px] relative shrink-0 z-[2] text-num-12 text-teal-100 font-poppins bg-[#001D18]">
-          <img className="absolute top-[0px] left-[0px] w-screen h-[150px]" alt="" />
-          <div className="absolute top-[0px] left-[8.89px] w-[1420.2px] h-[150px] flex items-center justify-center gap-[146px]">
+        <div className="w-screen h-[150px] relative shrink-0 z-2 text-num-12 text-teal-100 font-poppins bg-[#001D18]">
+          <img className="absolute top-0 left-0 w-screen h-[150px]" alt="" />
+          <div className="absolute top-0 left-[8.89px] w-[1420.2px] h-[150px] flex items-center justify-center gap-[146px]">
             {/* <img className="w-[218.4px] relative max-h-full object-cover" alt="" src={atlas_text} /> */}
             <div className="w-[127.9px] flex flex-col items-start">
               <b className="self-stretch h-[25.3px] relative text-[16px] flex text-white items-center shrink-0">
                 PLATFORM
               </b>
-              <div className="self-stretch h-num-28_4 relative flex items-center shrink-0 mt-[-4px]">
-                <Link to="/home">Browse Dorms</Link>
+              <div className="self-stretch h-num-28.4 relative flex items-center shrink-0 mt-[-4px]">
+                <Link to="/home">
+                
+                Browse Dorms
+                </Link>
               </div>
-              <div className="self-stretch h-num-28_4 relative flex items-center shrink-0 mt-[-4px]">
-                <Link to="/">How it works</Link>
+              <div className="self-stretch h-num-28.4 relative flex items-center shrink-0 mt-[-4px]">
+                
+                <Link to="/">
+                
+                How it works
+                </Link>
               </div>
             </div>
             <div className="flex flex-col items-start">
               <b className="w-[127.9px] h-[25.3px] relative text-[16px] flex text-white items-center shrink-0">
                 SUPPORT
               </b>
-              <div className="w-[108.9px] h-num-28_4 relative flex items-center shrink-0 mt-[-4px]">
-                <Link to="/about">About</Link>
+              <div className="w-[108.9px] h-num-28.4 relative flex items-center shrink-0 mt-[-4px]">
+                <Link to="/about">
+                  About
+                </Link>
               </div>
-              <div className="w-[108.9px] h-num-28_4 relative flex items-center shrink-0 mt-[-4px]">
-                <Link to="/contact-us">Contact us</Link>
+              <div className="w-[108.9px] h-num-28.4 relative flex items-center shrink-0 mt-[-4px]">
+                <Link to="/contact-us">
+                  Contact us
+                </Link> 
               </div>
             </div>
             <div className="w-[187.5px] flex flex-col items-start">
               <b className="self-stretch h-[25.3px] relative text-[16px] flex text-white items-center shrink-0">
                 LEGAL
               </b>
-              <div className="self-stretch h-num-28_4 relative flex items-center shrink-0 mt-[-4px]">
-                <Link to="/privacy">Privacy Policy</Link>
+              <div className="self-stretch h-num-28.4 relative flex items-center shrink-0 mt-[-4px]">
+                <Link to="/privacy">
+                  Privacy Policy
+                </Link>
               </div>
-              <div className="self-stretch h-num-28_4 relative flex items-center shrink-0 mt-[-4px]">
-                <Link to="/terms-of-use">Terms of Use</Link>
+              <div className="self-stretch h-num-28.4 relative flex items-center shrink-0 mt-[-4px]">
+                <Link to="/terms-of-use">
+                  Terms of Use
+                </Link>
               </div>
             </div>
           </div>

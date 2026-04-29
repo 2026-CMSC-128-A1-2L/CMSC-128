@@ -186,7 +186,7 @@ const BuildingRequirements: FunctionComponent<BuildingRequirementsProps> = ({ on
 
   return (
     <div className="flex-1 flex flex-col gap-3">
-      <h2 className="text-sm font-bold text-gray-500 mb-1">Building Requirements</h2>
+      <h2 className="text-sm font-bold text-black mb-1">Building Requirements</h2>
 
       {documents.map((doc) => (
         <DocumentCard
