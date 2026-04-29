@@ -13,34 +13,32 @@ const RatingBreakdown: FunctionComponent<RatingBreakdownProps> = ({
   rows,
 }) => {
   return (
-    <div className="self-stretch flex items-center justify-between gap-0">
-      <div className="w-[95.3px] flex flex-col items-start gap-1.5 shrink-0">
-        <b className="self-stretch h-[35px] relative flex text-transparent bg-clip-text! [background:linear-gradient(180deg,#5dc2a8_27.88%,#0c8873_84.13%)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] items-center justify-center shrink-0">
+    <div className="w-full flex flex-col sm:flex-row items-center sm:items-start justify-between gap-4 sm:gap-0">
+      <div className="w-[95px] flex flex-col items-center sm:items-start gap-1.5 shrink-0">
+        <b className="h-[35px] flex items-center justify-center text-transparent bg-clip-text! [background:linear-gradient(180deg,#5dc2a8_27.88%,#0c8873_84.13%)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] items-center justify-center shrink-0">
           {overallScore}
         </b>
-        <div className="self-stretch flex items-center"></div>
-        <div className="self-stretch h-[15px] relative text-num-12 tracking-num-0.02 font-semibold flex items-center justify-center shrink-0">
+        <div className="h-[15px] text-xs tracking-tight font-semibold flex items-center justify-center sm:justify-start">
           {totalReviews} reviews
         </div>
       </div>
-
-      <div className="w-[670px] flex flex-col items-start gap-2 shrink-0 text-num-12 text-dimgray">
+      <div className="w-full flex flex-col items-start gap-2 sm:pr-5 text-xs text-dimgray">
         {rows.map(({ star, width, count }) => (
-          <div key={star} className="self-stretch flex items-center gap-[7px]">
-            <div className="h-5 w-[23px] relative flex items-center justify-start shrink-0">
-              <span className="text-xs font-semibold tracking-num-0.02 mr-0.5">{star}</span>
+          <div key={star} className="w-full flex items-center gap-2">
+            <div className="h-5 w-[30px] flex items-center shrink-0">
+              <span className="text-xs font-semibold mr-1">{star}</span>
               <Icon icon="material-symbols:star-rounded" className="w-3 h-3" />
             </div>
-            <div className="h-1.5 w-[598.7px] relative">
-              <div className="absolute h-full w-full top-0 right-0 bottom-0 left-0 rounded-num-100 bg-whitesmoke-100" />
+            <div className="flex-1 h-1.5 relative">
+              <div className="absolute inset-0 rounded-num-100 bg-whitesmoke-100" />
               {width !== '0%' && (
                 <div
-                  className="absolute h-full top-0 bottom-0 left-0 rounded-num-100 [background:linear-gradient(180deg,#5dc2a8_27.88%,#0c8873_84.13%)]"
+                  className="absolute inset-y-0 left-0 rounded-num-100 [background:linear-gradient(180deg,#5dc2a8_27.88%,#0c8873_84.13%)]"
                   style={{ width }}
                 />
               )}
             </div>
-            <div className="h-5 w-5 relative tracking-num-0.02 font-semibold flex items-center justify-center shrink-0">
+            <div className="h-5 min-w-[20px] flex items-center justify-center font-semibold shrink-0">
               {count}
             </div>
           </div>

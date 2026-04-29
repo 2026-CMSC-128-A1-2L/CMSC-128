@@ -3,8 +3,6 @@ import { Link, useLocation } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import AtlasLogoText from '../../../assets/logo_atlas_text.svg?react';
 import AtlasLogoMin from '../../../assets/atlas logo (for white bg).png';
-import dark_icon from '../../../assets/sidebar_darkmode.svg';
-import search_icon from '../../../assets/sidebar_search.svg';
 import SideBarButton, { type SideBarButtonState } from './SideBarButton';
 import { useAuthStore } from '../../store/useAuthStore';
 import UserMenuPopup from './UserMenuPopup';
@@ -135,13 +133,13 @@ const SideBar = ({
               aria-label="Search"
               className="flex h-10 w-10 items-center justify-center rounded-full bg-[#f5f5f5] hover:bg-gray-200 transition-colors"
             >
-              <img src={search_icon} alt="" className="w-5 h-5" />
+              <Icon icon="heroicons:magnifying-glass" className="w-6 h-6" />
             </button>
           </div>
         ) : (
           <div className="w-full h-10 rounded-full bg-[#f5f5f5] flex items-center py-1 px-3 text-[10px]">
             <div className="flex-1 font-semibold text-[#2d3748]">Search</div>
-            <img src={search_icon} alt="" className="w-7 rounded-full" />
+              <Icon  icon="heroicons:magnifying-glass-circle-solid" className="w-8 h-8 text-darkolivegreen" />  
           </div>
         )}
       </div>
@@ -203,7 +201,7 @@ const SideBar = ({
         >
           {!collapsed && <span className="h-11 w-2 shrink-0 rounded-sm bg-transparent" />}
           <span className="flex items-center gap-4 rounded-xl px-1">
-            <img src={dark_icon} alt="" className="h-6 w-6 shrink-0" />
+            <Icon icon="gg:dark-mode" className="h-6 w-6 shrink-0 text-black" />
             {!collapsed && (
               <span className="font-semibold text-[14px] text-[#2d3748]">Dark Mode</span>
             )}
