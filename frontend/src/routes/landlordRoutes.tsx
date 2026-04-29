@@ -56,9 +56,10 @@ const landlordRoutes = [
     path="/landlord/properties/new"
     element={<LandlordNewListing />}
   />,
+
   <Route
     key="landlord-properties-building-info"
-    path="/landlord/properties/building-info"
+    path="/landlord/properties/:id"
     element={<BuildingInfo />}
   />,
   <Route
