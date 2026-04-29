@@ -54,25 +54,25 @@ const getPaymentStatusDisplay = (
       return {
         text: "PAID",
         gradient:
-          "bg-linear-to-b from-[#5dc2a8] to-[#0c8873] bg-clip-text text-transparent",
+          "bg-gradient-to-b from-[#5dc2a8] to-[#0c8873] bg-clip-text text-transparent",
       };
     case "overdue":
       return {
         text: "OVERDUE",
         gradient:
-          "bg-linear-to-b from-[#c00f0f] to-[#e44f4f] bg-clip-text text-transparent",
+          "bg-gradient-to-b from-[#c00f0f] to-[#e44f4f] bg-clip-text text-transparent",
       };
     case "partially_paid":
       return {
         text: "PARTIAL",
         gradient:
-          "bg-linear-to-t from-[#ffc273] to-[#fa7900] bg-clip-text text-transparent",
+          "bg-gradient-to-t from-[#ffc273] to-[#fa7900] bg-clip-text text-transparent",
       };
     default:
       return {
         text: "PENDING",
         gradient:
-          "bg-linear-to-b from-[#c29722] to-[#f6b709] bg-clip-text text-transparent",
+          "bg-gradient-to-b from-[#c29722] to-[#f6b709] bg-clip-text text-transparent",
       };
   }
 };
@@ -132,7 +132,7 @@ const TenantFinancePage: FunctionComponent = () => {
     : {
         text: "PENDING",
         gradient:
-          "bg-linear-to-b from-[#c29722] to-[#f6b709] bg-clip-text text-transparent",
+          "bg-gradient-to-b from-[#c29722] to-[#f6b709] bg-clip-text text-transparent",
       };
 
   const totalDue = currentBilling?.totalAmount || 0;
@@ -153,288 +153,193 @@ const TenantFinancePage: FunctionComponent = () => {
   const othersAmount =
     currentBilling?.breakdown.find((b) => b.name === "Others")?.amount || 300;
 
-  if (isLoading) {
-    return (
-      <div className="w-full min-h-screen relative overflow-y-auto flex items-start isolate gap-8">
+  const layout = (content: React.ReactNode) => (
+    <div className="flex min-h-screen font-inter text-darkslategray">
+      <div className="sticky top-0 h-screen shrink-0 z-10">
         <SideBar />
-        <div className="w-full flex flex-col items-start pr-4 lg:pr-20">
-          <div className="flex-1 flex items-center justify-center py-20">
-            <div className="text-center">Loading finance data...</div>
-          </div>
-        </div>
       </div>
+      <div className="flex flex-1 flex-col min-w-0 overflow-y-auto">
+        {content}
+      </div>
+    </div>
+  );
+
+  if (isLoading)
+    return layout(
+      <div className="flex-1 flex items-center justify-center py-20">
+        <div>Loading finance data...</div>
+      </div>,
     );
-  }
 
   return (
     <>
-      <div className="w-full min-h-screen relative overflow-y-auto flex flex-col items-start isolate gap-2.5 text-left text-[31.85px] text-darkslategray-200">
-        <div className="w-full h-full absolute top-0 left-0 z-0 bg-linear-to-b from-whitesmoke-100 to-white" />
+      {layout(
+        <>
+          <div className="flex-1 flex flex-col px-4 sm:px-6 lg:px-8 pt-8 md:pt-12 lg:pt-16 pb-0">
+            {/* Header */}
+            <div className="flex flex-col gap-3 mb-6">
+              <div className="flex items-center justify-between gap-5 flex-wrap">
+                <b className="text-2xl text-black font-inter">Finance</b>
+              </div>
+              <div className="h-0.5 rounded-full bg-whitesmoke-200" />
+            </div>
 
-        <div className="w-full overflow-hidden shrink-0 flex flex-col items-start z-1">
-          <div className="self-stretch flex-1 overflow-hidden flex flex-col items-start py-0 pl-0 pr-4 lg:pr-20">
-            <div className="w-full flex-1 flex flex-col lg:flex-row items-start shrink-0">
-              <SideBar />
+            {/* Property info */}
+            <div className="flex flex-col gap-1 px-2 mb-6">
+              <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+                <b className="text-xl md:text-2xl font-inter">
+                  One Sapphire Place
+                </b>
+                <PaymentMethodsDropdown />
+              </div>
+              <div className="flex items-start gap-2 px-2">
+                <Icon
+                  icon="mdi-light:map-marker"
+                  className="h-5 w-5 shrink-0 mt-0.5"
+                />
+                <b className="text-sm break-words">
+                  Lot 3, Block 17, Sapphire St, Umali Subd, Los Baños,
+                  Philippines, 4030
+                </b>
+              </div>
+              <div className="flex items-center gap-2 px-2">
+                <Icon icon="mdi-light:phone" className="h-5 w-5 shrink-0" />
+                <b className="text-sm">0969 014 8776</b>
+              </div>
+            </div>
 
-              <div className="self-stretch flex-1 overflow-hidden flex flex-col items-start justify-between gap-0 text-[14px] text-darkslategray-100 font-lora">
-                <div className="self-stretch flex flex-col items-start pt-8 md:pt-12 lg:pt-16 pb-0 pl-4 md:pl-6 lg:pl-8 pr-4 lg:pr-20 box-border">
-                  <div className="self-stretch flex flex-col items-start gap-3 shrink-0">
-                    {/* Header */}
-                    <div className="self-stretch flex flex-col items-center text-[24px] text-black font-inter">
-                      <div className="self-stretch flex flex-col items-start justify-center gap-3">
-                        <div className="self-stretch flex items-center justify-between gap-5 flex-wrap">
-                          <div className="flex flex-col items-center justify-end">
-                            <div className="flex items-center gap-10">
-                              <b className="relative leading-8 shrink-0">
-                                Finance
-                              </b>
-                            </div>
-                          </div>
+            {/* Three column layout */}
+            <div className="flex flex-col lg:flex-row items-stretch gap-4 text-teal font-inter">
+              {/* Left — Total Due + Breakdown */}
+              <div className="w-full lg:w-[300px] shrink-0 flex flex-col gap-2.5">
+                <div className="rounded-2xl bg-lightcyan-200 p-3 md:p-4 flex flex-col gap-2.5">
+                  <b className="text-sm md:text-base">Total Due</b>
+                  <div className="flex gap-2.5 text-xl md:text-2xl">
+                    <b>Php</b>
+                    <b>{totalDue.toFixed(2)}</b>
+                  </div>
+                </div>
+                <div className="flex flex-col gap-1 text-black">
+                  <div className="py-2 px-2">
+                    <b className="text-lg tracking-tight">Cost Breakdown</b>
+                  </div>
+                  <div className="rounded-2xl border border-whitesmoke-200 p-2.5 md:p-3 flex flex-col gap-2.5 text-xs md:text-sm text-center">
+                    <div className="flex justify-center gap-2.5">
+                      <b className="flex-1">Description</b>
+                      <b className="flex-1">Amount</b>
+                    </div>
+                    <div className="flex flex-col gap-2 font-lora text-left text-[10px] md:text-xs">
+                      {[
+                        ["Monthly Rent", rentAmount],
+                        ["Electricity", electricityAmount],
+                        ["Water", waterAmount],
+                        ["Internet", internetAmount],
+                        ["Others", othersAmount],
+                      ].map(([label, amt]) => (
+                        <div
+                          key={label as string}
+                          className="flex justify-between py-2"
+                        >
+                          <span className="flex-1 font-semibold tracking-wide">
+                            {label}
+                          </span>
+                          <span className="flex-1 font-semibold tracking-wide">
+                            Php {(amt as number).toFixed(2)}
+                          </span>
                         </div>
-                        <div className="self-stretch h-0.5 rounded-[100px] bg-whitesmoke-200 overflow-hidden shrink-0" />
-                      </div>
-
-                      {/* Property Header */}
-                      <div className="self-stretch flex flex-col items-start gap-6 md:gap-8 text-[14px] font-lora mt-6">
-                        <div className="self-stretch flex flex-col items-start justify-center py-0 px-2 md:px-3 box-border gap-1">
-                          <div className="self-stretch flex flex-col md:flex-row items-start md:items-center justify-between gap-3 md:gap-5 text-[20px] md:text-[24px] font-inter">
-                            <b className="relative leading-8">
-                              One Sapphire Place
-                            </b>
-                            <PaymentMethodsDropdown />
-                          </div>
-                          <div className="self-stretch flex items-start py-0 px-2 md:px-[11px] gap-2">
-                            <Icon
-                              icon="mdi-light:map-marker"
-                              className="h-5 w-5 relative shrink-0"
-                            />
-                            <b className="flex-1 text-sm md:text-base wrap-break-word">
-                              Lot 3, Block 17, Sapphire St, Umali Subd, Los
-                              Baños, Philippines, 4030
-                            </b>
-                          </div>
-                          <div className="self-stretch flex items-center py-0 px-2 md:px-[11px] gap-2">
-                            <Icon
-                              icon="mdi-light:phone"
-                              className="h-5 w-5 relative shrink-0"
-                            />
-                            <b className="flex-1 text-sm md:text-base">
-                              0969 014 8776
-                            </b>
-                          </div>
-                        </div>
-
-                        {/* Three Column Layout */}
-                        <div className="self-stretch flex flex-col lg:flex-row items-stretch gap-4 md:gap-3 text-teal font-inter">
-                          {/* Left Column - Total Due and Cost Breakdown */}
-                          <div className="w-full lg:w-[300px] rounded-[16px] overflow-hidden shrink-0 flex flex-col items-start gap-2.5">
-                            {/* Total Due Card */}
-                            <div className="self-stretch rounded-[16px] bg-lightcyan-200 overflow-hidden flex flex-col items-start p-3 md:p-4 gap-2.5">
-                              <b className="relative text-sm md:text-base">
-                                Total Due
-                              </b>
-                              <div className="flex items-start gap-2.5 text-[20px] md:text-[24px]">
-                                <b className="relative leading-8">Php</b>
-                                <b className="relative leading-8">
-                                  {totalDue.toFixed(2)}
-                                </b>
-                              </div>
-                            </div>
-
-                            {/* Cost Breakdown */}
-                            <div className="self-stretch flex flex-col items-start gap-1 text-[16px] md:text-[18px] text-black">
-                              <div className="self-stretch overflow-hidden flex flex-col items-start py-2 px-2">
-                                <b className="self-stretch relative tracking-[-0.01em]">
-                                  Cost Breakdown
-                                </b>
-                              </div>
-                              <div className="self-stretch rounded-[16px] border-whitesmoke-200 border-solid border overflow-hidden flex flex-col items-start p-2.5 md:p-3 gap-2.5 text-center text-[12px] md:text-[14px]">
-                                <div className="self-stretch flex items-start justify-center gap-2.5">
-                                  <b className="flex-1 relative">Description</b>
-                                  <b className="flex-1 relative">Amount</b>
-                                </div>
-                                <div className="self-stretch flex flex-col items-start gap-2 text-[10px] md:text-[12px] font-lora w-full">
-                                  <div className="self-stretch flex items-start justify-between py-2 px-0">
-                                    <div className="flex-1 tracking-[0.02em] font-semibold">
-                                      Monthly Rent
-                                    </div>
-                                    <div className="flex-1 tracking-[0.02em] font-semibold text-left">
-                                      Php {rentAmount.toFixed(2)}
-                                    </div>
-                                  </div>
-                                  <div className="self-stretch flex items-start justify-between py-2 px-0">
-                                    <div className="flex-1 tracking-[0.02em] font-semibold">
-                                      Electricity
-                                    </div>
-                                    <div className="flex-1 tracking-[0.02em] font-semibold text-left">
-                                      Php {electricityAmount.toFixed(2)}
-                                    </div>
-                                  </div>
-                                  <div className="self-stretch flex items-start justify-between py-2 px-0">
-                                    <div className="flex-1 tracking-[0.02em] font-semibold">
-                                      Water
-                                    </div>
-                                    <div className="flex-1 tracking-[0.02em] font-semibold text-left">
-                                      Php {waterAmount.toFixed(2)}
-                                    </div>
-                                  </div>
-                                  <div className="self-stretch flex items-start justify-between py-2 px-0">
-                                    <div className="flex-1 tracking-[0.02em] font-semibold">
-                                      Internet
-                                    </div>
-                                    <div className="flex-1 tracking-[0.02em] font-semibold text-left">
-                                      Php {internetAmount.toFixed(2)}
-                                    </div>
-                                  </div>
-                                  <div className="self-stretch flex items-start justify-between py-2 px-0">
-                                    <div className="flex-1 tracking-[0.02em] font-semibold">
-                                      Others
-                                    </div>
-                                    <div className="flex-1 tracking-[0.02em] font-semibold text-left">
-                                      Php {othersAmount.toFixed(2)}
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className="self-stretch flex items-start justify-between gap-2.5 text-teal pt-2 border-t border-whitesmoke-200">
-                                  <b className="flex-1 relative">Total</b>
-                                  <b className="flex-1 relative">
-                                    Php {totalDue.toFixed(2)}
-                                  </b>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Middle Column - Right Side content */}
-                          <div className="flex-1 rounded-[16px] overflow-hidden flex flex-col items-center gap-2.5">
-                            {/* Outstanding Balance and Payment Status Row */}
-                            <div className="self-stretch flex flex-col sm:flex-row items-stretch gap-2">
-                              <div className="flex-1 rounded-[16px] bg-white border-whitesmoke-200 border-solid border overflow-hidden flex flex-col items-start p-3 md:p-4 gap-2.5">
-                                <b className="relative text-sm md:text-base">
-                                  Outstanding Balance
-                                </b>
-                                <div className="flex items-start gap-2.5 text-[20px] md:text-[24px]">
-                                  <b className="relative leading-8">Php</b>
-                                  <b className="relative leading-8">
-                                    {outstandingBalance.toFixed(2)}
-                                  </b>
-                                </div>
-                              </div>
-                              <div className="flex-1 rounded-[16px] bg-white border-whitesmoke-200 border-solid border overflow-hidden flex flex-col items-start p-3 md:p-4 gap-2.5">
-                                <b className="relative text-sm md:text-base">
-                                  Payment Status
-                                </b>
-                                <div className="flex items-start text-[20px] md:text-[24px]">
-                                  <div
-                                    className={`relative leading-8 font-extrabold bg-clip-text text-transparent ${paymentStatus.gradient}`}
-                                  >
-                                    {paymentStatus.text}
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* Monthly Expenses Chart */}
-                            <div className="self-stretch w-full overflow-x-auto">
-                              <MonthlyExpensesChart />
-                            </div>
-
-                            {/* Upcoming Payments */}
-                            <div className="self-stretch overflow-hidden flex flex-col items-start p-2 md:p-2.5 gap-2.5 text-left text-[14px] font-inter">
-                              <b className="self-stretch text-[16px] md:text-[18px] tracking-[-0.01em]">
-                                Upcoming Payments
-                              </b>
-                              <div className="self-stretch h-0.5 border-whitesmoke-200 border-solid border" />
-
-                              {upcomingPayments.map((payment) => (
-                                <div
-                                  key={payment.id}
-                                  className="self-stretch rounded-lg border-whitesmoke-200 border-solid border overflow-hidden flex flex-col sm:flex-row items-start sm:items-center justify-between py-3 px-3 gap-3"
-                                >
-                                  <div className="self-stretch flex items-center gap-2.5">
-                                    <div className="h-5 w-5 rounded-[4px] bg-linear-to-b from-[#c29722] to-[#f6b709] overflow-hidden shrink-0" />
-                                    <div className="overflow-hidden flex flex-col items-start gap-1">
-                                      <div className="font-semibold shrink-0 text-sm md:text-base">
-                                        {payment.dueDate}
-                                      </div>
-                                      <div className="text-[11px] md:text-[12px] tracking-[0.02em] font-semibold font-lora text-dimgray shrink-0">
-                                        Php {payment.amount.toFixed(2)}
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <button
-                                    onClick={() => handlePayNow(payment)}
-                                    className="w-full sm:w-[90px] rounded-[12px] bg-lightcyan-100 overflow-hidden shrink-0 flex items-center justify-center py-2.5 px-3 cursor-pointer text-center text-teal hover:opacity-90 transition-opacity whitespace-nowrap"
-                                  >
-                                    <div className="font-semibold text-sm">
-                                      Pay Now
-                                    </div>
-                                  </button>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-
-                          {/* Rightmost Column - Overview with Billing History */}
-                          <div className="w-full lg:w-[180px] rounded-[16px] border-whitesmoke-200 border-solid border box-border overflow-hidden shrink-0 flex flex-col items-start py-2.5 px-0 gap-2 text-center text-[20px] md:text-[24px]">
-                            <div className="self-stretch rounded-[16px] bg-white overflow-hidden flex flex-col items-start p-3">
-                              <div className="self-stretch relative leading-8 font-extrabold text-base md:text-xl">
-                                Overview
-                              </div>
-                            </div>
-                            <div className="self-stretch flex-1 overflow-hidden flex flex-col items-start py-1 px-0 gap-2.5 text-[14px] text-darkslategray-100">
-                              <b className="self-stretch relative text-sm md:text-base">
-                                Billing History
-                              </b>
-                              <div className="self-stretch flex-1 overflow-hidden flex flex-col items-start py-0 px-2 md:px-3 gap-2 text-left text-[11px] md:text-[12px]">
-                                <div className="self-stretch rounded-lg border-whitesmoke-200 border-solid border overflow-hidden flex items-center py-2 px-3">
-                                  <div className="self-stretch overflow-hidden flex flex-col items-start gap-1">
-                                    <div className="font-semibold">
-                                      January 15, 2026
-                                    </div>
-                                    <div className="text-[9px] md:text-[10px] tracking-[0.04em] font-semibold font-lora text-dimgray">
-                                      Php 4500.00
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className="self-stretch rounded-lg border-whitesmoke-200 border-solid border overflow-hidden flex items-center py-2 px-3">
-                                  <div className="self-stretch overflow-hidden flex flex-col items-start gap-1">
-                                    <div className="font-semibold">
-                                      February 15, 2026
-                                    </div>
-                                    <div className="text-[9px] md:text-[10px] tracking-[0.04em] font-semibold font-lora text-dimgray">
-                                      Php 4500.00
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className="self-stretch rounded-lg border-whitesmoke-200 border-solid border overflow-hidden flex items-center py-2 px-3">
-                                  <div className="self-stretch overflow-hidden flex flex-col items-start gap-1">
-                                    <div className="font-semibold">
-                                      March 15, 2026
-                                    </div>
-                                    <div className="text-[9px] md:text-[10px] tracking-[0.04em] font-semibold font-lora text-dimgray">
-                                      Php 4500.00
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+                      ))}
+                    </div>
+                    <div className="flex justify-between gap-2.5 text-teal pt-2 border-t border-whitesmoke-200">
+                      <b className="flex-1">Total</b>
+                      <b className="flex-1">Php {totalDue.toFixed(2)}</b>
                     </div>
                   </div>
                 </div>
+              </div>
 
-                {/* Footer  */}
-                <Footer />
+              {/* Middle */}
+              <div className="flex-1 flex flex-col gap-2.5">
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <div className="flex-1 rounded-2xl bg-white border border-whitesmoke-200 p-3 md:p-4 flex flex-col gap-2.5">
+                    <b className="text-sm md:text-base">Outstanding Balance</b>
+                    <div className="flex gap-2.5 text-xl md:text-2xl">
+                      <b>Php</b>
+                      <b>{outstandingBalance.toFixed(2)}</b>
+                    </div>
+                  </div>
+                  <div className="flex-1 rounded-2xl bg-white border border-whitesmoke-200 p-3 md:p-4 flex flex-col gap-2.5">
+                    <b className="text-sm md:text-base">Payment Status</b>
+                    <b
+                      className={`text-xl md:text-2xl leading-8 bg-clip-text text-transparent ${paymentStatus.gradient}`}
+                    >
+                      {paymentStatus.text}
+                    </b>
+                  </div>
+                </div>
+                <div className="w-full overflow-x-auto">
+                  <MonthlyExpensesChart />
+                </div>
+                <div className="flex flex-col gap-2.5 p-2 md:p-2.5 font-inter text-sm">
+                  <b className="text-base md:text-lg tracking-tight">
+                    Upcoming Payments
+                  </b>
+                  <div className="h-0.5 border border-whitesmoke-200" />
+                  {upcomingPayments.map((payment) => (
+                    <div
+                      key={payment.id}
+                      className="rounded-lg border border-whitesmoke-200 flex flex-col sm:flex-row items-start sm:items-center justify-between py-3 px-3 gap-3"
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <div className="h-5 w-5 rounded-[4px] bg-gradient-to-b from-[#c29722] to-[#f6b709] shrink-0" />
+                        <div className="flex flex-col gap-1">
+                          <div className="font-semibold">{payment.dueDate}</div>
+                          <div className="text-[11px] font-semibold font-lora text-dimgray">
+                            Php {payment.amount.toFixed(2)}
+                          </div>
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => handlePayNow(payment)}
+                        className="w-full sm:w-[90px] rounded-xl bg-lightcyan-100 py-2.5 px-3 text-teal font-semibold hover:opacity-90 transition-opacity whitespace-nowrap text-center"
+                      >
+                        Pay Now
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Right — Overview */}
+              <div className="w-full lg:w-[180px] shrink-0 rounded-2xl border border-whitesmoke-200 flex flex-col py-2.5 gap-2">
+                <div className="rounded-2xl bg-white p-3">
+                  <b className="text-base md:text-xl">Overview</b>
+                </div>
+                <div className="flex flex-col gap-2.5 px-0">
+                  <b className="text-sm md:text-base px-2">Billing History</b>
+                  <div className="flex flex-col gap-2 px-2 md:px-3 text-xs">
+                    {[
+                      ["January 15, 2026", 4500],
+                      ["February 15, 2026", 4500],
+                      ["March 15, 2026", 4500],
+                    ].map(([date, amt]) => (
+                      <div
+                        key={date as string}
+                        className="rounded-lg border border-whitesmoke-200 flex flex-col py-2 px-3 gap-1"
+                      >
+                        <div className="font-semibold">{date}</div>
+                        <div className="text-[10px] font-semibold font-lora text-dimgray">
+                          Php {(amt as number).toFixed(2)}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* Submit Receipt Popup */}
+          <Footer />
+        </>,
+      )}
       {selectedPayment && (
         <SubmitReceipt
           isOpen={isSubmitReceiptOpen}
