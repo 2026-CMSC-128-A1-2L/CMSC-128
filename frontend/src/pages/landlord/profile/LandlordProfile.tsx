@@ -5,6 +5,7 @@ import LandlordInfoCard, { type LandlordInfo } from '../../../components/landlor
 import dorm1 from '../../../../assets/landing_contact.webp';
 import dorm2 from '../../../../assets/landing_listing.webp';
 import dorm3 from '../../../../assets/landing_contact.webp';
+import { Link } from 'react-router-dom';
 
 const landlord: LandlordInfo = {
   displayName: 'Quevin Custodio',
@@ -16,6 +17,7 @@ const landlord: LandlordInfo = {
 };
 
 type Property = {
+  id: string,   // for routing to specific building info
   name: string;
   location: string;
   rating: number;
@@ -24,18 +26,25 @@ type Property = {
 
 const properties: Property[] = [
   {
+    id: "1",
     name: 'Tri-AD Hall Dormitory',
     location: 'Umali Subdivision, Los Baños',
     rating: 4.3,
     image: dorm1,
   },
   {
+    id: "2",
     name: 'Two Sapphire Place',
     location: 'Umali Subdivision, Los Baños',
     rating: 3.7,
     image: dorm2,
   },
-  { name: "Women's Dormitory", location: 'Inside UPLB', rating: 3.7, image: dorm3 },
+  { 
+    id: "3",
+    name: "Women's Dormitory", 
+    location: 'Inside UPLB', 
+    rating: 3.7, 
+    image: dorm3 },
 ];
 
 type AvailabilityItemProps = {
@@ -65,6 +74,12 @@ const AvailabilityLine = ({ days, hours }: { days: string; hours: string }) => (
 
 const PropertyCard = ({ property }: { property: Property }) => (
   <article className="group flex flex-col overflow-hidden rounded-[12px] bg-white shadow-[0_1px_4px_0_rgba(0,0,0,0.08)] ring-1 ring-[#f0f0f0] transition-shadow duration-200 hover:shadow-[0_4px_12px_0_rgba(0,0,0,0.12)]">
+    <Link 
+      to={`/landlord/properties/building-info/${property.id}`} 
+      className="absolute inset-0 z-10"
+      aria-label={`View details for ${property.name}`}
+    />
+
     <div className="relative aspect-4/3 w-full overflow-hidden">
       <img
         src={property.image}
