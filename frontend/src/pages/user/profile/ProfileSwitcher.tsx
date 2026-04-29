@@ -1,6 +1,7 @@
 // pages/user/ProfileSwitcher.tsx
 import { useState, useCallback } from 'react';
 import CurrentDorm from './current_dorm/CurrentDorm';
+import CurrentDormCard from './current_dorm/CurrentDormCard';
 import UserVerif from './verification/UserVerif';
 import Sidebar from '../../../components/user/SideBar';
 import Footer from '../../../components/general/Footer';
@@ -17,6 +18,13 @@ const ProfileSwitcher = () => {
       anchor.scrollIntoView({ block: 'start', behavior: 'smooth' });
     }
   }, []);
+
+    const propertyImageSrc= undefined
+    const propertyName= undefined
+    const unitNumber= undefined
+    const contractDuration= undefined
+    const leaseEndDate= undefined
+    const verified= true
 
   return (
     <div className="w-full h-screen relative overflow-y-auto flex flex-col items-start isolate gap-2.5 text-left text-num-14 text-darkslategray-100 font-lora">
@@ -48,7 +56,14 @@ const ProfileSwitcher = () => {
                   <Switch activeTab={activeTab} setActiveTab={setActiveTab} />
 
                   <div className="self-stretch w-full">
-                    {activeTab === 'dorm' ? <CurrentDorm /> : <UserVerif verificationStep={1} />}
+                    {activeTab === 'dorm' ? <CurrentDormCard 
+                    propertyImageSrc={propertyImageSrc}
+                    propertyName={propertyName}
+                    unitNumber={unitNumber}
+                    contractDuration={contractDuration}
+                    leaseEndDate={leaseEndDate}
+                    verified={verified}
+                    /> : <UserVerif verificationStep={1} />}
                   </div>
                 </div>
               </div>

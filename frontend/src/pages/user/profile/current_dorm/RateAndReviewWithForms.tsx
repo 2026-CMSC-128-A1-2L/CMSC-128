@@ -41,7 +41,7 @@ const RateAndReview: FunctionComponent = () => {
                   <BreadcrumbHeader
                     routes={[
                       { name: "User Profile", url: "/profile-switcher" },
-                      { name: "Current Dorm", url: "/current-dorm" },
+                      { name: "Current Dorm", url: "/profile-switcher" },
                       { name: "Rate & Review", url: "/rate-review" },
                     ]}
                   />
