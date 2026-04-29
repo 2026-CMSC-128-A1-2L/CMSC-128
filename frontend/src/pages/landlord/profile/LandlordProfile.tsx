@@ -167,7 +167,7 @@ const LandlordProfile = () => {
         { label: 'Verification Status', to: '/landlord/profile/verification' },
       ]}
     >
-      <div className="flex w-full flex-col gap-[24px] rounded-[16px] bg-white/70 p-[8px] pb-[32px]">
+      <div className="flex w-full flex-col gap-[12px] rounded-[16px] bg-white/70 p-[8px] pb-[32px]">
         <LandlordInfoCard info={landlord} />
 
         <div className="h-px w-full bg-[#e5e7eb]/70" />
