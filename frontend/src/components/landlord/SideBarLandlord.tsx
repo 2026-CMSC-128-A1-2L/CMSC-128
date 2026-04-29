@@ -1,4 +1,10 @@
-import { useState, type MouseEventHandler } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type MouseEventHandler,
+} from "react";
 import { useNavigate } from "react-router-dom";
 import { Icon } from "@iconify/react";
 import AtlasLogo from "../../../assets/logo_atlas_text.svg?react";
@@ -15,7 +21,11 @@ export type SideBarLandlordItemKey =
   | "finance"
   | "settings";
 
-type UserInfo = { name: string; verified?: boolean; avatarUrl?: string };
+type UserInfo = {
+  name: string;
+  verified?: boolean;
+  avatarUrl?: string;
+};
 
 type SideBarLandlordProps = {
   activeItem?: SideBarLandlordItemKey;
@@ -24,62 +34,71 @@ type SideBarLandlordProps = {
   onAddListing?: MouseEventHandler<HTMLButtonElement>;
   onToggleDarkMode?: MouseEventHandler<HTMLButtonElement>;
   onProfileClick?: MouseEventHandler<HTMLButtonElement>;
+  onSignOut?: MouseEventHandler<HTMLButtonElement>;
   user?: UserInfo;
   className?: string;
 };
 
-const navItems = [
+const navItems: Array<{
+  key: SideBarLandlordItemKey;
+  label: string;
+  icon: string;
+  route: string;
+}> = [
   {
-    key: "dashboard" as const,
+    key: "dashboard",
     label: "Dashboard",
     icon: "solar:home-2-outline",
     route: "/landlord/dashboard",
   },
   {
-    key: "messages" as const,
+    key: "messages",
     label: "Messages",
     icon: "ic:outline-mail",
     route: "/landlord/messages",
   },
   {
-    key: "properties" as const,
+    key: "properties",
     label: "Properties",
     icon: "fluent:pen-16-regular",
     route: "/landlord/properties",
   },
   {
-    key: "managers" as const,
+    key: "managers",
     label: "Managers",
     icon: "hugeicons:id",
     route: "/landlord/managers",
   },
   {
-    key: "tenants" as const,
+    key: "tenants",
     label: "My Tenants",
     icon: "tabler:user-search",
     route: "/landlord/tenants",
   },
   {
-    key: "visits" as const,
+    key: "visits",
     label: "Visits",
     icon: "solar:calendar-outline",
     route: "/landlord/visits",
   },
   {
-    key: "finance" as const,
+    key: "finance",
     label: "Finance",
     icon: "solar:card-outline",
     route: "/landlord/finance",
   },
   {
-    key: "settings" as const,
+    key: "settings",
     label: "Settings",
     icon: "solar:settings-outline",
     route: "/landlord/settings",
   },
 ];
 
-const defaultUser: UserInfo = { name: "Quevin", verified: true };
+const defaultUser: UserInfo = {
+  name: "Quevin",
+  verified: true,
+};
 
 const SideBarLandlord = ({
   activeItem,
@@ -88,23 +107,92 @@ const SideBarLandlord = ({
   onAddListing,
   onToggleDarkMode,
   onProfileClick,
+  onSignOut,
   user = defaultUser,
   className = "",
 }: SideBarLandlordProps) => {
   const navigate = useNavigate();
   const [internalHover, setInternalHover] = useState<SideBarLandlordItemKey>();
   const [collapsed, setCollapsed] = useState(false);
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const [profileMenuPlacement, setProfileMenuPlacement] = useState<
+    "top" | "bottom"
+  >("top");
+  const profileMenuRef = useRef<HTMLDivElement | null>(null);
 
   const handleItemClick = (item: (typeof navItems)[number]) => {
     onItemClick ? onItemClick(item.key) : navigate(item.route);
   };
+
+  const resolveProfileMenuPlacement = useCallback(() => {
+    if (!profileMenuRef.current) return;
+
+    const menuHeight = 76;
+    const menuGap = 8;
+    const viewportPadding = 8;
+    const profileRect = profileMenuRef.current.getBoundingClientRect();
+
+    const canOpenBelow =
+      profileRect.bottom + menuGap + menuHeight <=
+      window.innerHeight - viewportPadding;
+    setProfileMenuPlacement(canOpenBelow ? "bottom" : "top");
+  }, []);
+
+  const handleProfileButtonClick: MouseEventHandler<HTMLButtonElement> = () => {
+    if (!isProfileMenuOpen) {
+      resolveProfileMenuPlacement();
+    }
+    setIsProfileMenuOpen((prev) => !prev);
+  };
+
+  const handleViewProfileClick: MouseEventHandler<HTMLButtonElement> = (
+    event,
+  ) => {
+    setIsProfileMenuOpen(false);
+    onProfileClick?.(event);
+  };
+
+  const handleSignOutClick: MouseEventHandler<HTMLButtonElement> = (event) => {
+    setIsProfileMenuOpen(false);
+    onSignOut?.(event);
+  };
+
+  useEffect(() => {
+    if (!isProfileMenuOpen) return;
+
+    const handleDocumentClick = (event: MouseEvent) => {
+      if (profileMenuRef.current?.contains(event.target as Node)) return;
+      setIsProfileMenuOpen(false);
+    };
+
+    const handleEscapeKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setIsProfileMenuOpen(false);
+    };
+
+    const handleResize = () => resolveProfileMenuPlacement();
+
+    window.addEventListener("mousedown", handleDocumentClick);
+    window.addEventListener("keydown", handleEscapeKey);
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("mousedown", handleDocumentClick);
+      window.removeEventListener("keydown", handleEscapeKey);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [isProfileMenuOpen, resolveProfileMenuPlacement]);
+
+  // Close profile menu when sidebar collapses
+  useEffect(() => {
+    if (collapsed) setIsProfileMenuOpen(false);
+  }, [collapsed]);
 
   const w = collapsed ? "w-[68px]" : "w-[200px]";
 
   return (
     <aside
       className={[
-        "h-full relative flex shrink-0 flex-col items-center gap-[32px] border border-solid border-[#f0f0f0] pt-[24px] pb-[30px] transition-[width] duration-200 min-h-screen",
+        "relative flex h-full min-h-screen shrink-0 flex-col items-center gap-[32px] border border-solid border-[#f0f0f0] bg-white pt-[24px] pb-[30px] transition-[width] duration-200",
         w,
         className,
       ].join(" ")}
@@ -114,7 +202,7 @@ const SideBarLandlord = ({
         type="button"
         onClick={() => setCollapsed((c) => !c)}
         aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-        className="absolute -right-[12px] top-[24px] z-10 flex h-[24px] w-[24px] items-center justify-center rounded-full border border-[#f0f0f0] bg-white shadow-sm text-[#666] hover:text-[#096c5b] transition-colors"
+        className="absolute -right-[12px] top-[24px] z-10 flex h-[24px] w-[24px] items-center justify-center rounded-full border border-[#f0f0f0] bg-white shadow-sm text-[#666] transition-colors hover:text-[#096c5b]"
       >
         <Icon
           icon={
@@ -130,9 +218,9 @@ const SideBarLandlord = ({
       <div className="flex h-[40px] items-center justify-center overflow-hidden">
         {collapsed ? (
           <img
-            className="h-[28px] w-[28px] text-[#096c5b]"
-            aria-label="Atlas"
+            className="h-[28px] w-[28px]"
             src={AtlasLogoMin}
+            aria-label="Atlas"
           />
         ) : (
           <AtlasLogo className="h-full w-[128px]" aria-label="Atlas" />
@@ -149,7 +237,7 @@ const SideBarLandlord = ({
               type="button"
               onClick={onAddListing}
               aria-label="Add new listing"
-              className="flex h-[36px] w-[36px] items-center justify-center rounded-full bg-[#096c5b] text-white hover:bg-[#075a4c] transition-colors"
+              className="flex h-[36px] w-[36px] items-center justify-center rounded-full bg-[#096c5b] text-white transition-colors hover:bg-[#075a4c]"
             >
               <Icon
                 icon="material-symbols:add-rounded"
@@ -160,17 +248,18 @@ const SideBarLandlord = ({
             <button
               type="button"
               onClick={onAddListing}
-              className="flex w-full cursor-pointer items-center overflow-hidden rounded-[100px] bg-[#f0f0f0] pl-[17px] pr-[12px] hover:bg-[#e6e6e6] transition-colors"
+              className="flex w-full cursor-pointer items-center overflow-hidden rounded-[100px] bg-[#f0f0f0] pl-[17px] pr-[12px] transition-colors duration-200 ease-in-out hover:bg-[#e6e6e6]"
             >
               <span className="flex flex-1 items-start overflow-hidden py-[10px]">
-                <span className="font-['Inter'] text-[10px] font-semibold whitespace-nowrap text-[#666]">
+                <span className="font-['Inter',sans-serif] text-[10px] font-semibold leading-normal whitespace-nowrap text-[#666]">
                   Add New Listing
                 </span>
               </span>
-              <span className="flex h-[32px] w-[32px] items-center justify-center rounded-full bg-[#096c5b] text-white">
+              <span className="flex h-[32px] w-[32px] items-center justify-center rounded-[100px] bg-[#096c5b] text-white transition-colors duration-200 ease-in-out">
                 <Icon
                   icon="material-symbols:add-rounded"
                   className="h-[24px] w-[24px]"
+                  aria-hidden="true"
                 />
               </span>
             </button>
@@ -187,6 +276,7 @@ const SideBarLandlord = ({
                 : item.key === effective
                   ? "hovered"
                   : "default";
+
             return (
               <div
                 key={item.key}
@@ -194,7 +284,7 @@ const SideBarLandlord = ({
                 onMouseLeave={() =>
                   setInternalHover((p) => (p === item.key ? undefined : p))
                 }
-                className="hover:bg-[#F0FAF6] transition-colors duration-150"
+                className="transition-colors duration-150 hover:bg-[#F0FAF6]"
                 title={collapsed ? item.label : undefined}
               >
                 {collapsed ? (
@@ -233,12 +323,15 @@ const SideBarLandlord = ({
           className={[
             "flex cursor-pointer items-center transition-colors hover:bg-[#F0FAF6]",
             collapsed
-              ? "justify-center h-[44px] w-full"
-              : "gap-[24px] pr-[20px] w-[180px]",
+              ? "h-[44px] w-full justify-center"
+              : "w-[180px] gap-[24px] pr-[20px]",
           ].join(" ")}
         >
           {!collapsed && (
-            <span className="h-[44px] w-[8px] shrink-0 rounded-[4px] bg-white" />
+            <span
+              aria-hidden="true"
+              className="h-[44px] w-[8px] shrink-0 rounded-[4px] bg-white"
+            />
           )}
           <span
             className={[
@@ -249,9 +342,10 @@ const SideBarLandlord = ({
             <Icon
               icon="gg:dark-mode"
               className="h-[24px] w-[24px] shrink-0 text-[#001d18]"
+              aria-hidden="true"
             />
             {!collapsed && (
-              <span className="font-['Inter'] text-[14px] font-semibold text-[#001d18]">
+              <span className="font-['Inter',sans-serif] text-[14px] font-semibold leading-normal text-[#001d18]">
                 Dark Mode
               </span>
             )}
@@ -262,48 +356,83 @@ const SideBarLandlord = ({
           <div className="h-[2px] w-full rounded-[100px] bg-[#f0f0f0]" />
         </div>
 
-        {/* Profile */}
-        <button
-          type="button"
-          onClick={onProfileClick}
-          aria-label={`${user.name} profile`}
-          className={[
-            "flex cursor-pointer items-center overflow-hidden transition-colors hover:bg-[#F0FAF6]",
-            collapsed
-              ? "justify-center py-[10px] w-full"
-              : "gap-[8px] pl-[32px] pr-[20px] py-[10px] w-full",
-          ].join(" ")}
-        >
-          <span className="flex h-[36px] w-[36px] shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#e5e7eb] text-[#9ca3af]">
-            {user.avatarUrl ? (
-              <img
-                src={user.avatarUrl}
-                alt=""
-                className="h-full w-full object-cover"
-              />
-            ) : (
-              <Icon icon="solar:user-bold" className="h-[22px] w-[22px]" />
-            )}
-          </span>
-          {!collapsed && (
-            <span className="flex flex-col items-start gap-[2px] overflow-hidden">
-              <span className="font-['Inter'] text-[14px] font-bold text-[#096c5b] whitespace-nowrap">
-                {user.name}
-              </span>
-              {user.verified && (
-                <span className="flex items-center gap-[4px]">
-                  <span className="bg-gradient-to-b from-[#5dc2a8] to-[#0c8873] bg-clip-text font-['Inter'] text-[10px] font-bold text-transparent whitespace-nowrap">
-                    Verified
-                  </span>
-                  <Icon
-                    icon="material-symbols:verified"
-                    className="h-[10px] w-[10px] text-[#0c8873]"
-                  />
-                </span>
+        {/* Profile with dropdown */}
+        <div ref={profileMenuRef} className="relative w-full">
+          {isProfileMenuOpen && !collapsed && (
+            <div
+              className={[
+                "absolute left-[20px] z-30 flex h-[68px] w-[171px] flex-col gap-[7px] rounded-[9px] border border-solid border-[#f0f0f0] bg-[#f7f7f7] px-[11px] py-[9px] shadow-[0_4px_18px_rgba(0,0,0,0.1)]",
+                profileMenuPlacement === "bottom"
+                  ? "top-full mt-[8px]"
+                  : "bottom-full mb-[8px]",
+              ].join(" ")}
+            >
+              <button
+                type="button"
+                onClick={handleViewProfileClick}
+                className="h-[21px] w-full cursor-pointer rounded-[9px] bg-[#cbf6ed] text-center font-['Inter',sans-serif] text-[11px] font-medium text-[#096c5b] transition-colors duration-150 hover:brightness-95"
+              >
+                View Profile
+              </button>
+              <button
+                type="button"
+                onClick={handleSignOutClick}
+                className="h-[21px] w-full cursor-pointer rounded-[9px] border border-solid border-[#f0f0f0] bg-white bg-gradient-to-b from-[#c00f0f] to-[#e44f4f] bg-clip-text text-center font-['Inter',sans-serif] text-[11px] font-medium text-transparent transition-colors duration-150 hover:bg-[#f9f9f9]"
+              >
+                Log Out
+              </button>
+            </div>
+          )}
+
+          <button
+            type="button"
+            onClick={handleProfileButtonClick}
+            aria-haspopup="menu"
+            aria-expanded={isProfileMenuOpen}
+            aria-label={`${user.name} profile`}
+            className={[
+              "flex cursor-pointer items-center overflow-hidden py-[10px] transition-colors duration-200 ease-in-out hover:bg-[#F0FAF6]",
+              collapsed
+                ? "w-full justify-center"
+                : "w-full gap-[8px] pl-[32px] pr-[20px]",
+            ].join(" ")}
+          >
+            <span className="flex h-[36px] w-[36px] shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#e5e7eb] text-[#9ca3af]">
+              {user.avatarUrl ? (
+                <img
+                  src={user.avatarUrl}
+                  alt=""
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <Icon
+                  icon="solar:user-bold"
+                  className="h-[22px] w-[22px]"
+                  aria-hidden="true"
+                />
               )}
             </span>
-          )}
-        </button>
+            {!collapsed && (
+              <span className="flex flex-col items-start justify-center gap-[4px] overflow-hidden">
+                <span className="font-['Inter',sans-serif] text-[14px] font-bold leading-normal whitespace-nowrap text-[#096c5b]">
+                  {user.name}
+                </span>
+                {user.verified && (
+                  <span className="flex items-center gap-[4px]">
+                    <span className="bg-gradient-to-b from-[#5dc2a8] to-[#0c8873] bg-clip-text font-['Inter',sans-serif] text-[10px] font-bold leading-normal whitespace-nowrap text-transparent">
+                      Verified
+                    </span>
+                    <Icon
+                      icon="material-symbols:verified"
+                      className="h-[10px] w-[10px] text-[#0c8873]"
+                      aria-hidden="true"
+                    />
+                  </span>
+                )}
+              </span>
+            )}
+          </button>
+        </div>
       </div>
     </aside>
   );
