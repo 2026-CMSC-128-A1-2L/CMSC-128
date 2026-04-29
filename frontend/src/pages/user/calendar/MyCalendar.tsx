@@ -41,6 +41,16 @@ const MyCalendar: FunctionComponent = () => {
     setSelectedDayEvents([]);
   }, []);
 
+  // Only open day popout if there are events
+  const handleDayPopout = useCallback(
+    (date: Date, events: CalendarEvent[]) => {
+      if (events.length > 0) {
+        openDayPopout(date, events);
+      }
+    },
+    [openDayPopout]
+  );
+
   const handlePrevMonth = useCallback(() => {
     setCurrentDate(
       (prev) => new Date(prev.getFullYear(), prev.getMonth() - 1)
@@ -82,7 +92,7 @@ const MyCalendar: FunctionComponent = () => {
                       onPrevMonth={handlePrevMonth}
                       onNextMonth={handleNextMonth}
                       onDateChange={handleDateChange}
-                      onDateClick={openDayPopout}
+                      onDateClick={handleDayPopout}
                       onEventClick={openEventPopout}
                     />
                   </div>

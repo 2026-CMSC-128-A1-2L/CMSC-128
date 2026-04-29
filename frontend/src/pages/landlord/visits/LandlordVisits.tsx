@@ -312,22 +312,17 @@ const Visits: FunctionComponent = () => {
               <div className="grid grid-cols-7 gap-1 sm:gap-2">
                 {getDaysForCalendar().map((day, idx) => {
                   const dayVisits = day ? getVisitsForDay(day) : [];
+                  const hasEvents = day && dayVisits.length > 0;
                   return (
                     <div
                       key={idx}
-                      className={`min-h-20 sm:min-h-28 p-1 sm:p-3 rounded border cursor-pointer transition-colors text-xs sm:text-base ${
+                      className={`min-h-20 sm:min-h-28 p-1 sm:p-3 rounded border transition-colors text-xs sm:text-base ${
                         day === null
-                          ? 'bg-whitesmoke-100 border-whitesmoke-200'
+                          ? 'bg-whitesmoke-100 border-whitesmoke-200 cursor-default'
                           : day === new Date().getDate() && month === new Date().getMonth() && year === new Date().getFullYear()
-                          ? 'bg-lightcyan border-teal hover:border-teal'
-                          : 'bg-white border-whitesmoke-200 hover:bg-whitesmoke-50'
+                          ? 'bg-lightcyan border-teal'
+                          : 'bg-white border-whitesmoke-200 cursor-default'
                       }`}
-                      onClick={() => {
-                        if (day !== null) {
-                          const clickedDate = new Date(year, month, day);
-                          openDayPopout(clickedDate, dayVisits);
-                        }
-                      }}
                     >
                       {day && (
                         <>
@@ -336,16 +331,16 @@ const Visits: FunctionComponent = () => {
                           </div>
                           <div className="flex flex-col gap-0.5 sm:gap-1 text-xs">
                             {dayVisits.slice(0, 1).map((visit) => (
-                              <div
+                              <button
                                 key={visit.id}
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   openEventPopout(visit);
                                 }}
-                                className={`p-0.5 sm:p-1 rounded ${visit.backgroundColor} cursor-pointer hover:opacity-80 transition-opacity overflow-hidden`}
+                                className={`w-full text-left p-0.5 sm:p-1 rounded ${visit.backgroundColor} cursor-pointer hover:opacity-80 transition-opacity overflow-hidden`}
                               >
                                 <div className="truncate font-semibold text-xs">{visit.visitorName}</div>
-                              </div>
+                              </button>
                             ))}
                             {dayVisits.length > 1 && (
                               <div className="text-xs text-teal font-semibold">
