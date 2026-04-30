@@ -4,18 +4,22 @@ import Footer from "../../../components/general/Footer";
 import { Icon } from "@iconify/react";
 import PropertyTabs from "../../../components/user/unitdetails/PropertyTabs";
 import ImageCarousel from "../../../components/user/unitdetails/ImageCarousel";
-import pic from "../../../../assets/landing_contact.webp";
-import pic2 from "../../../../assets/landing_listing.webp";
-import pic3 from "../../../../assets/landing_contact.webp";
+import pic from "../../../../assets/sample1.jpg";
+import pic2 from "../../../../assets/sample2.jpg";
+import pic3 from "../../../../assets/sample3.jpg";
+import pic4 from "../../../../assets/sample4.jpg";
+
 import AboutDetails from "../../../components/user/unitdetails/AboutDetails";
 import AmenetiesDetails from "../../../components/user/unitdetails/AmenetiesDetails";
 import RulesDetails from "../../../components/user/unitdetails/RulesDetails";
 import LocationDetails from "../../../components/user/unitdetails/LocationDetails";
 import ReviewDetails from "../../../components/user/unitdetails/ReviewDetails";
 import PropertyTab from "../../../components/user/unitdetails/PropertyTab";
+import DormCard from '../../../components/user/DormCard';
+import { dormData } from '../../../data/dorms';
 import { Link } from "react-router-dom";
 const UnitDetails: FunctionComponent = () => {
-  const gallery = [`${pic}`, `${pic2}`, `${pic3}`];
+  const gallery = [`${pic}`, `${pic2}`, `${pic3}`, `${pic4}`];
 
   const onArrowUpClick = useCallback(() => {
     const anchor = document.querySelector(
@@ -276,42 +280,25 @@ const UnitDetails: FunctionComponent = () => {
               </div>
 
               {/* You may also like */}
-              <div className="flex flex-col gap-3">
-                <div className="flex items-center justify-between px-2">
-                  <b className="text-lg">You may also like</b>
-                  <div className="h-7 w-7 rounded-full shadow bg-white flex items-center justify-center">
-                    <Icon icon="iconamoon:arrow-right-2" className="h-5 w-5" />
-                  </div>
+              <div className="h-full w-full overflow-x-auto flex py-1 box-border gap-3">
+                {/* Layout Wrapper: 
+      'flex-wrap' allows cards to wrap to the next line.
+      'gap-6' matches your original spacing.
+  */}
+                <div className="flex flex-wrap gap-6 justify-center w-full">
+                  {dormData.map((dorm) => (
+                    <DormCard
+                      key={dorm.id}
+                      name={dorm.name}
+                      rating={dorm.rating}
+                      price={dorm.price}
+                      location={dorm.location}
+                      image={dorm.image}
+                      room_types={dorm.room_types}
+                    />
+                  ))}
                 </div>
-                {[
-                  {
-                    name: "Westbrook Residences",
-                    addr: "569Q+3J2, Los Baños, Laguna",
-                    rating: "4.3",
-                  },
-                  {
-                    name: "Ruby Residences",
-                    addr: "10247 Ruby St, Los Baños, Laguna",
-                    rating: "4.8",
-                  },
-                ].map((item) => (
-                  <Link to="/unit" key={item.name}>
-                    <div className="rounded-lg shadow bg-whitesmoke-300 overflow-hidden">
-                      <div className="h-28 bg-gray-200 w-full" />
-                      <div className="p-3 flex flex-col gap-1">
-                        <b className="text-sm font-inter">{item.name}</b>
-                        <div className="text-[10px] font-semibold font-lora text-dimgray">
-                          {item.addr}
-                        </div>
-                        <div className="text-[10px] font-semibold">
-                          ★ {item.rating}
-                        </div>
-                      </div>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </div>
+              </div>            </div>
           </div>
         </div>
 
@@ -321,14 +308,6 @@ const UnitDetails: FunctionComponent = () => {
         </footer>
       </div>
 
-      {/* Scroll to top */}
-      <button
-        onClick={onArrowUpClick}
-        className="fixed bottom-8 right-8 h-14 w-14 rounded-full bg-gradient-to-b from-[#096c5b] to-[#16917c] shadow-lg flex items-center justify-center z-20 hover:opacity-90 transition-opacity"
-        aria-label="Scroll to top"
-      >
-        <Icon icon="mdi:chevron-up" className="h-7 w-7 text-white" />
-      </button>
     </div>
   );
 };
