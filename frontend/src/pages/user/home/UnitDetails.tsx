@@ -3,9 +3,6 @@ import SideBar from "../../../components/user/SideBar";
 import { Icon } from "@iconify/react";
 import PropertyTabs from "../../../components/user/unitdetails/PropertyTabs";
 import ImageCarousel from "../../../components/user/unitdetails/ImageCarousel";
-import pic from "../../../../assets/landing_contact.webp";
-import pic2 from "../../../../assets/landing_listing.webp";
-import pic3 from "../../../../assets/landing_contact.webp";
 import AboutDetails from "../../../components/user/unitdetails/AboutDetails";
 import AmenetiesDetails from "../../../components/user/unitdetails/AmenetiesDetails";
 import RulesDetails from "../../../components/user/unitdetails/RulesDetails";
@@ -13,8 +10,16 @@ import LocationDetails from "../../../components/user/unitdetails/LocationDetail
 import ReviewDetails from "../../../components/user/unitdetails/ReviewDetails";
 import PropertyTab from "../../../components/user/unitdetails/PropertyTab";
 import { Link } from "react-router-dom";
+import pic from "../../../../assets/sample1.jpg";
+import pic2 from "../../../../assets/sample2.jpg";
+import pic3 from "../../../../assets/sample3.jpg";
+import pic4 from "../../../../assets/sample4.jpg";
+import DormCard from '../../../components/user/DormCard';
+import { dormData } from '../../../data/dorms';
+
+
 const UnitDetails: FunctionComponent = () => {
-  const gallery = [`${pic}`, `${pic2}`, `${pic3}`];
+  const gallery = [`${pic}`, `${pic2}`, `${pic3}`, `${pic4}`];
 
   const onArrowUpClick = useCallback(() => {
     const anchor = document.querySelector(
@@ -256,7 +261,7 @@ const UnitDetails: FunctionComponent = () => {
                         </div>
                       </div>{" "}
                     </div>
-                    <div className="self-stretch flex items-start gap-[23.2px] text-center text-num-14.26 text-darkslategray-200 font-lora">
+                    <div className="self-stretch flex items-start gap-[30.2px] text-center text-num-14.26 text-darkslategray-200 font-lora">
                       <div className="flex-1 flex flex-col items-start gap-[29.4px]">
                         <div className="self-stretch flex flex-col items-start gap-[10.7px] shrink-0">
                           <div className="self-stretch flex items-center gap-[10.7px]">
@@ -359,19 +364,21 @@ const UnitDetails: FunctionComponent = () => {
                                 </div>
                               </Link>
                             </div>
-                            <div className="w-[256.7px] h-[32.1px] relative">
-                              <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] shadow-[0px_0px_3.57px_rgba(0,0,0,0.15)] rounded-num-8.91 bg-darkslategray-200" />
-                              <div className="absolute h-[69.47%] w-[50.02%] top-[13.89%] right-[19.77%] bottom-[16.64%] left-[30.21%]">
-                                <div className="absolute h-full w-full top-[0%] left-[0%] font-medium flex items-center justify-center">
-                                  Contact Details
+                            <Link to="/landlord/managers/daphne-dayne">
+                              <div className="w-[256.7px] h-[32.1px] relative">
+                                <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] shadow-[0px_0px_3.57px_rgba(0,0,0,0.15)] rounded-num-8.91 bg-darkslategray-200" />
+                                <div className="absolute h-[69.47%] w-[50.02%] top-[13.89%] right-[19.77%] bottom-[16.64%] left-[25.21%]">
+                                  <div className="absolute h-full w-full top-[0%] left-[0%] font-medium flex items-center justify-center">
+                                    View Profile
+                                  </div>
                                 </div>
-                              </div>
 
-                              <Icon
-                                icon="ic:outline-phone"
-                                className="absolute h-[44.55%] w-[5.92%] top-[27.77%] right-[69.77%] bottom-[27.68%] left-[24.31%] max-w-full overflow-hidden max-h-full"
-                              />
-                            </div>
+                                <Icon
+                                  icon="iconamoon:profile"
+                                  className="absolute h-[50.55%] w-[8.92%] top-[25.77%] right-[69.77%] bottom-[35.68%] left-[23.31%] max-w-full overflow-hidden max-h-full"
+                                />
+                              </div>
+                            </Link>
                           </div>
                           <div className="absolute top-[126.59px] left-0 w-num-291.5 flex items-center justify-center py-0 px-[8.9px] box-border gap-[7.1px] text-[16.05px] text-teal-100">
                             <div className="h-[53.5px] w-[124.8px] relative">
@@ -436,78 +443,27 @@ const UnitDetails: FunctionComponent = () => {
                               />
                             </div>
                           </div>
-                          <div className="self-stretch flex flex-col items-center justify-center gap-[10.7px] text-num-10.7 font-lora">
-                            <Link to="/unit">
-                              <div className="w-num-249.6 h-[196.1px] relative shadow-[0px_0px_3.57px_rgba(0,0,0,0.25)]">
-                                <div className="absolute top-0 left-[0.88px] shadow-[0px_0px_3.57px_rgba(0,0,0,0.25)] rounded-num-8.91 bg-whitesmoke-300 w-[247.8px] h-[196.1px]" />
-                                <div className="absolute top-[124.81px] left-0 w-num-249.6 h-[71.3px]">
-                                  <div className="absolute top-0 left-0 rounded-t-num-0 rounded-b-num-8.91 bg-whitesmoke-300 w-num-249.6 h-[71.3px] opacity-[0.15]" />
-                                  <img
-                                    className="absolute top-[45.47px] left-[222.18px] w-[18.3px] h-[18.4px]"
-                                    alt=""
-                                  />
-                                  <div className="absolute top-[11.59px] left-[223.06px] tracking-num-0.02 font-semibold flex items-center w-[15.9px] h-[12.5px]">
-                                    4.3
-                                  </div>
-                                  <div className="absolute top-[31.23px] left-[12.97px] w-[171.4px] h-num-14.7">
-                                    <img
-                                      className="absolute top-0 left-0 w-[14.7px] h-num-14.7"
-                                      alt=""
-                                    />
-                                    <div className="absolute top-[0.89px] left-[18.65px] tracking-num-0.02 font-semibold flex items-center w-[152.8px] h-[12.4px]">
-                                      569Q+3J2, Los Baños, Laguna
-                                    </div>
-                                  </div>
-                                  <b className="absolute top-[11.59px] left-[13.37px] text-[16.05px] tracking-num--0_01 flex font-inter items-center w-[184.5px] h-[14.3px]">
-                                    Westbrook Residences
-                                  </b>
-                                </div>
-                                <img
-                                  className="absolute top-[8.02px] left-[219.31px] w-[25.2px] h-[25.2px]"
-                                  alt=""
+
+                          <div className="h-full w-full overflow-x-auto flex py-1 box-border gap-3">
+                            {/* Layout Wrapper: 
+      'flex-wrap' allows cards to wrap to the next line.
+      'gap-6' matches your original spacing.
+  */}
+                            <div className="flex flex-wrap gap-6 justify-center w-full">
+                              {dormData.map((dorm) => (
+                                <DormCard
+                                  key={dorm.id}
+                                  name={dorm.name}
+                                  rating={dorm.rating}
+                                  price={dorm.price}
+                                  location={dorm.location}
+                                  image={dorm.image}
+                                  room_types={dorm.room_types}
                                 />
-                                <img
-                                  className="absolute top-0 left-[0.89px] rounded-t-num-8.91 rounded-b-num-0 w-[248.3px] h-[123.7px] object-cover"
-                                  alt=""
-                                />
-                              </div>
-                            </Link>
-                            <Link to="/unit">
-                              <div className="w-num-249.6 h-[198.8px] relative filter-[drop-shadow(0px_0px_3.57px_rgba(0,0,0,0.25))]">
-                                <div className="absolute top-0 left-[0.88px] shadow-[0px_0px_3.57px_rgba(0,0,0,0.25)] rounded-num-8.91 bg-whitesmoke-300 w-[247.8px] h-[196.1px]" />
-                                <div className="absolute top-[127.48px] left-0 w-num-249.6 h-[71.3px]">
-                                  <div className="absolute top-0 left-0 rounded-t-num-0 rounded-b-num-8.91 bg-white w-num-249.6 h-[71.3px] opacity-[0.15]" />
-                                  <img
-                                    className="absolute top-[42.79px] left-[222.18px] w-[18.3px] h-[18.4px]"
-                                    alt=""
-                                  />
-                                  <div className="absolute top-[8.92px] left-[223.06px] tracking-num-0.02 font-semibold flex items-center w-[15.9px] h-[12.5px]">
-                                    4.8
-                                  </div>
-                                  <div className="absolute top-[28.55px] left-[12.97px] w-[183.2px] h-num-14.7">
-                                    <img
-                                      className="absolute top-0 left-0 w-[14.7px] h-num-14.7"
-                                      alt=""
-                                    />
-                                    <div className="absolute top-[0.87px] left-[18.23px] tracking-num-0.02 font-semibold flex items-center w-[164.9px] h-[12.5px]">
-                                      10247 Ruby St, Los Baños, Laguna
-                                    </div>
-                                  </div>
-                                  <b className="absolute top-[8.92px] left-[13.28px] text-[16.05px] tracking-num--0_01 flex font-inter items-center w-[160.2px] h-[14.3px]">
-                                    Ruby Residences
-                                  </b>
-                                </div>
-                                <img
-                                  className="absolute top-0 left-[0.89px] rounded-t-num-8.91 rounded-b-num-0 w-[247.8px] h-[124.8px] object-cover"
-                                  alt=""
-                                />
-                                <img
-                                  className="absolute top-[8.02px] left-[219.31px] w-[25.2px] h-[25.2px]"
-                                  alt=""
-                                />
-                              </div>
-                            </Link>
+                              ))}
+                            </div>
                           </div>
+
                         </div>
                       </div>
                     </div>
@@ -559,12 +515,13 @@ const UnitDetails: FunctionComponent = () => {
           </div>
         </div>
       </div>
-      <div
+      {/*<div
         className="w-[60px] h-[60px] !!m-[0 important] absolute top-[890px] left-[1281px] rounded-[30px] [background:linear-gradient(183.48deg,#096c5b,#16917c)] shrink-0 flex items-start p-[16.2px] box-border cursor-pointer z-1"
         onClick={onArrowUpClick}
       >
         <img className="h-[27.7px] w-[27.7px] relative" alt="" />
       </div>
+      */}
     </div>
   );
 };
