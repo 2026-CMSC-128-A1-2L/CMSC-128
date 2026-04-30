@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import type { FunctionComponent } from 'react';
 import checkIcon from '../../../../assets/check_icon.svg';
 
 export type JoinedDormitoryPopupType = {

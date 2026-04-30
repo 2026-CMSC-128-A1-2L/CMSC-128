@@ -1,6 +1,6 @@
 import axios from 'axios';
-import z from 'zod';
-import { GetNotificationQuerySchema } from 'shared';
+import type z from 'zod';
+import type { GetNotificationQuerySchema } from 'shared';
 import type { GetNotificationsResponse } from '../interface/notification';
 import { API_URL } from './constant';
 

@@ -1,4 +1,4 @@
-import { FunctionComponent, useState, useCallback } from 'react';
+import { type FunctionComponent, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import JoinedDormitoryPopup from '../../../components/user/user-invitation/JoinedDormitoryPopup';
 import PortalPopup from '../../../components/user/user-invitation/PortalPopup';

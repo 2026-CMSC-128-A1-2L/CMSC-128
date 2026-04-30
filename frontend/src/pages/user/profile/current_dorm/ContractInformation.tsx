@@ -1,4 +1,4 @@
-import { type FunctionComponent } from 'react';
+import type { FunctionComponent } from 'react';
 import { Icon } from '@iconify/react';
 import VerifiedBadge from '../../../../../assets/verified_badge.svg';
 import DefaultAvatar from '../../../../../assets/default_avatar.svg';

@@ -63,18 +63,20 @@ const AddBillingPopup: FunctionComponent<AddBillingPopupProps> = ({
         if (!value.trim()) return 'Please enter tenant name';
         if (value.trim().length < 2) return 'Name must be at least 2 characters';
         return '';
-      case 'rent':
+      case 'rent': {
         if (!value) return 'Please enter rent amount';
         const rentNum = parseFloat(value);
         if (isNaN(rentNum)) return 'Please enter a valid number';
         if (rentNum < 0) return 'Amount cannot be negative';
         return '';
-      case 'utilities':
+      }
+      case 'utilities': {
         if (!value) return 'Please enter utilities amount';
         const utilitiesNum = parseFloat(value);
         if (isNaN(utilitiesNum)) return 'Please enter a valid number';
         if (utilitiesNum < 0) return 'Amount cannot be negative';
         return '';
+      }
       case 'miscFees':
         if (value) {
           const miscNum = parseFloat(value);

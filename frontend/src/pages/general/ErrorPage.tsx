@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import type { FunctionComponent } from 'react';
 
 import errorOwl from '../../../assets/error_owl.png';
 import { useNavigate } from 'react-router-dom';

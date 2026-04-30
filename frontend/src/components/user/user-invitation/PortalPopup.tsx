@@ -1,8 +1,8 @@
 import {
-  CSSProperties,
-  RefObject,
-  FunctionComponent,
-  ReactNode,
+  type CSSProperties,
+  type RefObject,
+  type FunctionComponent,
+  type ReactNode,
   useMemo,
   useCallback,
   useState,
