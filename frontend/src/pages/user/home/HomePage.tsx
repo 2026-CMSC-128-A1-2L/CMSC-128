@@ -1,19 +1,34 @@
-import { type FunctionComponent, useCallback, useState } from "react";
+import {
+  type FunctionComponent,
+  useCallback,
+  useState,
+  useEffect,
+} from "react";
 import { Icon } from "@iconify/react";
 import SideBar from "../../../components/user/SideBar";
 import DormCard from "../../../components/user/DormCard";
 import { dormData } from "../../../data/dorms";
 import Banner from "../../../components/general/Banner";
 import FilterTab from "../../../components/user/Filter/FilterTab";
+import { Link } from "react-router-dom";
+import LoadingPage from "../../general/LoadingPage";
 
 const HomePage: FunctionComponent = () => {
-  const onViewMoreContainerClick = useCallback(() => {
-    // Add your code here
-  }, []);
+  const onViewMoreContainerClick = useCallback(() => {}, []);
 
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const toggleFilter = () => setIsFilterOpen(!isFilterOpen);
   const [searchTerm, setSearchTerm] = useState("");
+  const [testLoading, setTestLoading] = useState(false); // change to true for testing ng loading
+
+  useEffect(() => {
+    const timer = setTimeout(() => setTestLoading(false), 3000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (testLoading) {
+    return <LoadingPage />;
+  }
 
   return (
     <div className="w-full flex items-start text-left text-[0.875rem] text-dimgray font-inter gap-8 ">

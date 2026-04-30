@@ -89,46 +89,31 @@ const UnitDetails: FunctionComponent = () => {
                 <span className="text-lg text-teal-100"> / month</span>
               </div>
             </div>
-            <div className="w-[200px] shrink-0" />
-            <div className="self-stretch w-[1238px] overflow-hidden shrink-0 flex flex-col items-center justify-between gap-2.5">
-              <div className="self-stretch flex flex-col items-start pt-8 pb-0 pl-8 pr-20">
-                <div className="self-stretch flex flex-col items-start gap-3">
-                  <div
-                    className="self-stretch overflow-hidden flex flex-col items-start justify-center p-2.5 gap-2.5"
-                    data-scroll-to="searchBarContainer"
-                  >
-                    <div className="h-6 flex items-center py-0 px-1 box-border gap-1.5">
-                      <div className="relative font-semibold shrink-0">
-                        Home
-                      </div>
-                      <Icon
-                        icon="iconamoon:arrow-right-2"
-                        className="w-6 h-6 rounded-[100px]"
-                      />
-                      <div className="relative font-semibold shrink-0">{`Pasalo Units `}</div>
-                      <Icon
-                        icon="iconamoon:arrow-right-2"
-                        className="w-6 h-6 rounded-[100px]"
-                      />
-                      <div className="w-[141px] flex items-center justify-center shrink-0">
-                        <div className="relative font-semibold">
-                          Women’s Dormitory
-                        </div>
-                      </div>
-                    </div>
-                    <div className="w-[704px] rounded-xl bg-aliceblue overflow-hidden flex items-center py-2 px-6 box-border gap-2.5 text-dimgray font-inter transition-all duration-300 border border-transparent focus-within:bg-white focus-within:shadow-[0_8px_30px_rgb(0,0,0,0.04)] focus-within:border-whitesmoke-200">
-                      <Icon
-                        icon="material-symbols:search"
-                        className="w-6 h-6 shrink-0 text-dimgray/60"
-                      />
 
-                      <input
-                        type="text"
-                        placeholder="Search for Dorms, Apartments, or Locations (e.g. UPLB, Umali Subdivision)"
-                        className="w-full bg-transparent border-none outline-none py-1 text-num-14 font-semibold text-darkslategray-200 placeholder:text-dimgray/50 placeholder:font-normal"
-                        onChange={(e) => console.log(e.target.value)} // Replace with your search logic
-                      />
-                    </div>
+            {/* Right: Apply card */}
+            <div className="w-full xl:w-[280px] shrink-0 bg-white border border-whitesmoke-300 rounded-xl flex flex-col items-center p-5 gap-5 text-sm font-inter">
+              <div className="w-full flex items-center justify-between text-xl">
+                <div className="flex items-center gap-2">
+                  <Icon icon="ri:grid-fill" className="h-5 w-5" />
+                  <b>Apply</b>
+                </div>
+                <button className="shadow rounded-md bg-whitesmoke-100 py-1 px-3 text-xs text-gray font-lora">
+                  Reset
+                </button>
+              </div>
+
+              <div className="w-full flex flex-col gap-4 text-gray font-lora text-xs">
+                <div className="flex flex-col gap-1.5">
+                  <div className="font-medium">Rooms Available</div>
+                  <div className="flex gap-2 text-black">
+                    {["1 Pax", "2 Pax"].map((p) => (
+                      <div
+                        key={p}
+                        className="flex-1 shadow rounded-lg py-1.5 text-center font-semibold text-xs"
+                      >
+                        {p}
+                      </div>
+                    ))}
                   </div>
                 </div>
                 <div className="flex flex-col gap-1.5">
