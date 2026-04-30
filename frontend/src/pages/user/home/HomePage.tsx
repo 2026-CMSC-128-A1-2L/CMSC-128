@@ -15,7 +15,7 @@ const HomePage: FunctionComponent = () => {
 
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const toggleFilter = () => setIsFilterOpen(!isFilterOpen);
-  const [testLoading, setTestLoading] = useState(false); // change to true for testing ng loading
+  const [testLoading, setTestLoading] = useState(true); // change to true for testing ng loading
 
   useEffect(() => {
     const timer = setTimeout(() => setTestLoading(false), 3000);
