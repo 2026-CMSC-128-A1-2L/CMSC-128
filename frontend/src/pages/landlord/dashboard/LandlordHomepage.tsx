@@ -138,28 +138,35 @@ const LandlordHomepage: FunctionComponent = () => {
         <div className="flex flex-1 flex-col gap-[48px] min-w-0">
           {/* Search */}
           <div className="flex w-full items-center gap-[10px] rounded-[12px] bg-[#f0f7ff] px-[24px] py-[10px] focus-within:ring-1 focus-within:ring-[#096c5b]/20 transition-all">
-          <Icon icon="ic:outline-search" className="h-[24px] w-[24px] text-[#666]" aria-hidden="true"/>
-  
-          <input type="text"
-            placeholder="Search properties or people..."
-            value={searchQuery}
-            maxLength={50} // Restricts input to 50 characters
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-transparent font-['Inter',sans-serif] text-[14px] font-bold text-[#666] outline-none placeholder:text-[#666]/50"
-          />
-
-          {searchQuery.length > 0 && (
-          <button
-            onClick={() => setSearchQuery("")}
-            className="flex items-center justify-center rounded-full p-1 hover:bg-[#e0f0ff] transition-colors"
-            aria-label="Clear search">
             <Icon
-              icon="solar:close-circle-bold"
-              className="h-[20px] w-[20px] text-[#666]/70 hover:text-[#096c5b]"
+              icon="ic:outline-search"
+              className="h-[24px] w-[24px] text-[#666]"
+              aria-hidden="true"
             />
-          </button>
-          )}
-        </div>
+
+            <input
+              type="text"
+              placeholder="Search properties or people..."
+              value={searchQuery}
+              maxLength={50} // Restricts input to 50 characters
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full bg-transparent font-['Inter',sans-serif] text-[14px] font-bold text-[#666] outline-none placeholder:text-[#666]/50"
+            />
+
+            {searchQuery.length > 0 && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="flex items-center justify-center rounded-full p-1 hover:bg-[#e0f0ff] transition-colors"
+                aria-label="Clear search"
+              >
+                <Icon
+                  icon="heroicons:magnifying-glass"
+                  className="h-[24px] w-[24px] text-[#666]"
+                  aria-hidden="true"
+                />
+              </button>
+            )}
+          </div>
 
           {/* Statistics */}
           <section className="flex flex-col gap-[16px]">
@@ -294,7 +301,7 @@ const LandlordHomepage: FunctionComponent = () => {
               {PROPERTIES.map((p) => (
                 <Link
                   key={p.name}
-                  to={`/landlord/properties/building-info/${p.id}`} // Dynamic Route
+                  to={`/landlord/properties/${p.id}`} // Dynamic Route
                   className="flex shrink-0 flex-col overflow-hidden rounded-[10px] bg-white shadow-[0px_4px_20px_rgba(0,0,0,0.15)] transition-transform hover:scale-[1.02]"
                   style={{ width: CARD_WIDTH }}
                 >

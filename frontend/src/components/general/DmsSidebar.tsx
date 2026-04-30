@@ -1,16 +1,16 @@
 import { useState, type FunctionComponent } from "react";
 import Message from "../general/InboxMessage";
 import { Icon } from "@iconify/react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const DmsSidebar: FunctionComponent = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchQuery, setSearchQuery] = useState("");
 
   return (
     <div className="w-72 h-screen relative overflow-hidden flex flex-col items-start py-10 pl-4 pr-3 box-border gap-2 text-left font-inter bg-white shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
       <div className="w-full flex flex-col items-start gap-8">
-        
         {/* Header & Search */}
         <div className="w-full flex items-center gap-2 text-[0.875rem]">
           <Icon
@@ -18,9 +18,11 @@ const DmsSidebar: FunctionComponent = () => {
             className="w-8 h-8 cursor-pointer shrink-0 hover:text-teal transition-colors"
             onClick={() => navigate(-1)}
           />
-
           <div className="flex-1 px-3 py-2 rounded-num-8 bg-unavailable_action flex items-center gap-2 transition-all focus-within:ring-1 focus-within:ring-teal/30 focus-within:bg-white focus-within:shadow-sm">
-            <Icon icon="material-symbols:search" className="w-4 h-4 text-unselected shrink-0" />
+            <Icon
+              icon="material-symbols:search"
+              className="w-4 h-4 text-unselected shrink-0"
+            />
             <input
               type="text"
               placeholder="Search messages"
@@ -43,14 +45,21 @@ const DmsSidebar: FunctionComponent = () => {
             </span>
           </div>
 
-          {/* Subtly Interactable Notification List */}
-          <div className="w-full flex flex-col items-start gap-1">
-            <div className="w-full group cursor-pointer p-1 rounded-xl transition-all hover:bg-teal/[0.04] active:scale-[0.98]">
-               <Message />
-            </div>
-            <div className="w-full group cursor-pointer p-1 rounded-xl transition-all hover:bg-teal/[0.04] active:scale-[0.98]">
-               <Message />
-            </div>
+          <div className="w-[260px] flex flex-col items-start gap-2 text-right text-[0.5rem]">
+            <Message
+              title="Invitation to Current Accommodation"
+              body="Quevin Custodio has invited you to join..."
+              time="1:20 am"
+              icon="iconamoon:notification"
+              onClick={() => navigate("/direct-messages/dorm-invitation")}
+              active={location.pathname === "/direct-messages/dorm-invitation"}
+            />
+            <Message />
+            <Message
+              title="Welcome to ATLAS!"
+              body="Hi Daphne! Welcome to ATLAS..."
+              time="2m ago"
+            />
           </div>
 
           <button className="w-full mt-1 flex items-center justify-center gap-1 group">
@@ -78,17 +87,35 @@ const DmsSidebar: FunctionComponent = () => {
               <b className="relative text-num-12 font-inter text-white">All</b>
             </button>
             <button className="h-fit rounded-full bg-lightcyan flex items-center justify-center py-1.5 px-5 transition-colors hover:bg-teal/10 active:scale-95">
-              <b className="relative text-num-12 font-inter text-teal">Unread</b>
+              <b className="relative text-num-12 font-inter text-teal">
+                Unread
+              </b>
             </button>
           </div>
 
-          <div className="w-full flex flex-col gap-1">
-             <div className="w-full hover:bg-gray-50 rounded-xl transition-colors cursor-pointer p-1">
-                <Message />
-             </div>
-             <div className="w-full hover:bg-gray-50 rounded-xl transition-colors cursor-pointer p-1">
-                <Message />
-             </div>
+          <div className="w-full flex flex-col items-start gap-2 text-right text-[0.5rem]">
+            <Message
+              title="Three Sapphire Place"
+              body="Hi Daphne! Your application is being reviewed by our do..."
+              time="1hr ago"
+              icon="iconamoon:email"
+            />
+            <Message
+              title="Narra Residences"
+              body="Hi Daphne! Your application is being reviewed by our do..."
+              time="2m ago"
+              icon="iconamoon:email"
+            />
+          </div>
+
+          <div className="w-full flex items-center justify-center gap-1 text-center">
+            <div className="relative font-semibold text-num-12 text-teal">
+              View Archive
+            </div>
+            <Icon
+              icon="material-symbols-light:chevron-right"
+              className="w-5 h-5 text-teal"
+            />
           </div>
         </div>
       </div>

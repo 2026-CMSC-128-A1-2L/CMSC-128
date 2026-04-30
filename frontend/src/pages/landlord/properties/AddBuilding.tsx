@@ -5,14 +5,16 @@ import BuildingSubmit from '../../../components/landlord/addbuilding/BuildingSub
 import TutorialIcon from "../../../../assets/help-chat.svg";
 import TutorialBubble from '../properties/AddBuildingTutorials';
 import { Icon } from '@iconify/react';
+import { useNavigate } from 'react-router-dom';
 
 const AddBuilding: FunctionComponent = () => {
   const [currentStep, setCurrentStep] = useState(0);
-
+  const navigate = useNavigate();
   const [showHelp, setShowHelp] = useState(false);
 
   const onCancelClick = useCallback(() => {
-  }, []);
+    navigate('/landlord/properties');
+  }, [navigate]);
 
   const onNextClick = useCallback(() => {
     setCurrentStep((prev) => prev + 1);

@@ -1,10 +1,10 @@
-import { type FunctionComponent, useCallback, useState } from 'react';
-import { Icon } from '@iconify/react';
-import SideBar from '../../../components/user/SideBar';
-import DormCard from '../../../components/user/DormCard';
-import { dormData } from '../../../data/dorms';
-import Banner from '../../../components/general/Banner';
-import FilterTab from '../../../components/user/Filter/FilterTab';
+import { type FunctionComponent, useCallback, useState } from "react";
+import { Icon } from "@iconify/react";
+import SideBar from "../../../components/user/SideBar";
+import DormCard from "../../../components/user/DormCard";
+import { dormData } from "../../../data/dorms";
+import Banner from "../../../components/general/Banner";
+import FilterTab from "../../../components/user/Filter/FilterTab";
 
 const HomePage: FunctionComponent = () => {
   const onViewMoreContainerClick = useCallback(() => {
@@ -16,7 +16,7 @@ const HomePage: FunctionComponent = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   return (
-    <div className="w-full flex items-start text-left text-[0.875rem] text-dimgray font-inter gap-8">
+    <div className="w-full flex items-start text-left text-[0.875rem] text-dimgray font-inter gap-8 ">
       <div className="sticky top-0 h-screen w-fit shrink-0">
         <SideBar></SideBar>
       </div>
@@ -28,14 +28,19 @@ const HomePage: FunctionComponent = () => {
             {/* search bar container */}
             <div className="w-full h-full overflow-hidden flex items-center pb-6 box-border ">
               {/* search bar */}
-              <div className={`
+              <div
+                className={`
                 w-full flex items-center transition-all duration-300
                 bg-[#f8f9fa] rounded-num-12 py-3 pl-3 pr-4 border border-transparent
                 focus-within:bg-white 
                 focus-within:shadow-[0_8px_10px_rgb(0,0,0,0.06)]
                 focus-within:transform focus-within:-translate-y-[1px]
-                `}>
-                <Icon icon="ic:outline-search" className="w-5 h-5 text-unselected shrink-0" />
+                `}
+              >
+                <Icon
+                  icon="ic:outline-search"
+                  className="w-5 h-5 text-unselected shrink-0"
+                />
                 <input
                   type="text"
                   placeholder="Search for Dorms, Apartments, or Locations (e.g. UPLB, Umali Subdivision)"
@@ -45,8 +50,14 @@ const HomePage: FunctionComponent = () => {
                   className="w-full bg-transparent border-none outline-none text-num-14 font-semibold text-darkgreen placeholder:text-unselected placeholder:font-normal"
                 />
                 {searchTerm && (
-                  <button onClick={() => setSearchTerm("")} className="text-unselected hover:text-darkgreen">
-                    <Icon icon="material-symbols:close-rounded" className="w-4 h-4" />
+                  <button
+                    onClick={() => setSearchTerm("")}
+                    className="text-unselected hover:text-darkgreen"
+                  >
+                    <Icon
+                      icon="material-symbols:close-rounded"
+                      className="w-4 h-4"
+                    />
                   </button>
                 )}
               </div>
@@ -55,7 +66,9 @@ const HomePage: FunctionComponent = () => {
               {/* greeting/filter button*/}
               <div className="w-full flex items-center justify-between box-border">
                 <div className="w-full h-8 flex-1 flex flex-col items-start justify-center">
-                  <b className="relative leading-8 text-teal">Mabuhay, iskolar!</b>
+                  <b className="relative leading-8 text-teal">
+                    Mabuhay, iskolar!
+                  </b>
                 </div>
                 <div className="w-fit h-fit flex items-center">
                   <div
@@ -79,7 +92,10 @@ const HomePage: FunctionComponent = () => {
                             onClick={toggleFilter}
                             className="p-2 hover:bg-gray-100 rounded-full"
                           >
-                            <Icon icon="material-symbols:close" className="w-6 h-6" />
+                            <Icon
+                              icon="material-symbols:close"
+                              className="w-6 h-6"
+                            />
                           </button>
                         </div>
                         <FilterTab />
@@ -91,18 +107,18 @@ const HomePage: FunctionComponent = () => {
 
               <div className="w-full flex flex-col items-start gap-10">
                 {/* pasalo units */}
-                <div className="w-full flex flex-col items-start justify-center gap-6">
+                <div className="w-full flex flex-col items-start justify-center gap-6 dark:text-white">
                   {/* header */}
                   <div className="w-full h-fit flex items-center justify-between">
                     <div className="h-full flex items-center gap-2">
-                      <div className="w-44 h-full flex flex-col items-start">
-                        <div className="w-44 h-full flex flex-col items-end">
-                          <Icon
-                            icon="material-symbols-light:info-outline"
-                            className="w-5 h-5"
-                          ></Icon>
-                        </div>
-                        <b className="w-fit relative flex items-start">Pasalo Units</b>
+                      <div className="w-44 h-full flex items-start gap-2">
+                        <b className="w-fit relative flex items-start">
+                          Pasalo Units
+                        </b>
+                        <Icon
+                          icon="material-symbols-light:info-outline"
+                          className="w-5 h-5"
+                        ></Icon>
                       </div>
                       <div
                         className="w-fit h-fit flex items-end justify-center gap-1 pt-4 cursor-pointer text-center text-[0.75rem] text-teal-100 font-lora"
@@ -111,33 +127,36 @@ const HomePage: FunctionComponent = () => {
                         <div className="relative [text-decoration:underline] tracking-num-0.02 font-semibold">
                           View All
                         </div>
-                        <Icon icon="radix-icons:arrow-top-right" className="w-3 h-3"></Icon>
+                        <Icon
+                          icon="radix-icons:arrow-top-right"
+                          className="w-3 h-3"
+                        ></Icon>
                       </div>
                     </div>
-                   <div className="flex items-center gap-[8px]">
-                <button
-                  // onClick={() => scrollTo(current - 1)}
-                  // disabled={current === 0}
-                  className="flex h-[32px] w-[32px] items-center justify-center rounded-full border border-[#f0f0f0] bg-white transition-opacity hover:opacity-70 disabled:opacity-30"
-                  aria-label="Previous property"
-                >
-                  <Icon
-                    icon="solar:arrow-left-bold"
-                    className="h-[16px] w-[16px] text-[#2f3136]"
-                  />
-                </button>
-                <button
-                  // onClick={() => scrollTo(current + 1)}
-                  // disabled={current === total - 1}
-                  className="flex h-[32px] w-[32px] items-center justify-center rounded-full bg-[#e0f7f4] transition-opacity hover:opacity-70 disabled:opacity-30"
-                  aria-label="Next property"
-                >
-                  <Icon
-                    icon="solar:arrow-right-bold"
-                    className="h-[16px] w-[16px] text-[#096c5b]"
-                  />
-                </button>
-              </div>
+                    <div className="flex items-center gap-[8px]">
+                      <button
+                        // onClick={() => scrollTo(current - 1)}
+                        // disabled={current === 0}
+                        className="flex h-[32px] w-[32px] items-center justify-center rounded-full border border-[#f0f0f0] bg-white transition-opacity hover:opacity-70 disabled:opacity-30"
+                        aria-label="Previous property"
+                      >
+                        <Icon
+                          icon="solar:arrow-left-bold"
+                          className="h-[16px] w-[16px] text-[#2f3136]"
+                        />
+                      </button>
+                      <button
+                        // onClick={() => scrollTo(current + 1)}
+                        // disabled={current === total - 1}
+                        className="flex h-[32px] w-[32px] items-center justify-center rounded-full bg-[#e0f7f4] transition-opacity hover:opacity-70 disabled:opacity-30"
+                        aria-label="Next property"
+                      >
+                        <Icon
+                          icon="solar:arrow-right-bold"
+                          className="h-[16px] w-[16px] text-[#096c5b]"
+                        />
+                      </button>
+                    </div>
                   </div>
                   <div className="h-full w-full overflow-x-auto flex py-1 box-border gap-3">
                     <div className="flex flex-wrap gap-6">
@@ -161,7 +180,9 @@ const HomePage: FunctionComponent = () => {
                   <div className="w-full h-10 flex items-center justify-between">
                     <div className="h-full flex items-center gap-6">
                       <div className="w-fit h-full flex items-center">
-                        <b className="w-fit flex items-center">Popular Listings</b>
+                        <b className="w-fit flex items-center">
+                          Popular Listings
+                        </b>
                       </div>
                       <div
                         className="w-fit h-fit flex items-end justify-center gap-1 cursor-pointer text-center text-[0.75rem] text-teal-100 font-lora"
@@ -170,33 +191,36 @@ const HomePage: FunctionComponent = () => {
                         <div className="relative [text-decoration:underline] tracking-num-0.02 font-semibold">
                           View All
                         </div>
-                        <Icon icon="radix-icons:arrow-top-right" className="w-3 h-3"></Icon>
+                        <Icon
+                          icon="radix-icons:arrow-top-right"
+                          className="w-3 h-3"
+                        ></Icon>
                       </div>
                     </div>
                     <div className="flex items-center gap-[8px]">
-                <button
-                  // onClick={() => scrollTo(current - 1)}
-                  // disabled={current === 0}
-                  className="flex h-[32px] w-[32px] items-center justify-center rounded-full border border-[#f0f0f0] bg-white transition-opacity hover:opacity-70 disabled:opacity-30"
-                  aria-label="Previous property"
-                >
-                  <Icon
-                    icon="solar:arrow-left-bold"
-                    className="h-[16px] w-[16px] text-[#2f3136]"
-                  />
-                </button>
-                <button
-                  // onClick={() => scrollTo(current + 1)}
-                  // disabled={current === total - 1}
-                  className="flex h-[32px] w-[32px] items-center justify-center rounded-full bg-[#e0f7f4] transition-opacity hover:opacity-70 disabled:opacity-30"
-                  aria-label="Next property"
-                >
-                  <Icon
-                    icon="solar:arrow-right-bold"
-                    className="h-[16px] w-[16px] text-[#096c5b]"
-                  />
-                </button>
-              </div>
+                      <button
+                        // onClick={() => scrollTo(current - 1)}
+                        // disabled={current === 0}
+                        className="flex h-[32px] w-[32px] items-center justify-center rounded-full border border-[#f0f0f0] bg-white transition-opacity hover:opacity-70 disabled:opacity-30"
+                        aria-label="Previous property"
+                      >
+                        <Icon
+                          icon="solar:arrow-left-bold"
+                          className="h-[16px] w-[16px] text-[#2f3136]"
+                        />
+                      </button>
+                      <button
+                        // onClick={() => scrollTo(current + 1)}
+                        // disabled={current === total - 1}
+                        className="flex h-[32px] w-[32px] items-center justify-center rounded-full bg-[#e0f7f4] transition-opacity hover:opacity-70 disabled:opacity-30"
+                        aria-label="Next property"
+                      >
+                        <Icon
+                          icon="solar:arrow-right-bold"
+                          className="h-[16px] w-[16px] text-[#096c5b]"
+                        />
+                      </button>
+                    </div>
                   </div>
                   <div className="h-full w-full overflow-x-auto flex py-1 box-border gap-3">
                     <div className="flex flex-wrap gap-6">
@@ -229,33 +253,36 @@ const HomePage: FunctionComponent = () => {
                         <div className="relative [text-decoration:underline] tracking-num-0.02 font-semibold">
                           View All
                         </div>
-                        <Icon icon="radix-icons:arrow-top-right" className="w-3 h-3"></Icon>
+                        <Icon
+                          icon="radix-icons:arrow-top-right"
+                          className="w-3 h-3"
+                        ></Icon>
                       </div>
                     </div>
                     <div className="flex items-center gap-[8px]">
-                <button
-                  // onClick={() => scrollTo(current - 1)}
-                  // disabled={current === 0}
-                  className="flex h-[32px] w-[32px] items-center justify-center rounded-full border border-[#f0f0f0] bg-white transition-opacity hover:opacity-70 disabled:opacity-30"
-                  aria-label="Previous property"
-                >
-                  <Icon
-                    icon="solar:arrow-left-bold"
-                    className="h-[16px] w-[16px] text-[#2f3136]"
-                  />
-                </button>
-                <button
-                  // onClick={() => scrollTo(current + 1)}
-                  // disabled={current === total - 1}
-                  className="flex h-[32px] w-[32px] items-center justify-center rounded-full bg-[#e0f7f4] transition-opacity hover:opacity-70 disabled:opacity-30"
-                  aria-label="Next property"
-                >
-                  <Icon
-                    icon="solar:arrow-right-bold"
-                    className="h-[16px] w-[16px] text-[#096c5b]"
-                  />
-                </button>
-              </div>
+                      <button
+                        // onClick={() => scrollTo(current - 1)}
+                        // disabled={current === 0}
+                        className="flex h-[32px] w-[32px] items-center justify-center rounded-full border border-[#f0f0f0] bg-white transition-opacity hover:opacity-70 disabled:opacity-30"
+                        aria-label="Previous property"
+                      >
+                        <Icon
+                          icon="solar:arrow-left-bold"
+                          className="h-[16px] w-[16px] text-[#2f3136]"
+                        />
+                      </button>
+                      <button
+                        // onClick={() => scrollTo(current + 1)}
+                        // disabled={current === total - 1}
+                        className="flex h-[32px] w-[32px] items-center justify-center rounded-full bg-[#e0f7f4] transition-opacity hover:opacity-70 disabled:opacity-30"
+                        aria-label="Next property"
+                      >
+                        <Icon
+                          icon="solar:arrow-right-bold"
+                          className="h-[16px] w-[16px] text-[#096c5b]"
+                        />
+                      </button>
+                    </div>
                   </div>
                   <div className="h-full w-full overflow-x-auto flex py-1 box-border gap-3">
                     <div className="flex flex-wrap gap-6">
@@ -279,7 +306,9 @@ const HomePage: FunctionComponent = () => {
                   <div className="w-full h-10 flex items-center justify-between">
                     <div className="h-full flex items-center gap-6">
                       <div className="w-fit h-full flex items-center">
-                        <b className="w-fit flex items-center">Listings You May Like</b>
+                        <b className="w-fit flex items-center">
+                          Listings You May Like
+                        </b>
                       </div>
                       <div
                         className="w-fit h-fit flex items-end justify-center gap-1 cursor-pointer text-center text-[0.75rem] text-teal-100 font-lora"
@@ -288,33 +317,36 @@ const HomePage: FunctionComponent = () => {
                         <div className="relative [text-decoration:underline] tracking-num-0.02 font-semibold">
                           View All
                         </div>
-                        <Icon icon="radix-icons:arrow-top-right" className="w-3 h-3"></Icon>
+                        <Icon
+                          icon="radix-icons:arrow-top-right"
+                          className="w-3 h-3"
+                        ></Icon>
                       </div>
                     </div>
-                   <div className="flex items-center gap-[8px]">
-                <button
-                  // onClick={() => scrollTo(current - 1)}
-                  // disabled={current === 0}
-                  className="flex h-[32px] w-[32px] items-center justify-center rounded-full border border-[#f0f0f0] bg-white transition-opacity hover:opacity-70 disabled:opacity-30"
-                  aria-label="Previous property"
-                >
-                  <Icon
-                    icon="solar:arrow-left-bold"
-                    className="h-[16px] w-[16px] text-[#2f3136]"
-                  />
-                </button>
-                <button
-                  // onClick={() => scrollTo(current + 1)}
-                  // disabled={current === total - 1}
-                  className="flex h-[32px] w-[32px] items-center justify-center rounded-full bg-[#e0f7f4] transition-opacity hover:opacity-70 disabled:opacity-30"
-                  aria-label="Next property"
-                >
-                  <Icon
-                    icon="solar:arrow-right-bold"
-                    className="h-[16px] w-[16px] text-[#096c5b]"
-                  />
-                </button>
-              </div>
+                    <div className="flex items-center gap-[8px]">
+                      <button
+                        // onClick={() => scrollTo(current - 1)}
+                        // disabled={current === 0}
+                        className="flex h-[32px] w-[32px] items-center justify-center rounded-full border border-[#f0f0f0] bg-white transition-opacity hover:opacity-70 disabled:opacity-30"
+                        aria-label="Previous property"
+                      >
+                        <Icon
+                          icon="solar:arrow-left-bold"
+                          className="h-[16px] w-[16px] text-[#2f3136]"
+                        />
+                      </button>
+                      <button
+                        // onClick={() => scrollTo(current + 1)}
+                        // disabled={current === total - 1}
+                        className="flex h-[32px] w-[32px] items-center justify-center rounded-full bg-[#e0f7f4] transition-opacity hover:opacity-70 disabled:opacity-30"
+                        aria-label="Next property"
+                      >
+                        <Icon
+                          icon="solar:arrow-right-bold"
+                          className="h-[16px] w-[16px] text-[#096c5b]"
+                        />
+                      </button>
+                    </div>
                   </div>
                   <div className="h-full w-full overflow-x-auto flex py-1 box-border gap-3">
                     <div className="flex flex-wrap gap-6">
