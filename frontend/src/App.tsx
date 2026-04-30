@@ -3,6 +3,7 @@ import { AnimatePresence } from 'framer-motion';
 
 import PageLayout from './pages/utilities/PageLayout';
 import UserLanding from './pages/UserLanding';
+import ErrorPage from './pages/general/ErrorPage';
 
 import userRoutes from './routes/userRoutes';
 import adminRoutes from './routes/adminRoutes';
@@ -26,6 +27,9 @@ function AnimatedRoutes() {
           {adminRoutes}
           {landlordRoutes}
         </Route>
+
+        {/* Catch-all 404 Route */}
+        <Route path="*" element={<ErrorPage />} />
       </Routes>
     </AnimatePresence>
   );
