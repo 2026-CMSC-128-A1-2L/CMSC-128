@@ -20,6 +20,7 @@ import { Route } from "react-router-dom";
 
 import Settings from "../pages/user/setting/Settings";
 import TestPage from "../pages/utilities/TestPage";
+import InviteAccomodation from "../pages/user/messages/InviteAccomodation";
 import Registration from "../pages/Registration";
 // import { StudentRoute } from './ProtectedRoute';
 /* <Route key="student-route" element={<StudentRoute />}> */
@@ -36,7 +37,13 @@ const userRoutes = [
   <Route key="contact" path="/contact-us" element={<ContactUs />} />,
   <Route key="bookmark" path="/bookmark" element={<BookmarksNewUsers />} />,
   <Route key="unit" path="/unit" element={<UnitDetails />} />,
-  <Route key="dms-landing" path="/direct-messages" element={<DmsLanding />} />,
+  <Route key="dms-landing" path="/direct-messages" element={<DmsLanding />}>
+    <Route
+      key="dms-dorm-invitation"
+      path="dorm-invitation"
+      element={<InviteAccomodation />}
+    />
+  </Route>,
   <Route key="current-dorm" path="/current-dorm" element={<CurrentDorm />} />,
   <Route
     key="contract"
