@@ -100,12 +100,6 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
         setAllEvents(response.data);
       } catch (error) {
         console.error("Failed to load all events, using sample data:", error);
-        const sampleForMonth = SAMPLE_EVENTS.filter(event => {
-          const eventDate = new Date(event.date);
-          return eventDate.getMonth() === currentDate.getMonth() && 
-                 eventDate.getFullYear() === currentDate.getFullYear();
-        });
-        setAllEvents(sampleForMonth);
       }
     };
 
@@ -207,9 +201,8 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
                 <span className="flex-1">{monthName}</span>
                 <Icon
                   icon="ic:round-keyboard-arrow-down"
-                  className={`h-4 w-4 transition-transform ${
-                    showMonthDropdown ? "rotate-180" : ""
-                  }`}
+                  className={`h-4 w-4 transition-transform ${showMonthDropdown ? "rotate-180" : ""
+                    }`}
                 />
               </button>
               {showMonthDropdown && (
@@ -218,9 +211,8 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
                     <button
                       key={m}
                       onClick={() => handleMonthSelect(idx)}
-                      className={`w-full text-left px-3 py-2 text-xs hover:bg-blue-50 ${
-                        idx === month ? "bg-lightcyan-100 font-bold" : ""
-                      }`}
+                      className={`w-full text-left px-3 py-2 text-xs hover:bg-blue-50 ${idx === month ? "bg-lightcyan-100 font-bold" : ""
+                        }`}
                     >
                       {m}
                     </button>
@@ -238,9 +230,8 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
                 <span className="flex-1">{yearStr}</span>
                 <Icon
                   icon="ic:round-keyboard-arrow-down"
-                  className={`h-4 w-4 transition-transform ${
-                    showYearDropdown ? "rotate-180" : ""
-                  }`}
+                  className={`h-4 w-4 transition-transform ${showYearDropdown ? "rotate-180" : ""
+                    }`}
                 />
               </button>
               {showYearDropdown && (
@@ -249,9 +240,8 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
                     <button
                       key={y}
                       onClick={() => handleYearSelect(y)}
-                      className={`w-full text-left px-3 py-2 text-xs hover:bg-blue-50 ${
-                        y === year ? "bg-lightcyan-100 font-bold" : ""
-                      }`}
+                      className={`w-full text-left px-3 py-2 text-xs hover:bg-blue-50 ${y === year ? "bg-lightcyan-100 font-bold" : ""
+                        }`}
                     >
                       {y}
                     </button>

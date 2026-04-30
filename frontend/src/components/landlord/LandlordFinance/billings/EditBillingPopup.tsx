@@ -51,7 +51,7 @@ const EditBillingPopup: FunctionComponent<EditBillingPopupProps> = ({
     const currentRentValue = currentRent !== undefined ? currentRent : rent;
     const currentUtilitiesValue = currentUtilities !== undefined ? currentUtilities : utilities;
     const currentMiscValue = currentMisc !== undefined ? currentMisc : miscFees;
-    
+
     switch (field) {
       case 'rent':
         if (!value) return 'Please enter rent amount';
@@ -89,7 +89,7 @@ const EditBillingPopup: FunctionComponent<EditBillingPopupProps> = ({
     if (field === 'utilities') setUtilities(value);
     if (field === 'miscFees') setMiscFees(value);
     if (field === 'amountPaid') setAmountPaid(value);
-    
+
     // Clear error for this field if it was previously invalid
     if (errors[field as keyof ValidationErrors]) {
       setErrors(prev => ({ ...prev, [field]: '' }));
@@ -117,14 +117,14 @@ const EditBillingPopup: FunctionComponent<EditBillingPopupProps> = ({
     const utilitiesError = validateField('utilities', utilities);
     const miscFeesError = validateField('miscFees', miscFees);
     const amountPaidError = validateField('amountPaid', amountPaid, rent, utilities, miscFees);
-    
+
     const newErrors: ValidationErrors = {
       rent: rentError,
       utilities: utilitiesError,
       miscFees: miscFeesError,
       amountPaid: amountPaidError,
     };
-    
+
     setErrors(newErrors);
     setTouched({
       rent: true,
@@ -132,7 +132,7 @@ const EditBillingPopup: FunctionComponent<EditBillingPopupProps> = ({
       miscFees: true,
       amountPaid: true,
     });
-    
+
     // Check if any errors exist
     const hasErrors = Object.values(newErrors).some(error => error && error.length > 0);
     return !hasErrors;
@@ -163,12 +163,12 @@ const EditBillingPopup: FunctionComponent<EditBillingPopupProps> = ({
   };
 
   const totalAmount = (parseFloat(rent) || 0) + (parseFloat(utilities) || 0) + (parseFloat(miscFees) || 0);
-  
+
   // Check if form is valid for enabling the save button
-  const isFormValid = 
-    rent && 
-    utilities && 
-    !errors.rent && 
+  const isFormValid =
+    rent &&
+    utilities &&
+    !errors.rent &&
     !errors.utilities &&
     rent !== '' &&
     utilities !== '' &&
@@ -197,46 +197,46 @@ const EditBillingPopup: FunctionComponent<EditBillingPopupProps> = ({
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 mb-5">
-            <NumberInput 
-              value={rent} 
-              onChange={(value) => handleFieldChange('rent', value)} 
-              onBlur={() => handleFieldBlur('rent', rent)} 
-              label="RENT" 
-              placeholder="Enter rent amount" 
-              required 
-              error={errors.rent} 
-              touched={touched.rent} 
+            <NumberInput
+              value={rent}
+              onChange={(value) => handleFieldChange('rent', value)}
+              onBlur={() => handleFieldBlur('rent', rent)}
+              label="RENT"
+              placeholder="Enter rent amount"
+              required
+              error={errors.rent}
+              touched={touched.rent}
             />
-            <NumberInput 
-              value={utilities} 
-              onChange={(value) => handleFieldChange('utilities', value)} 
-              onBlur={() => handleFieldBlur('utilities', utilities)} 
-              label="UTILITIES" 
-              placeholder="Enter utilities amount" 
-              required 
-              error={errors.utilities} 
-              touched={touched.utilities} 
+            <NumberInput
+              value={utilities}
+              onChange={(value) => handleFieldChange('utilities', value)}
+              onBlur={() => handleFieldBlur('utilities', utilities)}
+              label="UTILITIES"
+              placeholder="Enter utilities amount"
+              required
+              error={errors.utilities}
+              touched={touched.utilities}
             />
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 mb-8">
-            <NumberInput 
-              value={miscFees} 
-              onChange={(value) => handleFieldChange('miscFees', value)} 
-              onBlur={() => handleFieldBlur('miscFees', miscFees)} 
-              label="MISC. FEES" 
-              placeholder="Enter misc fees" 
-              error={errors.miscFees} 
-              touched={touched.miscFees} 
+            <NumberInput
+              value={miscFees}
+              onChange={(value) => handleFieldChange('miscFees', value)}
+              onBlur={() => handleFieldBlur('miscFees', miscFees)}
+              label="MISC. FEES"
+              placeholder="Enter misc fees"
+              error={errors.miscFees}
+              touched={touched.miscFees}
             />
-            <NumberInput 
-              value={amountPaid} 
-              onChange={(value) => handleFieldChange('amountPaid', value)} 
-              onBlur={() => handleFieldBlur('amountPaid', amountPaid)} 
-              label="AMOUNT PAID" 
-              placeholder="Enter amount paid" 
-              error={errors.amountPaid} 
-              touched={touched.amountPaid} 
+            <NumberInput
+              value={amountPaid}
+              onChange={(value) => handleFieldChange('amountPaid', value)}
+              onBlur={() => handleFieldBlur('amountPaid', amountPaid)}
+              label="AMOUNT PAID"
+              placeholder="Enter amount paid"
+              error={errors.amountPaid}
+              touched={touched.amountPaid}
             />
           </div>
 
@@ -247,11 +247,11 @@ const EditBillingPopup: FunctionComponent<EditBillingPopupProps> = ({
             </div>
           </div>
 
-          <PopupButtons 
-            onCancel={onClose} 
-            onSubmit={handleSave} 
-            isFormValid={isFormValid} 
-            submitText="SAVE CHANGES" 
+          <PopupButtons
+            onCancel={onClose}
+            onSubmit={handleSave}
+            isFormValid={!!isFormValid}
+            submitText="SAVE CHANGES"
           />
         </div>
       </div>

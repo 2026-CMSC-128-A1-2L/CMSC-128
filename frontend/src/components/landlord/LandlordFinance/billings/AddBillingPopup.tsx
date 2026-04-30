@@ -193,7 +193,7 @@ const AddBillingPopup: FunctionComponent<AddBillingPopupProps> = ({
             />
           </div>
 
-          <PopupButtons onCancel={onClose} onSubmit={handleSubmit} isFormValid={isFormValid} submitText="ADD BILLING" />
+          <PopupButtons onCancel={onClose} onSubmit={handleSubmit} isFormValid={!!isFormValid} submitText="ADD BILLING" />
         </div>
       </div>
     </PortalPopup>
