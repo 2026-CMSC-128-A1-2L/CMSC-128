@@ -52,19 +52,23 @@ const SignInPopUp: FunctionComponent<SignInPopUpProps> = ({ onClose }) => {
           </b>
         </div>
 
-        <div className="self-stretch p-2.5">
-          <a
-            href="/api/auth/google"
-            className="self-stretch rounded-num-12 bg-aliceblue border-whitesmoke-300 border-solid border flex items-center justify-center py-3 px-4 gap-3 cursor-pointer hover:bg-lightcyan transition-colors"
-          >
-            <img
-              className="h-6 w-6 relative"
-              alt="G"
-              src="https://www.svgrepo.com/show/475656/google-color.svg"
-            />
-            <b className="relative tracking-num--0_01 text-gray">Sign in with Google</b>
-          </a>
-        </div>
+        <Link to="/registration">
+          <div className="self-stretch p-2.5">
+            <a
+              //href="/api/auth/google"
+
+              className="self-stretch rounded-num-12 bg-aliceblue border-whitesmoke-300 border-solid border flex items-center justify-center py-3 px-4 gap-3 cursor-pointer hover:bg-lightcyan transition-colors"
+            >
+              <img
+                className="h-6 w-6 relative"
+                alt="G"
+                src="https://www.svgrepo.com/show/475656/google-color.svg"
+              />
+              <b className="relative tracking-num--0_01 text-gray">Sign in with Google</b>
+            </a>
+          </div>
+
+        </Link>
 
         <div className="text-center text-num-12">
           <p className="m-0 leading-6 font-medium text-gray-100">
