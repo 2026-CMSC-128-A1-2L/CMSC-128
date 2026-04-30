@@ -1,7 +1,7 @@
 // frontend/src/components/user/finance/SubmitReceipt.tsx
-import { type FunctionComponent, useState, useRef } from "react";
-import { Icon } from "@iconify/react";
-import PortalPopup from "../../../components/general/PortalPopup";
+import { type FunctionComponent, useState, useRef } from 'react';
+import { Icon } from '@iconify/react';
+import PortalPopup from '../../../components/general/PortalPopup';
 
 export type SubmitReceiptType = {
   className?: string;
@@ -18,22 +18,22 @@ export type SubmitReceiptType = {
 };
 
 const SubmitReceipt: FunctionComponent<SubmitReceiptType> = ({
-  className = "",
+  className = '',
   isOpen = false,
   onClose,
-  dueDate = "",
+  dueDate = '',
   dueAmount = 0,
   onSubmit,
 }) => {
-  const [referenceNo, setReferenceNo] = useState("");
-  const [accountName, setAccountName] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState("");
+  const [referenceNo, setReferenceNo] = useState('');
+  const [accountName, setAccountName] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState('');
   const [isMethodDropdownOpen, setIsMethodDropdownOpen] = useState(false);
   const [receiptFile, setReceiptFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const paymentMethods = ["GCash", "Bank Transfer", "Cash", "Maya"];
+  const paymentMethods = ['GCash', 'Bank Transfer', 'Cash', 'Maya'];
 
   const handleFileUpload = () => {
     fileInputRef.current?.click();
@@ -51,7 +51,7 @@ const SubmitReceipt: FunctionComponent<SubmitReceiptType> = ({
       setIsUploading(true);
       try {
         // Simulate upload delay - replace with actual API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise((resolve) => setTimeout(resolve, 1000));
         onSubmit({
           referenceNo,
           paymentMethod,
@@ -140,13 +140,10 @@ const SubmitReceipt: FunctionComponent<SubmitReceiptType> = ({
                   onClick={() => setIsMethodDropdownOpen(!isMethodDropdownOpen)}
                   className="w-full rounded-lg bg-white border-whitesmoke-200 border-solid border-2 flex items-center justify-between p-3 cursor-pointer hover:border-teal transition-colors"
                 >
-                  <div className={paymentMethod ? "text-black" : "text-dimgray"}>
-                    {paymentMethod || "Select Payment Method"}
+                  <div className={paymentMethod ? 'text-black' : 'text-dimgray'}>
+                    {paymentMethod || 'Select Payment Method'}
                   </div>
-                  <Icon
-                    icon="mdi-light:chevron-down"
-                    className="h-5 w-5 text-gray-400"
-                  />
+                  <Icon icon="mdi-light:chevron-down" className="h-5 w-5 text-gray-400" />
                 </div>
 
                 {isMethodDropdownOpen && (
@@ -176,7 +173,7 @@ const SubmitReceipt: FunctionComponent<SubmitReceiptType> = ({
           </div>
 
           {/* GCash QR Section only when GCash is selected */}
-          {paymentMethod === "GCash" && (
+          {paymentMethod === 'GCash' && (
             <div className="flex flex-col items-start gap-2 w-full mb-4 animate-fade-in">
               <b className="text-base tracking-[-0.01em]">GCASH QR CODE</b>
               <div className="w-full rounded-2xl bg-white border-whitesmoke-200 border-solid border-2 flex flex-col items-center py-6 px-0 gap-3 text-center text-2xl text-gray">
@@ -196,7 +193,7 @@ const SubmitReceipt: FunctionComponent<SubmitReceiptType> = ({
           )}
 
           {/* Bank Transfer Section only when Bank Transfer is selected */}
-          {paymentMethod === "Bank Transfer" && (
+          {paymentMethod === 'Bank Transfer' && (
             <div className="flex flex-col items-start gap-2 w-full mb-4 animate-fade-in">
               <b className="text-base tracking-[-0.01em]">BANK TRANSFER</b>
               <div className="w-full rounded-2xl bg-white border-whitesmoke-200 border-solid border flex flex-col items-start py-3 px-1.5 text-sm text-silver">
@@ -242,7 +239,7 @@ const SubmitReceipt: FunctionComponent<SubmitReceiptType> = ({
               <Icon icon="mdi-light:cloud-upload" className="w-10 h-10" />
             </div>
             <div className="flex items-center justify-center p-2.5">
-              <b>{receiptFile ? receiptFile.name : "Upload receipt screenshot"}</b>
+              <b>{receiptFile ? receiptFile.name : 'Upload receipt screenshot'}</b>
             </div>
             {receiptFile && (
               <button
@@ -264,12 +261,12 @@ const SubmitReceipt: FunctionComponent<SubmitReceiptType> = ({
               disabled={!receiptFile || !paymentMethod || isUploading}
               className={`w-full rounded-xl bg-lightcyan overflow-hidden flex items-center justify-center p-3 transition-all duration-200 ${
                 !receiptFile || !paymentMethod || isUploading
-                  ? "opacity-50 cursor-not-allowed"
-                  : "hover:bg-teal hover:text-white hover:scale-[1.02] active:scale-95 cursor-pointer"
+                  ? 'opacity-50 cursor-not-allowed'
+                  : 'hover:bg-teal hover:text-white hover:scale-[1.02] active:scale-95 cursor-pointer'
               }`}
             >
               <div className="font-semibold">
-                {isUploading ? "Submitting..." : "Submit Payment"}
+                {isUploading ? 'Submitting...' : 'Submit Payment'}
               </div>
             </button>
           </div>

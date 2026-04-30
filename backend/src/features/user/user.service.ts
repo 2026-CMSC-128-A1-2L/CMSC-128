@@ -1,8 +1,8 @@
 import type mongoose from 'mongoose';
 import type { ClientSession, QueryFilter } from 'mongoose';
-import { Student, User } from "./user.model.js";
-import { AppError } from "../../error.js";
-import { sendNotification } from "../notification/notification.service.js";
+import { Student, User } from './user.model.js';
+import { AppError } from '../../error.js';
+import { sendNotification } from '../notification/notification.service.js';
 import assert from 'node:assert';
 import { UserTypeType } from 'shared';
 import type { StudentPreferences } from 'shared';

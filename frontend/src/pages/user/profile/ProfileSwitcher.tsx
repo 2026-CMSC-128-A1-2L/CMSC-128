@@ -19,12 +19,12 @@ const ProfileSwitcher = () => {
     }
   }, []);
 
-    const propertyImageSrc= undefined
-    const propertyName= undefined
-    const unitNumber= undefined
-    const contractDuration= undefined
-    const leaseEndDate= undefined
-    const verified= true
+  const propertyImageSrc = undefined;
+  const propertyName = undefined;
+  const unitNumber = undefined;
+  const contractDuration = undefined;
+  const leaseEndDate = undefined;
+  const verified = true;
 
   return (
     <div className="w-full h-screen relative overflow-y-auto flex flex-col items-start isolate gap-2.5 text-left text-num-14 text-darkslategray-100 font-lora">
@@ -56,14 +56,18 @@ const ProfileSwitcher = () => {
                   <Switch activeTab={activeTab} setActiveTab={setActiveTab} />
 
                   <div className="self-stretch w-full">
-                    {activeTab === 'dorm' ? <CurrentDormCard 
-                    propertyImageSrc={propertyImageSrc}
-                    propertyName={propertyName}
-                    unitNumber={unitNumber}
-                    contractDuration={contractDuration}
-                    leaseEndDate={leaseEndDate}
-                    verified={verified}
-                    /> : <UserVerif verificationStep={1} />}
+                    {activeTab === 'dorm' ? (
+                      <CurrentDormCard
+                        propertyImageSrc={propertyImageSrc}
+                        propertyName={propertyName}
+                        unitNumber={unitNumber}
+                        contractDuration={contractDuration}
+                        leaseEndDate={leaseEndDate}
+                        verified={verified}
+                      />
+                    ) : (
+                      <UserVerif verificationStep={1} />
+                    )}
                   </div>
                 </div>
               </div>

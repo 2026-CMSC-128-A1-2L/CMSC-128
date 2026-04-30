@@ -58,11 +58,7 @@ const LandlordProfileVerification = () => {
           onSubmit={handleSubmit}
         />
 
-        <DocumentsUploadList
-          documents={documents}
-          uploads={uploads}
-          onFileSelected={handleFile}
-        />
+        <DocumentsUploadList documents={documents} uploads={uploads} onFileSelected={handleFile} />
       </div>
     </LandlordLayout>
   );

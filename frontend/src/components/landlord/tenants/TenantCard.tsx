@@ -20,15 +20,13 @@ const STATUS_MAP: Record<PaymentStatus, StatusDescriptor> = {
   },
   pending: {
     label: 'Pending',
-    textClass:
-      'bg-linear-to-b from-[#c29722] to-[#f6b709] bg-clip-text text-transparent',
+    textClass: 'bg-linear-to-b from-[#c29722] to-[#f6b709] bg-clip-text text-transparent',
     icon: 'material-symbols:pending-outline',
     iconClass: 'text-[#c29722]',
   },
   overdue: {
     label: 'Overdue',
-    textClass:
-      'bg-linear-to-b from-[#c00f0f] to-[#e44f4f] bg-clip-text text-transparent',
+    textClass: 'bg-linear-to-b from-[#c00f0f] to-[#e44f4f] bg-clip-text text-transparent',
     icon: 'material-symbols:cancel-outline',
     iconClass: 'text-[#c00f0f]',
   },
@@ -74,7 +72,11 @@ const TenantCard = ({ tenant, to, onMoreOptions }: TenantCardProps) => {
           aria-label={`More options for ${tenant.displayName}`}
           className="flex h-[32px] w-[28px] shrink-0 cursor-pointer items-center justify-center text-[#2f3136] transition-colors hover:text-[#096c5b]"
         >
-          <Icon icon="iconamoon:menu-kebab-vertical" className="h-[28px] w-[28px]" aria-hidden="true" />
+          <Icon
+            icon="iconamoon:menu-kebab-vertical"
+            className="h-[28px] w-[28px]"
+            aria-hidden="true"
+          />
         </button>
       </div>
 
@@ -94,7 +96,10 @@ const TenantCard = ({ tenant, to, onMoreOptions }: TenantCardProps) => {
         </div>
         <span
           aria-hidden="true"
-          className={['flex h-[32px] w-[32px] shrink-0 items-center justify-center', status.iconClass].join(' ')}
+          className={[
+            'flex h-[32px] w-[32px] shrink-0 items-center justify-center',
+            status.iconClass,
+          ].join(' ')}
         >
           <Icon icon={status.icon} className="h-[32px] w-[32px]" />
         </span>

@@ -1,6 +1,6 @@
-import { type FunctionComponent, useEffect, useState } from "react";
-import { Icon } from "@iconify/react";
-import { CalendarService, type CalendarEvent } from "../../../service/CalendarService";
+import { type FunctionComponent, useEffect, useState } from 'react';
+import { Icon } from '@iconify/react';
+import { CalendarService, type CalendarEvent } from '../../../service/CalendarService';
 
 interface MiniCalendarProps {
   currentDate: Date;
@@ -11,48 +11,48 @@ interface MiniCalendarProps {
   onEventClick?: (event: CalendarEvent) => void;
 }
 
-const DAYS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
+const DAYS = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
 const MONTHS = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
 ];
 const MONTH_SHORT = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
 ];
 
-const getEventIcon = (type: CalendarEvent["type"]) => {
+const getEventIcon = (type: CalendarEvent['type']) => {
   switch (type) {
-    case "booking":
-      return "ic:round-calendar-today";
-    case "billing":
-      return "ic:round-receipt";
-    case "move-in":
-      return "ic:round-home";
-    case "move-out":
-      return "ic:round-logout";
+    case 'booking':
+      return 'ic:round-calendar-today';
+    case 'billing':
+      return 'ic:round-receipt';
+    case 'move-in':
+      return 'ic:round-home';
+    case 'move-out':
+      return 'ic:round-logout';
     default:
-      return "ic:round-circle";
+      return 'ic:round-circle';
   }
 };
 
@@ -70,8 +70,6 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
   const [showMonthDropdown, setShowMonthDropdown] = useState(false);
   const [showYearDropdown, setShowYearDropdown] = useState(false);
 
-
-
   useEffect(() => {
     const fetchUpcomingEvents = async () => {
       setLoading(true);
@@ -79,7 +77,7 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
         const response = await CalendarService.getUpcomingEvents();
         setUpcomingEvents(response.data.slice(0, 3));
       } catch (error) {
-        console.error("Failed to load upcoming events:", error);
+        console.error('Failed to load upcoming events:', error);
         setUpcomingEvents([]);
       } finally {
         setLoading(false);
@@ -95,11 +93,11 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
       try {
         const response = await CalendarService.getCalendarEvents(
           currentDate.getFullYear(),
-          currentDate.getMonth() + 1
+          currentDate.getMonth() + 1,
         );
         setAllEvents(response.data);
       } catch (error) {
-        console.error("Failed to load all events, using sample data:", error);
+        console.error('Failed to load all events, using sample data:', error);
       }
     };
 
@@ -130,11 +128,10 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
   }
 
   const today = new Date();
-  const isCurrentMonth =
-    today.getFullYear() === year && today.getMonth() === month;
+  const isCurrentMonth = today.getFullYear() === year && today.getMonth() === month;
 
-  const monthName = currentDate.toLocaleDateString("en-US", {
-    month: "short",
+  const monthName = currentDate.toLocaleDateString('en-US', {
+    month: 'short',
   });
   const yearStr = currentDate.getFullYear().toString();
 
@@ -154,10 +151,10 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
 
   const formatEventDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
     });
   };
 
@@ -201,8 +198,9 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
                 <span className="flex-1">{monthName}</span>
                 <Icon
                   icon="ic:round-keyboard-arrow-down"
-                  className={`h-4 w-4 transition-transform ${showMonthDropdown ? "rotate-180" : ""
-                    }`}
+                  className={`h-4 w-4 transition-transform ${
+                    showMonthDropdown ? 'rotate-180' : ''
+                  }`}
                 />
               </button>
               {showMonthDropdown && (
@@ -211,8 +209,9 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
                     <button
                       key={m}
                       onClick={() => handleMonthSelect(idx)}
-                      className={`w-full text-left px-3 py-2 text-xs hover:bg-blue-50 ${idx === month ? "bg-lightcyan-100 font-bold" : ""
-                        }`}
+                      className={`w-full text-left px-3 py-2 text-xs hover:bg-blue-50 ${
+                        idx === month ? 'bg-lightcyan-100 font-bold' : ''
+                      }`}
                     >
                       {m}
                     </button>
@@ -230,8 +229,7 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
                 <span className="flex-1">{yearStr}</span>
                 <Icon
                   icon="ic:round-keyboard-arrow-down"
-                  className={`h-4 w-4 transition-transform ${showYearDropdown ? "rotate-180" : ""
-                    }`}
+                  className={`h-4 w-4 transition-transform ${showYearDropdown ? 'rotate-180' : ''}`}
                 />
               </button>
               {showYearDropdown && (
@@ -240,8 +238,9 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
                     <button
                       key={y}
                       onClick={() => handleYearSelect(y)}
-                      className={`w-full text-left px-3 py-2 text-xs hover:bg-blue-50 ${y === year ? "bg-lightcyan-100 font-bold" : ""
-                        }`}
+                      className={`w-full text-left px-3 py-2 text-xs hover:bg-blue-50 ${
+                        y === year ? 'bg-lightcyan-100 font-bold' : ''
+                      }`}
                     >
                       {y}
                     </button>
@@ -273,22 +272,21 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
             {weeks.map((week, wi) => (
               <div key={wi} className="grid grid-cols-7 gap-0.5">
                 {week.map((day, di) => {
-                  const isTodayDay =
-                    isCurrentMonth && day === today.getDate() && day !== null;
+                  const isTodayDay = isCurrentMonth && day === today.getDate() && day !== null;
                   return (
                     <button
                       key={di}
                       onClick={() => handleDateClick(day)}
                       disabled={day === null}
                       className={[
-                        "rounded-md flex items-center justify-center p-2 aspect-square transition-colors",
-                        day === null ? "cursor-default" : "cursor-pointer hover:bg-gray-100",
+                        'rounded-md flex items-center justify-center p-2 aspect-square transition-colors',
+                        day === null ? 'cursor-default' : 'cursor-pointer hover:bg-gray-100',
                         isTodayDay
-                          ? "bg-lightcyan-100 text-teal-200 font-bold hover:bg-lightcyan-200"
-                          : "",
-                      ].join(" ")}
+                          ? 'bg-lightcyan-100 text-teal-200 font-bold hover:bg-lightcyan-200'
+                          : '',
+                      ].join(' ')}
                     >
-                      {day ?? ""}
+                      {day ?? ''}
                     </button>
                   );
                 })}
@@ -316,10 +314,7 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
                 }}
                 className="w-full h-12 rounded-num-8 border border-whitesmoke-200 box-border overflow-hidden flex items-center p-3 gap-2 hover:bg-whitesmoke-200 transition-colors cursor-pointer font-inter"
               >
-                <Icon
-                  icon={getEventIcon(event.type)}
-                  className="h-6 w-6 shrink-0 text-teal"
-                />
+                <Icon icon={getEventIcon(event.type)} className="h-6 w-6 shrink-0 text-teal" />
                 <div className="flex-1 flex items-center justify-between min-w-0 gap-2">
                   <div className="text-num-14 font-medium text-dimgray truncate">{event.title}</div>
                   <div className="text-xs text-dimgray shrink-0">{formatEventDate(event.date)}</div>

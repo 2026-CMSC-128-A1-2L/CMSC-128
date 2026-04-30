@@ -1,14 +1,15 @@
-import { type FunctionComponent, useState } from "react";
-import DmsSidebar from "../../../components/general/DmsSidebar";
-import oswald from "../../../../assets/owl_inbox.png";
-import TutorialIcon from "../../../../assets/help-chat.svg";
-import TutorialBubble from "../messages/DMsTutorial";
-import { Outlet, useLocation } from "react-router-dom";
+import { type FunctionComponent, useState } from 'react';
+import DmsSidebar from '../../../components/general/DmsSidebar';
+import oswald from '../../../../assets/owl_inbox.png';
+import TutorialIcon from '../../../../assets/help-chat.svg';
+import TutorialBubble from '../messages/DMsTutorial';
+import { Outlet, useLocation } from 'react-router-dom';
 
 const DmsLanding: FunctionComponent = () => {
   const [showHelp, setShowHelp] = useState(false);
   const location = useLocation();
-  const isBaseRoute = location.pathname === "/direct-messages" || location.pathname === "/direct-messages/";
+  const isBaseRoute =
+    location.pathname === '/direct-messages' || location.pathname === '/direct-messages/';
 
   return (
     <div className="w-full h-screen flex items-start font-inter overflow-hidden relative">
@@ -43,11 +44,7 @@ const DmsLanding: FunctionComponent = () => {
         className="fixed bottom-10 right-10 z-[1000] cursor-pointer transition-all hover:scale-110 active:scale-95"
         onClick={() => setShowHelp(!showHelp)}
       >
-        <img
-          src={TutorialIcon}
-          alt="Help"
-          className="w-16 h-16 drop-shadow-lg"
-        />
+        <img src={TutorialIcon} alt="Help" className="w-16 h-16 drop-shadow-lg" />
       </div>
     </div>
   );

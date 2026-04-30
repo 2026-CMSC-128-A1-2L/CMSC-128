@@ -1,8 +1,8 @@
 import '../../config.js';
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
-import { User } from "../user/user.model.js";
-import { createUser, type CreateUserParams } from "../user/user.service.js";
+import { User } from '../user/user.model.js';
+import { createUser, type CreateUserParams } from '../user/user.service.js';
 
 if (!process.env.GOOGLE_CLIENT_ID) {
   throw new Error('Missing GOOGLE_CLIENT_ID in environment variables.');

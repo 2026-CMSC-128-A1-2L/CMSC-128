@@ -1,37 +1,37 @@
 // frontend/src/pages/user/finance/Finance.tsx
-import { type FunctionComponent, useState, useEffect } from "react";
-import { Icon } from "@iconify/react";
-import SideBar from "../../../components/user/SideBar";
-import Footer from "../../../components/general/Footer";
-import DownloadBillings from "../../../components/user/finance/DownloadBillings";
-import SubmitReceipt from "../../../components/user/finance/SubmitReceipt";
-import MonthlyExpensesChart from "../../../components/user/finance/MonthlyExpensesChart";
+import { type FunctionComponent, useState, useEffect } from 'react';
+import { Icon } from '@iconify/react';
+import SideBar from '../../../components/user/SideBar';
+import Footer from '../../../components/general/Footer';
+import DownloadBillings from '../../../components/user/finance/DownloadBillings';
+import SubmitReceipt from '../../../components/user/finance/SubmitReceipt';
+import MonthlyExpensesChart from '../../../components/user/finance/MonthlyExpensesChart';
 import type {
   TenantBilling,
   UpcomingPayment,
-} from "../../../components/user/finance/types/tenantFinance";
+} from '../../../components/user/finance/types/tenantFinance';
 
 // Mock data - replace with API calls
 const fetchCurrentBilling = async (): Promise<TenantBilling | null> => {
   return {
-    _id: "billing_1",
-    userId: "user_1",
-    unitId: "unit_1",
-    facilityId: "facility_1",
-    dueDate: "2026-04-15",
+    _id: 'billing_1',
+    userId: 'user_1',
+    unitId: 'unit_1',
+    facilityId: 'facility_1',
+    dueDate: '2026-04-15',
     paymentDate: null,
     paidAmount: null,
     totalAmount: 4950,
-    paymentStatus: "unpaid",
+    paymentStatus: 'unpaid',
     breakdown: [
-      { name: "Monthly Rent", amount: 3000 },
-      { name: "Electricity", amount: 800 },
-      { name: "Water", amount: 350 },
-      { name: "Internet", amount: 500 },
-      { name: "Others", amount: 300 },
+      { name: 'Monthly Rent', amount: 3000 },
+      { name: 'Electricity', amount: 800 },
+      { name: 'Water', amount: 350 },
+      { name: 'Internet', amount: 500 },
+      { name: 'Others', amount: 300 },
     ],
-    createdAt: "2026-03-01",
-    updatedAt: "2026-03-01",
+    createdAt: '2026-03-01',
+    updatedAt: '2026-03-01',
   };
 };
 
@@ -39,74 +39,63 @@ const fetchUpcomingPayments = async (): Promise<UpcomingPayment[]> => {
   const currentDate = new Date();
   const currentMonth = currentDate.toLocaleString('default', { month: 'long' });
   const currentYear = currentDate.getFullYear();
-  
+
   return [
-    { 
-      id: "1", 
-      dueDate: `${currentMonth} 15, ${currentYear} (Current)`, 
-      amount: 4950, 
-      billingId: "billing_1",
-      isCurrent: true
+    {
+      id: '1',
+      dueDate: `${currentMonth} 15, ${currentYear} (Current)`,
+      amount: 4950,
+      billingId: 'billing_1',
+      isCurrent: true,
     },
-    { 
-      id: "2", 
-      dueDate: `May 15, ${currentYear}`, 
-      amount: 4950, 
-      billingId: "billing_2",
-      isCurrent: false
+    {
+      id: '2',
+      dueDate: `May 15, ${currentYear}`,
+      amount: 4950,
+      billingId: 'billing_2',
+      isCurrent: false,
     },
-    { 
-      id: "3", 
-      dueDate: `June 15, ${currentYear}`, 
-      amount: 4950, 
-      billingId: "billing_3",
-      isCurrent: false
+    {
+      id: '3',
+      dueDate: `June 15, ${currentYear}`,
+      amount: 4950,
+      billingId: 'billing_3',
+      isCurrent: false,
     },
   ];
 };
 
-const getPaymentStatusDisplay = (
-  status: string,
-): { text: string; gradient: string } => {
+const getPaymentStatusDisplay = (status: string): { text: string; gradient: string } => {
   switch (status) {
-    case "paid":
+    case 'paid':
       return {
-        text: "PAID",
-        gradient:
-          "bg-gradient-to-b from-[#5dc2a8] to-[#0c8873] bg-clip-text text-transparent",
+        text: 'PAID',
+        gradient: 'bg-gradient-to-b from-[#5dc2a8] to-[#0c8873] bg-clip-text text-transparent',
       };
-    case "overdue":
+    case 'overdue':
       return {
-        text: "OVERDUE",
-        gradient:
-          "bg-gradient-to-b from-[#c00f0f] to-[#e44f4f] bg-clip-text text-transparent",
+        text: 'OVERDUE',
+        gradient: 'bg-gradient-to-b from-[#c00f0f] to-[#e44f4f] bg-clip-text text-transparent',
       };
-    case "partially_paid":
+    case 'partially_paid':
       return {
-        text: "PARTIAL",
-        gradient:
-          "bg-gradient-to-t from-[#ffc273] to-[#fa7900] bg-clip-text text-transparent",
+        text: 'PARTIAL',
+        gradient: 'bg-gradient-to-t from-[#ffc273] to-[#fa7900] bg-clip-text text-transparent',
       };
     default:
       return {
-        text: "PENDING",
-        gradient:
-          "bg-gradient-to-b from-[#c29722] to-[#f6b709] bg-clip-text text-transparent",
+        text: 'PENDING',
+        gradient: 'bg-gradient-to-b from-[#c29722] to-[#f6b709] bg-clip-text text-transparent',
       };
   }
 };
 
 const TenantFinancePage: FunctionComponent = () => {
-  const [currentBilling, setCurrentBilling] = useState<TenantBilling | null>(
-    null,
-  );
-  const [upcomingPayments, setUpcomingPayments] = useState<UpcomingPayment[]>(
-    [],
-  );
+  const [currentBilling, setCurrentBilling] = useState<TenantBilling | null>(null);
+  const [upcomingPayments, setUpcomingPayments] = useState<UpcomingPayment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitReceiptOpen, setIsSubmitReceiptOpen] = useState(false);
-  const [selectedPayment, setSelectedPayment] =
-    useState<UpcomingPayment | null>(null);
+  const [selectedPayment, setSelectedPayment] = useState<UpcomingPayment | null>(null);
 
   useEffect(() => {
     const loadData = async () => {
@@ -119,7 +108,7 @@ const TenantFinancePage: FunctionComponent = () => {
         setCurrentBilling(billing);
         setUpcomingPayments(payments);
       } catch (error) {
-        console.error("Failed to load finance data:", error);
+        console.error('Failed to load finance data:', error);
       } finally {
         setIsLoading(false);
       }
@@ -143,7 +132,7 @@ const TenantFinancePage: FunctionComponent = () => {
     receiptFile: File | null;
     accountName?: string;
   }) => {
-    console.log("Submitting receipt for payment:", selectedPayment, data);
+    console.log('Submitting receipt for payment:', selectedPayment, data);
     // Here you would make an API call to submit the payment
     handleCloseSubmitReceipt();
   };
@@ -151,9 +140,8 @@ const TenantFinancePage: FunctionComponent = () => {
   const paymentStatus = currentBilling
     ? getPaymentStatusDisplay(currentBilling.paymentStatus)
     : {
-        text: "PENDING",
-        gradient:
-          "bg-gradient-to-b from-[#c29722] to-[#f6b709] bg-clip-text text-transparent",
+        text: 'PENDING',
+        gradient: 'bg-gradient-to-b from-[#c29722] to-[#f6b709] bg-clip-text text-transparent',
       };
 
   const totalDue = currentBilling?.totalAmount || 0;
@@ -162,26 +150,20 @@ const TenantFinancePage: FunctionComponent = () => {
     : totalDue;
 
   const rentAmount =
-    currentBilling?.breakdown.find((b) => b.name === "Monthly Rent")?.amount ||
-    3000;
+    currentBilling?.breakdown.find((b) => b.name === 'Monthly Rent')?.amount || 3000;
   const electricityAmount =
-    currentBilling?.breakdown.find((b) => b.name === "Electricity")?.amount ||
-    800;
-  const waterAmount =
-    currentBilling?.breakdown.find((b) => b.name === "Water")?.amount || 350;
+    currentBilling?.breakdown.find((b) => b.name === 'Electricity')?.amount || 800;
+  const waterAmount = currentBilling?.breakdown.find((b) => b.name === 'Water')?.amount || 350;
   const internetAmount =
-    currentBilling?.breakdown.find((b) => b.name === "Internet")?.amount || 500;
-  const othersAmount =
-    currentBilling?.breakdown.find((b) => b.name === "Others")?.amount || 300;
+    currentBilling?.breakdown.find((b) => b.name === 'Internet')?.amount || 500;
+  const othersAmount = currentBilling?.breakdown.find((b) => b.name === 'Others')?.amount || 300;
 
   const layout = (content: React.ReactNode) => (
     <div className="flex min-h-screen font-inter text-darkslategray">
       <div className="sticky top-0 h-screen shrink-0 z-10">
         <SideBar />
       </div>
-      <div className="flex flex-1 flex-col min-w-0 overflow-y-auto">
-        {content}
-      </div>
+      <div className="flex flex-1 flex-col min-w-0 overflow-y-auto">{content}</div>
     </div>
   );
 
@@ -208,22 +190,16 @@ const TenantFinancePage: FunctionComponent = () => {
             {/* Property info */}
             <div className="flex flex-col gap-1 px-2 mb-6">
               <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
-                <b className="text-xl md:text-2xl font-inter">
-                  One Sapphire Place
-                </b>
-                <DownloadBillings 
-                  billingId={currentBilling?._id} 
+                <b className="text-xl md:text-2xl font-inter">One Sapphire Place</b>
+                <DownloadBillings
+                  billingId={currentBilling?._id}
                   month={new Date().toLocaleString('default', { month: 'long', year: 'numeric' })}
                 />
               </div>
               <div className="flex items-start gap-2 px-2">
-                <Icon
-                  icon="mdi-light:map-marker"
-                  className="h-5 w-5 shrink-0 mt-0.5"
-                />
+                <Icon icon="mdi-light:map-marker" className="h-5 w-5 shrink-0 mt-0.5" />
                 <b className="text-sm break-words">
-                  Lot 3, Block 17, Sapphire St, Umali Subd, Los Baños,
-                  Philippines, 4030
+                  Lot 3, Block 17, Sapphire St, Umali Subd, Los Baños, Philippines, 4030
                 </b>
               </div>
               <div className="flex items-center gap-2 px-2">
@@ -254,19 +230,14 @@ const TenantFinancePage: FunctionComponent = () => {
                     </div>
                     <div className="flex flex-col gap-2 font-lora text-left text-[10px] md:text-xs">
                       {[
-                        ["Monthly Rent", rentAmount],
-                        ["Electricity", electricityAmount],
-                        ["Water", waterAmount],
-                        ["Internet", internetAmount],
-                        ["Others", othersAmount],
+                        ['Monthly Rent', rentAmount],
+                        ['Electricity', electricityAmount],
+                        ['Water', waterAmount],
+                        ['Internet', internetAmount],
+                        ['Others', othersAmount],
                       ].map(([label, amt]) => (
-                        <div
-                          key={label as string}
-                          className="flex justify-between py-2"
-                        >
-                          <span className="flex-1 font-semibold tracking-wide">
-                            {label}
-                          </span>
+                        <div key={label as string} className="flex justify-between py-2">
+                          <span className="flex-1 font-semibold tracking-wide">{label}</span>
                           <span className="flex-1 font-semibold tracking-wide">
                             Php {(amt as number).toFixed(2)}
                           </span>
@@ -304,9 +275,7 @@ const TenantFinancePage: FunctionComponent = () => {
                   <MonthlyExpensesChart />
                 </div>
                 <div className="flex flex-col gap-2.5 p-2 md:p-2.5 font-inter text-sm">
-                  <b className="text-base md:text-lg tracking-tight">
-                    Upcoming Payments
-                  </b>
+                  <b className="text-base md:text-lg tracking-tight">Upcoming Payments</b>
                   <div className="h-0.5 border border-whitesmoke-200" />
                   {upcomingPayments.map((payment) => (
                     <div
@@ -317,8 +286,8 @@ const TenantFinancePage: FunctionComponent = () => {
                         <div
                           className={`h-5 w-5 rounded-[4px] shrink-0 ${
                             payment.isCurrent
-                              ? "bg-gradient-to-b from-[#024338] to-[#096c5b]"
-                              : "bg-gradient-to-b from-[#c29722] to-[#f6b709]"
+                              ? 'bg-gradient-to-b from-[#024338] to-[#096c5b]'
+                              : 'bg-gradient-to-b from-[#c29722] to-[#f6b709]'
                           }`}
                         />
                         <div className="flex flex-col gap-1">
@@ -348,9 +317,9 @@ const TenantFinancePage: FunctionComponent = () => {
                   <b className="text-sm md:text-base px-2">Past Bills</b>
                   <div className="flex flex-col gap-2 px-2 md:px-3 text-xs">
                     {[
-                      ["January 15, 2026", 4500],
-                      ["February 15, 2026", 4500],
-                      ["March 15, 2026", 4500],
+                      ['January 15, 2026', 4500],
+                      ['February 15, 2026', 4500],
+                      ['March 15, 2026', 4500],
                     ].map(([date, amt]) => (
                       <div
                         key={date as string}

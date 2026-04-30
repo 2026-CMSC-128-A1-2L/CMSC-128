@@ -15,7 +15,6 @@ const AddManager2: FunctionComponent<Props> = ({ onClose, email }) => {
     <div className="w-120 h-125 relative rounded-2xl bg-white overflow-hidden flex flex-col items-start p-8 box-border text-center text-2xl text-black font-inter">
       <div className="self-stretch h-[436px] overflow-hidden shrink-0 flex flex-col items-center pt-[65px] px-2.5 pb-6 box-border gap-6">
         <div className="self-stretch flex flex-col items-start">
-
           {/* Icon */}
           <div className="self-stretch bg-white overflow-hidden flex items-center justify-center py-[5px] px-[3px]">
             <div className="w-[100px] h-[100px] flex items-center justify-center relative rounded-[50%] bg-lightcyan">
@@ -35,7 +34,6 @@ const AddManager2: FunctionComponent<Props> = ({ onClose, email }) => {
               <span className="font-medium">. You'll be notified once they accept or decline.</span>
             </div>
           </div>
-
         </div>
 
         {/* Close button */}
@@ -46,7 +44,6 @@ const AddManager2: FunctionComponent<Props> = ({ onClose, email }) => {
             </button>
           </div>
         </div>
-
       </div>
     </div>
   );

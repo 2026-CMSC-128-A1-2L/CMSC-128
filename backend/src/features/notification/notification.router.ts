@@ -3,7 +3,7 @@ import {
   routeGetNotifications,
   routeGetNotification,
   routeReadNotification,
-} from "./notification.controller.js";
+} from './notification.controller.js';
 
 const router = Router();
 

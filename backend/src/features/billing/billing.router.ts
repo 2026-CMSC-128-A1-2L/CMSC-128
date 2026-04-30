@@ -7,16 +7,16 @@ import {
   routeUpdateBillingPayment,
   routeGetBillingsSummary,
   routeGetUserBillingDashboard,
-} from "./billing.controller.js";
+} from './billing.controller.js';
 import {
   getBillingId,
   includeSelf,
   isSuperAdmin,
   manageBillingsFilter,
   selfFilter,
-} from "../../middleware.js";
-import { createDocumentRouter } from "../document/document.router.js";
-import { Billing } from "./billing.model.js";
+} from '../../middleware.js';
+import { createDocumentRouter } from '../document/document.router.js';
+import { Billing } from './billing.model.js';
 
 const router = Router();
 

@@ -1,14 +1,14 @@
 import mongoose from 'mongoose';
 import type { QueryFilter } from 'mongoose';
-import { Billing, type BillingType } from "./billing.model.js";
-import { AppError } from "../../error.js";
-import { Rental, type RentalType } from "../rental/rental.model.js";
-import { sendNotification } from "../notification/notification.service.js";
-import { buildQuery } from "../../utils.js";
-import { HousingFacility } from "../facility/facility.model.js";
-import { Unit } from "../unit/unit.model.js";
-import { combineFilters } from "../../middleware.js";
-import { DocumentType } from "../document/document.model.js";
+import { Billing, type BillingType } from './billing.model.js';
+import { AppError } from '../../error.js';
+import { Rental, type RentalType } from '../rental/rental.model.js';
+import { sendNotification } from '../notification/notification.service.js';
+import { buildQuery } from '../../utils.js';
+import { HousingFacility } from '../facility/facility.model.js';
+import { Unit } from '../unit/unit.model.js';
+import { combineFilters } from '../../middleware.js';
+import { DocumentType } from '../document/document.model.js';
 
 export type CreateBillingArguments = {
   rentalId: mongoose.Types.ObjectId;

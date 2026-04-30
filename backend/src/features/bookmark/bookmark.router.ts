@@ -3,8 +3,8 @@ import {
   routeGetBookmarkedUnits,
   routeAddBookmark,
   routeDeleteBookmark,
-} from "./bookmark.controller.js";
-import { isVerifiedStudent } from "../../middleware.js";
+} from './bookmark.controller.js';
+import { isVerifiedStudent } from '../../middleware.js';
 
 const router = Router();
 

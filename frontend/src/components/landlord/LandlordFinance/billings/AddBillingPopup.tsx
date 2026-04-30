@@ -88,8 +88,8 @@ const AddBillingPopup: FunctionComponent<AddBillingPopupProps> = ({
   };
 
   const handleFieldBlur = (field: string, value: string) => {
-    setTouched(prev => ({ ...prev, [field]: true }));
-    setErrors(prev => ({ ...prev, [field]: validateField(field, value) }));
+    setTouched((prev) => ({ ...prev, [field]: true }));
+    setErrors((prev) => ({ ...prev, [field]: validateField(field, value) }));
   };
 
   const validateAll = (): boolean => {
@@ -102,7 +102,7 @@ const AddBillingPopup: FunctionComponent<AddBillingPopupProps> = ({
     };
     setErrors(newErrors);
     setTouched({ room: true, fullName: true, rent: true, utilities: true, miscFees: true });
-    return !Object.values(newErrors).some(error => error && error.length > 0);
+    return !Object.values(newErrors).some((error) => error && error.length > 0);
   };
 
   const handleSubmit = () => {
@@ -118,15 +118,30 @@ const AddBillingPopup: FunctionComponent<AddBillingPopupProps> = ({
     }
   };
 
-  const isFormValid = selectedRoom && fullName.trim() && rent && utilities &&
-    !errors.room && !errors.fullName && !errors.rent && !errors.utilities;
+  const isFormValid =
+    selectedRoom &&
+    fullName.trim() &&
+    rent &&
+    utilities &&
+    !errors.room &&
+    !errors.fullName &&
+    !errors.rent &&
+    !errors.utilities;
 
-  const roomOptions = availableRooms.map(room => ({ value: room.toString(), label: `Room ${room}` }));
+  const roomOptions = availableRooms.map((room) => ({
+    value: room.toString(),
+    label: `Room ${room}`,
+  }));
 
   if (!isOpen) return null;
 
   return (
-    <PortalPopup overlayColor="rgba(0, 0, 0, 0.25)" placement="Centered" onOutsideClick={onClose} zIndex={100}>
+    <PortalPopup
+      overlayColor="rgba(0, 0, 0, 0.25)"
+      placement="Centered"
+      onOutsideClick={onClose}
+      zIndex={100}
+    >
       <div className="relative w-full max-w-[612px] bg-white rounded-[32px] shadow-[0px_4px_20px_rgba(0,0,0,0.15)] overflow-hidden">
         <div className="bg-gradient-to-b from-[#096c5b] to-[#16917c] px-[40px] sm:px-[57px] pt-[30px] pb-[40px]">
           <b className="block text-[24px] sm:text-[32px] text-white mb-2">Add Billing</b>
@@ -193,7 +208,12 @@ const AddBillingPopup: FunctionComponent<AddBillingPopupProps> = ({
             />
           </div>
 
-          <PopupButtons onCancel={onClose} onSubmit={handleSubmit} isFormValid={!!isFormValid} submitText="ADD BILLING" />
+          <PopupButtons
+            onCancel={onClose}
+            onSubmit={handleSubmit}
+            isFormValid={!!isFormValid}
+            submitText="ADD BILLING"
+          />
         </div>
       </div>
     </PortalPopup>

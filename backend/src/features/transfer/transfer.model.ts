@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { documentSchema, type DocumentType } from "../document/document.model.js";
+import { documentSchema, type DocumentType } from '../document/document.model.js';
 
 // Transfer request flow:
 // 1. Student (with contract-signed rental) requests a transfer

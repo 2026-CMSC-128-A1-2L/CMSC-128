@@ -8,7 +8,7 @@ import {
   createAcceptDocument,
   createRejectDocument,
   WithDocument,
-} from "./document.service.js";
+} from './document.service.js';
 import type mongoose from 'mongoose';
 import type { QueryFilter } from 'mongoose';
 import assert from 'node:assert';

@@ -1,5 +1,5 @@
-import type { FunctionComponent } from "react";
-import { Icon } from "@iconify/react";
+import type { FunctionComponent } from 'react';
+import { Icon } from '@iconify/react';
 
 export type VisitSlot = {
   id: string;
@@ -16,7 +16,7 @@ export type LandlordEventPopoutType = {
 };
 
 const LandlordEventPopout: FunctionComponent<LandlordEventPopoutType> = ({
-  className = "",
+  className = '',
   onClose,
   event,
 }) => {
@@ -32,14 +32,9 @@ const LandlordEventPopout: FunctionComponent<LandlordEventPopoutType> = ({
         />
 
         <div className="flex items-start gap-4">
-          <Icon
-            icon="ic:round-person"
-            className="w-12 h-12 text-teal shrink-0 mt-1"
-          />
+          <Icon icon="ic:round-person" className="w-12 h-12 text-teal shrink-0 mt-1" />
           <div className="flex-1">
-            <div className="text-lg font-semibold text-dimgray mb-2">
-              {event.visitorName}
-            </div>
+            <div className="text-lg font-semibold text-dimgray mb-2">{event.visitorName}</div>
             <div className="text-sm text-gray mb-4">Visit Time: {event.time}</div>
             <div className="text-xs text-dimgray">
               <span className="font-semibold">Visit ID:</span> {event.id}

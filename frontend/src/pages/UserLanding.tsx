@@ -18,7 +18,7 @@ function useScrollReveal(threshold = 0.15) {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    
+
     // IntersectionObserver: https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API
     // These observers detect when sections come into view as the user scrolls
     // Kapag nadaanan ni user, magiging visible.
@@ -68,8 +68,8 @@ const UserLanding: FunctionComponent = () => {
     if (!container) return;
 
     // Check if lumagpas to 400 na ba yung nascroll
-      // if oo, button to scroll top gogogo
-      // else, edi nde
+    // if oo, button to scroll top gogogo
+    // else, edi nde
     const onScroll = () => setShowScrollTop(container.scrollTop > 400);
     container.addEventListener('scroll', onScroll);
     return () => container.removeEventListener('scroll', onScroll);
@@ -79,7 +79,10 @@ const UserLanding: FunctionComponent = () => {
   const scrollToWhatIs = () => whatIsAtlasRef.current?.scrollIntoView({ behavior: 'smooth' });
 
   return (
-    <div ref={containerRef} className="w-full h-screen relative bg-white overflow-y-auto flex flex-col items-start isolate text-left text-[64px] text-teal-200 font-inter">
+    <div
+      ref={containerRef}
+      className="w-full h-screen relative bg-white overflow-y-auto flex flex-col items-start isolate text-left text-[64px] text-teal-200 font-inter"
+    >
       <div ref={topRef} className="flex flex-col items-start z-1 shrink-0">
         <div className="self-stretch h-[1244px] flex flex-col items-start text-num-18 text-darkslategray-200">
           <div className="bg-gray-900 flex flex-col items-start py-px px-0">
@@ -98,7 +101,9 @@ const UserLanding: FunctionComponent = () => {
                 </div>
                 <div className="self-stretch flex items-center justify-center py-0 px-1">
                   <b className="h-[35px] w-[76px] relative tracking-num--0_01 flex items-center justify-center shrink-0">
-                    <button type="button" onClick={scrollToWhatIs} className="cursor-pointer">About</button>
+                    <button type="button" onClick={scrollToWhatIs} className="cursor-pointer">
+                      About
+                    </button>
                   </b>
                 </div>
                 <div className="self-stretch flex items-center justify-center py-0 px-1 pr-16">
@@ -161,7 +166,10 @@ const UserLanding: FunctionComponent = () => {
 
           <div className="self-stretch flex flex-col items-center justify-center z-1 shrink-0">
             <div ref={whatIsAtlasRef} />
-            <div ref={whatIsReveal.ref} className={`self-stretch bg-white flex items-center py-16 px-20 gap-3 ${reveal(whatIsReveal.isVisible)}`}>
+            <div
+              ref={whatIsReveal.ref}
+              className={`self-stretch bg-white flex items-center py-16 px-20 gap-3 ${reveal(whatIsReveal.isVisible)}`}
+            >
               <div className="flex-1 flex flex-col items-start gap-3">
                 <b className="self-stretch relative">What is ATLAS?</b>
                 <div className="self-stretch relative text-[20px] leading-10 text-gray-300">
@@ -183,8 +191,13 @@ const UserLanding: FunctionComponent = () => {
               </div>
             </div>
 
-            <div ref={cardsReveal.ref} className="self-stretch bg-white flex items-center justify-center py-10 px-0 gap-[89px] text-center text-num-24 text-gray-300">
-              <div className={`h-[233px] w-[200px] relative transition-transform duration-50 ease-in-out hover:scale-110 ${reveal(cardsReveal.isVisible, 'delay-0')}`}>
+            <div
+              ref={cardsReveal.ref}
+              className="self-stretch bg-white flex items-center justify-center py-10 px-0 gap-[89px] text-center text-num-24 text-gray-300"
+            >
+              <div
+                className={`h-[233px] w-[200px] relative transition-transform duration-50 ease-in-out hover:scale-110 ${reveal(cardsReveal.isVisible, 'delay-0')}`}
+              >
                 <div className="absolute top-[-11px] left-[-20px] w-[239px] h-60 flex flex-col items-center p-2.5 box-border gap-3.5 shrink-0">
                   <Icon icon="tabler:search" color="#2F8677" className="w-20 h-20" />
                   <b className="w-[177px] relative leading-num-32 flex items-center justify-center">
@@ -196,7 +209,9 @@ const UserLanding: FunctionComponent = () => {
                   </b>
                 </div>
               </div>
-              <div className={`h-[247px] w-num-199 relative transition-transform duration-50 ease-in-out hover:scale-110 ${reveal(cardsReveal.isVisible, 'delay-150')}`}>
+              <div
+                className={`h-[247px] w-num-199 relative transition-transform duration-50 ease-in-out hover:scale-110 ${reveal(cardsReveal.isVisible, 'delay-150')}`}
+              >
                 <div className="absolute top-[-2px] left-[-19px] w-[234px] h-[249px] flex flex-col items-center p-2.5 box-border gap-3.5 shrink-0">
                   <Icon icon="emojione-monotone:clipboard" color="#2F8677" className="w-15 h-15" />
                   <b className="w-[177px] relative leading-num-32 flex items-center justify-center">
@@ -207,7 +222,9 @@ const UserLanding: FunctionComponent = () => {
                   </b>
                 </div>
               </div>
-              <div className={`h-[251px] w-num-199 relative transition-transform duration-50 ease-in-out hover:scale-110 ${reveal(cardsReveal.isVisible, 'delay-300')}`}>
+              <div
+                className={`h-[251px] w-num-199 relative transition-transform duration-50 ease-in-out hover:scale-110 ${reveal(cardsReveal.isVisible, 'delay-300')}`}
+              >
                 <div className="absolute top-[-2px] left-[-18px] w-[234px] h-[249px] flex flex-col items-center p-2.5 box-border gap-3.5 shrink-0">
                   <Icon icon="mdi:home" color="#2F8677" className="w-17 h-17" />
                   <b className="self-stretch relative leading-num-32">MANAGE</b>
@@ -216,7 +233,9 @@ const UserLanding: FunctionComponent = () => {
                   </b>
                 </div>
               </div>
-              <div className={`h-[247px] w-num-199 relative transition-transform duration-50 ease-in-out hover:scale-110 ${reveal(cardsReveal.isVisible, 'delay-[450ms]')}`}>
+              <div
+                className={`h-[247px] w-num-199 relative transition-transform duration-50 ease-in-out hover:scale-110 ${reveal(cardsReveal.isVisible, 'delay-[450ms]')}`}
+              >
                 <div className="absolute top-[-2px] left-[-18px] w-[234px] h-[249px] flex flex-col items-center p-2.5 box-border gap-3.5 shrink-0">
                   <Icon icon="mdi:security" color="#2F8677" className="w-15 h-15" />
                   <b className="w-[177px] relative leading-num-32 flex items-center justify-center">
@@ -230,7 +249,10 @@ const UserLanding: FunctionComponent = () => {
               </div>
             </div>
 
-            <div ref={howHelpsReveal.ref} className={`self-stretch flex flex-row items-center bg-[#0c8873] ${reveal(howHelpsReveal.isVisible)}`}>
+            <div
+              ref={howHelpsReveal.ref}
+              className={`self-stretch flex flex-row items-center bg-[#0c8873] ${reveal(howHelpsReveal.isVisible)}`}
+            >
               <div className="flex-1 flex items-center justify-center py-16 pl-20">
                 <AtlasCurious className="w-70 h-70 fill-[#EBF9F6]" />
               </div>
@@ -246,16 +268,26 @@ const UserLanding: FunctionComponent = () => {
             </div>
           </div>
 
-          <div ref={coreFeaturesRef} className="self-stretch bg-azure overflow-hidden flex flex-col items-start text-center text-[56px] text-gray-300">
-            <div ref={coreFeaturesReveal.ref} className="w-screen flex flex-col items-center justify-center pt-12 px-40 pb-6 box-border gap-[52px]">
-              <div className={`relative font-extrabold text-transparent bg-clip-text! [background:linear-gradient(90deg,#0c8873,#5dc2a8_72.12%)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] ${reveal(coreFeaturesReveal.isVisible)}`}>
+          <div
+            ref={coreFeaturesRef}
+            className="self-stretch bg-azure overflow-hidden flex flex-col items-start text-center text-[56px] text-gray-300"
+          >
+            <div
+              ref={coreFeaturesReveal.ref}
+              className="w-screen flex flex-col items-center justify-center pt-12 px-40 pb-6 box-border gap-[52px]"
+            >
+              <div
+                className={`relative font-extrabold text-transparent bg-clip-text! [background:linear-gradient(90deg,#0c8873,#5dc2a8_72.12%)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] ${reveal(coreFeaturesReveal.isVisible)}`}
+              >
                 Core features that set us
                 <br />
                 apart from the competition
               </div>
               <div className="self-stretch overflow-hidden flex items-start p-2.5 gap-5 text-left text-num-24">
                 <div className="self-stretch flex-1 flex flex-col items-start py-2.5 px-0 gap-2.5">
-                  <div className={`self-stretch rounded-num-16 bg-white overflow-hidden flex flex-col items-start py-4 px-num-32 gap-2.5 transition-transform duration-50 ease-in-out hover:scale-105 ${reveal(coreFeaturesReveal.isVisible, 'delay-100')}`}>
+                  <div
+                    className={`self-stretch rounded-num-16 bg-white overflow-hidden flex flex-col items-start py-4 px-num-32 gap-2.5 transition-transform duration-50 ease-in-out hover:scale-105 ${reveal(coreFeaturesReveal.isVisible, 'delay-100')}`}
+                  >
                     <Icon icon="iconoir:design-nib" className="w-[58px] h-[58px]" color="#096C5B" />
                     <div className="self-stretch flex flex-col items-start gap-1">
                       <b className="relative leading-num-32">Role-based Views</b>
@@ -265,7 +297,9 @@ const UserLanding: FunctionComponent = () => {
                       </div>
                     </div>
                   </div>
-                  <div className={`self-stretch flex-1 rounded-num-16 bg-white overflow-hidden flex flex-col items-start py-4 px-num-32 gap-2.5 transition-transform duration-50 ease-in-out hover:scale-105 ${reveal(coreFeaturesReveal.isVisible, 'delay-[400ms]')}`}>
+                  <div
+                    className={`self-stretch flex-1 rounded-num-16 bg-white overflow-hidden flex flex-col items-start py-4 px-num-32 gap-2.5 transition-transform duration-50 ease-in-out hover:scale-105 ${reveal(coreFeaturesReveal.isVisible, 'delay-[400ms]')}`}
+                  >
                     <Icon
                       icon="material-symbols:verified"
                       className="w-[58px] h-[58px]"
@@ -281,7 +315,9 @@ const UserLanding: FunctionComponent = () => {
                   </div>
                 </div>
                 <div className="self-stretch w-[300px] flex items-start justify-center py-2.5 px-0 box-border">
-                  <div className={`self-stretch flex-1 rounded-xl bg-white overflow-hidden flex flex-col items-start p-2.5 box-border gap-2.5 max-w-full transition-transform duration-50 ease-in-out hover:scale-105 ${reveal(coreFeaturesReveal.isVisible, 'delay-200')}`}>
+                  <div
+                    className={`self-stretch flex-1 rounded-xl bg-white overflow-hidden flex flex-col items-start p-2.5 box-border gap-2.5 max-w-full transition-transform duration-50 ease-in-out hover:scale-105 ${reveal(coreFeaturesReveal.isVisible, 'delay-200')}`}
+                  >
                     <Icon icon="mdi:home" className="w-[58px] h-[58px] ml-5" color="#096C5B" />
                     <div className="self-stretch flex flex-col items-center justify-center py-0 px-num-32 gap-2.5">
                       <b className="self-stretch relative leading-num-32">Accomodation Tracking</b>
@@ -294,7 +330,9 @@ const UserLanding: FunctionComponent = () => {
                   </div>
                 </div>
                 <div className="flex-1 flex flex-col items-start py-2.5 px-0 gap-2.5">
-                  <div className={`self-stretch rounded-num-16 bg-white overflow-hidden flex flex-col items-start py-4 px-num-32 gap-2.5 transition-transform duration-50 ease-in-out hover:scale-105 ${reveal(coreFeaturesReveal.isVisible, 'delay-300')}`}>
+                  <div
+                    className={`self-stretch rounded-num-16 bg-white overflow-hidden flex flex-col items-start py-4 px-num-32 gap-2.5 transition-transform duration-50 ease-in-out hover:scale-105 ${reveal(coreFeaturesReveal.isVisible, 'delay-300')}`}
+                  >
                     <Icon
                       icon="ic:baseline-notifications-active"
                       className="w-[58px] h-[58px] ml-1"
@@ -308,7 +346,11 @@ const UserLanding: FunctionComponent = () => {
                       </div>
                     </div>
                   </div>
-                  <div className={`self-stretch rounded-num-16 bg-white overflow-hidden flex flex-col items-start py-4 px-num-32 transition-transform duration-50 ease-in-out hover:scale-105 ${reveal(coreFeaturesReveal.isVisible, 'delay-[500ms]')}`}>                    <div className="self-stretch overflow-hidden flex flex-col items-start p-2.5 gap-2.5">
+                  <div
+                    className={`self-stretch rounded-num-16 bg-white overflow-hidden flex flex-col items-start py-4 px-num-32 transition-transform duration-50 ease-in-out hover:scale-105 ${reveal(coreFeaturesReveal.isVisible, 'delay-[500ms]')}`}
+                  >
+                    {' '}
+                    <div className="self-stretch overflow-hidden flex flex-col items-start p-2.5 gap-2.5">
                       <Icon
                         icon="fluent:handshake-16-regular"
                         className="w-[58px] h-[58px]"
@@ -328,7 +370,10 @@ const UserLanding: FunctionComponent = () => {
             </div>
           </div>
 
-          <div ref={purposeReveal.ref} className={`self-stretch bg-darkslategray-100 overflow-hidden flex flex-col items-center justify-center py-20 px-6 md:px-20 ${reveal(purposeReveal.isVisible)}`}>
+          <div
+            ref={purposeReveal.ref}
+            className={`self-stretch bg-darkslategray-100 overflow-hidden flex flex-col items-center justify-center py-20 px-6 md:px-20 ${reveal(purposeReveal.isVisible)}`}
+          >
             <div className="h-20" />
             <div className="w-full h-[59px] relative text-[50px] font-extrabold font-inter text-transparent bg-clip-text! [background:linear-gradient(90deg,#0c8873,#5dc2a8_72.12%)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] text-center flex items-center justify-center">
               What is its PURPOSE?
@@ -367,12 +412,19 @@ const UserLanding: FunctionComponent = () => {
                 alt=""
               />
             </div>
-            <div ref={providesReveal.ref} className="w-screen h-[1034px] flex flex-col items-center justify-center py-[111px] px-[118px] box-border gap-10 z-2 shrink-0">
-              <div className={`self-stretch relative leading-[60px] font-extrabold ${reveal(providesReveal.isVisible)}`}>
+            <div
+              ref={providesReveal.ref}
+              className="w-screen h-[1034px] flex flex-col items-center justify-center py-[111px] px-[118px] box-border gap-10 z-2 shrink-0"
+            >
+              <div
+                className={`self-stretch relative leading-[60px] font-extrabold ${reveal(providesReveal.isVisible)}`}
+              >
                 What does ATLAS provide?
               </div>
               <div className="w-[1173px] flex flex-col items-end text-center text-num-36 font-poppins">
-                <div className={`w-num-1172 h-num-138 relative ${reveal(providesReveal.isVisible, 'delay-100')}`}>
+                <div
+                  className={`w-num-1172 h-num-138 relative ${reveal(providesReveal.isVisible, 'delay-100')}`}
+                >
                   <div className="absolute top-0 left-0 bg-white border-teal-200 border-solid border-b box-border w-num-1172 h-num-138" />
                   <div className="absolute top-[46px] left-[28.08px] flex items-center gap-[67px]">
                     <b className="h-num-37 w-num-48.7 relative flex items-center justify-center shrink-0">
@@ -384,7 +436,9 @@ const UserLanding: FunctionComponent = () => {
                     <Icon icon="lucide:plus" className="h-[26px] w-[26px]" />
                   </div>
                 </div>
-                <div className={`w-num-1172 h-num-138 relative ${reveal(providesReveal.isVisible, 'delay-200')}`}>
+                <div
+                  className={`w-num-1172 h-num-138 relative ${reveal(providesReveal.isVisible, 'delay-200')}`}
+                >
                   <div className="absolute top-0 left-0 bg-white border-teal-200 border-solid border-b box-border w-num-1172 h-num-138" />
                   <div className="absolute top-[46px] left-[28.08px] flex items-center gap-[67px]">
                     <b className="h-num-37 w-num-48.7 relative flex items-center justify-center shrink-0">
@@ -396,7 +450,9 @@ const UserLanding: FunctionComponent = () => {
                     <Icon icon="lucide:plus" className="h-[26px] w-[26px]" />
                   </div>
                 </div>
-                <div className={`w-num-1172 h-num-138 relative ${reveal(providesReveal.isVisible, 'delay-300')}`}>
+                <div
+                  className={`w-num-1172 h-num-138 relative ${reveal(providesReveal.isVisible, 'delay-300')}`}
+                >
                   <div className="absolute top-0 left-0 bg-white border-teal-200 border-solid border-b box-border w-num-1172 h-num-138" />
                   <div className="absolute top-[46px] left-[28.08px] flex items-center gap-[67px]">
                     <b className="h-num-37 w-num-48.7 relative flex items-center justify-center shrink-0">
@@ -408,7 +464,9 @@ const UserLanding: FunctionComponent = () => {
                     <Icon icon="lucide:plus" className="h-[26px] w-[26px]" />
                   </div>
                 </div>
-                <div className={`w-num-1172 h-num-138 relative ${reveal(providesReveal.isVisible, 'delay-[400ms]')}`}>
+                <div
+                  className={`w-num-1172 h-num-138 relative ${reveal(providesReveal.isVisible, 'delay-[400ms]')}`}
+                >
                   <div className="absolute top-0 left-0 bg-white border-teal-200 border-solid border-b box-border w-num-1172 h-num-138" />
                   <div className="absolute top-[46px] left-[28.08px] flex items-center gap-[67px]">
                     <b className="h-num-37 w-num-48.7 relative flex items-center justify-center shrink-0">
@@ -421,7 +479,9 @@ const UserLanding: FunctionComponent = () => {
                     <Icon icon="lucide:plus" className="h-[26px] w-[26px]" />
                   </div>
                 </div>
-                <div className={`w-num-1172 h-num-138 relative ${reveal(providesReveal.isVisible, 'delay-[500ms]')}`}>
+                <div
+                  className={`w-num-1172 h-num-138 relative ${reveal(providesReveal.isVisible, 'delay-[500ms]')}`}
+                >
                   <div className="absolute top-0 left-0 bg-white border-teal-200 border-solid border-b box-border w-num-1172 h-num-138" />
                   <b className="absolute top-[55px] left-[28.08px] flex items-center justify-center w-num-48.7 h-num-37">
                     05
@@ -438,7 +498,10 @@ const UserLanding: FunctionComponent = () => {
             </div>
 
             <div ref={faqRef} />
-            <div ref={faqReveal.ref} className={`w-screen flex flex-col items-center py-0 px-[79px] box-border gap-[52px] z-3 shrink-0 text-[100px] text-darkslategray-200 ${reveal(faqReveal.isVisible)}`}>
+            <div
+              ref={faqReveal.ref}
+              className={`w-screen flex flex-col items-center py-0 px-[79px] box-border gap-[52px] z-3 shrink-0 text-[100px] text-darkslategray-200 ${reveal(faqReveal.isVisible)}`}
+            >
               <div className="self-stretch h-[71px] w-screen relative">
                 <b className="flex items-center w-screen h-[71px]">FAQs</b>
               </div>
@@ -559,7 +622,9 @@ const UserLanding: FunctionComponent = () => {
                 SUPPORT
               </b>
               <div className="w-[108.9px] h-num-28.4 relative flex items-center shrink-0 mt-[-4px]">
-                <button type="button" onClick={scrollToWhatIs} className="cursor-pointer">About</button>
+                <button type="button" onClick={scrollToWhatIs} className="cursor-pointer">
+                  About
+                </button>
               </div>
               <div className="w-[108.9px] h-num-28.4 relative flex items-center shrink-0 mt-[-4px]">
                 <Link to="/contact-us">Contact us</Link>

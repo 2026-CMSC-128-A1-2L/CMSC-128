@@ -12,7 +12,7 @@ import {
   getUnitById,
   updateUnit,
   deleteUnit,
-} from "./unit.service.js";
+} from './unit.service.js';
 
 export const routeGetUnits: RequestHandler = async (req, res, next) => {
   const query = GetUnitsRequestQuerySchema.parse(req.query);

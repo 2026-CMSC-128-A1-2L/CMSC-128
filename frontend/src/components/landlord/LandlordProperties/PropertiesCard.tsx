@@ -97,4 +97,3 @@ const PropertiesCard: FunctionComponent<PropertiesCardProps> = ({
 };
 
 export default PropertiesCard;
-

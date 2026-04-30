@@ -1,32 +1,30 @@
-import { type FunctionComponent, useCallback } from "react";
-import SideBar from "../../../components/user/SideBar";
-import Footer from "../../../components/general/Footer";
-import { Icon } from "@iconify/react";
-import PropertyTabs from "../../../components/user/unitdetails/PropertyTabs";
-import ImageCarousel from "../../../components/user/unitdetails/ImageCarousel";
-import pic from "../../../../assets/sample1.jpg";
-import pic2 from "../../../../assets/sample2.jpg";
-import pic3 from "../../../../assets/sample3.jpg";
-import pic4 from "../../../../assets/sample4.jpg";
+import { type FunctionComponent, useCallback } from 'react';
+import SideBar from '../../../components/user/SideBar';
+import Footer from '../../../components/general/Footer';
+import { Icon } from '@iconify/react';
+import PropertyTabs from '../../../components/user/unitdetails/PropertyTabs';
+import ImageCarousel from '../../../components/user/unitdetails/ImageCarousel';
+import pic from '../../../../assets/sample1.jpg';
+import pic2 from '../../../../assets/sample2.jpg';
+import pic3 from '../../../../assets/sample3.jpg';
+import pic4 from '../../../../assets/sample4.jpg';
 
-import AboutDetails from "../../../components/user/unitdetails/AboutDetails";
-import AmenetiesDetails from "../../../components/user/unitdetails/AmenetiesDetails";
-import RulesDetails from "../../../components/user/unitdetails/RulesDetails";
-import LocationDetails from "../../../components/user/unitdetails/LocationDetails";
-import ReviewDetails from "../../../components/user/unitdetails/ReviewDetails";
-import PropertyTab from "../../../components/user/unitdetails/PropertyTab";
+import AboutDetails from '../../../components/user/unitdetails/AboutDetails';
+import AmenetiesDetails from '../../../components/user/unitdetails/AmenetiesDetails';
+import RulesDetails from '../../../components/user/unitdetails/RulesDetails';
+import LocationDetails from '../../../components/user/unitdetails/LocationDetails';
+import ReviewDetails from '../../../components/user/unitdetails/ReviewDetails';
+import PropertyTab from '../../../components/user/unitdetails/PropertyTab';
 import DormCard from '../../../components/user/DormCard';
 import { dormData } from '../../../data/dorms';
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 const UnitDetails: FunctionComponent = () => {
   const gallery = [`${pic}`, `${pic2}`, `${pic3}`, `${pic4}`];
 
   const onArrowUpClick = useCallback(() => {
-    const anchor = document.querySelector(
-      "[data-scroll-to='searchBarContainer']",
-    );
+    const anchor = document.querySelector("[data-scroll-to='searchBarContainer']");
     if (anchor) {
-      anchor.scrollIntoView({ block: "start", behavior: "smooth" });
+      anchor.scrollIntoView({ block: 'start', behavior: 'smooth' });
     }
   }, []);
 
@@ -56,8 +54,7 @@ const UnitDetails: FunctionComponent = () => {
           <div className="w-full max-w-2xl rounded-xl bg-aliceblue flex items-center py-2.5 px-6 gap-2.5 text-dimgray font-inter">
             <Icon icon="material-symbols:search" className="w-6 h-6 shrink-0" />
             <b className="text-sm">
-              Search for Dorms, Apartments, or Locations (e.g. UPLB, Umali
-              Subdivision)
+              Search for Dorms, Apartments, or Locations (e.g. UPLB, Umali Subdivision)
             </b>
           </div>
 
@@ -73,18 +70,14 @@ const UnitDetails: FunctionComponent = () => {
                   <b className="text-xl leading-8 opacity-30">- 1 pax</b>
                 </div>
                 <div className="flex items-center gap-3 text-xs text-teal-200 font-poppins">
-                  <div className="rounded border border-teal-200 py-2 px-6">
-                    VISIT
-                  </div>
-                  <div className="rounded border border-teal-200 py-2 px-6">
-                    SAVE
-                  </div>
+                  <div className="rounded border border-teal-200 py-2 px-6">VISIT</div>
+                  <div className="rounded border border-teal-200 py-2 px-6">SAVE</div>
                 </div>
               </div>
 
               <div className="text-xs tracking-wide font-semibold px-2">
-                University of the Philippines Los Banos | 0.5 km from UPLB Main
-                Gate | Listed 3 days ago
+                University of the Philippines Los Banos | 0.5 km from UPLB Main Gate | Listed 3 days
+                ago
               </div>
 
               {/* Price */}
@@ -110,7 +103,7 @@ const UnitDetails: FunctionComponent = () => {
                 <div className="flex flex-col gap-1.5">
                   <div className="font-medium">Rooms Available</div>
                   <div className="flex gap-2 text-black">
-                    {["1 Pax", "2 Pax"].map((p) => (
+                    {['1 Pax', '2 Pax'].map((p) => (
                       <div
                         key={p}
                         className="flex-1 shadow rounded-lg py-1.5 text-center font-semibold text-xs"
@@ -123,25 +116,20 @@ const UnitDetails: FunctionComponent = () => {
                 <div className="flex flex-col gap-1.5">
                   <div className="font-medium">Lease Duration</div>
                   <div className="shadow rounded-lg bg-white flex items-center py-2 px-3 gap-2 text-silver">
-                    <span className="flex-1 font-semibold text-xs">
-                      Choose lease duration
-                    </span>
+                    <span className="flex-1 font-semibold text-xs">Choose lease duration</span>
                     <Icon icon="mdi:chevron-down" className="h-4 w-4" />
                   </div>
                 </div>
                 <div className="flex flex-col gap-1.5">
                   <div className="font-medium">Preferred Move-in Date</div>
                   <div className="shadow rounded-lg bg-white flex items-center py-2 px-3 gap-2 text-silver">
-                    <span className="flex-1 font-semibold text-xs">
-                      Choose date
-                    </span>
+                    <span className="flex-1 font-semibold text-xs">Choose date</span>
                     <Icon icon="mdi:calendar" className="h-4 w-4" />
                   </div>
                 </div>
                 <div className="flex flex-col gap-1.5">
                   <div className="font-medium">
-                    Message to Landlord{" "}
-                    <span className="text-silver">(optional)</span>
+                    Message to Landlord <span className="text-silver">(optional)</span>
                   </div>
                   <div className="shadow rounded-lg bg-white py-2 px-3 h-14 text-silver font-semibold text-xs">
                     Introduce yourself or ask a question..
@@ -151,9 +139,9 @@ const UnitDetails: FunctionComponent = () => {
                 {/* Cost summary */}
                 <div className="shadow rounded-lg bg-whitesmoke-200 flex flex-col p-3 gap-1 text-dimgray font-poppins text-xs">
                   {[
-                    ["Monthly Rent", "₱1000.00"],
-                    ["Est. Utilities", "₱500.00"],
-                    ["Security Deposit", "₱2000.00"],
+                    ['Monthly Rent', '₱1000.00'],
+                    ['Est. Utilities', '₱500.00'],
+                    ['Security Deposit', '₱2000.00'],
                   ].map(([l, v]) => (
                     <div key={l} className="flex justify-between">
                       <span>{l}</span>
@@ -173,9 +161,7 @@ const UnitDetails: FunctionComponent = () => {
                   to="/applications"
                   className="w-full rounded-lg bg-darkslategray-200 flex items-center justify-center gap-2 py-3 px-4"
                 >
-                  <span className="font-medium text-sm">
-                    Submit Application
-                  </span>
+                  <span className="font-medium text-sm">Submit Application</span>
                   <Icon icon="formkit:arrowright" className="h-5 w-5" />
                 </Link>
                 <p className="text-xs text-dimgray font-lora text-center">
@@ -194,18 +180,18 @@ const UnitDetails: FunctionComponent = () => {
               {/* Tags */}
               <div className="flex flex-wrap gap-2 text-xs text-center text-teal-200">
                 {[
-                  ["2 Slots Left", true],
-                  ["Transient"],
-                  ["~18 sqm"],
-                  ["Female Only"],
-                  ["Min. 6 Months"],
-                  ["2 Floors"],
-                  ["Semi-Furnished"],
-                  ["Shared Bathroom"],
+                  ['2 Slots Left', true],
+                  ['Transient'],
+                  ['~18 sqm'],
+                  ['Female Only'],
+                  ['Min. 6 Months'],
+                  ['2 Floors'],
+                  ['Semi-Furnished'],
+                  ['Shared Bathroom'],
                 ].map(([label, filled]) => (
                   <div
                     key={label as string}
-                    className={`rounded-lg border border-teal-200 py-2 px-4 font-medium ${filled ? "bg-lightcyan" : ""}`}
+                    className={`rounded-lg border border-teal-200 py-2 px-4 font-medium ${filled ? 'bg-lightcyan' : ''}`}
                   >
                     {label}
                   </div>
@@ -227,17 +213,11 @@ const UnitDetails: FunctionComponent = () => {
               {/* Landlord card */}
               <div className="rounded-lg shadow bg-white flex flex-col p-4 gap-4">
                 <div className="flex items-center gap-2 text-xl">
-                  <Icon
-                    icon="material-symbols:wifi-home-outline-rounded"
-                    className="h-6 w-6"
-                  />
+                  <Icon icon="material-symbols:wifi-home-outline-rounded" className="h-6 w-6" />
                   <b className="text-sm">LANDLORD</b>
                 </div>
                 <div className="flex items-center gap-3">
-                  <img
-                    className="h-12 w-12 rounded-full object-cover shadow"
-                    alt=""
-                  />
+                  <img className="h-12 w-12 rounded-full object-cover shadow" alt="" />
                   <div className="flex flex-col gap-0.5 font-lora text-xs">
                     <div className="font-medium">Cynthia Villar</div>
                     <div className="text-[10px] font-semibold text-darkslategray-100">
@@ -247,8 +227,8 @@ const UnitDetails: FunctionComponent = () => {
                 </div>
                 <div className="flex gap-2 text-teal-100 text-sm">
                   {[
-                    ["3", "Active Units"],
-                    ["5 yrs", "On Platform"],
+                    ['3', 'Active Units'],
+                    ['5 yrs', 'On Platform'],
                   ].map(([val, lbl]) => (
                     <div
                       key={lbl}
@@ -266,10 +246,7 @@ const UnitDetails: FunctionComponent = () => {
                     to="/direct-messages"
                     className="rounded-lg bg-darkslategray-200 flex items-center justify-center gap-2 py-2 shadow"
                   >
-                    <Icon
-                      icon="material-symbols:mail-outline"
-                      className="h-5 w-5"
-                    />
+                    <Icon icon="material-symbols:mail-outline" className="h-5 w-5" />
                     <span className="font-medium">Send Message</span>
                   </Link>
                   <button className="rounded-lg bg-darkslategray-200 flex items-center justify-center gap-2 py-2 shadow">
@@ -278,7 +255,6 @@ const UnitDetails: FunctionComponent = () => {
                   </button>
                 </div>
               </div>
-
               {/* You may also like */}
               <div className="h-full w-full overflow-x-auto flex py-1 box-border gap-3">
                 {/* Layout Wrapper: 
@@ -298,7 +274,8 @@ const UnitDetails: FunctionComponent = () => {
                     />
                   ))}
                 </div>
-              </div>            </div>
+              </div>{' '}
+            </div>
           </div>
         </div>
 
@@ -307,7 +284,6 @@ const UnitDetails: FunctionComponent = () => {
           <Footer />
         </footer>
       </div>
-
     </div>
   );
 };

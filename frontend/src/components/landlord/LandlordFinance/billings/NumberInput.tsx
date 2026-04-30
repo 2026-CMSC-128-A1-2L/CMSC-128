@@ -26,7 +26,9 @@ const TextInput: FunctionComponent<TextInputProps> = ({
       <b className="block text-[12px] sm:text-[14px] font-inter text-darkslategray-100 mb-2">
         {label} {required && <span className="text-crimson">*</span>}
       </b>
-      <div className={`shadow-[0px_0px_5px_rgba(0,0,0,0.25)] rounded-md bg-white h-10 w-full border ${error && touched ? 'border-crimson' : 'border-whitesmoke-200'}`}>
+      <div
+        className={`shadow-[0px_0px_5px_rgba(0,0,0,0.25)] rounded-md bg-white h-10 w-full border ${error && touched ? 'border-crimson' : 'border-whitesmoke-200'}`}
+      >
         <input
           type="text"
           value={value}

@@ -6,7 +6,9 @@ import SetAvailableTime from '../../../components/landlord/VisitsSections/SetAva
 import PortalPopup from '../../../components/landlord/VisitsSections/PortalPopup';
 import UpcomingVisitsSection from '../../../components/landlord/VisitsSections/UpcomingVisitsSection';
 import VisitRequestsSection from '../../../components/landlord/VisitsSections/VisitRequestsSection';
-import LandlordDayEventsPopout, { type VisitSlot } from '../../../components/landlord/VisitsSections/LandlordDayEventsPopout';
+import LandlordDayEventsPopout, {
+  type VisitSlot,
+} from '../../../components/landlord/VisitsSections/LandlordDayEventsPopout';
 import LandlordEventPopout from '../../../components/landlord/VisitsSections/LandlordEventPopout';
 
 const Visits: FunctionComponent = () => {
@@ -19,13 +21,39 @@ const Visits: FunctionComponent = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedDayVisits, setSelectedDayVisits] = useState<VisitSlot[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<VisitSlot | null>(null);
-  
-  const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-  const MONTH_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  
+
+  const MONTHS = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+  const MONTH_SHORT = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
+
   // Fetch visit data from API (currently empty, waiting for backend integration)
   const allVisits: VisitSlot[] = [];
-  
+
   const month = currentDate.getMonth();
   const year = currentDate.getFullYear();
 
@@ -77,19 +105,22 @@ const Visits: FunctionComponent = () => {
     setSelectedEvent(null);
   }, []);
 
-  const handleUpcomingVisitClick = useCallback((visitId: string) => {
-    const visit = allVisits.find(v => v.id === visitId);
-    if (visit) {
-      openEventPopout(visit);
-    }
-  }, [allVisits]);
+  const handleUpcomingVisitClick = useCallback(
+    (visitId: string) => {
+      const visit = allVisits.find((v) => v.id === visitId);
+      if (visit) {
+        openEventPopout(visit);
+      }
+    },
+    [allVisits],
+  );
 
   const getDaysInMonth = (m: number, y: number) => new Date(y, m + 1, 0).getDate();
   const getFirstDayOfMonth = (m: number, y: number) => new Date(y, m, 1).getDay();
 
   const getVisitsForDay = (day: number) => {
     const dayOfWeek = new Date(year, month, day).getDay();
-    return allVisits.filter(visit => visit.dayOfWeek === dayOfWeek);
+    return allVisits.filter((visit) => visit.dayOfWeek === dayOfWeek);
   };
 
   // Transform visits to show all upcoming visits
@@ -289,7 +320,9 @@ const Visits: FunctionComponent = () => {
                               disabled={day === null}
                               className={[
                                 'rounded-md flex items-center justify-center p-2 aspect-square transition-colors',
-                                day === null ? 'cursor-default' : 'cursor-pointer hover:bg-gray-100',
+                                day === null
+                                  ? 'cursor-default'
+                                  : 'cursor-pointer hover:bg-gray-100',
                                 isTodayDay
                                   ? 'bg-lightcyan-100 text-teal-200 font-bold hover:bg-lightcyan-200'
                                   : '',
@@ -308,7 +341,10 @@ const Visits: FunctionComponent = () => {
 
             {/* Upcoming Visits Section */}
             <div className="bg-white rounded-num-8 p-3 sm:p-4 border border-whitesmoke-200 w-full">
-              <UpcomingVisitsSection visits={upcomingVisits} onVisitClick={handleUpcomingVisitClick} />
+              <UpcomingVisitsSection
+                visits={upcomingVisits}
+                onVisitClick={handleUpcomingVisitClick}
+              />
             </div>
           </div>
 
@@ -345,9 +381,11 @@ const Visits: FunctionComponent = () => {
                       className={`min-h-20 sm:min-h-28 p-1 sm:p-3 rounded border transition-colors text-xs sm:text-base ${
                         day === null
                           ? 'bg-whitesmoke-100 border-whitesmoke-200 cursor-default'
-                          : day === new Date().getDate() && month === new Date().getMonth() && year === new Date().getFullYear()
-                          ? 'bg-lightcyan border-teal'
-                          : 'bg-white border-whitesmoke-200 cursor-default'
+                          : day === new Date().getDate() &&
+                              month === new Date().getMonth() &&
+                              year === new Date().getFullYear()
+                            ? 'bg-lightcyan border-teal'
+                            : 'bg-white border-whitesmoke-200 cursor-default'
                       }`}
                     >
                       {day && (
@@ -365,7 +403,9 @@ const Visits: FunctionComponent = () => {
                                 }}
                                 className={`w-full text-left p-0.5 sm:p-1 rounded ${visit.backgroundColor} cursor-pointer hover:opacity-80 transition-opacity overflow-hidden`}
                               >
-                                <div className="truncate font-semibold text-xs">{visit.visitorName}</div>
+                                <div className="truncate font-semibold text-xs">
+                                  {visit.visitorName}
+                                </div>
                               </button>
                             ))}
                             {dayVisits.length > 1 && (
@@ -423,10 +463,7 @@ const Visits: FunctionComponent = () => {
           placement="Centered"
           onOutsideClick={closeEventPopout}
         >
-          <LandlordEventPopout
-            event={selectedEvent}
-            onClose={closeEventPopout}
-          />
+          <LandlordEventPopout event={selectedEvent} onClose={closeEventPopout} />
         </PortalPopup>
       )}
     </LandlordLayout>

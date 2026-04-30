@@ -7,7 +7,7 @@ import {
   UpdateListingBodySchema,
   UpdateListingTagsResponseBodySchema,
 } from 'shared';
-import type { ListingType } from "./listing.model.js";
+import type { ListingType } from './listing.model.js';
 import {
   getListings,
   createListing,
@@ -15,8 +15,8 @@ import {
   updateListing,
   deleteListing,
   updateListingTags,
-} from "./listing.service.js";
-import { AppError } from "../../error.js";
+} from './listing.service.js';
+import { AppError } from '../../error.js';
 
 export const routeGetListings: RequestHandler = async (req, res, _next) => {
   const params = GetListingsQuerySchema.parse(req.query);

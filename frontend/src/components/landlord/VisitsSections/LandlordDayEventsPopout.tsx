@@ -1,5 +1,5 @@
-import type { FunctionComponent } from "react";
-import { Icon } from "@iconify/react";
+import type { FunctionComponent } from 'react';
+import { Icon } from '@iconify/react';
 
 export type VisitSlot = {
   id: string;
@@ -17,16 +17,16 @@ export type LandlordDayEventsPopoutType = {
 };
 
 const LandlordDayEventsPopout: FunctionComponent<LandlordDayEventsPopoutType> = ({
-  className = "",
+  className = '',
   onClose,
   date,
   events,
 }) => {
-  const formattedDate = date.toLocaleDateString("en-US", {
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-    year: "numeric",
+  const formattedDate = date.toLocaleDateString('en-US', {
+    weekday: 'long',
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
   });
 
   return (
@@ -44,9 +44,7 @@ const LandlordDayEventsPopout: FunctionComponent<LandlordDayEventsPopoutType> = 
 
         <div className="border-t border-whitesmoke-200 pt-4">
           {events.length === 0 ? (
-            <div className="text-center py-4 text-dimgray">
-              No visits scheduled for this day
-            </div>
+            <div className="text-center py-4 text-dimgray">No visits scheduled for this day</div>
           ) : (
             <div className="flex flex-col gap-3">
               {events.map((event) => (
@@ -54,14 +52,9 @@ const LandlordDayEventsPopout: FunctionComponent<LandlordDayEventsPopoutType> = 
                   key={event.id}
                   className="flex items-start gap-3 pb-3 border-b border-whitesmoke-200 last:border-b-0"
                 >
-                  <Icon
-                    icon="ic:round-person"
-                    className="h-5 w-5 shrink-0 mt-1 text-teal"
-                  />
+                  <Icon icon="ic:round-person" className="h-5 w-5 shrink-0 mt-1 text-teal" />
                   <div className="flex-1 min-w-0">
-                    <div className="font-semibold text-dimgray">
-                      {event.visitorName}
-                    </div>
+                    <div className="font-semibold text-dimgray">{event.visitorName}</div>
                     <div className="text-xs text-gray mt-1">{event.time}</div>
                   </div>
                 </div>

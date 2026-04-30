@@ -21,7 +21,7 @@ const UpcomingPayments: FunctionComponent<UpcomingPaymentsProps> = ({ payments, 
     <div className="self-stretch overflow-hidden flex flex-col items-start p-2.5 gap-2.5 text-left text-[14px] font-inter">
       <b className="self-stretch text-[18px] tracking-[-0.01em]">Upcoming Payments</b>
       <div className="self-stretch h-0.5 border-whitesmoke-200 border-solid border" />
-      
+
       {payments.map((payment) => (
         <div
           key={payment.id}

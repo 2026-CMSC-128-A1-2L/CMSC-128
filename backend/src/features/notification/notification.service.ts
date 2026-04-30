@@ -1,7 +1,7 @@
 import type mongoose from 'mongoose';
 import type { QueryFilter } from 'mongoose';
-import { combineFilters } from "../../middleware.js";
-import { Notification, NotificationType } from "./notification.model.js";
+import { combineFilters } from '../../middleware.js';
+import { Notification, NotificationType } from './notification.model.js';
 
 export const sendNotification = async (
   userId: mongoose.Types.ObjectId,

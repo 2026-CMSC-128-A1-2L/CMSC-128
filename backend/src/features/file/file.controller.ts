@@ -1,5 +1,5 @@
 import type { RequestHandler } from 'express';
-import { File } from "./file.model.js";
+import { File } from './file.model.js';
 import assert from 'node:assert';
 
 export const routeUploadFile: RequestHandler = async (req, res, next) => {

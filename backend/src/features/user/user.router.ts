@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createDocumentRouter } from "../document/document.router.js";
+import { createDocumentRouter } from '../document/document.router.js';
 import {
   isSuperAdmin,
   isSelfOrSuperAdmin,
@@ -8,7 +8,7 @@ import {
   selfFilter,
   isLoggedIn,
   isVerifiedCheck,
-} from "../../middleware.js";
+} from '../../middleware.js';
 import {
   routeGetUsers,
   routeUpdateSelf,
@@ -19,13 +19,13 @@ import {
   routeGetSelf,
   routeGetUser,
   routeOnboardSelf,
-} from "./user.controller.js";
-import { User } from "./user.model.js";
-import { routeGetApplicationsByStudent } from "../application/application.controller.js";
-import { routeGetRentalsByUser } from "../rental/rental.controller.js";
-import { routeGetUserBillings } from "../billing/billing.controller.js";
-import { routeGetVisitBookingsByStudent } from "../booking/booking.controller.js";
-import { routeReportUser, routeGetMyReports } from "../report/report.controller.js";
+} from './user.controller.js';
+import { User } from './user.model.js';
+import { routeGetApplicationsByStudent } from '../application/application.controller.js';
+import { routeGetRentalsByUser } from '../rental/rental.controller.js';
+import { routeGetUserBillings } from '../billing/billing.controller.js';
+import { routeGetVisitBookingsByStudent } from '../booking/booking.controller.js';
+import { routeReportUser, routeGetMyReports } from '../report/report.controller.js';
 
 const router = Router();
 

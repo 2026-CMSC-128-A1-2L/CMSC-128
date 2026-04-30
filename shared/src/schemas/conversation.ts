@@ -4,7 +4,7 @@ import {
   ObjectIdSchema,
   PaginationRequestSchema,
   PaginationResponseSchema,
-} from "./common.js";
+} from './common.js';
 
 // GET /messages
 export const GetMyConversationsResponseBody = z

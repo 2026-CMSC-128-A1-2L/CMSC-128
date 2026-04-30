@@ -1,10 +1,10 @@
-import { AppError } from "../../error.js";
+import { AppError } from '../../error.js';
 import {
   ObjectIdSchema,
   GetMyConversationResponseBody,
   GetMyConversationsResponseBody,
 } from 'shared';
-import { getConversation, getConversations, sendMessage } from "./message.service.js";
+import { getConversation, getConversations, sendMessage } from './message.service.js';
 import { RequestHandler } from 'express';
 import assert from 'node:assert';
 import z from 'zod';

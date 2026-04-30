@@ -40,23 +40,19 @@ const PropertyCard: FunctionComponent<PropertyCardProps> = ({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div
-        className={`transition-all duration-300 ${
-          isHovered ? 'scale-[1.02]' : 'scale-100'
-        }`}
-      >
+      <div className={`transition-all duration-300 ${isHovered ? 'scale-[1.02]' : 'scale-100'}`}>
         <div className="h-[360px] w-[348px] filter-[drop-shadow(0px_4px_20px_rgba(0,0,0,0.15))] relative">
           {/* White background */}
           <div className="absolute inset-0 rounded-[25px] bg-white z-0" />
-          
+
           {/* Image */}
           <img
             className="w-full h-[200px] rounded-t-[25px] object-cover relative z-10"
             alt={name}
             src={displayImage}
             onError={handleImageError}
-            />
-          
+          />
+
           {/* Content Overlay */}
           <div className="absolute bottom-0 left-0 right-0 bg-white rounded-b-[25px] p-3 z-10">
             {/* Header */}
@@ -68,9 +64,7 @@ const PropertyCard: FunctionComponent<PropertyCardProps> = ({
                 <div className="absolute inset-0 rounded-[5px] border border-teal" />
                 <div className="absolute inset-0 flex items-center justify-center gap-1">
                   <div className="w-1.5 h-1.5 rounded-full bg-teal" />
-                  <span className="text-[12px] font-semibold text-teal capitalize">
-                    {status}
-                  </span>
+                  <span className="text-[12px] font-semibold text-teal capitalize">{status}</span>
                 </div>
               </div>
             </div>
@@ -98,11 +92,13 @@ const PropertyCard: FunctionComponent<PropertyCardProps> = ({
                 </div>
               </div>
               <div className="w-[100px]">
-                <b className={`text-[16px] ${
-                  outstanding > 0 
-                    ? 'bg-linear-to-b from-[#c29722] to-[#f6b709] bg-clip-text text-transparent'
-                    : 'text-silver'
-                }`}>
+                <b
+                  className={`text-[16px] ${
+                    outstanding > 0
+                      ? 'bg-linear-to-b from-[#c29722] to-[#f6b709] bg-clip-text text-transparent'
+                      : 'text-silver'
+                  }`}
+                >
                   ₱{outstanding.toLocaleString()}
                 </b>
                 <div className="text-[12px] tracking-[0.02em] font-semibold font-lora text-silver">
@@ -115,9 +111,11 @@ const PropertyCard: FunctionComponent<PropertyCardProps> = ({
       </div>
 
       {/* Arrow button */}
-      <div className={`absolute bottom-4 right-4 w-8 h-8 rounded-full bg-darkslategray flex items-center justify-center shadow-md transition-all duration-300 z-10 ${
-        isHovered ? 'translate-x-1 bg-teal' : ''
-      }`}>
+      <div
+        className={`absolute bottom-4 right-4 w-8 h-8 rounded-full bg-darkslategray flex items-center justify-center shadow-md transition-all duration-300 z-10 ${
+          isHovered ? 'translate-x-1 bg-teal' : ''
+        }`}
+      >
         <Icon icon="mdi:chevron-right" className="w-4 h-4 text-white" />
       </div>
     </div>

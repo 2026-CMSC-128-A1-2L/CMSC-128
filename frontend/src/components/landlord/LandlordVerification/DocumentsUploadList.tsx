@@ -1,5 +1,5 @@
-import DocumentUploadCard, { type DocumentStatus } from "./DocumentUploadCard";
-import type { DocumentSlot } from "./DocumentsData";
+import DocumentUploadCard, { type DocumentStatus } from './DocumentUploadCard';
+import type { DocumentSlot } from './DocumentsData';
 
 interface DocumentsUploadListProps {
   documents: DocumentSlot[];
@@ -7,21 +7,13 @@ interface DocumentsUploadListProps {
   onFileSelected: (id: string, file: File) => void;
 }
 
-const DocumentsUploadList = ({
-  documents,
-  uploads,
-  onFileSelected,
-}: DocumentsUploadListProps) => {
-  const getStatus = (id: string): DocumentStatus =>
-    uploads[id] ? "uploaded" : "missing";
+const DocumentsUploadList = ({ documents, uploads, onFileSelected }: DocumentsUploadListProps) => {
+  const getStatus = (id: string): DocumentStatus => (uploads[id] ? 'uploaded' : 'missing');
 
   return (
     <>
       {documents.map((doc) => (
-        <div
-          key={doc.id}
-          className="flex w-full flex-col items-center justify-center px-[32px]"
-        >
+        <div key={doc.id} className="flex w-full flex-col items-center justify-center px-[32px]">
           <DocumentUploadCard
             title={doc.title}
             acceptedHint={doc.acceptedHint}

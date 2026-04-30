@@ -1,4 +1,4 @@
-import type { FunctionComponent, } from 'react';
+import type { FunctionComponent } from 'react';
 import checked_radio_button from '../../../../assets/checked_button.svg';
 import unchecked_radio_button from '../../../../assets/unchecked_button.svg';
 

@@ -1,6 +1,6 @@
 import './config.js';
 import mongoose from 'mongoose';
-import { getApp } from "./app.js";
+import { getApp } from './app.js';
 
 // Connect to MongoDB
 try {

@@ -1,7 +1,7 @@
-import type { FunctionComponent } from "react";
-import LogoFooter from "../../../assets/footer_logo.svg?react";
-import { Icon } from "@iconify/react";
-import { Link } from "react-router-dom";
+import type { FunctionComponent } from 'react';
+import LogoFooter from '../../../assets/footer_logo.svg?react';
+import { Icon } from '@iconify/react';
+import { Link } from 'react-router-dom';
 
 const Footer: FunctionComponent = () => {
   return (

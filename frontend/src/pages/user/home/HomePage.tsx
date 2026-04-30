@@ -1,24 +1,19 @@
-import {
-  type FunctionComponent,
-  useCallback,
-  useState,
-  useEffect,
-} from "react";
-import { Icon } from "@iconify/react";
-import SideBar from "../../../components/user/SideBar";
-import DormCard from "../../../components/user/DormCard";
-import { dormData } from "../../../data/dorms";
-import Banner from "../../../components/general/Banner";
-import FilterTab from "../../../components/user/Filter/FilterTab";
-import { Link } from "react-router-dom";
-import LoadingPage from "../../general/LoadingPage";
+import { type FunctionComponent, useCallback, useState, useEffect } from 'react';
+import { Icon } from '@iconify/react';
+import SideBar from '../../../components/user/SideBar';
+import DormCard from '../../../components/user/DormCard';
+import { dormData } from '../../../data/dorms';
+import Banner from '../../../components/general/Banner';
+import FilterTab from '../../../components/user/Filter/FilterTab';
+import { Link } from 'react-router-dom';
+import LoadingPage from '../../general/LoadingPage';
 
 const HomePage: FunctionComponent = () => {
   const onViewMoreContainerClick = useCallback(() => {}, []);
 
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const toggleFilter = () => setIsFilterOpen(!isFilterOpen);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const [testLoading, setTestLoading] = useState(false); // change to true for testing ng loading
 
   useEffect(() => {
@@ -52,10 +47,7 @@ const HomePage: FunctionComponent = () => {
                 focus-within:transform focus-within:-translate-y-[1px]
                 `}
               >
-                <Icon
-                  icon="ic:outline-search"
-                  className="w-5 h-5 text-unselected shrink-0"
-                />
+                <Icon icon="ic:outline-search" className="w-5 h-5 text-unselected shrink-0" />
                 <input
                   type="text"
                   placeholder="Search for Dorms, Apartments, or Locations (e.g. UPLB, Umali Subdivision)"
@@ -66,13 +58,10 @@ const HomePage: FunctionComponent = () => {
                 />
                 {searchTerm && (
                   <button
-                    onClick={() => setSearchTerm("")}
+                    onClick={() => setSearchTerm('')}
                     className="text-unselected hover:text-darkgreen"
                   >
-                    <Icon
-                      icon="material-symbols:close-rounded"
-                      className="w-4 h-4"
-                    />
+                    <Icon icon="material-symbols:close-rounded" className="w-4 h-4" />
                   </button>
                 )}
               </div>
@@ -81,9 +70,7 @@ const HomePage: FunctionComponent = () => {
               {/* greeting/filter button*/}
               <div className="w-full flex items-center justify-between box-border">
                 <div className="w-full h-8 flex-1 flex flex-col items-start justify-center">
-                  <b className="relative leading-8 text-teal">
-                    Mabuhay, iskolar!
-                  </b>
+                  <b className="relative leading-8 text-teal">Mabuhay, iskolar!</b>
                 </div>
                 <div className="w-fit h-fit flex items-center">
                   <div
@@ -107,10 +94,7 @@ const HomePage: FunctionComponent = () => {
                             onClick={toggleFilter}
                             className="p-2 hover:bg-gray-100 rounded-full"
                           >
-                            <Icon
-                              icon="material-symbols:close"
-                              className="w-6 h-6"
-                            />
+                            <Icon icon="material-symbols:close" className="w-6 h-6" />
                           </button>
                         </div>
                         <FilterTab />
@@ -127,13 +111,8 @@ const HomePage: FunctionComponent = () => {
                   <div className="w-full h-fit flex items-center justify-between">
                     <div className="h-full flex items-center gap-2">
                       <div className="w-44 h-full flex items-start gap-2">
-                        <b className="w-fit relative flex items-start">
-                          Pasalo Units
-                        </b>
-                        <Icon
-                          icon="material-symbols-light:info-outline"
-                          className="w-5 h-5"
-                        ></Icon>
+                        <b className="w-fit relative flex items-start">Pasalo Units</b>
+                        <Icon icon="material-symbols-light:info-outline" className="w-5 h-5"></Icon>
                       </div>
                       <div
                         className="w-fit h-fit flex items-end justify-center gap-1 pt-4 cursor-pointer text-center text-[0.75rem] text-teal-100 font-lora"
@@ -142,10 +121,7 @@ const HomePage: FunctionComponent = () => {
                         <div className="relative [text-decoration:underline] tracking-num-0.02 font-semibold">
                           View All
                         </div>
-                        <Icon
-                          icon="radix-icons:arrow-top-right"
-                          className="w-3 h-3"
-                        ></Icon>
+                        <Icon icon="radix-icons:arrow-top-right" className="w-3 h-3"></Icon>
                       </div>
                     </div>
                     <div className="flex items-center gap-[8px]">
@@ -195,9 +171,7 @@ const HomePage: FunctionComponent = () => {
                   <div className="w-full h-10 flex items-center justify-between">
                     <div className="h-full flex items-center gap-6">
                       <div className="w-fit h-full flex items-center">
-                        <b className="w-fit flex items-center">
-                          Popular Listings
-                        </b>
+                        <b className="w-fit flex items-center">Popular Listings</b>
                       </div>
                       <div
                         className="w-fit h-fit flex items-end justify-center gap-1 cursor-pointer text-center text-[0.75rem] text-teal-100 font-lora"
@@ -206,10 +180,7 @@ const HomePage: FunctionComponent = () => {
                         <div className="relative [text-decoration:underline] tracking-num-0.02 font-semibold">
                           View All
                         </div>
-                        <Icon
-                          icon="radix-icons:arrow-top-right"
-                          className="w-3 h-3"
-                        ></Icon>
+                        <Icon icon="radix-icons:arrow-top-right" className="w-3 h-3"></Icon>
                       </div>
                     </div>
                     <div className="flex items-center gap-[8px]">
@@ -268,10 +239,7 @@ const HomePage: FunctionComponent = () => {
                         <div className="relative [text-decoration:underline] tracking-num-0.02 font-semibold">
                           View All
                         </div>
-                        <Icon
-                          icon="radix-icons:arrow-top-right"
-                          className="w-3 h-3"
-                        ></Icon>
+                        <Icon icon="radix-icons:arrow-top-right" className="w-3 h-3"></Icon>
                       </div>
                     </div>
                     <div className="flex items-center gap-[8px]">
@@ -321,9 +289,7 @@ const HomePage: FunctionComponent = () => {
                   <div className="w-full h-10 flex items-center justify-between">
                     <div className="h-full flex items-center gap-6">
                       <div className="w-fit h-full flex items-center">
-                        <b className="w-fit flex items-center">
-                          Listings You May Like
-                        </b>
+                        <b className="w-fit flex items-center">Listings You May Like</b>
                       </div>
                       <div
                         className="w-fit h-fit flex items-end justify-center gap-1 cursor-pointer text-center text-[0.75rem] text-teal-100 font-lora"
@@ -332,10 +298,7 @@ const HomePage: FunctionComponent = () => {
                         <div className="relative [text-decoration:underline] tracking-num-0.02 font-semibold">
                           View All
                         </div>
-                        <Icon
-                          icon="radix-icons:arrow-top-right"
-                          className="w-3 h-3"
-                        ></Icon>
+                        <Icon icon="radix-icons:arrow-top-right" className="w-3 h-3"></Icon>
                       </div>
                     </div>
                     <div className="flex items-center gap-[8px]">

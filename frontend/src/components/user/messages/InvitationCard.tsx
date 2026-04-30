@@ -64,8 +64,7 @@ const InvitationCard: FunctionComponent<InvitationCardProps> = ({
 
           <div className="flex flex-col items-center gap-[7px]">
             <b className="w-[564px] h-[88px] relative leading-num-32 flex items-center justify-center shrink-0">
-              {inviterName} has invited you to join your current accommodations
-              in {dormitoryName}
+              {inviterName} has invited you to join your current accommodations in {dormitoryName}
             </b>
 
             {/* Invitation Message Box */}
@@ -78,8 +77,7 @@ const InvitationCard: FunctionComponent<InvitationCardProps> = ({
                   <div className="w-[521px] h-auto relative leading-6 font-medium flex items-center justify-center shrink-0">
                     {invitationMessage}
                     <br />
-                    You may head over {linkText} to check out the building's
-                    profile.
+                    You may head over {linkText} to check out the building's profile.
                   </div>
                   <div className="w-[474.6px] relative text-num-12 tracking-num-0_02 font-semibold font-lora flex items-center justify-center">
                     This invitation will expire in {expirationDays} days.

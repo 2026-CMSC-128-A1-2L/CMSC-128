@@ -5,9 +5,7 @@ interface MessageSidebarProps {
   onBackClick: () => void;
 }
 
-const MessageSidebar: FunctionComponent<MessageSidebarProps> = ({
-  onBackClick,
-}) => {
+const MessageSidebar: FunctionComponent<MessageSidebarProps> = ({ onBackClick }) => {
   return (
     <div className="h-[924px] flex items-center p-num-10 box-border shrink-0">
       <div className="h-[924px] w-num-340 relative overflow-y-auto shrink-0">
@@ -85,7 +83,7 @@ const MessageSidebar: FunctionComponent<MessageSidebarProps> = ({
                     <b className="relative">All</b>
                   </div>
                   <div className="h-8 w-20 rounded-[100px] bg-lightcyan flex items-center justify-center py-2 px-3 box-border text-teal-200">
-                    <b className="relative whitespace-pre-wrap">Unread  8</b>
+                    <b className="relative whitespace-pre-wrap">Unread 8</b>
                   </div>
                 </div>
               </div>

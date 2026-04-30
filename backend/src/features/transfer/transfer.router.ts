@@ -1,12 +1,12 @@
 import { Router } from 'express';
-import { isVerifiedStudent, manageListingsFilter, selfFilter } from "../../middleware.js";
+import { isVerifiedStudent, manageListingsFilter, selfFilter } from '../../middleware.js';
 import {
   routeGetTransferRequests,
   routeCreateTransferRequest,
   routeApproveTransferRequest,
   routeRejectTransferRequest,
   routeCancelTransferRequest,
-} from "./transfer.controller.js";
+} from './transfer.controller.js';
 
 const router = Router();
 

@@ -1,9 +1,14 @@
 import { Router } from 'express';
-import { isSuperAdmin, manageBillingsFilter, manageListingsFilter } from "../../middleware.js";
-import { routeGetUnits, routeGetUnit, routeUpdateUnit, routeDeleteUnit } from "./unit.controller.js";
-import { routeGetRentalsByUnit } from "../rental/rental.controller.js";
-import { routeGetUnitBillings } from "../billing/billing.controller.js";
-import { currentTenantManagerFilter } from "./unit.middleware.js";
+import { isSuperAdmin, manageBillingsFilter, manageListingsFilter } from '../../middleware.js';
+import {
+  routeGetUnits,
+  routeGetUnit,
+  routeUpdateUnit,
+  routeDeleteUnit,
+} from './unit.controller.js';
+import { routeGetRentalsByUnit } from '../rental/rental.controller.js';
+import { routeGetUnitBillings } from '../billing/billing.controller.js';
+import { currentTenantManagerFilter } from './unit.middleware.js';
 
 const router = Router();
 
