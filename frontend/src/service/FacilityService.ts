@@ -144,9 +144,6 @@ export const FacilityService = {
 
 
 
-
-
-
   async updateManagerPermissions(
     facilityId: string,
     managerId: string,
@@ -184,4 +181,39 @@ export const FacilityService = {
       throw error;
     }
   },
+
+  async approveFacility(facilityId: string) {
+    try {
+      await axios.post(
+        `/api/facilities/${facilityId}/approve`,
+        {
+          // headers
+        }
+      );
+    } catch (error) {
+      console.error('Failed to approve facility:', error);
+      throw error;
+    }
+  },
+
+  async rejectFacility(facilityId: string) {
+    try {
+      await axios.post(
+        `/api/facilities/${facilityId}/reject`,
+        {
+          // headers
+        }
+      );
+    } catch (error) {
+      console.error('Failed to reject facility:', error);
+      throw error;
+    }
+  },
+
+
+
+  //CREATE LISTING -> ListingService.ts
+  //GET REVIEWS -> ReviewService.ts
+  //GET RATINGS -> RatingService.ts
+
 };

@@ -1,17 +1,17 @@
 import axios from 'axios';
 import z from 'zod';
-import type { GetBookingsQuery } from '../interface/booking'
+import type { GetBookingsQuery, CreateBookingBody } from '../interface/booking'
 import { GetBookingsQuerySchema } from 'shared';
 import { API_URL } from './constant';
 
 
 export const BookingService = {
-  async createBooking(facilityId: string, startDate: Date, endDate: Date, message: string) {
+  async createBooking(body: CreateBookingBody) {
     try {
       const response = await axios.post(
         `${API_URL}/api/bookings/`,
         {
-          facilityId, startDate, endDate, message
+          ...body
         },
         {
           //headers
@@ -45,7 +45,7 @@ export const BookingService = {
     }
   },
 
-  async updateBooking(bookingId: string) {
+  async updateBookingStatus(bookingId: string) {
     try {
       const response = await axios.patch(
         `${API_URL}/bookings/${bookingId}`,

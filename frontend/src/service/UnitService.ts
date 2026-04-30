@@ -1,10 +1,33 @@
 import axios from 'axios';
 import z from 'zod';
 import { GetUnitsRequestQuerySchema } from 'shared';
-import type { GetUnitsRequestQuery } from '../interface/unit';
+import type { GetUnitsRequestQuery, CreateUnitBody } from '../interface/unit';
 import { API_URL } from './constant';
 
 export const UnitService = {
+
+  //FOREIGN -> Listing Route 
+
+  async createUnit(listingId: string, body: CreateUnitBody) {
+    try {
+      const response = await axios.post(
+        `${API_URL}/api/listings/${listingId}/units`,
+        {
+          ...body,
+        },
+        {
+          // headers
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Error creating listing:', error);
+      throw error;
+    }
+  },
+
+
+
   async getUnits(
     params: z.infer<typeof GetUnitsRequestQuerySchema>
   ): Promise<GetUnitsRequestQuery> {
@@ -56,7 +79,7 @@ export const UnitService = {
     try {
       const response = await axios.delete(
         `${API_URL}/api/units/${unitId}`
-      )
+      );
 
       return response.data()
     } catch (error) {
@@ -65,8 +88,9 @@ export const UnitService = {
     }
   },
 
-  //routeGetRentalsByUnit
-  //routeGetUnitBillings
+  //GET rentals by unit -> RentalService
+  //GET unit billings -> BillingService
+  //
 
 
 
