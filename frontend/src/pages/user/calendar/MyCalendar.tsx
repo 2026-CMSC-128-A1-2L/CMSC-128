@@ -17,8 +17,10 @@ const MyCalendar: FunctionComponent = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
 
   const openEventPopout = useCallback((event: CalendarEvent) => {
-    setSelectedEvent(event);
-    setEventPopoutOpen(true);
+    const eventDate = new Date(event.date);
+    setSelectedDate(eventDate);
+    setSelectedDayEvents([event]); // Will be populated with full day events in the popout
+    setDayPopoutOpen(true);
   }, []);
 
   const closeEventPopout = useCallback(() => {
@@ -40,6 +42,14 @@ const MyCalendar: FunctionComponent = () => {
     setSelectedDate(null);
     setSelectedDayEvents([]);
   }, []);
+
+  // Always open day popout when clicking on mini calendar date
+  const handleDayPopout = useCallback(
+    (date: Date, events: CalendarEvent[]) => {
+      openDayPopout(date, events);
+    },
+    [openDayPopout]
+  );
 
   const handlePrevMonth = useCallback(() => {
     setCurrentDate(
@@ -65,24 +75,40 @@ const MyCalendar: FunctionComponent = () => {
         </div>
         <div className="flex flex-1 flex-col min-w-0 overflow-y-auto">
           <div className="flex-1 flex flex-col px-4 sm:px-8 pt-16 pr-4 sm:pr-20">
-            <div className="flex flex-col gap-8 flex-1">
-              <b className="text-2xl leading-8">My Calendar</b>
-              <div className="self-stretch flex-1 rounded-2xl bg-white border border-whitesmoke-200 flex flex-col">
-                <div className="flex-1 flex flex-col lg:flex-row items-start overflow-auto px-6 py-6 gap-6">
-                  <MiniCalendar
-                    currentDate={currentDate}
-                    onPrevMonth={handlePrevMonth}
-                    onNextMonth={handleNextMonth}
-                    onDateChange={handleDateChange}
-                    onDateClick={openDayPopout}
-                    onEventClick={openEventPopout}
-                  />
-                  <MainCalendarGrid
-                    currentDate={currentDate}
-                    onPrevMonth={handlePrevMonth}
-                    onNextMonth={handleNextMonth}
-                    onEventClick={openEventPopout}
-                  />
+            <div className="flex flex-col gap-4 sm:gap-8 flex-1">
+              {/* Header Section */}
+              <div className="flex flex-col gap-3">
+                <b className="text-xl sm:text-2xl leading-8 text-black">My Calendar</b>
+                <div className="h-0.5 bg-whitesmoke-200" />
+              </div>
+
+              {/* Main Content - Two Column Layout */}
+              <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
+                {/* LEFT SIDEBAR */}
+                <div className="w-full lg:w-72 flex flex-col gap-6 shrink-0">
+                  {/* Mini Calendar Container */}
+                  <div className="bg-white rounded-num-8 p-3 sm:p-4 border border-whitesmoke-200 w-full overflow-hidden">
+                    <MiniCalendar
+                      currentDate={currentDate}
+                      onPrevMonth={handlePrevMonth}
+                      onNextMonth={handleNextMonth}
+                      onDateChange={handleDateChange}
+                      onDateClick={handleDayPopout}
+                      onEventClick={openEventPopout}
+                    />
+                  </div>
+                </div>
+
+                {/* RIGHT MAIN CONTENT */}
+                <div className="flex-1 flex flex-col gap-6 min-w-0">
+                  <div className="rounded-2xl bg-white border border-whitesmoke-200 flex flex-col p-6">
+                    <MainCalendarGrid
+                      currentDate={currentDate}
+                      onPrevMonth={handlePrevMonth}
+                      onNextMonth={handleNextMonth}
+                      onEventClick={openEventPopout}
+                    />
+                  </div>
                 </div>
               </div>
             </div>

@@ -74,7 +74,7 @@ const AvailabilityLine = ({ days, hours }: { days: string; hours: string }) => (
 
 const PropertyCard = ({ property }: { property: Property }) => (
   <Link
-    to={`/landlord/properties/building-info/${property.id}`}
+    to={`/landlord/properties/${property.id}`}
     className="group flex flex-col overflow-hidden rounded-[12px] bg-white shadow-[0_1px_4px_0_rgba(0,0,0,0.08)] ring-1 ring-[#f0f0f0] transition-shadow duration-200 hover:shadow-[0_4px_12px_0_rgba(0,0,0,0.12)] no-underline"
   >
     
@@ -167,7 +167,7 @@ const LandlordProfile = () => {
         { label: 'Verification Status', to: '/landlord/profile/verification' },
       ]}
     >
-      <div className="flex w-full flex-col gap-[24px] rounded-[16px] bg-white/70 p-[8px] pb-[32px]">
+      <div className="flex w-full flex-col gap-[12px] rounded-[16px] bg-white/70 p-[8px] pb-[32px]">
         <LandlordInfoCard info={landlord} />
 
         <div className="h-px w-full bg-[#e5e7eb]/70" />

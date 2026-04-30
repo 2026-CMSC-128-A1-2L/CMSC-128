@@ -138,7 +138,7 @@ const LandlordHomepage: FunctionComponent = () => {
           {/* Search */}
           <div className="flex w-full items-center gap-[10px] rounded-[12px] bg-[#f0f7ff] px-[24px] py-[10px]">
             <Icon
-              icon="solar:magnifer-bold"
+              icon="heroicons:magnifying-glass"
               className="h-[24px] w-[24px] text-[#666]"
               aria-hidden="true"
             />
@@ -280,7 +280,7 @@ const LandlordHomepage: FunctionComponent = () => {
               {PROPERTIES.map((p) => (
                 <Link
                   key={p.name}
-                  to={`/landlord/properties/building-info/${p.id}`} // Dynamic Route
+                  to={`/landlord/properties/${p.id}`} // Dynamic Route
                   className="flex shrink-0 flex-col overflow-hidden rounded-[10px] bg-white shadow-[0px_4px_20px_rgba(0,0,0,0.15)] transition-transform hover:scale-[1.02]"
                   style={{ width: CARD_WIDTH }}
                 >
