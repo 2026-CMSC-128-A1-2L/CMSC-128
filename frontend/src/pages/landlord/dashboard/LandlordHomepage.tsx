@@ -118,6 +118,7 @@ const LandlordHomepage: FunctionComponent = () => {
   const trackRef = useRef<HTMLDivElement>(null);
   const [current, setCurrent] = useState(0);
   const total = PROPERTIES.length;
+  const [searchQuery, setSearchQuery] = useState("");
 
   const scrollTo = (index: number) => {
     const clamped = Math.max(0, Math.min(index, total - 1));
@@ -136,15 +137,35 @@ const LandlordHomepage: FunctionComponent = () => {
         {/* Main column */}
         <div className="flex flex-1 flex-col gap-[48px] min-w-0">
           {/* Search */}
-          <div className="flex w-full items-center gap-[10px] rounded-[12px] bg-[#f0f7ff] px-[24px] py-[10px]">
+          <div className="flex w-full items-center gap-[10px] rounded-[12px] bg-[#f0f7ff] px-[24px] py-[10px] focus-within:ring-1 focus-within:ring-[#096c5b]/20 transition-all">
             <Icon
-              icon="heroicons:magnifying-glass"
+              icon="ic:outline-search"
               className="h-[24px] w-[24px] text-[#666]"
               aria-hidden="true"
             />
-            <span className="font-['Inter',sans-serif] text-[14px] font-bold text-[#666]">
-              Search
-            </span>
+
+            <input
+              type="text"
+              placeholder="Search properties or people..."
+              value={searchQuery}
+              maxLength={50} // Restricts input to 50 characters
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full bg-transparent font-['Inter',sans-serif] text-[14px] font-bold text-[#666] outline-none placeholder:text-[#666]/50"
+            />
+
+            {searchQuery.length > 0 && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="flex items-center justify-center rounded-full p-1 hover:bg-[#e0f0ff] transition-colors"
+                aria-label="Clear search"
+              >
+                <Icon
+                  icon="heroicons:magnifying-glass"
+                  className="h-[24px] w-[24px] text-[#666]"
+                  aria-hidden="true"
+                />
+              </button>
+            )}
           </div>
 
           {/* Statistics */}

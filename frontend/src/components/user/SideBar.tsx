@@ -81,6 +81,7 @@ const SideBar = ({
   const [collapsed, setCollapsed] = useState(false);
   const [internalHover, setInternalHover] = useState<SideBarItemKey>();
   const location = useLocation();
+  const [searchQuery, setSearchQuery] = useState("");
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const { isDark, toggle } = useTheme();
 
@@ -140,19 +141,48 @@ const SideBar = ({
           <div className="flex justify-center">
             <button
               type="button"
+              onClick={() => setCollapsed(false)} // Opens sidebar to search
               aria-label="Search"
               className="flex h-10 w-10 items-center justify-center rounded-full bg-[#f5f5f5] hover:bg-gray-200 transition-colors"
             >
-              <Icon icon="heroicons:magnifying-glass" className="w-6 h-6" />
+              <Icon icon="ic:outline-search" className="w-5 h-5" />
             </button>
           </div>
         ) : (
-          <div className="w-full h-10 rounded-full bg-[#f5f5f5] flex items-center py-1 px-3 text-[10px]">
-            <div className="flex-1 font-semibold text-[#2d3748]">Search</div>
-            <Icon
-              icon="heroicons:magnifying-glass-circle-solid"
-              className="w-8 h-8 text-darkolivegreen"
+          <div className="relative w-full h-10 rounded-full bg-[#f5f5f5] flex items-center px-3 group focus-within:ring-1 focus-within:ring-teal-500/30 transition-all">
+            <input
+              type="text"
+              placeholder="Search"
+              value={searchQuery}
+              maxLength={50}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) =>
+                e.key === "Enter" && console.log("Searching for:", searchQuery)
+              }
+              className="flex-1 bg-transparent border-none outline-none text-[12px] font-semibold text-[#2d3748] placeholder:text-[#9ca3af] w-full pr-1"
             />
+
+            {/* Clear Button - only shows when there is text */}
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery("")}
+                className="mr-1 text-[#9ca3af] hover:text-[#2d3748] transition-colors"
+              >
+                <Icon
+                  icon="material-symbols:close-rounded"
+                  className="w-4 h-4"
+                />
+              </button>
+            )}
+
+            <button
+              type="button"
+              className="shrink-0 hover:scale-110 transition-transform"
+              onClick={() => console.log("Searching for:", searchQuery)}
+            >
+              <Icon icon="ic:outline-search" className="w-5 h-5" />
+            </button>
           </div>
         )}
       </div>

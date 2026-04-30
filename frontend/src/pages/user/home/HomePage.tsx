@@ -1,20 +1,24 @@
-import { type FunctionComponent, useCallback, useState, useEffect } from 'react';
-import { Icon } from '@iconify/react';
-import SideBar from '../../../components/user/SideBar';
-import DormCard from '../../../components/user/DormCard';
-import { dormData } from '../../../data/dorms';
-import Banner from '../../../components/general/Banner';
-import FilterTab from '../../../components/user/Filter/FilterTab';
-import { Link } from 'react-router-dom';
+import {
+  type FunctionComponent,
+  useCallback,
+  useState,
+  useEffect,
+} from "react";
+import { Icon } from "@iconify/react";
+import SideBar from "../../../components/user/SideBar";
+import DormCard from "../../../components/user/DormCard";
+import { dormData } from "../../../data/dorms";
+import Banner from "../../../components/general/Banner";
+import FilterTab from "../../../components/user/Filter/FilterTab";
+import { Link } from "react-router-dom";
 import LoadingPage from "../../general/LoadingPage";
 
 const HomePage: FunctionComponent = () => {
-  const onViewMoreContainerClick = useCallback(() => {
-
-  }, []);
+  const onViewMoreContainerClick = useCallback(() => {}, []);
 
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const toggleFilter = () => setIsFilterOpen(!isFilterOpen);
+  const [searchTerm, setSearchTerm] = useState("");
   const [testLoading, setTestLoading] = useState(false); // change to true for testing ng loading
 
   useEffect(() => {
@@ -25,7 +29,6 @@ const HomePage: FunctionComponent = () => {
   if (testLoading) {
     return <LoadingPage />;
   }
-
 
   return (
     <div className="w-full flex items-start text-left text-[0.875rem] text-dimgray font-inter gap-8 ">
@@ -40,15 +43,40 @@ const HomePage: FunctionComponent = () => {
             {/* search bar container */}
             <div className="w-full h-full overflow-hidden flex items-center pb-6 box-border ">
               {/* search bar */}
-              <div className="w-full rounded-num-12 bg-unavailable_action flex items-center py-3 pl-3 pr-6 box-border gap-2">
-                <Icon icon="ic:outline-search" className="w-5 h-5"></Icon>
-                <b className="relative text-unselected">
-                  Search for Dorms, Apartments, or Locations (e.g. UPLB, Umali
-                  Subdivision)
-                </b>
+              <div
+                className={`
+                w-full flex items-center transition-all duration-300
+                bg-[#f8f9fa] rounded-num-12 py-3 pl-3 pr-4 border border-transparent
+                focus-within:bg-white 
+                focus-within:shadow-[0_8px_10px_rgb(0,0,0,0.06)]
+                focus-within:transform focus-within:-translate-y-[1px]
+                `}
+              >
+                <Icon
+                  icon="ic:outline-search"
+                  className="w-5 h-5 text-unselected shrink-0"
+                />
+                <input
+                  type="text"
+                  placeholder="Search for Dorms, Apartments, or Locations (e.g. UPLB, Umali Subdivision)"
+                  value={searchTerm}
+                  maxLength={50}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full bg-transparent border-none outline-none text-num-14 font-semibold text-darkgreen placeholder:text-unselected placeholder:font-normal"
+                />
+                {searchTerm && (
+                  <button
+                    onClick={() => setSearchTerm("")}
+                    className="text-unselected hover:text-darkgreen"
+                  >
+                    <Icon
+                      icon="material-symbols:close-rounded"
+                      className="w-4 h-4"
+                    />
+                  </button>
+                )}
               </div>
             </div>
-
             <div className="w-full flex flex-col items-start gap-6 text-[1.5rem] text-gray">
               {/* greeting/filter button*/}
               <div className="w-full flex items-center justify-between box-border">
