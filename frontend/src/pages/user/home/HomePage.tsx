@@ -28,7 +28,7 @@ const HomePage: FunctionComponent = () => {
 
 
   return (
-    <div className="w-full flex items-start text-left text-[0.875rem] text-dimgray font-inter gap-8">
+    <div className="w-full flex items-start text-left text-[0.875rem] text-dimgray font-inter gap-8 ">
       <div className="sticky top-0 h-screen w-fit shrink-0">
         <SideBar></SideBar>
       </div>
@@ -43,7 +43,8 @@ const HomePage: FunctionComponent = () => {
               <div className="w-full rounded-num-12 bg-unavailable_action flex items-center py-3 pl-3 pr-6 box-border gap-2">
                 <Icon icon="ic:outline-search" className="w-5 h-5"></Icon>
                 <b className="relative text-unselected">
-                  Search for Dorms, Apartments, or Locations (e.g. UPLB, Umali Subdivision)
+                  Search for Dorms, Apartments, or Locations (e.g. UPLB, Umali
+                  Subdivision)
                 </b>
               </div>
             </div>
@@ -52,7 +53,9 @@ const HomePage: FunctionComponent = () => {
               {/* greeting/filter button*/}
               <div className="w-full flex items-center justify-between box-border">
                 <div className="w-full h-8 flex-1 flex flex-col items-start justify-center">
-                  <b className="relative leading-8 text-teal">Mabuhay, iskolar!</b>
+                  <b className="relative leading-8 text-teal">
+                    Mabuhay, iskolar!
+                  </b>
                 </div>
                 <div className="w-fit h-fit flex items-center">
                   <div
@@ -76,7 +79,10 @@ const HomePage: FunctionComponent = () => {
                             onClick={toggleFilter}
                             className="p-2 hover:bg-gray-100 rounded-full"
                           >
-                            <Icon icon="material-symbols:close" className="w-6 h-6" />
+                            <Icon
+                              icon="material-symbols:close"
+                              className="w-6 h-6"
+                            />
                           </button>
                         </div>
                         <FilterTab />
@@ -88,18 +94,18 @@ const HomePage: FunctionComponent = () => {
 
               <div className="w-full flex flex-col items-start gap-10">
                 {/* pasalo units */}
-                <div className="w-full flex flex-col items-start justify-center gap-6">
+                <div className="w-full flex flex-col items-start justify-center gap-6 dark:text-white">
                   {/* header */}
                   <div className="w-full h-fit flex items-center justify-between">
                     <div className="h-full flex items-center gap-2">
-                      <div className="w-44 h-full flex flex-col items-start">
-                        <div className="w-44 h-full flex flex-col items-end">
-                          <Icon
-                            icon="material-symbols-light:info-outline"
-                            className="w-5 h-5"
-                          ></Icon>
-                        </div>
-                        <b className="w-fit relative flex items-start">Pasalo Units</b>
+                      <div className="w-44 h-full flex items-start gap-2">
+                        <b className="w-fit relative flex items-start">
+                          Pasalo Units
+                        </b>
+                        <Icon
+                          icon="material-symbols-light:info-outline"
+                          className="w-5 h-5"
+                        ></Icon>
                       </div>
                       <div
                         className="w-fit h-fit flex items-end justify-center gap-1 pt-4 cursor-pointer text-center text-[0.75rem] text-teal-100 font-lora"
@@ -108,7 +114,10 @@ const HomePage: FunctionComponent = () => {
                         <div className="relative [text-decoration:underline] tracking-num-0.02 font-semibold">
                           View All
                         </div>
-                        <Icon icon="radix-icons:arrow-top-right" className="w-3 h-3"></Icon>
+                        <Icon
+                          icon="radix-icons:arrow-top-right"
+                          className="w-3 h-3"
+                        ></Icon>
                       </div>
                     </div>
                     <div className="flex items-center gap-[8px]">
@@ -158,7 +167,9 @@ const HomePage: FunctionComponent = () => {
                   <div className="w-full h-10 flex items-center justify-between">
                     <div className="h-full flex items-center gap-6">
                       <div className="w-fit h-full flex items-center">
-                        <b className="w-fit flex items-center">Popular Listings</b>
+                        <b className="w-fit flex items-center">
+                          Popular Listings
+                        </b>
                       </div>
                       <div
                         className="w-fit h-fit flex items-end justify-center gap-1 cursor-pointer text-center text-[0.75rem] text-teal-100 font-lora"
@@ -167,7 +178,10 @@ const HomePage: FunctionComponent = () => {
                         <div className="relative [text-decoration:underline] tracking-num-0.02 font-semibold">
                           View All
                         </div>
-                        <Icon icon="radix-icons:arrow-top-right" className="w-3 h-3"></Icon>
+                        <Icon
+                          icon="radix-icons:arrow-top-right"
+                          className="w-3 h-3"
+                        ></Icon>
                       </div>
                     </div>
                     <div className="flex items-center gap-[8px]">
@@ -226,7 +240,10 @@ const HomePage: FunctionComponent = () => {
                         <div className="relative [text-decoration:underline] tracking-num-0.02 font-semibold">
                           View All
                         </div>
-                        <Icon icon="radix-icons:arrow-top-right" className="w-3 h-3"></Icon>
+                        <Icon
+                          icon="radix-icons:arrow-top-right"
+                          className="w-3 h-3"
+                        ></Icon>
                       </div>
                     </div>
                     <div className="flex items-center gap-[8px]">
@@ -276,7 +293,9 @@ const HomePage: FunctionComponent = () => {
                   <div className="w-full h-10 flex items-center justify-between">
                     <div className="h-full flex items-center gap-6">
                       <div className="w-fit h-full flex items-center">
-                        <b className="w-fit flex items-center">Listings You May Like</b>
+                        <b className="w-fit flex items-center">
+                          Listings You May Like
+                        </b>
                       </div>
                       <div
                         className="w-fit h-fit flex items-end justify-center gap-1 cursor-pointer text-center text-[0.75rem] text-teal-100 font-lora"
@@ -285,7 +304,10 @@ const HomePage: FunctionComponent = () => {
                         <div className="relative [text-decoration:underline] tracking-num-0.02 font-semibold">
                           View All
                         </div>
-                        <Icon icon="radix-icons:arrow-top-right" className="w-3 h-3"></Icon>
+                        <Icon
+                          icon="radix-icons:arrow-top-right"
+                          className="w-3 h-3"
+                        ></Icon>
                       </div>
                     </div>
                     <div className="flex items-center gap-[8px]">

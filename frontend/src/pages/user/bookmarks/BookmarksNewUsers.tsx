@@ -4,15 +4,17 @@ import { Icon } from "@iconify/react";
 import SideBar from "../../../components/user/SideBar";
 import Footer from "../../../components/general/Footer";
 import { Link } from "react-router-dom";
+import { useTheme } from "../../../pages/utilities/DarkMode";
 
 const BookmarksNewUsers: FunctionComponent = () => {
+  const { toggle } = useTheme();
   return (
     <div className="w-full h-screen flex flex-col font-inter text-black overflow-hidden">
       <div className="flex flex-1 overflow-hidden">
         <div className="sticky top-0 h-screen shrink-0 z-10">
-          <SideBar />
+          <SideBar onToggleDarkMode={toggle} />
         </div>
-        <div className="w-[200px] shrink-0 hidden md:block" />
+
         <div className="flex-1 flex flex-col overflow-hidden">
           <div className="flex-1 overflow-y-auto">
             <div className="flex flex-col min-h-full max-h-[1192px]">

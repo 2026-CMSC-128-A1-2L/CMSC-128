@@ -1,11 +1,12 @@
 import type { FunctionComponent } from "react";
 import Message from "../general/InboxMessage";
 import { Icon } from "@iconify/react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 const DmsSidebar: FunctionComponent = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   return (
-    <div className="w-50 h-screen relative overflow-hidden flex flex-col items-start py-15 pl-2.5 pr-2 box-border gap-2 text-left font-inter">
+    <div className="w-[340px] h-screen relative overflow-hidden flex flex-col items-start py-15 pl-2.5 pr-2 box-border gap-2 text-left font-inter">
       <div className="w-full flex flex-col items-start gap-7.5">
         <div className="w-full flex items-center gap-0 text-[0.875rem]">
           <Icon
@@ -25,14 +26,26 @@ const DmsSidebar: FunctionComponent = () => {
         <div className="self-stretch flex flex-col items-start gap-1 font-lora">
           <div className="self-stretch flex items-end py-1 font-inter">
             <b className="w-full flex-1 relative flex items-start pl-3 text-num-18">
-              Notifications
+              System
             </b>
           </div>
           <div className="w-full flex flex-col items-start gap-2 text-right text-[0.5rem]">
+            <Message
+              title="Invitation to Current Accommodation"
+              body="Quevin Custodio has invited you to join..."
+              time="1:20 am"
+              icon="iconamoon:notification"
+              onClick={() => navigate("/direct-messages/dorm-invitation")}
+              active={location.pathname === "/direct-messages/dorm-invitation"}
+            />
             <Message></Message>
-            <Message></Message>
+            <Message
+              title="Welcome to ATLAS!"
+              body="Hi Daphne! Welcome to ATLAS..."
+              time="2m ago"
+            ></Message>
           </div>
-          <div className="w-full flex items-center justify-center gap-1 text-center">
+          <div className="w-full flex items-center justify-center gap-1 text-center mt-2">
             <div className="relative font-semibold text-num-12 text-teal">
               View All
             </div>
@@ -61,8 +74,18 @@ const DmsSidebar: FunctionComponent = () => {
             </div>
           </div>
           <div className="w-full h-full flex flex-col items-start gap-2 text-right text-[0.5rem]">
-            <Message></Message>
-            <Message></Message>
+            <Message
+              title="Three Sapphire Place"
+              body="Hi Daphne! Your application is being reviewed by our do..."
+              time="1hr ago"
+              icon="iconamoon:email"
+            />
+            <Message
+              title="Narra Residences"
+              body="Hi Daphne! Your application is being reviewed by our do..."
+              time="2m ago"
+              icon="iconamoon:email"
+            />
           </div>
           <div className="w-full flex items-center justify-center gap-1 text-center">
             <div className="relative font-semibold text-num-12 text-teal">
