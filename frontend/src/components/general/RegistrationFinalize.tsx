@@ -1,4 +1,4 @@
-import { type FunctionComponent } from 'react';
+import type { FunctionComponent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import type { RegistrationProfileData } from '../../pages/Registration';
@@ -49,15 +49,13 @@ const RegistrationFinalize: FunctionComponent<RegistrationFinalizeProps> = ({
 
   const handleSubmit = () => {
     onSubmit();
-    const destination =
-      data.role === 'student' ? '/home' : '/landlord-homepage';
+    const destination = data.role === 'student' ? '/home' : '/landlord-homepage';
     navigate(destination);
   };
 
   return (
     <div className="flex-1 w-full relative overflow-hidden flex items-start justify-center text-center text-num-14 text-dimgray font-inter">
       <div className="w-[620px] rounded-num-12 border-whitesmoke border-solid border box-border overflow-hidden flex flex-col items-start pt-3 px-4 pb-4 gap-4">
-
         {/* Review banner */}
         <div className="self-stretch rounded-xl bg-lightcyan border border-teal-100 flex items-center px-4 py-3 gap-3 text-left mt-2">
           <Icon icon="material-symbols:info-outline" className="w-5 h-5 text-teal-600 shrink-0" />
@@ -67,11 +65,13 @@ const RegistrationFinalize: FunctionComponent<RegistrationFinalizeProps> = ({
         </div>
 
         <div className="self-stretch flex flex-col items-start gap-3 px-num-10">
-
           {/* Full Name */}
           <div className="self-stretch h-11 rounded-num-12 bg-aliceblue border-whitesmoke border-solid border box-border overflow-hidden flex items-center py-0 px-3 gap-2.5">
             <div className="overflow-hidden flex items-center p-1 shrink-0">
-              <Icon icon="material-symbols:person-outline-rounded" className="h-6 w-6 text-dimgray" />
+              <Icon
+                icon="material-symbols:person-outline-rounded"
+                className="h-6 w-6 text-dimgray"
+              />
             </div>
             <div className="flex items-center gap-4 flex-1">
               <span className="text-sm font-medium text-black flex-1 text-left leading-6">
@@ -100,13 +100,20 @@ const RegistrationFinalize: FunctionComponent<RegistrationFinalizeProps> = ({
 
           {/* Contact + Email */}
           <div className="self-stretch flex items-start gap-4">
-            <ReadOnlyField icon="proicons:call" value={data.contactNumber} placeholder="No contact number" />
+            <ReadOnlyField
+              icon="proicons:call"
+              value={data.contactNumber}
+              placeholder="No contact number"
+            />
             <ReadOnlyField icon="mdi-light:email" value={data.email} placeholder="No email" />
           </div>
 
           {/* Home Address */}
-          <ReadOnlyField icon="ep:location" value={data.homeAddress} placeholder="No address provided" />
-
+          <ReadOnlyField
+            icon="ep:location"
+            value={data.homeAddress}
+            placeholder="No address provided"
+          />
         </div>
 
         {/* Back / Looks good */}
@@ -127,7 +134,6 @@ const RegistrationFinalize: FunctionComponent<RegistrationFinalizeProps> = ({
             <b className="relative">Looks good!</b>
           </button>
         </div>
-
       </div>
     </div>
   );

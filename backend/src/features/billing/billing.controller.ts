@@ -17,8 +17,8 @@ import {
   updateBilling,
   updateBillingPayment,
   sumbitBillingPayment,
-} from './billing.service';
-import { AppError } from '../../error';
+} from './billing.service.js';
+import { AppError } from '../../error.js';
 
 import assert from 'node:assert';
 

@@ -11,37 +11,39 @@ interface ReviewCardProps {
 
 const ReviewCard: FunctionComponent<ReviewCardProps> = ({ initials, name, date, rating, text }) => {
   return (
-    <div className="w-[794px] relative shrink-0">
-      <div className="absolute h-full w-full top-0 right-0 bottom-0 left-0 rounded-[15px] bg-white border-whitesmoke-200 border-solid border box-border" />
-      <div className="relative top-[12px] w-[793px] flex flex-col items-start gap-1.5 pb-3">
-        <div className="self-stretch flex items-start py-num-0 pl-num-20 pr-20 justify-between">
+    <div className="w-full mx-auto relative shrink-0">
+      {/* Background */}
+      <div className="absolute inset-0 rounded-[15px] bg-white border border-whitesmoke-200 box-border" />
+
+      <div className="relative top-[12px] w-full flex flex-col items-start gap-1.5 pb-3">
+        {/* Header */}
+        <div className="w-full flex items-start pl-4 pr-4 sm:pl-5 sm:pr-5 justify-between">
           <div className="flex items-start gap-2 shrink-0">
+            {/* Avatar */}
             <div className="h-8 w-8 relative">
-              <div className="absolute h-full w-full top-0 right-0 bottom-0 left-0 rounded-[50%] bg-gainsboro border-silver border-solid border box-border" />
-              <div className="absolute h-[37.5%] w-[78.13%] top-[31.25%] left-[9.38%] tracking-num-0.02 font-semibold flex items-center justify-center">
+              <div className="absolute inset-0 rounded-full bg-gainsboro border border-silver box-border" />
+              <div className="absolute inset-0 flex items-center justify-center text-xs font-semibold">
                 {initials}
               </div>
             </div>
-            <div className="w-[215px] flex flex-col items-start text-left text-[14px] text-black font-inter">
-              <div className="self-stretch h-3.5 relative leading-6 font-medium flex items-center shrink-0">
-                {name}
-              </div>
-              <div className="self-stretch h-3.5 relative text-[8px] text-darkslategray flex items-center shrink-0">
-                {date}
-              </div>
+
+            {/* Name + Date */}
+            <div className="flex flex-col items-start text-left text-sm text-black font-inter">
+              <div className="leading-6 font-medium">{name}</div>
+              <div className="text-[10px] sm:text-[8px] text-darkslategray">{date}</div>
             </div>
           </div>
-          <div className="w-[82px] flex flex-col items-end shrink-0 text-left text-num-18 text-teal-200 font-inter">
+
+          {/* Rating */}
+          <div className="flex flex-col items-end shrink-0 text-teal-200 font-inter">
             <Icon icon="material-symbols:star-rounded" className="w-[13px] h-[13px]" />
-            <b className="self-stretch h-3.5 relative tracking-num--0_01 flex items-center shrink-0">
-              {rating}
-            </b>
+            <b className="tracking-tight text-sm sm:text-[12px]">{rating}</b>
           </div>
         </div>
-        <div className="w-[766px] flex items-start py-2.5 px-num-20 box-border text-left text-black">
-          <div className="w-[763px] relative tracking-num-0.02 font-semibold inline-block shrink-0">
-            {text}
-          </div>
+
+        {/* Text */}
+        <div className="w-full px-4 sm:px-5 py-2.5 box-border text-left text-black">
+          <div className="w-full tracking-tight font-semibold text-sm sm:text-base">{text}</div>
         </div>
       </div>
     </div>

@@ -1,28 +1,28 @@
 import { Router } from 'express';
 
-import activityRouter from './features/activity/activity.router';
-import applicationRouter from './features/application/application.router';
-import authRouter from './features/auth/auth.router';
-import billingRouter from './features/billing/billing.router';
-import bookingRouter from './features/booking/booking.router';
-import bookmarkRouter from './features/bookmark/bookmark.router';
-import calendarRouter from './features/calendar/calendar.router';
-import facilityRouter from './features/facility/facility.router';
-import fileRouter from './features/file/file.router';
-import inviteRouter from './features/invite/invite.router';
-import listingRouter from './features/listing/listing.router';
-import messageRouter from './features/message/message.router';
-import notificationRouter from './features/notification/notification.router';
-import profileRouter from './features/profile/profile.router';
-import rentalRouter from './features/rental/rental.router';
-import reportRouter from './features/report/report.router';
-import reviewRouter from './features/review/review.router';
-import tagRouter from './features/tag/tag.router';
-import transferRouter from './features/transfer/transfer.router';
-import unitRouter from './features/unit/unit.router';
-import userRouter from './features/user/user.router';
+import activityRouter from './features/activity/activity.router.js';
+import applicationRouter from './features/application/application.router.js';
+import authRouter from './features/auth/auth.router.js';
+import billingRouter from './features/billing/billing.router.js';
+import bookingRouter from './features/booking/booking.router.js';
+import bookmarkRouter from './features/bookmark/bookmark.router.js';
+import calendarRouter from './features/calendar/calendar.router.js';
+import facilityRouter from './features/facility/facility.router.js';
+import fileRouter from './features/file/file.router.js';
+import inviteRouter from './features/invite/invite.router.js';
+import listingRouter from './features/listing/listing.router.js';
+import messageRouter from './features/message/message.router.js';
+import notificationRouter from './features/notification/notification.router.js';
+import profileRouter from './features/profile/profile.router.js';
+import rentalRouter from './features/rental/rental.router.js';
+import reportRouter from './features/report/report.router.js';
+import reviewRouter from './features/review/review.router.js';
+import tagRouter from './features/tag/tag.router.js';
+import transferRouter from './features/transfer/transfer.router.js';
+import unitRouter from './features/unit/unit.router.js';
+import userRouter from './features/user/user.router.js';
 
-import { errorHandler } from './error';
+import { errorHandler } from './error.js';
 
 const router = Router();
 

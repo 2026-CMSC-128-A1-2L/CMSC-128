@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import crypto from 'node:crypto';
-import { managerPermissionSchema, type ManagerPermissionType } from '../facility/facility.model';
+import { managerPermissionSchema, type ManagerPermissionType } from '../facility/facility.model.js';
 
 export type InviteType = {
   email: string;

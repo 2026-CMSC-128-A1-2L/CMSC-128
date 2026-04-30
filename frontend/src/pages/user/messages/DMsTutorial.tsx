@@ -13,14 +13,14 @@ const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose 
     {
       title: 'Notifications',
       text: 'This is where ATLAS sends you active notifications to keep you up-to-date!',
-      position: 'top-[40px] left-[190px]',
+      position: 'top-[60px] left-[190px]',
       total: 2,
       currentStep: 1,
     },
     {
       title: 'Notifications',
       text: 'Look out for updates on your submissions and important system announcements.',
-      position: 'top-[40px] left-[190px]',
+      position: 'top-[60px] left-[190px]',
       total: 2,
       currentStep: 2,
     },
@@ -58,16 +58,20 @@ const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose 
 
   const current = helpContent[step - 1];
   const totalSteps = helpContent.length;
+  const isLastStep = step === totalSteps;
 
   const handleNext = () => {
-    if (step < totalSteps) setStep(step + 1);
+    if (step < totalSteps) {
+      setStep(step + 1);
+    } else {
+      onClose();
+      setStep(1);
+    }
   };
 
   const handleBack = () => {
     if (step > 1) setStep(step - 1);
   };
-
-  const isLastStep = step === totalSteps;
 
   return (
     <div
@@ -113,14 +117,12 @@ const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose 
                   </button>
                 )}
 
-                {!isLastStep && (
-                  <button
-                    onClick={handleNext}
-                    className="w-[54px] rounded-lg bg-[#d0dbe3] py-1 text-[12px] text-[#2f3136] font-semibold font-lora text-center cursor-pointer hover:brightness-95 transition-all"
-                  >
-                    Next
-                  </button>
-                )}
+                <button
+                  onClick={handleNext}
+                  className="w-[54px] rounded-lg bg-[#d0dbe3] py-1 text-[12px] text-[#2f3136] font-semibold font-lora text-center cursor-pointer hover:brightness-95 transition-all"
+                >
+                  {isLastStep ? 'Finish' : 'Next'}
+                </button>
               </div>
             </div>
           </div>

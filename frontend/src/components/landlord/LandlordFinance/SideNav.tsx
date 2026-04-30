@@ -13,7 +13,7 @@ const tabs: { id: TabType; label: string; width: string }[] = [
 ];
 
 const SideNav: FunctionComponent<SideNavProps> = ({ activeTab, onTabChange }) => (
-  <div className="h-[694px] w-full lg:w-[200px] rounded-[10px] bg-white border-whitesmoke-200 border-solid border box-border flex flex-row lg:flex-col items-center text-center text-[16px] overflow-x-auto lg:overflow-x-visible">
+  <div className="w-full lg:w-[200px] rounded-[10px] bg-white border-whitesmoke-200 border-solid border box-border flex flex-row lg:flex-col items-center text-center text-[16px] overflow-x-auto lg:overflow-x-visible self-start">
     {tabs.map(({ id, label, width }, i) => (
       <div
         key={id}

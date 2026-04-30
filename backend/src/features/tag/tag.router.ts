@@ -1,6 +1,12 @@
 import { Router } from 'express';
-import { isSuperAdmin } from '../../middleware';
-import { routeGetTags, routeCreateTag, routeUpdateTag, routeDeleteTag, routeEnrichTags } from './tag.controller';
+import { isSuperAdmin } from '../../middleware.js';
+import {
+  routeGetTags,
+  routeCreateTag,
+  routeUpdateTag,
+  routeDeleteTag,
+  routeEnrichTags,
+} from './tag.controller.js';
 
 const router = Router();
 

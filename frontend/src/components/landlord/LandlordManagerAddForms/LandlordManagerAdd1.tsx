@@ -15,22 +15,52 @@ const PERMISSIONS = [
   {
     section: 'Property Management',
     items: [
-      { icon: 'solar:trash-bin-trash-bold', title: 'Delete Buildings', desc: 'Allow manager to remove building records', field: 'deleteBuildings' as const },
-      { icon: 'solar:trash-bin-trash-bold', title: 'Delete Listings', desc: 'Allow manager to remove listing records', field: 'deleteListings' as const },
-      { icon: 'solar:home-bold', title: 'Manage Buildings', desc: 'Allow manager to access and edit building info', field: 'manageBuildings' as const },
+      {
+        icon: 'solar:trash-bin-trash-bold',
+        title: 'Delete Buildings',
+        desc: 'Allow manager to remove building records',
+        field: 'deleteBuildings' as const,
+      },
+      {
+        icon: 'solar:trash-bin-trash-bold',
+        title: 'Delete Listings',
+        desc: 'Allow manager to remove listing records',
+        field: 'deleteListings' as const,
+      },
+      {
+        icon: 'solar:home-bold',
+        title: 'Manage Buildings',
+        desc: 'Allow manager to access and edit building info',
+        field: 'manageBuildings' as const,
+      },
     ],
   },
   {
     section: 'Billings and Financials',
     items: [
-      { icon: 'solar:bill-list-bold', title: 'Manage Billings', desc: 'Manage rents and utility payments', field: 'manageBillings' as const },
+      {
+        icon: 'solar:bill-list-bold',
+        title: 'Manage Billings',
+        desc: 'Manage rents and utility payments',
+        field: 'manageBillings' as const,
+      },
     ],
   },
   {
     section: 'Tenant Management',
     items: [
-      { icon: 'solar:calendar-bold', title: 'Accept Ocular Visits', desc: 'Accept ocular visit requests from potential tenants', field: 'acceptOcularVisits' as const },
-      { icon: 'solar:flag-bold', title: 'Report Users', desc: 'Report users for misconduct upon review', field: 'reportUsers' as const },
+      {
+        icon: 'solar:calendar-bold',
+        title: 'Accept Ocular Visits',
+        desc: 'Accept ocular visit requests from potential tenants',
+        field: 'acceptOcularVisits' as const,
+      },
+      {
+        icon: 'solar:flag-bold',
+        title: 'Report Users',
+        desc: 'Report users for misconduct upon review',
+        field: 'reportUsers' as const,
+      },
     ],
   },
 ];
@@ -55,14 +85,21 @@ export interface AddManagerFormValues {
 
 // ─── Checkbox UI ─────────────────────────────────────────────────────────────
 
-const Checkbox: FunctionComponent<{ active: boolean; onToggle: () => void }> = ({ active, onToggle }) => (
+const Checkbox: FunctionComponent<{ active: boolean; onToggle: () => void }> = ({
+  active,
+  onToggle,
+}) => (
   <button
     type="button"
-    onClick={(e) => { e.stopPropagation(); onToggle(); }}
-    className={`flex h-[20px] w-[20px] shrink-0 items-center justify-center rounded-[3px] border transition-colors ${active
-      ? 'border-[#096c5b] bg-[#096c5b]'
-      : 'border-[#d1d5db] bg-[#f5f5f5] shadow-[0px_0px_2px_rgba(0,0,0,0.25)]'
-      }`}
+    onClick={(e) => {
+      e.stopPropagation();
+      onToggle();
+    }}
+    className={`flex h-[20px] w-[20px] shrink-0 items-center justify-center rounded-[3px] border transition-colors ${
+      active
+        ? 'border-[#096c5b] bg-[#096c5b]'
+        : 'border-[#d1d5db] bg-[#f5f5f5] shadow-[0px_0px_2px_rgba(0,0,0,0.25)]'
+    }`}
     aria-checked={active}
     role="checkbox"
   >
@@ -73,21 +110,26 @@ const Checkbox: FunctionComponent<{ active: boolean; onToggle: () => void }> = (
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 const AddManager1: FunctionComponent<Props> = ({ onCancel, onSend }) => {
-  const { register, handleSubmit, watch, setValue, formState: { errors } } =
-    useForm<AddManagerFormValues>({
-      defaultValues: {
-        email: '',
-        checkboxes: {
-          deleteBuildings: false,
-          deleteListings: false,
-          manageBuildings: false,
-          manageBillings: false,
-          acceptOcularVisits: false,
-          reportUsers: false,
-        },
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm<AddManagerFormValues>({
+    defaultValues: {
+      email: '',
+      checkboxes: {
+        deleteBuildings: false,
+        deleteListings: false,
+        manageBuildings: false,
+        manageBillings: false,
+        acceptOcularVisits: false,
+        reportUsers: false,
       },
-      mode: 'onChange',
-    });
+    },
+    mode: 'onChange',
+  });
 
   const checkboxes = watch('checkboxes');
 
@@ -98,9 +140,7 @@ const AddManager1: FunctionComponent<Props> = ({ onCancel, onSend }) => {
   };
 
   const toggleAll = () => {
-    const allFields = PERMISSIONS.flatMap((g) =>
-      g.items.map((i) => i.field)
-    );
+    const allFields = PERMISSIONS.flatMap((g) => g.items.map((i) => i.field));
     const allOn = allFields.every((f) => checkboxes[f]);
     allFields.forEach((f) => setValue(`checkboxes.${f}`, !allOn));
   };
@@ -117,8 +157,8 @@ const AddManager1: FunctionComponent<Props> = ({ onCancel, onSend }) => {
   };
 
   return (
-    <div className="relative rounded-tl-[26px] bg-white w-[490px] flex flex-col items-center pb-[48px] gap-[34px]">
-
+    // AFTER
+    <div className="relative rounded-[26px] bg-white w-[490px] flex flex-col items-center overflow-hidden max-h-[90vh]">
       {/* ── Header ── */}
       <div className="self-stretch rounded-tl-[26px] bg-linear-to-b from-[#096c5b] to-[#16917c] flex flex-col items-start justify-center py-[10px] pl-[46px] pr-[26px]">
         <div className="flex flex-col items-start pt-[26px] pb-[6px] gap-[4px]">
@@ -128,13 +168,12 @@ const AddManager1: FunctionComponent<Props> = ({ onCancel, onSend }) => {
           </b>
         </div>
       </div>
-
       {/* ── Body ── */}
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="self-stretch flex flex-col items-start px-[38px] pb-[16px] gap-[18px]"
+        className="self-stretch flex flex-col items-start px-[38px] pb-[6px] gap-[18px] overflow-y-auto max-h-full flex-1"
       >
-
+        <div className="pb-[32px]" />
         {/* Email */}
         <div className="self-stretch flex flex-col items-start gap-[6px]">
           <b className="font-['Inter',sans-serif] text-[13px] text-[#666]">Email Address</b>
@@ -152,15 +191,15 @@ const AddManager1: FunctionComponent<Props> = ({ onCancel, onSend }) => {
                 className="flex-1 bg-transparent font-['Inter',sans-serif] text-[13px] font-medium text-black outline-none placeholder-[#8a9099]"
               />
             </div>
-            {errors.email && (
-              <span className="text-xs text-red-500">{errors.email.message}</span>
-            )}
+            {errors.email && <span className="text-xs text-red-500">{errors.email.message}</span>}
           </div>
         </div>
 
         {/* Global Select All */}
         <div className="self-stretch flex items-center justify-end gap-[9px] pr-[18px]">
-          <span className="font-['Inter',sans-serif] text-[11px] font-medium text-[#8a9099]">Select All</span>
+          <span className="font-['Inter',sans-serif] text-[11px] font-medium text-[#8a9099]">
+            Select All
+          </span>
           <Checkbox active={isAllChecked} onToggle={toggleAll} />
         </div>
 
@@ -168,7 +207,6 @@ const AddManager1: FunctionComponent<Props> = ({ onCancel, onSend }) => {
         {PERMISSIONS.map((group) => {
           return (
             <div key={group.section} className="self-stretch flex flex-col items-start gap-[16px]">
-
               {/* Section header — no per-section Select All */}
               <b className="font-['Inter',sans-serif] text-[13px] text-[#666]">{group.section}</b>
 
@@ -181,17 +219,23 @@ const AddManager1: FunctionComponent<Props> = ({ onCancel, onSend }) => {
                       key={item.field}
                       type="button"
                       onClick={() => toggleOne(item.field)}
-                      className={`self-stretch rounded-[10px] flex items-center py-[10px] pl-[10px] pr-[18px] gap-[13px] text-left transition-colors ${active ? 'bg-[#f0fdf9]' : 'hover:bg-[#fafafa]'
-                        }`}
+                      className={`self-stretch rounded-[10px] flex items-center py-[10px] pl-[10px] pr-[18px] gap-[13px] text-left transition-colors ${
+                        active ? 'bg-[#f0fdf9]' : 'hover:bg-[#fafafa]'
+                      }`}
                     >
                       {/* Hidden RHF field to keep form values in sync */}
-                      <input type="checkbox" {...register(`checkboxes.${item.field}`)} className="hidden" />
+                      <input
+                        type="checkbox"
+                        {...register(`checkboxes.${item.field}`)}
+                        className="hidden"
+                      />
 
                       <div className="flex flex-1 items-center gap-[13px]">
                         {/* Icon circle — teal when active */}
                         <div
-                          className={`flex h-[24px] w-[24px] shrink-0 items-center justify-center rounded-full transition-colors ${active ? 'bg-[#096c5b]' : 'bg-[#f5f5f5]'
-                            }`}
+                          className={`flex h-[24px] w-[24px] shrink-0 items-center justify-center rounded-full transition-colors ${
+                            active ? 'bg-[#096c5b]' : 'bg-[#f5f5f5]'
+                          }`}
                         >
                           <Icon
                             icon={item.icon}
@@ -199,8 +243,12 @@ const AddManager1: FunctionComponent<Props> = ({ onCancel, onSend }) => {
                           />
                         </div>
                         <div className="flex flex-col gap-[4px]">
-                          <b className="font-['Inter',sans-serif] text-[13px] text-black">{item.title}</b>
-                          <span className="font-['Inter',sans-serif] text-[11px] font-medium text-[#666]">{item.desc}</span>
+                          <b className="font-['Inter',sans-serif] text-[13px] text-black">
+                            {item.title}
+                          </b>
+                          <span className="font-['Inter',sans-serif] text-[11px] font-medium text-[#666]">
+                            {item.desc}
+                          </span>
                         </div>
                       </div>
 
@@ -229,7 +277,7 @@ const AddManager1: FunctionComponent<Props> = ({ onCancel, onSend }) => {
             Send Invite
           </button>
         </div>
-
+        <div className="pb-[32px]" />
       </form>
     </div>
   );

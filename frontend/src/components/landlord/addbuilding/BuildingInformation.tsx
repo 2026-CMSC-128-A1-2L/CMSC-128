@@ -27,8 +27,12 @@ interface BuildingFormValues {
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 
-const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNextClick, onPrevClick }) => {
-  const { buildingInfo, setBuildingInfo, addRoomType, addManager, removeManager } = useBuildingStore();
+const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({
+  onNextClick,
+  onPrevClick,
+}) => {
+  const { buildingInfo, setBuildingInfo, addRoomType, addManager, removeManager } =
+    useBuildingStore();
 
   const [activePopup, setActivePopup] = useState<'none' | 'add1' | 'add2'>('none');
   const [lastInvitedEmail, setLastInvitedEmail] = useState('');
@@ -36,16 +40,20 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
   const [lightboxIndex, setLightboxIndex] = useState(-1);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const { register, handleSubmit, watch, formState: { errors } } =
-    useForm<BuildingFormValues>({
-      defaultValues: {
-        name: buildingInfo.name,
-        typeOfBuilding: buildingInfo.typeOfBuilding,
-        location: buildingInfo.location,
-        about: buildingInfo.about,
-      },
-      mode: 'onChange',
-    });
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<BuildingFormValues>({
+    defaultValues: {
+      name: buildingInfo.name,
+      typeOfBuilding: buildingInfo.typeOfBuilding,
+      location: buildingInfo.location,
+      about: buildingInfo.about,
+    },
+    mode: 'onChange',
+  });
 
   useEffect(() => {
     const subscription = watch((values) => {
@@ -109,7 +117,6 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
       >
         <div className="w-[880px] flex flex-col items-start">
           <div className="w-[880px] rounded-2xl bg-white border-whitesmoke border-solid border box-border flex flex-col items-start py-8 px-12 gap-3">
-
             {/* ── Building Information ── */}
             <div className="self-stretch flex flex-col items-start gap-6">
               <div className="self-stretch flex items-center">
@@ -127,15 +134,21 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
                           className="flex-1 bg-transparent text-sm text-black placeholder-slategray outline-none font-medium leading-num-24"
                         />
                       </div>
-                      {errors.name && <span className="text-xs text-red-500">{errors.name.message}</span>}
+                      {errors.name && (
+                        <span className="text-xs text-red-500">{errors.name.message}</span>
+                      )}
                     </div>
                   </div>
                   <div className="flex-1 flex flex-col items-start gap-3">
-                    <b className="self-stretch h-[15.2px] relative flex items-center shrink-0">Type of Building</b>
+                    <b className="self-stretch h-[15.2px] relative flex items-center shrink-0">
+                      Type of Building
+                    </b>
                     <div className="self-stretch flex flex-col gap-1">
                       <div className="self-stretch h-12 rounded-num-12 bg-aliceblue border-whitesmoke border-solid border box-border flex items-center px-4">
                         <select
-                          {...register('typeOfBuilding', { required: 'Please select a building type' })}
+                          {...register('typeOfBuilding', {
+                            required: 'Please select a building type',
+                          })}
                           className="flex-1 bg-transparent text-sm text-black outline-none font-medium appearance-none cursor-pointer"
                         >
                           <option value="">Select type</option>
@@ -144,9 +157,16 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
                           <option value="bedspacer">Bed Spacer</option>
                           <option value="transient">Transient</option>
                         </select>
-                        <Icon icon="mynaui:chevron-down" className="w-5 h-5 shrink-0 pointer-events-none" />
+                        <Icon
+                          icon="mynaui:chevron-down"
+                          className="w-5 h-5 shrink-0 pointer-events-none"
+                        />
                       </div>
-                      {errors.typeOfBuilding && <span className="text-xs text-red-500">{errors.typeOfBuilding.message}</span>}
+                      {errors.typeOfBuilding && (
+                        <span className="text-xs text-red-500">
+                          {errors.typeOfBuilding.message}
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -160,7 +180,9 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
                         className="flex-1 bg-transparent text-sm text-black placeholder-slategray outline-none font-medium leading-num-24"
                       />
                     </div>
-                    {errors.location && <span className="text-xs text-red-500">{errors.location.message}</span>}
+                    {errors.location && (
+                      <span className="text-xs text-red-500">{errors.location.message}</span>
+                    )}
                   </div>
                 </div>
               </div>
@@ -187,7 +209,10 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
               </div>
               <div className="self-stretch overflow-hidden flex items-start flex-wrap content-start py-num-10 px-0 gap-2">
                 {images.map((src, index) => (
-                  <div key={index} className="relative group h-[100px] w-[100px] rounded-num-12 border-whitesmoke border-solid border overflow-hidden bg-gray-50 shrink-0">
+                  <div
+                    key={index}
+                    className="relative group h-[100px] w-[100px] rounded-num-12 border-whitesmoke border-solid border overflow-hidden bg-gray-50 shrink-0"
+                  >
                     <img
                       src={src}
                       alt={`Building preview ${index + 1}`}
@@ -196,7 +221,10 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
                     />
                     <button
                       type="button"
-                      onClick={(e) => { e.stopPropagation(); handleRemoveImage(index); }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleRemoveImage(index);
+                      }}
                       className="absolute top-1 right-1 bg-white/80 backdrop-blur-sm rounded-full p-1 shadow-sm opacity-0 group-hover:opacity-100 transition-opacity text-red-500 hover:text-red-700"
                     >
                       <Icon icon="material-symbols:close" className="w-4 h-4" />
@@ -209,7 +237,14 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
                 >
                   <Icon icon="material-symbols:add-photo-alternate-outline" className="w-8 h-8" />
                 </div>
-                <input type="file" multiple accept="image/*" ref={fileInputRef} onChange={handleFileChange} className="hidden" />
+                <input
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  ref={fileInputRef}
+                  onChange={handleFileChange}
+                  className="hidden"
+                />
               </div>
             </div>
 
@@ -274,13 +309,15 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
                 <Icon icon="material-symbols:add-rounded" className="w-4 h-4" />
               </div>
             </div>
-
           </div>
         </div>
 
         {/* ── Back / Next ── */}
         <div className="w-[903px] overflow-hidden flex items-center justify-center py-0 px-num-10 box-border gap-2.5 text-num-14 text-dimgray">
-          <div className="rounded-[45px] flex items-center justify-center py-2 px-8 cursor-pointer" onClick={onPrevClick}>
+          <div
+            className="rounded-[45px] flex items-center justify-center py-2 px-8 cursor-pointer"
+            onClick={onPrevClick}
+          >
             <b className="relative">Back</b>
           </div>
           <button
@@ -303,14 +340,20 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
 
       {activePopup === 'add1' && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div className="relative shadow-2xl rounded-tl-[26px]" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="relative shadow-2xl rounded-tl-[26px]"
+            onClick={(e) => e.stopPropagation()}
+          >
             <AddManager1 onCancel={() => setActivePopup('none')} onSend={handleManagerSend} />
           </div>
         </div>
       )}
       {activePopup === 'add2' && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div className="relative shadow-2xl rounded-tl-[26px]" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="relative shadow-2xl rounded-tl-[26px]"
+            onClick={(e) => e.stopPropagation()}
+          >
             <AddManager2 onClose={() => setActivePopup('none')} email={lastInvitedEmail} />
           </div>
         </div>

@@ -13,7 +13,11 @@ interface RegistrationProfileProps {
 
 const ROLES: { value: RegistrationProfileData['role']; label: string; icon: string }[] = [
   { value: 'student', label: 'I am a student!', icon: 'ph:student' },
-  { value: 'landlord', label: 'I am a landlord!', icon: 'material-symbols-light:business-center-outline-rounded' },
+  {
+    value: 'landlord',
+    label: 'I am a landlord!',
+    icon: 'material-symbols-light:business-center-outline-rounded',
+  },
   { value: 'manager', label: 'I am a manager!', icon: 'ph:files' },
 ];
 
@@ -46,7 +50,6 @@ const RegistrationProfile: FunctionComponent<RegistrationProfileProps> = ({ onNe
         onSubmit={handleSubmit(onSubmit)}
         className="w-[620px] rounded-num-12 border-whitesmoke border-solid border box-border overflow-hidden flex flex-col items-start pt-3 px-4 pb-5 gap-5"
       >
-
         {/* ── Full Name ── */}
         <div className="self-stretch flex flex-col items-start justify-start px-num-10 pt-num-10 gap-1">
           <div className="self-stretch h-11 rounded-num-12 bg-aliceblue border-whitesmoke border-solid border box-border overflow-hidden flex items-center justify-start py-0 px-3 gap-2.5">
@@ -139,11 +142,15 @@ const RegistrationProfile: FunctionComponent<RegistrationProfileProps> = ({ onNe
                 <button
                   key={role.value}
                   type="button"
-                  onClick={() => { setSelectedRole(role.value); setRoleError(''); }}
-                  className={`flex-1 rounded-num-12 border overflow-hidden flex flex-col items-center p-num-10 gap-2 transition-colors ${isSelected
-                    ? 'border-teal-600 bg-teal-50 text-teal-700'
-                    : 'border-whitesmoke hover:bg-gray-50 text-dimgray'
-                    }`}
+                  onClick={() => {
+                    setSelectedRole(role.value);
+                    setRoleError('');
+                  }}
+                  className={`flex-1 rounded-num-12 border overflow-hidden flex flex-col items-center p-num-10 gap-2 transition-colors ${
+                    isSelected
+                      ? 'border-teal-600 bg-teal-50 text-teal-700'
+                      : 'border-whitesmoke hover:bg-gray-50 text-dimgray'
+                  }`}
                 >
                   <Icon icon={role.icon} className="h-6 w-6" />
                   <span className="text-xs font-semibold leading-5">{role.label}</span>
@@ -151,9 +158,7 @@ const RegistrationProfile: FunctionComponent<RegistrationProfileProps> = ({ onNe
               );
             })}
           </div>
-          {roleError && (
-            <span className="text-xs text-red-500">{roleError}</span>
-          )}
+          {roleError && <span className="text-xs text-red-500">{roleError}</span>}
         </div>
 
         {/* ── Proceed ── */}
@@ -167,7 +172,6 @@ const RegistrationProfile: FunctionComponent<RegistrationProfileProps> = ({ onNe
             <b className="relative">Proceed</b>
           </button>
         </div>
-
       </form>
     </div>
   );

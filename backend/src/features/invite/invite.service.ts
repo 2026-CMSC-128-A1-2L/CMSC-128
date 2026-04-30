@@ -1,10 +1,10 @@
 import mongoose from 'mongoose';
-import { AppError } from '../../error';
-import { HousingFacility, type ManagerPermissionType } from '../facility/facility.model';
-import { User } from '../user/user.model';
-import { Invite, type InviteType } from './invite.model';
+import { AppError } from '../../error.js';
+import { HousingFacility, type ManagerPermissionType } from '../facility/facility.model.js';
+import { User } from '../user/user.model.js';
+import { Invite, type InviteType } from './invite.model.js';
 import type { QueryFilter } from 'mongoose';
-import { getUserByEmail } from '../user/user.service';
+import { getUserByEmail } from '../user/user.service.js';
 
 export const getInvites = async (filters: QueryFilter<InviteType>) => {
   return await Invite.find(filters).lean();

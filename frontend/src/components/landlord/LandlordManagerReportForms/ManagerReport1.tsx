@@ -15,12 +15,29 @@ const ITEMS = [
 const ReportManager1: FunctionComponent<Props> = ({ onNext, onCancel }) => {
   const [checked, setChecked] = useState<Set<string>>(new Set());
 
-  const toggle = (key: string) => setChecked((p) => { const n = new Set(p); n.has(key) ? n.delete(key) : n.add(key); return n; });
-  const toggleAll = (keys: string[]) => setChecked((p) => { const n = new Set(p); const allOn = keys.every((k) => n.has(k)); keys.forEach((k) => allOn ? n.delete(k) : n.add(k)); return n; });
+  const toggle = (key: string) =>
+    setChecked((p) => {
+      const n = new Set(p);
+      n.has(key) ? n.delete(key) : n.add(key);
+      return n;
+    });
+  const toggleAll = (keys: string[]) =>
+    setChecked((p) => {
+      const n = new Set(p);
+      const allOn = keys.every((k) => n.has(k));
+      keys.forEach((k) => (allOn ? n.delete(k) : n.add(k)));
+      return n;
+    });
 
   return (
     <ReportManagerShell onCancel={onCancel} onNext={onNext}>
-      <ReportManagerSection section="Administrative & Management Issues" items={ITEMS} checked={checked} onToggle={toggle} onToggleAll={toggleAll} />
+      <ReportManagerSection
+        section="Administrative & Management Issues"
+        items={ITEMS}
+        checked={checked}
+        onToggle={toggle}
+        onToggleAll={toggleAll}
+      />
     </ReportManagerShell>
   );
 };

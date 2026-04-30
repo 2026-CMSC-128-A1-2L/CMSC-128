@@ -5,19 +5,19 @@ import {
   manageApplicationsFilter,
   manageListingsFilter,
   managerFilter,
-} from '../../middleware';
+} from '../../middleware.js';
 import {
   routeGetListings,
   routeGetListing,
   routeUpdateListing,
   routeDeleteListing,
   routeUpdateListingTags,
-} from './listing.controller';
-import { routeCreateUnit, routeGetUnitsByListing } from '../unit/unit.controller';
-import { routeGetRentalsByListing } from '../rental/rental.controller';
-import { routeGetListingReviews, routeCreateReview } from '../review/review.controller';
-import { routeReportListing } from '../report/report.controller';
-import { routeGetApplicationsByListing } from '../application/application.controller';
+} from './listing.controller.js';
+import { routeCreateUnit, routeGetUnitsByListing } from '../unit/unit.controller.js';
+import { routeGetRentalsByListing } from '../rental/rental.controller.js';
+import { routeGetListingReviews, routeCreateReview } from '../review/review.controller.js';
+import { routeReportListing } from '../report/report.controller.js';
+import { routeGetApplicationsByListing } from '../application/application.controller.js';
 
 const router = Router();
 

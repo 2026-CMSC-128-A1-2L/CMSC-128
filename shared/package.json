@@ -4,8 +4,10 @@
   "type": "module",
   "version": "1.0.0",
   "description": "",
-  "main": "./src/index.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
+    "build": "tsc",
     "lint": "biome check .",
     "format": "biome format --write .",
     "fix": "biome lint --write .",

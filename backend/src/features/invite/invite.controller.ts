@@ -1,11 +1,11 @@
 import type { RequestHandler } from 'express';
 import { CreateInviteManagerBodySchema } from 'shared';
-import { sendNotification } from '../notification/notification.service';
-import { inviteManager, acceptInvite, declineInvite, getInvites } from './invite.service';
-import { AppError } from '../../error';
-import { Invite } from './invite.model';
+import { sendNotification } from '../notification/notification.service.js';
+import { inviteManager, acceptInvite, declineInvite, getInvites } from './invite.service.js';
+import { AppError } from '../../error.js';
+import { Invite } from './invite.model.js';
 import z from 'zod';
-
+import assert from 'node:assert';
 
 // returns all invites for the logged in user (by their email)
 export const routeGetInvites: RequestHandler = async (_req, res, _next) => {
@@ -49,7 +49,6 @@ export const routeDeclineInvite: RequestHandler = async (req, res, _next) => {
   res.sendStatus(204);
 };
 
-
 // get specific invites
 export const routeGetInviteById: RequestHandler = async (req, res, next) => {
   const token = z.string().parse(req.params.inviteId);
@@ -57,7 +56,6 @@ export const routeGetInviteById: RequestHandler = async (req, res, next) => {
   if (!invite) throw new AppError(404, 'Invite not found.');
   res.status(200).json({ data: invite });
 };
-
 
 // landlord to delete/retract invites to add a manager
 export const routeDeleteInvite: RequestHandler = async (req, res, next) => {

@@ -1,3 +1,4 @@
+// frontend/src/pages/landlord/finance/LandlordFinance.tsx
 import { type FunctionComponent, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LandlordLayout, { type BreadcrumbItem } from '../../../components/landlord/LandlordLayout';
@@ -27,87 +28,52 @@ interface OverviewStats {
   collectionRate: number;
 }
 
+const MOCK_STATS: OverviewStats = {
+  totalIncome: 163600.0,
+  totalBuildings: 3,
+  occupancyRate: 82,
+  outstandingBalance: 23400.0,
+  collectionRate: 94,
+};
+
+const MOCK_PROPERTIES: PropertyStats[] = [
+  {
+    id: 'facility1',
+    name: 'One Sapphire Place',
+    address: 'Lot 3, Block 17, Sapphire St, Umali Subd, Los Baños, Philippines, 4030',
+    totalUnits: 24,
+    occupiedUnits: 24,
+    income: 89400.0,
+    outstanding: 12600.0,
+    status: 'active',
+  },
+  {
+    id: 'facility2',
+    name: 'Two Emerald Avenue',
+    address: 'Lot 5, Block 12, Emerald Ave, Los Baños, Philippines, 4030',
+    totalUnits: 21,
+    occupiedUnits: 18,
+    income: 73200.0,
+    outstanding: 9300.0,
+    status: 'active',
+  },
+  {
+    id: 'facility3',
+    name: 'Three Ruby Road',
+    address: 'Lot 8, Block 5, Ruby Road, Los Baños, Philippines, 4030',
+    totalUnits: 16,
+    occupiedUnits: 12,
+    income: 42340.0,
+    outstanding: 0.0,
+    status: 'active',
+  },
+];
+
 const LandlordFinance: FunctionComponent = () => {
   const navigate = useNavigate();
-  // const _location = useLocation();
-  const [stats, setStats] = useState<OverviewStats>({
-    totalIncome: 0,
-    totalBuildings: 0,
-    occupancyRate: 0,
-    outstandingBalance: 0,
-    collectionRate: 0,
-  });
-  const [properties, setProperties] = useState<PropertyStats[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [clickedPropertyId, setClickedPropertyId] = useState<string | null>(null);
-  const [isPageLoading, setIsPageLoading] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsPageLoading(false);
-    }, 100);
-    return () => clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      try {
-        const mockStats: OverviewStats = {
-          totalIncome: 163600.0,
-          totalBuildings: 3,
-          occupancyRate: 82,
-          outstandingBalance: 23400.0,
-          collectionRate: 94,
-        };
-
-        const mockProperties: PropertyStats[] = [
-          {
-            id: 'facility1',
-            name: 'One Sapphire Place',
-            address: 'Lot 3, Block 17, Sapphire St, Umali Subd, Los Baños, Philippines, 4030',
-            // No imageUrl - will use placeholder
-            totalUnits: 24,
-            occupiedUnits: 24,
-            income: 89400.0,
-            outstanding: 12600.0,
-            status: 'active',
-          },
-          {
-            id: 'facility2',
-            name: 'Two Emerald Avenue',
-            address: 'Lot 5, Block 12, Emerald Ave, Los Baños, Philippines, 4030',
-            // No imageUrl - will use placeholder
-            totalUnits: 21,
-            occupiedUnits: 18,
-            income: 73200.0,
-            outstanding: 9300.0,
-            status: 'active',
-          },
-          {
-            id: 'facility3',
-            name: 'Three Ruby Road',
-            address: 'Lot 8, Block 5, Ruby Road, Los Baños, Philippines, 4030',
-            // No imageUrl - will use placeholder
-            totalUnits: 16,
-            occupiedUnits: 12,
-            income: 42340.0,
-            outstanding: 0.0,
-            status: 'active',
-          },
-        ];
-
-        setStats(mockStats);
-        setProperties(mockProperties);
-      } catch (error) {
-        console.error('Failed to fetch finance data:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
+  const [stats] = useState<OverviewStats>(MOCK_STATS);
+  const [properties] = useState<PropertyStats[]>(MOCK_PROPERTIES);
 
   const breadcrumbs: BreadcrumbItem[] = [{ label: 'Finance', to: '/landlord/finance' }];
 
@@ -130,26 +96,9 @@ const LandlordFinance: FunctionComponent = () => {
     navigate('/landlord/properties/new');
   };
 
-  if (isLoading) {
-    return (
-      <LandlordLayout activeSidebarItem="finance" breadcrumbs={breadcrumbs}>
-        <div className="flex flex-col gap-6">
-          <div className="w-full h-[84px] bg-gray-100 animate-pulse rounded-[10px]" />
-          <div className="w-full h-[280px] bg-gray-100 animate-pulse rounded-2xl" />
-          <div className="w-full h-[280px] bg-gray-100 animate-pulse rounded-2xl" />
-          <div className="w-full h-[400px] bg-gray-100 animate-pulse rounded-2xl" />
-        </div>
-      </LandlordLayout>
-    );
-  }
-
   return (
     <LandlordLayout activeSidebarItem="finance" breadcrumbs={breadcrumbs}>
-      <div
-        className={`flex flex-col w-full transition-all duration-300 ease-out ${
-          isPageLoading ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'
-        }`}
-      >
+      <div className="flex flex-col w-full">
         {/* Header */}
         <div className="self-stretch flex flex-col items-start justify-center gap-3 mb-6">
           <div className="self-stretch flex items-center justify-between gap-5">
@@ -164,12 +113,8 @@ const LandlordFinance: FunctionComponent = () => {
 
         {/* Stats Cards Row */}
         <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-[15px] mb-6">
-          {statCards.map((card, index) => (
-            <div
-              key={card.label}
-              className="transition-all duration-300 hover:translate-y-[-2px]"
-              style={{ animationDelay: `${index * 100}ms` }}
-            >
+          {statCards.map((card) => (
+            <div key={card.label} className="transition-all duration-300 hover:translate-y-[-2px]">
               <StatCard {...card} />
             </div>
           ))}
@@ -193,13 +138,12 @@ const LandlordFinance: FunctionComponent = () => {
             </b>
           </div>
           <div className="w-full flex flex-wrap items-start gap-4">
-            {properties.map((property, index) => (
+            {properties.map((property) => (
               <div
                 key={property.id}
                 className={`transition-all duration-300 hover:translate-y-[-4px] ${
                   clickedPropertyId === property.id ? 'animate-pulse-scale' : ''
                 }`}
-                style={{ animationDelay: `${index * 100}ms` }}
               >
                 <PropertyCard {...property} onClick={() => handlePropertyClick(property.id)} />
               </div>
@@ -227,4 +171,3 @@ const LandlordFinance: FunctionComponent = () => {
 };
 
 export default LandlordFinance;
-

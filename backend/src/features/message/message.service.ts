@@ -1,9 +1,9 @@
 import mongoose from 'mongoose';
-import { Message, MessageType } from './message.model';
-import { User, UserType } from '../user/user.model';
-import { AppError } from '../../error';
+import { Message, MessageType } from './message.model.js';
+import { User, UserType } from '../user/user.model.js';
+import { AppError } from '../../error.js';
 import { UserTypeType } from 'shared';
-import { getManagedFacilities } from '../facility/facility.service';
+import { getManagedFacilities } from '../facility/facility.service.js';
 
 export type ConversationAggregateResult = {
   _id: mongoose.Types.ObjectId;

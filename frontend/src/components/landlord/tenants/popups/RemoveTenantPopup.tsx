@@ -51,8 +51,8 @@ const RemoveTenantPopup = ({ targetName, isOpen, onClose }: RemoveTenantPopupPro
                 Request Sent
               </h2>
               <p className="font-['Inter',sans-serif] text-[14px] font-medium leading-[20px]">
-                Your request for tenant removal has been received. We will verify and notify
-                you once it has been approved.
+                Your request for tenant removal has been received. We will verify and notify you
+                once it has been approved.
               </p>
             </div>
             <button
@@ -65,19 +65,21 @@ const RemoveTenantPopup = ({ targetName, isOpen, onClose }: RemoveTenantPopupPro
           </div>
         </div>
       ) : (
-        <div className="flex w-[612px] flex-col items-center gap-[42px] rounded-tl-[32px] bg-white pb-[32px]">
-          <div className="flex w-full flex-col">
-            <div className="rounded-tl-[32px] bg-linear-to-b from-[#096c5b] to-[#16917c] px-[57px] py-[12px]">
-              <div className="w-full py-[32px] pb-[8px]">
-                <h2 className="font-['Poppins',sans-serif] text-[32px] font-bold text-white">
-                  Remove Tenant
-                </h2>
-                <p className="font-['Inter',sans-serif] text-[18px] font-bold tracking-[-0.18px] text-[#f1f5f9]">
-                  Remove tenant application
-                </p>
-              </div>
+        <div className="flex w-[612px] flex-col items-center rounded-[32px] bg-white overflow-hidden max-h-[90vh]">
+          {/* Header */}
+          <div className="w-full bg-linear-to-b from-[#096c5b] to-[#16917c] px-[57px] py-[12px] shrink-0">
+            <div className="w-full py-[32px] pb-[8px]">
+              <h2 className="font-['Poppins',sans-serif] text-[32px] font-bold text-white">
+                Remove Tenant
+              </h2>
+              <p className="font-['Inter',sans-serif] text-[18px] font-bold tracking-[-0.18px] text-[#f1f5f9]">
+                Remove tenant application
+              </p>
             </div>
+          </div>
 
+          {/* Scrollable Body */}
+          <div className="flex w-full flex-col overflow-y-auto flex-1">
             {step === 'select' ? (
               <div className="flex w-full flex-col gap-[48px] px-[48px] pt-[32px] pb-[20px]">
                 <p className="px-[8px] font-['Inter',sans-serif] text-[18px] font-bold tracking-[-0.18px] text-[#001d18]">
@@ -95,7 +97,11 @@ const RemoveTenantPopup = ({ targetName, isOpen, onClose }: RemoveTenantPopupPro
                       <button
                         type="button"
                         onClick={() =>
-                          setChecked({ backedOut: !allSelected, noDocuments: !allSelected, other: !allSelected })
+                          setChecked({
+                            backedOut: !allSelected,
+                            noDocuments: !allSelected,
+                            other: !allSelected,
+                          })
                         }
                         className={[
                           'flex h-[24px] w-[24px] items-center justify-center rounded-[4px] shadow-[0px_0px_2px_0px_rgba(0,0,0,0.25)]',
@@ -117,7 +123,9 @@ const RemoveTenantPopup = ({ targetName, isOpen, onClose }: RemoveTenantPopupPro
                     title="Applicant has failed to submit any document"
                     description="The period of submission of documents has passed."
                     checked={checked.noDocuments}
-                    onToggle={() => setChecked((prev) => ({ ...prev, noDocuments: !prev.noDocuments }))}
+                    onToggle={() =>
+                      setChecked((prev) => ({ ...prev, noDocuments: !prev.noDocuments }))
+                    }
                   />
                   <ReportOption
                     title="Other"
@@ -135,7 +143,7 @@ const RemoveTenantPopup = ({ targetName, isOpen, onClose }: RemoveTenantPopupPro
                   <button
                     type="button"
                     onClick={() => setStep('select')}
-                    className="mt-[4px] flex h-[18px] w-[18px] items-center justify-center rounded-[4px] bg-[#096c5b] text-white"
+                    className="mt-[4px] flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[4px] bg-[#096c5b] text-white"
                   >
                     <Icon icon="material-symbols:check-rounded" className="h-[14px] w-[14px]" />
                   </button>
@@ -143,31 +151,31 @@ const RemoveTenantPopup = ({ targetName, isOpen, onClose }: RemoveTenantPopupPro
                     I declare that all information and reports submitted are{' '}
                     <span className="font-bold text-[#096c5b]">truthful</span>,{' '}
                     <span className="font-bold text-[#096c5b]">complete</span>, and{' '}
-                    <span className="font-bold text-[#096c5b]">based on verified facts</span> to
-                    the best of my knowledge. I acknowledge that any false or misleading
-                    information may lead to consequences in accordance with applicable rules
-                    and regulations.
+                    <span className="font-bold text-[#096c5b]">based on verified facts</span> to the
+                    best of my knowledge. I acknowledge that any false or misleading information may
+                    lead to consequences in accordance with applicable rules and regulations.
                   </p>
                 </div>
               </div>
             )}
-          </div>
 
-          <div className="flex items-center gap-[16px]">
-            <button
-              type="button"
-              onClick={closeAll}
-              className="rounded-[12px] px-[24px] py-[8px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#ef4444]"
-            >
-              Cancel
-            </button>
-            <button
-              type="button"
-              onClick={() => setStep((prev) => (prev === 'select' ? 'confirm' : 'success'))}
-              className="rounded-[12px] bg-[#cbf6ed] px-[24px] py-[8px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b]"
-            >
-              {step === 'select' ? 'Next' : 'Submit'}
-            </button>
+            {/* Footer buttons — inline with scroll */}
+            <div className="flex items-center justify-center gap-[16px] pt-[8px] pb-[42px]">
+              <button
+                type="button"
+                onClick={closeAll}
+                className="rounded-[12px] px-[24px] py-[8px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#ef4444]"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => setStep((prev) => (prev === 'select' ? 'confirm' : 'success'))}
+                className="rounded-[12px] bg-[#cbf6ed] px-[24px] py-[8px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b]"
+              >
+                {step === 'select' ? 'Next' : 'Submit'}
+              </button>
+            </div>
           </div>
         </div>
       )}

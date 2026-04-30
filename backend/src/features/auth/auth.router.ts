@@ -1,7 +1,7 @@
 import { type RequestHandler, Router } from 'express';
-import passportGoogle from './google';
-import { isDevelopment } from '../../middleware';
-import { routeTestRegister, routeTestLogin } from './auth.controller';
+import passportGoogle from './google.js';
+import { isDevelopment } from '../../middleware.js';
+import { routeTestRegister, routeTestLogin } from './auth.controller.js';
 
 const router = Router();
 
@@ -9,13 +9,31 @@ router.get(
   '/google',
   passportGoogle.authenticate('google', { scope: ['profile', 'email'] }) as RequestHandler,
 );
-router.get(
-  '/google/callback',
-  passportGoogle.authenticate('google', {
-    failureRedirect: '/login',
-    successRedirect: '/',
-  }) as RequestHandler,
-);
+
+router.get('/google/callback', (req, res, next) => {
+  // biome-ignore lint/suspicious/noExplicitAny: idk the type of this
+  passportGoogle.authenticate('google', (err: any, user: any, info: any) => {
+    if (err) {
+      return next(err);
+    }
+
+    if (!user) {
+      return res.redirect('/');
+    }
+
+    req.logIn(user, (err) => {
+      if (err) {
+        return next(err);
+      }
+
+      if (user.status === 'setup') {
+        return res.redirect('/registration');
+      } else {
+        return res.redirect('/home');
+      }
+    });
+  })(req, res, next);
+});
 
 // creation of fake accounts endpoints
 router.post('/test/register', isDevelopment, routeTestRegister);

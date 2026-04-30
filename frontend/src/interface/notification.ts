@@ -1,6 +1,4 @@
-import { GetNotificationsResponseBodySchema } from 'shared';
-import type z from "zod";
+import type { GetNotificationsResponseBodySchema } from 'shared';
+import type z from 'zod';
 
-export type GetNotificationsResponse = z.infer<
-  typeof GetNotificationsResponseBodySchema
->;
+export type GetNotificationsResponse = z.infer<typeof GetNotificationsResponseBodySchema>;

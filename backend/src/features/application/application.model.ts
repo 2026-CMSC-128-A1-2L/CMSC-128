@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { documentSchema, type DocumentType } from '../document/document.model';
+import { documentSchema, type DocumentType } from '../document/document.model.js';
 import { APPLICATION_STATUS } from 'shared';
 
 export type ApplicationStatusType = (typeof APPLICATION_STATUS)[number];

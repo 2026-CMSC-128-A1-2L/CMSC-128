@@ -1,4 +1,4 @@
-import { type FunctionComponent } from 'react';
+import type { FunctionComponent } from 'react';
 import { Icon } from '@iconify/react';
 
 // ─── Props ────────────────────────────────────────────────────────────────────
@@ -18,7 +18,6 @@ const RegistrationVerification: FunctionComponent<RegistrationVerificationProps>
     <div className="flex-1 w-full relative overflow-hidden flex items-start justify-center text-left text-num-14 text-dimgray font-inter">
       <div className="w-[620px] rounded-xl border-whitesmoke border-solid border box-border overflow-hidden flex flex-col items-start pt-3 px-4 pb-5 gap-6">
         <div className="w-full flex flex-col items-start p-3 box-border gap-3">
-
           {/* Title */}
           <div className="self-stretch flex items-center text-center text-[18px] text-black">
             <b className="relative tracking-[-0.01em]">Get ready for verification!</b>
@@ -27,7 +26,8 @@ const RegistrationVerification: FunctionComponent<RegistrationVerificationProps>
           {/* Subtitle */}
           <div className="self-stretch flex items-center justify-center text-black">
             <div className="flex-1 relative leading-6 font-medium">
-              To list properties on ATLAS, your account needs to be verified by an admin. Here's what you'll need to prepare!
+              To list properties on ATLAS, your account needs to be verified by an admin. Here's
+              what you'll need to prepare!
             </div>
           </div>
 
@@ -38,7 +38,8 @@ const RegistrationVerification: FunctionComponent<RegistrationVerificationProps>
               <div className="flex-1 relative tracking-[0.02em] font-semibold">
                 <span>No uploads required right now. </span>
                 <span className="text-teal-200">
-                  This checklist is just to help you know what to prepare. You can submit documents from your dashboard after your account is created.
+                  This checklist is just to help you know what to prepare. You can submit documents
+                  from your dashboard after your account is created.
                 </span>
               </div>
             </div>
@@ -57,7 +58,9 @@ const RegistrationVerification: FunctionComponent<RegistrationVerificationProps>
               <b className="flex-1 relative">Valid ID</b>
             </div>
             <div className="self-stretch flex items-center justify-center text-[12px] font-lora">
-              <div className="flex-1 relative tracking-[0.02em] font-semibold">e.g. Passport, Driver’s License, etc.</div>
+              <div className="flex-1 relative tracking-[0.02em] font-semibold">
+                e.g. Passport, Driver’s License, etc.
+              </div>
             </div>
           </div>
           <div className="self-stretch h-[60px] rounded-xl bg-aliceblue border-whitesmoke border-solid border box-border flex flex-col items-start justify-center py-0 px-6 gap-1">
@@ -65,10 +68,11 @@ const RegistrationVerification: FunctionComponent<RegistrationVerificationProps>
               <b className="flex-1 relative">Business Permit</b>
             </div>
             <div className="self-stretch flex items-center justify-center text-[12px] font-lora">
-              <div className="flex-1 relative tracking-[0.02em] font-semibold">Current and valid local government permit to operate a rental business</div>
+              <div className="flex-1 relative tracking-[0.02em] font-semibold">
+                Current and valid local government permit to operate a rental business
+              </div>
             </div>
           </div>
-
         </div>
 
         {/* Back / Proceed */}

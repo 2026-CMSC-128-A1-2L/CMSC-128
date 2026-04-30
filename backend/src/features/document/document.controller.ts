@@ -8,9 +8,10 @@ import {
   createAcceptDocument,
   createRejectDocument,
   WithDocument,
-} from './document.service';
+} from './document.service.js';
 import type mongoose from 'mongoose';
 import type { QueryFilter } from 'mongoose';
+import assert from 'node:assert';
 
 // GET ../documents
 export const routeGetDocuments = (model: ModelWithDocument): RequestHandler => {
