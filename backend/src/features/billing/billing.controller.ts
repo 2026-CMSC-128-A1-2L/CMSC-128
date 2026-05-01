@@ -3,7 +3,7 @@ import {
   CreateBillingBodySchema,
   GetBillingsQuerySchema,
   ObjectIdSchema,
-  submitBillingPaymentArgumentsSchema,
+  SubmitBillingPaymentArgumentsSchema,
   UpdateBillingPaymentRequestBodySchema,
   UpdateBillingRequestBodySchema,
 } from 'shared';

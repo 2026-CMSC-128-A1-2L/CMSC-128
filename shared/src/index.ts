@@ -19,3 +19,4 @@ export * from './schemas/transfer.js';
 export * from './schemas/unit.js';
 export * from './schemas/user.js';
 export * from './schemas/booking.js';
+export * from './schemas/document.js';
