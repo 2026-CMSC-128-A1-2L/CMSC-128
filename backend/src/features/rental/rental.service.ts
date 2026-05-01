@@ -48,6 +48,7 @@ export const createRental = async (data: CreateRentalArguments) => {
 
   const newRental = await new Rental({
     userId: data.userId,
+    facilityId: data.facilityId,
     unitId: data.unitId,
     applicationId: data.applicationId,
     status: 'active',

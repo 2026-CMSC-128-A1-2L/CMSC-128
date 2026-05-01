@@ -1,8 +1,6 @@
 import mongoose from 'mongoose';
 import crypto from 'node:crypto';
 import { managerPermissionSchema, type ManagerPermissionType } from '../facility/facility.model.js';
-import { fchown } from 'node:fs';
-
 export type InviteType = {
   email: string;
   landlordId: mongoose.Types.ObjectId;
@@ -15,6 +13,7 @@ export type InviteType = {
   dateInvited: Date;
   dateAccepted?: Date;
   dateDeclined?: Date;
+  expiresAt?: Date;
 };
 
 const inviteSchema = new mongoose.Schema<InviteType>({
@@ -56,6 +55,7 @@ const inviteSchema = new mongoose.Schema<InviteType>({
   dateInvited: { type: Date, default: Date.now, required: true },
   dateAccepted: { type: Date },
   dateDeclined: { type: Date },
+  expiresAt: { type: Date },
 });
 
 export const Invite = mongoose.model('Invite', inviteSchema);
