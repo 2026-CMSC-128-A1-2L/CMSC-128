@@ -19,3 +19,4 @@ export * from './schemas/transfer';
 export * from './schemas/unit';
 export * from './schemas/user';
 export * from './schemas/booking';
+export * from './schemas/document';
