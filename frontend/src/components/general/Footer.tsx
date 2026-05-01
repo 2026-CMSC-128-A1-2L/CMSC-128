@@ -1,11 +1,11 @@
-import type { FunctionComponent } from "react";
-import LogoFooter from "../../../assets/footer_logo.svg?react";
-import { Icon } from "@iconify/react";
-import { Link } from "react-router-dom";
+import type { FunctionComponent } from 'react';
+import LogoFooter from '../../../assets/footer_logo.svg?react';
+import { Icon } from '@iconify/react';
+import { Link } from 'react-router-dom';
 
 const Footer: FunctionComponent = () => {
   return (
-    <div className="w-full bg-whitesmoke overflow-hidden flex items-center py-4 px-10 box-border text-num-14 text-dimgray font-inter max-w-full">
+    <div className="w-full overflow-hidden flex items-center py-4 px-10 box-border text-num-14 text-dimgray font-inter max-w-full">
       <div className="flex-1 flex items-center gap-20">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">

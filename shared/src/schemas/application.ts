@@ -1,5 +1,5 @@
 import z from 'zod';
-import { DateTimeSchema, ObjectIdSchema, PaginationRequestSchema, QuerySchema } from './common';
+import { DateTimeSchema, ObjectIdSchema, PaginationRequestSchema, QuerySchema } from './common.js';
 
 // POST /api/applications
 export const CreateApplicationBodySchema = z.object({

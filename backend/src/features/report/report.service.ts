@@ -1,10 +1,10 @@
 import type mongoose from 'mongoose';
-import { AppError } from '../../error';
-import { Listing } from '../listing/listing.model';
-import { Rental } from '../rental/rental.model';
-import { Unit } from '../unit/unit.model';
-import { User } from '../user/user.model';
-import { Report, ListingReport, UserReport } from './report.model';
+import { AppError } from '../../error.js';
+import { Listing } from '../listing/listing.model.js';
+import { Rental } from '../rental/rental.model.js';
+import { Unit } from '../unit/unit.model.js';
+import { User } from '../user/user.model.js';
+import { Report, ListingReport, UserReport } from './report.model.js';
 
 export type CreateListingReportArgs = {
   userId: mongoose.Types.ObjectId;
@@ -50,13 +50,16 @@ export const reportListing = async (data: CreateListingReportArgs) => {
 
   // Only active tenants of this facility may submit a report
   const facilityListingIds = await Listing.find({ facilityId: listing.facilityId }).distinct('_id');
-  const facilityUnitIds = await Unit.find({ listingId: { $in: facilityListingIds } }).distinct('_id');
+  const facilityUnitIds = await Unit.find({ listingId: { $in: facilityListingIds } }).distinct(
+    '_id',
+  );
   const activeRental = await Rental.findOne({
     userId: data.userId,
     unitId: { $in: facilityUnitIds },
     status: 'active',
   });
-  if (!activeRental) throw new AppError(403, 'Only active tenants of this facility can submit a report.');
+  if (!activeRental)
+    throw new AppError(403, 'Only active tenants of this facility can submit a report.');
 
   // Prevent duplicate pending reports
   const existing = await ListingReport.findOne({

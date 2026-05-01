@@ -1,192 +1,324 @@
-import { type FunctionComponent, useCallback } from "react";
-import { Icon } from "@iconify/react";
+import { type FunctionComponent, useEffect, useState } from 'react';
+import { Icon } from '@iconify/react';
+import { CalendarService, type CalendarEvent } from '../../service/CalendarService';
 
 interface MiniCalendarProps {
-  onEventClick?: () => void;
+  currentDate: Date;
+  onPrevMonth?: () => void;
+  onNextMonth?: () => void;
+  onDateChange?: (date: Date) => void;
+  onDateClick?: (date: Date, events: CalendarEvent[]) => void;
+  onEventClick?: (event: CalendarEvent) => void;
 }
 
+const DAYS = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+const MONTHS = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+];
+const MONTH_SHORT = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+];
+
+const getEventIcon = (type: CalendarEvent['type']) => {
+  switch (type) {
+    case 'booking':
+      return 'ic:round-calendar-today';
+    case 'billing':
+      return 'ic:round-receipt';
+    case 'move-in':
+      return 'ic:round-home';
+    case 'move-out':
+      return 'ic:round-logout';
+    default:
+      return 'ic:round-circle';
+  }
+};
+
 const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
+  currentDate,
+  onPrevMonth,
+  onNextMonth,
+  onDateChange,
+  onDateClick,
   onEventClick,
 }) => {
-  const onIconButtonContainerClick = useCallback(() => {
-    // Add your code here
+  const [upcomingEvents, setUpcomingEvents] = useState<CalendarEvent[]>([]);
+  const [allEvents, setAllEvents] = useState<CalendarEvent[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [showMonthDropdown, setShowMonthDropdown] = useState(false);
+  const [showYearDropdown, setShowYearDropdown] = useState(false);
+
+  useEffect(() => {
+    const fetchUpcomingEvents = async () => {
+      setLoading(true);
+      try {
+        const response = await CalendarService.getUpcomingEvents();
+        setUpcomingEvents(response.data.slice(0, 3)); // Show only first 3 upcoming events
+      } catch (error) {
+        console.error('Failed to load upcoming events:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUpcomingEvents();
   }, []);
 
+  // Fetch all events for current month
+  useEffect(() => {
+    const fetchAllEvents = async () => {
+      try {
+        const response = await CalendarService.getCalendarEvents(
+          currentDate.getFullYear(),
+          currentDate.getMonth() + 1,
+        );
+        setAllEvents(response.data);
+      } catch (error) {
+        console.error('Failed to load all events:', error);
+      }
+    };
+
+    fetchAllEvents();
+  }, [currentDate]);
+
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth();
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+  const weeks: (number | null)[][] = [];
+  let week: (number | null)[] = new Array(firstDay).fill(null);
+
+  for (let day = 1; day <= daysInMonth; day++) {
+    week.push(day);
+    if (week.length === 7) {
+      weeks.push(week);
+      week = [];
+    }
+  }
+
+  if (week.length > 0) {
+    while (week.length < 7) {
+      week.push(null);
+    }
+    weeks.push(week);
+  }
+
+  const today = new Date();
+  const isCurrentMonth = today.getFullYear() === year && today.getMonth() === month;
+
+  const monthName = currentDate.toLocaleDateString('en-US', {
+    month: 'short',
+  });
+  const yearStr = currentDate.getFullYear().toString();
+
+  const handleMonthSelect = (monthIndex: number) => {
+    const newDate = new Date(year, monthIndex);
+    onDateChange?.(newDate);
+    setShowMonthDropdown(false);
+  };
+
+  const handleYearSelect = (selectedYear: number) => {
+    const newDate = new Date(selectedYear, month);
+    onDateChange?.(newDate);
+    setShowYearDropdown(false);
+  };
+
+  const yearRange = Array.from({ length: 21 }, (_, i) => year - 10 + i);
+
+  const formatEventDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    });
+  };
+
+  const getEventsForDay = (day: number) => {
+    return allEvents.filter((event) => {
+      const eventDate = new Date(event.date);
+      return (
+        eventDate.getDate() === day &&
+        eventDate.getMonth() === month &&
+        eventDate.getFullYear() === year
+      );
+    });
+  };
+
+  const handleDateClick = (day: number | null) => {
+    if (day === null) return;
+    const clickedDate = new Date(year, month, day);
+    const dayEvents = getEventsForDay(day);
+    onDateClick?.(clickedDate, dayEvents);
+  };
+
   return (
-    <div className="h-full w-72 flex flex-col items-start pt-num-0 px-num-0 pb-4 box-border gap-6">
-      <div className="rounded-xl bg-white border-whitesmoke-200 border-solid border flex flex-col items-center p-4 isolate">
-        <div className="self-stretch flex items-center gap-3 z-10">
-          <div
-            className="rounded-full overflow-hidden flex items-center justify-center p-2 cursor-pointer hover:bg-whitesmoke-100"
-            onClick={onIconButtonContainerClick}
+    <div className="w-full lg:w-72 shrink-0 flex flex-col gap-6 pb-4">
+      {/* Mini calendar */}
+      <div className="rounded-xl bg-white border border-whitesmoke-200 flex flex-col items-center p-4 gap-4">
+        {/* Nav */}
+        <div className="self-stretch flex items-center gap-3">
+          <button
+            onClick={onPrevMonth}
+            className="rounded-full p-2 hover:bg-whitesmoke-100 transition-colors"
           >
             <Icon icon="ic:round-chevron-left" className="h-5 w-5" />
-          </div>
-          <div className="flex-1 flex items-start isolate gap-2">
-            <div className="flex-1 flex flex-col items-start">
-              <div className="self-stretch rounded-md bg-white border-gainsboro border-solid border flex items-center p-2 gap-2 text-num-12">
-                <div className="flex-1 relative leading-tight">Apr</div>
-                <Icon icon="ic:round-keyboard-arrow-down" className="h-4 w-4" />
-              </div>
+          </button>
+          <div className="flex-1 flex gap-2 relative">
+            {/* Month Dropdown */}
+            <div className="flex-1 relative">
+              <button
+                onClick={() => setShowMonthDropdown(!showMonthDropdown)}
+                className="w-full rounded-md border border-gainsboro flex items-center p-2 gap-1 text-xs hover:bg-gray-50"
+              >
+                <span className="flex-1">{monthName}</span>
+                <Icon
+                  icon="ic:round-keyboard-arrow-down"
+                  className={`h-4 w-4 transition-transform ${
+                    showMonthDropdown ? 'rotate-180' : ''
+                  }`}
+                />
+              </button>
+              {showMonthDropdown && (
+                <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gainsboro rounded-md z-10 shadow-lg max-h-48 overflow-y-auto">
+                  {MONTH_SHORT.map((m, idx) => (
+                    <button
+                      key={m}
+                      onClick={() => handleMonthSelect(idx)}
+                      className={`w-full text-left px-3 py-2 text-xs hover:bg-blue-50 ${
+                        idx === month ? 'bg-lightcyan-100 font-bold' : ''
+                      }`}
+                    >
+                      {m}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
-            <div className="flex-1 flex flex-col items-start">
-              <div className="self-stretch rounded-md bg-white border-gainsboro border-solid border flex items-center p-2 gap-2 text-num-12">
-                <div className="flex-1 relative leading-tight">2026</div>
-                <Icon icon="ic:round-keyboard-arrow-down" className="h-4 w-4" />
-              </div>
+
+            {/* Year Dropdown */}
+            <div className="flex-1 relative">
+              <button
+                onClick={() => setShowYearDropdown(!showYearDropdown)}
+                className="w-full rounded-md border border-gainsboro flex items-center p-2 gap-1 text-xs hover:bg-gray-50"
+              >
+                <span className="flex-1">{yearStr}</span>
+                <Icon
+                  icon="ic:round-keyboard-arrow-down"
+                  className={`h-4 w-4 transition-transform ${showYearDropdown ? 'rotate-180' : ''}`}
+                />
+              </button>
+              {showYearDropdown && (
+                <div className="absolute top-full right-0 left-0 mt-1 bg-white border border-gainsboro rounded-md z-10 shadow-lg max-h-48 overflow-y-auto">
+                  {yearRange.map((y) => (
+                    <button
+                      key={y}
+                      onClick={() => handleYearSelect(y)}
+                      className={`w-full text-left px-3 py-2 text-xs hover:bg-blue-50 ${
+                        y === year ? 'bg-lightcyan-100 font-bold' : ''
+                      }`}
+                    >
+                      {y}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
-          <div
-            className="rounded-full overflow-hidden flex items-center justify-center p-2 cursor-pointer hover:bg-whitesmoke-100"
-            onClick={onIconButtonContainerClick}
+          <button
+            onClick={onNextMonth}
+            className="rounded-full p-2 hover:bg-whitesmoke-100 transition-colors"
           >
             <Icon icon="ic:round-chevron-right" className="h-5 w-5" />
-          </div>
+          </button>
         </div>
-        <div className="flex flex-col items-center pt-4 px-num-0 pb-num-0 z-0 text-center text-num-11.59 text-gray font-inter">
-          <div className="self-stretch flex items-center justify-center gap-0.5">
-            <div className="flex-1 flex items-center justify-center">
-              <div className="relative leading-num-19.31 text-xs">Su</div>
-            </div>
-            <div className="flex-1 flex items-center justify-center">
-              <div className="relative leading-num-19.31 text-xs">Mo</div>
-            </div>
-            <div className="flex-1 flex items-center justify-center">
-              <div className="relative leading-num-19.31 text-xs">Tu</div>
-            </div>
-            <div className="flex-1 flex items-center justify-center">
-              <div className="relative leading-num-19.31 text-xs">We</div>
-            </div>
-            <div className="flex-1 flex items-center justify-center">
-              <div className="relative leading-num-19.31 text-xs">Th</div>
-            </div>
-            <div className="flex-1 flex items-center justify-center">
-              <div className="relative leading-num-19.31 text-xs">Fr</div>
-            </div>
-            <div className="flex-1 flex items-center justify-center">
-              <div className="relative leading-num-19.31 text-xs">Sa</div>
-            </div>
+
+        {/* Day labels */}
+        <div className="self-stretch flex flex-col gap-0.5 text-center">
+          <div className="grid grid-cols-7 text-xs text-gray font-inter">
+            {DAYS.map((d) => (
+              <div key={d} className="flex items-center justify-center py-1">
+                {d}
+              </div>
+            ))}
           </div>
-          <div className="flex flex-col items-center isolate gap-0.5 text-num-12 text-black">
-            <div className="flex items-center gap-0.5 z-40">
-              <div className="h-num-38.6 w-num-38.6 rounded-md flex items-center justify-center p-3 box-border" />
-              <div className="h-num-38.6 w-num-38.6 rounded-md flex items-center justify-center p-3 box-border" />
-              <div className="h-num-38.6 w-num-38.6 rounded-md flex items-center justify-center p-3 box-border" />
-              <div className="h-num-38.6 w-num-38.6 rounded-md flex items-center justify-center p-3 box-border">
-                <div className="relative leading-tight shrink-0">1</div>
+
+          {/* Date grid */}
+          <div className="flex flex-col gap-0.5 text-xs text-black">
+            {weeks.map((week, wi) => (
+              <div key={wi} className="grid grid-cols-7 gap-0.5">
+                {week.map((day, di) => {
+                  const isTodayDay = isCurrentMonth && day === today.getDate() && day !== null;
+                  return (
+                    <button
+                      key={di}
+                      onClick={() => handleDateClick(day)}
+                      disabled={day === null}
+                      className={[
+                        'rounded-md flex items-center justify-center p-2 aspect-square transition-colors',
+                        day === null ? 'cursor-default' : 'cursor-pointer hover:bg-gray-100',
+                        isTodayDay
+                          ? 'bg-lightcyan-100 text-teal-200 font-bold hover:bg-lightcyan-200'
+                          : '',
+                      ].join(' ')}
+                    >
+                      {day ?? ''}
+                    </button>
+                  );
+                })}
               </div>
-              <div className="h-num-38.6 w-num-38.6 rounded-md flex items-center justify-center p-3 box-border">
-                <div className="relative leading-tight shrink-0">2</div>
-              </div>
-              <div className="h-num-38.6 w-num-38.6 rounded-md bg-lightcyan-100 flex items-center justify-center p-3 box-border text-teal-200 font-inter">
-                <b className="relative leading-tight shrink-0">3</b>
-              </div>
-              <div className="h-num-38.6 w-num-38.6 rounded-md flex items-center justify-center p-3 box-border">
-                <div className="relative leading-tight shrink-0">4</div>
-              </div>
-            </div>
-            <div className="flex items-center gap-0.5 z-30">
-              <div className="h-num-38.6 w-num-38.6 rounded-md flex items-center justify-center p-3 box-border">
-                <div className="relative leading-tight shrink-0">5</div>
-              </div>
-              <div className="h-num-38.6 w-num-38.6 rounded-md flex items-center justify-center p-3 box-border">
-                <div className="relative leading-tight shrink-0">6</div>
-              </div>
-              <div className="h-num-38.6 w-num-38.6 rounded-md flex items-center justify-center p-3 box-border">
-                <div className="relative leading-tight shrink-0">7</div>
-              </div>
-              <div className="h-num-38.6 w-num-38.6 rounded-md flex items-center justify-center p-3 box-border">
-                <div className="relative leading-tight shrink-0">8</div>
-              </div>
-              <div className="h-num-38.6 w-num-38.6 rounded-md flex items-center justify-center p-3 box-border">
-                <div className="relative leading-tight shrink-0">9</div>
-              </div>
-              <div className="h-num-38.6 w-num-38.6 rounded-md flex items-center justify-center p-3 box-border">
-                <div className="relative leading-tight shrink-0">10</div>
-              </div>
-              <div className="h-num-38.6 w-num-38.6 rounded-md flex items-center justify-center p-3 box-border">
-                <div className="relative leading-tight shrink-0">11</div>
-              </div>
-            </div>
-            <div className="flex items-center gap-0.5 z-20">
-              <div className="h-num-38.6 w-num-38.6 rounded-md flex items-center justify-center p-3 box-border">
-                <div className="relative leading-tight shrink-0">12</div>
-              </div>
-              <div className="h-num-38.6 w-num-38.6 rounded-md flex items-center justify-center p-3 box-border">
-                <div className="relative leading-tight shrink-0">13</div>
-              </div>
-              <div className="h-num-38.6 w-num-38.6 rounded-md flex items-center justify-center p-3 box-border">
-                <div className="relative leading-tight shrink-0">14</div>
-              </div>
-              <div className="h-num-38.6 w-num-38.6 rounded-md flex items-center justify-center p-3 box-border">
-                <div className="relative leading-tight shrink-0">15</div>
-              </div>
-              <div className="h-num-38.6 w-num-38.6 rounded-md flex items-center justify-center p-3 box-border">
-                <div className="relative leading-tight shrink-0">16</div>
-              </div>
-              <div className="h-num-38.6 w-num-38.6 rounded-md flex items-center justify-center p-3 box-border">
-                <div className="relative leading-tight shrink-0">17</div>
-              </div>
-              <div className="h-num-38.6 w-num-38.6 rounded-md flex items-center justify-center p-3 box-border">
-                <div className="relative leading-tight shrink-0">18</div>
-              </div>
-            </div>
-            <div className="flex items-center gap-0.5 z-10">
-              <div className="h-num-38.6 w-num-38.6 rounded-md flex items-center justify-center p-3 box-border">
-                <div className="relative leading-tight shrink-0">19</div>
-              </div>
-              <div className="h-num-38.6 w-num-38.6 rounded-md flex items-center justify-center p-3 box-border">
-                <div className="relative leading-tight shrink-0">20</div>
-              </div>
-              <div className="h-num-38.6 w-num-38.6 rounded-md flex items-center justify-center p-3 box-border">
-                <div className="relative leading-tight shrink-0">21</div>
-              </div>
-              <div className="h-num-38.6 w-num-38.6 rounded-md flex items-center justify-center p-3 box-border">
-                <div className="relative leading-tight shrink-0">22</div>
-              </div>
-              <div className="h-num-38.6 w-num-38.6 rounded-md flex items-center justify-center p-3 box-border">
-                <div className="relative leading-tight shrink-0">23</div>
-              </div>
-              <div className="h-num-38.6 w-num-38.6 rounded-md flex items-center justify-center p-3 box-border">
-                <div className="relative leading-tight shrink-0">24</div>
-              </div>
-              <div className="h-num-38.6 w-num-38.6 rounded-md flex items-center justify-center p-3 box-border">
-                <div className="relative leading-tight shrink-0">25</div>
-              </div>
-            </div>
-            <div className="flex items-center gap-0.5 z-0">
-              <div className="h-num-38.6 w-num-38.6 rounded-md flex items-center justify-center p-3 box-border">
-                <div className="relative leading-tight shrink-0">26</div>
-              </div>
-              <div className="h-num-38.6 w-num-38.6 rounded-md flex items-center justify-center p-3 box-border">
-                <div className="relative leading-tight shrink-0">27</div>
-              </div>
-              <div className="h-num-38.6 w-num-38.6 rounded-md flex items-center justify-center p-3 box-border">
-                <div className="relative leading-tight shrink-0">28</div>
-              </div>
-              <div className="h-num-38.6 w-num-38.6 rounded-md flex items-center justify-center p-3 box-border">
-                <div className="relative leading-tight shrink-0">29</div>
-              </div>
-              <div className="h-num-38.6 w-num-38.6 rounded-md flex items-center justify-center p-3 box-border">
-                <div className="relative leading-tight shrink-0">30</div>
-              </div>
-              <div className="h-num-38.6 w-num-38.6 rounded-md flex items-center justify-center p-3 box-border" />
-              <div className="h-num-38.6 w-num-38.6 rounded-md flex items-center justify-center p-3 box-border" />
-            </div>
+            ))}
           </div>
         </div>
       </div>
-      <div className="self-stretch overflow-hidden flex flex-col items-start py-2 px-num-0 gap-2 text-center text-num-14">
-        <b className="self-stretch relative font-semibold">Upcoming Events</b>
-        <div className="self-stretch h-auto rounded-2xl border-whitesmoke-200 border-solid border box-border overflow-hidden shrink-0 flex items-center p-4 gap-2 text-num-12 cursor-pointer hover:bg-gray-50" onClick={onEventClick}>
-          <Icon icon="ic:round-circle" className="h-6 w-6" />
-          <div className="flex flex-col items-start justify-center gap-1 shrink-0">
-            <div className="relative font-medium">Ocular Visit</div>
-            <div className="relative text-num-11.59 tracking-num-0.04 font-medium font-lora text-dimgray">
-              April 7, 2026
+
+      {/* Upcoming events */}
+      <div className="flex flex-col gap-2 text-sm">
+        <b className="font-semibold">Upcoming Events</b>
+        {loading ? (
+          <div className="text-xs text-dimgray">Loading events...</div>
+        ) : upcomingEvents.length > 0 ? (
+          upcomingEvents.map((event) => (
+            <div
+              key={event.referenceId}
+              onClick={() => onEventClick?.(event)}
+              className="rounded-2xl border border-whitesmoke-200 flex items-center p-4 gap-2 cursor-pointer hover:bg-gray-50 transition-colors"
+            >
+              <Icon icon={getEventIcon(event.type)} className="h-6 w-6 shrink-0" />
+              <div className="flex flex-col gap-1">
+                <div className="text-xs font-medium">{event.title}</div>
+                <div className="text-[11px] font-medium font-lora text-dimgray tracking-wide">
+                  {formatEventDate(event.date)}
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+          ))
+        ) : (
+          <div className="text-xs text-dimgray">No upcoming events</div>
+        )}
       </div>
     </div>
   );

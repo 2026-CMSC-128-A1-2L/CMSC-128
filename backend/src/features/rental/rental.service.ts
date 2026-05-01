@@ -1,9 +1,9 @@
 import type mongoose from 'mongoose';
-import { AppError } from '../../error';
-import { combineFilters } from '../../middleware';
-import { ApplicationForm } from '../application/application.model';
-import { Rental } from './rental.model';
-import { Unit } from '../unit/unit.model';
+import { AppError } from '../../error.js';
+import { combineFilters } from '../../middleware.js';
+import { ApplicationForm } from '../application/application.model.js';
+import { Rental } from './rental.model.js';
+import { Unit } from '../unit/unit.model.js';
 import { UnitFilterSchema } from 'shared';
 
 // TODO: verify if actual move-in/out dates are needed
@@ -39,10 +39,10 @@ export const createRental = async (data: CreateRentalArguments) => {
   }
 
   const unit = await Unit.findById(data.unitId);
-  
-  if(!unit) throw new AppError(404, 'Unit not found.');
 
-  if(unit.currentRentals.length >= unit.capacity){
+  if (!unit) throw new AppError(404, 'Unit not found.');
+
+  if (unit.currentRentals.length >= unit.capacity) {
     throw new AppError(400, 'Unit is already at full capacity.');
   }
 
@@ -276,11 +276,7 @@ export const moveOut = async (
   await rental.save();
 
   // remove current rental to the currentRentals of the unit
-  await Unit.updateOne(
-    { _id: rental.unitId },
-    { $pull: { currentRentals: rental._id } },
-  );
-
+  await Unit.updateOne({ _id: rental.unitId }, { $pull: { currentRentals: rental._id } });
 
   return rental;
 };

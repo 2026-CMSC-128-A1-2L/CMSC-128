@@ -7,7 +7,7 @@ import {
   UpdateListingBodySchema,
   UpdateListingTagsResponseBodySchema,
 } from 'shared';
-import type { ListingType } from './listing.model';
+import type { ListingType } from './listing.model.js';
 import {
   getListings,
   createListing,
@@ -15,12 +15,13 @@ import {
   updateListing,
   deleteListing,
   updateListingTags,
-} from './listing.service';
-import { AppError } from '../../error';
+} from './listing.service.js';
+import { AppError } from '../../error.js';
 
 export const routeGetListings: RequestHandler = async (req, res, _next) => {
   const params = GetListingsQuerySchema.parse(req.query);
-  const listings = await getListings(params, res.locals.filters);
+  // biome-ignore lint/suspicious/noExplicitAny: ayaw ih pero tama yan
+  const listings = await getListings(params as any, res.locals.filters);
   res.status(200).json({ data: listings });
 };
 

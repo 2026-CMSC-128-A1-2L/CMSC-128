@@ -1,7 +1,7 @@
 import type mongoose from 'mongoose';
-import { type ManagerType, User } from '../user/user.model';
-import { HousingFacility, type HousingFacilityType } from '../facility/facility.model';
-import { AppError } from '../../error';
+import { type ManagerType, User } from '../user/user.model.js';
+import { HousingFacility, type HousingFacilityType } from '../facility/facility.model.js';
+import { AppError } from '../../error.js';
 import type { ProfileSchema } from 'shared';
 import type z from 'zod';
 
@@ -17,7 +17,7 @@ export const getProfile = async (userId: mongoose.Types.ObjectId) => {
   if (!user) {
     throw new AppError(404, 'User not found');
   }
-  
+
   if (user.userType === 'Manager') {
     const facilities = (await HousingFacility.find({
       managers: { $elemMatch: { userId } },

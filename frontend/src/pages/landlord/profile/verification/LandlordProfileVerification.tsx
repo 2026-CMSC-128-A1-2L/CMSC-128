@@ -44,7 +44,7 @@ const LandlordProfileVerification = () => {
         { label: 'Verification Status' },
       ]}
     >
-      <div className="flex w-full flex-col gap-[12px] rounded-[16px] bg-white/70 pb-[32px]">
+      <div className="flex w-full flex-col gap-[12px] rounded-[16px] bg-white/70 p-[8px] pb-[32px]">
         <LandlordInfoCard info={landlord} />
 
         <div className="flex w-full flex-col items-center px-[32px] py-[12px]">
@@ -58,11 +58,7 @@ const LandlordProfileVerification = () => {
           onSubmit={handleSubmit}
         />
 
-        <DocumentsUploadList
-          documents={documents}
-          uploads={uploads}
-          onFileSelected={handleFile}
-        />
+        <DocumentsUploadList documents={documents} uploads={uploads} onFileSelected={handleFile} />
       </div>
     </LandlordLayout>
   );

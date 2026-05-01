@@ -9,10 +9,7 @@ import Preferences from '../../user/setting/Preferences';
 
 const LandlordSettings: FunctionComponent = () => {
   return (
-    <LandlordLayout
-      activeSidebarItem="settings"
-      breadcrumbs={[{ label: 'Settings' }]}
-    >
+    <LandlordLayout activeSidebarItem="settings" breadcrumbs={[{ label: 'Settings' }]}>
       <div className="flex flex-col items-start gap-3 w-full pt-6 px-8">
         <PropertyTabs>
           <PropertyTab text="General" element={<General />} />

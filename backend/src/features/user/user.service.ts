@@ -1,8 +1,8 @@
 import type mongoose from 'mongoose';
 import type { ClientSession, QueryFilter } from 'mongoose';
-import { Student, User } from './user.model';
-import { AppError } from '../../error';
-import { sendNotification } from '../notification/notification.service';
+import { Student, User } from './user.model.js';
+import { AppError } from '../../error.js';
+import { sendNotification } from '../notification/notification.service.js';
 import assert from 'node:assert';
 import { UserTypeType } from 'shared';
 import type { StudentPreferences } from 'shared';
@@ -22,10 +22,10 @@ export const createUser = async (params: CreateUserParams) => {
   const userResult = await User.findOne({
     emails: params.email,
     status: { $in: ['setup', 'verified', 'unverified'] },
-  });
+  }).lean();
 
   if (userResult) {
-    throw new AppError(409, 'User with this email already exists.');
+    return userResult;
   }
 
   const newUser = new User({

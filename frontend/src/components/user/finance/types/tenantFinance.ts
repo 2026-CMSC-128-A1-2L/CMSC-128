@@ -23,6 +23,7 @@ export interface UpcomingPayment {
   dueDate: string;
   amount: number;
   billingId: string;
+  isCurrent?: boolean;
 }
 
 export interface BillingHistoryItem {

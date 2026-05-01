@@ -1,5 +1,5 @@
-import type { FunctionComponent } from "react";
-import { Icon } from "@iconify/react";
+import type { FunctionComponent } from 'react';
+import { Icon } from '@iconify/react';
 
 interface Event {
   id: string;
@@ -16,9 +16,9 @@ interface EventListProps {
 const EventList: FunctionComponent<EventListProps> = ({
   events = [
     {
-      id: "1",
-      title: "Ocular Visit",
-      date: "April 7, 2026",
+      id: '1',
+      title: 'Ocular Visit',
+      date: 'April 7, 2026',
     },
   ],
   onEventClick,

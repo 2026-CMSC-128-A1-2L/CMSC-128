@@ -8,7 +8,7 @@ import {
   createAcceptDocument,
   createRejectDocument,
   WithDocument,
-} from './document.service';
+} from './document.service.js';
 import type mongoose from 'mongoose';
 import type { QueryFilter } from 'mongoose';
 import { AddDocumentBodySchema, AddDocumentParamsSchema, DeleteDocumentParamsSchema, AcceptDocumentParamsSchema, RejectDocumentParamsSchema, RejectDocumentBodySchema } from 'shared';

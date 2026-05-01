@@ -2,17 +2,19 @@ import { type FunctionComponent, useCallback, useState } from 'react';
 import BuildingRequirements from '../../../components/landlord/addbuilding/BuildingRequirements';
 import BuildingInformation from '../../../components/landlord/addbuilding/BuildingInformation';
 import BuildingSubmit from '../../../components/landlord/addbuilding/BuildingSubmit';
-import TutorialIcon from "../../../../assets/help-chat.svg";
+import TutorialIcon from '../../../../assets/help-chat.svg';
 import TutorialBubble from '../properties/AddBuildingTutorials';
 import { Icon } from '@iconify/react';
+import { useNavigate } from 'react-router-dom';
 
 const AddBuilding: FunctionComponent = () => {
   const [currentStep, setCurrentStep] = useState(0);
-
+  const navigate = useNavigate();
   const [showHelp, setShowHelp] = useState(false);
 
   const onCancelClick = useCallback(() => {
-  }, []);
+    navigate('/landlord/properties');
+  }, [navigate]);
 
   const onNextClick = useCallback(() => {
     setCurrentStep((prev) => prev + 1);
@@ -20,7 +22,7 @@ const AddBuilding: FunctionComponent = () => {
 
   const onPrevClick = useCallback(() => {
     setCurrentStep((prev) => prev - 1);
-  }, [])
+  }, []);
 
   const renderStepContent = () => {
     switch (currentStep) {
@@ -29,7 +31,6 @@ const AddBuilding: FunctionComponent = () => {
       case 1:
         return <BuildingInformation onNextClick={onNextClick} onPrevClick={onPrevClick} />;
       case 2:
-
         return <BuildingSubmit onPrevClick={onPrevClick} />;
       default:
     }
@@ -44,14 +45,21 @@ const AddBuilding: FunctionComponent = () => {
   return (
     <div className="w-screen font-sans">
       <div className="px-20 pt-4 pb-12">
-        <div className="flex items-center gap-1.5 py-4 cursor-pointer w-full" onClick={onCancelClick}>
-          <Icon icon='material-symbols-light:chevron-left' className='w-7 h-7' />
+        <div
+          className="flex items-center gap-1.5 py-4 cursor-pointer w-full"
+          onClick={onCancelClick}
+        >
+          <Icon icon="material-symbols-light:chevron-left" className="w-7 h-7" />
           <span className="text-sm font-semibold text-black">Cancel</span>
         </div>
 
         <div className="rounded-3xl border border-whitesmoke px-10 pt-8 pb-10">
-          <h1 className="text-2xl font-bold" style={{ color: '#1a5c50' }}>Add a New Building</h1>
-          <p className="text-sm font-semibold text-black mt-1">Follow 3 simple steps and you're ready to go!</p>
+          <h1 className="text-2xl font-bold" style={{ color: '#1a5c50' }}>
+            Add a New Building
+          </h1>
+          <p className="text-sm font-semibold text-black mt-1">
+            Follow 3 simple steps and you're ready to go!
+          </p>
 
           <div className="w-full h-px my-6" />
 
@@ -65,11 +73,21 @@ const AddBuilding: FunctionComponent = () => {
                       style={{ background: step.active ? '#1a5c50' : '#d1d5db' }}
                     />
                     {i < steps.length - 1 && (
-                      <div className="w-0.5" style={{ flex: 1, minHeight: '150px', background: i === 0 ? '#b5c8c5' : '#d1d5db' }} />
+                      <div
+                        className="w-0.5"
+                        style={{
+                          flex: 1,
+                          minHeight: '150px',
+                          background: i === 0 ? '#b5c8c5' : '#d1d5db',
+                        }}
+                      />
                     )}
                   </div>
                   <div className="flex items-start pt-1.5 pb-4">
-                    <span className="text-sm font-semibold" style={{ color: step.active ? '#1a5c50' : '#9ca3af' }}>
+                    <span
+                      className="text-sm font-semibold"
+                      style={{ color: step.active ? '#1a5c50' : '#9ca3af' }}
+                    >
                       {step.label}
                     </span>
                   </div>
@@ -79,7 +97,6 @@ const AddBuilding: FunctionComponent = () => {
             <TutorialBubble show={showHelp} onClose={() => setShowHelp(false)} />
 
             {renderStepContent()}
-
           </div>
         </div>
       </div>
@@ -88,10 +105,21 @@ const AddBuilding: FunctionComponent = () => {
         className="fixed bottom-10 right-10 z-1000 cursor-pointer transition-all hover:scale-110 active:scale-95"
         onClick={() => setShowHelp(!showHelp)}
       >
-        <img
+        {/* <img
           src={TutorialIcon}
           alt="Help"
           className="w-16 h-16 drop-shadow-lg"
+        /> */}
+        {/* di ko mabago kulay ng Iconify na to */}
+        {/* <Icon icon="streamline-sharp-color:help-chat-2-flat" className="w-16 h-16 drop-shadow-lg" /> */}
+        <div
+          className="w-16 h-16 drop-shadow-lg"
+          style={{
+            background: 'linear-gradient(135deg, #096C5B, #16917C)',
+            WebkitMask:
+              "url('https://api.iconify.design/iconoir/chat-bubble-question-solid.svg') no-repeat center / contain",
+            mask: "url('https://api.iconify.design/iconoir/chat-bubble-question-solid.svg') no-repeat center / contain",
+          }}
         />
       </div>
     </div>

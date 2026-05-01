@@ -1,75 +1,134 @@
-import { type FunctionComponent, useState, useCallback } from "react";
-import Footer from "../../../components/general/Footer";
-import SideBar from "../../../components/user/SideBar";
-import MiniCalendar from "../../../components/user/MiniCalendar";
-import EventPopout from "../../../components/user/EventPopout";
-import PortalPopup from "../../../components/general/PortalPopup";
-import MainCalendarGrid from "../../../components/user/MainCalendarGrid";
-import PageBackground from "../../../components/general/PageBackground";
+import { type FunctionComponent, useState, useCallback } from 'react';
+import Footer from '../../../components/general/Footer';
+import SideBar from '../../../components/user/SideBar';
+import MiniCalendar from '../../../components/user/user-calendar/MiniCalendar';
+import EventPopout from '../../../components/user/EventPopout';
+import DayEventsPopout from '../../../components/user/user-calendar/DayEventsPopout';
+import PortalPopup from '../../../components/general/PortalPopup';
+import MainCalendarGrid from '../../../components/user/user-calendar/MainCalendarGrid';
+import type { CalendarEvent } from '../../../service/CalendarService';
 
 const MyCalendar: FunctionComponent = () => {
   const [isEventPopoutOpen, setEventPopoutOpen] = useState(false);
+  const [isDayPopoutOpen, setDayPopoutOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [selectedDayEvents, setSelectedDayEvents] = useState<CalendarEvent[]>([]);
+  const [currentDate, setCurrentDate] = useState(new Date());
 
-  const openEventPopout = useCallback(() => {
-    setEventPopoutOpen(true);
+  const openEventPopout = useCallback((event: CalendarEvent) => {
+    const eventDate = new Date(event.date);
+    setSelectedDate(eventDate);
+    setSelectedDayEvents([event]); // Will be populated with full day events in the popout
+    setDayPopoutOpen(true);
   }, []);
 
   const closeEventPopout = useCallback(() => {
     setEventPopoutOpen(false);
+    setSelectedEvent(null);
+  }, []);
+
+  const openDayPopout = useCallback((date: Date, events: CalendarEvent[]) => {
+    setSelectedDate(date);
+    setSelectedDayEvents(events);
+    setDayPopoutOpen(true);
+  }, []);
+
+  const closeDayPopout = useCallback(() => {
+    setDayPopoutOpen(false);
+    setSelectedDate(null);
+    setSelectedDayEvents([]);
+  }, []);
+
+  // Always open day popout when clicking on mini calendar date
+  const handleDayPopout = useCallback(
+    (date: Date, events: CalendarEvent[]) => {
+      openDayPopout(date, events);
+    },
+    [openDayPopout],
+  );
+
+  const handlePrevMonth = useCallback(() => {
+    setCurrentDate((prev) => new Date(prev.getFullYear(), prev.getMonth() - 1));
+  }, []);
+
+  const handleNextMonth = useCallback(() => {
+    setCurrentDate((prev) => new Date(prev.getFullYear(), prev.getMonth() + 1));
+  }, []);
+
+  const handleDateChange = useCallback((date: Date) => {
+    setCurrentDate(date);
   }, []);
 
   return (
     <>
-      <PageBackground />
-      <div className="w-full h-screen flex flex-col font-inter text-black overflow-hidden">
-        <div className="flex flex-1 overflow-hidden">
-          {/* Sidebar */}
-          <div className="fixed top-0 left-0 h-full w-[200px] hidden md:block z-10">
-            <SideBar />
-          </div>
-          <div className="w-[200px] shrink-0 hidden md:block" />
-          
-          {/* Right Frame / Content */}
-          <div className="flex-1 flex flex-col overflow-hidden">
-            <div className="flex-1 overflow-y-auto">
-              <div className="flex flex-col min-h-full">
-                <div className="flex-1 flex flex-col px-4 sm:px-8 pt-16 pr-4 sm:pr-20">
-                  <div className="flex flex-col gap-8 flex-1">
-                    {/* Header */}
-                    <div className="flex flex-col gap-3">
-                      <div className="flex items-center gap-2.5">
-                        <b className="relative leading-8 shrink-0">
-                          My Calendar
-                        </b>
-                      </div>
-                    </div>
+      <div className="flex min-h-screen font-inter text-black">
+        <div className="sticky top-0 h-screen shrink-0 z-10">
+          <SideBar />
+        </div>
+        <div className="flex flex-1 flex-col min-w-0 overflow-y-auto">
+          <div className="flex-1 flex flex-col px-4 sm:px-8 pt-16 pr-4 sm:pr-20">
+            <div className="flex flex-col gap-4 sm:gap-8 flex-1">
+              {/* Header Section */}
+              <div className="flex flex-col gap-3">
+                <b className="text-xl sm:text-2xl leading-8 text-black">My Calendar</b>
+                <div className="h-0.5 bg-whitesmoke-200" />
+              </div>
 
-                    {/* Calendar Content */}
-                    <div className="self-stretch flex-1 rounded-2xl bg-white border border-whitesmoke-200 flex flex-col items-start gap-4 text-center text-dimgray">
-                      <div className="self-stretch flex-1 flex items-start text-num-15.45 overflow-auto px-6 py-6 gap-6">
-                        <MiniCalendar onEventClick={openEventPopout} />
-                        <MainCalendarGrid onEventClick={openEventPopout} />
-                      </div>
-                    </div>
+              {/* Main Content - Two Column Layout */}
+              <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
+                {/* LEFT SIDEBAR */}
+                <div className="w-full lg:w-72 flex flex-col gap-6 shrink-0">
+                  {/* Mini Calendar Container */}
+                  <div className="bg-white rounded-num-8 p-3 sm:p-4 border border-whitesmoke-200 w-full overflow-hidden">
+                    <MiniCalendar
+                      currentDate={currentDate}
+                      onPrevMonth={handlePrevMonth}
+                      onNextMonth={handleNextMonth}
+                      onDateChange={handleDateChange}
+                      onDateClick={handleDayPopout}
+                      onEventClick={openEventPopout}
+                    />
                   </div>
                 </div>
-                
-                {/* Footer */}
-                <footer>
-                  <Footer />
-                </footer>
+
+                {/* RIGHT MAIN CONTENT */}
+                <div className="flex-1 flex flex-col gap-6 min-w-0">
+                  <div className="rounded-2xl bg-white border border-whitesmoke-200 flex flex-col p-6">
+                    <MainCalendarGrid
+                      currentDate={currentDate}
+                      onPrevMonth={handlePrevMonth}
+                      onNextMonth={handleNextMonth}
+                      onEventClick={openEventPopout}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
+          <Footer />
         </div>
       </div>
-      {isEventPopoutOpen && (
+      {isEventPopoutOpen && selectedEvent && (
         <PortalPopup
           overlayColor="rgba(0, 0, 0, 0.25)"
           placement="Centered"
           onOutsideClick={closeEventPopout}
         >
-          <EventPopout onClose={closeEventPopout} />
+          <EventPopout event={selectedEvent} onClose={closeEventPopout} />
+        </PortalPopup>
+      )}
+      {isDayPopoutOpen && selectedDate && (
+        <PortalPopup
+          overlayColor="rgba(0, 0, 0, 0.25)"
+          placement="Centered"
+          onOutsideClick={closeDayPopout}
+        >
+          <DayEventsPopout
+            date={selectedDate}
+            events={selectedDayEvents}
+            onClose={closeDayPopout}
+          />
         </PortalPopup>
       )}
     </>

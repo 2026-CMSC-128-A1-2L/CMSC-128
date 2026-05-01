@@ -69,21 +69,14 @@ const UserDocumentCard = ({
             <div className="h-16 flex items-center gap-6">
               <Icon icon="mdi:cloud-upload" className="w-16 h-16" />
               <div className="flex flex-col items-start justify-center gap-2">
-                <b className="relative">
-                  {fileName ? `${fileName}` : 'Upload the document'}
-                </b>
+                <b className="relative">{fileName ? `${fileName}` : 'Upload the document'}</b>
                 <div className="relative text-[12px] tracking-[0.02em] font-semibold font-lora text-slategray">
                   {acceptedHint}
                 </div>
               </div>
             </div>
           </div>
-          <input
-            type="file"
-            accept={accept}
-            onChange={handleFileChange}
-            className="hidden"
-          />
+          <input type="file" accept={accept} onChange={handleFileChange} className="hidden" />
         </label>
       </div>
     </div>

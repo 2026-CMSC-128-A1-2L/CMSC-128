@@ -1,1 +1,1 @@
-export const API_URL = "atlas-uplb.vercel.app" as const;
+export const API_URL = import.meta.env.VITE_API_URL || 'https://atlas-up.vercel.app';

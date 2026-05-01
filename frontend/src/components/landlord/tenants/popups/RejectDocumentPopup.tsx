@@ -11,7 +11,12 @@ type RejectDocumentPopupProps = {
   onConfirm: () => void;
 };
 
-const RejectDocumentPopup = ({ document, isOpen, onClose, onConfirm }: RejectDocumentPopupProps) => {
+const RejectDocumentPopup = ({
+  document,
+  isOpen,
+  onClose,
+  onConfirm,
+}: RejectDocumentPopupProps) => {
   const [checked, setChecked] = useState({
     unreadable: true,
     incorrect: true,

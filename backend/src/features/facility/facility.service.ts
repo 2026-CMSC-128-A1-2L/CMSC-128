@@ -1,18 +1,18 @@
 import type { FacilityType, USER_TYPES } from 'shared';
 import type { QueryFilter } from 'mongoose';
-import { AppError } from '../../error';
-import { combineFilters } from '../../middleware';
-import { Listing } from '../listing/listing.model';
+import { AppError } from '../../error.js';
+import { combineFilters } from '../../middleware.js';
+import { Listing } from '../listing/listing.model.js';
 import {
   HousingFacility,
   type HousingFacilityType,
   type ManagerPermissionType,
-} from './facility.model';
-import { inviteManager } from '../invite/invite.service';
+} from './facility.model.js';
+import { inviteManager } from '../invite/invite.service.js';
 import type mongoose from 'mongoose';
-import { getAllRentals } from '../rental/rental.service';
-import { getUnits } from '../unit/unit.service';
-import { getBillings } from '../billing/billing.service';
+import { getAllRentals } from '../rental/rental.service.js';
+import { getUnits } from '../unit/unit.service.js';
+import { getBillings } from '../billing/billing.service.js';
 
 type FacilityFilters = {
   name?: string;
@@ -423,7 +423,7 @@ export const getMonthlyIncomeByLandlord = async (landlordId: mongoose.Types.Obje
   const uniqueUnitIds = [
     ...new Map(activeRentals.map((r) => [r.unitId.toString(), r.unitId])).values(),
   ];
-  const units = await getUnits({ }, { _id: { $in: uniqueUnitIds } });
+  const units = await getUnits({}, { _id: { $in: uniqueUnitIds } });
 
   const unitPriceMap = new Map(units.map((u) => [u._id.toString(), u.price]));
 
@@ -477,14 +477,17 @@ export const getOverdueTenantsByLandlord = async (landlordId: mongoose.Types.Obj
 
   // getBillings accepts a query filter — fetch all billings for these rentals.
   // We then group by rentalId in JS to find the latest billing per rental.
-  const allBillings = await getBillings({ }, { rentalId: { $in: rentalIds } });
+  const allBillings = await getBillings({}, { rentalId: { $in: rentalIds } });
 
   // Group billings by rentalId and pick the one with the latest dueDate.
-  const latestBillingByRentalId = new Map<string, typeof allBillings[number]>();
+  const latestBillingByRentalId = new Map<string, (typeof allBillings)[number]>();
   for (const billing of allBillings) {
     const key = billing.rentalId.toString();
     const existing = latestBillingByRentalId.get(key);
-    if (!existing || (billing.dueDate && (!existing.dueDate || billing.dueDate > existing.dueDate))) {
+    if (
+      !existing ||
+      (billing.dueDate && (!existing.dueDate || billing.dueDate > existing.dueDate))
+    ) {
       latestBillingByRentalId.set(key, billing);
     }
   }

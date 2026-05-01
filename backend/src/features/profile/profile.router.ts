@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { isVerifiedCheck } from '../../middleware';
-import { routeGetProfile } from './profile.controller';
+import { isVerifiedCheck } from '../../middleware.js';
+import { routeGetProfile } from './profile.controller.js';
 
 const router = Router();
 

@@ -17,26 +17,43 @@ interface PropertyInfo {
   phone: string;
 }
 
+// Property data mapping
+const propertyData: Record<string, PropertyInfo> = {
+  facility1: {
+    id: 'facility1',
+    name: 'One Sapphire Place',
+    address: 'Lot 3, Block 17, Sapphire St, Umali Subd, Los Baños, Philippines, 4030',
+    phone: '0969 014 8776',
+  },
+  facility2: {
+    id: 'facility2',
+    name: 'Two Emerald Avenue',
+    address: 'Lot 5, Block 12, Emerald Ave, Los Baños, Philippines, 4030',
+    phone: '0969 014 8777',
+  },
+  facility3: {
+    id: 'facility3',
+    name: 'Three Ruby Road',
+    address: 'Lot 8, Block 5, Ruby Road, Los Baños, Philippines, 4030',
+    phone: '0969 014 8778',
+  },
+};
+
 const LandlordPropertyFinance: FunctionComponent = () => {
   const navigate = useNavigate();
   const { propertyId } = useParams<{ propertyId: string }>();
   const [activeTab, setActiveTab] = useState<TabType>('overview');
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const [isPageLoading, setIsPageLoading] = useState(true);
-  const [isNavigatingBack, setIsNavigatingBack] = useState(false);
-  const [property] = useState<PropertyInfo>({
-    id: propertyId || 'facility1',
-    name: 'One Sapphire Place',
-    address: 'Lot 3, Block 17, Sapphire St, Umali Subd, Los Baños, Philippines, 4030',
-    phone: '0969 014 8776',
-  });
+  const [property, setProperty] = useState<PropertyInfo | null>(null);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsPageLoading(false);
-    }, 100);
-    return () => clearTimeout(timer);
-  }, []);
+    console.log('LandlordPropertyFinance mounted, propertyId:', propertyId);
+    if (propertyId && propertyData[propertyId]) {
+      setProperty(propertyData[propertyId]);
+    } else {
+      navigate('/landlord/finance');
+    }
+  }, [propertyId, navigate]);
 
   const handleTabChange = (tab: TabType) => {
     if (tab === activeTab) return;
@@ -50,22 +67,29 @@ const LandlordPropertyFinance: FunctionComponent = () => {
   };
 
   const handleBackToFinance = () => {
-    setIsNavigatingBack(true);
-    setTimeout(() => {
-      navigate('/landlord/finance');
-    }, 200);
+    navigate('/landlord/finance');
   };
 
   const breadcrumbs: BreadcrumbItem[] = [
     { label: 'Finance', to: '/landlord/finance' },
-    { label: property.name },
+    { label: property?.name || 'Property' },
   ];
+
+  if (!property) {
+    return (
+      <LandlordLayout activeSidebarItem="finance" breadcrumbs={breadcrumbs}>
+        <div className="flex items-center justify-center py-20">
+          <div className="text-center">
+            <div className="text-gray-500 mb-2">Loading property details...</div>
+          </div>
+        </div>
+      </LandlordLayout>
+    );
+  }
 
   return (
     <LandlordLayout activeSidebarItem="finance" breadcrumbs={breadcrumbs}>
-      <div className={`flex flex-col w-full transition-all duration-300 ease-out ${
-        isPageLoading && !isNavigatingBack ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'
-      } ${isNavigatingBack ? 'opacity-0 translate-y-4' : ''}`}>
+      <div className="flex flex-col w-full">
         <div className="self-stretch flex flex-col items-start justify-center gap-3 mb-6">
           <div className="self-stretch flex items-center justify-between gap-5">
             <div className="h-8 flex flex-col items-center justify-end">
@@ -78,15 +102,11 @@ const LandlordPropertyFinance: FunctionComponent = () => {
         </div>
 
         {/* Property Header */}
-        <div className="self-stretch h-[120px] flex flex-col items-start justify-center py-0 px-2 box-border gap-1 text-num-14 text-darkslategray-100 font-lora mb-6">
-          <b className="self-stretch relative text-[24px] leading-8 font-inter">
-            {property.name}
-          </b>
+        <div className="self-stretch flex flex-col items-start justify-center py-0 px-2 box-border gap-1 text-num-14 text-darkslategray-100 font-lora mb-6">
+          <b className="self-stretch relative text-[24px] leading-8 font-inter">{property.name}</b>
           <div className="self-stretch flex items-center py-0 px-4 gap-2">
             <Icon icon="mdi:map-marker" className="text-lg" aria-hidden="true" />
-            <b className="flex-1 relative text-sm">
-              {property.address}
-            </b>
+            <b className="flex-1 relative text-sm">{property.address}</b>
           </div>
           <div className="self-stretch flex items-center py-0 px-4 gap-2">
             <Icon icon="mdi:phone" className="text-lg" aria-hidden="true" />
@@ -107,7 +127,7 @@ const LandlordPropertyFinance: FunctionComponent = () => {
         <div className="flex flex-col lg:flex-row gap-6">
           <SideNav activeTab={activeTab} onTabChange={handleTabChange} />
 
-          <div className="flex-1 overflow-hidden">
+          <div className="flex-1 min-w-0">
             <div
               className={`transition-all duration-300 ease-in-out ${
                 isTransitioning ? 'opacity-0 translate-y-2' : 'opacity-100 translate-y-0'

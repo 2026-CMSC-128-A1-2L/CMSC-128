@@ -1,14 +1,7 @@
-import LandlordUnderConstruction from '../../../components/landlord/LandlordUnderConstruction';
+import LandlordHomepage from './LandlordHomepage';
 
 const LandlordDashboard = () => {
-  return (
-    <LandlordUnderConstruction
-      activeSidebarItem="dashboard"
-      breadcrumbs={[{ label: 'Dashboard' }]}
-      icon="solar:home-2-bold-duotone"
-      title="Dashboard coming soon"
-    />
-  );
+  return <LandlordHomepage />;
 };
 
 export default LandlordDashboard;

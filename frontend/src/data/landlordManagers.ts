@@ -68,9 +68,7 @@ export const managers: Manager[] = [
     managingSince: 'January 2025',
     availability: {
       ocular: { days: 'Thu - Fri', hours: '9:00 AM - 4:00 PM' },
-      inquiries: [
-        { days: 'Mon - Fri', hours: '9:00 AM - 5:00 PM' },
-      ],
+      inquiries: [{ days: 'Mon - Fri', hours: '9:00 AM - 5:00 PM' }],
     },
     permissions: [
       { label: 'Property Management', granted: true },
@@ -86,5 +84,4 @@ export const properties: Property[] = [
   { id: 'three-sapphire', name: 'Three Sapphire Place', managerIds: [] },
 ];
 
-export const getManagerById = (id: string) =>
-  managers.find((m) => m.id === id);
+export const getManagerById = (id: string) => managers.find((m) => m.id === id);

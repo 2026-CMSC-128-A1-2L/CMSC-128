@@ -1,15 +1,16 @@
 {
   "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
     "target": "esnext",
     "lib": ["ESNext"],
-    "module": "ESNext",
-    "moduleResolution": "node",
-    "types": ["node"],
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "outDir": "./dist"
+    "module": "nodenext",
+    "rootDir": "src",
+    "outDir": "dist",
+    "moduleResolution": "nodenext",
+    "skipLibCheck": true
   },
-  "include": ["**/*.ts"],
+  "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]
 }

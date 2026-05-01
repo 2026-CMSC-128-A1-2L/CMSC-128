@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import mongoose from 'mongoose';
 import { Factory } from 'fishery';
-import { type HousingFacilityType, HousingFacility } from '../features/facility/facility.model';
-import { Landlord, Manager, Student, Admin, type UserType } from '../features/user/user.model';
-import type { DocumentType } from '../features/document/document.model';
+import { type HousingFacilityType, HousingFacility } from '../features/facility/facility.model.js';
+import { Landlord, Manager, Student, Admin, type UserType } from '../features/user/user.model.js';
+import type { DocumentType } from '../features/document/document.model.js';
 import { UserStatus, UserTypeType } from 'shared';
 
 type UserParams = {

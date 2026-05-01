@@ -29,7 +29,7 @@ const LandlordVerif: FunctionComponent = () => {
         <div className="flex-1 flex flex-col overflow-hidden">
           <div className="flex-1 overflow-y-auto">
             <div className="w-full h-[1024px] relative flex flex-col items-start isolate gap-2.5 text-left text-num-14">
-              <div className="w-[1440px] h-[1512px] overflow-hidden shrink-0 flex flex-col items-start z-1">
+              <div className="w-full max-w-[1440px] min-h-screen flex flex-col items-start z-1">
                 <div className="self-stretch flex-1 overflow-hidden flex flex-col items-start py-num-0 pl-num-0 pr-20">
                   <div className="self-stretch flex-1 flex items-center gap-8 shrink-0">
                     <div className="h-[1112px] hidden flex-col items-center">
@@ -148,8 +148,6 @@ const LandlordVerif: FunctionComponent = () => {
                               </div>
                             </div>
 
-                            <TutorialBubble show={showHelp} onClose={() => setShowHelp(false)} />
-
                             <div className="self-stretch flex items-center py-num-0 px-num-32 gap-6 shrink-0 text-[24px]">
                               <div className="flex-1 flex items-center">
                                 <div className="flex items-center gap-2">
@@ -248,12 +246,24 @@ const LandlordVerif: FunctionComponent = () => {
         </div>
       </div>
       {/* ======= FLOATING ICON FOR TUTORIAL ======= */}
-          <div
-            className="fixed bottom-10 right-10 z-1000 cursor-pointer transition-all hover:scale-110 active:scale-95"
-            onClick={() => setShowHelp(!showHelp)}
-          >
-            <img src={TutorialIcon} alt="Help" className="w-16 h-16 drop-shadow-lg" />
-          </div>
+      <div
+        className="fixed bottom-10 right-10 z-[1000] cursor-pointer transition-all hover:scale-110 active:scale-95"
+        onClick={() => setShowHelp(!showHelp)}
+      >
+        {/* <img src={TutorialIcon} alt="Help" className="w-16 h-16 drop-shadow-lg" /> */}
+        {/* di ko mabago kulay ng Iconify na to */}
+        {/* <Icon icon="iconoir:chat-bubble-question-solid" className="w-16 h-16 drop-shadow-lg" /> */}
+        <div
+          className="w-16 h-16 drop-shadow-lg"
+          style={{
+            background: 'linear-gradient(135deg, #096C5B, #16917C)',
+            WebkitMask:
+              "url('https://api.iconify.design/iconoir/chat-bubble-question-solid.svg') no-repeat center / contain",
+            mask: "url('https://api.iconify.design/iconoir/chat-bubble-question-solid.svg') no-repeat center / contain",
+          }}
+        />
+      </div>
+      <TutorialBubble show={showHelp} onClose={() => setShowHelp(false)} />
     </div>
   );
 };

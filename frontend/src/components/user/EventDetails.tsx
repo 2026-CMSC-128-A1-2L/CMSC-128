@@ -1,4 +1,4 @@
-import type { FunctionComponent } from "react";
+import type { FunctionComponent } from 'react';
 
 interface EventDetailsProps {
   title?: string;
@@ -9,11 +9,11 @@ interface EventDetailsProps {
 }
 
 const EventDetails: FunctionComponent<EventDetailsProps> = ({
-  title = "Ocular Visit",
-  date = "April 7, 2026",
-  time = "2:00 PM - 3:00 PM",
-  description = "Please visit the clinic for your ocular checkup.",
-  location = "Health Services Center, 2nd Floor",
+  title = 'Ocular Visit',
+  date = 'April 7, 2026',
+  time = '2:00 PM - 3:00 PM',
+  description = 'Please visit the clinic for your ocular checkup.',
+  location = 'Health Services Center, 2nd Floor',
 }) => {
   return (
     <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-6 flex flex-col gap-4">
@@ -34,7 +34,7 @@ const EventDetails: FunctionComponent<EventDetailsProps> = ({
           </div>
         </div>
       </div>
-      
+
       <div className="flex flex-col gap-2">
         <h3 className="font-semibold text-sm text-black">Description</h3>
         <p className="text-sm text-dimgray leading-relaxed">{description}</p>

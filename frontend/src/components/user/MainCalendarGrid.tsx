@@ -1,73 +1,153 @@
-import type { FunctionComponent, } from "react";
+import { type FunctionComponent, useEffect, useState } from 'react';
+import { CalendarService, type CalendarEvent } from '../../service/CalendarService';
 
 interface MainCalendarGridProps {
-  onEventClick?: () => void;
+  currentDate: Date;
+  onPrevMonth?: () => void;
+  onNextMonth?: () => void;
+  onEventClick?: (event: CalendarEvent) => void;
 }
 
+const DAYS = ['SUN', 'MON', 'TUE', 'WED', 'THUR', 'FRI', 'SAT'];
+
+const getEventColor = (type: CalendarEvent['type']) => {
+  switch (type) {
+    case 'booking':
+      return 'from-[#c00f0f] to-[#e44f4f]';
+    case 'billing':
+      return 'from-[#ff9800] to-[#ffb74d]';
+    case 'move-in':
+      return 'from-[#4caf50] to-[#81c784]';
+    case 'move-out':
+      return 'from-[#2196f3] to-[#64b5f6]';
+    default:
+      return 'from-[#c00f0f] to-[#e44f4f]';
+  }
+};
+
 const MainCalendarGrid: FunctionComponent<MainCalendarGridProps> = ({
+  currentDate,
+  onPrevMonth,
+  onNextMonth,
   onEventClick,
 }) => {
+  const [events, setEvents] = useState<CalendarEvent[]>([]);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await CalendarService.getCalendarEvents(
+          currentDate.getFullYear(),
+          currentDate.getMonth() + 1,
+        );
+        setEvents(response.data);
+      } catch (error) {
+        console.error('Failed to load calendar events:', error);
+      }
+    };
+
+    fetchEvents();
+  }, [currentDate]);
+
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth();
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const daysInPrevMonth = new Date(year, month, 0).getDate();
+
+  const calendarDays: { day: number; inactive: boolean }[] = [];
+
+  // Previous month's days
+  for (let i = firstDay - 1; i >= 0; i--) {
+    calendarDays.push({ day: daysInPrevMonth - i, inactive: true });
+  }
+
+  // Current month's days
+  for (let i = 1; i <= daysInMonth; i++) {
+    calendarDays.push({ day: i, inactive: false });
+  }
+
+  // Next month's days
+  const remaining = 42 - calendarDays.length;
+  for (let i = 1; i <= remaining; i++) {
+    calendarDays.push({ day: i, inactive: true });
+  }
+
+  const getEventsForDay = (day: number) => {
+    return events.filter((event) => {
+      const eventDate = new Date(event.date);
+      return (
+        eventDate.getDate() === day &&
+        eventDate.getMonth() === month &&
+        eventDate.getFullYear() === year
+      );
+    });
+  };
+
+  const today = new Date();
+  const isCurrentMonth = today.getFullYear() === year && today.getMonth() === month;
+
+  const monthName = currentDate.toLocaleDateString('en-US', {
+    month: 'long',
+    year: 'numeric',
+  });
+
   return (
-    <div className="w-full sm:w-96 md:w-full lg:w-[738px] rounded-lg sm:rounded-[14.11px] overflow-hidden shrink-0 flex flex-col items-start py-2 sm:py-[9.4px] px-num-0 box-border text-xs sm:text-sm md:text-base lg:text-[23.09px] h-[450px] sm:h-[600px] md:h-[756px] bg-white">
-      <div className="self-stretch filter-[drop-shadow(0px_0.568566083908081px_0.57px_rgba(0,0,0,0.12))] flex flex-col items-center justify-center">
-        <div className="w-[726.5px] flex items-center py-[18.8px] px-[9.4px] box-border">
-          <div className="relative tracking-[-0.01em] font-semibold">
-            April 2026
+    <div className="w-full rounded-[14px] overflow-hidden flex flex-col bg-white">
+      {/* Month header */}
+      <div className="flex items-center justify-center px-4 py-4 border-b border-whitesmoke-200">
+        <div className="text-base font-semibold tracking-tight">{monthName}</div>
+      </div>
+
+      {/* Day labels */}
+      <div className="grid grid-cols-7 bg-blue-50 text-dimgray text-[9px] font-medium">
+        {DAYS.map((d) => (
+          <div key={d} className="border border-whitesmoke-200 p-1.5">
+            {d}
           </div>
-        </div>
-        <div className="w-[726.5px] h-[23.5px] bg-aliceblue flex items-start justify-center text-num-9.1 text-dimgray">
-          <div className="self-stretch w-num-104 rounded-tl-[4.55px] rounded-tr-num-0 rounded-b-num-0 bg-white border-whitesmoke-200 border-solid border-[0.6px] box-border flex flex-col items-start justify-center p-num-6_8">
-            <div className="relative font-medium">SUN</div>
-          </div>
-          <div className="self-stretch w-num-104 bg-white border-whitesmoke-200 border-solid border-[0.6px] box-border flex flex-col items-start justify-center p-num-6_8">
-            <div className="relative font-medium">MON</div>
-          </div>
-          <div className="self-stretch w-num-104 bg-white border-whitesmoke-200 border-solid border-[0.6px] box-border flex flex-col items-start justify-center p-num_6_8">
-            <div className="relative font-medium">TUE</div>
-          </div>
-          <div className="self-stretch w-num-104 bg-white border-whitesmoke-200 border-solid border-[0.6px] box-border flex flex-col items-start justify-center p-num-6_8">
-            <div className="relative font-medium">WED</div>
-          </div>
-          <div className="self-stretch w-num-104 bg-white border-whitesmoke-200 border-solid border-[0.6px] box-border flex flex-col items-start justify-center p-num-6_8">
-            <div className="relative font-medium">THUR</div>
-          </div>
-          <div className="self-stretch w-num-104 bg-white border-whitesmoke-200 border-solid border-[0.6px] box-border flex flex-col items-start justify-center p-num-6_8">
-            <div className="relative font-medium">FRI</div>
-          </div>
-          <div className="self-stretch w-num-104 rounded-tl-num-0 rounded-tr-[4.55px] rounded-b-num-0 bg-white border-whitesmoke-200 border-solid border-[0.6px] box-border flex flex-col items-start justify-center p-num-6_8">
-            <div className="relative font-medium">SAT</div>
-          </div>
-        </div>
-        <div className="w-full flex items-start justify-center flex-wrap content-start gap-0 text-[10px] sm:text-[12px] md:text-num-16.46]">
-          {[29, 30, 31, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 1, 2].map(
-            (day, index) => (
-              <div
-                key={index}
-                className={`h-num-108.7 w-num-104 border-whitesmoke-200 border-solid border-[0.6px] box-border flex flex-col items-start justify-between p-num-4_7 gap-[5.7px] ${
-                  index < 3 || index > 30
-                    ? "bg-whitesmoke-200 text-dimgray"
-                    : day === 3
-                    ? "bg-lightcyan-200 text-teal-100"
-                    : "bg-white"
-                }`}
-              >
-                <b className="relative">{day}</b>
-                <div className="self-stretch flex-1 flex flex-col items-start p-num-4_7">
-                  {day === 7 && (
-                    <div
-                      className="self-stretch rounded-[2.27px] [background:rgba(0,133,255,0.1),#fff] flex items-center justify-center py-num-4_7 px-[9.4px] opacity-[0.8] cursor-pointer hover:opacity-100"
-                      onClick={onEventClick}
+        ))}
+      </div>
+
+      {/* Date cells */}
+      <div className="grid grid-cols-7 flex-1">
+        {calendarDays.map((item, i) => {
+          const { day, inactive } = item;
+          const isTodayDay = isCurrentMonth && day === today.getDate() && !inactive;
+          const dayEvents = getEventsForDay(day);
+
+          return (
+            <div
+              key={i}
+              className={[
+                'border border-whitesmoke-200 flex flex-col items-start p-1 gap-1 min-h-[60px] sm:min-h-[80px] md:min-h-[100px]',
+                inactive
+                  ? 'bg-whitesmoke-200 text-dimgray'
+                  : isTodayDay
+                    ? 'bg-lightcyan-200 text-teal-100'
+                    : 'bg-white',
+              ].join(' ')}
+            >
+              <b className="text-[10px] sm:text-xs">{day}</b>
+              <div className="w-full flex flex-col gap-0.5">
+                {dayEvents.map((event) => (
+                  <button
+                    key={event.referenceId}
+                    onClick={() => onEventClick?.(event)}
+                    className="w-full rounded-sm bg-blue-50 py-0.5 px-1 opacity-80 hover:opacity-100 transition-opacity text-left"
+                  >
+                    <b
+                      className={`text-[9px] sm:text-[11px] bg-gradient-to-b ${getEventColor(
+                        event.type,
+                      )} bg-clip-text text-transparent`}
                     >
-                      <b className="relative text-transparent bg-clip-text! [background:linear-gradient(180deg,#c00f0f,#e44f4f)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] shrink-0 text-[11.76px]">
-                        Ocular Visit
-                      </b>
-                    </div>
-                  )}
-                </div>
+                      {event.title}
+                    </b>
+                  </button>
+                ))}
               </div>
-            )
-          )}
-        </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
