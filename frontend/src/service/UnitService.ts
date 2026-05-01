@@ -40,7 +40,7 @@ export const UnitService = {
         `${API_URL}/api/units?q=${kv}`,
       );
 
-      return response.data();
+      return response.data;
 
     } catch (error) {
       console.error("Failed to fetch units: ", error);
@@ -55,7 +55,7 @@ export const UnitService = {
         `${API_URL}/api/units/${unitId}`
       )
 
-      return response.data()
+      return response.data;
     } catch (error) {
       console.error("Failed to fectch unit: ", error);
       throw (error);
@@ -68,7 +68,7 @@ export const UnitService = {
         `${API_URL}/api/units/${unitId}`
       )
 
-      return response.data()
+      return response.data;
     } catch (error) {
       console.error("Failed to update unit: ", error);
       throw error;
@@ -81,7 +81,7 @@ export const UnitService = {
         `${API_URL}/api/units/${unitId}`
       );
 
-      return response.data()
+      return response.data;
     } catch (error) {
       console.error("Failed to update unit: ", error);
       throw error;

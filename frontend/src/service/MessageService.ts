@@ -12,7 +12,7 @@ export const MessageService = {
           //headers
         },
       );
-      return response.data();
+      return response.data;
 
     } catch (error) {
       console.error("Failed to fetch messages", error);
@@ -28,7 +28,7 @@ export const MessageService = {
           //headers
         },
       );
-      return response.data();
+      return response.data;
 
     } catch (error) {
       console.error("Failed to fetch user messages", error);
@@ -44,7 +44,7 @@ export const MessageService = {
           //headers
         },
       );
-      return response.data();
+      return response.data;
 
     } catch (error) {
       console.error("Failed to send messages", error);

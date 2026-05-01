@@ -17,7 +17,7 @@ export const BookingService = {
           //headers
         }
       );
-      return response.data();
+      return response.data;
     } catch (error) {
       console.error("Error creating booking", error);
       throw (error);
@@ -58,7 +58,7 @@ export const BookingService = {
 
       );
 
-      return response.data()
+      return response.data;
     } catch (error) {
       console.error("Failed to update booking:", error);
       throw error
@@ -76,7 +76,7 @@ export const BookingService = {
 
       );
 
-      return response.data()
+      return response.data;
     } catch (error) {
       console.error("Failed to delete booking:", error);
       throw error

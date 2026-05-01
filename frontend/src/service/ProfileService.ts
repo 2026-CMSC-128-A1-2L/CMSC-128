@@ -12,7 +12,7 @@ export const ProfileService = {
         },
       );
 
-      return response.data()
+      return response.data;
     } catch (error) {
       console.error("Failed to fetch profile: ", error)
       throw error
