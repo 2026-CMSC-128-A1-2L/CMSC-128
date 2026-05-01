@@ -1,5 +1,13 @@
 import type z from 'zod';
-import { TagFilterSchema, TagSchema, ListingFilterSchema, GetListingsQuerySchema, CreateListingBodySchema, UpdateListingBodySchema, UpdateListingTagsResponseBodySchema } from 'shared';
+import {
+  TagFilterSchema,
+  TagSchema,
+  ListingFilterSchema,
+  GetListingsQuerySchema,
+  CreateListingBodySchema,
+  UpdateListingBodySchema,
+  UpdateListingTagsResponseBodySchema,
+} from 'shared';
 
 export type TagFilter = z.infer<typeof TagFilterSchema>;
 export type Tag = z.infer<typeof TagSchema>;

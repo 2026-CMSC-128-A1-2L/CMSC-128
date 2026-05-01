@@ -1,15 +1,10 @@
 import axios from 'axios';
 import z from 'zod';
 import { GetListingsQuerySchema } from 'shared';
-import type {
-  GetListingsQuery,
-  CreateListingBody,
-  UpdateListingBody
-} from '../interface/listing';
+import type { GetListingsQuery, CreateListingBody, UpdateListingBody } from '../interface/listing';
 import { API_URL } from './constant';
 
 export const ListingService = {
-
   //FOREIGN -> Facility Routes
   async createListing(facilityId: string, body: CreateListingBody) {
     try {
@@ -20,7 +15,7 @@ export const ListingService = {
         },
         {
           // headers
-        }
+        },
       );
       return response.data;
     } catch (error) {
@@ -29,18 +24,14 @@ export const ListingService = {
     }
   },
 
-
   async getListings(params: z.infer<typeof GetListingsQuerySchema>): Promise<GetListingsQuery> {
     try {
       const kv = new URLSearchParams({
         q: encodeURIComponent(JSON.stringify(params)),
       }).toString();
-      const response = await axios.get<GetListingsQuery>(
-        `${API_URL}/api/listings?q=${kv}`,
-        {
-          // headers
-        }
-      );
+      const response = await axios.get<GetListingsQuery>(`${API_URL}/api/listings?q=${kv}`, {
+        // headers
+      });
       return response.data;
     } catch (error) {
       console.error('Error fetching listings:', error);
@@ -50,12 +41,9 @@ export const ListingService = {
 
   async getListing(listingId: string) {
     try {
-      const response = await axios.get(
-        `${API_URL}/api/listings/${listingId}`,
-        {
-          // headers
-        }
-      );
+      const response = await axios.get(`${API_URL}/api/listings/${listingId}`, {
+        // headers
+      });
       return response.data;
     } catch (error) {
       console.error('Error fetching listing:', error);
@@ -72,7 +60,7 @@ export const ListingService = {
         },
         {
           // headers
-        }
+        },
       );
       return response.data;
     } catch (error) {
@@ -83,12 +71,9 @@ export const ListingService = {
 
   async deleteListing(listingId: string) {
     try {
-      await axios.delete(
-        `${API_URL}/api/listings/${listingId}`,
-        {
-          // headers
-        }
-      );
+      await axios.delete(`${API_URL}/api/listings/${listingId}`, {
+        // headers
+      });
     } catch (error) {
       console.error('Error deleting listing:', error);
       throw error;
@@ -104,7 +89,7 @@ export const ListingService = {
         },
         {
           // headers
-        }
+        },
       );
       return response.data;
     } catch (error) {
@@ -113,16 +98,11 @@ export const ListingService = {
     }
   },
 
-
-
   async getListingsByFacility(facilityId: string) {
     try {
-      const response = await axios.get(
-        `${API_URL}/api/facilities/${facilityId}/listings`,
-        {
-          // headers
-        }
-      );
+      const response = await axios.get(`${API_URL}/api/facilities/${facilityId}/listings`, {
+        // headers
+      });
       return response.data;
     } catch (error) {
       console.error('Error fetching listings by facility:', error);
@@ -137,6 +117,4 @@ export const ListingService = {
   // GET Listing Reviews -> ReviewService
   // POST Create Review -> ReviewService
   // POST Report Listing -> ReportService
-
-
 };

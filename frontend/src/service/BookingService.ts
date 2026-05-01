@@ -1,9 +1,8 @@
 import axios from 'axios';
 import z from 'zod';
-import type { GetBookingsQuery, CreateBookingBody } from '../interface/booking'
+import type { GetBookingsQuery, CreateBookingBody } from '../interface/booking';
 import { GetBookingsQuerySchema } from 'shared';
 import { API_URL } from './constant';
-
 
 export const BookingService = {
   async createBooking(body: CreateBookingBody) {
@@ -11,17 +10,16 @@ export const BookingService = {
       const response = await axios.post(
         `${API_URL}/api/bookings/`,
         {
-          ...body
+          ...body,
         },
         {
           //headers
-        }
+        },
       );
       return response.data();
     } catch (error) {
-      console.error("Error creating booking", error);
-      throw (error);
-
+      console.error('Error creating booking', error);
+      throw error;
     }
   },
 
@@ -31,16 +29,11 @@ export const BookingService = {
         q: encodeURIComponent(JSON.stringify(params)),
       }).toString();
 
-      const response = await axios.get<GetBookingsQuery>(
-        `${API_URL}/api/bookings?q=${kv}`,
-        {
-
-        }
-      );
+      const response = await axios.get<GetBookingsQuery>(`${API_URL}/api/bookings?q=${kv}`, {});
 
       return response.data;
     } catch (error) {
-      console.error("Failed to fetch bookings:", error);
+      console.error('Failed to fetch bookings:', error);
       throw error;
     }
   },
@@ -49,19 +42,16 @@ export const BookingService = {
     try {
       const response = await axios.patch(
         `${API_URL}/bookings/${bookingId}`,
-        {
-
-        },
+        {},
         {
           //headers
-        }
-
+        },
       );
 
-      return response.data()
+      return response.data();
     } catch (error) {
-      console.error("Failed to update booking:", error);
-      throw error
+      console.error('Failed to update booking:', error);
+      throw error;
     }
   },
 
@@ -72,18 +62,13 @@ export const BookingService = {
 
         {
           //headers
-        }
-
+        },
       );
 
-      return response.data()
+      return response.data();
     } catch (error) {
-      console.error("Failed to delete booking:", error);
-      throw error
+      console.error('Failed to delete booking:', error);
+      throw error;
     }
   },
-
-
-
-
-}
+};

@@ -1,6 +1,10 @@
 import type z from 'zod';
-import { UnitFilterSchema, GetUnitsRequestQuerySchema, CreateUnitBodySchema, UpdateUnitBodySchema } from 'shared';
-
+import {
+  UnitFilterSchema,
+  GetUnitsRequestQuerySchema,
+  CreateUnitBodySchema,
+  UpdateUnitBodySchema,
+} from 'shared';
 
 export type UnitFilter = z.infer<typeof UnitFilterSchema>;
 export type GetUnitsRequestQuery = z.infer<typeof GetUnitsRequestQuerySchema>;

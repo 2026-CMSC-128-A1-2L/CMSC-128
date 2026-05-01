@@ -5,6 +5,8 @@ import { User } from '../user/user.model.js';
 import { Invite, type InviteType } from './invite.model.js';
 import type { QueryFilter } from 'mongoose';
 import { getUserByEmail } from '../user/user.service.js';
+import { Unit } from '../unit/unit.model.js';
+import { combineFilters } from '../../middleware.js';
 
 export const getInvites = async (filters: QueryFilter<InviteType>) => {
   return await Invite.find(filters).lean();
@@ -142,4 +144,50 @@ export const declineInvite = async (token: string, emails: string[]) => {
   }
 
   return updatedInvite;
+};
+
+// For facility invitation
+export const inviteStudent = async (
+  landlordId: mongoose.Types.ObjectId,
+  facilityId: mongoose.Types.ObjectId,
+  unitId: mongoose.Types.ObjectId,
+  email: string,
+) => {
+  let newInvite: InviteType;
+  const session = await mongoose.startSession();
+  try {
+    session.startTransaction();
+    const unit = await Unit.findOne({ _id: unitId, facilityId }).session(session);
+    if (!unit) throw new AppError(404, 'Unit not found');
+
+    const existingUser = await getUserByEmail(email, session);
+    if (existingUser && existingUser.userType !== 'Student') {
+      throw new AppError(422, 'Can only invite student accounts');
+    }
+    const existingInvite = await Invite.findOne({
+      email,
+      unitId,
+      status: 'pending',
+    }).session(session);
+
+    if (existingInvite) throw new AppError(409, 'A pending invite already exists for this user.');
+
+    // Create invite
+    const invite = new Invite({
+      landlordId,
+      facilityId,
+      unitId,
+      email,
+      inviteType: 'student',
+    });
+
+    newInvite = await invite.save({ session });
+
+    await session.commitTransaction();
+  } catch (error) {
+    await session.abortTransaction();
+    throw error;
+  } finally {
+    await session.endSession();
+  }
 };

@@ -11,14 +11,13 @@ import type {
 import { API_URL } from './constant';
 
 export const FacilityService = {
-
   async getFacilities() {
     try {
       const response = await axios.get<{ data: GetFacilitiesResponse }>(
         `${API_URL}/api/facilities`,
         {
           // headers
-        }
+        },
       );
       return response.data;
     } catch (error) {
@@ -36,7 +35,7 @@ export const FacilityService = {
         },
         {
           // headers
-        }
+        },
       );
       return response.data;
     } catch (error) {
@@ -44,7 +43,6 @@ export const FacilityService = {
       throw error;
     }
   },
-
 
   async createFacility(body: CreateFacilityBody) {
     try {
@@ -55,7 +53,7 @@ export const FacilityService = {
         },
         {
           // headers
-        }
+        },
       );
       return response.data;
     } catch (error) {
@@ -73,7 +71,7 @@ export const FacilityService = {
         },
         {
           // headers
-        }
+        },
       );
       return response.data;
     } catch (error) {
@@ -84,18 +82,14 @@ export const FacilityService = {
 
   async deleteFacility(facilityId: string) {
     try {
-      await axios.delete(
-        `${API_URL}/api/facilities/${facilityId}`,
-        {
-          // headers
-        }
-      );
+      await axios.delete(`${API_URL}/api/facilities/${facilityId}`, {
+        // headers
+      });
     } catch (error) {
       console.error('Failed to delete facility:', error);
       throw error;
     }
   },
-
 
   async getFacility(facilityId: string) {
     try {
@@ -103,7 +97,7 @@ export const FacilityService = {
         `${API_URL}/api/facilities/${facilityId}`,
         {
           // headers
-        }
+        },
       );
       return response.data;
     } catch (error) {
@@ -118,7 +112,7 @@ export const FacilityService = {
         `${API_URL}/api/facilities/landlord/monthly-income`,
         {
           // headers
-        }
+        },
       );
       return response.data;
     } catch (error) {
@@ -133,7 +127,7 @@ export const FacilityService = {
         `${API_URL}/api/facilities/landlord/overdue-tenants`,
         {
           // headers
-        }
+        },
       );
       return response.data;
     } catch (error) {
@@ -142,12 +136,10 @@ export const FacilityService = {
     }
   },
 
-
-
   async updateManagerPermissions(
     facilityId: string,
     managerId: string,
-    body: UpdateManagerPermissionsBody
+    body: UpdateManagerPermissionsBody,
   ) {
     try {
       const response = await axios.patch(
@@ -157,7 +149,7 @@ export const FacilityService = {
         },
         {
           // headers
-        }
+        },
       );
       return response.data;
     } catch (error) {
@@ -166,16 +158,11 @@ export const FacilityService = {
     }
   },
 
-
-
   async removeManager(facilityId: string, managerId: string) {
     try {
-      await axios.delete(
-        `${API_URL}/api/facilities/${facilityId}/managers/${managerId}`,
-        {
-          // headers
-        }
-      );
+      await axios.delete(`${API_URL}/api/facilities/${facilityId}/managers/${managerId}`, {
+        // headers
+      });
     } catch (error) {
       console.error('Failed to remove manager:', error);
       throw error;
@@ -184,12 +171,9 @@ export const FacilityService = {
 
   async approveFacility(facilityId: string) {
     try {
-      await axios.post(
-        `/api/facilities/${facilityId}/approve`,
-        {
-          // headers
-        }
-      );
+      await axios.post(`/api/facilities/${facilityId}/approve`, {
+        // headers
+      });
     } catch (error) {
       console.error('Failed to approve facility:', error);
       throw error;
@@ -198,22 +182,16 @@ export const FacilityService = {
 
   async rejectFacility(facilityId: string) {
     try {
-      await axios.post(
-        `/api/facilities/${facilityId}/reject`,
-        {
-          // headers
-        }
-      );
+      await axios.post(`/api/facilities/${facilityId}/reject`, {
+        // headers
+      });
     } catch (error) {
       console.error('Failed to reject facility:', error);
       throw error;
     }
   },
 
-
-
   //CREATE LISTING -> ListingService.ts
   //GET REVIEWS -> ReviewService.ts
   //GET RATINGS -> RatingService.ts
-
 };

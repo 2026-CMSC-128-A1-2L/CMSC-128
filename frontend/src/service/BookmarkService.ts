@@ -1,25 +1,20 @@
-import axios from "axios";
-import z from "zod";
-import { GetBookingsQuerySchema } from "shared";
-import type { GetBookmarksQuery } from "../interface/bookmark";
-import { API_URL } from "./constant";
-
+import axios from 'axios';
+import z from 'zod';
+import { GetBookingsQuerySchema } from 'shared';
+import type { GetBookmarksQuery } from '../interface/bookmark';
+import { API_URL } from './constant';
 
 export const BookmarkService = {
-  async getBookmarks(
-    params: z.infer<typeof GetBookingsQuerySchema>
-  ): Promise<GetBookmarksQuery> {
+  async getBookmarks(params: z.infer<typeof GetBookingsQuerySchema>): Promise<GetBookmarksQuery> {
     try {
       const kv = new URLSearchParams({
         q: encodeURIComponent(JSON.stringify(params)),
       }).toString();
 
-      const response = await axios.get<GetBookmarksQuery>(
-        `${API_URL}/api/bookmarks?q=${kv}`,
-      );
+      const response = await axios.get<GetBookmarksQuery>(`${API_URL}/api/bookmarks?q=${kv}`);
       return response.data;
     } catch (error) {
-      console.error("Failed to fetch notifications:", error);
+      console.error('Failed to fetch notifications:', error);
       throw error;
     }
   },
@@ -33,30 +28,25 @@ export const BookmarkService = {
         },
         {
           //headrs
-        }
+        },
       );
 
       return response.data;
     } catch (error) {
-      console.error("Failed to add bookmark", error);
+      console.error('Failed to add bookmark', error);
       throw error;
     }
   },
 
   async deleteBookmark(listingId: string) {
     try {
-      const response = await axios.delete(
-        `${API_URL}/api/bookmarks/${listingId}`,
-        {
-          //headers
-        }
-      );
+      const response = await axios.delete(`${API_URL}/api/bookmarks/${listingId}`, {
+        //headers
+      });
       return response.data;
     } catch (error) {
       console.error('Failed to delete bookmark:', error);
       throw error;
     }
   },
-
-
 };
