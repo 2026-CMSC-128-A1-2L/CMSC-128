@@ -1,12 +1,11 @@
 import axios from 'axios';
 import z from 'zod';
-import { GetCalendarQuerySchema } from 'shared';
 import type { GetCalendarQuery } from '../interface/calendar';
 import { API_URL } from './constant';
 
 export const CalendarService = {
 
-  async getCalendar(params: z.infer<typeof GetCalendarQuerySchema>): Promise<GetCalendarQuery> {
+  async getCalendar(params: z.infer<GetCalendarQuery>): Promise<GetCalendarQuery> {
     try {
       const kv = new URLSearchParams({
         q: encodeURIComponent(JSON.stringify(params)),
