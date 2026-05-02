@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent } from "react";
 
 interface InvitationButtonsProps {
   onAccept: () => void;
@@ -12,7 +12,8 @@ const InvitationButtons: FunctionComponent<InvitationButtonsProps> = ({
   return (
     <div className="flex items-center text-left text-[20.87px] text-crimson">
       <div className="flex items-center gap-[23.9px]">
-        <div className="w-[148px] rounded-[17.89px] flex items-center justify-center py-[11.9px] px-[35.8px] box-border cursor-pointer hover:opacity-80 transition-opacity"
+        <div
+          className="w-[148px] rounded-[17.89px] flex items-center justify-center py-[11.9px] px-[35.8px] box-border cursor-pointer hover:opacity-80 transition-opacity"
           onClick={onCancel}
         >
           <div className="relative font-semibold inline-block max-w-[401.25px]">
