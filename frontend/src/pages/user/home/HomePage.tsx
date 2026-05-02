@@ -1,17 +1,15 @@
-import { type FunctionComponent, useCallback, useRef, useState, useEffect } from 'react';
+import { type FunctionComponent, useRef, useState, useEffect } from 'react';
 import { Icon } from '@iconify/react';
 import SideBar from '../../../components/user/SideBar';
 import DormCard from '../../../components/user/DormCard';
 import { dormData } from '../../../data/dorms';
 import Banner from '../../../components/general/Banner';
 import FilterTab from '../../../components/user/Filter/FilterTab';
-import { Link } from 'react-router-dom';
 import LoadingPage from '../../general/LoadingPage';
 
 const CARD_WIDTH = 280;
 const CARD_GAP = 24;
 
-// For the NavArrows
 const useCarousel = (total: number) => {
   const trackRef = useRef<HTMLDivElement>(null);
   const [current, setCurrent] = useState(0);
@@ -28,20 +26,39 @@ const useCarousel = (total: number) => {
   return { trackRef, current, scrollTo, total };
 };
 
-const HomePage: FunctionComponent = () => {
-  const onViewMoreContainerClick = useCallback(() => {}, []);
+type ViewAllCategory = 'pasalo' | 'popular' | 'near' | 'mayLike' | null;
 
+const CATEGORY_LABELS: Record<NonNullable<ViewAllCategory>, string> = {
+  pasalo: 'Pasalo Units',
+  popular: 'Popular Listings',
+  near: 'Near Campus',
+  mayLike: 'Listings You May Like',
+};
+
+// TODO: change to actual data
+const pasaloDorms = dormData; 
+const popularDorms = dormData; 
+const nearDorms = dormData;  
+const mayLikeDorms = dormData; 
+
+const CATEGORY_DATA: Record<NonNullable<ViewAllCategory>, typeof dormData> = {
+  pasalo: pasaloDorms,
+  popular: popularDorms,
+  near: nearDorms,
+  mayLike: mayLikeDorms,
+};
+
+const HomePage: FunctionComponent = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const toggleFilter = () => setIsFilterOpen(!isFilterOpen);
   const [searchTerm, setSearchTerm] = useState('');
   const [testLoading, setTestLoading] = useState(false);
+  const [viewAllCategory, setViewAllCategory] = useState<ViewAllCategory>(null);
 
-
-  // TODO: Change the data to actual data
-  const pasalo  = useCarousel(dormData.length);
-  const popular = useCarousel(dormData.length);
-  const near    = useCarousel(dormData.length);
-  const mayLike = useCarousel(dormData.length);
+  const pasalo  = useCarousel(pasaloDorms.length);
+  const popular = useCarousel(popularDorms.length);
+  const near    = useCarousel(nearDorms.length);
+  const mayLike = useCarousel(mayLikeDorms.length);
 
   useEffect(() => {
     const timer = setTimeout(() => setTestLoading(false), 3000);
@@ -50,7 +67,6 @@ const HomePage: FunctionComponent = () => {
 
   const isSearching = searchTerm.trim().length > 0;
 
-  // TODO: change data to actual data
   const filteredDorms = isSearching
     ? dormData.filter(
         (dorm) =>
@@ -59,9 +75,19 @@ const HomePage: FunctionComponent = () => {
       )
     : dormData;
 
-  if (testLoading) {
-    return <LoadingPage />;
-  }
+  const handleViewAll = (category: ViewAllCategory) => {
+    setViewAllCategory(category);
+    setSearchTerm('');
+  };
+
+  const handleClearViewAll = () => setViewAllCategory(null);
+
+  const handleSearch = (value: string) => {
+    setSearchTerm(value);
+    if (value.trim().length > 0) setViewAllCategory(null);
+  };
+
+  if (testLoading) return <LoadingPage />;
 
   const NavArrows = ({
     current,
@@ -92,6 +118,18 @@ const HomePage: FunctionComponent = () => {
     </div>
   );
 
+  const ViewAllLink = ({ category }: { category: NonNullable<ViewAllCategory> }) => (
+    <div
+      className="w-fit h-fit flex items-end justify-center gap-1 pt-4 cursor-pointer text-center text-[0.75rem] text-teal-100 font-lora"
+      onClick={() => handleViewAll(category)}
+    >
+      <div className="relative [text-decoration:underline] tracking-num-0.02 font-semibold">
+        View All
+      </div>
+      <Icon icon="radix-icons:arrow-top-right" className="w-3 h-3" />
+    </div>
+  );
+
   return (
     <div className="w-full flex items-start text-left text-[0.875rem] text-dimgray font-inter gap-8">
       <div className="sticky top-0 h-screen w-fit shrink-0">
@@ -105,29 +143,18 @@ const HomePage: FunctionComponent = () => {
 
             {/* search bar */}
             <div className="w-full h-full overflow-hidden flex items-center pb-6 box-border">
-              <div
-                className="
-                  w-full flex items-center transition-all duration-300
-                  bg-[#f8f9fa] rounded-num-12 py-3 pl-3 pr-4 border border-transparent
-                  focus-within:bg-white
-                  focus-within:shadow-[0_8px_10px_rgb(0,0,0,0.06)]
-                  focus-within:transform focus-within:-translate-y-[1px]
-                "
-              >
+              <div className="w-full flex items-center transition-all duration-300 bg-[#f8f9fa] rounded-num-12 py-3 pl-3 pr-4 border border-transparent focus-within:bg-white focus-within:shadow-[0_8px_10px_rgb(0,0,0,0.06)] focus-within:transform focus-within:-translate-y-[1px]">
                 <Icon icon="ic:outline-search" className="w-5 h-5 text-unselected shrink-0" />
                 <input
                   type="text"
                   placeholder="Search for Dorms, Apartments, or Locations (e.g. UPLB, Umali Subdivision)"
                   value={searchTerm}
                   maxLength={50}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onChange={(e) => handleSearch(e.target.value)}
                   className="w-full bg-transparent border-none outline-none text-num-14 font-semibold text-darkgreen placeholder:text-unselected placeholder:font-normal"
                 />
                 {searchTerm && (
-                  <button
-                    onClick={() => setSearchTerm('')}
-                    className="text-unselected hover:text-darkgreen"
-                  >
+                  <button onClick={() => handleSearch('')} className="text-unselected hover:text-darkgreen">
                     <Icon icon="material-symbols:close-rounded" className="w-4 h-4" />
                   </button>
                 )}
@@ -151,17 +178,11 @@ const HomePage: FunctionComponent = () => {
 
                   {isFilterOpen && (
                     <div className="fixed inset-0 z-100 flex justify-end">
-                      <div
-                        className="absolute inset-0 bg-preview/45 backdrop"
-                        onClick={toggleFilter}
-                      />
+                      <div className="absolute inset-0 bg-preview/45 backdrop" onClick={toggleFilter} />
                       <div className="relative z-10 w-full max-w-[500px] h-full bg-white animate-in slide-in-from-right duration-500 overflow-y-auto">
                         <div className="p-4 flex justify-between items-center border-b">
                           <h2 className="text-xl font-bold">Filters</h2>
-                          <button
-                            onClick={toggleFilter}
-                            className="p-2 hover:bg-gray-100 rounded-full"
-                          >
+                          <button onClick={toggleFilter} className="p-2 hover:bg-gray-100 rounded-full">
                             <Icon icon="material-symbols:close" className="w-6 h-6" />
                           </button>
                         </div>
@@ -174,8 +195,8 @@ const HomePage: FunctionComponent = () => {
 
               <div className="w-full min-w-0 flex flex-col items-start gap-10">
 
+                {/* ── Search results view ── */}
                 {isSearching ? (
-                  /* ── Search results ── */
                   <div className="w-full flex flex-col items-start gap-6">
                     <div className="w-full flex items-center justify-between">
                       <div className="flex items-center gap-2 flex-wrap">
@@ -187,7 +208,7 @@ const HomePage: FunctionComponent = () => {
                         </span>
                       </div>
                       <button
-                        onClick={() => setSearchTerm('')}
+                        onClick={() => handleSearch('')}
                         className="text-[0.75rem] text-teal-100 underline font-semibold hover:opacity-70 transition-opacity whitespace-nowrap"
                       >
                         Clear search
@@ -218,7 +239,7 @@ const HomePage: FunctionComponent = () => {
                           Try a different name or location.
                         </p>
                         <button
-                          onClick={() => setSearchTerm('')}
+                          onClick={() => handleSearch('')}
                           className="mt-2 px-5 py-2 rounded-full bg-[#e0f7f4] text-[#096c5b] text-[0.8rem] font-semibold hover:opacity-80 transition-opacity"
                         >
                           Back to all listings
@@ -226,7 +247,66 @@ const HomePage: FunctionComponent = () => {
                       </div>
                     )}
                   </div>
+
+                ) : viewAllCategory ? (
+                  /* ── View All category view ── */
+                  <div className="w-full flex flex-col items-start gap-6">
+                    <div className="w-full flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <button
+                          onClick={handleClearViewAll}
+                          className="flex items-center justify-center h-8 w-8 rounded-full bg-whitesmoke-100 hover:bg-lightcyan/45 transition-colors"
+                        >
+                          <Icon icon="solar:arrow-left-bold" className="w-4 h-4 text-darkgreen" />
+                        </button>
+                        <b className="text-[1rem] text-darkgreen">
+                          {CATEGORY_LABELS[viewAllCategory]}
+                        </b>
+                        <span className="text-[0.75rem] text-unselected font-normal">
+                          — {CATEGORY_DATA[viewAllCategory].length} listing{CATEGORY_DATA[viewAllCategory].length !== 1 ? 's' : ''}
+                        </span>
+                      </div>
+                      <button
+                        onClick={handleClearViewAll}
+                        className="text-[0.75rem] text-teal-100 underline font-semibold hover:opacity-70 transition-opacity whitespace-nowrap"
+                      >
+                        Back to home
+                      </button>
+                    </div>
+
+                    {CATEGORY_DATA[viewAllCategory].length > 0 ? (
+                      <div className="w-full flex flex-wrap gap-6 py-1">
+                        {CATEGORY_DATA[viewAllCategory].map((dorm) => (
+                          <DormCard
+                            key={dorm.id}
+                            name={dorm.name}
+                            rating={dorm.rating}
+                            price={dorm.price}
+                            location={dorm.location}
+                            image={dorm.image}
+                            room_types={dorm.room_types}
+                          />
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="w-full flex flex-col items-center justify-center py-20 gap-3 text-center">
+                        <Icon icon="mdi:home-search-outline" className="w-16 h-16 text-unselected" />
+                        <p className="text-[1rem] font-semibold text-dimgray">No listings available</p>
+                        <p className="text-[0.875rem] text-unselected max-w-xs">
+                          There are currently no listings under {CATEGORY_LABELS[viewAllCategory]}.
+                        </p>
+                        <button
+                          onClick={handleClearViewAll}
+                          className="mt-2 px-5 py-2 rounded-full bg-[#e0f7f4] text-[#096c5b] text-[0.8rem] font-semibold hover:opacity-80 transition-opacity"
+                        >
+                          Back to home
+                        </button>
+                      </div>
+                    )}
+                  </div>
+
                 ) : (
+                  /* ── Default home view ── */
                   <>
                     {/* pasalo units */}
                     <div className="w-full min-w-0 flex flex-col items-start justify-center gap-6 dark:text-white">
@@ -236,15 +316,7 @@ const HomePage: FunctionComponent = () => {
                             <b className="w-fit relative flex items-start">Pasalo Units</b>
                             <Icon icon="material-symbols-light:info-outline" className="w-5 h-5" />
                           </div>
-                          <div
-                            className="w-fit h-fit flex items-end justify-center gap-1 pt-4 cursor-pointer text-center text-[0.75rem] text-teal-100 font-lora"
-                            onClick={onViewMoreContainerClick}
-                          >
-                            <div className="relative [text-decoration:underline] tracking-num-0.02 font-semibold">
-                              View All
-                            </div>
-                            <Icon icon="radix-icons:arrow-top-right" className="w-3 h-3" />
-                          </div>
+                          <ViewAllLink category="pasalo" />
                         </div>
                         <NavArrows current={pasalo.current} total={pasalo.total} scrollTo={pasalo.scrollTo} />
                       </div>
@@ -252,10 +324,9 @@ const HomePage: FunctionComponent = () => {
                         ref={pasalo.trackRef}
                         className="w-full max-w-full flex gap-6 overflow-x-auto scroll-smooth pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
                       >
-                        {dormData.map((dorm) => (
+                        {pasaloDorms.map((dorm) => (
                           <div key={dorm.id} className="shrink-0">
                             <DormCard
-                              key={dorm.id}
                               name={dorm.name}
                               rating={dorm.rating}
                               price={dorm.price}
@@ -275,15 +346,7 @@ const HomePage: FunctionComponent = () => {
                           <div className="w-fit h-full flex items-center">
                             <b className="w-fit flex items-center">Popular Listings</b>
                           </div>
-                          <div
-                            className="w-fit h-fit flex items-end justify-center gap-1 cursor-pointer text-center text-[0.75rem] text-teal-100 font-lora"
-                            onClick={onViewMoreContainerClick}
-                          >
-                            <div className="relative [text-decoration:underline] tracking-num-0.02 font-semibold">
-                              View All
-                            </div>
-                            <Icon icon="radix-icons:arrow-top-right" className="w-3 h-3" />
-                          </div>
+                          <ViewAllLink category="popular" />
                         </div>
                         <NavArrows current={popular.current} total={popular.total} scrollTo={popular.scrollTo} />
                       </div>
@@ -291,10 +354,9 @@ const HomePage: FunctionComponent = () => {
                         ref={popular.trackRef}
                         className="w-full max-w-full flex gap-6 overflow-x-auto scroll-smooth pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
                       >
-                        {dormData.map((dorm) => (
+                        {popularDorms.map((dorm) => (
                           <div key={dorm.id} className="shrink-0">
                             <DormCard
-                              key={dorm.id}
                               name={dorm.name}
                               rating={dorm.rating}
                               price={dorm.price}
@@ -314,15 +376,7 @@ const HomePage: FunctionComponent = () => {
                           <div className="w-fit h-full flex items-center">
                             <b className="w-fit flex items-center">Near Campus</b>
                           </div>
-                          <div
-                            className="w-fit h-fit flex items-end justify-center gap-1 cursor-pointer text-center text-[0.75rem] text-teal-100 font-lora"
-                            onClick={onViewMoreContainerClick}
-                          >
-                            <div className="relative [text-decoration:underline] tracking-num-0.02 font-semibold">
-                              View All
-                            </div>
-                            <Icon icon="radix-icons:arrow-top-right" className="w-3 h-3" />
-                          </div>
+                          <ViewAllLink category="near" />
                         </div>
                         <NavArrows current={near.current} total={near.total} scrollTo={near.scrollTo} />
                       </div>
@@ -330,10 +384,9 @@ const HomePage: FunctionComponent = () => {
                         ref={near.trackRef}
                         className="w-full max-w-full flex gap-6 overflow-x-auto scroll-smooth pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
                       >
-                        {dormData.map((dorm) => (
+                        {nearDorms.map((dorm) => (
                           <div key={dorm.id} className="shrink-0">
                             <DormCard
-                              key={dorm.id}
                               name={dorm.name}
                               rating={dorm.rating}
                               price={dorm.price}
@@ -353,15 +406,7 @@ const HomePage: FunctionComponent = () => {
                           <div className="w-fit h-full flex items-center">
                             <b className="w-fit flex items-center">Listings You May Like</b>
                           </div>
-                          <div
-                            className="w-fit h-fit flex items-end justify-center gap-1 cursor-pointer text-center text-[0.75rem] text-teal-100 font-lora"
-                            onClick={onViewMoreContainerClick}
-                          >
-                            <div className="relative [text-decoration:underline] tracking-num-0.02 font-semibold">
-                              View All
-                            </div>
-                            <Icon icon="radix-icons:arrow-top-right" className="w-3 h-3" />
-                          </div>
+                          <ViewAllLink category="mayLike" />
                         </div>
                         <NavArrows current={mayLike.current} total={mayLike.total} scrollTo={mayLike.scrollTo} />
                       </div>
@@ -369,10 +414,9 @@ const HomePage: FunctionComponent = () => {
                         ref={mayLike.trackRef}
                         className="w-full max-w-full flex gap-6 overflow-x-auto scroll-smooth pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
                       >
-                        {dormData.map((dorm) => (
+                        {mayLikeDorms.map((dorm) => (
                           <div key={dorm.id} className="shrink-0">
                             <DormCard
-                              key={dorm.id}
                               name={dorm.name}
                               rating={dorm.rating}
                               price={dorm.price}
@@ -414,13 +458,11 @@ const HomePage: FunctionComponent = () => {
                     </div>
                   </>
                 )}
-
               </div>
             </div>
           </div>
         </div>
       </div>
-
       <div className="w-[3.563rem] h-[3.563rem] absolute !!m-[0 important] top-220 left-[81.438rem] overflow-hidden shrink-0 z-1" />
     </div>
   );
