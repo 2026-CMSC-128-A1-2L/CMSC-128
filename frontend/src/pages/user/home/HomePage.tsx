@@ -11,6 +11,7 @@ import LoadingPage from '../../general/LoadingPage';
 const CARD_WIDTH = 280;
 const CARD_GAP = 24;
 
+// For the NavArrows
 const useCarousel = (total: number) => {
   const trackRef = useRef<HTMLDivElement>(null);
   const [current, setCurrent] = useState(0);
@@ -254,6 +255,7 @@ const HomePage: FunctionComponent = () => {
                         {dormData.map((dorm) => (
                           <div key={dorm.id} className="shrink-0">
                             <DormCard
+                              key={dorm.id}
                               name={dorm.name}
                               rating={dorm.rating}
                               price={dorm.price}
@@ -292,6 +294,7 @@ const HomePage: FunctionComponent = () => {
                         {dormData.map((dorm) => (
                           <div key={dorm.id} className="shrink-0">
                             <DormCard
+                              key={dorm.id}
                               name={dorm.name}
                               rating={dorm.rating}
                               price={dorm.price}
@@ -330,6 +333,7 @@ const HomePage: FunctionComponent = () => {
                         {dormData.map((dorm) => (
                           <div key={dorm.id} className="shrink-0">
                             <DormCard
+                              key={dorm.id}
                               name={dorm.name}
                               rating={dorm.rating}
                               price={dorm.price}
@@ -368,6 +372,7 @@ const HomePage: FunctionComponent = () => {
                         {dormData.map((dorm) => (
                           <div key={dorm.id} className="shrink-0">
                             <DormCard
+                              key={dorm.id}
                               name={dorm.name}
                               rating={dorm.rating}
                               price={dorm.price}
