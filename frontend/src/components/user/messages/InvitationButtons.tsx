@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+import { FunctionComponent } from "react";
+=======
 import type { FunctionComponent } from 'react';
+>>>>>>> 99b1d3ad8a1efd3bbe10fd035b82a6381b1219ce
 
 interface InvitationButtonsProps {
   onAccept: () => void;
