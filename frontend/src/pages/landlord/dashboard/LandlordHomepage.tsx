@@ -7,6 +7,7 @@ import sapphire2 from '../../../../assets/sapphire2.jpg';
 import sapphire3 from '../../../../assets/sapphire3.png';
 
 import TutorialBubble from '../dashboard/LandlordHomepageTutorials';
+// import TutorialBubble from '../../../components/user/Tutorials';
 import TutorialIcon from '../../../../assets/help-chat.svg';
 const STATS = [
   {
@@ -228,7 +229,7 @@ const LandlordHomepage: FunctionComponent = () => {
                   </span>
                 </button>
               </div>
-              <TutorialBubble show={showHelp} onClose={() => setShowHelp(false)} />
+              
             </div>
           </section>
 
@@ -446,7 +447,9 @@ const LandlordHomepage: FunctionComponent = () => {
           </section>
         </aside>
       </div>
+      <TutorialBubble show={showHelp} onClose={() => setShowHelp(false)} />
       {/* ======= FLOATING ICON ========== */}
+      
       <div
         className="fixed bottom-10 right-10 z-1000 cursor-pointer transition-all hover:scale-110 active:scale-95"
         onClick={() => setShowHelp(!showHelp)}
