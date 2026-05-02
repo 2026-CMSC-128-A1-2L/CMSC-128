@@ -1,10 +1,10 @@
 import mongoose, { QueryFilter } from 'mongoose';
 import type { ROOM_TYPES } from 'shared';
-import { AppError } from "../../error.js";
-import { combineFilters } from "../../middleware.js";
-import { HousingFacility, type HousingFacilityType } from "../facility/facility.model.js";
-import { Tag } from "../tag/tag.model.js";
-import { Listing, type ListingType } from "./listing.model.js";
+import { AppError } from '../../error.js';
+import { combineFilters } from '../../middleware.js';
+import { HousingFacility, type HousingFacilityType } from '../facility/facility.model.js';
+import { Tag } from '../tag/tag.model.js';
+import { Listing, type ListingType } from './listing.model.js';
 
 type TagFilter = {
   name: string;

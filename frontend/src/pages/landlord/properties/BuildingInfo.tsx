@@ -1,9 +1,9 @@
-import { useState } from "react";
-import { Icon } from "@iconify/react";
-import { useNavigate, useLocation, useParams } from "react-router-dom";
-import LandlordLayout from "../../../components/landlord/LandlordLayout";
-import { BUILDINGS } from "../../../data/buildings";
-import type { Building } from "../../../data/buildings";
+import { useState } from 'react';
+import { Icon } from '@iconify/react';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
+import LandlordLayout from '../../../components/landlord/LandlordLayout';
+import { BUILDINGS } from '../../../data/buildings';
+import type { Building } from '../../../data/buildings';
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
@@ -25,26 +25,20 @@ const Button = (props: {
   );
 };
 
-const ListingCard = (props: {
-  facilityName: string;
-  listingName: string;
-  image?: string;
-}) => {
+const ListingCard = (props: { facilityName: string; listingName: string; image?: string }) => {
   const { facilityName, listingName, image } = props;
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
     <div
       className={`relative bg-aliceblue border-whitesmoke border-solid border box-border overflow-hidden flex flex-col items-start text-left text-black font-inter transition-all duration-300
-        ${isExpanded ? "w-66 h-fit rounded-num-16 shadow-sm" : "w-66 h-56 rounded-[15.31px]"}`}
+        ${isExpanded ? 'w-66 h-fit rounded-num-16 shadow-sm' : 'w-66 h-56 rounded-[15.31px]'}`}
     >
       <img className="w-66 h-30 object-cover" src={image} alt={facilityName} />
       <div className="w-full flex flex-col py-2 px-3 gap-2">
         <div className="w-full flex flex-col items-start gap-0">
           <div className="w-full h-fit flex items-start gap-1">
-            <b className="w-full relative flex items-center text-num-16">
-              {listingName}
-            </b>
+            <b className="w-full relative flex items-center text-num-16">{listingName}</b>
           </div>
         </div>
         <div className="w-full h-fit flex flex-col gap-1">
@@ -53,14 +47,10 @@ const ListingCard = (props: {
               type="button"
               onClick={() => setIsExpanded(!isExpanded)}
               className="hover:scale-125 transition-transform flex items-center justify-center"
-              aria-label={isExpanded ? "Collapse" : "Expand"}
+              aria-label={isExpanded ? 'Collapse' : 'Expand'}
             >
               <Icon
-                icon={
-                  isExpanded
-                    ? "bi:chevron-compact-up"
-                    : "bi:chevron-compact-down"
-                }
+                icon={isExpanded ? 'bi:chevron-compact-up' : 'bi:chevron-compact-down'}
                 className="w-6 h-6 text-teal"
               />
             </button>
@@ -95,7 +85,7 @@ const TextField = (props: {
   );
 };
 
-const ManagerList = (props: { managers: Building["managers"] }) => (
+const ManagerList = (props: { managers: Building['managers'] }) => (
   <div className="self-stretch h-38 overflow-hidden shrink-0 flex flex-col items-start py-2.5 px-0 box-border gap-2.5">
     <div className="self-stretch flex items-center">
       <b className="relative tracking-num--0_01">Managers</b>
@@ -108,9 +98,7 @@ const ManagerList = (props: { managers: Building["managers"] }) => (
             <div className="w-90 relative leading-6 font-medium flex items-center shrink-0">
               {manager.name}
             </div>
-            <div className="relative leading-6 font-medium">
-              {manager.availability}
-            </div>
+            <div className="relative leading-6 font-medium">{manager.availability}</div>
           </div>
         ))}
       </table>
@@ -118,7 +106,7 @@ const ManagerList = (props: { managers: Building["managers"] }) => (
   </div>
 );
 
-const TenantList = (props: { tenants: Building["tenants"] }) => (
+const TenantList = (props: { tenants: Building['tenants'] }) => (
   <div className="self-stretch overflow-hidden flex flex-col items-start py-2.5 px-0 gap-2.5">
     <div className="self-stretch flex items-center">
       <b className="relative tracking-num--0_01">Tenants</b>
@@ -131,9 +119,7 @@ const TenantList = (props: { tenants: Building["tenants"] }) => (
             <div className="w-90 relative leading-6 font-medium flex items-center shrink-0">
               {tenant.name}
             </div>
-            <div className="relative leading-6 font-medium">
-              {tenant.roomNumber}
-            </div>
+            <div className="relative leading-6 font-medium">{tenant.roomNumber}</div>
           </div>
         ))}
       </table>
@@ -174,7 +160,7 @@ const BuildingInfo = () => {
     return (
       <LandlordLayout
         activeSidebarItem="properties"
-        breadcrumbs={[{ label: "Properties", to: "/landlord/properties" }]}
+        breadcrumbs={[{ label: 'Properties', to: '/landlord/properties' }]}
       >
         <div className="flex items-center justify-center h-64 text-gray-500">
           Building not found.
@@ -196,16 +182,13 @@ const BuildingInfo = () => {
     tenants,
   } = building;
 
-  const pendingRooms = roomTypes.filter((r) => r.status === "pending");
-  const approvedRooms = roomTypes.filter((r) => r.status === "approved");
+  const pendingRooms = roomTypes.filter((r) => r.status === 'pending');
+  const approvedRooms = roomTypes.filter((r) => r.status === 'approved');
 
   return (
     <LandlordLayout
       activeSidebarItem="properties"
-      breadcrumbs={[
-        { label: "Properties", to: "/landlord/properties" },
-        { label: name },
-      ]}
+      breadcrumbs={[{ label: 'Properties', to: '/landlord/properties' }, { label: name }]}
     >
       <div className="w-full h-fit flex flex-col items-start gap-8 text-dimgray font-inter pr-20">
         <div className="w-full flex flex-col items-start justify-center">
@@ -227,20 +210,12 @@ const BuildingInfo = () => {
 
           {/* Body */}
           <div className="self-stretch flex flex-col gap-6 pl-2 py-6">
-            <div className="text-lg text-teal font-bold">
-              Building Information
-            </div>
+            <div className="text-lg text-teal font-bold">Building Information</div>
 
             {/* Fields row 1 */}
             <div className="w-full flex flex-col gap-4 text-sm text-dimgray">
               <div className="w-full flex items-start gap-4">
-                <TextField
-                  disabled
-                  className="flex-4"
-                  text="Name"
-                  id="name"
-                  value={name}
-                />
+                <TextField disabled className="flex-4" text="Name" id="name" value={name} />
                 <TextField
                   disabled
                   className="flex-3"
@@ -248,13 +223,7 @@ const BuildingInfo = () => {
                   id="building-type"
                   value={buildingType}
                 />
-                <TextField
-                  disabled
-                  className="flex-2"
-                  text="Status"
-                  id="status"
-                  value={status}
-                />
+                <TextField disabled className="flex-2" text="Status" id="status" value={status} />
                 <TextField
                   disabled
                   className="flex-1"

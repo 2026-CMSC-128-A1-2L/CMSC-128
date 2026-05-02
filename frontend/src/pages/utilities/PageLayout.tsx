@@ -1,6 +1,6 @@
-import { Outlet, useLocation } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
-import PageBackground from "../../components/general/PageBackground";
+import { Outlet, useLocation } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import PageBackground from '../../components/general/PageBackground';
 
 const PageLayout = () => {
   const location = useLocation();

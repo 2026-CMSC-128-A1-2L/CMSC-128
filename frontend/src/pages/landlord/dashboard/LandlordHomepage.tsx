@@ -1,99 +1,67 @@
-import { type FunctionComponent, useRef, useState } from "react";
-import { Link } from "react-router-dom";
-import { Icon } from "@iconify/react";
-import LandlordLayout from "../../../components/landlord/LandlordLayout";
-import sapphire1 from "../../../../assets/sapphire1.jpg";
-import sapphire2 from "../../../../assets/sapphire2.jpg";
-import sapphire3 from "../../../../assets/sapphire3.png";
+import { type FunctionComponent, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Icon } from '@iconify/react';
+import LandlordLayout from '../../../components/landlord/LandlordLayout';
+import NotifyTenantsPopup from '../../../components/landlord/NotifyTenantsPopup';
+import sapphire1 from '../../../../assets/sapphire1.jpg';
+import sapphire2 from '../../../../assets/sapphire2.jpg';
+import sapphire3 from '../../../../assets/sapphire3.png';
 
-import TutorialBubble from "../dashboard/LandlordHomepageTutorials";
-import TutorialIcon from "../../../../assets/help-chat.svg";
+import TutorialBubble from '../dashboard/LandlordHomepageTutorials';
+import TutorialIcon from '../../../../assets/help-chat.svg';
 const STATS = [
   {
-    label: "Monthly Income",
-    value: "Php 138,600",
-    sub: "Feb 2026",
-    subColor: "text-[#666]",
+    label: 'Monthly Income',
+    value: 'Php 138,600',
+    sub: 'Feb 2026',
+    subColor: 'text-[#666]',
   },
   {
-    label: "Number of Tenants",
-    value: "28",
-    sub: "2 ongoing lease transfers",
+    label: 'Number of Tenants',
+    value: '28',
+    sub: '2 ongoing lease transfers',
     subGradient: true,
   },
-  { label: "Overdue Rent", value: "1", sub: "Tenant", subColor: "text-[#666]" },
+  { label: 'Overdue Rent', value: '1', sub: 'Tenant', subColor: 'text-[#666]' },
 ];
 
-const PROPERTIES = [
-  {
-    id: "1",
-    name: "Two Sapphire Place",
-    img: sapphire1,
-    occupied: "18/24",
-    income: "₱89,400.00",
-    balance: "₱12,600.00",
-  },
-  {
-    id: "2",
-    name: "One Sapphire Place",
-    img: sapphire2,
-    occupied: "20/24",
-    income: "₱89,400.00",
-    balance: "₱12,600.00",
-  },
-  {
-    id: "3",
-    name: "Three Sapphire Place",
-    img: sapphire3,
-    occupied: "18/24",
-    income: "₱89,400.00",
-    balance: "₱12,600.00",
-  },
-];
+import { BUILDINGS } from '../../../data/buildings';
 
 const PENDING = [
-  { name: "Daphne Dayne", email: "dcanape@up.edu.ph" },
-  { name: "Nathaniel Cunanan", email: "ncunanan@up.edu.ph" },
-  { name: "Lance Chrysler De Jesus", email: "lvdejesus1@up.edu.ph" },
+  { name: 'Daphne Dayne', email: 'dcanape@up.edu.ph' },
+  { name: 'Nathaniel Cunanan', email: 'ncunanan@up.edu.ph' },
+  { name: 'Lance Chrysler De Jesus', email: 'lvdejesus1@up.edu.ph' },
 ];
 
 const VISITS = [
-  { name: "Daphne Dayne", email: "dcanape@up.edu.ph" },
-  { name: "Nathaniel Cunanan", email: "ncunanan@up.edu.ph" },
+  { name: 'Daphne Dayne', email: 'dcanape@up.edu.ph' },
+  { name: 'Nathaniel Cunanan', email: 'ncunanan@up.edu.ph' },
 ];
 
 const ACTIVITY = [
   {
-    name: "Haira Espinocilla",
-    action: "paid rent for month of Feb",
-    time: "3d ago",
+    name: 'Haira Espinocilla',
+    action: 'paid rent for month of Feb',
+    time: '3d ago',
   },
-  { name: "Riz Doroja", action: "paid rent for month of Feb", time: "1d ago" },
+  { name: 'Riz Doroja', action: 'paid rent for month of Feb', time: '1d ago' },
   {
-    name: "Dorm Manager #2",
-    action: "collected payments in One Sapphire",
-    time: "2m ago",
+    name: 'Dorm Manager #2',
+    action: 'collected payments in One Sapphire',
+    time: '2m ago',
   },
   {
-    name: "Dorm Manager #1",
-    action: "accepted ocular visits for April 9",
-    time: "1m ago",
+    name: 'Dorm Manager #1',
+    action: 'accepted ocular visits for April 9',
+    time: '1m ago',
   },
 ];
 
-const Avatar = ({
-  className = "h-[40px] w-[40px]",
-}: {
-  className?: string;
-}) => (
+const Avatar = ({ className = 'h-[40px] w-[40px]' }: { className?: string }) => (
   <span
     className={`flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#e5e7eb] text-[#9ca3af] ${className}`}
   >
-    <Icon
-      icon="solar:user-bold"
-      className="h-[60%] w-[60%]"
-      aria-hidden="true"
-    />
+    <Icon icon="solar:user-bold" className="h-[60%] w-[60%]" aria-hidden="true" />
   </span>
 );
 
@@ -101,9 +69,7 @@ const PersonRow = ({ name, email }: { name: string; email: string }) => (
   <div className="flex w-full items-center gap-[10px] rounded-[8px] border border-[#f0f0f0] px-[12px] py-[4px]">
     <Avatar />
     <div className="flex flex-col gap-[2px] overflow-hidden">
-      <b className="truncate font-['Inter',sans-serif] text-[14px] text-black">
-        {name}
-      </b>
+      <b className="truncate font-['Inter',sans-serif] text-[14px] text-black">{name}</b>
       <span className="truncate font-['Lora',serif] text-[12px] font-semibold text-[#8a9099]">
         {email}
       </span>
@@ -117,15 +83,16 @@ const CARD_GAP = 16;
 const LandlordHomepage: FunctionComponent = () => {
   const trackRef = useRef<HTMLDivElement>(null);
   const [current, setCurrent] = useState(0);
-  const total = PROPERTIES.length;
-  const [searchQuery, setSearchQuery] = useState("");
+  const total = BUILDINGS.length;
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showNotify, setShowNotify] = useState(false);
 
   const scrollTo = (index: number) => {
     const clamped = Math.max(0, Math.min(index, total - 1));
     setCurrent(clamped);
     trackRef.current?.scrollTo({
       left: clamped * (CARD_WIDTH + CARD_GAP),
-      behavior: "smooth",
+      behavior: 'smooth',
     });
   };
 
@@ -133,7 +100,7 @@ const LandlordHomepage: FunctionComponent = () => {
 
   return (
     <LandlordLayout activeSidebarItem="dashboard" breadcrumbs={[]}>
-      <div className="flex w-full flex-col gap-[48px] pt-[16px] lg:flex-row lg:items-start">
+      <div className="flex w-full flex-col gap-[48px] pt-[60px] lg:flex-row lg:items-start">
         {/* Main column */}
         <div className="flex flex-1 flex-col gap-[48px] min-w-0">
           {/* Search */}
@@ -155,7 +122,7 @@ const LandlordHomepage: FunctionComponent = () => {
 
             {searchQuery.length > 0 && (
               <button
-                onClick={() => setSearchQuery("")}
+                onClick={() => setSearchQuery('')}
                 className="flex items-center justify-center rounded-full p-1 hover:bg-[#e0f0ff] transition-colors"
                 aria-label="Clear search"
               >
@@ -188,13 +155,11 @@ const LandlordHomepage: FunctionComponent = () => {
             </div>
             <div className="grid grid-cols-1 gap-[12px] sm:grid-cols-2 xl:grid-cols-4">
               {STATS.map((s) => (
-                <div
+                <Link to="/landlord/finance"
                   key={s.label}
                   className="flex flex-col items-center justify-center gap-[8px] rounded-[16px] border border-[#f0f0f0] bg-white p-[12px] text-center"
                 >
-                  <b className="font-['Inter',sans-serif] text-[14px] text-[#666]">
-                    {s.label}
-                  </b>
+                  <b className="font-['Inter',sans-serif] text-[14px] text-[#666]">{s.label}</b>
                   <b className="font-['Inter',sans-serif] text-[24px] leading-[32px] text-[#096c5b]">
                     {s.value}
                   </b>
@@ -202,9 +167,9 @@ const LandlordHomepage: FunctionComponent = () => {
                     <span
                       className="font-['Inter',sans-serif] text-[14px] font-medium"
                       style={{
-                        background: "linear-gradient(0deg,#ffc273,#fa7900)",
-                        WebkitBackgroundClip: "text",
-                        WebkitTextFillColor: "transparent",
+                        background: 'linear-gradient(0deg,#ffc273,#fa7900)',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
                       }}
                     >
                       {s.sub}
@@ -216,7 +181,7 @@ const LandlordHomepage: FunctionComponent = () => {
                       {s.sub}
                     </span>
                   )}
-                </div>
+                </Link>
               ))}
               <div className="flex flex-col items-center justify-center gap-[8px] rounded-[16px] bg-[#096c5b] p-[12px] text-center">
                 <Icon
@@ -227,7 +192,7 @@ const LandlordHomepage: FunctionComponent = () => {
                 <b className="font-['Inter',sans-serif] text-[18px] tracking-[-0.01em] text-[#f0f0f0]">
                   Pay Reminder
                 </b>
-                <button className="flex items-center gap-[8px] rounded-full bg-[#f0f0f0] px-[12px] py-[4px] transition-opacity hover:opacity-80">
+                <button type="button" onClick={() => setShowNotify(true)} className="flex items-center gap-[8px] rounded-full bg-[#f0f0f0] px-[12px] py-[4px] transition-opacity hover:opacity-80">
                   <span className="font-['Inter',sans-serif] text-[12px] font-medium text-[#096c5b]">
                     Notify your tenants
                   </span>
@@ -240,10 +205,7 @@ const LandlordHomepage: FunctionComponent = () => {
                   </span>
                 </button>
               </div>
-              <TutorialBubble
-                show={showHelp}
-                onClose={() => setShowHelp(false)}
-              />
+              <TutorialBubble show={showHelp} onClose={() => setShowHelp(false)} />
             </div>
           </section>
 
@@ -274,10 +236,7 @@ const LandlordHomepage: FunctionComponent = () => {
                   className="flex h-[32px] w-[32px] items-center justify-center rounded-full border border-[#f0f0f0] bg-white transition-opacity hover:opacity-70 disabled:opacity-30"
                   aria-label="Previous property"
                 >
-                  <Icon
-                    icon="solar:arrow-left-bold"
-                    className="h-[16px] w-[16px] text-[#2f3136]"
-                  />
+                  <Icon icon="solar:arrow-left-bold" className="h-[16px] w-[16px] text-[#2f3136]" />
                 </button>
                 <button
                   onClick={() => scrollTo(current + 1)}
@@ -298,22 +257,18 @@ const LandlordHomepage: FunctionComponent = () => {
               ref={trackRef}
               className="flex gap-[16px] overflow-x-auto scroll-smooth pb-[8px] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             >
-              {PROPERTIES.map((p) => (
+              {BUILDINGS.map((b) => (
                 <Link
-                  key={p.name}
-                  to={`/landlord/properties/${p.id}`} // Dynamic Route
+                  key={b.name}
+                  to={`/landlord/properties/${b.id}`} // Dynamic Route
                   className="flex shrink-0 flex-col overflow-hidden rounded-[10px] bg-white shadow-[0px_4px_20px_rgba(0,0,0,0.15)] transition-transform hover:scale-[1.02]"
                   style={{ width: CARD_WIDTH }}
                 >
-                  <img
-                    src={p.img}
-                    alt={p.name}
-                    className="h-[120px] w-full object-cover"
-                  />
+                  <img src={b.img} alt={b.name} className="h-[120px] w-full object-cover" />
                   <div className="flex flex-col gap-[8px] p-[12px]">
                     <div className="flex items-center justify-between gap-[8px]">
                       <b className="truncate font-['Inter',sans-serif] text-[16px] tracking-[-0.01em] text-black">
-                        {p.name}
+                        {b.name}
                       </b>
                       <span className="flex shrink-0 items-center gap-[4px] rounded-[5px] border border-[#096c5b] px-[8px] py-[2px]">
                         <span className="h-[6px] w-[6px] rounded-full bg-[#096c5b]" />
@@ -329,7 +284,7 @@ const LandlordHomepage: FunctionComponent = () => {
                         aria-hidden="true"
                       />
                       <b className="font-['Poppins',sans-serif] text-[14px] tracking-[-0.01em] text-[#666]">
-                        {p.occupied}
+                        {b.occupiedUnits}
                       </b>
                     </div>
                     <div className="flex items-center justify-between">
@@ -342,13 +297,12 @@ const LandlordHomepage: FunctionComponent = () => {
                         <b
                           className="font-['Poppins',sans-serif] text-[13px] tracking-[-0.01em]"
                           style={{
-                            background:
-                              "linear-gradient(180deg,#5dc2a8 27.88%,#0c8873 84.13%)",
-                            WebkitBackgroundClip: "text",
-                            WebkitTextFillColor: "transparent",
+                            background: 'linear-gradient(180deg,#5dc2a8 27.88%,#0c8873 84.13%)',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
                           }}
                         >
-                          {p.income}
+                          {b.income}
                         </b>
                       </div>
                       <div className="flex items-center gap-[6px]">
@@ -360,13 +314,12 @@ const LandlordHomepage: FunctionComponent = () => {
                         <b
                           className="font-['Poppins',sans-serif] text-[13px] tracking-[-0.01em]"
                           style={{
-                            background:
-                              "linear-gradient(180deg,#c29722,#f6b709)",
-                            WebkitBackgroundClip: "text",
-                            WebkitTextFillColor: "transparent",
+                            background: 'linear-gradient(180deg,#c29722,#f6b709)',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
                           }}
                         >
-                          {p.balance}
+                          {b.outstanding}
                         </b>
                       </div>
                       {/* Changed eye icon from Link to simple Icon since parent is now a Link */}
@@ -388,13 +341,13 @@ const LandlordHomepage: FunctionComponent = () => {
           <div className="grid grid-cols-1 gap-[16px] sm:grid-cols-2">
             {[
               {
-                title: "Pending Applications",
-                to: "/landlord/tenants/unvalidated",
+                title: 'Pending Applications',
+                to: '/landlord/tenants/unvalidated',
                 items: PENDING,
               },
               {
-                title: "Scheduled Visits",
-                to: "/landlord/visits",
+                title: 'Scheduled Visits',
+                to: '/landlord/visits',
                 items: VISITS,
               },
             ].map((panel) => (
@@ -425,7 +378,7 @@ const LandlordHomepage: FunctionComponent = () => {
         </div>
 
         {/* Right sidebar */}
-        <aside className="flex w-full flex-col gap-[32px] lg:w-[280px] lg:shrink-0">
+        <aside className="flex w-full flex-col gap-[32px] lg:w-[280px] lg:shrink-0 lg:pt-[60px]">
           <div className="flex flex-col gap-[8px]">
             <Avatar className="h-[74px] w-[74px]" />
             <div className="flex items-center gap-[6px]">
@@ -443,9 +396,7 @@ const LandlordHomepage: FunctionComponent = () => {
             </span>
           </div>
           <section className="flex flex-col gap-[12px]">
-            <b className="font-['Inter',sans-serif] text-[14px] text-black">
-              Activity
-            </b>
+            <b className="font-['Inter',sans-serif] text-[14px] text-black">Activity</b>
             <div className="flex flex-col gap-[12px]">
               {ACTIVITY.map((a) => (
                 <div
@@ -477,12 +428,9 @@ const LandlordHomepage: FunctionComponent = () => {
         className="fixed bottom-10 right-10 z-1000 cursor-pointer transition-all hover:scale-110 active:scale-95"
         onClick={() => setShowHelp(!showHelp)}
       >
-        <img
-          src={TutorialIcon}
-          alt="Help"
-          className="w-16 h-16 drop-shadow-lg"
-        />
+        <img src={TutorialIcon} alt="Help" className="w-16 h-16 drop-shadow-lg" />
       </div>
+      <NotifyTenantsPopup isOpen={showNotify} onClose={() => setShowNotify(false)} />
     </LandlordLayout>
   );
 };

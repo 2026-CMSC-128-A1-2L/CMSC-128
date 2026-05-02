@@ -37,7 +37,7 @@ const RoomDropdown: FunctionComponent<RoomDropdownProps> = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const selectedOption = options.find(opt => opt.value === value);
+  const selectedOption = options.find((opt) => opt.value === value);
 
   return (
     <div className="mb-5">
@@ -53,11 +53,16 @@ const RoomDropdown: FunctionComponent<RoomDropdownProps> = ({
             disabled ? 'bg-whitesmoke-100 cursor-not-allowed' : 'hover:border-teal'
           } ${error && touched ? 'border-crimson' : 'border-whitesmoke-200'}`}
         >
-          <div className={`text-[12px] sm:text-[14px] font-medium font-inter ${selectedOption ? 'text-black' : 'text-dimgray'}`}>
+          <div
+            className={`text-[12px] sm:text-[14px] font-medium font-inter ${selectedOption ? 'text-black' : 'text-dimgray'}`}
+          >
             {selectedOption?.label || placeholder}
           </div>
           {!disabled && (
-            <Icon icon="mdi-light:chevron-down" className={`h-5 w-5 text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+            <Icon
+              icon="mdi-light:chevron-down"
+              className={`h-5 w-5 text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+            />
           )}
         </div>
 

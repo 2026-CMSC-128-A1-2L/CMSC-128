@@ -1,20 +1,20 @@
-import { type FunctionComponent, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
-import { Icon } from "@iconify/react";
-import LandlordLayout from "../../../components/landlord/LandlordLayout";
-import PropertiesCard from "../../../components/landlord/LandlordProperties/PropertiesCard";
-import { BUILDINGS } from "../../../data/buildings";
+import { type FunctionComponent, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Icon } from '@iconify/react';
+import LandlordLayout from '../../../components/landlord/LandlordLayout';
+import PropertiesCard from '../../../components/landlord/LandlordProperties/PropertiesCard';
+import { BUILDINGS } from '../../../data/buildings';
 
 // Assets
 
-import search from "../../../../assets/search_green.svg";
-import plus from "../../../../assets/green_plus.svg";
+import search from '../../../../assets/search_green.svg';
+import plus from '../../../../assets/green_plus.svg';
 
 const LandlordProperties: FunctionComponent = () => {
   const navigate = useNavigate();
 
   const onAddBuildingContainerClick = useCallback(() => {
-    navigate("/landlord/add-building");
+    navigate('/landlord/add-building');
   }, [navigate]);
 
   // Mock data
@@ -61,9 +61,7 @@ const LandlordProperties: FunctionComponent = () => {
                 <h2 className="font-['Inter',sans-serif] text-[24px] font-bold text-black">
                   My Accommodations
                 </h2>
-                <span className="text-[24px] font-bold text-[#5dc2a8]">
-                  {BUILDINGS.length}
-                </span>
+                <span className="text-[24px] font-bold text-[#5dc2a8]">{BUILDINGS.length}</span>
               </div>
 
               <div className="flex items-center gap-[16px]">
@@ -72,9 +70,7 @@ const LandlordProperties: FunctionComponent = () => {
                     Filter By:
                   </span>
                   <button className="flex items-center gap-[10px] rounded-[16px] bg-[#f5f5f5] px-[12px] py-[8px] text-[#666]">
-                    <span className="text-[14px] font-medium">
-                      Recently Added
-                    </span>
+                    <span className="text-[14px] font-medium">Recently Added</span>
                     <Icon icon="mdi-light:chevron-down" className="h-5 w-5" />
                   </button>
                 </div>

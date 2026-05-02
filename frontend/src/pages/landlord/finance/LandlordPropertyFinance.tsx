@@ -103,14 +103,10 @@ const LandlordPropertyFinance: FunctionComponent = () => {
 
         {/* Property Header */}
         <div className="self-stretch flex flex-col items-start justify-center py-0 px-2 box-border gap-1 text-num-14 text-darkslategray-100 font-lora mb-6">
-          <b className="self-stretch relative text-[24px] leading-8 font-inter">
-            {property.name}
-          </b>
+          <b className="self-stretch relative text-[24px] leading-8 font-inter">{property.name}</b>
           <div className="self-stretch flex items-center py-0 px-4 gap-2">
             <Icon icon="mdi:map-marker" className="text-lg" aria-hidden="true" />
-            <b className="flex-1 relative text-sm">
-              {property.address}
-            </b>
+            <b className="flex-1 relative text-sm">{property.address}</b>
           </div>
           <div className="self-stretch flex items-center py-0 px-4 gap-2">
             <Icon icon="mdi:phone" className="text-lg" aria-hidden="true" />

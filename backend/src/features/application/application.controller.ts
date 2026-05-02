@@ -19,10 +19,10 @@ import {
   rejectFinalApplication,
   rejectInitialApplication,
   finalizeApplication,
-} from "./application.service.js";
+} from './application.service.js';
 import type { QueryFilter } from 'mongoose';
-import type { ApplicationType } from "./application.model.js";
-import { AppError } from "../../error.js";
+import type { ApplicationType } from './application.model.js';
+import { AppError } from '../../error.js';
 import assert from 'node:assert';
 
 export const routeCreateApplication: RequestHandler = async (req, res, _next) => {
@@ -137,4 +137,3 @@ export const routeFinalizeApplication: ApplicationHandler = async (req, res, _ne
   if (!updatedApplication) throw new AppError(404, 'Application not found.');
   res.status(200).send(updatedApplication);
 };
-

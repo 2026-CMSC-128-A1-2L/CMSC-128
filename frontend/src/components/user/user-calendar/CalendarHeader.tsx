@@ -1,12 +1,10 @@
-import type { FunctionComponent } from "react";
+import type { FunctionComponent } from 'react';
 
 interface CalendarHeaderProps {
   title?: string;
 }
 
-const CalendarHeader: FunctionComponent<CalendarHeaderProps> = ({
-  title = "Calendar",
-}) => {
+const CalendarHeader: FunctionComponent<CalendarHeaderProps> = ({ title = 'Calendar' }) => {
   return (
     <div className="w-full flex flex-col items-start pt-8 pb-0 pl-8 pr-5">
       <div className="w-full flex flex-col items-start gap-3">

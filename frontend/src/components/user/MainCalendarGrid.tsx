@@ -1,5 +1,5 @@
-import { type FunctionComponent, useEffect, useState } from "react";
-import { CalendarService, type CalendarEvent } from "../../service/CalendarService";
+import { type FunctionComponent, useEffect, useState } from 'react';
+import { CalendarService, type CalendarEvent } from '../../service/CalendarService';
 
 interface MainCalendarGridProps {
   currentDate: Date;
@@ -8,20 +8,20 @@ interface MainCalendarGridProps {
   onEventClick?: (event: CalendarEvent) => void;
 }
 
-const DAYS = ["SUN", "MON", "TUE", "WED", "THUR", "FRI", "SAT"];
+const DAYS = ['SUN', 'MON', 'TUE', 'WED', 'THUR', 'FRI', 'SAT'];
 
-const getEventColor = (type: CalendarEvent["type"]) => {
+const getEventColor = (type: CalendarEvent['type']) => {
   switch (type) {
-    case "booking":
-      return "from-[#c00f0f] to-[#e44f4f]";
-    case "billing":
-      return "from-[#ff9800] to-[#ffb74d]";
-    case "move-in":
-      return "from-[#4caf50] to-[#81c784]";
-    case "move-out":
-      return "from-[#2196f3] to-[#64b5f6]";
+    case 'booking':
+      return 'from-[#c00f0f] to-[#e44f4f]';
+    case 'billing':
+      return 'from-[#ff9800] to-[#ffb74d]';
+    case 'move-in':
+      return 'from-[#4caf50] to-[#81c784]';
+    case 'move-out':
+      return 'from-[#2196f3] to-[#64b5f6]';
     default:
-      return "from-[#c00f0f] to-[#e44f4f]";
+      return 'from-[#c00f0f] to-[#e44f4f]';
   }
 };
 
@@ -38,11 +38,11 @@ const MainCalendarGrid: FunctionComponent<MainCalendarGridProps> = ({
       try {
         const response = await CalendarService.getCalendarEvents(
           currentDate.getFullYear(),
-          currentDate.getMonth() + 1
+          currentDate.getMonth() + 1,
         );
         setEvents(response.data);
       } catch (error) {
-        console.error("Failed to load calendar events:", error);
+        console.error('Failed to load calendar events:', error);
       }
     };
 
@@ -85,12 +85,11 @@ const MainCalendarGrid: FunctionComponent<MainCalendarGridProps> = ({
   };
 
   const today = new Date();
-  const isCurrentMonth =
-    today.getFullYear() === year && today.getMonth() === month;
+  const isCurrentMonth = today.getFullYear() === year && today.getMonth() === month;
 
-  const monthName = currentDate.toLocaleDateString("en-US", {
-    month: "long",
-    year: "numeric",
+  const monthName = currentDate.toLocaleDateString('en-US', {
+    month: 'long',
+    year: 'numeric',
   });
 
   return (
@@ -113,21 +112,20 @@ const MainCalendarGrid: FunctionComponent<MainCalendarGridProps> = ({
       <div className="grid grid-cols-7 flex-1">
         {calendarDays.map((item, i) => {
           const { day, inactive } = item;
-          const isTodayDay =
-            isCurrentMonth && day === today.getDate() && !inactive;
+          const isTodayDay = isCurrentMonth && day === today.getDate() && !inactive;
           const dayEvents = getEventsForDay(day);
 
           return (
             <div
               key={i}
               className={[
-                "border border-whitesmoke-200 flex flex-col items-start p-1 gap-1 min-h-[60px] sm:min-h-[80px] md:min-h-[100px]",
+                'border border-whitesmoke-200 flex flex-col items-start p-1 gap-1 min-h-[60px] sm:min-h-[80px] md:min-h-[100px]',
                 inactive
-                  ? "bg-whitesmoke-200 text-dimgray"
+                  ? 'bg-whitesmoke-200 text-dimgray'
                   : isTodayDay
-                    ? "bg-lightcyan-200 text-teal-100"
-                    : "bg-white",
-              ].join(" ")}
+                    ? 'bg-lightcyan-200 text-teal-100'
+                    : 'bg-white',
+              ].join(' ')}
             >
               <b className="text-[10px] sm:text-xs">{day}</b>
               <div className="w-full flex flex-col gap-0.5">
@@ -139,7 +137,7 @@ const MainCalendarGrid: FunctionComponent<MainCalendarGridProps> = ({
                   >
                     <b
                       className={`text-[9px] sm:text-[11px] bg-gradient-to-b ${getEventColor(
-                        event.type
+                        event.type,
                       )} bg-clip-text text-transparent`}
                     >
                       {event.title}

@@ -1,5 +1,5 @@
 import z, { file } from 'zod';
-import { ObjectIdSchema, QuerySchema, RangeSchema } from "./common.js";
+import { ObjectIdSchema, QuerySchema, RangeSchema } from './common.js';
 
 // POST /billings
 export const CreateBillingBodySchema = z.object({
@@ -67,7 +67,7 @@ export const UpdateBillingPaymentRequestBodySchema = z.object({
   amount: z.number(),
 });
 
-export const submitBillingPaymentArgumentsSchema = z.object({
+export const SubmitBillingPaymentArgumentsSchema = z.object({
   file: z.string(),
   paymentMethod: z.enum(['gcash', 'bank_transfer']),
 });

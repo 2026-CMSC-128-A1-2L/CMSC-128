@@ -1,19 +1,17 @@
-import { type FunctionComponent } from "react";
-import { Icon } from "@iconify/react";
-import VerifiedBadge from "../../../../../assets/verified_badge.svg";
-import DefaultAvatar from "../../../../../assets/default_avatar.svg";
-import { useState, useRef } from "react";
-import Footer from "../../../../components/general/Footer";
-import Sidebar from "../../../../components/user/SideBar";
+import type { FunctionComponent } from 'react';
+import { Icon } from '@iconify/react';
+import VerifiedBadge from '../../../../../assets/verified_badge.svg';
+import DefaultAvatar from '../../../../../assets/default_avatar.svg';
+import { useState, useRef } from 'react';
+import Footer from '../../../../components/general/Footer';
+import Sidebar from '../../../../components/user/SideBar';
 
 const CurrentDorm: FunctionComponent = () => {
   const [profileImage, setProfileImage] = useState<string>(DefaultAvatar);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // handle profile image change
-  const handleProfileImageChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
+  const handleProfileImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       const imageUrl = URL.createObjectURL(file);
@@ -23,13 +21,11 @@ const CurrentDorm: FunctionComponent = () => {
 
   // contact number editing state
   const [isEditing, setIsEditing] = useState(false);
-  const [contactNumber, setContactNumber] = useState("09123456789");
+  const [contactNumber, setContactNumber] = useState('09123456789');
 
   // home address editing state
   const [isEditingAddress, setIsEditingAddress] = useState(false);
-  const [homeAddress, setHomeAddress] = useState(
-    "Brgy. Batong Malake, Los Banos, Laguna",
-  );
+  const [homeAddress, setHomeAddress] = useState('Brgy. Batong Malake, Los Banos, Laguna');
 
   const handleSaveAddress = () => {
     setIsEditingAddress(false);
@@ -38,16 +34,16 @@ const CurrentDorm: FunctionComponent = () => {
   // save changes and exit editing mode
   const handleSave = () => {
     if (contactNumber.length !== 11) {
-    return;
+      return;
     }
     setIsEditing(false);
   };
 
   // redact contact number except for first 2 digits
   const redactContact = (number: string) => {
-    if (!number) return "";
+    if (!number) return '';
     if (number.length < 2) return number;
-    return number.substring(0, 2) + "*".repeat(Math.max(0, number.length - 2));
+    return number.substring(0, 2) + '*'.repeat(Math.max(0, number.length - 2));
   };
 
   return (
@@ -63,10 +59,7 @@ const CurrentDorm: FunctionComponent = () => {
                 <div className="self-stretch h-16 overflow-hidden shrink-0 flex items-end p-num-10 box-border gap-2.5">
                   <div className="h-6 flex items-center gap-1.5">
                     <div className="relative font-semibold">User Profile</div>
-                    <Icon
-                      icon="iconamoon:arrow-right-2"
-                      className="h-6 w-6 relative"
-                    />
+                    <Icon icon="iconamoon:arrow-right-2" className="h-6 w-6 relative" />
                     <div className="relative font-semibold">Current Dorm</div>
                   </div>
                 </div>
@@ -77,15 +70,9 @@ const CurrentDorm: FunctionComponent = () => {
                         <b className="relative">Student Profile</b>
                         <div className="flex items-center justify-center gap-2.5 text-[24px] text-darkslategray-200">
                           <b className="relative leading-8">Daphne Dayne</b>
-                          <img
-                            className="h-6 w-6 relative"
-                            alt=""
-                            src={VerifiedBadge}
-                          />
+                          <img className="h-6 w-6 relative" alt="" src={VerifiedBadge} />
                         </div>
-                        <b className="relative text-teal-200">
-                          dcanape@up.edu.ph
-                        </b>
+                        <b className="relative text-teal-200">dcanape@up.edu.ph</b>
                       </div>
                     </div>
                     <div className="self-stretch overflow-hidden flex items-start justify-between py-1 px-num-32 gap-5">
@@ -122,17 +109,11 @@ const CurrentDorm: FunctionComponent = () => {
                           <div className="flex items-center gap-2">
                             <b className="relative">Contact number</b>
                             <button
-                              onClick={() =>
-                                isEditing ? handleSave() : setIsEditing(true)
-                              }
+                              onClick={() => (isEditing ? handleSave() : setIsEditing(true))}
                               className="focus:outline-none hover:opacity-80 transition-opacity"
                             >
                               <Icon
-                                icon={
-                                  isEditing
-                                    ? "solar:check-read-linear"
-                                    : "iconamoon:edit"
-                                }
+                                icon={isEditing ? 'solar:check-read-linear' : 'iconamoon:edit'}
                                 className="h-6 w-6 relative"
                                 color="#096C5B"
                               />
@@ -146,26 +127,24 @@ const CurrentDorm: FunctionComponent = () => {
                                 onChange={(e) => {
                                   // Filters for numbers only to keep data clean
                                   const val = e.target.value;
-                                  const onlyNums = val.replace(/[^0-9]/g, "");
+                                  const onlyNums = val.replace(/[^0-9]/g, '');
 
                                   if (onlyNums.length === 0) {
-                                    setContactNumber("");
+                                    setContactNumber('');
                                     return;
                                   }
 
                                   if (onlyNums.length === 1) {
-                                    if (onlyNums === "0") setContactNumber(onlyNums);
+                                    if (onlyNums === '0') setContactNumber(onlyNums);
                                     return;
                                   }
 
-                                  if (onlyNums.startsWith("09") && onlyNums.length <= 11) {
+                                  if (onlyNums.startsWith('09') && onlyNums.length <= 11) {
                                     setContactNumber(onlyNums);
                                   }
                                 }}
                                 className="border-b border-[#096C5B] text-[14px] bg-transparent outline-none w-[200px] py-1 text-black"
-                                onKeyDown={(e) =>
-                                  e.key === "Enter" && handleSave()
-                                }
+                                onKeyDown={(e) => e.key === 'Enter' && handleSave()}
                                 autoFocus
                               />
                             ) : (
@@ -180,17 +159,13 @@ const CurrentDorm: FunctionComponent = () => {
                             <b className="relative">Home Address</b>
                             <button
                               onClick={() =>
-                                isEditingAddress
-                                  ? handleSaveAddress()
-                                  : setIsEditingAddress(true)
+                                isEditingAddress ? handleSaveAddress() : setIsEditingAddress(true)
                               }
                               className="focus:outline-none hover:opacity-80 transition-opacity"
                             >
                               <Icon
                                 icon={
-                                  isEditingAddress
-                                    ? "solar:check-read-linear"
-                                    : "iconamoon:edit"
+                                  isEditingAddress ? 'solar:check-read-linear' : 'iconamoon:edit'
                                 }
                                 className="h-6 w-6 relative"
                                 color="#096C5B"
@@ -204,7 +179,7 @@ const CurrentDorm: FunctionComponent = () => {
                                 value={homeAddress}
                                 onChange={(e) => {
                                   const val = e.target.value;
-                                  // Regex allows: letters, numbers, spaces, and . , - # 
+                                  // Regex allows: letters, numbers, spaces, and . , - #
                                   // This blocks emojis and special characters like $ % ^ *
                                   const isValidChar = /^[a-zA-Z0-9\s.,\-#]*$/.test(val);
                                   if (isValidChar && val.length <= 100) {
@@ -212,15 +187,11 @@ const CurrentDorm: FunctionComponent = () => {
                                   }
                                 }}
                                 className="border-b border-[#096C5B] text-[14px] bg-transparent outline-none w-[300px] py-1 text-black"
-                                onKeyDown={(e) =>
-                                  e.key === "Enter" && handleSaveAddress()
-                                }
+                                onKeyDown={(e) => e.key === 'Enter' && handleSaveAddress()}
                                 autoFocus
                               />
                             ) : (
-                              <b className="relative text-black py-1 text-left">
-                                {homeAddress}
-                              </b>
+                              <b className="relative text-black py-1 text-left">{homeAddress}</b>
                             )}
                           </div>
                         </div>
@@ -244,9 +215,7 @@ const CurrentDorm: FunctionComponent = () => {
                       <div className="overflow-hidden flex flex-col items-start p-num-10 gap-4">
                         <div className="flex flex-col items-start gap-1">
                           <b className="relative">Current Dorm</b>
-                          <b className="relative text-black">
-                            One Sapphire Place
-                          </b>
+                          <b className="relative text-black">One Sapphire Place</b>
                         </div>
                         <div className="flex flex-col items-start gap-1">
                           <b className="relative">Rent Fee</b>
@@ -257,9 +226,7 @@ const CurrentDorm: FunctionComponent = () => {
                               onClick={(e) => e.preventDefault()}
                               className="flex items-center gap-1 text-[12px] text-teal-100 cursor-pointer hover:underline"
                             >
-                              <div className="relative font-medium">
-                                See Finance
-                              </div>
+                              <div className="relative font-medium">See Finance</div>
                               <Icon
                                 icon="solar:arrow-right-up-linear"
                                 className="h-4 w-4 relative"

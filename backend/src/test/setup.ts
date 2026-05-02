@@ -1,6 +1,6 @@
 import '../../src/config.js';
 import mongoose from 'mongoose';
-import { getApp } from "../../src/app.js";
+import { getApp } from '../../src/app.js';
 import { agent } from 'supertest';
 import { beforeAll, afterAll } from 'vitest';
 import type { App } from 'supertest/types.js';

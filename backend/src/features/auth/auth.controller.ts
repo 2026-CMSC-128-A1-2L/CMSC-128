@@ -1,8 +1,8 @@
 import type { RequestHandler } from 'express';
 import z from 'zod';
 import { promisify } from 'util';
-import { AppError } from "../../error.js";
-import { createTestUser, getUserByEmail } from "../user/user.service.js";
+import { AppError } from '../../error.js';
+import { createTestUser, getUserByEmail } from '../user/user.service.js';
 
 const userType = {
   firstName: z.string(),

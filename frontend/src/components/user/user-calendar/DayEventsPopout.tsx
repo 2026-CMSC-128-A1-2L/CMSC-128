@@ -1,6 +1,6 @@
-import type { FunctionComponent } from "react";
-import { Icon } from "@iconify/react";
-import type { CalendarEvent } from "../../../service/CalendarService";
+import type { FunctionComponent } from 'react';
+import { Icon } from '@iconify/react';
+import type { CalendarEvent } from '../../../service/CalendarService';
 
 export type DayEventsPopoutType = {
   className?: string;
@@ -9,62 +9,62 @@ export type DayEventsPopoutType = {
   events: CalendarEvent[];
 };
 
-const getEventIcon = (type: CalendarEvent["type"]) => {
+const getEventIcon = (type: CalendarEvent['type']) => {
   switch (type) {
-    case "booking":
-      return "ic:round-calendar-today";
-    case "billing":
-      return "ic:round-receipt";
-    case "move-in":
-      return "ic:round-home";
-    case "move-out":
-      return "ic:round-logout";
+    case 'booking':
+      return 'ic:round-calendar-today';
+    case 'billing':
+      return 'ic:round-receipt';
+    case 'move-in':
+      return 'ic:round-home';
+    case 'move-out':
+      return 'ic:round-logout';
     default:
-      return "ic:round-circle";
+      return 'ic:round-circle';
   }
 };
 
-const getEventColor = (type: CalendarEvent["type"]) => {
+const getEventColor = (type: CalendarEvent['type']) => {
   switch (type) {
-    case "booking":
-      return "#c00f0f";
-    case "billing":
-      return "#ff9800";
-    case "move-in":
-      return "#4caf50";
-    case "move-out":
-      return "#2196f3";
+    case 'booking':
+      return '#c00f0f';
+    case 'billing':
+      return '#ff9800';
+    case 'move-in':
+      return '#4caf50';
+    case 'move-out':
+      return '#2196f3';
     default:
-      return "#c00f0f";
+      return '#c00f0f';
   }
 };
 
-const getTypeLabel = (type: CalendarEvent["type"]) => {
+const getTypeLabel = (type: CalendarEvent['type']) => {
   switch (type) {
-    case "booking":
-      return "Visit Booking";
-    case "billing":
-      return "Billing Due";
-    case "move-in":
-      return "Move In";
-    case "move-out":
-      return "Move Out";
+    case 'booking':
+      return 'Visit Booking';
+    case 'billing':
+      return 'Billing Due';
+    case 'move-in':
+      return 'Move In';
+    case 'move-out':
+      return 'Move Out';
     default:
-      return "Event";
+      return 'Event';
   }
 };
 
 const DayEventsPopout: FunctionComponent<DayEventsPopoutType> = ({
-  className = "",
+  className = '',
   onClose,
   date,
   events,
 }) => {
-  const formattedDate = date.toLocaleDateString("en-US", {
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-    year: "numeric",
+  const formattedDate = date.toLocaleDateString('en-US', {
+    weekday: 'long',
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
   });
 
   return (
@@ -82,9 +82,7 @@ const DayEventsPopout: FunctionComponent<DayEventsPopoutType> = ({
 
         <div className="border-t border-whitesmoke-200 pt-4">
           {events.length === 0 ? (
-            <div className="text-center py-4 text-dimgray">
-              No events for this day
-            </div>
+            <div className="text-center py-4 text-dimgray">No events for this day</div>
           ) : (
             <div className="flex flex-col gap-3">
               {events.map((event) => (
@@ -98,16 +96,12 @@ const DayEventsPopout: FunctionComponent<DayEventsPopoutType> = ({
                     color={getEventColor(event.type)}
                   />
                   <div className="flex-1 min-w-0">
-                    <div className="font-semibold text-sm">
-                      {getTypeLabel(event.type)}
-                    </div>
-                    <div className="text-xs text-dimgray mt-1">
-                      {event.title}
-                    </div>
+                    <div className="font-semibold text-sm">{getTypeLabel(event.type)}</div>
+                    <div className="text-xs text-dimgray mt-1">{event.title}</div>
                     <div className="text-[11px] text-gray mt-2">
-                      {new Date(event.date).toLocaleTimeString("en-US", {
-                        hour: "2-digit",
-                        minute: "2-digit",
+                      {new Date(event.date).toLocaleTimeString('en-US', {
+                        hour: '2-digit',
+                        minute: '2-digit',
                         hour12: true,
                       })}
                     </div>

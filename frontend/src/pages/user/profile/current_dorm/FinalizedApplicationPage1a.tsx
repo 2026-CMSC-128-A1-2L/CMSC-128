@@ -8,7 +8,6 @@ import CancelApplication1 from '../../../../components/user/Profile/CancelApplic
 import CancelApplication2 from '../../../../components/user/Profile/CancelApplication2';
 import FinalizeApplication from '../../../../components/user/Profile/FinalizeApplication';
 
-
 const FinalizedApplicationPage1a: FunctionComponent = () => {
   // States for each requirement
   const [isIdUploaded, setIsIdUploaded] = useState(false);
@@ -17,9 +16,10 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
   const [isSubmitPopupVisible, setIsSubmitPopupVisible] = useState(false);
   const [cancelStage, setCancelStage] = useState<null | 'confirming' | 'success'>(null);
 
-
   // Calculate total uploaded count
-  const uploadedCount = [isIdUploaded, isConsentUploaded, isContractUploaded].filter(Boolean).length;
+  const uploadedCount = [isIdUploaded, isConsentUploaded, isContractUploaded].filter(
+    Boolean,
+  ).length;
   const allUploaded = uploadedCount === 3;
 
   const onSubmitTextClick = useCallback(() => {
@@ -37,14 +37,14 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
   }, []);
 
   const handleFinalClose = useCallback(() => {
-  setIsIdUploaded(false);
-  setIsConsentUploaded(false);
-  setIsContractUploaded(false);
-  setCancelStage(null);
+    setIsIdUploaded(false);
+    setIsConsentUploaded(false);
+    setIsContractUploaded(false);
+    setCancelStage(null);
   }, []);
 
   const handleGoBack = useCallback(() => {
-  setCancelStage(null); 
+    setCancelStage(null);
   }, []);
 
   return (
@@ -63,13 +63,14 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
             <div className="self-stretch flex-1 overflow-hidden flex flex-col items-start justify-between gap-0">
               <div className="self-stretch flex-1 flex flex-col items-start py-num-0 pl-num-32 pr-20">
                 <div className="self-stretch h-[1012px] flex flex-col items-start">
-                  
                   {/* Breadcrumbs */}
                   <div className="self-stretch h-16 overflow-hidden shrink-0 flex items-end p-num-10 box-border gap-2.5">
                     <div className="h-6 flex items-center gap-1.5">
                       <div className="relative font-semibold">User Profile</div>
                       <Icon icon="iconamoon:arrow-right-2" className="h-6 w-6 relative" />
-                      <div className="relative font-semibold" data-scroll-to="currentDormText">Current Dorm</div>
+                      <div className="relative font-semibold" data-scroll-to="currentDormText">
+                        Current Dorm
+                      </div>
                     </div>
                   </div>
 
@@ -87,8 +88,12 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
                         </div>
                       </div>
                       <div className="self-stretch overflow-hidden flex items-start justify-between py-1 px-num-32 gap-5">
-                        <img className="w-[200px] relative max-h-full object-cover" alt="" src={Photo} />
-                        
+                        <img
+                          className="w-[200px] relative max-h-full object-cover"
+                          alt=""
+                          src={Photo}
+                        />
+
                         <div className="overflow-hidden flex flex-col items-start p-num-10 gap-4">
                           <div className="flex flex-col items-start gap-1">
                             <b className="relative">Name</b>
@@ -130,7 +135,9 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
                             <b className="relative">Current Dorm</b>
                             <b className="relative text-black">One Sapphire Place</b>
                             <div className="flex items-center gap-1 text-num-12">
-                              <div className="relative font-medium text-transparent bg-clip-text! [background:linear-gradient(180deg,#c29722,#f6b709)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">Pending</div>
+                              <div className="relative font-medium text-transparent bg-clip-text! [background:linear-gradient(180deg,#c29722,#f6b709)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">
+                                Pending
+                              </div>
                               <Icon icon="solar:arrow-right-up-linear" className="w-4" />
                             </div>
                           </div>
@@ -145,26 +152,33 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
                         </div>
                       </div>
                     </div>
-                    
+
                     <div className="self-stretch flex flex-col items-start gap-3 text-darkslategray-100">
                       {/* Sub-Header Section */}
                       <div className="self-stretch flex flex-col items-center justify-center gap-12 text-white">
                         <div className="w-[520px] h-12 relative text-white">
                           <div className="absolute h-full w-full rounded-[99.72px] bg-white flex items-center justify-center p-1 box-border gap-1">
-                            <div className="flex-1 h-full rounded-[99.72px] bg-darkslategray-200 flex items-center justify-center font-semibold">CURRENT DORM</div>
-                            <div className="flex-1 h-full flex items-center justify-center text-slategray font-semibold">VERIFICATION STATUS</div>
+                            <div className="flex-1 h-full rounded-[99.72px] bg-darkslategray-200 flex items-center justify-center font-semibold">
+                              CURRENT DORM
+                            </div>
+                            <div className="flex-1 h-full flex items-center justify-center text-slategray font-semibold">
+                              VERIFICATION STATUS
+                            </div>
                           </div>
                         </div>
                         <div className="self-stretch h-8 flex items-center justify-center gap-6 text-[24px] text-darkslategray-100">
                           <b className="relative leading-8">Finalize Your Application</b>
-                          <div className={`relative text-num-12 font-medium cursor-pointer border-b border-solid transition-all 
-                              ${uploadedCount === 0 
-                              ? "opacity-30 pointer-events-none border-slategray text-slategray" 
-                              : "text-transparent bg-clip-text! [background:linear-gradient(180deg,#c00f0f,#e44f4f)] border-[#c00f0f] hover:opacity-80"
-                                    }`}
-                              onClick={uploadedCount > 0 ? onCancelClick : undefined}>
-                                  Cancel
-                            </div>
+                          <div
+                            className={`relative text-num-12 font-medium cursor-pointer border-b border-solid transition-all 
+                              ${
+                                uploadedCount === 0
+                                  ? 'opacity-30 pointer-events-none border-slategray text-slategray'
+                                  : 'text-transparent bg-clip-text! [background:linear-gradient(180deg,#c00f0f,#e44f4f)] border-[#c00f0f] hover:opacity-80'
+                              }`}
+                            onClick={uploadedCount > 0 ? onCancelClick : undefined}
+                          >
+                            Cancel
+                          </div>
                         </div>
                       </div>
 
@@ -172,7 +186,10 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
                       <div className="self-stretch flex items-center py-num-0 px-num-32 gap-6 text-[24px]">
                         <div className="flex-1 flex items-center gap-6">
                           <div className="flex items-center gap-3">
-                            <Icon icon="material-symbols:info-outline" className="h-6 w-6 relative" />
+                            <Icon
+                              icon="material-symbols:info-outline"
+                              className="h-6 w-6 relative"
+                            />
                             <b className="relative leading-8">Required Documents</b>
                           </div>
                           <b className="relative text-num-14 text-dimgray">
@@ -184,12 +201,14 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
                         <div className="w-24">
                           {!allUploaded ? (
                             <div className="h-8 w-full rounded-2xl bg-aliceblue flex items-center justify-center py-0 px-3 box-border text-center text-sm text-slategray font-inter">
-                                <b className="relative">Submit</b>
+                              <b className="relative">Submit</b>
                             </div>
                           ) : (
-                        //pag naka on na sya
+                            //pag naka on na sya
                             <div className="h-8 w-full relative rounded-2xl bg-lightcyan flex items-center justify-center py-0 px-3 box-border text-center text-sm text-teal font-inter">
-                              <b className="relative cursor-pointer" onClick={onSubmitTextClick}>Submit</b>
+                              <b className="relative cursor-pointer" onClick={onSubmitTextClick}>
+                                Submit
+                              </b>
                             </div>
                           )}
                         </div>
@@ -203,20 +222,30 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
                               <div className="flex-1 flex items-center gap-4">
                                 <b className="relative">Official University ID</b>
                                 <div className="h-8 w-24 rounded-num-16 bg-white flex items-center justify-center text-center">
-                                  <b className="relative text-transparent bg-clip-text! [background:linear-gradient(180deg,#c00f0f,#e44f4f)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">Required</b>
+                                  <b className="relative text-transparent bg-clip-text! [background:linear-gradient(180deg,#c00f0f,#e44f4f)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">
+                                    Required
+                                  </b>
                                 </div>
                               </div>
                               <div className="w-[72px] flex items-center gap-6">
                                 <Icon icon="iconamoon:eye" className="h-6 w-6 relative" />
-                                <Icon icon="qlementine-icons:menu-dots-16" className="h-6 w-6 relative" />
+                                <Icon
+                                  icon="qlementine-icons:menu-dots-16"
+                                  className="h-6 w-6 relative"
+                                />
                               </div>
                             </div>
-                            <div className="w-[852px] h-[88px] rounded-num-16 border-dimgray border-dashed border box-border overflow-hidden shrink-0 flex items-center py-num-12 px-4 text-black cursor-pointer" onClick={() => setIsIdUploaded(true)}>
+                            <div
+                              className="w-[852px] h-[88px] rounded-num-16 border-dimgray border-dashed border box-border overflow-hidden shrink-0 flex items-center py-num-12 px-4 text-black cursor-pointer"
+                              onClick={() => setIsIdUploaded(true)}
+                            >
                               <div className="h-16 flex items-center gap-6">
                                 <Icon icon="icons8:upload-2" className="h-16 w-16 relative" />
                                 <div className="flex flex-col items-start justify-center gap-2">
                                   <b className="relative">Upload the document</b>
-                                  <div className="relative text-num-12 tracking-[0.02em] font-semibold font-lora text-slategray">.jpg or .png less than 500KB</div>
+                                  <div className="relative text-num-12 tracking-[0.02em] font-semibold font-lora text-slategray">
+                                    .jpg or .png less than 500KB
+                                  </div>
                                 </div>
                               </div>
                             </div>
@@ -226,18 +255,25 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
                             <div className="self-stretch flex items-center justify-between pr-6">
                               <div className="flex-1 flex items-center gap-4">
                                 <b className="relative">Official University ID</b>
-                                <div className="h-8 w-24 rounded-2xl bg-aliceblue flex items-center justify-center text-slategray"><b className="relative">Uploaded</b></div>
+                                <div className="h-8 w-24 rounded-2xl bg-aliceblue flex items-center justify-center text-slategray">
+                                  <b className="relative">Uploaded</b>
+                                </div>
                               </div>
                               <div className="flex items-center gap-6">
                                 <Icon icon="iconamoon:eye" className="h-6 w-6 relative" />
-                                <Icon icon="qlementine-icons:menu-dots-16" className="h-6 w-6 relative" />
+                                <Icon
+                                  icon="qlementine-icons:menu-dots-16"
+                                  className="h-6 w-6 relative"
+                                />
                               </div>
                             </div>
                             <div className="w-[852px] h-[88px] flex items-center py-3 gap-2.5 text-black">
                               <Icon icon="bi:file-earmark-image" className="w-16 h-16 relative" />
                               <div className="flex flex-col items-start justify-center gap-2">
                                 <b className="relative">id.png</b>
-                                <div className="relative text-xs tracking-[0.02em] font-semibold font-lora text-slategray">Submitted: 02 April 2026</div>
+                                <div className="relative text-xs tracking-[0.02em] font-semibold font-lora text-slategray">
+                                  Submitted: 02 April 2026
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -251,20 +287,35 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
                             <div className="self-stretch flex items-center justify-between pr-6">
                               <div className="flex-1 flex items-center gap-6">
                                 <b className="relative">Parental Consent Form</b>
-                                <div className="h-8 w-24 rounded-num-16 bg-white flex items-center justify-center text-center"><b className="relative text-transparent bg-clip-text! [background:linear-gradient(180deg,#c00f0f,#e44f4f)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">Required</b></div>
-                                <div className="flex items-center gap-1 text-num-12 text-teal"><b>Download Form</b><Icon icon="material-symbols:download-rounded" /></div>
+                                <div className="h-8 w-24 rounded-num-16 bg-white flex items-center justify-center text-center">
+                                  <b className="relative text-transparent bg-clip-text! [background:linear-gradient(180deg,#c00f0f,#e44f4f)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">
+                                    Required
+                                  </b>
+                                </div>
+                                <div className="flex items-center gap-1 text-num-12 text-teal">
+                                  <b>Download Form</b>
+                                  <Icon icon="material-symbols:download-rounded" />
+                                </div>
                               </div>
                               <div className="flex items-center gap-6">
                                 <Icon icon="iconamoon:eye" className="h-6 w-6 relative" />
-                                <Icon icon="qlementine-icons:menu-dots-16" className="h-6 w-6 relative" />
+                                <Icon
+                                  icon="qlementine-icons:menu-dots-16"
+                                  className="h-6 w-6 relative"
+                                />
                               </div>
                             </div>
-                            <div className="w-[852px] h-[88px] rounded-num-16 border-dimgray border-dashed border box-border flex items-center py-num-12 px-4 text-black cursor-pointer" onClick={() => setIsConsentUploaded(true)}>
+                            <div
+                              className="w-[852px] h-[88px] rounded-num-16 border-dimgray border-dashed border box-border flex items-center py-num-12 px-4 text-black cursor-pointer"
+                              onClick={() => setIsConsentUploaded(true)}
+                            >
                               <div className="h-16 flex items-center gap-6">
                                 <Icon icon="icons8:upload-2" className="h-16 w-16 relative" />
                                 <div className="flex flex-col items-start justify-center gap-2">
                                   <b className="relative">Upload the document</b>
-                                  <div className="relative text-num-12 tracking-[0.02em] font-semibold font-lora text-slategray">.pdf less than 500KB</div>
+                                  <div className="relative text-num-12 tracking-[0.02em] font-semibold font-lora text-slategray">
+                                    .pdf less than 500KB
+                                  </div>
                                 </div>
                               </div>
                             </div>
@@ -274,19 +325,32 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
                             <div className="self-stretch flex items-center justify-between pr-6">
                               <div className="flex-1 flex items-center gap-6">
                                 <b className="relative">Parental Consent Form</b>
-                                <div className="h-8 w-24 rounded-2xl bg-aliceblue flex items-center justify-center text-slategray"><b className="relative">Uploaded</b></div>
-                                <div className="flex items-center gap-1 text-xs text-teal"><b>Download Consent Form</b><Icon icon="material-symbols:download-rounded" className="h-5 w-5" /></div>
+                                <div className="h-8 w-24 rounded-2xl bg-aliceblue flex items-center justify-center text-slategray">
+                                  <b className="relative">Uploaded</b>
+                                </div>
+                                <div className="flex items-center gap-1 text-xs text-teal">
+                                  <b>Download Consent Form</b>
+                                  <Icon
+                                    icon="material-symbols:download-rounded"
+                                    className="h-5 w-5"
+                                  />
+                                </div>
                               </div>
                               <div className="flex items-center gap-6">
                                 <Icon icon="iconamoon:eye" className="h-6 w-6 relative" />
-                                <Icon icon="qlementine-icons:menu-dots-16" className="h-6 w-6 relative" />
+                                <Icon
+                                  icon="qlementine-icons:menu-dots-16"
+                                  className="h-6 w-6 relative"
+                                />
                               </div>
                             </div>
                             <div className="w-[852px] h-[88px] flex items-center py-3 gap-2.5 text-black">
                               <Icon icon="bi:file-earmark-pdf" className="w-16 h-16 relative" />
                               <div className="flex flex-col items-start justify-center gap-2">
                                 <b className="relative">consent_form.pdf</b>
-                                <div className="relative text-xs tracking-[0.02em] font-semibold font-lora text-slategray">Submitted: 02 April 2026</div>
+                                <div className="relative text-xs tracking-[0.02em] font-semibold font-lora text-slategray">
+                                  Submitted: 02 April 2026
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -300,20 +364,35 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
                             <div className="self-stretch flex items-center justify-between pr-6 gap-5">
                               <div className="w-[492px] flex items-center gap-6">
                                 <b className="relative">Tenancy Contract</b>
-                                <div className="h-8 w-24 rounded-num-16 bg-white flex items-center justify-center text-center"><b className="relative text-transparent bg-clip-text! [background:linear-gradient(180deg,#c00f0f,#e44f4f)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">Required</b></div>
-                                <div className="flex items-center gap-1 text-num-12 text-teal"><b>Download Contract</b><Icon icon="material-symbols:download-rounded" /></div>
+                                <div className="h-8 w-24 rounded-num-16 bg-white flex items-center justify-center text-center">
+                                  <b className="relative text-transparent bg-clip-text! [background:linear-gradient(180deg,#c00f0f,#e44f4f)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">
+                                    Required
+                                  </b>
+                                </div>
+                                <div className="flex items-center gap-1 text-num-12 text-teal">
+                                  <b>Download Contract</b>
+                                  <Icon icon="material-symbols:download-rounded" />
+                                </div>
                               </div>
                               <div className="flex items-center gap-6">
                                 <Icon icon="iconamoon:eye" className="h-6 w-6 relative" />
-                                <Icon icon="qlementine-icons:menu-dots-16" className="h-6 w-6 relative" />
+                                <Icon
+                                  icon="qlementine-icons:menu-dots-16"
+                                  className="h-6 w-6 relative"
+                                />
                               </div>
                             </div>
-                            <div className="w-[852px] h-[88px] rounded-num-16 border-dimgray border-dashed border flex items-center py-num-12 px-4 text-black cursor-pointer" onClick={() => setIsContractUploaded(true)}>
+                            <div
+                              className="w-[852px] h-[88px] rounded-num-16 border-dimgray border-dashed border flex items-center py-num-12 px-4 text-black cursor-pointer"
+                              onClick={() => setIsContractUploaded(true)}
+                            >
                               <div className="h-16 flex items-center gap-6">
                                 <Icon icon="icons8:upload-2" className="h-16 w-16 relative" />
                                 <div className="flex flex-col items-start justify-center gap-2">
                                   <b className="relative">Upload the document</b>
-                                  <div className="relative text-num-12 tracking-[0.02em] font-semibold font-lora text-slategray">.pdf less than 500KB</div>
+                                  <div className="relative text-num-12 tracking-[0.02em] font-semibold font-lora text-slategray">
+                                    .pdf less than 500KB
+                                  </div>
                                 </div>
                               </div>
                             </div>
@@ -323,19 +402,32 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
                             <div className="self-stretch flex items-center justify-between pr-6 gap-5">
                               <div className="w-[492px] flex items-center gap-6">
                                 <b className="relative">Tenancy Contract</b>
-                                <div className="h-8 w-24 rounded-2xl bg-aliceblue flex items-center justify-center text-slategray"><b className="relative">Uploaded</b></div>
-                                <div className="flex items-center gap-1 text-xs text-teal"><b>Download Tenancy Contract</b><Icon icon="material-symbols:download-rounded" className="h-5 w-5" /></div>
+                                <div className="h-8 w-24 rounded-2xl bg-aliceblue flex items-center justify-center text-slategray">
+                                  <b className="relative">Uploaded</b>
+                                </div>
+                                <div className="flex items-center gap-1 text-xs text-teal">
+                                  <b>Download Tenancy Contract</b>
+                                  <Icon
+                                    icon="material-symbols:download-rounded"
+                                    className="h-5 w-5"
+                                  />
+                                </div>
                               </div>
                               <div className="flex items-center gap-6">
                                 <Icon icon="iconamoon:eye" className="h-6 w-6 relative" />
-                                <Icon icon="qlementine-icons:menu-dots-16" className="h-6 w-6 relative" />
+                                <Icon
+                                  icon="qlementine-icons:menu-dots-16"
+                                  className="h-6 w-6 relative"
+                                />
                               </div>
                             </div>
                             <div className="w-[852px] h-[88px] flex items-center py-3 gap-2.5 text-black">
                               <Icon icon="bi:file-earmark-pdf" className="w-16 h-16 relative" />
                               <div className="flex flex-col items-start justify-center gap-2">
                                 <b className="relative">tenancy_contract.pdf</b>
-                                <div className="relative text-xs tracking-[0.02em] font-semibold font-lora text-slategray">Submitted: 02 April 2026</div>
+                                <div className="relative text-xs tracking-[0.02em] font-semibold font-lora text-slategray">
+                                  Submitted: 02 April 2026
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -353,24 +445,17 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
         </div>
         {isSubmitPopupVisible && (
           <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-           <FinalizeApplication onContinue={() => setIsSubmitPopupVisible(false)} />
-        </div>
+            <FinalizeApplication onContinue={() => setIsSubmitPopupVisible(false)} />
+          </div>
         )}
-        </div>
+      </div>
 
-        {cancelStage && (
+      {cancelStage && (
         <div className="fixed inset-0 z-999 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
           {cancelStage === 'confirming' && (
-            <CancelApplication1 
-              onConfirm={handleConfirmCancellation} 
-              onBack={handleGoBack} 
-            />
+            <CancelApplication1 onConfirm={handleConfirmCancellation} onBack={handleGoBack} />
           )}
-          {cancelStage === 'success' && (
-            <CancelApplication2 
-              onClose={handleFinalClose} 
-            />
-          )}
+          {cancelStage === 'success' && <CancelApplication2 onClose={handleFinalClose} />}
         </div>
       )}
     </div>

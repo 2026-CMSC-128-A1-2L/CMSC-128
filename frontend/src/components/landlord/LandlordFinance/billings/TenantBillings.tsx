@@ -166,8 +166,18 @@ const fetchBillingsByMonth = async (month: string, year: number): Promise<Billin
 
 const getAvailableMonths = () => {
   const months = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
   ];
 
   const currentDate = new Date();
@@ -336,7 +346,11 @@ const TenantBillingsTab: FunctionComponent = () => {
 
               {isMonthDropdownOpen && (
                 <>
-                  <div key="backdrop" className="fixed inset-0 z-10" onClick={() => setIsMonthDropdownOpen(false)} />
+                  <div
+                    key="backdrop"
+                    className="fixed inset-0 z-10"
+                    onClick={() => setIsMonthDropdownOpen(false)}
+                  />
                   <div className="absolute top-full right-0 mt-1 w-[150px] z-20 bg-white border border-whitesmoke-200 rounded-lg shadow-lg overflow-hidden">
                     {availableMonths.map((month, index) => (
                       <div

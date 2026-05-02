@@ -1,5 +1,5 @@
-import { Icon } from "@iconify/react";
-import AtlasLogo from "../../../assets/logo_atlas_text.svg?react";
+import { Icon } from '@iconify/react';
+import AtlasLogo from '../../../assets/logo_atlas_text.svg?react';
 
 const LandlordFooter = () => {
   return (
@@ -11,11 +11,7 @@ const LandlordFooter = () => {
               <AtlasLogo className="h-[42px] w-[48px]" aria-label="Atlas" />
               <div className="flex items-center gap-[12px]">
                 <span className="flex items-center gap-[4px] font-['Inter',sans-serif] text-[14px] font-bold text-[#666]">
-                  <Icon
-                    icon="ph:copyright-bold"
-                    className="h-[20px] w-[20px]"
-                    aria-hidden="true"
-                  />
+                  <Icon icon="ph:copyright-bold" className="h-[20px] w-[20px]" aria-hidden="true" />
                   2026
                 </span>
                 <span className="font-['Inter',sans-serif] text-[14px] font-bold text-[#666]">

@@ -12,20 +12,20 @@ import {
   routeRejectFacility,
   routeGetMonthlyIncomeByLandlord,
   routeGetOverdueTenantsByLandlord,
-} from "./facility.controller.js";
-import { routeCreateListing } from "../listing/listing.controller.js";
+} from './facility.controller.js';
+import { routeCreateListing } from '../listing/listing.controller.js';
 import {
   routeGetFacilityReviews,
   routeGetAverageRatingsByFacility,
-} from "../review/review.controller.js";
+} from '../review/review.controller.js';
 import {
   correctLandlordFilter,
   directManagerFilter,
   isLandlord,
   isSuperAdmin,
   listingViewFilter,
-} from "../../middleware.js";
-import { routeGetVisitBookingsByFacility } from "../booking/booking.controller.js";
+} from '../../middleware.js';
+import { routeGetVisitBookingsByFacility } from '../booking/booking.controller.js';
 
 const router = Router();
 
@@ -63,7 +63,7 @@ router.post('/', isLandlord, routeCreateFacility);
 // landlord only
 // ============================================================================
 router.get('/landlord/monthly-income', isLandlord, routeGetMonthlyIncomeByLandlord);
-  
+
 // ============================================================================
 // GET /api/facilities/landlord/overdue-tenants
 //

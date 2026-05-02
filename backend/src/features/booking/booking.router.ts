@@ -4,13 +4,13 @@ import {
   routeCreateBooking,
   routeCancelBooking,
   routeUpdateBookingStatus,
-} from "./booking.controller.js";
+} from './booking.controller.js';
 import {
   isSuperAdmin,
   isVerifiedStudent,
   manageListingsFilter,
   selfFilter,
-} from "../../middleware.js";
+} from '../../middleware.js';
 
 const router = Router();
 

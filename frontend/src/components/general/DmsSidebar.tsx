@@ -1,12 +1,12 @@
-import { useState, type FunctionComponent } from "react";
-import Message from "../general/InboxMessage";
-import { Icon } from "@iconify/react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useState, type FunctionComponent } from 'react';
+import Message from '../general/InboxMessage';
+import { Icon } from '@iconify/react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const DmsSidebar: FunctionComponent = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
 
   return (
     <div className="w-72 h-screen relative overflow-hidden flex flex-col items-start py-10 pl-4 pr-3 box-border gap-2 text-left font-inter bg-white shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
@@ -19,10 +19,7 @@ const DmsSidebar: FunctionComponent = () => {
             onClick={() => navigate(-1)}
           />
           <div className="flex-1 px-3 py-2 rounded-num-8 bg-unavailable_action flex items-center gap-2 transition-all focus-within:ring-1 focus-within:ring-teal/30 focus-within:bg-white focus-within:shadow-sm">
-            <Icon
-              icon="material-symbols:search"
-              className="w-4 h-4 text-unselected shrink-0"
-            />
+            <Icon icon="material-symbols:search" className="w-4 h-4 text-unselected shrink-0" />
             <input
               type="text"
               placeholder="Search messages"
@@ -51,8 +48,8 @@ const DmsSidebar: FunctionComponent = () => {
               body="Quevin Custodio has invited you to join..."
               time="1:20 am"
               icon="iconamoon:notification"
-              onClick={() => navigate("/direct-messages/dorm-invitation")}
-              active={location.pathname === "/direct-messages/dorm-invitation"}
+              onClick={() => navigate('/direct-messages/dorm-invitation')}
+              active={location.pathname === '/direct-messages/dorm-invitation'}
             />
             <Message />
             <Message
@@ -87,9 +84,7 @@ const DmsSidebar: FunctionComponent = () => {
               <b className="relative text-num-12 font-inter text-white">All</b>
             </button>
             <button className="h-fit rounded-full bg-lightcyan flex items-center justify-center py-1.5 px-5 transition-colors hover:bg-teal/10 active:scale-95">
-              <b className="relative text-num-12 font-inter text-teal">
-                Unread
-              </b>
+              <b className="relative text-num-12 font-inter text-teal">Unread</b>
             </button>
           </div>
 
@@ -109,13 +104,8 @@ const DmsSidebar: FunctionComponent = () => {
           </div>
 
           <div className="w-full flex items-center justify-center gap-1 text-center">
-            <div className="relative font-semibold text-num-12 text-teal">
-              View Archive
-            </div>
-            <Icon
-              icon="material-symbols-light:chevron-right"
-              className="w-5 h-5 text-teal"
-            />
+            <div className="relative font-semibold text-num-12 text-teal">View Archive</div>
+            <Icon icon="material-symbols-light:chevron-right" className="w-5 h-5 text-teal" />
           </div>
         </div>
       </div>

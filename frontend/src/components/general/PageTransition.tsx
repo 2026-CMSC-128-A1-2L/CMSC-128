@@ -1,5 +1,5 @@
-import { motion } from "framer-motion";
-import { type ReactNode } from "react";
+import { motion } from 'framer-motion';
+import type { ReactNode } from 'react';
 
 export default function PageTransition({ children }: { children: ReactNode }) {
   return (
@@ -16,17 +16,17 @@ export default function PageTransition({ children }: { children: ReactNode }) {
 
       {/* BIG overlay animation (you WILL see this) */}
       <motion.div
-        initial={{ x: "100%" }}
-        animate={{ x: "100%" }}
-        exit={{ x: "0%" }}
-        transition={{ duration: 0.5, ease: "easeInOut" }}
+        initial={{ x: '100%' }}
+        animate={{ x: '100%' }}
+        exit={{ x: '0%' }}
+        transition={{ duration: 0.5, ease: 'easeInOut' }}
         style={{
-          position: "fixed",
+          position: 'fixed',
           top: 0,
           left: 0,
-          width: "100vw",
-          height: "100vh",
-          background: "black",
+          width: '100vw',
+          height: '100vh',
+          background: 'black',
           zIndex: 9999,
         }}
       />

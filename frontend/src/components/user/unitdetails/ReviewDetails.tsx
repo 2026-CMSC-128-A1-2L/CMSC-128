@@ -49,9 +49,7 @@ const ReviewDetails: FunctionComponent = () => {
         <div className="self-stretch flex flex-col items-start py-2 px-16 text-[14px]">
           <div className="self-stretch relative">
             <div className="relative h-max w-full py-2 shadow-[0px_0px_4px_rgba(0,0,0,0.25)] rounded-[10px] bg-white">
-              <div className="w-full flex items-center justify-center">
-                View all 12 reviews
-              </div>
+              <div className="w-full flex items-center justify-center">View all 12 reviews</div>
             </div>
           </div>
         </div>

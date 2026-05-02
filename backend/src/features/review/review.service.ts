@@ -1,11 +1,11 @@
 import type mongoose from 'mongoose';
-import { AppError } from "../../error.js";
-import { combineFilters } from "../../middleware.js";
-import { HousingFacility } from "../facility/facility.model.js";
-import { Listing, ListingType } from "../listing/listing.model.js";
-import { Rental } from "../rental/rental.model.js";
-import { Unit } from "../unit/unit.model.js";
-import { Review, ReviewType } from "./review.model.js";
+import { AppError } from '../../error.js';
+import { combineFilters } from '../../middleware.js';
+import { HousingFacility } from '../facility/facility.model.js';
+import { Listing, ListingType } from '../listing/listing.model.js';
+import { Rental } from '../rental/rental.model.js';
+import { Unit } from '../unit/unit.model.js';
+import { Review, ReviewType } from './review.model.js';
 import { QueryFilter } from 'mongoose';
 
 type Ratings = {

@@ -15,10 +15,10 @@ import {
   updateSelf,
   rejectUser,
   onboardSelf,
-} from "./user.service.js";
-import { AppError } from "../../error.js";
+} from './user.service.js';
+import { AppError } from '../../error.js';
 import assert from 'node:assert';
-import { UserType } from "./user.model.js";
+import { UserType } from './user.model.js';
 
 export const routeGetUsers: RequestHandler = async (req, res, _next) => {
   const params = GetUsersQuerySchema.parse(req.query);

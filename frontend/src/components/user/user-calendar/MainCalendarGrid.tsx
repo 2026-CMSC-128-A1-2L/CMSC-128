@@ -1,5 +1,5 @@
-import { type FunctionComponent, useEffect, useState } from "react";
-import { CalendarService, type CalendarEvent } from "../../../service/CalendarService";
+import { type FunctionComponent, useEffect, useState } from 'react';
+import { CalendarService, type CalendarEvent } from '../../../service/CalendarService';
 
 interface MainCalendarGridProps {
   currentDate: Date;
@@ -8,24 +8,22 @@ interface MainCalendarGridProps {
   onEventClick?: (event: CalendarEvent) => void;
 }
 
-const DAYS = ["SUN", "MON", "TUE", "WED", "THUR", "FRI", "SAT"];
+const DAYS = ['SUN', 'MON', 'TUE', 'WED', 'THUR', 'FRI', 'SAT'];
 
-const getEventColor = (type: CalendarEvent["type"]) => {
+const getEventColor = (type: CalendarEvent['type']) => {
   switch (type) {
-    case "booking":
-      return "from-[#c00f0f] to-[#e44f4f]";
-    case "billing":
-      return "from-[#ff9800] to-[#ffb74d]";
-    case "move-in":
-      return "from-[#4caf50] to-[#81c784]";
-    case "move-out":
-      return "from-[#2196f3] to-[#64b5f6]";
+    case 'booking':
+      return 'from-[#c00f0f] to-[#e44f4f]';
+    case 'billing':
+      return 'from-[#ff9800] to-[#ffb74d]';
+    case 'move-in':
+      return 'from-[#4caf50] to-[#81c784]';
+    case 'move-out':
+      return 'from-[#2196f3] to-[#64b5f6]';
     default:
-      return "from-[#c00f0f] to-[#e44f4f]";
+      return 'from-[#c00f0f] to-[#e44f4f]';
   }
 };
-
-
 
 const MainCalendarGrid: FunctionComponent<MainCalendarGridProps> = ({
   currentDate,
@@ -40,11 +38,11 @@ const MainCalendarGrid: FunctionComponent<MainCalendarGridProps> = ({
       try {
         const response = await CalendarService.getCalendarEvents(
           currentDate.getFullYear(),
-          currentDate.getMonth() + 1
+          currentDate.getMonth() + 1,
         );
         setEvents(response.data);
       } catch (error) {
-        console.error("Failed to load calendar events:", error);
+        console.error('Failed to load calendar events:', error);
       }
     };
 
@@ -87,12 +85,11 @@ const MainCalendarGrid: FunctionComponent<MainCalendarGridProps> = ({
   };
 
   const today = new Date();
-  const isCurrentMonth =
-    today.getFullYear() === year && today.getMonth() === month;
+  const isCurrentMonth = today.getFullYear() === year && today.getMonth() === month;
 
-  const monthName = currentDate.toLocaleDateString("en-US", {
-    month: "long",
-    year: "numeric",
+  const monthName = currentDate.toLocaleDateString('en-US', {
+    month: 'long',
+    year: 'numeric',
   });
 
   // Get events for a specific day from API data
@@ -109,7 +106,7 @@ const MainCalendarGrid: FunctionComponent<MainCalendarGridProps> = ({
 
       {/* Day labels */}
       <div className="grid grid-cols-7 gap-1 sm:gap-2 px-3 sm:px-6 py-3 text-center text-xs sm:text-num-14 font-semibold text-dimgray">
-        {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => (
+        {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((d) => (
           <div key={d}>{d}</div>
         ))}
       </div>
@@ -118,8 +115,7 @@ const MainCalendarGrid: FunctionComponent<MainCalendarGridProps> = ({
       <div className="grid grid-cols-7 gap-1 sm:gap-2 px-3 sm:px-6 pb-6">
         {calendarDays.map((item, i) => {
           const { day, inactive } = item;
-          const isTodayDay =
-            isCurrentMonth && day === today.getDate() && !inactive;
+          const isTodayDay = isCurrentMonth && day === today.getDate() && !inactive;
           const dayEvents = getEventsForDayWithFallback(day);
           const hasEvents = dayEvents.length > 0;
 
@@ -128,17 +124,15 @@ const MainCalendarGrid: FunctionComponent<MainCalendarGridProps> = ({
               key={i}
               className={`min-h-20 sm:min-h-28 p-1 sm:p-3 rounded border transition-colors ${
                 inactive
-                  ? "bg-whitesmoke-100 border-whitesmoke-200 cursor-default"
+                  ? 'bg-whitesmoke-100 border-whitesmoke-200 cursor-default'
                   : isTodayDay
-                    ? "bg-lightcyan border-teal"
+                    ? 'bg-lightcyan border-teal'
                     : hasEvents
-                    ? "bg-white border-whitesmoke-200 cursor-default"
-                    : "bg-white border-whitesmoke-200 cursor-default"
+                      ? 'bg-white border-whitesmoke-200 cursor-default'
+                      : 'bg-white border-whitesmoke-200 cursor-default'
               }`}
             >
-              <div className="text-xs sm:text-num-14 font-semibold text-dimgray mb-1">
-                {day}
-              </div>
+              <div className="text-xs sm:text-num-14 font-semibold text-dimgray mb-1">{day}</div>
               <div className="flex flex-col gap-0.5 sm:gap-1 text-xs">
                 {dayEvents.slice(0, 1).map((event) => (
                   <button
@@ -150,15 +144,11 @@ const MainCalendarGrid: FunctionComponent<MainCalendarGridProps> = ({
                     }}
                     className="w-full text-left px-1 sm:px-1.5 py-0.5 rounded bg-gradient-to-r from-blue-100 to-blue-50 hover:from-blue-200 hover:to-blue-100 transition-colors truncate cursor-pointer"
                   >
-                    <span className="font-semibold text-xs truncate block">
-                      {event.title}
-                    </span>
+                    <span className="font-semibold text-xs truncate block">{event.title}</span>
                   </button>
                 ))}
                 {dayEvents.length > 1 && (
-                  <div className="text-xs text-teal font-semibold">
-                    +{dayEvents.length - 1}
-                  </div>
+                  <div className="text-xs text-teal font-semibold">+{dayEvents.length - 1}</div>
                 )}
               </div>
             </div>

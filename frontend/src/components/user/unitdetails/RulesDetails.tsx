@@ -12,11 +12,20 @@ const rules = [
 
 const RuleDetails: FunctionComponent = () => (
   <div className="w-full flex flex-col gap-4 font-inter">
-    <div className="px-5 py-2"><b className="text-xl text-black">House Rules</b></div>
+    <div className="px-5 py-2">
+      <b className="text-xl text-black">House Rules</b>
+    </div>
     <div className="px-5 flex flex-col gap-3">
       {rules.map(({ text, ok }) => (
-        <div key={text} className="rounded-xl border border-whitesmoke bg-white flex items-center gap-3 px-4 py-3">
-          <img src={ok ? allowed : not_allowed} alt={ok ? 'allowed' : 'not allowed'} className="h-5 w-5 shrink-0" />
+        <div
+          key={text}
+          className="rounded-xl border border-whitesmoke bg-white flex items-center gap-3 px-4 py-3"
+        >
+          <img
+            src={ok ? allowed : not_allowed}
+            alt={ok ? 'allowed' : 'not allowed'}
+            className="h-5 w-5 shrink-0"
+          />
           <span className="text-sm font-medium">{text}</span>
         </div>
       ))}

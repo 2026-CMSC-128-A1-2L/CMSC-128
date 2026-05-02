@@ -1,10 +1,10 @@
 import { RequestHandler } from 'express';
 import { QueryFilter } from 'mongoose';
-import { AppError } from "../../error.js";
-import { combineFilters } from "../../middleware.js";
-import { Listing } from "../listing/listing.model.js";
-import { Rental } from "../rental/rental.model.js";
-import { UnitType } from "./unit.model.js";
+import { AppError } from '../../error.js';
+import { combineFilters } from '../../middleware.js';
+import { Listing } from '../listing/listing.model.js';
+import { Rental } from '../rental/rental.model.js';
+import { UnitType } from './unit.model.js';
 
 export const currentTenantManagerFilter: RequestHandler<
   unknown,

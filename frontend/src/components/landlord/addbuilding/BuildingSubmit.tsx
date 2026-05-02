@@ -1,7 +1,13 @@
 import { type FunctionComponent, useCallback, useState } from 'react';
 import { Icon } from '@iconify/react';
 import { useBuildingStore } from './useBuildingStore';
-import type { RoomData, RoomTypeData, ManagerData, PaymentMethodData, RequirementItem } from './useBuildingStore';
+import type {
+  RoomData,
+  RoomTypeData,
+  ManagerData,
+  PaymentMethodData,
+  RequirementItem,
+} from './useBuildingStore';
 import ListingsSuccess from './ListingsSuccess';
 
 // ─── Props ────────────────────────────────────────────────────────────────────
@@ -29,8 +35,9 @@ const RequirementRow: FunctionComponent<{ req: RequirementItem }> = ({ req }) =>
     <div className="self-stretch rounded-2xl bg-aliceblue border border-whitesmoke flex items-center py-4 px-6 gap-4">
       {/* Status icon */}
       <div
-        className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${isUploaded ? 'bg-teal-100' : 'bg-red-100'
-          }`}
+        className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
+          isUploaded ? 'bg-teal-100' : 'bg-red-100'
+        }`}
       >
         <Icon
           icon={isUploaded ? 'material-symbols:check-rounded' : 'material-symbols:close-rounded'}
@@ -52,8 +59,9 @@ const RequirementRow: FunctionComponent<{ req: RequirementItem }> = ({ req }) =>
 
       {/* Badge */}
       <span
-        className={`text-xs font-semibold rounded-2xl px-3 py-1 shrink-0 ${isUploaded ? 'text-slate-500 bg-slate-100' : 'text-red-600 bg-red-100'
-          }`}
+        className={`text-xs font-semibold rounded-2xl px-3 py-1 shrink-0 ${
+          isUploaded ? 'text-slate-500 bg-slate-100' : 'text-red-600 bg-red-100'
+        }`}
       >
         {isUploaded ? 'Uploaded' : 'Missing'}
       </span>
@@ -110,7 +118,12 @@ const RoomTypeBlock: FunctionComponent<{ roomType: RoomTypeData }> = ({ roomType
           <b className="text-xs text-dimgray">Photos</b>
           <div className="flex items-start flex-wrap gap-2">
             {roomType.images.map((src, i) => (
-              <img key={i} src={src} alt={`Room type photo ${i + 1}`} className="h-[80px] w-[80px] rounded-xl object-cover border border-whitesmoke" />
+              <img
+                key={i}
+                src={src}
+                alt={`Room type photo ${i + 1}`}
+                className="h-[80px] w-[80px] rounded-xl object-cover border border-whitesmoke"
+              />
             ))}
           </div>
         </div>
@@ -152,7 +165,11 @@ const PaymentMethodBlock: FunctionComponent<{
       {data.qrImage ? (
         <div className="flex flex-col gap-2">
           <span className="text-xs font-medium text-slategray">QR Code</span>
-          <img src={data.qrImage} alt="QR" className="h-[120px] w-[120px] rounded-xl object-cover border border-whitesmoke" />
+          <img
+            src={data.qrImage}
+            alt="QR"
+            className="h-[120px] w-[120px] rounded-xl object-cover border border-whitesmoke"
+          />
         </div>
       ) : (
         <div className="flex flex-col gap-1">
@@ -200,12 +217,15 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
       <div className="relative w-full flex flex-col items-start justify-center gap-2.5 text-center text-num-18 text-teal-200 font-inter">
         <div className="w-[880px] flex flex-col items-start">
           <div className="w-[880px] rounded-2xl bg-white border-whitesmoke border-solid border box-border flex flex-col items-start py-8 px-12 gap-3">
-
             {/* Review Banner */}
             <div className="self-stretch rounded-xl bg-lightcyan border border-teal-100 flex items-center px-4 py-3 gap-3 text-left mb-2">
-              <Icon icon="material-symbols:info-outline" className="w-5 h-5 text-teal-600 shrink-0" />
+              <Icon
+                icon="material-symbols:info-outline"
+                className="w-5 h-5 text-teal-600 shrink-0"
+              />
               <p className="text-sm font-medium text-teal-700">
-                Please review all information carefully before submitting. You cannot edit after submission.
+                Please review all information carefully before submitting. You cannot edit after
+                submission.
               </p>
             </div>
 
@@ -215,10 +235,9 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
                 <b className="relative tracking-num--0_01">Building Requirements</b>
                 {/* Upload progress badge */}
                 <span
-                  className={`text-xs font-semibold rounded-full px-3 py-1 ${allUploaded
-                    ? 'bg-teal-100 text-teal-700'
-                    : 'bg-red-100 text-red-600'
-                    }`}
+                  className={`text-xs font-semibold rounded-full px-3 py-1 ${
+                    allUploaded ? 'bg-teal-100 text-teal-700' : 'bg-red-100 text-red-600'
+                  }`}
                 >
                   {uploadedCount} / {requirements.length} uploaded
                 </span>
@@ -249,7 +268,9 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
             <div className="self-stretch flex flex-col items-start py-num-10 px-0 gap-2.5 text-left">
               <b className="relative tracking-num--0_01">About</b>
               <div className="self-stretch rounded-num-12 bg-aliceblue border-whitesmoke border-solid border py-3 px-4 text-left text-num-14 text-slategray font-medium min-h-[120px]">
-                {buildingInfo.about || <span className="italic text-gray-100">No description provided.</span>}
+                {buildingInfo.about || (
+                  <span className="italic text-gray-100">No description provided.</span>
+                )}
               </div>
             </div>
 
@@ -259,7 +280,12 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
               {buildingInfo.images && buildingInfo.images.length > 0 ? (
                 <div className="self-stretch flex items-start flex-wrap gap-2 py-2">
                   {buildingInfo.images.map((src, index) => (
-                    <img key={index} src={src} alt={`Building photo ${index + 1}`} className="h-[100px] w-[100px] rounded-num-12 object-cover border border-whitesmoke" />
+                    <img
+                      key={index}
+                      src={src}
+                      alt={`Building photo ${index + 1}`}
+                      className="h-[100px] w-[100px] rounded-num-12 object-cover border border-whitesmoke"
+                    />
                   ))}
                 </div>
               ) : (
@@ -288,11 +314,17 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
                 <div className="self-stretch flex flex-col gap-5">
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 rounded-full bg-teal-600 shrink-0" />
-                    <span className="text-xs font-semibold text-teal-700">Cashless Payment Enabled</span>
+                    <span className="text-xs font-semibold text-teal-700">
+                      Cashless Payment Enabled
+                    </span>
                   </div>
                   <div className="self-stretch grid grid-cols-2 gap-5">
                     {payment.gcash?.name ? (
-                      <PaymentMethodBlock title="GCash" accountLabel="GCash Number" data={payment.gcash} />
+                      <PaymentMethodBlock
+                        title="GCash"
+                        accountLabel="GCash Number"
+                        data={payment.gcash}
+                      />
                     ) : (
                       <div className="flex flex-col gap-3">
                         <span className="text-sm font-bold text-gray-600">GCash</span>
@@ -302,7 +334,11 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
                       </div>
                     )}
                     {payment.bank?.name ? (
-                      <PaymentMethodBlock title="Bank Transfer" accountLabel="Account Number" data={payment.bank} />
+                      <PaymentMethodBlock
+                        title="Bank Transfer"
+                        accountLabel="Account Number"
+                        data={payment.bank}
+                      />
                     ) : (
                       <div className="flex flex-col gap-3">
                         <span className="text-sm font-bold text-gray-600">Bank Transfer</span>
@@ -322,10 +358,12 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
               {buildingInfo.managers.length > 0 ? (
                 <div className="self-stretch flex flex-col gap-3">
                   {buildingInfo.managers.map((m: ManagerData) => (
-                    <div key={m.email} className="self-stretch rounded-2xl bg-aliceblue border border-whitesmoke flex flex-col py-5 px-6 gap-4">
+                    <div
+                      key={m.email}
+                      className="self-stretch rounded-2xl bg-aliceblue border border-whitesmoke flex flex-col py-5 px-6 gap-4"
+                    >
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-teal-100 flex items-center justify-center shrink-0">
-                        </div>
+                        <div className="w-8 h-8 rounded-full bg-teal-100 flex items-center justify-center shrink-0"></div>
                         <span className="text-sm font-bold text-slategray">{m.email}</span>
                       </div>
                       <div className="w-full h-px bg-whitesmoke" />
@@ -336,13 +374,20 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
                             {(Object.entries(m.checkboxes) as [string, boolean][])
                               .filter(([, enabled]) => enabled)
                               .map(([key]) => (
-                                <span key={key} className="text-xs font-semibold bg-white border border-whitesmoke text-slategray rounded-full px-3 py-1">
-                                  {key.replace(/([A-Z])/g, ' $1').replace(/^./, (s) => s.toUpperCase())}
+                                <span
+                                  key={key}
+                                  className="text-xs font-semibold bg-white border border-whitesmoke text-slategray rounded-full px-3 py-1"
+                                >
+                                  {key
+                                    .replace(/([A-Z])/g, ' $1')
+                                    .replace(/^./, (s) => s.toUpperCase())}
                                 </span>
                               ))}
                           </div>
                         ) : (
-                          <span className="text-xs italic text-gray-100">No permissions granted</span>
+                          <span className="text-xs italic text-gray-100">
+                            No permissions granted
+                          </span>
                         )}
                       </div>
                     </div>
@@ -352,13 +397,15 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
                 <p className="text-sm text-gray-100 italic">No managers invited.</p>
               )}
             </div>
-
           </div>
         </div>
 
         {/* Back / Submit */}
         <div className="w-[903px] overflow-hidden flex items-center justify-center py-0 px-num-10 box-border gap-2.5 text-num-14 text-dimgray">
-          <div className="rounded-[45px] flex items-center justify-center py-2 px-8 cursor-pointer" onClick={onPrevClick}>
+          <div
+            className="rounded-[45px] flex items-center justify-center py-2 px-8 cursor-pointer"
+            onClick={onPrevClick}
+          >
             <b className="relative">Back</b>
           </div>
           <button

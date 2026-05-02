@@ -47,7 +47,11 @@ const TenantsToolbar = ({
             aria-label={`Search ${title.toLowerCase()}`}
             className="flex h-[32px] w-[32px] cursor-pointer items-center justify-center text-[#2f3136] transition-colors hover:text-[#096c5b]"
           >
-            <Icon icon="material-symbols:search-rounded" className="h-[24px] w-[24px]" aria-hidden="true" />
+            <Icon
+              icon="material-symbols:search-rounded"
+              className="h-[24px] w-[24px]"
+              aria-hidden="true"
+            />
           </button>
         </div>
       </div>
@@ -64,7 +68,11 @@ const TenantsToolbar = ({
           <span className="font-['Inter',sans-serif] text-[14px] font-medium leading-[24px] whitespace-nowrap text-[#666]">
             {filterLabel}
           </span>
-          <Icon icon="mdi-light:chevron-down" className="h-[24px] w-[24px] text-[#2f3136]" aria-hidden="true" />
+          <Icon
+            icon="mdi-light:chevron-down"
+            className="h-[24px] w-[24px] text-[#2f3136]"
+            aria-hidden="true"
+          />
         </button>
       </div>
     </div>

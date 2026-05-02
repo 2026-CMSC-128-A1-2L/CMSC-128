@@ -12,7 +12,11 @@ const ReportManager6: FunctionComponent<Props> = ({ onClose }) => {
         <div className="self-stretch flex flex-col items-start">
           <div className="self-stretch bg-white overflow-hidden flex items-center justify-center py-[5px] px-[3px]">
             <div className="w-[100px] h-[100px] flex items-center justify-center relative rounded-[50%] bg-lightcyan">
-              <Icon icon="solar:check-circle-bold" className="h-[64px] w-[64px] text-[#096c5b]" aria-hidden="true" />
+              <Icon
+                icon="solar:check-circle-bold"
+                className="h-[64px] w-[64px] text-[#096c5b]"
+                aria-hidden="true"
+              />
             </div>
           </div>
           <div className="self-stretch overflow-hidden flex flex-col items-center justify-center p-2.5 gap-2.5">

@@ -16,11 +16,16 @@ const ReportManagerSection = ({ section, items, checked, onToggle, onToggleAll }
 
   const Checkbox = ({ active, onCheck }: { active: boolean; onCheck: () => void }) => (
     <button
-      onClick={(e) => { e.stopPropagation(); onCheck(); }}
+      onClick={(e) => {
+        e.stopPropagation();
+        onCheck();
+      }}
       role="checkbox"
       aria-checked={active}
       className={`flex h-[19.2px] w-[19.2px] shrink-0 items-center justify-center rounded-[3.2px] border transition-colors ${
-        active ? 'border-[#096c5b] bg-[#096c5b]' : 'border-[#d1d5db] bg-[#f5f5f5] shadow-[0px_0px_1.6px_rgba(0,0,0,0.25)]'
+        active
+          ? 'border-[#096c5b] bg-[#096c5b]'
+          : 'border-[#d1d5db] bg-[#f5f5f5] shadow-[0px_0px_1.6px_rgba(0,0,0,0.25)]'
       }`}
     >
       {active && <Icon icon="solar:check-bold" className="h-[11px] w-[11px] text-white" />}
@@ -32,7 +37,9 @@ const ReportManagerSection = ({ section, items, checked, onToggle, onToggleAll }
       <div className="self-stretch flex items-center justify-between pr-[17.6px]">
         <b className="font-['Inter',sans-serif] text-[14px] text-[#666]">{section}</b>
         <div className="flex items-center gap-[8.8px]">
-          <span className="font-['Inter',sans-serif] text-[12px] font-medium text-[#8a9099]">Select All</span>
+          <span className="font-['Inter',sans-serif] text-[12px] font-medium text-[#8a9099]">
+            Select All
+          </span>
           <Checkbox active={allOn} onCheck={() => onToggleAll(keys)} />
         </div>
       </div>
@@ -47,7 +54,11 @@ const ReportManagerSection = ({ section, items, checked, onToggle, onToggleAll }
             >
               <div className="flex flex-1 flex-col gap-[3.2px]">
                 <b className="font-['Inter',sans-serif] text-[14px] text-black">{item.title}</b>
-                {item.desc && <span className="font-['Inter',sans-serif] text-[12px] font-medium text-[#666]">{item.desc}</span>}
+                {item.desc && (
+                  <span className="font-['Inter',sans-serif] text-[12px] font-medium text-[#666]">
+                    {item.desc}
+                  </span>
+                )}
               </div>
               <Checkbox active={active} onCheck={() => onToggle(item.title)} />
             </button>
