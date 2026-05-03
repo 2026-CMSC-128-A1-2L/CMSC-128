@@ -33,7 +33,7 @@ const userRoutes = [
   // </Route>,
   <Route key="home" path="/home" element={<HomePage />} />,
   <Route key="test" path="/test" element={<TestPage />} />,
-  <Route key="filter" path="/filter" element={<Filter />} />,
+  // <Route key="filter" path="/filter" element={<Filter />} />,
   <Route key="contact" path="/contact-us" element={<ContactUs />} />,
   <Route key="bookmark" path="/bookmark" element={<BookmarksNewUsers />} />,
   <Route key="unit" path="/unit" element={<UnitDetails />} />,
