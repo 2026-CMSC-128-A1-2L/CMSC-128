@@ -17,8 +17,8 @@ type StepState = "completed" | "active" | "upcoming";
 
 const getCircleClasses = (state: StepState): string => {
   if (state === "completed") return "bg-[#096c5b] text-white";
-  if (state === "active")
-    return "bg-[#024338] text-white ring-2 ring-[#024338]/20 ring-offset-2 ring-offset-transparent";
+  // Removed static ring from active state to make room for the loading animation
+  if (state === "active") return "bg-[#024338] text-white";
   return "bg-[#b5c8c5] text-transparent";
 };
 
@@ -38,20 +38,29 @@ const ProgressBar = ({ currentStep }: VerificationProgressProps) => {
 
         return (
           <Fragment key={step.key}>
-            <div className="flex flex-col items-center gap-[10px]">
-              <span
-                className={[
-                  "flex h-[22px] w-[22px] items-center justify-center rounded-full transition-colors duration-200",
-                  getCircleClasses(state),
-                ].join(" ")}
-              >
-                {state === "completed" && (
-                  <Icon
-                    icon="material-symbols:check-rounded"
-                    className="h-[14px] w-[14px]"
-                  />
+            <div className="flex flex-col items-center gap-[10px] relative">
+              <div className="relative flex h-[22px] w-[22px] items-center justify-center">
+                {state === "active" && (
+                  <>
+                    <div className="absolute inset-0 rounded-full bg-darkslategray/30 animate-ripple" />
+                    <div className="absolute inset-0 rounded-full bg-darkslategray/30 animate-ripple [animation-delay:1000ms]" />
+                  </>
                 )}
-              </span>
+                <span
+                  className={[
+                    "relative z-10 flex h-[22px] w-[22px] items-center justify-center rounded-full transition-colors duration-200",
+                    getCircleClasses(state),
+                  ].join(" ")}
+                >
+                  {state === "completed" && (
+                    <Icon
+                      icon="material-symbols:check-rounded"
+                      className="h-[14px] w-[14px]"
+                    />
+                  )}
+                </span>
+              </div>
+
               <span className="font-['Inter',sans-serif] text-[14px] font-semibold whitespace-nowrap text-[#024338]">
                 {step.label}
               </span>
