@@ -1,64 +1,79 @@
-import type { FunctionComponent } from "react";
+import { Fragment } from "react";
+import { Icon } from "@iconify/react";
 
-interface ProgressBarProps {
-  currentStep: number;
-}
+export type VerificationStep = "submit" | "reviewing" | "finish";
 
-const ProgressBar: FunctionComponent<ProgressBarProps> = ({ currentStep }) => {
-  const steps = ["Submit", "Reviewing", "Finish"];
+type VerificationProgressProps = {
+  currentStep: VerificationStep;
+};
+
+const steps: Array<{ key: VerificationStep; label: string }> = [
+  { key: "submit", label: "Submit" },
+  { key: "reviewing", label: "Reviewing" },
+  { key: "finish", label: "Finish" },
+];
+
+type StepState = "completed" | "active" | "upcoming";
+
+const getCircleClasses = (state: StepState): string => {
+  if (state === "completed") return "bg-[#096c5b] text-white";
+  if (state === "active")
+    return "bg-[#024338] text-white ring-2 ring-[#024338]/20 ring-offset-2 ring-offset-transparent";
+  return "bg-[#b5c8c5] text-transparent";
+};
+
+const ProgressBar = ({ currentStep }: VerificationProgressProps) => {
+  const currentIdx = steps.findIndex((s) => s.key === currentStep);
 
   return (
-    <div className="w-full flex flex-col items-center font-poppins py-4">
-      {/* Container with a max-width to match your previous ~723px design */}
-      <div className="w-full max-w-[723px] flex items-start justify-between relative">
-        {steps.map((label, index) => (
-          <div
-            key={label}
-            className="flex flex-col items-center relative flex-1"
-          >
-            {/* The Circle (w-8 h-8) */}
-            <div
-              className={`w-8 h-8 rounded-full flex items-center justify-center z-10 transition-colors duration-300 ${
-                currentStep >= index
-                  ? "bg-darkslategray-200 text-white"
-                  : "bg-[#B5C8C5] text-white"
-              }`}
-            >
-              {/* Number Label inside the circle */}
-              <span className="text-xs font-bold">{index + 1}</span>
-            </div>
+    <div className="flex w-full max-w-[723px] items-start">
+      {steps.map((step, idx) => {
+        const state: StepState =
+          idx < currentIdx
+            ? "completed"
+            : idx === currentIdx
+              ? "active"
+              : "upcoming";
+        const isLast = idx === steps.length - 1;
 
-            {/* Step Text Label below circle */}
-            <div
-              className={`mt-2 text-sm font-semibold transition-colors duration-300 ${
-                currentStep >= index
-                  ? "text-darkslategray-200"
-                  : "text-[#B5C8C5]"
-              }`}
-            >
-              {label}
-            </div>
-
-            {/* Connecting Line logic */}
-            {index < steps.length - 1 && (
-              <div
-                className="absolute top-4 left-[50%] w-full h-[3px] -z-0"
-                style={{ backgroundColor: "#B5C8C5" }}
+        return (
+          <Fragment key={step.key}>
+            <div className="flex flex-col items-center gap-[10px]">
+              <span
+                className={[
+                  "flex h-[22px] w-[22px] items-center justify-center rounded-full transition-colors duration-200",
+                  getCircleClasses(state),
+                ].join(" ")}
               >
-                {/* Active Gradient Fill Overlay */}
+                {state === "completed" && (
+                  <Icon
+                    icon="material-symbols:check-rounded"
+                    className="h-[14px] w-[14px]"
+                  />
+                )}
+              </span>
+              <span className="font-['Inter',sans-serif] text-[14px] font-semibold whitespace-nowrap text-[#024338]">
+                {step.label}
+              </span>
+            </div>
+
+            {!isLast && (
+              <div className="mx-[12px] mt-[8px] h-[6px] flex-1 overflow-hidden rounded-full bg-[#b5c8c5]">
                 <div
-                  className="h-full transition-all duration-500 ease-out"
-                  style={{
-                    width: currentStep > index ? "100%" : "0%",
-                    background:
-                      "linear-gradient(90deg, rgba(2,67,56,0.8), #b5c8c5 99.99%)",
-                  }}
+                  className={[
+                    "h-full rounded-full transition-all duration-300",
+                    idx < currentIdx
+                      ? "w-full bg-[#096c5b]"
+                      : idx === currentIdx
+                        ? "w-1/2 bg-linear-to-r from-[rgba(2,67,56,0.8)] to-[#b5c8c5]"
+                        : "w-0",
+                  ].join(" ")}
                 />
               </div>
             )}
-          </div>
-        ))}
-      </div>
+          </Fragment>
+        );
+      })}
     </div>
   );
 };
