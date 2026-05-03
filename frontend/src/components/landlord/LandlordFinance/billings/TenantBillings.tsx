@@ -7,11 +7,11 @@ import type { Billing } from '../types/billing';
 
 const TABLE_COLUMNS = [
   { label: 'Room', className: 'w-[8%]' },
-  { label: 'Tenant Name', className: 'w-[18%]' },
-  { label: 'Rent', className: 'w-[9%]' },
-  { label: 'Utilities', className: 'w-[9%]' },
-  { label: 'Misc.', className: 'w-[9%]' },
-  { label: 'Total Due', className: 'w-[9%]' },
+  { label: 'Tenant Name', className: 'w-[22%]' },
+  { label: 'Rent', className: 'w-[10%]' },
+  { label: 'Utilities', className: 'w-[10%]' },
+  { label: 'Misc.', className: 'w-[10%]' },
+  { label: 'Total Due', className: 'w-[10%]' },
   { label: 'Amount Paid', className: 'w-[10%]' },
   { label: 'Status', className: 'w-[18%]' },
 ];
