@@ -1,8 +1,4 @@
 import { useMemo, useState } from 'react';
-import LandlordLayout from '../../../../components/landlord/LandlordLayout';
-import LandlordInfoCard, {
-  type LandlordInfo,
-} from '../../../../components/landlord/LandlordInfoCard';
 import VerificationProgress, {
   type VerificationStep,
 } from '../../../../components/landlord/VerificationProgress';
@@ -10,21 +6,15 @@ import DocumentsSubmissionHeader from '../../../../components/landlord/LandlordV
 import DocumentsUploadList from '../../../../components/landlord/LandlordVerification/DocumentsUploadList';
 import { documents } from '../../../../components/landlord/LandlordVerification/DocumentsData';
 
-const landlord: LandlordInfo = {
-  displayName: 'Quevin Custodio',
-  email: 'qacustodio@up.edu.ph',
-  fullName: 'Quevin James A. Custodio',
-  role: 'Landlord',
-  employees: ['Nathaniel Cunanan', 'Lance De Jesus'],
-  verified: false,
-};
-
-const LandlordProfileVerification = () => {
+const LandlordVerificationView = () => {
   const [uploads, setUploads] = useState<Record<string, File | undefined>>({});
 
   const step: VerificationStep = 'submit';
 
-  const uploadedCount = useMemo(() => Object.values(uploads).filter(Boolean).length, [uploads]);
+  const uploadedCount = useMemo(
+    () => Object.values(uploads).filter(Boolean).length,
+    [uploads]
+  );
 
   const canSubmit = uploadedCount === documents.length;
 
@@ -33,35 +23,35 @@ const LandlordProfileVerification = () => {
   };
 
   const handleSubmit = () => {
-    // TODO: Implement submit logic
+    // TODO: Implement actual API submit logic
     console.log('Submitting documents:', uploads);
   };
 
   return (
-    <LandlordLayout
-      breadcrumbs={[
-        { label: 'User Profile', to: '/landlord/profile' },
-        { label: 'Verification Status' },
-      ]}
-    >
-      <div className="flex w-full flex-col gap-[12px] rounded-[16px] bg-white/70 p-[8px] pb-[32px]">
-        <LandlordInfoCard info={landlord} />
-
-        <div className="flex w-full flex-col items-center px-[32px] py-[12px]">
-          <VerificationProgress currentStep={step} />
-        </div>
-
-        <DocumentsSubmissionHeader
-          uploadedCount={uploadedCount}
-          totalCount={documents.length}
-          canSubmit={canSubmit}
-          onSubmit={handleSubmit}
-        />
-
-        <DocumentsUploadList documents={documents} uploads={uploads} onFileSelected={handleFile} />
+    <div className="flex flex-col gap-[12px]">
+      {/* Progress Stepper Section */}
+      <div className="flex w-full flex-col items-center px-[32px] py-[12px]">
+        <VerificationProgress currentStep={step} />
       </div>
-    </LandlordLayout>
+
+      {/* Submission Control Header */}
+      <DocumentsSubmissionHeader
+        uploadedCount={uploadedCount}
+        totalCount={documents.length}
+        canSubmit={canSubmit}
+        onSubmit={handleSubmit}
+      />
+
+      {/* Main Upload List */}
+      <div className="px-[8px]">
+        <DocumentsUploadList 
+          documents={documents} 
+          uploads={uploads} 
+          onFileSelected={handleFile} 
+        />
+      </div>
+    </div>
   );
 };
 
-export default LandlordProfileVerification;
+export default LandlordVerificationView;
