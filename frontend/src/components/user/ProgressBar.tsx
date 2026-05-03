@@ -1,55 +1,79 @@
-import type { FunctionComponent } from 'react';
+import { Fragment } from "react";
+import { Icon } from "@iconify/react";
 
-interface ProgressBarProps {
-  currentStep: number;
-}
+export type VerificationStep = "submit" | "reviewing" | "finish";
 
-const ProgressBar: FunctionComponent<ProgressBarProps> = ({ currentStep }) => {
-  const steps = ['Submit', 'Reviewing', 'Finish'];
+type VerificationProgressProps = {
+  currentStep: VerificationStep;
+};
+
+const steps: Array<{ key: VerificationStep; label: string }> = [
+  { key: "submit", label: "Submit" },
+  { key: "reviewing", label: "Reviewing" },
+  { key: "finish", label: "Finish" },
+];
+
+type StepState = "completed" | "active" | "upcoming";
+
+const getCircleClasses = (state: StepState): string => {
+  if (state === "completed") return "bg-[#096c5b] text-white";
+  if (state === "active")
+    return "bg-[#024338] text-white ring-2 ring-[#024338]/20 ring-offset-2 ring-offset-transparent";
+  return "bg-[#b5c8c5] text-transparent";
+};
+
+const ProgressBar = ({ currentStep }: VerificationProgressProps) => {
+  const currentIdx = steps.findIndex((s) => s.key === currentStep);
 
   return (
-    <div className="self-stretch flex flex-col items-center justify-center text-darkslategray-200 font-poppins">
-      <div className="w-[723px] h-[87px] relative">
-        <div
-          className={`absolute h-[9.2%] w-[32.64%] top-[29.89%] left-[11.07%] rounded-[34.55px] ${
-            currentStep >= 1
-              ? '[background:linear-gradient(90deg,rgba(2,67,56,0.8),#b5c8c5_99.99%)]'
-              : 'bg-[#B5C8C5]'
-          }`}
-        />
-        <div
-          className={`absolute h-[9.2%] w-[34.44%] top-[26.44%] left-[54.91%] rounded-[34.55px] ${
-            currentStep >= 2
-              ? '[background:linear-gradient(90deg,rgba(2,67,56,0.8),#b5c8c5_99.99%)]'
-              : 'bg-[#B5C8C5]'
-          }`}
-        />
+    <div className="flex w-full max-w-[723px] items-start">
+      {steps.map((step, idx) => {
+        const state: StepState =
+          idx < currentIdx
+            ? "completed"
+            : idx === currentIdx
+              ? "active"
+              : "upcoming";
+        const isLast = idx === steps.length - 1;
 
-        {/* Labels */}
-        <div className="absolute h-[37.93%] w-[13.42%] top-[51.72%] left-[0%] leading-8 font-semibold flex items-center justify-center">
-          {steps[0]}
-        </div>
-        <div className="absolute h-[37.93%] w-[11.2%] top-[51.72%] left-[43.71%] font-semibold flex items-center justify-center">
-          {steps[1]}
-        </div>
-        <div className="absolute h-[37.93%] w-[10.37%] top-[51.72%] left-[88.93%] font-semibold flex items-center justify-center">
-          {steps[2]}
-        </div>
+        return (
+          <Fragment key={step.key}>
+            <div className="flex flex-col items-center gap-[10px]">
+              <span
+                className={[
+                  "flex h-[22px] w-[22px] items-center justify-center rounded-full transition-colors duration-200",
+                  getCircleClasses(state),
+                ].join(" ")}
+              >
+                {state === "completed" && (
+                  <Icon
+                    icon="material-symbols:check-rounded"
+                    className="h-[14px] w-[14px]"
+                  />
+                )}
+              </span>
+              <span className="font-['Inter',sans-serif] text-[14px] font-semibold whitespace-nowrap text-[#024338]">
+                {step.label}
+              </span>
+            </div>
 
-        <div className="absolute h-[37.93%] w-[4.56%] top-[13.79%] left-[4.43%] rounded-[50%] bg-darkslategray-200" />
-
-        <div
-          className={`absolute h-[37.93%] w-[4.56%] top-[12.64%] left-[47.03%] rounded-[50%] ${
-            currentStep > 1 ? 'bg-darkslategray-200' : 'bg-[#B5C8C5]'
-          }`}
-        />
-
-        <div
-          className={`absolute h-[37.93%] w-[4.56%] top-[12.64%] left-[91.84%] rounded-[50%] ${
-            currentStep > 2 ? 'bg-darkslategray-200' : 'bg-[#B5C8C5]'
-          }`}
-        />
-      </div>
+            {!isLast && (
+              <div className="mx-[12px] mt-[8px] h-[6px] flex-1 overflow-hidden rounded-full bg-[#b5c8c5]">
+                <div
+                  className={[
+                    "h-full rounded-full transition-all duration-300",
+                    idx < currentIdx
+                      ? "w-full bg-[#096c5b]"
+                      : idx === currentIdx
+                        ? "w-1/2 bg-linear-to-r from-[rgba(2,67,56,0.8)] to-[#b5c8c5]"
+                        : "w-0",
+                  ].join(" ")}
+                />
+              </div>
+            )}
+          </Fragment>
+        );
+      })}
     </div>
   );
 };
