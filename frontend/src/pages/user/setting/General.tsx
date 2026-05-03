@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
 import info_icon from '../../../../assets/infoicon_icon.svg';
+import SignInPopUp from '../../../components/general/SignInPopUp';
 
 type UserData = {
   firstName: string;
@@ -18,6 +19,7 @@ type UserData = {
 const General: FunctionComponent = () => {
   const [user, setUser] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showSignIn, setShowSignIn] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -36,23 +38,8 @@ const General: FunctionComponent = () => {
     fetchUser();
   }, []);
 
-  const handleDownloadData = async () => {
-    try {
-      const res = await fetch('/api/users/me', { credentials: 'include' });
-      const json = await res.json();
-      const blob = new Blob([JSON.stringify(json.data, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'my-atlas-data.json';
-      a.click();
-      URL.revokeObjectURL(url);
-    } catch (err) {
-      console.error('Failed to download data', err);
-    }
-  };
-
-  // TODO: DELETE /api/users/me
+  // todo: download personal data API 
+  // todo: account deletion API
 
   const fullName = user
     ? [user.firstName, user.middleName, user.lastName].filter(Boolean).join(' ')
@@ -68,19 +55,21 @@ const General: FunctionComponent = () => {
 
   const isVerified = user?.verificationStatus === 'approved';
 
-  const verificationLabel =
-    user?.verificationStatus === 'approved'
+  const verificationLabel = !user
+    ? 'Signed Out'
+    : user.verificationStatus === 'approved'
       ? 'Verified'
-      : user?.verificationStatus === 'submitted'
+      : user.verificationStatus === 'submitted'
         ? 'Pending Review'
-        : user?.verificationStatus === 'rejected'
+        : user.verificationStatus === 'rejected'
           ? 'Rejected'
           : 'Unverified';
 
-  const verificationStyle: CSSProperties =
-    user?.verificationStatus === 'approved'
+  const verificationStyle: CSSProperties = !user
+    ? { color: '#bdbdbd' }
+    : user.verificationStatus === 'approved'
       ? { color: '#096c5b' }
-      : user?.verificationStatus === 'submitted'
+      : user.verificationStatus === 'submitted'
         ? { color: '#ca8a04' }
         : {
             background: 'linear-gradient(180deg, #c00f0f, #e44f4f)',
@@ -126,9 +115,20 @@ const General: FunctionComponent = () => {
                     <b className="relative">Verification Status</b>
                     <div className="self-stretch flex items-center gap-8 text-teal-100">
                       <b className="relative" style={verificationStyle}>{verificationLabel}</b>
-                      {!isVerified && (
+                      {!user ? (
+                        <>
+                          <button
+                            onClick={() => setShowSignIn(true)}
+                            className="flex items-center gap-1 text-[12px] text-teal-100 cursor-pointer bg-transparent border-none p-0"
+                          >
+                            <span className="relative font-medium">Sign In</span>
+                            <Icon icon="solar:arrow-right-up-linear" className="w-4 relative max-h-full" />
+                          </button>
+                          {showSignIn && <SignInPopUp onClose={() => setShowSignIn(false)} />}
+                        </>
+                      ) : !isVerified && (
                         <button
-                          onClick={() => navigate('/user/profile/verification')}
+                          onClick={() => navigate('/profile-switcher')} // todo: change route to actual verification page when route finalized
                           className="flex items-center gap-1 text-[12px] cursor-pointer bg-transparent border-none p-0"
                         >
                           <span className="relative font-medium text-teal-100">Get Verified</span>
@@ -158,7 +158,7 @@ const General: FunctionComponent = () => {
                       </div>
                     ))
                   ) : (
-                    <b className="relative text-dimgray">No emails linked</b>
+                    <b className="relative text-silver">No emails linked</b>
                   )}
                 </div>
 
@@ -188,7 +188,6 @@ const General: FunctionComponent = () => {
                     <b className="relative">Personal Data</b>
                     <div className="self-stretch flex flex-col items-start py-num-0 px-2 text-teal-200">
                       <button
-                        onClick={handleDownloadData}
                         className="h-8 rounded-num-16 bg-aliceblue flex items-center justify-center py-num-0 px-4 box-border cursor-pointer border-none"
                       >
                         <b className="relative">Download Personal Data</b>
