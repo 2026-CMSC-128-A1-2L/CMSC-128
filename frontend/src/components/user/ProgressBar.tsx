@@ -16,10 +16,9 @@ const steps: Array<{ key: VerificationStep; label: string }> = [
 type StepState = "completed" | "active" | "upcoming";
 
 const getCircleClasses = (state: StepState): string => {
-  if (state === "completed") return "bg-[#096c5b] text-white";
-  // Removed static ring from active state to make room for the loading animation
-  if (state === "active") return "bg-[#024338] text-white";
-  return "bg-[#b5c8c5] text-transparent";
+  if (state === "completed") return "bg-teal text-white";
+  if (state === "active") return "bg-darkslategray text-white";
+  return "bg-silver-100 text-transparent";
 };
 
 const ProgressBar = ({ currentStep }: VerificationProgressProps) => {
