@@ -4,7 +4,7 @@ import PropertyTabs from '../../../components/user/unitdetails/PropertyTabs';
 import PropertyTab from '../../../components/user/unitdetails/PropertyTab';
 import General from '../../user/setting/General';
 import Security from '../../user/setting/Security';
-import Notification from '../../user/setting/Notification';
+import LandlordNotification from './LandlordNotifications';
 import Preferences from '../../user/setting/Preferences';
 
 const LandlordSettings: FunctionComponent = () => {
@@ -14,7 +14,7 @@ const LandlordSettings: FunctionComponent = () => {
         <PropertyTabs>
           <PropertyTab text="General" element={<General />} />
           <PropertyTab text="Security" element={<Security />} />
-          <PropertyTab text="Notification" element={<Notification />} />
+          <PropertyTab text="Notification" element={<LandlordNotification />} />
           <PropertyTab text="Preferences" element={<Preferences />} />
         </PropertyTabs>
       </div>
