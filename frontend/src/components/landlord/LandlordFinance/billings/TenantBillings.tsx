@@ -6,14 +6,14 @@ import EditBillingPopup from './EditBillingPopup';
 import type { Billing } from '../types/billing';
 
 const TABLE_COLUMNS = [
-  { label: 'Room', className: 'w-[8%] min-w-[60px]' },
+  { label: 'Room', className: 'w-[7%] min-w-[50px]' },
   { label: 'Tenant Name', className: 'w-[18%] min-w-[140px]' },
   { label: 'Rent', className: 'w-[9%] min-w-[80px]' },
   { label: 'Utilities', className: 'w-[9%] min-w-[80px]' },
-  { label: 'Misc.', className: 'w-[9%] min-w-[80px]' },
+  { label: 'Misc.', className: 'w-[8%] min-w-[70px]' },
   { label: 'Total Due', className: 'w-[9%] min-w-[80px]' },
-  { label: 'Amount Paid', className: 'w-[10%] min-w-[80px]' },
-  { label: 'Status', className: 'w-[18%] min-w-[120px]' },
+  { label: 'Amount Paid', className: 'w-[13%] min-w-[100px]' },
+  { label: 'Status', className: 'w-[17%] min-w-[120px]' },
 ];
 
 // Mock data by month - replace with API call
@@ -377,7 +377,7 @@ const TenantBillingsTab: FunctionComponent = () => {
             <div className="w-full h-12 rounded-t-[12.75px] bg-darkslategray-200 flex items-center px-6 gap-4 text-[12px] sm:text-[14px] text-white font-inter">
               {TABLE_COLUMNS.map(({ label, className }) => (
                 <div key={label} className={`${className} shrink-0`}>
-                  <b className="flex items-center justify-center">{label}</b>
+                  <b className="flex items-center justify-center whitespace-nowrap">{label}</b>
                 </div>
               ))}
             </div>

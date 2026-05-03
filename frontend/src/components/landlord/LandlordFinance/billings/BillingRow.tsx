@@ -106,7 +106,7 @@ const BillingRow: FunctionComponent<BillingRowProps> = ({
       onClick={handleRowClick}
       className="w-full flex items-center gap-4 px-6 h-12 text-center text-[12px] sm:text-[13px] font-inter text-darkslategray-100 hover:bg-gray-50 transition-colors cursor-pointer"
     >
-      <div className="w-[8%] min-w-[60px] flex items-center justify-center shrink-0 font-medium">
+      <div className="w-[7%] min-w-[50px] flex items-center justify-center shrink-0 font-medium">
         {roomNumber}
       </div>
       <div className="w-[18%] min-w-[140px] flex items-center justify-center shrink-0 font-medium truncate">
@@ -118,17 +118,17 @@ const BillingRow: FunctionComponent<BillingRowProps> = ({
       <div className="w-[9%] min-w-[80px] flex items-center justify-center shrink-0">
         {php(utilitiesAmount)}
       </div>
-      <div className="w-[9%] min-w-[80px] flex items-center justify-center shrink-0">
+      <div className="w-[8%] min-w-[70px] flex items-center justify-center shrink-0">
         {php(miscAmount)}
       </div>
       <div className="w-[9%] min-w-[80px] flex items-center justify-center shrink-0 font-medium">
         {php(billing.totalAmount)}
       </div>
-      <div className="w-[10%] min-w-[80px] flex items-center justify-center shrink-0">
+      <div className="w-[13%] min-w-[100px] flex items-center justify-center shrink-0">
         {php(paidAmount)}
       </div>
       <div
-        className="w-[18%] min-w-[120px] flex items-center justify-center py-2 px-0 shrink-0 relative"
+        className="w-[17%] min-w-[120px] flex items-center justify-center py-2 px-0 shrink-0 relative"
         ref={dropdownRef}
       >
         <button
