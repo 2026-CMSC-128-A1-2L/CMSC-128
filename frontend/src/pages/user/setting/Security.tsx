@@ -57,7 +57,7 @@ const Security: FunctionComponent = () => {
                     <div className="text-silver font-medium text-num-14">Not signed in</div>
                     <button
                       onClick={() => setShowSignIn(true)}
-                      className="flex items-center gap-1 text-[12px] text-teal-100 cursor-pointer bg-transparent border-none p-0"
+                      className="flex items-center gap-1 text-[12px] text-teal-100 cursor-pointer bg-transparent border-none p-0 transition-all duration-150 hover:text-teal-200 hover:gap-1.5"
                     >
                       <span className="font-medium">Sign In</span>
                       <Icon icon="solar:arrow-right-up-linear" className="w-4 relative max-h-full" />
@@ -74,7 +74,7 @@ const Security: FunctionComponent = () => {
                       user.emails.map((email, i) => (
                         <a
                           key={i}
-                          className="self-stretch relative [text-decoration:underline] font-medium text-inherit"
+                          className="self-stretch relative [text-decoration:underline] font-medium text-inherit transition-all duration-150 hover:text-teal"
                           href={`mailto:${email}`}
                           target="_blank"
                           rel="noopener"
@@ -97,7 +97,7 @@ const Security: FunctionComponent = () => {
               </div>
               <div className="self-stretch flex flex-col items-start justify-center gap-3 text-num-12">
                 <div className="self-stretch flex flex-col items-start">
-                  <div className="self-stretch h-[68px] rounded-num-16 border-whitesmoke-200 border-solid border box-border overflow-hidden shrink-0 flex flex-col items-start justify-center py-num-4 px-num-10">
+                  <div className="self-stretch h-[68px] rounded-num-16 border-whitesmoke-200 border-solid border box-border overflow-hidden shrink-0 flex flex-col items-start justify-center py-num-4 px-num-10 transition-all duration-200 hover:border-teal-100 hover:bg-azure hover:shadow-sm cursor-pointer">
                     <div className="self-stretch flex items-center gap-2.5">
                       <div className="flex-1 flex items-center gap-3">
                         <Icon icon="wordpress:desktop" className="w-12 relative h-12" />
@@ -114,11 +114,11 @@ const Security: FunctionComponent = () => {
                           </div>
                         </div>
                       </div>
-                      <Icon icon="qlementine-icons:menu-dots-24" className="h-6 w-6 relative" />
+                      <Icon icon="qlementine-icons:menu-dots-24" className="h-6 w-6 relative cursor-pointer text-dimgray transition-all duration-150 hover:text-teal hover:scale-110" />
                     </div>
                   </div>
                 </div>
-                <div className="self-stretch h-[68px] rounded-num-16 border-whitesmoke-200 border-solid border box-border overflow-hidden shrink-0 flex flex-col items-start justify-center py-num-4 px-num-10">
+                <div className="self-stretch h-[68px] rounded-num-16 border-whitesmoke-200 border-solid border box-border overflow-hidden shrink-0 flex flex-col items-start justify-center py-num-4 px-num-10 transition-all duration-200 hover:border-teal-100 hover:bg-azure hover:shadow-sm cursor-pointer">
                   <div className="self-stretch flex items-center gap-2.5">
                     <div className="flex-1 flex items-center gap-3">
                       <Icon icon="wordpress:desktop" className="w-12 h-12 relative" />
@@ -175,7 +175,7 @@ const Security: FunctionComponent = () => {
                       href="https://myaccount.google.com/security"
                       target="_blank"
                       rel="noopener"
-                      className="[text-decoration:underline] text-inherit"
+                      className="[text-decoration:underline] text-inherit transition-all duration-150 hover:text-teal"
                     >
                       Google Account Settings.
                     </a>

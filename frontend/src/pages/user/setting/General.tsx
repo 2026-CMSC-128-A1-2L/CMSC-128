@@ -119,7 +119,7 @@ const General: FunctionComponent = () => {
                         <>
                           <button
                             onClick={() => setShowSignIn(true)}
-                            className="flex items-center gap-1 text-[12px] text-teal-100 cursor-pointer bg-transparent border-none p-0"
+                            className="flex items-center gap-1 text-[12px] text-teal-100 cursor-pointer bg-transparent border-none p-0 transition-all duration-150 hover:text-teal-200 hover:gap-1.5 group"
                           >
                             <span className="relative font-medium">Sign In</span>
                             <Icon icon="solar:arrow-right-up-linear" className="w-4 relative max-h-full" />
@@ -129,7 +129,7 @@ const General: FunctionComponent = () => {
                       ) : !isVerified && (
                         <button
                           onClick={() => navigate('/profile-switcher')} // todo: change route to actual verification page when route finalized
-                          className="flex items-center gap-1 text-[12px] cursor-pointer bg-transparent border-none p-0"
+                          className="flex items-center gap-1 text-[12px] cursor-pointer bg-transparent border-none p-0 transition-all duration-150 hover:gap-1.5 group"
                         >
                           <span className="relative font-medium text-teal-100">Get Verified</span>
                           <Icon icon="solar:arrow-right-up-linear" className="w-4 relative max-h-full text-teal-100" />
@@ -148,7 +148,7 @@ const General: FunctionComponent = () => {
                     user.emails.map((email, i) => (
                       <div key={i} className="flex items-center justify-center">
                         <a
-                          className="relative font-bold text-inherit [text-decoration:none]"
+                          className="relative font-bold text-inherit [text-decoration:none] transition-all duration-150 hover:text-teal hover:underline"
                           href={`mailto:${email}`}
                           target="_blank"
                           rel="noopener"
@@ -188,7 +188,7 @@ const General: FunctionComponent = () => {
                     <b className="relative">Personal Data</b>
                     <div className="self-stretch flex flex-col items-start py-num-0 px-2 text-teal-200">
                       <button
-                        className="h-8 rounded-num-16 bg-aliceblue flex items-center justify-center py-num-0 px-4 box-border cursor-pointer border-none"
+                        className="h-8 rounded-num-16 bg-aliceblue border-solid border border-whitesmoke-200 flex items-center justify-center py-num-0 px-4 box-border cursor-pointer transition-all duration-200 hover:bg-azure hover:border-teal-100 hover:shadow-sm"
                       >
                         <b className="relative">Download Personal Data</b>
                       </button>
@@ -212,7 +212,7 @@ const General: FunctionComponent = () => {
                     <b className="relative">Account Deletion</b>
                     <div className="self-stretch flex flex-col items-start py-num-0 px-2">
                       <button
-                        className="h-8 rounded-num-16 bg-aliceblue flex items-center justify-center py-num-0 px-3 box-border cursor-pointer border-none"
+                        className="h-8 rounded-num-16 bg-aliceblue flex items-center justify-center py-num-0 px-3 box-border cursor-pointer border-none transition-all duration-200 hover:bg-red-50 hover:shadow-sm"
                       >
                         <b className="relative" style={{
                             background: 'linear-gradient(180deg, #c00f0f, #e44f4f)',
