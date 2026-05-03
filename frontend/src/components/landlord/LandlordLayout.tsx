@@ -5,7 +5,7 @@ import { Icon } from '@iconify/react';
 import PageBackground from '../general/PageBackground';
 import SideBarLandlord, { type SideBarLandlordItemKey } from './SideBarLandlord';
 import LandlordFooter from './LandlordFooter';
-import TutorialBubble from '../../pages/landlord/dashboard/LandlordHomepageTutorials';
+import TutorialBubble from '../../../../frontend/src/components/landlord/TutorialsForLandlord';
 
 export type BreadcrumbItem = {
   label: string;
@@ -85,6 +85,22 @@ const LandlordLayout = ({ activeSidebarItem, breadcrumbs = [], children }: Landl
           <LandlordFooter />
         </div>
       </div>
+      {/* ======= FLOATING ICON FOR TUTORIAL ======= */}
+      <div
+        className="fixed bottom-10 right-10 z-[9999] cursor-pointer transition-all hover:scale-110 active:scale-95"
+        onClick={() => setShowHelp(!showHelp)}
+      >
+        <div
+          className="w-16 h-16 drop-shadow-lg"
+          style={{
+            background: 'linear-gradient(135deg, #096C5B, #16917C)',
+            WebkitMask:
+              "url('https://api.iconify.design/iconoir/chat-bubble-question-solid.svg') no-repeat center / contain",
+            mask: "url('https://api.iconify.design/iconoir/chat-bubble-question-solid.svg') no-repeat center / contain",
+          }}
+        />
+      </div>
+      <TutorialBubble show={showHelp} onClose={() => setShowHelp(false)} />
     </div>
   );
 };

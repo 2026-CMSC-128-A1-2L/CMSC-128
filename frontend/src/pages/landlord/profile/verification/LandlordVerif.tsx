@@ -4,7 +4,7 @@ import SideBar from '../../../../components/landlord/SideBarLandlord';
 import Footer from '../../../../components/general/Footer';
 import { Icon } from '@iconify/react';
 import VerifiedBadge from '../../../../../assets/verified_badge.svg';
-import TutorialBubble from './TutorialsForLandlord';
+import TutorialBubble from '../../../../components/landlord/TutorialsForLandlord';
 import TutorialIcon from '../../../../../assets/help-chat.svg';
 
 const LandlordVerif: FunctionComponent = () => {
@@ -245,7 +245,6 @@ const LandlordVerif: FunctionComponent = () => {
           </div>
         </div>
       </div>
-      <TutorialBubble show={showHelp} onClose={() => setShowHelp(false)} />
       {/* ======= FLOATING ICON FOR TUTORIAL ======= */}
       <div
         className="fixed bottom-10 right-10 z-[1000] cursor-pointer transition-all hover:scale-110 active:scale-95"
@@ -264,7 +263,7 @@ const LandlordVerif: FunctionComponent = () => {
           }}
         />
       </div>
-      
+      <TutorialBubble show={showHelp} onClose={() => setShowHelp(false)} />
     </div>
   );
 };
