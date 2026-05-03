@@ -175,19 +175,16 @@ const HomePage: FunctionComponent = () => {
                   >
                     <Icon icon="mage:filter" className="w-6 h-6" />
                   </div>
-
                   {isFilterOpen && (
                     <div className="fixed inset-0 z-100 flex justify-end">
-                      <div className="absolute inset-0 bg-preview/45 backdrop" onClick={toggleFilter} />
-                      <div className="relative z-10 w-full max-w-[500px] h-full bg-white animate-in slide-in-from-right duration-500 overflow-y-auto">
-                        <div className="p-4 flex justify-between items-center border-b">
-                          <h2 className="text-xl font-bold">Filters</h2>
-                          <button onClick={toggleFilter} className="p-2 hover:bg-gray-100 rounded-full">
-                            <Icon icon="material-symbols:close" className="w-6 h-6" />
-                          </button>
-                        </div>
-                        <FilterTab />
-                      </div>
+                      <div 
+                        className="absolute inset-0 bg-preview/45 backdrop-blur-sm" 
+                        onClick={toggleFilter} 
+                      />
+
+                    <div className="relative z-10 w-full max-w-[500px] h-full bg-white animate-in slide-in-from-right duration-500">
+                      <FilterTab onClose={toggleFilter} />
+                    </div>
                     </div>
                   )}
                 </div>
