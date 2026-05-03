@@ -1,54 +1,63 @@
-import type { FunctionComponent } from 'react';
+import type { FunctionComponent } from "react";
 
 interface ProgressBarProps {
   currentStep: number;
 }
 
 const ProgressBar: FunctionComponent<ProgressBarProps> = ({ currentStep }) => {
-  const steps = ['Submit', 'Reviewing', 'Finish'];
+  const steps = ["Submit", "Reviewing", "Finish"];
 
   return (
-    <div className="self-stretch flex flex-col items-center justify-center text-darkslategray-200 font-poppins">
-      <div className="w-[723px] h-[87px] relative">
-        <div
-          className={`absolute h-[9.2%] w-[32.64%] top-[29.89%] left-[11.07%] rounded-[34.55px] ${
-            currentStep >= 1
-              ? '[background:linear-gradient(90deg,rgba(2,67,56,0.8),#b5c8c5_99.99%)]'
-              : 'bg-[#B5C8C5]'
-          }`}
-        />
-        <div
-          className={`absolute h-[9.2%] w-[34.44%] top-[26.44%] left-[54.91%] rounded-[34.55px] ${
-            currentStep >= 2
-              ? '[background:linear-gradient(90deg,rgba(2,67,56,0.8),#b5c8c5_99.99%)]'
-              : 'bg-[#B5C8C5]'
-          }`}
-        />
+    <div className="w-full flex flex-col items-center font-poppins py-4">
+      {/* Container with a max-width to match your previous ~723px design */}
+      <div className="w-full max-w-[723px] flex items-start justify-between relative">
+        {steps.map((label, index) => (
+          <div
+            key={label}
+            className="flex flex-col items-center relative flex-1"
+          >
+            {/* The Circle (w-8 h-8) */}
+            <div
+              className={`w-8 h-8 rounded-full flex items-center justify-center z-10 transition-colors duration-300 ${
+                currentStep >= index
+                  ? "bg-darkslategray-200 text-white"
+                  : "bg-[#B5C8C5] text-white"
+              }`}
+            >
+              {/* Number Label inside the circle */}
+              <span className="text-xs font-bold">{index + 1}</span>
+            </div>
 
-        {/* Labels */}
-        <div className="absolute h-[37.93%] w-[13.42%] top-[51.72%] left-[0%] leading-8 font-semibold flex items-center justify-center">
-          {steps[0]}
-        </div>
-        <div className="absolute h-[37.93%] w-[11.2%] top-[51.72%] left-[43.71%] font-semibold flex items-center justify-center">
-          {steps[1]}
-        </div>
-        <div className="absolute h-[37.93%] w-[10.37%] top-[51.72%] left-[88.93%] font-semibold flex items-center justify-center">
-          {steps[2]}
-        </div>
+            {/* Step Text Label below circle */}
+            <div
+              className={`mt-2 text-sm font-semibold transition-colors duration-300 ${
+                currentStep >= index
+                  ? "text-darkslategray-200"
+                  : "text-[#B5C8C5]"
+              }`}
+            >
+              {label}
+            </div>
 
-        <div className="absolute h-[37.93%] w-[4.56%] top-[13.79%] left-[4.43%] rounded-[50%] bg-darkslategray-200" />
-
-        <div
-          className={`absolute h-[37.93%] w-[4.56%] top-[12.64%] left-[47.03%] rounded-[50%] ${
-            currentStep > 1 ? 'bg-darkslategray-200' : 'bg-[#B5C8C5]'
-          }`}
-        />
-
-        <div
-          className={`absolute h-[37.93%] w-[4.56%] top-[12.64%] left-[91.84%] rounded-[50%] ${
-            currentStep > 2 ? 'bg-darkslategray-200' : 'bg-[#B5C8C5]'
-          }`}
-        />
+            {/* Connecting Line logic */}
+            {index < steps.length - 1 && (
+              <div
+                className="absolute top-4 left-[50%] w-full h-[3px] -z-0"
+                style={{ backgroundColor: "#B5C8C5" }}
+              >
+                {/* Active Gradient Fill Overlay */}
+                <div
+                  className="h-full transition-all duration-500 ease-out"
+                  style={{
+                    width: currentStep > index ? "100%" : "0%",
+                    background:
+                      "linear-gradient(90deg, rgba(2,67,56,0.8), #b5c8c5 99.99%)",
+                  }}
+                />
+              </div>
+            )}
+          </div>
+        ))}
       </div>
     </div>
   );
