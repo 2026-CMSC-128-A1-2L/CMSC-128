@@ -4,6 +4,7 @@ import { Icon } from '@iconify/react';
 import AtlasLogo from '../../../assets/logo_atlas_text.svg?react';
 import AtlasLogoMin from '../../../assets/atlas logo (for white bg).png';
 import SideBarLandlordButton from './SideBarLandlordButton';
+import { useTheme } from '../../pages/utilities/DarkMode';
 
 export type SideBarLandlordItemKey =
   | 'dashboard'
@@ -106,11 +107,21 @@ const SideBarLandlord = ({
   className = '',
 }: SideBarLandlordProps) => {
   const navigate = useNavigate();
+  const { isDark, toggle } = useTheme();
   const [internalHover, setInternalHover] = useState<SideBarLandlordItemKey>();
   const [collapsed, setCollapsed] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [profileMenuPlacement, setProfileMenuPlacement] = useState<'top' | 'bottom'>('top');
   const profileMenuRef = useRef<HTMLDivElement | null>(null);
+
+  const handleDarkModeToggle: MouseEventHandler<HTMLButtonElement> = (event) => {
+    if (onToggleDarkMode) {
+      onToggleDarkMode(event);
+      return;
+    }
+
+    toggle();
+  };
 
   const handleItemClick = (item: (typeof navItems)[number]) => {
     onItemClick ? onItemClick(item.key) : navigate(item.route);
@@ -181,7 +192,7 @@ const SideBarLandlord = ({
   return (
     <aside
       className={[
-        'relative flex h-full min-h-screen shrink-0 flex-col items-center gap-[32px] border border-solid border-[#f0f0f0] pt-[24px] pb-[30px] transition-[width] duration-200',
+        'relative flex h-full min-h-screen shrink-0 flex-col items-center gap-[32px] border border-solid border-[#f0f0f0] pt-[24px] pb-[30px] transition-[width] duration-200 dark:border-gray-700 dark:bg-[#121212] dark:text-white',
         w,
         className,
       ].join(' ')}
@@ -191,7 +202,7 @@ const SideBarLandlord = ({
         type="button"
         onClick={() => setCollapsed((c) => !c)}
         aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-        className="absolute -right-[12px] top-[24px] z-10 flex h-[24px] w-[24px] items-center justify-center rounded-full border border-[#f0f0f0] bg-white shadow-sm text-[#666] transition-colors hover:text-[#096c5b]"
+        className="absolute -right-[12px] top-[24px] z-10 flex h-[24px] w-[24px] items-center justify-center rounded-full border border-[#f0f0f0] bg-white shadow-sm text-[#666] transition-colors hover:text-[#096c5b] dark:border-gray-700 dark:bg-[#1e1e1e] dark:text-gray-200"
       >
         <Icon
           icon={
@@ -228,10 +239,10 @@ const SideBarLandlord = ({
             <button
               type="button"
               onClick={onAddListing}
-              className="flex w-full cursor-pointer items-center overflow-hidden rounded-[100px] bg-[#f0f0f0] pl-[17px] pr-[12px] transition-colors duration-200 ease-in-out hover:bg-[#e6e6e6]"
+              className="flex w-full cursor-pointer items-center overflow-hidden rounded-[100px] bg-[#f0f0f0] pl-[17px] pr-[12px] transition-colors duration-200 ease-in-out hover:bg-[#e6e6e6] dark:bg-[#1e1e1e] dark:hover:bg-[#2a2a2a]"
             >
               <span className="flex flex-1 items-start overflow-hidden py-[10px]">
-                <span className="font-['Inter',sans-serif] text-[10px] font-semibold leading-normal whitespace-nowrap text-[#666]">
+                <span className="font-['Inter',sans-serif] text-[10px] font-semibold leading-normal whitespace-nowrap text-[#666] dark:text-gray-300">
                   Add New Listing
                 </span>
               </span>
@@ -258,7 +269,7 @@ const SideBarLandlord = ({
                 key={item.key}
                 onMouseEnter={() => setInternalHover(item.key)}
                 onMouseLeave={() => setInternalHover((p) => (p === item.key ? undefined : p))}
-                className="transition-colors duration-150 hover:bg-[#F0FAF6]"
+                className="transition-colors duration-150 hover:bg-[#F0FAF6] dark:hover:bg-[#1f2937]"
                 title={collapsed ? item.label : undefined}
               >
                 {collapsed ? (
@@ -268,7 +279,7 @@ const SideBarLandlord = ({
                     aria-label={item.label}
                     className={[
                       'flex h-[44px] w-full items-center justify-center',
-                      state === 'clicked' ? 'text-[#096c5b]' : 'text-[#666]',
+                      state === 'clicked' ? 'text-[#096c5b]' : 'text-[#666] dark:text-gray-300',
                     ].join(' ')}
                   >
                     <Icon icon={item.icon} className="h-[20px] w-[20px]" />
@@ -292,10 +303,10 @@ const SideBarLandlord = ({
         {/* Dark mode */}
         <button
           type="button"
-          onClick={onToggleDarkMode}
+          onClick={handleDarkModeToggle}
           aria-label="Toggle dark mode"
           className={[
-            'flex cursor-pointer items-center transition-colors hover:bg-[#F0FAF6]',
+            'flex cursor-pointer items-center transition-colors hover:bg-[#F0FAF6] dark:hover:bg-[#1f2937]',
             collapsed ? 'h-[44px] w-full justify-center' : 'w-[180px] gap-[24px] pr-[20px]',
           ].join(' ')}
         >
@@ -309,20 +320,20 @@ const SideBarLandlord = ({
             ].join(' ')}
           >
             <Icon
-              icon="gg:dark-mode"
-              className="h-[24px] w-[24px] shrink-0 text-[#001d18]"
+              icon={isDark ? 'ph:sun-bold' : 'ph:moon-bold'}
+              className="h-[24px] w-[24px] shrink-0 text-[#001d18] dark:text-white"
               aria-hidden="true"
             />
             {!collapsed && (
-              <span className="font-['Inter',sans-serif] text-[14px] font-semibold leading-normal text-[#001d18]">
-                Dark Mode
+              <span className="font-['Inter',sans-serif] text-[14px] font-semibold leading-normal text-[#001d18] dark:text-white">
+                {isDark ? 'Light Mode' : 'Dark Mode'}
               </span>
             )}
           </span>
         </button>
 
         <div className="flex w-full flex-col items-start px-[20px]">
-          <div className="h-[2px] w-full rounded-[100px] bg-[#f0f0f0]" />
+          <div className="h-[2px] w-full rounded-[100px] bg-[#f0f0f0] dark:bg-gray-700" />
         </div>
 
         {/* Profile with dropdown */}
@@ -330,7 +341,7 @@ const SideBarLandlord = ({
           {isProfileMenuOpen && !collapsed && (
             <div
               className={[
-                'absolute left-[20px] z-30 flex h-[68px] w-[171px] flex-col gap-[7px] rounded-[9px] border border-solid border-[#f0f0f0] bg-[#f7f7f7] px-[11px] py-[9px] shadow-[0_4px_18px_rgba(0,0,0,0.1)]',
+                'absolute left-[20px] z-30 flex h-[68px] w-[171px] flex-col gap-[7px] rounded-[9px] border border-solid border-[#f0f0f0] bg-[#f7f7f7] px-[11px] py-[9px] shadow-[0_4px_18px_rgba(0,0,0,0.1)] dark:border-gray-700 dark:bg-[#1e1e1e]',
                 profileMenuPlacement === 'bottom' ? 'top-full mt-[8px]' : 'bottom-full mb-[8px]',
               ].join(' ')}
             >
@@ -344,7 +355,7 @@ const SideBarLandlord = ({
               <button
                 type="button"
                 onClick={handleSignOutClick}
-                className="h-[21px] w-full cursor-pointer rounded-[9px] border border-solid border-[#f0f0f0] bg-white bg-gradient-to-b from-[#c00f0f] to-[#e44f4f] bg-clip-text text-center font-['Inter',sans-serif] text-[11px] font-medium text-transparent transition-colors duration-150 hover:bg-[#f9f9f9]"
+                className="h-[21px] w-full cursor-pointer rounded-[9px] border border-solid border-[#f0f0f0] bg-white bg-gradient-to-b from-[#c00f0f] to-[#e44f4f] bg-clip-text text-center font-['Inter',sans-serif] text-[11px] font-medium text-transparent transition-colors duration-150 hover:bg-[#f9f9f9] dark:border-gray-600 dark:bg-[#2a2a2a]"
               >
                 Log Out
               </button>
@@ -358,7 +369,7 @@ const SideBarLandlord = ({
             aria-expanded={isProfileMenuOpen}
             aria-label={`${user.name} profile`}
             className={[
-              'flex cursor-pointer items-center overflow-hidden py-[10px] transition-colors duration-200 ease-in-out hover:bg-[#F0FAF6]',
+              'flex cursor-pointer items-center overflow-hidden py-[10px] transition-colors duration-200 ease-in-out hover:bg-[#F0FAF6] dark:hover:bg-[#1f2937]',
               collapsed ? 'w-full justify-center' : 'w-full gap-[8px] pl-[32px] pr-[20px]',
             ].join(' ')}
           >

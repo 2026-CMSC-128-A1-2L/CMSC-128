@@ -24,7 +24,7 @@ const LandlordLayout = ({ activeSidebarItem, breadcrumbs = [], children }: Landl
   const [showHelp, setShowHelp] = useState(false);
 
   return (
-    <div className="relative min-h-screen">
+    <div className="relative min-h-screen text-[#001d18] dark:text-gray-100">
       <PageBackground />
       <div className="relative z-10 flex min-h-screen flex-col">
         <div className="flex flex-1 items-stretch">
@@ -52,13 +52,13 @@ const LandlordLayout = ({ activeSidebarItem, breadcrumbs = [], children }: Landl
                         {item.to ? (
                           <Link
                             to={item.to}
-                            className={`${labelClass} text-[#096c5b] hover:underline`}
+                            className={`${labelClass} text-[#096c5b] hover:underline dark:text-teal-100`}
                           >
                             {item.label}
                           </Link>
                         ) : (
                           <span
-                            className={`${labelClass} text-[#2f3136]`}
+                            className={`${labelClass} text-[#2f3136] dark:text-gray-200`}
                             aria-current={isLast ? 'page' : undefined}
                           >
                             {item.label}
@@ -67,7 +67,7 @@ const LandlordLayout = ({ activeSidebarItem, breadcrumbs = [], children }: Landl
                         {!isLast && (
                           <Icon
                             icon="iconamoon:arrow-right-2"
-                            className="h-[24px] w-[24px] text-[#2f3136]"
+                            className="h-[24px] w-[24px] text-[#2f3136] dark:text-gray-300"
                             aria-hidden="true"
                           />
                         )}
