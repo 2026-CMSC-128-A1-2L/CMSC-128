@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import LandlordLayout from '../../../components/landlord/LandlordLayout';
@@ -6,15 +6,22 @@ import TenantsToolbar from '../../../components/landlord/tenants/TenantsToolbar'
 import TenantCard from '../../../components/landlord/tenants/TenantCard';
 import RemoveTenantPopup from '../../../components/landlord/tenants/popups/RemoveTenantPopup';
 import {
-  TENANT_COUNT,
-  pendingApplications,
-  tenants,
-  type Tenant,
-} from '../../../data/landlordTenants';
+  defaultTenantListFilters,
+  filterAndSortTenants,
+  tenantFiltersActive,
+} from '../../../utils/tenantListFilters';
+import { pendingApplications, tenants, type Tenant } from '../../../data/landlordTenants';
 
 const LandlordTenants = () => {
   const pendingCount = pendingApplications.length;
   const [removeTarget, setRemoveTarget] = useState<Tenant | null>(null);
+  const [filters, setFilters] = useState(defaultTenantListFilters);
+
+  const filteredTenants = useMemo(() => filterAndSortTenants(tenants, filters), [filters]);
+
+  const patchFilters = (patch: Partial<typeof filters>) => {
+    setFilters((prev) => ({ ...prev, ...patch }));
+  };
 
   return (
     <LandlordLayout activeSidebarItem="tenants" breadcrumbs={[{ label: 'My Tenants' }]}>
@@ -23,8 +30,11 @@ const LandlordTenants = () => {
           <TenantsToolbar
             eyebrow="My Tenants"
             title="Tenants"
-            count={TENANT_COUNT}
+            count={filteredTenants.length}
             countClassName="text-[#096c5b]"
+            filter={filters}
+            onFilterChange={patchFilters}
+            onResetFilters={() => setFilters(defaultTenantListFilters)}
           />
           <div className="h-[2px] w-full rounded-[100px] bg-[#f0f0f0]" />
 
@@ -62,12 +72,35 @@ const LandlordTenants = () => {
               Validated tenants will appear here.
             </p>
           </div>
+        ) : filteredTenants.length === 0 ? (
+          <div className="flex min-h-[280px] w-full flex-col items-center justify-center gap-[16px] rounded-[16px] border border-dashed border-[#f0f0f0] bg-white p-[32px] text-center">
+            <Icon
+              icon="material-symbols:filter-alt-off"
+              className="h-[40px] w-[40px] text-[#64748b]"
+              aria-hidden="true"
+            />
+            <p className="font-['Inter',sans-serif] text-[16px] font-bold text-[#2f3136]">
+              No tenants match your filters
+            </p>
+            <p className="font-['Inter',sans-serif] text-[14px] text-[#666]">
+              Try a different status, sort, or facility search.
+            </p>
+            {tenantFiltersActive(filters) && (
+              <button
+                type="button"
+                onClick={() => setFilters(defaultTenantListFilters)}
+                className="rounded-[12px] bg-[#cbf6ed] px-[24px] py-[10px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] transition-opacity hover:opacity-80"
+              >
+                Reset filters
+              </button>
+            )}
+          </div>
         ) : (
           <section
             aria-label="Tenants grid"
             className="grid w-full grid-cols-1 gap-x-[24px] gap-y-[32px] sm:grid-cols-2 xl:grid-cols-3"
           >
-            {tenants.map((tenant) => (
+            {filteredTenants.map((tenant) => (
               <TenantCard
                 key={tenant.id}
                 tenant={tenant}
