@@ -90,7 +90,11 @@ const LandlordTenantDetail = () => {
           ) : (
             <div className="flex flex-col gap-[12px] px-[32px]">
               {tenant.documents.map((document) => (
-                <SubmittedDocumentCard key={document.id} document={document} />
+                <SubmittedDocumentCard
+                  key={document.id}
+                  document={document}
+                  showMoreMenu={false}
+                />
               ))}
             </div>
           )}

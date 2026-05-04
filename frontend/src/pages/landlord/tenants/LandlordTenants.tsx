@@ -1,27 +1,61 @@
 import { useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import LandlordLayout from '../../../components/landlord/LandlordLayout';
+import LandlordManagerActionsPopover, {
+  type ManagerAction,
+} from '../../../components/landlord/LandlordManagerActionsPopover';
+import ReportManager from '../../../components/landlord/LandlordManagerReportController';
 import TenantsToolbar from '../../../components/landlord/tenants/TenantsToolbar';
 import TenantCard from '../../../components/landlord/tenants/TenantCard';
 import RemoveTenantPopup from '../../../components/landlord/tenants/popups/RemoveTenantPopup';
 import {
   defaultTenantListFilters,
   filterAndSortTenants,
+  filterTenantsByName,
   tenantFiltersActive,
 } from '../../../utils/tenantListFilters';
 import { pendingApplications, tenants, type Tenant } from '../../../data/landlordTenants';
 
 const LandlordTenants = () => {
+  const navigate = useNavigate();
   const pendingCount = pendingApplications.length;
+  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+  const [reportTarget, setReportTarget] = useState<Tenant | null>(null);
   const [removeTarget, setRemoveTarget] = useState<Tenant | null>(null);
   const [filters, setFilters] = useState(defaultTenantListFilters);
+  const [nameSearchQuery, setNameSearchQuery] = useState('');
 
-  const filteredTenants = useMemo(() => filterAndSortTenants(tenants, filters), [filters]);
+  const handleTenantAction = (tenant: Tenant, action: ManagerAction) => {
+    setOpenMenuId(null);
+    if (action === 'message') {
+      navigate('/landlord/messages');
+      return;
+    }
+    if (action === 'report') {
+      setReportTarget(tenant);
+      return;
+    }
+    if (action === 'remove') {
+      setRemoveTarget(tenant);
+    }
+  };
+
+  const filteredTenants = useMemo(() => {
+    const sorted = filterAndSortTenants(tenants, filters);
+    return filterTenantsByName(sorted, nameSearchQuery);
+  }, [filters, nameSearchQuery]);
 
   const patchFilters = (patch: Partial<typeof filters>) => {
     setFilters((prev) => ({ ...prev, ...patch }));
   };
+
+  const resetAllListFilters = () => {
+    setFilters(defaultTenantListFilters);
+    setNameSearchQuery('');
+  };
+
+  const hasActiveListFilters = tenantFiltersActive(filters) || nameSearchQuery.trim().length > 0;
 
   return (
     <LandlordLayout activeSidebarItem="tenants" breadcrumbs={[{ label: 'My Tenants' }]}>
@@ -34,7 +68,9 @@ const LandlordTenants = () => {
             countClassName="text-[#096c5b]"
             filter={filters}
             onFilterChange={patchFilters}
-            onResetFilters={() => setFilters(defaultTenantListFilters)}
+            onResetFilters={resetAllListFilters}
+            nameSearchQuery={nameSearchQuery}
+            onNameSearchChange={setNameSearchQuery}
           />
           <div className="h-[2px] w-full rounded-[100px] bg-[#f0f0f0]" />
 
@@ -83,12 +119,12 @@ const LandlordTenants = () => {
               No tenants match your filters
             </p>
             <p className="font-['Inter',sans-serif] text-[14px] text-[#666]">
-              Try a different status, sort, or facility search.
+              Try a different status, sort, facility search, or tenant name search.
             </p>
-            {tenantFiltersActive(filters) && (
+            {hasActiveListFilters && (
               <button
                 type="button"
-                onClick={() => setFilters(defaultTenantListFilters)}
+                onClick={resetAllListFilters}
                 className="rounded-[12px] bg-[#cbf6ed] px-[24px] py-[10px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] transition-opacity hover:opacity-80"
               >
                 Reset filters
@@ -105,7 +141,16 @@ const LandlordTenants = () => {
                 key={tenant.id}
                 tenant={tenant}
                 to={`/landlord/tenants/${tenant.id}`}
-                onMoreOptions={setRemoveTarget}
+                menuOpen={openMenuId === tenant.id}
+                onKebabClick={(t) => setOpenMenuId((prev) => (prev === t.id ? null : t.id))}
+                actionMenu={
+                  <LandlordManagerActionsPopover
+                    open={openMenuId === tenant.id}
+                    onClose={() => setOpenMenuId(null)}
+                    onAction={(action) => handleTenantAction(tenant, action)}
+                    subjectName={tenant.displayName}
+                  />
+                }
               />
             ))}
           </section>
@@ -115,6 +160,13 @@ const LandlordTenants = () => {
         targetName={removeTarget?.displayName ?? null}
         isOpen={Boolean(removeTarget)}
         onClose={() => setRemoveTarget(null)}
+      />
+      <ReportManager
+        isOpen={Boolean(reportTarget)}
+        onClose={() => setReportTarget(null)}
+        manager={
+          reportTarget ? { displayName: reportTarget.displayName, email: reportTarget.email } : null
+        }
       />
     </LandlordLayout>
   );

@@ -63,6 +63,15 @@ export function filterAndSortTenants(list: Tenant[], filters: TenantListFilters)
   return out;
 }
 
+export function filterTenantsByName(list: Tenant[], nameQuery: string): Tenant[] {
+  const q = nameQuery.trim().toLowerCase();
+  if (!q) return list;
+  return list.filter((t) => {
+    const hay = `${t.displayName} ${t.fullName}`.toLowerCase();
+    return hay.includes(q);
+  });
+}
+
 export function tenantFiltersActive(filters: TenantListFilters): boolean {
   return filters.status !== 'all' || filters.facilityQuery.trim().length > 0;
 }

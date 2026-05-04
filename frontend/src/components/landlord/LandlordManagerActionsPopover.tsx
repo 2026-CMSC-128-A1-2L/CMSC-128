@@ -7,7 +7,8 @@ type Props = {
   open: boolean;
   onClose: () => void;
   onAction: (action: ManagerAction) => void;
-  managerName: string;
+  /** Display name for aria labels (tenant, manager, etc.). */
+  subjectName: string;
 };
 
 const items: Array<{
@@ -25,7 +26,7 @@ const LandlordManagerActionsPopover: FunctionComponent<Props> = ({
   open,
   onClose,
   onAction,
-  managerName,
+  subjectName,
 }) => {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -57,7 +58,7 @@ const LandlordManagerActionsPopover: FunctionComponent<Props> = ({
     <div
       ref={ref}
       role="menu"
-      aria-label={`Actions for ${managerName}`}
+      aria-label={`Actions for ${subjectName}`}
       onClick={(e) => e.stopPropagation()}
       className="absolute left-full top-1/2 z-30 ml-[8px] flex w-[156px] -translate-y-1/2 flex-col gap-[2px] rounded-[10px] border border-solid border-[#f0f0f0] bg-white px-[6px] py-[6px] shadow-[0_8px_24px_rgba(0,0,0,0.12)] origin-left animate-fade-in"
       style={{ animationDuration: '150ms' }}
@@ -73,9 +74,7 @@ const LandlordManagerActionsPopover: FunctionComponent<Props> = ({
           }}
           className={[
             'flex items-center gap-[10px] rounded-[8px] px-[10px] py-[8px] text-left transition-colors',
-            item.danger
-              ? 'text-[#dc2626] hover:bg-[#fef2f2]'
-              : 'text-[#2f3136] hover:bg-[#f0faf6]',
+            item.danger ? 'text-[#dc2626] hover:bg-[#fef2f2]' : 'text-[#2f3136] hover:bg-[#f0faf6]',
           ].join(' ')}
         >
           <Icon icon={item.icon} className="h-[18px] w-[18px] shrink-0" aria-hidden="true" />
