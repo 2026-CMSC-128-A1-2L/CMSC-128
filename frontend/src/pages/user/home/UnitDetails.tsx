@@ -265,6 +265,7 @@ const UnitDetails: FunctionComponent = () => {
                   {dormData.map((dorm) => (
                     <DormCard
                       key={dorm.id}
+                      id={dorm.id}
                       name={dorm.name}
                       rating={dorm.rating}
                       price={dorm.price}
