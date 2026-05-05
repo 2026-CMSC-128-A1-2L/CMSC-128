@@ -1,16 +1,29 @@
-import { type FunctionComponent, useState } from 'react';
+import { type FunctionComponent, useEffect, useState } from 'react';
 import { Icon } from '@iconify/react';
 import Tags from '../Filter/Tags';
 import Distance from '../Filter/DistanceMap';
+interface filterCriteriaProps{
+  filterCriteria:{minPrice:number;
+  maxPrice:number;
+  pax: number | 'Any';
+  propertyType:string;
+  selectedEssentials:string[];
+  distance:number;}
+  setFilterCriteria:any;
+};
 
-const Filter: FunctionComponent = () => {
+
+const Filter: FunctionComponent<filterCriteriaProps> = (props) => {
+  const {filterCriteria,setFilterCriteria}=props;
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(1000);
   const [pax, setPax] = useState<number | 'Any'>('Any');
   const [propertyType, setPropertyType] = useState('Dormitory');
   const [selectedEssentials, setSelectedEssentials] = useState<string[]>([]);
   const [distance, setDistance] = useState(1); // default 1km
-
+  useEffect(()=>{
+    console.log(filterCriteria)
+  },[filterCriteria])
   const handleReset = () => {
     setMinPrice(0);
     setMaxPrice(1000);
@@ -180,7 +193,13 @@ const Filter: FunctionComponent = () => {
       </div>
 
       {/* apply */}
-      <button className="self-stretch overflow-hidden flex items-center justify-center p-[0.55rem] border-none bg-transparent cursor-pointer w-full mt-4">
+      <button 
+        className="self-stretch overflow-hidden flex items-center justify-center p-[0.55rem] border-none bg-transparent cursor-pointer w-full mt-4"
+        onClick={() => {
+          setFilterCriteria({minPrice,maxPrice,pax,propertyType,selectedEssentials,distance})
+          // console.log('apply filter with:',filterCriteria) 
+        }}        
+      >
         <div className="flex-1 rounded-[14.1px] bg-teal flex items-center justify-center py-[0.662rem] px-[0.881rem] box-border max-w-full text-white hover:opacity-90 transition-opacity">
           <b className="relative text-num-14">Apply Filter</b>
         </div>

@@ -55,6 +55,18 @@ const HomePage: FunctionComponent = () => {
   const [testLoading, setTestLoading] = useState(false);
   const [viewAllCategory, setViewAllCategory] = useState<ViewAllCategory>(null);
 
+  // filtercriteria based on filter tab
+  const [filterCriteria, setFilterCriteria] = useState({
+    //default filter state; can be updated when user applies filter
+    minPrice: 0,
+    maxPrice: 1000,
+    pax: 'Any' as number | 'Any',
+    propertyType: 'Dormitory',
+    selectedEssentials: [] as string[],
+    distance: 1,
+  });
+
+
   const pasalo  = useCarousel(pasaloDorms.length);
   const popular = useCarousel(popularDorms.length);
   const near    = useCarousel(nearDorms.length);
@@ -65,15 +77,22 @@ const HomePage: FunctionComponent = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  const isSearching = searchTerm.trim().length > 0;
 
-  const filteredDorms = isSearching
-    ? dormData.filter(
+  const isSearching = searchTerm.trim().length > 0;
+  // filter from filter tab will be automatically applied to all data that passes through.
+  const filteredDorms=dormData.filter(
+    (dorm)=>
+      dorm.price.min>=filterCriteria.minPrice
+      &&
+      dorm.price.max<=filterCriteria.maxPrice
+  )
+  const searchFilterDorms = isSearching
+    ? filteredDorms.filter(
         (dorm) =>
           dorm.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
           dorm.location.toLowerCase().includes(searchTerm.toLowerCase())
       )
-    : dormData;
+    : filteredDorms; 
 
   const handleViewAll = (category: ViewAllCategory) => {
     setViewAllCategory(category);
@@ -186,7 +205,7 @@ const HomePage: FunctionComponent = () => {
                             <Icon icon="material-symbols:close" className="w-6 h-6" />
                           </button>
                         </div>
-                        <FilterTab />
+                        <FilterTab filterCriteria={filterCriteria} setFilterCriteria={setFilterCriteria}/>
                       </div>
                     </div>
                   )}
@@ -204,7 +223,7 @@ const HomePage: FunctionComponent = () => {
                           Results for <span className="text-teal">"{searchTerm}"</span>
                         </b>
                         <span className="text-[0.75rem] text-unselected font-normal">
-                          — {filteredDorms.length} listing{filteredDorms.length !== 1 ? 's' : ''} found
+                          — {searchFilterDorms.length} listing{searchFilterDorms.length !== 1 ? 's' : ''} found
                         </span>
                       </div>
                       <button
@@ -213,11 +232,11 @@ const HomePage: FunctionComponent = () => {
                       >
                         Clear search
                       </button>
-                    </div>
+                    </div>S
 
-                    {filteredDorms.length > 0 ? (
+                    {searchFilterDorms.length > 0 ? (
                       <div className="w-full flex flex-wrap gap-6 py-1">
-                        {filteredDorms.map((dorm) => (
+                        {searchFilterDorms.map((dorm) => (
                           <DormCard
                             key={dorm.id}
                             name={dorm.name}
