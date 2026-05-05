@@ -24,7 +24,8 @@ const useCarousel = (total: number) => {
   };
 
   return { trackRef, current, scrollTo, total };
-};
+}; 
+  
 
 type ViewAllCategory = 'pasalo' | 'popular' | 'near' | 'mayLike' | null;
 
@@ -35,36 +36,45 @@ const CATEGORY_LABELS: Record<NonNullable<ViewAllCategory>, string> = {
   mayLike: 'Listings You May Like',
 };
 
-// TODO: change to actual data
-const pasaloDorms = dormData; 
-const popularDorms = dormData; 
-const nearDorms = dormData;  
-const mayLikeDorms = dormData; 
-
-const CATEGORY_DATA: Record<NonNullable<ViewAllCategory>, typeof dormData> = {
-  pasalo: pasaloDorms,
-  popular: popularDorms,
-  near: nearDorms,
-  mayLike: mayLikeDorms,
-};
-
 const HomePage: FunctionComponent = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const toggleFilter = () => setIsFilterOpen(!isFilterOpen);
   const [searchTerm, setSearchTerm] = useState('');
   const [testLoading, setTestLoading] = useState(false);
   const [viewAllCategory, setViewAllCategory] = useState<ViewAllCategory>(null);
-
   // filtercriteria based on filter tab
   const [filterCriteria, setFilterCriteria] = useState({
     //default filter state; can be updated when user applies filter
     minPrice: 0,
-    maxPrice: 1000,
+    maxPrice: 10000,
     pax: 'Any' as number | 'Any',
     propertyType: 'Dormitory',
     selectedEssentials: [] as string[],
     distance: 1,
   });
+
+  // filter from filter tab will be automatically applied to all data that passes through.
+  //TODO: add additional filters once dorm rating, dorm distance, and dorm tags are present in data json
+  const filteredDorms=dormData.filter(
+    (dorm)=>
+      dorm.price.min>=filterCriteria.minPrice
+      &&
+      dorm.price.max<=filterCriteria.maxPrice
+  )
+  // TODO: change to actual data
+
+  // applied tab filter to dormData
+  const pasaloDorms = filteredDorms; 
+  const popularDorms = filteredDorms; 
+  const nearDorms = filteredDorms;  
+  const mayLikeDorms = filteredDorms; 
+
+  const CATEGORY_DATA: Record<NonNullable<ViewAllCategory>, typeof dormData> = {
+    pasalo: pasaloDorms,
+    popular: popularDorms,
+    near: nearDorms,
+    mayLike: mayLikeDorms,
+  };
 
 
   const pasalo  = useCarousel(pasaloDorms.length);
@@ -79,13 +89,6 @@ const HomePage: FunctionComponent = () => {
 
 
   const isSearching = searchTerm.trim().length > 0;
-  // filter from filter tab will be automatically applied to all data that passes through.
-  const filteredDorms=dormData.filter(
-    (dorm)=>
-      dorm.price.min>=filterCriteria.minPrice
-      &&
-      dorm.price.max<=filterCriteria.maxPrice
-  )
   const searchFilterDorms = isSearching
     ? filteredDorms.filter(
         (dorm) =>

@@ -15,12 +15,12 @@ interface filterCriteriaProps{
 
 const Filter: FunctionComponent<filterCriteriaProps> = (props) => {
   const {filterCriteria,setFilterCriteria}=props;
-  const [minPrice, setMinPrice] = useState(0);
-  const [maxPrice, setMaxPrice] = useState(1000);
-  const [pax, setPax] = useState<number | 'Any'>('Any');
-  const [propertyType, setPropertyType] = useState('Dormitory');
-  const [selectedEssentials, setSelectedEssentials] = useState<string[]>([]);
-  const [distance, setDistance] = useState(1); // default 1km
+  const [minPrice, setMinPrice] = useState(filterCriteria.minPrice);
+  const [maxPrice, setMaxPrice] = useState(filterCriteria.maxPrice);
+  const [pax, setPax] = useState<number | 'Any'>(filterCriteria.pax);
+  const [propertyType, setPropertyType] = useState(filterCriteria.propertyType);
+  const [selectedEssentials, setSelectedEssentials] = useState<string[]>(filterCriteria.selectedEssentials);
+  const [distance, setDistance] = useState(filterCriteria.distance); 
   useEffect(()=>{
     console.log(filterCriteria)
   },[filterCriteria])
