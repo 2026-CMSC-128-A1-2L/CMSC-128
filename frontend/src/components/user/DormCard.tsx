@@ -39,22 +39,40 @@ const DormCard: FunctionComponent<DormCardProps> = ({
   const [isExpanded, setIsExpanded] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
+  const [notificationOpacity, setNotificationOpacity] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState('Added to Bookmarks');
   const navigate = useNavigate();
 
   const handleBookmarkClick = async (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     e.preventDefault();
-    console.log('Bookmark clicked for:', id);
+    console.log('Bookmark clicked for:', id, 'Currently bookmarked:', isBookmarked);
+    
     try {
-      await BookmarkService.addBookmark(String(id));
-      setIsBookmarked(true);
+      if (isBookmarked) {
+        // Remove bookmark
+        await BookmarkService.deleteBookmark(String(id));
+        setIsBookmarked(false);
+        setNotificationMessage('Removed from Bookmarks');
+      } else {
+        // Add bookmark
+        await BookmarkService.addBookmark(String(id));
+        setIsBookmarked(true);
+        setNotificationMessage('Added to Bookmarks');
+      }
       setShowNotification(true);
-      setTimeout(() => setShowNotification(false), 3000);
+      setNotificationOpacity(true);
+      setTimeout(() => setNotificationOpacity(false), 3200);
+      setTimeout(() => setShowNotification(false), 3900);
     } catch (error) {
-      console.error('Failed to bookmark:', error);
-      setIsBookmarked(true);
+      console.error('Failed to toggle bookmark:', error);
+      // Still show notification on error
+      setIsBookmarked(!isBookmarked);
+      setNotificationMessage(isBookmarked ? 'Removed from Bookmarks' : 'Added to Bookmarks');
       setShowNotification(true);
-      setTimeout(() => setShowNotification(false), 3000);
+      setNotificationOpacity(true);
+      setTimeout(() => setNotificationOpacity(false), 3200);
+      setTimeout(() => setShowNotification(false), 3900);
     }
   };
 
@@ -78,13 +96,11 @@ const DormCard: FunctionComponent<DormCardProps> = ({
   return (
     <>
       {showNotification && (
-        <div className="fixed top-6 left-6 bg-white border-2 border-green-500 rounded-lg shadow-2xl px-5 py-3 z-50">
-          <div className="flex items-center gap-2">
-            <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-            </svg>
-            <span className="text-sm font-semibold text-gray-900">Added to bookmarks</span>
-          </div>
+        <div className="fixed top-8 left-8 px-6 py-3 z-50 flex items-center gap-2 transition-opacity duration-700 ease-in-out" style={{ backgroundColor: '#e0f7fa', borderRadius: '16px', opacity: notificationOpacity ? 1 : 0 }}>
+          <svg className="w-5 h-5 flex-shrink-0" fill="#00897b" viewBox="0 0 24 24">
+            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+          </svg>
+          <span className="text-sm font-semibold" style={{ color: '#00695c' }}>{notificationMessage}</span>
         </div>
       )}
       <div
