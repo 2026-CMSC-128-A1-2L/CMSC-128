@@ -15,10 +15,11 @@ export type BreadcrumbItem = {
 type LandlordLayoutProps = {
   activeSidebarItem?: SideBarLandlordItemKey;
   breadcrumbs?: BreadcrumbItem[];
+  activeTab?:string;
   children: ReactNode;
 };
 
-const LandlordLayout = ({ activeSidebarItem, breadcrumbs = [], children }: LandlordLayoutProps) => {
+const LandlordLayout = ({ activeSidebarItem, breadcrumbs = [], children,activeTab }: LandlordLayoutProps) => {
   const navigate = useNavigate();
 
   const [showHelp, setShowHelp] = useState(false);
@@ -86,7 +87,9 @@ const LandlordLayout = ({ activeSidebarItem, breadcrumbs = [], children }: Landl
         </div>
       </div>
       {/* ======= FLOATING ICON FOR TUTORIAL ======= */}
-      <div
+      {
+        activeTab!='info' &&
+        <div
         className="fixed bottom-10 right-10 z-[9999] cursor-pointer transition-all hover:scale-110 active:scale-95"
         onClick={() => setShowHelp(!showHelp)}
       >
@@ -100,7 +103,9 @@ const LandlordLayout = ({ activeSidebarItem, breadcrumbs = [], children }: Landl
           }}
         />
       </div>
-      <TutorialBubble show={showHelp} onClose={() => setShowHelp(false)} />
+      }
+      < TutorialBubble show={showHelp} onClose={() => setShowHelp(false)} />
+      
     </div>
   );
 };

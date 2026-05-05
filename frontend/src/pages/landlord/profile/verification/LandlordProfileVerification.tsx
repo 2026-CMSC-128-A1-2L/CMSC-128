@@ -9,6 +9,8 @@ import VerificationProgress, {
 import DocumentsSubmissionHeader from '../../../../components/landlord/LandlordVerification/DocumentsSubmissionHeader';
 import DocumentsUploadList from '../../../../components/landlord/LandlordVerification/DocumentsUploadList';
 import { documents } from '../../../../components/landlord/LandlordVerification/DocumentsData';
+import { useNavigate } from 'react-router-dom';
+import LandlordProfileSwitch from '../component/LandlordProfileSwitch';
 
 const landlord: LandlordInfo = {
   displayName: 'Quevin Custodio',
@@ -20,6 +22,7 @@ const landlord: LandlordInfo = {
 };
 
 const LandlordProfileVerification = () => {
+  const navigate=useNavigate()
   const [uploads, setUploads] = useState<Record<string, File | undefined>>({});
 
   const step: VerificationStep = 'submit';
@@ -46,6 +49,14 @@ const LandlordProfileVerification = () => {
     >
       <div className="flex w-full flex-col gap-[12px] rounded-[16px] bg-white/70 p-[8px] pb-[32px]">
         <LandlordInfoCard info={landlord} />
+        <LandlordProfileSwitch
+  activeTab="verification"
+  setActiveTab={(tab) => {
+    if (tab === 'info') {
+      navigate('/landlord/profile');
+    }
+  }}
+/>
 
         <div className="flex w-full flex-col items-center px-[32px] py-[12px]">
           <VerificationProgress currentStep={step} />

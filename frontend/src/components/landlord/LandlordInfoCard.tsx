@@ -19,6 +19,8 @@ type LandlordInfoCardProps = {
   onEditContact?: () => void;
   onEditHomeAddress?: () => void;
   verificationHref?: string;
+  activeTab: 'info' | 'verification';
+  setActiveTab: (tab: 'info' | 'verification') => void;
 };
 
 const PLACEHOLDER = '- - - - -';
@@ -75,6 +77,8 @@ const LandlordInfoCard = ({
   onEditContact,
   onEditHomeAddress,
   verificationHref = '/landlord/profile/verification',
+  activeTab,
+  setActiveTab
 }: LandlordInfoCardProps) => {
   return (
     <section className="flex flex-col gap-[24px] rounded-[16px] px-[32px] pt-[32px] pb-[24px]">
@@ -127,8 +131,14 @@ const LandlordInfoCard = ({
               </ul>
             )}
           </Field>
-          <Field label="Verification Status" to={verificationHref}>
-            <span className="inline-flex items-center gap-[4px] text-[#096c5b] group-hover:underline">
+
+            {/* removed to function here, repaced with a div */}
+          <div
+        className="group flex flex-col items-start gap-[4px] rounded-[6px] transition-colors hover:bg-[#eaf6f2]/60 cursor-pointer"
+        onClick={() => setActiveTab('verification')} 
+          >
+          <Field label="Verification Status"  >
+            <span className="inline-flex items-center gap-[4px] text-[#096c5b] group-hover:underline"  >
               {info.verified ? 'Verified' : 'Unverified'}
               {info.verified && (
                 <Icon
@@ -143,7 +153,7 @@ const LandlordInfoCard = ({
                 aria-hidden="true"
               />
             </span>
-          </Field>
+          </Field></div>
         </div>
       </div>
     </section>

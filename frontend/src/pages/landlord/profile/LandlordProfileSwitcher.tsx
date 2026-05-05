@@ -1,12 +1,17 @@
-import { useState, type ReactNode } from 'react';
-import { Icon } from '@iconify/react';
+import { useState, useMemo } from 'react';
 import LandlordLayout from '../../../components/landlord/LandlordLayout';
 import LandlordInfoCard, { type LandlordInfo } from '../../../components/landlord/LandlordInfoCard';
+import LandlordProfileSwitch from './component/LandlordProfileSwitch';
+import VerificationProgress, { type VerificationStep } from '../../../components/landlord/VerificationProgress';
+import DocumentsSubmissionHeader from '../../../components/landlord/LandlordVerification/DocumentsSubmissionHeader';
+import DocumentsUploadList from '../../../components/landlord/LandlordVerification/DocumentsUploadList';
+import { documents } from '../../../components/landlord/LandlordVerification/DocumentsData';
+
+import { Icon } from '@iconify/react';
+import type { ReactNode } from 'react';
 import dorm1 from '../../../../assets/landing_contact.webp';
 import dorm2 from '../../../../assets/landing_listing.webp';
 import dorm3 from '../../../../assets/landing_contact.webp';
-import { useNavigate } from 'react-router-dom';
-import LandlordProfileSwitch from './component/LandlordProfileSwitch';
 import { Link } from 'react-router-dom';
 
 const landlord: LandlordInfo = {
@@ -19,7 +24,7 @@ const landlord: LandlordInfo = {
 };
 
 type Property = {
-  id: string; // for routing to specific building info
+  id: string;
   name: string;
   location: string;
   rating: number;
@@ -27,27 +32,9 @@ type Property = {
 };
 
 const properties: Property[] = [
-  {
-    id: '1',
-    name: 'Tri-AD Hall Dormitory',
-    location: 'Umali Subdivision, Los Baños',
-    rating: 4.3,
-    image: dorm1,
-  },
-  {
-    id: '2',
-    name: 'Two Sapphire Place',
-    location: 'Umali Subdivision, Los Baños',
-    rating: 3.7,
-    image: dorm2,
-  },
-  {
-    id: '3',
-    name: "Women's Dormitory",
-    location: 'Inside UPLB',
-    rating: 3.7,
-    image: dorm3,
-  },
+  { id: '1', name: 'Tri-AD Hall Dormitory', location: 'Umali Subdivision, Los Baños', rating: 4.3, image: dorm1 },
+  { id: '2', name: 'Two Sapphire Place', location: 'Umali Subdivision, Los Baños', rating: 3.7, image: dorm2 },
+  { id: '3', name: "Women's Dormitory", location: 'Inside UPLB', rating: 3.7, image: dorm3 },
 ];
 
 type AvailabilityItemProps = {
@@ -91,35 +78,22 @@ const PropertyCard = ({ property }: { property: Property }) => (
         aria-label={`Bookmark ${property.name}`}
         className="absolute right-[10px] top-[10px] flex h-[30px] w-[30px] cursor-pointer items-center justify-center rounded-full bg-white/95 text-[#096c5b] shadow-sm transition-colors hover:bg-white"
       >
-        <Icon
-          icon="material-symbols:bookmark-outline"
-          className="h-[18px] w-[18px]"
-          aria-hidden="true"
-        />
+        <Icon icon="material-symbols:bookmark-outline" className="h-[18px] w-[18px]" aria-hidden="true" />
       </button>
     </div>
-
     <div className="flex flex-col gap-[6px] px-[16px] py-[14px]">
       <div className="flex items-start justify-between gap-[8px]">
         <h3 className="min-w-0 truncate font-['Inter',sans-serif] text-[16px] font-bold leading-[20px] tracking-[-0.18px] text-black">
           {property.name}
         </h3>
         <span className="flex shrink-0 items-center gap-[4px] font-['Lora',serif] text-[12px] font-semibold tracking-[0.24px] text-[#2f3136]">
-          <Icon
-            icon="material-symbols:star-rounded"
-            className="h-[14px] w-[14px] text-[#f5b301]"
-            aria-hidden="true"
-          />
+          <Icon icon="material-symbols:star-rounded" className="h-[14px] w-[14px] text-[#f5b301]" aria-hidden="true" />
           {property.rating.toFixed(1)}
         </span>
       </div>
       <div className="flex items-center justify-between gap-[8px]">
         <span className="flex min-w-0 items-center gap-[6px] font-['Lora',serif] text-[12px] font-semibold tracking-[0.24px] text-[#2f3136]">
-          <Icon
-            icon="material-symbols:location-on-outline"
-            className="h-[14px] w-[14px] shrink-0 text-[#096c5b]"
-            aria-hidden="true"
-          />
+          <Icon icon="material-symbols:location-on-outline" className="h-[14px] w-[14px] shrink-0 text-[#096c5b]" aria-hidden="true" />
           <span className="truncate">{property.location}</span>
         </span>
         <button
@@ -127,11 +101,7 @@ const PropertyCard = ({ property }: { property: Property }) => (
           aria-label={`More info for ${property.name}`}
           className="flex h-[20px] w-[20px] shrink-0 cursor-pointer items-center justify-center text-[#2f3136] hover:text-[#096c5b]"
         >
-          <Icon
-            icon="material-symbols:info-outline"
-            className="h-[18px] w-[18px]"
-            aria-hidden="true"
-          />
+          <Icon icon="material-symbols:info-outline" className="h-[18px] w-[18px]" aria-hidden="true" />
         </button>
       </div>
     </div>
@@ -145,9 +115,7 @@ type SectionHeaderProps = {
 
 const SectionHeader = ({ title, onEdit }: SectionHeaderProps) => (
   <div className="flex items-center gap-[12px]">
-    <h2 className="font-['Inter',sans-serif] text-[22px] font-bold leading-[28px] text-[#2f3136]">
-      {title}
-    </h2>
+    <h2 className="font-['Inter',sans-serif] text-[22px] font-bold leading-[28px] text-[#2f3136]">{title}</h2>
     {onEdit && (
       <button
         type="button"
@@ -161,8 +129,13 @@ const SectionHeader = ({ title, onEdit }: SectionHeaderProps) => (
   </div>
 );
 
-const LandlordProfile = () => {
-  const navigate = useNavigate();
+const LandlordProfileSwitcher = () => {
+  const [activeTab, setActiveTab] = useState<'info' | 'verification'>('info');
+
+  const [uploads, setUploads] = useState<Record<string, File | undefined>>({});
+  const step: VerificationStep = 'submit';
+  const uploadedCount = useMemo(() => Object.values(uploads).filter(Boolean).length, [uploads]);
+  const canSubmit = uploadedCount === documents.length;
 
 
 
@@ -174,51 +147,77 @@ const LandlordProfile = () => {
   const [isEditingAddress, setIsEditingAddress] = useState(false);
   const [homeAddress, setHomeAddress] = useState('Brgy. Batong Malake, Los Banos, Laguna');
 
+
+  const handleFile = (id: string, file: File) => {
+    setUploads((prev) => ({ ...prev, [id]: file }));
+  };
+
+  const handleSubmit = () => {
+    console.log('Submitting documents:', uploads);
+  };
+
   return (
     <LandlordLayout
       breadcrumbs={[
         { label: 'User Profile' },
-        { label: 'Verification Status', to: '/landlord/profile/verification' },
+        { label: activeTab === 'info' ? 'Profile Info' : 'Verification Status' },
       ]}
+      activeTab={activeTab}
     >
       <div className="flex w-full flex-col gap-[12px] rounded-[16px] bg-white/70 p-[8px] pb-[32px]">
-        <LandlordInfoCard info={landlord} />
-        <LandlordProfileSwitch
-  activeTab="info"
-  setActiveTab={(tab) => {
-    if (tab === 'verification') {
-      navigate('/landlord/profile/verification');
-    }
-  }}
-/>
+      
+        <LandlordInfoCard info={landlord} activeTab={activeTab} setActiveTab={setActiveTab} />
 
-        <div className="h-px w-full bg-[#e5e7eb]/70" />
-        <section className="flex flex-col gap-[16px] px-[32px]">
-          <SectionHeader title="Availability" />
-          <div className="grid grid-cols-1 gap-x-[48px] gap-y-[24px] md:grid-cols-2">
-            <AvailabilityItem icon="solar:clock-circle-outline" title="Ocular Visitation">
-              <AvailabilityLine days="Mon - Wed:" hours="8:00 AM - 5:00 PM" />
-            </AvailabilityItem>
-            <AvailabilityItem icon="ix:inquiry" title="General Inquiries">
-              <AvailabilityLine days="Mon - Fri:" hours="8:00 AM - 5:00 PM" />
-              <AvailabilityLine days="Sat - Sun:" hours="9:00 AM - 3:00 PM" />
-            </AvailabilityItem>
-          </div>
-        </section>
+        <LandlordProfileSwitch activeTab={activeTab} setActiveTab={setActiveTab} />
 
-        <div className="h-px w-full bg-[#e5e7eb]/70" />
+        {activeTab === 'info' ? (
+          <>
+            <div className="h-px w-full bg-[#e5e7eb]/70" />
+            <section className="flex flex-col gap-[16px] px-[32px]">
+              <SectionHeader title="Availability" />
+              <div className="grid grid-cols-1 gap-x-[48px] gap-y-[24px] md:grid-cols-2">
+                <AvailabilityItem icon="solar:clock-circle-outline" title="Ocular Visitation">
+                  <AvailabilityLine days="Mon - Wed:" hours="8:00 AM - 5:00 PM" />
+                </AvailabilityItem>
+                <AvailabilityItem icon="ix:inquiry" title="General Inquiries">
+                  <AvailabilityLine days="Mon - Fri:" hours="8:00 AM - 5:00 PM" />
+                  <AvailabilityLine days="Sat - Sun:" hours="9:00 AM - 3:00 PM" />
+                </AvailabilityItem>
+              </div>
+            </section>
 
-        <section className="flex flex-col gap-[16px] px-[32px]">
-          <SectionHeader title="Managed Properties" onEdit={() => {}} />
-          <div className="grid grid-cols-1 gap-[16px] sm:grid-cols-2 lg:grid-cols-3">
-            {properties.map((p) => (
-              <PropertyCard key={p.name} property={p} />
-            ))}
-          </div>
-        </section>
+            <div className="h-px w-full bg-[#e5e7eb]/70" />
+
+            <section className="flex flex-col gap-[16px] px-[32px]">
+              <SectionHeader title="Managed Properties" onEdit={() => {}} />
+              <div className="grid grid-cols-1 gap-[16px] sm:grid-cols-2 lg:grid-cols-3">
+                {properties.map((p) => (
+                  <PropertyCard key={p.name} property={p} />
+                ))}
+              </div>
+            </section>
+          </>
+        ) : (
+          <>
+            <div className="flex w-full flex-col items-center px-[32px] py-[12px]">
+              <VerificationProgress currentStep={step} />
+            </div>
+            <DocumentsSubmissionHeader
+              uploadedCount={uploadedCount}
+              totalCount={documents.length}
+              canSubmit={canSubmit}
+              onSubmit={handleSubmit}
+            />
+            <DocumentsUploadList
+              documents={documents}
+              uploads={uploads}
+              onFileSelected={handleFile}
+            />
+          </>
+        )}
       </div>
     </LandlordLayout>
   );
 };
 
-export default LandlordProfile;
+export default LandlordProfileSwitcher;

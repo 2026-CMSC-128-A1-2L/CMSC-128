@@ -17,13 +17,19 @@ import LandlordUnvalidatedApplications from '../pages/landlord/tenants/LandlordU
 import LandlordUnvalidatedTenantDetail from '../pages/landlord/tenants/LandlordUnvalidatedTenantDetail';
 import LandlordManagersSpecific from '../pages/landlord/managers/LandlordManagerSpecific';
 
+
+import LandlordProfileSwitcher from '../pages/landlord/profile/LandlordProfileSwitcher';
+
+
 import { Route } from 'react-router-dom';
 import LandlordPropertyFinance from '../pages/landlord/finance/LandlordPropertyFinance';
 import EditBuilding from '../pages/landlord/properties/EditBuilding';
 
 const landlordRoutes = [
   <Route key="landlord-home" path="/landlord-homepage" element={<LandlordHomepage />} />,
-  <Route key="landlord-profile" path="/landlord/profile" element={<LandlordProfile />} />,
+  // <Route key="landlord-profile" path="/landlord/profile" element={<LandlordProfile />} />,
+
+  <Route key="landlord-profile-v2" path="/landlord/profile" element={<LandlordProfileSwitcher/>} />,
   <Route
     key="landlord-profile-verification"
     path="/landlord/profile/verification"
@@ -32,6 +38,7 @@ const landlordRoutes = [
   <Route key="landlord-dashboard" path="/landlord/dashboard" element={<LandlordDashboard />} />,
   <Route key="landlord-messages" path="/landlord/messages" element={<LandlordMessages />} />,
   <Route key="landlord-properties" path="/landlord/properties" element={<LandlordProperties />} />,
+
   <Route
     key="landlord-properties-new"
     path="/landlord/properties/new"
