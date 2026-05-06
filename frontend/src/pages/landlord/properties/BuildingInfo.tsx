@@ -6,6 +6,7 @@ import { BUILDINGS } from '../../../data/buildings';
 import type { Building } from '../../../data/buildings';
 
 import RoomtypeModal from '../../../components/landlord/LandlordProperties/RoomtypeModal'
+import React from 'react';
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
 const Button = (props: {
@@ -185,6 +186,7 @@ const BuildingInfo = () => {
     about,
     photos,
     roomTypes,
+    rooms,
     managers,
     tenants,
   } = building;
@@ -290,24 +292,65 @@ const BuildingInfo = () => {
                 <div className="w-full flex items-center justify-between gap-4 text-left text-black" 
                       >
                   {approvedRooms.map((listing) => (
-                    <>
-                    <ListingCard
-                      key={listing.id}
-                      facilityName={name}
-                      listingName={listing.name}
-                      image={listing.image}
-                      setModal={setModal}
-                    />
+                      <>
+                      <ListingCard
+                        key={listing.id}
+                        facilityName={name}
+                        listingName={listing.name}
+                        image={listing.image}
+                        setModal={setModal}
+                      />
 
-                  <RoomtypeModal
-                  key={listing.id}
-                  openModal={modal}
-                  closeModal={() => setModal(false)}
-                  >
-                    {listing.name}
-                  </RoomtypeModal>
-                  </>
-                    
+                    <RoomtypeModal
+                    key={listing.id}
+                    openModal={modal}
+                    closeModal={() => setModal(false)}
+                    >
+                      <div className='flex flex-col w-full'>
+                        <div className='flex mx-auto flex-col w-fit'>
+                          <p>{name}</p>
+                          <p>{listing.name}</p>
+                          
+                        </div>
+                        {/* list out all rooms of the current room type */}
+                        <div className='grid grid-cols-3 mx-auto text-center'>
+                        <p>Room Number</p> <p>Current Occupants</p>  <p>Status</p>
+                        {rooms.filter((room)=>room.roomType===listing.name).map((room)=>(
+                          
+                          <React.Fragment key={room.id}>
+                            <p>{room.roomNumber}</p>
+                            {/* get count of all occupants per room */}
+                            <p>{tenants.filter((tenant)=>tenant.roomNumber===room.roomNumber).length}</p>
+                            {/* get first item that appears when filtering for roomType object associated with the room */}
+                            <p>{listing.status}</p>
+
+                          </React.Fragment>
+                        ))}
+                        </div>
+                        {/* get all occupants in that room type */}
+                        {
+                          <div>
+                            <p>Tenants</p>
+                          <div>{
+                            rooms.filter((room)=>room.roomType===listing.name).map((room)=>(
+                              <React.Fragment key={room.id}>
+                                {tenants.filter((tenant)=>tenant.roomNumber===room.roomNumber).map((tenant)=>(
+                                  <React.Fragment key={tenant.name}>
+                                  {tenant.name}
+                                  </React.Fragment>
+                                ))}
+                              </React.Fragment>
+                            ))
+                          }</div>
+
+                          </div>
+                        
+                        }
+                      </div>
+                      
+                    </RoomtypeModal>
+                    </>
+                      
                   ))}
                   <AddListingCard />
                 </div>

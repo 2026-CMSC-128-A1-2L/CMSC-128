@@ -23,7 +23,7 @@ function RoomtypeModal({ openModal, closeModal, children }) {
         onCancel={closeModal}
         >
         {children}
-        <button onClick={closeModal} className="cursor-pointer">
+        <button onClick={closeModal} className="cursor-pointer bg-red-500 text-white">
             Close
         </button>
         </dialog>
