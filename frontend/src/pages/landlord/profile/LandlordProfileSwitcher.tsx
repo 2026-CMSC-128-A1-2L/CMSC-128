@@ -18,6 +18,8 @@ const landlord: LandlordInfo = {
   displayName: 'Quevin Custodio',
   email: 'qacustodio@up.edu.ph',
   fullName: 'Quevin James A. Custodio',
+  contactNumber:'-----',
+  homeAddress:'-----',
   role: 'Landlord',
   employees: ['Nathaniel Cunanan', 'Lance De Jesus'],
   verified: true,
@@ -143,7 +145,6 @@ const LandlordProfileSwitcher = () => {
   
   //if user has recently submitted documents, disable submit button until user has reuploaded new documents
   const canSubmit = uploadedCount === documents.length;
-  const [statefulCanSubmit,setStatefulCanSubmit]=useState(false);
   const [isRecentSubmit,setIsRecentSubmit]=useState(false);
 
   const handleFile = (id: string, file: File) => {
@@ -157,14 +158,30 @@ const LandlordProfileSwitcher = () => {
     setIsRecentSubmit(true)
   };
 
+  // stateful variable for contacts and home address
 
+  //LIFTED DECLARATIONS FROM USER/PROFILEINFO.TSX
+  //stateful contact number variable
+  const [contactNumber, setContactNumber] = useState(landlord.contactNumber);
+  
+  // stateful home variable
+  const [homeAddress, setHomeAddress] = useState(landlord.homeAddress);
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [isEditingAddress, setIsEditingAddress] = useState(false);
+  
   //on change to uploads, setIsRecentSubmit(false)
   useEffect(()=>{
     setIsRecentSubmit(false)
   },[uploads])
 
-    
+  //on change to contact number and home address, update landlord info object
+  useEffect(() => {
+  landlord.contactNumber = contactNumber;
+  landlord.homeAddress = homeAddress;
+}, [contactNumber, homeAddress]);
   return (
+
     <LandlordLayout
       breadcrumbs={[
         { label: 'User Profile' },
@@ -173,8 +190,25 @@ const LandlordProfileSwitcher = () => {
       activeTab={activeTab}
     >
       <div className="flex w-full flex-col gap-[12px] rounded-[16px] bg-white/70 p-[8px] pb-[32px]">
-      
-        <LandlordInfoCard info={landlord} activeTab={activeTab} setActiveTab={setActiveTab} />
+        
+        <LandlordInfoCard 
+        info={landlord} 
+        activeTab={activeTab} 
+        setActiveTab={setActiveTab} 
+        setContactNumber={setContactNumber}
+        setHomeAddress={setHomeAddress}
+
+        onEditContact={()=>{
+          setIsEditing(!isEditing)
+        }}
+        onEditHomeAddress={()=>{
+          setIsEditingAddress(!isEditingAddress)
+        }}
+        setIsEditing={setIsEditing}
+        isEditing={isEditing}
+        setIsEditingAddress={setIsEditingAddress}
+        isEditingAddress={isEditingAddress}
+      />
 
         <LandlordProfileSwitch activeTab={activeTab} setActiveTab={setActiveTab} />
 
