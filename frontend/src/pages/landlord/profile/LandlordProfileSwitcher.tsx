@@ -214,6 +214,7 @@ const LandlordProfileSwitcher = () => {
               uploadedCount={uploadedCount}
               totalCount={documents.length}
               canSubmit={canSubmit && !isRecentSubmit}
+              statefulVerificationStep={statefulVerificationStep}
               onSubmit={handleSubmit}
             />
             <DocumentsUploadList
