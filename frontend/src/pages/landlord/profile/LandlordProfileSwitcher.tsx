@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import LandlordLayout from '../../../components/landlord/LandlordLayout';
 import LandlordInfoCard, { type LandlordInfo } from '../../../components/landlord/LandlordInfoCard';
 import LandlordProfileSwitch from './component/LandlordProfileSwitch';
@@ -133,20 +133,18 @@ const LandlordProfileSwitcher = () => {
   const [activeTab, setActiveTab] = useState<'info' | 'verification'>('info');
 
   const [uploads, setUploads] = useState<Record<string, File | undefined>>({});
+  
+  //change step into a stateful variable
   const step: VerificationStep = 'submit';
+
+  const [statefulVerificationStep,setStatefulVerificationStep]=useState<VerificationStep>('submit');
+
   const uploadedCount = useMemo(() => Object.values(uploads).filter(Boolean).length, [uploads]);
+  
+  //if user has recently submitted documents, disable submit button until user has reuploaded new documents
   const canSubmit = uploadedCount === documents.length;
-
-
-
-  // contact number editing state
-  const [isEditing, setIsEditing] = useState(false);
-  const [contactNumber, setContactNumber] = useState('09*********');
-
-  // home address editing state
-  const [isEditingAddress, setIsEditingAddress] = useState(false);
-  const [homeAddress, setHomeAddress] = useState('Brgy. Batong Malake, Los Banos, Laguna');
-
+  const [statefulCanSubmit,setStatefulCanSubmit]=useState(false);
+  const [isRecentSubmit,setIsRecentSubmit]=useState(false);
 
   const handleFile = (id: string, file: File) => {
     setUploads((prev) => ({ ...prev, [id]: file }));
@@ -154,8 +152,18 @@ const LandlordProfileSwitcher = () => {
 
   const handleSubmit = () => {
     console.log('Submitting documents:', uploads);
+    setStatefulVerificationStep('reviewing') //only admin has the power to set verification to 'finished'
+    //after every submit, set isRecentSubmit to true
+    setIsRecentSubmit(true)
   };
 
+
+  //on change to uploads, setIsRecentSubmit(false)
+  useEffect(()=>{
+    setIsRecentSubmit(false)
+  },[uploads])
+
+    
   return (
     <LandlordLayout
       breadcrumbs={[
@@ -200,12 +208,12 @@ const LandlordProfileSwitcher = () => {
         ) : (
           <>
             <div className="flex w-full flex-col items-center px-[32px] py-[12px]">
-              <VerificationProgress currentStep={step} />
+              <VerificationProgress currentStep={statefulVerificationStep}  />
             </div>
             <DocumentsSubmissionHeader
               uploadedCount={uploadedCount}
               totalCount={documents.length}
-              canSubmit={canSubmit}
+              canSubmit={canSubmit && !isRecentSubmit}
               onSubmit={handleSubmit}
             />
             <DocumentsUploadList
