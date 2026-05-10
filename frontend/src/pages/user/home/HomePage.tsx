@@ -1,5 +1,6 @@
-import { type FunctionComponent, useRef, useState } from 'react';
+import { type FunctionComponent, useEffect, useRef, useState } from 'react';
 import { Icon } from '@iconify/react';
+import { useSearchParams } from 'react-router-dom';
 import SideBar from '../../../components/user/SideBar';
 import DormCard from '../../../components/user/DormCard';
 import Banner from '../../../components/general/Banner';
@@ -53,6 +54,7 @@ const NavArrows = ({
 }) => (
   <div className="flex items-center gap-[8px]">
     <button
+      type="button"
       onClick={() => scrollTo(current - 1)}
       disabled={current === 0}
       className="flex h-[32px] w-[32px] items-center justify-center rounded-full border border-[#f0f0f0] bg-white transition-opacity hover:opacity-70 disabled:opacity-30"
@@ -61,6 +63,7 @@ const NavArrows = ({
       <Icon icon="solar:arrow-left-bold" className="h-[16px] w-[16px] text-[#2f3136]" />
     </button>
     <button
+      type="button"
       onClick={() => scrollTo(current + 1)}
       disabled={current === total - 1}
       className="flex h-[32px] w-[32px] items-center justify-center rounded-full bg-[#e0f7f4] transition-opacity hover:opacity-70 disabled:opacity-30"
@@ -78,7 +81,8 @@ const ViewAllLink = ({
   category: NonNullable<ViewAllCategory>;
   onViewAll: (category: ViewAllCategory) => void;
 }) => (
-  <div
+  <button
+    type="button"
     className="w-fit h-fit flex items-end justify-center gap-1 pt-4 cursor-pointer text-center text-[0.75rem] text-teal-100 font-lora"
     onClick={() => onViewAll(category)}
   >
@@ -86,7 +90,7 @@ const ViewAllLink = ({
       View All
     </div>
     <Icon icon="radix-icons:arrow-top-right" className="w-3 h-3" />
-  </div>
+  </button>
 );
 
 // ─── Carousel section ─────────────────────────────────────────────────────────
@@ -112,17 +116,11 @@ const CarouselSection = ({
         <div className="h-full flex items-center gap-2">
           <div className="w-fit h-full flex items-start gap-2">
             <b className="w-fit relative flex items-start">{title}</b>
-            {infoIcon && (
-              <Icon icon="material-symbols-light:info-outline" className="w-5 h-5" />
-            )}
+            {infoIcon && <Icon icon="material-symbols-light:info-outline" className="w-5 h-5" />}
           </div>
           {category && <ViewAllLink category={category} onViewAll={onViewAll} />}
         </div>
-        <NavArrows
-          current={carousel.current}
-          total={carousel.total}
-          scrollTo={carousel.scrollTo}
-        />
+        <NavArrows current={carousel.current} total={carousel.total} scrollTo={carousel.scrollTo} />
       </div>
       <div
         ref={carousel.trackRef}
@@ -153,6 +151,7 @@ const EmptyState = ({ onBack, label }: { onBack: () => void; label: string }) =>
     <Icon icon="mdi:home-search-outline" className="w-16 h-16 text-unselected" />
     <p className="text-[1rem] font-semibold text-dimgray">{label}</p>
     <button
+      type="button"
       onClick={onBack}
       className="mt-2 px-5 py-2 rounded-full bg-[#e0f7f4] text-[#096c5b] text-[0.8rem] font-semibold hover:opacity-80 transition-opacity"
     >
@@ -167,6 +166,7 @@ const ErrorState = ({ message, onRetry }: { message: string; onRetry: () => void
     <p className="text-[1rem] font-semibold text-dimgray">Could not load listings</p>
     <p className="text-[0.875rem] text-unselected max-w-xs">{message}</p>
     <button
+      type="button"
       onClick={onRetry}
       className="mt-2 px-5 py-2 rounded-full bg-[#e0f7f4] text-[#096c5b] text-[0.8rem] font-semibold hover:opacity-80 transition-opacity"
     >
@@ -178,8 +178,9 @@ const ErrorState = ({ message, onRetry }: { message: string; onRetry: () => void
 // ─── HomePage ─────────────────────────────────────────────────────────────────
 
 const HomePage: FunctionComponent = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState(searchParams.get('search') ?? '');
   const [viewAllCategory, setViewAllCategory] = useState<ViewAllCategory>(null);
 
   // Real data from the backend
@@ -201,10 +202,10 @@ const HomePage: FunctionComponent = () => {
 
   const filteredDorms = isSearching
     ? facilities.filter(
-      (dorm) =>
-        dorm.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        dorm.location.toLowerCase().includes(searchTerm.toLowerCase()),
-    )
+        (dorm) =>
+          dorm.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          dorm.location.toLowerCase().includes(searchTerm.toLowerCase()),
+      )
     : facilities;
 
   const handleViewAll = (category: ViewAllCategory) => {
@@ -214,8 +215,21 @@ const HomePage: FunctionComponent = () => {
 
   const handleSearch = (value: string) => {
     setSearchTerm(value);
+    const nextParams = new URLSearchParams(searchParams);
+    if (value.trim()) {
+      nextParams.set('search', value);
+    } else {
+      nextParams.delete('search');
+    }
+    setSearchParams(nextParams, { replace: true });
     if (value.trim().length > 0) setViewAllCategory(null);
   };
+
+  useEffect(() => {
+    const searchFromUrl = searchParams.get('search') ?? '';
+    setSearchTerm(searchFromUrl);
+    if (searchFromUrl.trim()) setViewAllCategory(null);
+  }, [searchParams]);
 
   if (isLoading) return <LoadingPage />;
 
@@ -229,7 +243,6 @@ const HomePage: FunctionComponent = () => {
       <div className="w-full min-w-0 h-fit flex items-start pt-15 pr-20 pb-20">
         <div className="h-fit w-full min-w-0 flex flex-col items-start gap-80">
           <div className="w-full min-w-0 flex flex-col items-start">
-
             {/* search bar */}
             <div className="w-full h-full overflow-hidden flex items-center pb-6 box-border">
               <div className="w-full flex items-center transition-all duration-300 bg-[#f8f9fa] rounded-num-12 py-3 pl-3 pr-4 border border-transparent focus-within:bg-white focus-within:shadow-[0_8px_10px_rgb(0,0,0,0.06)] focus-within:transform focus-within:-translate-y-[1px]">
@@ -243,7 +256,11 @@ const HomePage: FunctionComponent = () => {
                   className="w-full bg-transparent border-none outline-none text-num-14 font-semibold text-darkgreen placeholder:text-unselected placeholder:font-normal"
                 />
                 {searchTerm && (
-                  <button onClick={() => handleSearch('')} className="text-unselected hover:text-darkgreen">
+                  <button
+                    type="button"
+                    onClick={() => handleSearch('')}
+                    className="text-unselected hover:text-darkgreen"
+                  >
                     <Icon icon="material-symbols:close-rounded" className="w-4 h-4" />
                   </button>
                 )}
@@ -251,27 +268,36 @@ const HomePage: FunctionComponent = () => {
             </div>
 
             <div className="w-full flex flex-col items-start gap-6 text-[1.5rem] text-gray">
-
               {/* greeting / filter button */}
               <div className="w-full flex items-center justify-between box-border">
                 <div className="w-full h-8 flex-1 flex flex-col items-start justify-center">
                   <b className="relative leading-8 text-teal">Mabuhay, iskolar!</b>
                 </div>
                 <div className="w-fit h-fit flex items-center">
-                  <div
+                  <button
+                    type="button"
                     onClick={() => setIsFilterOpen(true)}
                     className="h-10 w-10 rounded-full bg-whitesmoke-100 flex items-center justify-center cursor-pointer hover:bg-lightcyan/45 transition-colors"
                   >
                     <Icon icon="mage:filter" className="w-6 h-6" />
-                  </div>
+                  </button>
 
                   {isFilterOpen && (
                     <div className="fixed inset-0 z-100 flex justify-end">
-                      <div className="absolute inset-0 bg-preview/45 backdrop" onClick={() => setIsFilterOpen(false)} />
+                      <button
+                        type="button"
+                        className="absolute inset-0 bg-preview/45 backdrop"
+                        onClick={() => setIsFilterOpen(false)}
+                        aria-label="Close filters"
+                      />
                       <div className="relative z-10 w-full max-w-[500px] h-full bg-white animate-in slide-in-from-right duration-500 overflow-y-auto">
                         <div className="p-4 flex justify-between items-center border-b">
                           <h2 className="text-xl font-bold">Filters</h2>
-                          <button onClick={() => setIsFilterOpen(false)} className="p-2 hover:bg-gray-100 rounded-full">
+                          <button
+                            type="button"
+                            onClick={() => setIsFilterOpen(false)}
+                            className="p-2 hover:bg-gray-100 rounded-full"
+                          >
                             <Icon icon="material-symbols:close" className="w-6 h-6" />
                           </button>
                         </div>
@@ -283,11 +309,9 @@ const HomePage: FunctionComponent = () => {
               </div>
 
               <div className="w-full min-w-0 flex flex-col items-start gap-10">
-
                 {/* Error state */}
                 {error ? (
                   <ErrorState message={error} onRetry={refetch} />
-
                 ) : isSearching ? (
                   /* Search results */
                   <div className="w-full flex flex-col items-start gap-6">
@@ -297,10 +321,12 @@ const HomePage: FunctionComponent = () => {
                           Results for <span className="text-teal">"{searchTerm}"</span>
                         </b>
                         <span className="text-[0.75rem] text-unselected font-normal">
-                          — {filteredDorms.length} listing{filteredDorms.length !== 1 ? 's' : ''} found
+                          — {filteredDorms.length} listing{filteredDorms.length !== 1 ? 's' : ''}{' '}
+                          found
                         </span>
                       </div>
                       <button
+                        type="button"
                         onClick={() => handleSearch('')}
                         className="text-[0.75rem] text-teal-100 underline font-semibold hover:opacity-70 transition-opacity whitespace-nowrap"
                       >
@@ -311,7 +337,7 @@ const HomePage: FunctionComponent = () => {
                     {filteredDorms.length > 0 ? (
                       <div className="w-full flex flex-wrap gap-6 py-1">
                         {filteredDorms.map((dorm) => (
-                          <DormCard key={dorm.id} id={dorm.id} {...dorm} />
+                          <DormCard key={dorm.id} {...dorm} />
                         ))}
                       </div>
                     ) : (
@@ -321,13 +347,13 @@ const HomePage: FunctionComponent = () => {
                       />
                     )}
                   </div>
-
                 ) : viewAllCategory ? (
                   /* View all category */
                   <div className="w-full flex flex-col items-start gap-6">
                     <div className="w-full flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <button
+                          type="button"
                           onClick={() => setViewAllCategory(null)}
                           className="flex items-center justify-center h-8 w-8 rounded-full bg-whitesmoke-100 hover:bg-lightcyan/45 transition-colors"
                         >
@@ -342,6 +368,7 @@ const HomePage: FunctionComponent = () => {
                         </span>
                       </div>
                       <button
+                        type="button"
                         onClick={() => setViewAllCategory(null)}
                         className="text-[0.75rem] text-teal-100 underline font-semibold hover:opacity-70 transition-opacity whitespace-nowrap"
                       >
@@ -352,7 +379,7 @@ const HomePage: FunctionComponent = () => {
                     {CATEGORY_DATA[viewAllCategory].length > 0 ? (
                       <div className="w-full flex flex-wrap gap-6 py-1">
                         {CATEGORY_DATA[viewAllCategory].map((dorm) => (
-                          <DormCard key={dorm.id} id={dorm.id} {...dorm} />
+                          <DormCard key={dorm.id} {...dorm} />
                         ))}
                       </div>
                     ) : (
@@ -362,7 +389,6 @@ const HomePage: FunctionComponent = () => {
                       />
                     )}
                   </div>
-
                 ) : (
                   /* Default home view */
                   <>
@@ -394,7 +420,7 @@ const HomePage: FunctionComponent = () => {
                       </div>
                       <div className="w-full flex flex-wrap gap-6">
                         {facilities.map((dorm) => (
-                          <DormCard key={dorm.id} id={dorm.id} {...dorm} />
+                          <DormCard key={dorm.id} {...dorm} />
                         ))}
                       </div>
                     </div>

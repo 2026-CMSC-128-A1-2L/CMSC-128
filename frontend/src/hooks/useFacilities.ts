@@ -10,7 +10,7 @@ export type DormCardData = {
   price: { min: number; max: number };
   location: string;
   image: string;
-  room_types: { pax: string; price: number }[];
+  room_types: { pax: string; price: number; unitCount?: number; availableUnitCount?: number }[];
 };
 
 // GetFacilitiesResponse is an array of ManagerFacilitySchema | UserFacilitySchema.
@@ -18,12 +18,22 @@ export type DormCardData = {
 // UserFacilitySchema adds `averageRating`, `image`, `price`.
 // ManagerFacilitySchema / UserFacilityDetailedSchema adds `media`.
 type FacilityItem = GetFacilitiesResponse[number];
+type FacilityListItem = FacilityItem & {
+  listings?: {
+    name: string;
+    price: {
+      min: number;
+      max: number;
+    };
+    unitCount?: number;
+    availableUnitCount?: number;
+  }[];
+};
 
 function mapToCardData(facility: FacilityItem): DormCardData {
   const hasUserFields = 'averageRating' in facility;
   const hasMedia = 'media' in facility;
-
-
+  const facilityWithListings = facility as FacilityListItem;
 
   // Image: prefer explicit `image` field (UserFacilitySchema),
   // then first media item (detailed schemas), then placeholder.
@@ -40,13 +50,25 @@ function mapToCardData(facility: FacilityItem): DormCardData {
     ? ((facility as { averageRating: number }).averageRating ?? 0).toFixed(1)
     : '—';
 
-
-
   // Price: present on UserFacilitySchema; stub 0/0 for detailed schemas
+  const listingPrices =
+    facilityWithListings.listings
+      ?.flatMap((listing) => [listing.price.min, listing.price.max])
+      .filter((price) => price > 0) ?? [];
   const price =
     hasUserFields && 'price' in facility
       ? (facility as { price: { min: number; max: number } }).price
-      : { min: 0, max: 0 };
+      : {
+          min: listingPrices.length > 0 ? Math.min(...listingPrices) : 0,
+          max: listingPrices.length > 0 ? Math.max(...listingPrices) : 0,
+        };
+  const roomTypes =
+    facilityWithListings.listings?.map((listing) => ({
+      pax: listing.name,
+      price: listing.price.min,
+      unitCount: listing.unitCount,
+      availableUnitCount: listing.availableUnitCount,
+    })) ?? [];
 
   return {
     id: facility.id as string,
@@ -55,9 +77,7 @@ function mapToCardData(facility: FacilityItem): DormCardData {
     image,
     rating,
     price,
-    // room_types lives on listings, not the facility list endpoint.
-    // Populate from SearchFacilitiesResponse when you integrate search.
-    room_types: [],
+    room_types: roomTypes,
   };
 }
 
@@ -77,6 +97,7 @@ export function useFacilities(): UseFacilitiesReturn {
   const refetch = () => setFetchCount((n) => n + 1);
 
   useEffect(() => {
+    void fetchCount;
     let cancelled = false;
 
     const load = async () => {
@@ -92,8 +113,7 @@ export function useFacilities(): UseFacilitiesReturn {
         }
       } catch (err) {
         if (!cancelled) {
-          const message =
-            err instanceof Error ? err.message : 'Failed to load facilities.';
+          const message = err instanceof Error ? err.message : 'Failed to load facilities.';
           setError(message);
         }
       } finally {
