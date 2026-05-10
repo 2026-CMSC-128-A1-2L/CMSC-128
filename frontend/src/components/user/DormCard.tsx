@@ -2,30 +2,31 @@ import { useState, type FunctionComponent, type MouseEvent } from 'react';
 import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
 
+// Shared formatter — created once at module level, not per render
+const currencyFormatter = new Intl.NumberFormat('en-PH', {
+  style: 'currency',
+  currency: 'PHP',
+  minimumFractionDigits: 0,
+});
+
+const priceRange = (min: number, max: number): string => {
+  if (min === 0 && max === 0) return 'Price TBA';
+  if (min === max) return `${currencyFormatter.format(min)}/month`;
+  return `${currencyFormatter.format(min)} – ${currencyFormatter.format(max)}/month`;
+};
+
 type DormCardProps = {
+  id: string;           // facility ID — used for navigation
   name: string;
   rating: string;
-  price: {
-    min: number;
-    max: number;
-  };
+  price: { min: number; max: number };
   location: string;
   image: string;
   room_types: { pax: string; price: number }[];
 };
 
-const priceRange = (min: number, max: number) => {
-  const formatter = new Intl.NumberFormat('en-PH', {
-    style: 'currency',
-    currency: 'PHP',
-    minimumFractionDigits: 0,
-  });
-
-  if (min === max) return `${formatter.format(min)}/month`;
-  return `${formatter.format(min)} - ${formatter.format(max)}/month`;
-};
-
 const DormCard: FunctionComponent<DormCardProps> = ({
+  id,
   name,
   rating,
   price,
@@ -36,20 +37,12 @@ const DormCard: FunctionComponent<DormCardProps> = ({
   const [isExpanded, setIsExpanded] = useState(false);
   const navigate = useNavigate();
 
-  const currencyFormatter = new Intl.NumberFormat('en-PH', {
-    style: 'currency',
-    currency: 'PHP',
-    minimumFractionDigits: 0,
-  });
-
-  // TODO: change route to specific unit
   const handleCardClick = () => {
-    navigate('/unit');
+    navigate(`/facilities/${id}`);
   };
 
-  // TPrevent navigation when dropdown is clicked
   const handleToggleExpand = (e: MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation(); 
+    e.stopPropagation();
     setIsExpanded(!isExpanded);
   };
 
@@ -84,16 +77,20 @@ const DormCard: FunctionComponent<DormCardProps> = ({
               <div className="text-num-12 h-fit font-semibold text-dimgray font-lora">
                 Available Listings:
               </div>
-              <div className="w-full h-full flex flex-col gap-1">
-                {room_types.map((room, index) => (
-                  <div key={index} className="flex justify-between text-num-12 font-inter">
-                    <span className="font-bold">{room.pax}</span>
-                    <span className="text-dimgray">
-                      {currencyFormatter.format(room.price)}/month
-                    </span>
-                  </div>
-                ))}
-              </div>
+              {room_types.length > 0 ? (
+                <div className="w-full h-full flex flex-col gap-1">
+                  {room_types.map((room, index) => (
+                    <div key={index} className="flex justify-between text-num-12 font-inter">
+                      <span className="font-bold">{room.pax}</span>
+                      <span className="text-dimgray">
+                        {currencyFormatter.format(room.price)}/month
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-num-12 text-unselected">No listings available yet.</p>
+              )}
             </div>
           )}
 
