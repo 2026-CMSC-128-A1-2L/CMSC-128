@@ -14,6 +14,7 @@ export type UnitType = {
 
 const unitSchema = new mongoose.Schema<UnitType>({
   listingId: { type: mongoose.Schema.Types.ObjectId, ref: 'Listing', required: true },
+  facilityId: { type: mongoose.Schema.Types.ObjectId, ref: 'HousingFacility', required: true },
   roomNumber: { type: String, unique: true, required: true },
 
   // NOTE: Always keep consistent everytime a user gets accepted or moves out.
