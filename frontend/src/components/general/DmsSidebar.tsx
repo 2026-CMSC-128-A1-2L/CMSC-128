@@ -109,7 +109,7 @@ const DmsSidebar: FunctionComponent = () => {
           <Icon
             icon="material-symbols-light:chevron-left"
             className="w-8 h-8 cursor-pointer shrink-0 hover:text-teal transition-colors"
-            onClick={() => navigate(-1)}
+            onClick={() => navigate('/home')}
           />
           <div className="flex-1 px-3 py-2 rounded-num-8 bg-unavailable_action flex items-center gap-2 transition-all focus-within:ring-1 focus-within:ring-teal/30 focus-within:bg-white focus-within:shadow-sm dark:bg-[#1e1e1e] dark:focus-within:bg-[#2a2a2a]">
             <Icon icon="material-symbols:search" className="w-4 h-4 text-unselected shrink-0" />
@@ -181,7 +181,7 @@ const DmsSidebar: FunctionComponent = () => {
             <button
               className={`h-fit rounded-full flex items-center justify-center py-1.5 px-5 transition-all active:scale-95 ${
                 dmFilter === 'all'
-                  ? 'bg-darkgreen text-white shadow-md shadow-darkgreen/20'
+                  ? 'bg-teal text-white shadow-md shadow-teal/20'
                   : 'bg-lightcyan text-teal hover:bg-teal/10'
               }`}
               onClick={() => setDmFilter('all')}
@@ -191,7 +191,7 @@ const DmsSidebar: FunctionComponent = () => {
             <button
               className={`h-fit rounded-full flex items-center justify-center py-1.5 px-5 transition-all active:scale-95 ${
                 dmFilter === 'unread'
-                  ? 'bg-darkgreen text-white shadow-md shadow-darkgreen/20'
+                  ? 'bg-teal text-white shadow-md shadow-teal/20'
                   : 'bg-lightcyan text-teal hover:bg-teal/10'
               }`}
               onClick={() => setDmFilter('unread')}
