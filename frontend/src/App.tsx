@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 
 import PageLayout from './pages/utilities/PageLayout';
@@ -13,14 +13,31 @@ import { useEffect } from 'react';
 
 // ... your other imports
 
+const getSignedInDestination = (user: ReturnType<typeof useAuthStore.getState>['user']) => {
+  if (!user) return '/';
+  if (user.status === 'setup') return '/registration';
+  if (user.userType === 'Landlord' || user.userType === 'Manager') return '/landlord-homepage';
+  if (user.userType === 'Admin') return '/admin/analytics';
+  return '/home';
+};
+
+function LandingRoute() {
+  const user = useAuthStore((state) => state.user);
+
+  if (user) {
+    return <Navigate to={getSignedInDestination(user)} replace />;
+  }
+
+  return <UserLanding />;
+}
+
 function AnimatedRoutes() {
   const location = useLocation();
-  const user = useAuthStore((state) => state.user);
 
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<UserLanding />} />
+        <Route path="/" element={<LandingRoute />} />
 
         <Route element={<PageLayout />}>
           {userRoutes}

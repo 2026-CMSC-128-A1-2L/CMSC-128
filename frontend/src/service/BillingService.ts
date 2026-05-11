@@ -1,20 +1,18 @@
-import axios from 'axios';
-import z from 'zod';
-import { GetBillingsQuerySchema } from 'shared';
-import type { GetBillingsQuery, CreateBillingBody, UpdateBillingRequestBody, UpdateBillingPaymentRequestBody, SubmitBillingPaymentArguments, VerifyBillingRequestBody } from '../interface/billing';
-import { API_URL } from './constant';
+import type z from 'zod';
+import type { GetBillingsQuerySchema } from 'shared';
+import type {
+  CreateBillingBody,
+  GetBillingsQuery,
+  SubmitBillingPaymentArguments,
+  UpdateBillingPaymentRequestBody,
+  UpdateBillingRequestBody,
+} from '../interface/billing';
+import { api } from './axiosInstance';
 
 export const BillingService = {
-
-  //FOREIGN -> Landlord Router
   async getLandlordSummary() {
     try {
-      const response = await axios.get(
-        `${API_URL}/api/billings/landlord/summary`,
-        {
-          // headers
-        }
-      );
+      const response = await api.get('/api/billings/landlord/summary');
       return response.data;
     } catch (error) {
       console.error('Error fetching landlord billing summary:', error);
@@ -22,16 +20,9 @@ export const BillingService = {
     }
   },
 
-  //FOREGIN -> Facility Router
-
   async getFacilitySummary(facilityId: string) {
     try {
-      const response = await axios.get(
-        `${API_URL}/api/billings/facility/${facilityId}/summary`,
-        {
-          // headers
-        }
-      );
+      const response = await api.get(`/api/billings/facility/${facilityId}/summary`);
       return response.data;
     } catch (error) {
       console.error('Error fetching facility billing summary:', error);
@@ -39,17 +30,9 @@ export const BillingService = {
     }
   },
 
-
-  //FOREIGN -> User Router
-
   async getUserBillingDashboard(userId: string) {
     try {
-      const response = await axios.get(
-        `${API_URL}/api/billings/users/${userId}/dashboard`,
-        {
-          // headers
-        }
-      );
+      const response = await api.get(`/api/billings/users/${userId}/dashboard`);
       return response.data;
     } catch (error) {
       console.error('Error fetching user billing dashboard:', error);
@@ -57,20 +40,11 @@ export const BillingService = {
     }
   },
 
-
-
-
   async getBillings(params: z.infer<typeof GetBillingsQuerySchema>): Promise<GetBillingsQuery> {
     try {
-      const kv = new URLSearchParams({
-        q: encodeURIComponent(JSON.stringify(params)),
-      }).toString();
-      const response = await axios.get<GetBillingsQuery>(
-        `${API_URL}/api/billings?q=${kv}`,
-        {
-          // headers
-        }
-      );
+      const response = await api.get<GetBillingsQuery>('/api/billings', {
+        params: { q: JSON.stringify(params) },
+      });
       return response.data;
     } catch (error) {
       console.error('Error fetching billings:', error);
@@ -80,15 +54,7 @@ export const BillingService = {
 
   async createBilling(body: CreateBillingBody) {
     try {
-      const response = await axios.post(
-        `${API_URL}/api/billings`,
-        {
-          ...body,
-        },
-        {
-          // headers
-        }
-      );
+      const response = await api.post('/api/billings', body);
       return response.data;
     } catch (error) {
       console.error('Error creating billing:', error);
@@ -96,16 +62,9 @@ export const BillingService = {
     }
   },
 
-
   async getBilling(billingId: string) {
     try {
-      const response = await axios.get(
-        `${API_URL}/api/billings/${billingId}`,
-        {
-          // headers
-        }
-      );
-
+      const response = await api.get(`/api/billings/${billingId}`);
       return response.data;
     } catch (error) {
       console.error('Error fetching billing:', error);
@@ -115,15 +74,7 @@ export const BillingService = {
 
   async updateBilling(billingId: string, body: UpdateBillingRequestBody) {
     try {
-      const response = await axios.patch(
-        `${API_URL}/api/billings/${billingId}`,
-        {
-          ...body,
-        },
-        {
-          // headers
-        }
-      );
+      const response = await api.patch(`/api/billings/${billingId}`, body);
       return response.data;
     } catch (error) {
       console.error('Error updating billing:', error);
@@ -133,15 +84,7 @@ export const BillingService = {
 
   async updateBillingPayment(billingId: string, body: UpdateBillingPaymentRequestBody) {
     try {
-      const response = await axios.post(
-        `${API_URL}/api/billings/${billingId}/verify`,
-        {
-          ...body,
-        },
-        {
-          // headers
-        }
-      );
+      const response = await api.post(`/api/billings/${billingId}/verify`, body);
       return response.data;
     } catch (error) {
       console.error('Error verifying billing payment:', error);
@@ -149,19 +92,9 @@ export const BillingService = {
     }
   },
 
-
-
   async submitBillingPayment(billingId: string, body: SubmitBillingPaymentArguments) {
     try {
-      const response = await axios.post(
-        `${API_URL}/api/billings/${billingId}/submit-payment`,
-        {
-          ...body,
-        },
-        {
-          // headers
-        }
-      );
+      const response = await api.post(`/api/billings/${billingId}/submit-payment`, body);
       return response.data;
     } catch (error) {
       console.error('Error submitting billing payment:', error);
@@ -169,4 +102,13 @@ export const BillingService = {
     }
   },
 
+  async getUnitBillings(unitId: string) {
+    try {
+      const response = await api.get(`/api/units/${unitId}/billings`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching unit billings:', error);
+      throw error;
+    }
+  },
 };

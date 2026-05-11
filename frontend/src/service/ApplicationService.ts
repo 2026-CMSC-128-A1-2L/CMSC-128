@@ -1,24 +1,21 @@
-import axios from 'axios';
-import z from 'zod';
-import { GetApplicationsQuerySchema } from 'shared';
-import type { GetApplicationsQuery, CreateApplicationBody, ApproveApplicationRequestBody, AssignUnitRequestBody, ApplicationFilter } from '../interface/application';
-import { API_URL } from './constant';
+import type z from 'zod';
+import type { GetApplicationsQuerySchema } from 'shared';
+import type {
+  ApproveApplicationRequestBody,
+  AssignUnitRequestBody,
+  CreateApplicationBody,
+  GetApplicationsQuery,
+} from '../interface/application';
+import { api } from './axiosInstance';
 
 export const ApplicationService = {
-
-
-
-  async getApplications(params: z.infer<typeof GetApplicationsQuerySchema>): Promise<GetApplicationsQuery> {
+  async getApplications(
+    params: z.infer<typeof GetApplicationsQuerySchema>,
+  ): Promise<GetApplicationsQuery> {
     try {
-      const kv = new URLSearchParams({
-        q: encodeURIComponent(JSON.stringify(params)),
-      }).toString();
-      const response = await axios.get<GetApplicationsQuery>(
-        `${API_URL}/api/applications?q=${kv}`,
-        {
-          // headers
-        }
-      );
+      const response = await api.get<GetApplicationsQuery>('/api/applications', {
+        params: { q: JSON.stringify(params) },
+      });
       return response.data;
     } catch (error) {
       console.error('Error fetching applications:', error);
@@ -28,15 +25,7 @@ export const ApplicationService = {
 
   async createApplication(body: CreateApplicationBody) {
     try {
-      const response = await axios.post(
-        `${API_URL}/api/applications`,
-        {
-          ...body,
-        },
-        {
-          // headers
-        }
-      );
+      const response = await api.post('/api/applications', body);
       return response.data;
     } catch (error) {
       console.error('Error creating application:', error);
@@ -44,15 +33,9 @@ export const ApplicationService = {
     }
   },
 
-
   async getApplication(applicationId: string) {
     try {
-      const response = await axios.get(
-        `${API_URL}/api/applications/${applicationId}`,
-        {
-          // headers
-        }
-      );
+      const response = await api.get(`/api/applications/${applicationId}`);
       return response.data;
     } catch (error) {
       console.error('Error fetching application:', error);
@@ -60,15 +43,9 @@ export const ApplicationService = {
     }
   },
 
-
   async deleteApplication(applicationId: string) {
     try {
-      await axios.delete(
-        `${API_URL}/api/applications/${applicationId}`,
-        {
-          // headers
-        }
-      );
+      await api.delete(`/api/applications/${applicationId}`);
     } catch (error) {
       console.error('Error deleting application:', error);
       throw error;
@@ -77,15 +54,7 @@ export const ApplicationService = {
 
   async approveApplication(applicationId: string, body: ApproveApplicationRequestBody) {
     try {
-      const response = await axios.post(
-        `${API_URL}/api/applications/${applicationId}/approve`,
-        {
-          ...body,
-        },
-        {
-          // headers
-        }
-      );
+      const response = await api.post(`/api/applications/${applicationId}/approve`, body);
       return response.data;
     } catch (error) {
       console.error('Error approving application:', error);
@@ -95,13 +64,7 @@ export const ApplicationService = {
 
   async rejectApplication(applicationId: string) {
     try {
-      const response = await axios.post(
-        `${API_URL}/api/applications/${applicationId}/reject`,
-        {},
-        {
-          // headers
-        }
-      );
+      const response = await api.post(`/api/applications/${applicationId}/reject`, {});
       return response.data;
     } catch (error) {
       console.error('Error rejecting application:', error);
@@ -111,15 +74,7 @@ export const ApplicationService = {
 
   async assignUnit(applicationId: string, body: AssignUnitRequestBody) {
     try {
-      const response = await axios.post(
-        `${API_URL}/api/applications/${applicationId}/assign-unit`,
-        {
-          ...body,
-        },
-        {
-          // headers
-        }
-      );
+      const response = await api.post(`/api/applications/${applicationId}/assign-unit`, body);
       return response.data;
     } catch (error) {
       console.error('Error assigning unit:', error);
@@ -129,16 +84,20 @@ export const ApplicationService = {
 
   async finalizeApplication(applicationId: string) {
     try {
-      const response = await axios.post(
-        `${API_URL}/api/applications/${applicationId}/finalize`,
-        {},
-        {
-          // headers
-        }
-      );
+      const response = await api.post(`/api/applications/${applicationId}/finalize`, {});
       return response.data;
     } catch (error) {
       console.error('Error finalizing application:', error);
+      throw error;
+    }
+  },
+
+  async getApplicationsByListing(listingId: string) {
+    try {
+      const response = await api.get(`/api/listings/${listingId}/applications`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching listing applications:', error);
       throw error;
     }
   },

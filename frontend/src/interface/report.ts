@@ -1,4 +1,8 @@
-import { ReportListingBodySchema, ReportUserBodySchema, ResolveReportBodySchema } from 'shared';
+import type {
+  ReportListingBodySchema,
+  ReportUserBodySchema,
+  ResolveReportBodySchema,
+} from 'shared';
 import type z from 'zod';
 
 export type ReportListingBody = z.infer<typeof ReportListingBodySchema>;

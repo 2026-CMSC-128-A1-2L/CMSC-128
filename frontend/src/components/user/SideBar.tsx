@@ -1,4 +1,5 @@
-import { useState, type MouseEventHandler } from 'react';
+import { useCallback, useEffect, useRef, useState, type MouseEventHandler } from 'react';
+import { createPortal } from 'react-dom';
 import { Link, useLocation } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import AtlasLogoText from '../../../assets/logo_atlas_text.svg?react';
@@ -72,34 +73,63 @@ const navItems = [
   },
 ];
 
-const SideBar = ({
-  activeItem,
-  onToggleDarkMode,
-  onProfileClick,
-  className = '',
-}: SideBarProps) => {
+const SideBar = ({ activeItem, onProfileClick, className = '' }: SideBarProps) => {
   const [collapsed, setCollapsed] = useState(false);
   const [internalHover, setInternalHover] = useState<SideBarItemKey>();
   const location = useLocation();
   const [searchQuery, setSearchQuery] = useState('');
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const [profileMenuPosition, setProfileMenuPosition] = useState({ left: 0, bottom: 0 });
+  const profileButtonRef = useRef<HTMLButtonElement>(null);
   const { isDark, toggle } = useTheme();
 
   const resolvedActive: SideBarItemKey | undefined =
     activeItem ?? navItems.find((item) => location.pathname.startsWith(item.route))?.key;
 
-  const { user } = useAuthStore();
+  const { user, logout } = useAuthStore();
   const username = user ? `${user.firstName} ${user.lastName}` : null;
   const navigate = useNavigate();
+  const updateProfileMenuPosition = useCallback(() => {
+    const profileButton = profileButtonRef.current;
+    if (!profileButton) return;
+
+    const rect = profileButton.getBoundingClientRect();
+    setProfileMenuPosition({
+      left: rect.right + 8,
+      bottom: window.innerHeight - rect.bottom,
+    });
+  }, []);
+
   onProfileClick = () => {
-    setProfileMenuOpen(!profileMenuOpen);
+    updateProfileMenuPosition();
+    setProfileMenuOpen((open) => !open);
   };
+
+  const handleLogout = async () => {
+    await logout();
+    setProfileMenuOpen(false);
+    navigate('/', { replace: true });
+  };
+
+  useEffect(() => {
+    if (!profileMenuOpen) return;
+
+    updateProfileMenuPosition();
+
+    const handleWindowChange = () => updateProfileMenuPosition();
+    window.addEventListener('resize', handleWindowChange);
+    window.addEventListener('scroll', handleWindowChange, true);
+
+    return () => {
+      window.removeEventListener('resize', handleWindowChange);
+      window.removeEventListener('scroll', handleWindowChange, true);
+    };
+  }, [profileMenuOpen, updateProfileMenuPosition]);
 
   return (
     <div
       className={[
-        'h-full relative flex shrink-0 flex-col items-center border border-solid border-[#f0f0f0] dark:border-gray-700 py-8 gap-8 transition-[width] duration-200 min-h-screen dark:text-white',
-        collapsed ? 'w-[68px]' : 'w-[200px]',
+        'h-full relative z-[1000] flex shrink-0 flex-col items-center overflow-visible border border-solid border-[#f0f0f0] dark:border-gray-700 py-8 gap-8 transition-[width] duration-200 min-h-screen dark:text-white',
         collapsed ? 'w-[68px]' : 'w-[200px]',
         className,
       ].join(' ')}
@@ -254,6 +284,7 @@ const SideBar = ({
         {/* Profile */}
         <div className="relative flex flex-row">
           <button
+            ref={profileButtonRef}
             type="button"
             onClick={onProfileClick}
             aria-label={username ?? 'Sign In'}
@@ -278,17 +309,26 @@ const SideBar = ({
               </div>
             )}
           </button>
-          <div className="absolute right-0 -top-full">
-            {profileMenuOpen && (
-              <UserMenuPopup
-                isOpen={profileMenuOpen}
-                onViewProfile={() => {
-                  navigate('/profile-switcher');
+          {profileMenuOpen &&
+            createPortal(
+              <div
+                className="fixed z-[2147483647]"
+                style={{
+                  left: profileMenuPosition.left,
+                  bottom: profileMenuPosition.bottom,
                 }}
-                onLogOut={() => {}}
-              />
+              >
+                <UserMenuPopup
+                  isOpen={profileMenuOpen}
+                  onViewProfile={() => {
+                    setProfileMenuOpen(false);
+                    navigate('/profile-switcher');
+                  }}
+                  onLogOut={handleLogout}
+                />
+              </div>,
+              document.body,
             )}
-          </div>
         </div>
       </div>
     </div>

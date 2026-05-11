@@ -5,7 +5,6 @@ import {
   isSelfOrSuperAdmin,
   setUserId,
   getUserId,
-  selfFilter,
   isLoggedIn,
   isVerifiedCheck,
 } from '../../middleware.js';
@@ -19,6 +18,7 @@ import {
   routeGetSelf,
   routeGetUser,
   routeOnboardSelf,
+  routeSubmitVerificationSelf,
 } from './user.controller.js';
 import { User } from './user.model.js';
 import { routeGetApplicationsByStudent } from '../application/application.controller.js';
@@ -76,6 +76,13 @@ router.delete('/me', isLoggedIn, routeDeleteSelf);
 router.post('/me/onboard', isLoggedIn, routeOnboardSelf);
 
 // ============================================================================
+// POST /api/users/me/verification
+//
+// The user submits uploaded verification documents for admin review.
+// ============================================================================
+router.post('/me/verification', isLoggedIn, routeSubmitVerificationSelf);
+
+// ============================================================================
 // GET /api/users/:userId/applications
 // ============================================================================
 router.get('/me/applications', setUserId, routeGetApplicationsByStudent);
@@ -100,6 +107,14 @@ router.get('/me/billings', setUserId, routeGetUserBillings);
 // GET /api/users/:userId/bookings
 // ============================================================================
 router.get('/me/bookings', setUserId, routeGetVisitBookingsByStudent);
+
+// ============================================================================
+// GET /api/users/me/reports
+//
+// Returns the logged-in user's own submitted reports and their statuses.
+// Used by students and landlords to track "Report Updates".
+// ============================================================================
+router.get('/me/reports', isVerifiedCheck, routeGetMyReports);
 
 // ============================================================================
 // GET /api/users/:userId
@@ -129,16 +144,8 @@ router.delete('/:userId', isSuperAdmin, routeDeleteUser);
 router.use(
   '/:userId/documents',
   getUserId,
-  createDocumentRouter(selfFilter, isSuperAdmin, isSelfOrSuperAdmin, User),
+  createDocumentRouter(isSelfOrSuperAdmin, isSuperAdmin, isSelfOrSuperAdmin, User),
 );
-
-// ============================================================================
-// GET /api/users/me/reports
-//
-// Returns the logged-in user's own submitted reports and their statuses.
-// Used by students and landlords to track "Report Updates".
-// ============================================================================
-router.get('/me/reports', isVerifiedCheck, routeGetMyReports);
 
 // ============================================================================
 // POST /api/users/:userId/report

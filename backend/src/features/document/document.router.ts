@@ -1,7 +1,7 @@
 /* Routers for:
  *   GET ../documents
- *   POST ../documents/:docId/files
- *   DELETE ../documents/:docId/files/:fileId
+ *   POST ../documents/:docId
+ *   DELETE ../documents/:docId/:fileId
  *   POST ../documents/:docId/accept
  *   POST ../documents/:docId/reject
  */
@@ -29,10 +29,10 @@ export const createDocumentRouter = (
   const documentRouter = Router({ mergeParams: true });
 
   documentRouter.get('/', ownerOrVerifierMiddleware, routeGetDocuments(model));
-  documentRouter.post('/:documentId', ownerMiddleware, routeAddDocument(model));
-  documentRouter.delete('/:documentId', ownerMiddleware, routeDeleteDocument(model));
-  documentRouter.post('/:documentId/accept', verifierMiddleware, routeAcceptDocument(model));
-  documentRouter.post('/:documentId/reject', verifierMiddleware, routeRejectDocument(model));
+  documentRouter.post('/:docId', ownerMiddleware, routeAddDocument(model));
+  documentRouter.delete('/:docId/:fileId', ownerMiddleware, routeDeleteDocument(model));
+  documentRouter.post('/:docId/accept', verifierMiddleware, routeAcceptDocument(model));
+  documentRouter.post('/:docId/reject', verifierMiddleware, routeRejectDocument(model));
 
   return documentRouter;
 };
