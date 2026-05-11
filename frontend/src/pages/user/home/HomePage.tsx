@@ -35,11 +35,10 @@ const CATEGORY_LABELS: Record<NonNullable<ViewAllCategory>, string> = {
   mayLike: 'Listings You May Like',
 };
 
-// TODO: change to actual data
-const pasaloDorms = dormData; 
-const popularDorms = dormData; 
-const nearDorms = dormData;  
-const mayLikeDorms = dormData; 
+const pasaloDorms = dormData;
+const popularDorms = dormData;
+const nearDorms = dormData;
+const mayLikeDorms = dormData;
 
 const CATEGORY_DATA: Record<NonNullable<ViewAllCategory>, typeof dormData> = {
   pasalo: pasaloDorms,
@@ -131,23 +130,17 @@ const HomePage: FunctionComponent = () => {
   );
 
   return (
-    <div className="w-full flex items-start text-left text-[0.875rem] text-dimgray font-inter gap-8">
-      <div className="sticky top-0 h-screen w-fit shrink-0">
-        <SideBar />
-      </div>
-
-      {/* right frame */}
-      <div className="w-full min-w-0 h-fit flex items-start pt-15 pr-20 pb-20">
-        <div className="h-fit w-full min-w-0 flex flex-col items-start gap-80">
+    <div className="min-h-screen w-full flex items-stretch text-left text-[0.875rem] text-dimgray font-inter overflow-x-hidden">
+      <SideBar />
+      <div className="flex-1 min-w-0 flex flex-col h-screen overflow-y-auto pt-8 sm:pt-12 px-4 sm:px-6 lg:px-8 xl:pr-20 pb-16">
+        <div className="w-full min-w-0 flex flex-col items-start gap-16 sm:gap-20">
           <div className="w-full min-w-0 flex flex-col items-start">
-
-            {/* search bar */}
-            <div className="w-full h-full overflow-hidden flex items-center pb-6 box-border">
+            <div className="w-full overflow-hidden flex items-center pb-6 box-border">
               <div className="w-full flex items-center transition-all duration-300 bg-[#f8f9fa] rounded-num-12 py-3 pl-3 pr-4 border border-transparent focus-within:bg-white focus-within:shadow-[0_8px_10px_rgb(0,0,0,0.06)] focus-within:transform focus-within:-translate-y-[1px]">
                 <Icon icon="ic:outline-search" className="w-5 h-5 text-unselected shrink-0" />
                 <input
                   type="text"
-                  placeholder="Search for Dorms, Apartments, or Locations (e.g. UPLB, Umali Subdivision)"
+                  placeholder="Search for Dorms, Apartments, or Locations"
                   value={searchTerm}
                   maxLength={50}
                   onChange={(e) => handleSearch(e.target.value)}
@@ -160,10 +153,7 @@ const HomePage: FunctionComponent = () => {
                 )}
               </div>
             </div>
-
             <div className="w-full flex flex-col items-start gap-6 text-[1.5rem] text-gray">
-
-              {/* greeting / filter button */}
               <div className="w-full flex items-center justify-between box-border">
                 <div className="w-full h-8 flex-1 flex flex-col items-start justify-center">
                   <b className="relative leading-8 text-teal">Mabuhay, iskolar!</b>
@@ -177,22 +167,18 @@ const HomePage: FunctionComponent = () => {
                   </div>
                   {isFilterOpen && (
                     <div className="fixed inset-0 z-100 flex justify-end">
-                      <div 
-                        className="absolute inset-0 bg-preview/45 backdrop-blur-sm" 
-                        onClick={toggleFilter} 
+                      <div
+                        className="absolute inset-0 bg-preview/45 backdrop-blur-sm"
+                        onClick={toggleFilter}
                       />
-
-                    <div className="relative z-10 w-full max-w-[500px] h-full bg-white animate-in slide-in-from-right duration-500">
-                      <FilterTab onClose={toggleFilter} />
-                    </div>
+                      <div className="relative z-10 w-full max-w-[500px] h-full bg-white animate-in slide-in-from-right duration-500">
+                        <FilterTab onClose={toggleFilter} />
+                      </div>
                     </div>
                   )}
                 </div>
               </div>
-
               <div className="w-full min-w-0 flex flex-col items-start gap-10">
-
-                {/* ── Search results view ── */}
                 {isSearching ? (
                   <div className="w-full flex flex-col items-start gap-6">
                     <div className="w-full flex items-center justify-between">
@@ -211,20 +197,10 @@ const HomePage: FunctionComponent = () => {
                         Clear search
                       </button>
                     </div>
-
                     {filteredDorms.length > 0 ? (
                       <div className="w-full flex flex-wrap gap-6 py-1">
                         {filteredDorms.map((dorm) => (
-                          <DormCard
-                            key={dorm.id}
-                            id={dorm.id}
-                            name={dorm.name}
-                            rating={dorm.rating}
-                            price={dorm.price}
-                            location={dorm.location}
-                            image={dorm.image}
-                            room_types={dorm.room_types}
-                          />
+                          <DormCard key={dorm.id} id={dorm.id} name={dorm.name} rating={dorm.rating} price={dorm.price} location={dorm.location} image={dorm.image} room_types={dorm.room_types} />
                         ))}
                       </div>
                     ) : (
@@ -232,14 +208,9 @@ const HomePage: FunctionComponent = () => {
                         <Icon icon="mdi:home-search-outline" className="w-16 h-16 text-unselected" />
                         <p className="text-[1rem] font-semibold text-dimgray">No listings found</p>
                         <p className="text-[0.875rem] text-unselected max-w-xs">
-                          We couldn't find any dorms matching{' '}
-                          <span className="font-medium">"{searchTerm}"</span>.
-                          Try a different name or location.
+                          We couldn't find any dorms matching <span className="font-medium">"{searchTerm}"</span>. Try a different name or location.
                         </p>
-                        <button
-                          onClick={() => handleSearch('')}
-                          className="mt-2 px-5 py-2 rounded-full bg-[#e0f7f4] text-[#096c5b] text-[0.8rem] font-semibold hover:opacity-80 transition-opacity"
-                        >
+                        <button onClick={() => handleSearch('')} className="mt-2 px-5 py-2 rounded-full bg-[#e0f7f4] text-[#096c5b] text-[0.8rem] font-semibold hover:opacity-80 transition-opacity">
                           Back to all listings
                         </button>
                       </div>
@@ -247,27 +218,18 @@ const HomePage: FunctionComponent = () => {
                   </div>
 
                 ) : viewAllCategory ? (
-                  /* ── View All category view ── */
                   <div className="w-full flex flex-col items-start gap-6">
                     <div className="w-full flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <button
-                          onClick={handleClearViewAll}
-                          className="flex items-center justify-center h-8 w-8 rounded-full bg-whitesmoke-100 hover:bg-lightcyan/45 transition-colors"
-                        >
+                        <button onClick={handleClearViewAll} className="flex items-center justify-center h-8 w-8 rounded-full bg-whitesmoke-100 hover:bg-lightcyan/45 transition-colors">
                           <Icon icon="solar:arrow-left-bold" className="w-4 h-4 text-darkgreen" />
                         </button>
-                        <b className="text-[1rem] text-darkgreen">
-                          {CATEGORY_LABELS[viewAllCategory]}
-                        </b>
+                        <b className="text-[1rem] text-darkgreen">{CATEGORY_LABELS[viewAllCategory]}</b>
                         <span className="text-[0.75rem] text-unselected font-normal">
                           — {CATEGORY_DATA[viewAllCategory].length} listing{CATEGORY_DATA[viewAllCategory].length !== 1 ? 's' : ''}
                         </span>
                       </div>
-                      <button
-                        onClick={handleClearViewAll}
-                        className="text-[0.75rem] text-teal-100 underline font-semibold hover:opacity-70 transition-opacity whitespace-nowrap"
-                      >
+                      <button onClick={handleClearViewAll} className="text-[0.75rem] text-teal-100 underline font-semibold hover:opacity-70 transition-opacity whitespace-nowrap">
                         Back to home
                       </button>
                     </div>
@@ -275,16 +237,7 @@ const HomePage: FunctionComponent = () => {
                     {CATEGORY_DATA[viewAllCategory].length > 0 ? (
                       <div className="w-full flex flex-wrap gap-6 py-1">
                         {CATEGORY_DATA[viewAllCategory].map((dorm) => (
-                          <DormCard
-                            key={dorm.id}
-                            id={dorm.id}
-                            name={dorm.name}
-                            rating={dorm.rating}
-                            price={dorm.price}
-                            location={dorm.location}
-                            image={dorm.image}
-                            room_types={dorm.room_types}
-                          />
+                          <DormCard key={dorm.id} id={dorm.id} name={dorm.name} rating={dorm.rating} price={dorm.price} location={dorm.location} image={dorm.image} room_types={dorm.room_types} />
                         ))}
                       </div>
                     ) : (
@@ -294,10 +247,7 @@ const HomePage: FunctionComponent = () => {
                         <p className="text-[0.875rem] text-unselected max-w-xs">
                           There are currently no listings under {CATEGORY_LABELS[viewAllCategory]}.
                         </p>
-                        <button
-                          onClick={handleClearViewAll}
-                          className="mt-2 px-5 py-2 rounded-full bg-[#e0f7f4] text-[#096c5b] text-[0.8rem] font-semibold hover:opacity-80 transition-opacity"
-                        >
+                        <button onClick={handleClearViewAll} className="mt-2 px-5 py-2 rounded-full bg-[#e0f7f4] text-[#096c5b] text-[0.8rem] font-semibold hover:opacity-80 transition-opacity">
                           Back to home
                         </button>
                       </div>
@@ -305,159 +255,45 @@ const HomePage: FunctionComponent = () => {
                   </div>
 
                 ) : (
-                  /* ── Default home view ── */
                   <>
-                    {/* pasalo units */}
-                    <div className="w-full min-w-0 flex flex-col items-start justify-center gap-6 dark:text-white">
-                      <div className="w-full h-fit flex items-center justify-between">
-                        <div className="h-full flex items-center gap-2">
-                          <div className="w-44 h-full flex items-start gap-2">
-                            <b className="w-fit relative flex items-start">Pasalo Units</b>
-                            <Icon icon="material-symbols-light:info-outline" className="w-5 h-5" />
+                    {[
+                      { label: 'Pasalo Units', category: 'pasalo' as const, carousel: pasalo, dorms: pasaloDorms, showInfo: true },
+                      { label: 'Popular Listings', category: 'popular' as const, carousel: popular, dorms: popularDorms },
+                      { label: 'Near Campus', category: 'near' as const, carousel: near, dorms: nearDorms },
+                      { label: 'Listings You May Like', category: 'mayLike' as const, carousel: mayLike, dorms: mayLikeDorms },
+                    ].map(({ label, category, carousel, dorms, showInfo }) => (
+                      <div key={category} className="w-full min-w-0 flex flex-col items-start justify-center gap-6 dark:text-white">
+                        <div className="w-full h-fit flex items-center justify-between">
+                          <div className="h-full flex items-center gap-2">
+                            <div className="flex items-center gap-2">
+                              <b className="w-fit relative flex items-start">{label}</b>
+                              {showInfo && <Icon icon="material-symbols-light:info-outline" className="w-5 h-5" />}
+                            </div>
+                            <ViewAllLink category={category} />
                           </div>
-                          <ViewAllLink category="pasalo" />
+                          <NavArrows current={carousel.current} total={carousel.total} scrollTo={carousel.scrollTo} />
                         </div>
-                        <NavArrows current={pasalo.current} total={pasalo.total} scrollTo={pasalo.scrollTo} />
-                      </div>
-                      <div
-                        ref={pasalo.trackRef}
-                        className="w-full max-w-full flex gap-6 overflow-x-auto scroll-smooth pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-                      >
-                        {pasaloDorms.map((dorm) => (
-                          <div key={dorm.id} className="shrink-0">
-                            <DormCard
-                              id={dorm.id}
-                              name={dorm.name}
-                              rating={dorm.rating}
-                              price={dorm.price}
-                              location={dorm.location}
-                              image={dorm.image}
-                              room_types={dorm.room_types}
-                            />
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* popular listings */}
-                    <div className="w-full min-w-0 self-stretch flex flex-col items-start justify-center gap-6">
-                      <div className="w-full h-10 flex items-center justify-between">
-                        <div className="h-full flex items-center gap-6">
-                          <div className="w-fit h-full flex items-center">
-                            <b className="w-fit flex items-center">Popular Listings</b>
-                          </div>
-                          <ViewAllLink category="popular" />
-                        </div>
-                        <NavArrows current={popular.current} total={popular.total} scrollTo={popular.scrollTo} />
-                      </div>
-                      <div
-                        ref={popular.trackRef}
-                        className="w-full max-w-full flex gap-6 overflow-x-auto scroll-smooth pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-                      >
-                        {popularDorms.map((dorm) => (
-                          <div key={dorm.id} className="shrink-0">
-                            <DormCard
-                              id={dorm.id}
-                              name={dorm.name}
-                              rating={dorm.rating}
-                              price={dorm.price}
-                              location={dorm.location}
-                              image={dorm.image}
-                              room_types={dorm.room_types}
-                            />
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* near campus */}
-                    <div className="w-full min-w-0 self-stretch flex flex-col items-start justify-center gap-6">
-                      <div className="w-full h-10 flex items-center justify-between">
-                        <div className="h-full flex items-center gap-6">
-                          <div className="w-fit h-full flex items-center">
-                            <b className="w-fit flex items-center">Near Campus</b>
-                          </div>
-                          <ViewAllLink category="near" />
-                        </div>
-                        <NavArrows current={near.current} total={near.total} scrollTo={near.scrollTo} />
-                      </div>
-                      <div
-                        ref={near.trackRef}
-                        className="w-full max-w-full flex gap-6 overflow-x-auto scroll-smooth pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-                      >
-                        {nearDorms.map((dorm) => (
-                          <div key={dorm.id} className="shrink-0">
-                            <DormCard
-                              id={dorm.id}
-                              name={dorm.name}
-                              rating={dorm.rating}
-                              price={dorm.price}
-                              location={dorm.location}
-                              image={dorm.image}
-                              room_types={dorm.room_types}
-                            />
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* listings you may like */}
-                    <div className="w-full min-w-0 self-stretch flex flex-col items-start justify-center gap-6">
-                      <div className="w-full h-10 flex items-center justify-between">
-                        <div className="h-full flex items-center gap-6">
-                          <div className="w-fit h-full flex items-center">
-                            <b className="w-fit flex items-center">Listings You May Like</b>
-                          </div>
-                          <ViewAllLink category="mayLike" />
-                        </div>
-                        <NavArrows current={mayLike.current} total={mayLike.total} scrollTo={mayLike.scrollTo} />
-                      </div>
-                      <div
-                        ref={mayLike.trackRef}
-                        className="w-full max-w-full flex gap-6 overflow-x-auto scroll-smooth pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-                      >
-                        {mayLikeDorms.map((dorm) => (
-                          <div key={dorm.id} className="shrink-0">
-                            <DormCard
-                              id={dorm.id}
-                              name={dorm.name}
-                              rating={dorm.rating}
-                              price={dorm.price}
-                              location={dorm.location}
-                              image={dorm.image}
-                              room_types={dorm.room_types}
-                            />
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    <Banner />
-
-                    {/* all listings */}
-                    <div className="w-full min-w-0 self-stretch flex flex-col items-start justify-center gap-6">
-                      <div className="w-full h-10 flex items-center justify-between">
-                        <div className="h-full flex items-center gap-6">
-                          <div className="w-fit h-full flex items-center">
-                            <b className="w-fit flex items-center">All Listings</b>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="h-full w-full overflow-x-auto flex py-1 box-border gap-3">
-                        <div className="flex flex-wrap gap-6">
-                          {dormData.map((dorm) => (
-                            <DormCard
-                              key={dorm.id}
-                              id={dorm.id}
-                              name={dorm.name}
-                              rating={dorm.rating}
-                              price={dorm.price}
-                              location={dorm.location}
-                              image={dorm.image}
-                              room_types={dorm.room_types}
-                            />
+                        <div
+                          ref={carousel.trackRef}
+                          className="w-full max-w-full flex gap-6 overflow-x-auto scroll-smooth pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                        >
+                          {dorms.map((dorm) => (
+                            <div key={dorm.id} className="shrink-0">
+                              <DormCard id={dorm.id} name={dorm.name} rating={dorm.rating} price={dorm.price} location={dorm.location} image={dorm.image} room_types={dorm.room_types} />
+                            </div>
                           ))}
                         </div>
+                      </div>
+                    ))}
+                    <Banner />
+                    <div className="w-full min-w-0 flex flex-col items-start justify-center gap-6">
+                      <div className="w-full h-10 flex items-center">
+                        <b className="w-fit flex items-center">All Listings</b>
+                      </div>
+                      <div className="w-full flex flex-wrap gap-6 py-1">
+                        {dormData.map((dorm) => (
+                          <DormCard key={dorm.id} id={dorm.id} name={dorm.name} rating={dorm.rating} price={dorm.price} location={dorm.location} image={dorm.image} room_types={dorm.room_types} />
+                        ))}
                       </div>
                     </div>
                   </>
@@ -467,7 +303,6 @@ const HomePage: FunctionComponent = () => {
           </div>
         </div>
       </div>
-      <div className="w-[3.563rem] h-[3.563rem] absolute !!m-[0 important] top-220 left-[81.438rem] overflow-hidden shrink-0 z-1" />
     </div>
   );
 };
