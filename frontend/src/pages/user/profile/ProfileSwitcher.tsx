@@ -30,13 +30,12 @@ const ProfileSwitcher = () => {
 
   return (
     <div className="w-full h-screen relative overflow-y-auto flex flex-col items-start isolate gap-2.5 text-left text-num-14 text-darkslategray-100 font-inter">
-      <div className="w-full max-w-[1440px] h-auto overflow-hidden shrink-0 flex flex-col items-start">
-        <div className="gap-8 flex-1 flex items-center">
-          <div className="sticky top-0 left-0 h-full w-[200px] hidden md:block z-10">
+      <div className="w-full max-w-[1440px] flex items-start">
+          <div className="sticky top-0 left-0 h-screen w-[200px] hidden md:block shrink-0 z-10">
             <Sidebar />
           </div>
 
-          <div className="w-full flex flex-col items-start justify-between gap-20">
+          <div className="w-full flex flex-col items-start justify-between gap-20 pl-5">
             <div className="self-stretch flex flex-col items-start py-num-0 pr-20">
               <div
                 className="self-stretch h-16 overflow-hidden shrink-0 flex items-end p-num-10 box-border gap-2.5"
@@ -92,7 +91,6 @@ const ProfileSwitcher = () => {
             </div>
             <Footer />
           </div>
-        </div>
       </div>
     </div>
   );
