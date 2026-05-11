@@ -48,7 +48,7 @@ const AddBuilding: FunctionComponent = () => {
   ];
 
   return (
-    <div className="w-screen font-inter min-h-screen bg-white">
+    <div className="w-screen font-inter min-h-screen bg-white dark:bg-darkmode dark:text-gray-100">
       <div className="px-10 lg:px-20 pt-4 pb-12">
         <button
           type="button"
@@ -65,11 +65,11 @@ const AddBuilding: FunctionComponent = () => {
           </div>
         </button>
 
-        <div className="rounded-3xl border border-whitesmoke px-6 md:px-10 pt-8 pb-10 shadow-sm">
+        <div className="rounded-3xl border border-whitesmoke px-6 md:px-10 pt-8 pb-10 shadow-sm dark:border-gray-700 dark:bg-[#121212]">
           <h1 className="text-2xl font-bold" style={{ color: "#1a5c50" }}>
             Add a New Building
           </h1>
-          <p className="text-sm font-semibold text-black mt-1">
+          <p className="text-sm font-semibold text-black mt-1 dark:text-gray-100">
             Follow 3 simple steps and you're ready to go!
           </p>
 
