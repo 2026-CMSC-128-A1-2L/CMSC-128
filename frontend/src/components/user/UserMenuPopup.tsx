@@ -9,11 +9,7 @@ export default function UserMenuPopup({ isOpen, onViewProfile, onLogOut }: UserM
   if (!isOpen) return null;
 
   return (
-    /* absolute: Floats the menu. 
-      top-full & mt-2: Pushes it right below the profile picture container. 
-      left-0: Aligns it to the left side of the parent.
-    */
-    <div className="absolute top-full left-0 mt-2 w-[220px] bg-[#f8f9fa] rounded-2xl p-3 shadow-[0px_4px_12px_rgba(0,0,0,0.1)] flex flex-col gap-2 font-inter z-50">
+    <div className="w-[220px] bg-[#f8f9fa] rounded-2xl p-3 shadow-[0px_8px_24px_rgba(0,0,0,0.16)] flex flex-col gap-2 font-inter">
       {/* View Profile Button */}
       <button
         type="button"

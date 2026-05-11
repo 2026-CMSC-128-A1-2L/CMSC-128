@@ -99,8 +99,7 @@ const SideBar = ({ activeItem, onProfileClick, className = '' }: SideBarProps) =
   return (
     <div
       className={[
-        'h-full relative flex shrink-0 flex-col items-center border border-solid border-[#f0f0f0] dark:border-gray-700 py-8 gap-8 transition-[width] duration-200 min-h-screen dark:text-white',
-        collapsed ? 'w-[68px]' : 'w-[200px]',
+        'h-full relative z-[1000] flex shrink-0 flex-col items-center overflow-visible border border-solid border-[#f0f0f0] dark:border-gray-700 py-8 gap-8 transition-[width] duration-200 min-h-screen dark:text-white',
         collapsed ? 'w-[68px]' : 'w-[200px]',
         className,
       ].join(' ')}
@@ -279,7 +278,7 @@ const SideBar = ({ activeItem, onProfileClick, className = '' }: SideBarProps) =
               </div>
             )}
           </button>
-          <div className="absolute right-0 -top-full">
+          <div className="absolute left-full bottom-0 z-[10000] ml-2">
             {profileMenuOpen && (
               <UserMenuPopup
                 isOpen={profileMenuOpen}
