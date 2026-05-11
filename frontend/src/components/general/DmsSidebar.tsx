@@ -55,6 +55,7 @@ const DmsSidebar: FunctionComponent = () => {
       time: '1hr ago',
       icon: 'iconamoon:email',
       unread: true,
+      unreadCount: 5,
       archived: false,
     },
     {
@@ -96,7 +97,7 @@ const DmsSidebar: FunctionComponent = () => {
     return true;
   });
 
-  const unreadCount = activeDMs.filter((dm) => dm.unread).length;
+  const totalUnreadCount = activeDMs.reduce((acc, dm) => acc + (dm.unreadCount || 0), 0);
 
   const displayedArchivedDMs = showAllArchive ? archivedDMs : [];
 
@@ -195,8 +196,8 @@ const DmsSidebar: FunctionComponent = () => {
               }`}
               onClick={() => setDmFilter('unread')}
             >
-              <b className="relative text-num-12 font-inter">
-                Unread {unreadCount > 0 && <span>{unreadCount}</span>}
+              <b className="relative text-num-12 font-inter flex items-center gap-1">
+                Unread {totalUnreadCount > 0 && <span className="opacity-80">{totalUnreadCount}</span>}
               </b>
             </button>
           </div>
@@ -212,6 +213,7 @@ const DmsSidebar: FunctionComponent = () => {
                   time={dm.time}
                   icon={dm.icon}
                   unread={dm.unread}
+                  unreadCount={dm.unreadCount}
                 />
               ))
             ) : (
@@ -241,6 +243,7 @@ const DmsSidebar: FunctionComponent = () => {
                   time={dm.time}
                   icon={dm.icon}
                   unread={dm.unread}
+                  unreadCount={dm.unreadCount}
                 />
               ))}
             </div>
