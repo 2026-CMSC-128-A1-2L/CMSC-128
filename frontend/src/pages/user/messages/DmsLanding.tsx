@@ -4,6 +4,7 @@ import oswald from '../../../../assets/owl_inbox.png';
 import TutorialIcon from '../../../../assets/help-chat.svg';
 import TutorialBubble from '../messages/DMsTutorial';
 import NotificationDetail from '../../../components/general/NotificationDetail';
+import ChatDetail from '../../../components/general/ChatDetail';
 import BgUpper from '../../../../assets/bg-upper.svg?react';
 import BgLower from '../../../../assets/bg-lower.svg?react';
 
@@ -63,39 +64,69 @@ const DmsLanding: FunctionComponent = () => {
     {
       id: 1,
       title: 'Three Sapphire Place',
+      subtitle: 'Landlord',
       body: 'Hi Daphne! Your application is being reviewed by our do...',
       time: '1hr ago',
       icon: 'iconamoon:email',
       unread: true,
       unreadCount: 5,
       archived: false,
+      messages: [
+        { id: 1, sender: 'Three Sapphire Place', text: 'Mabuhay! We\'re confirming your slot in our dormitory. Would you like to proceed?', isMe: false },
+        { id: 2, sender: 'You', text: 'Yes! I would like to move in next week!', isMe: true },
+        { id: 3, sender: 'Three Sapphire Place', text: 'That sounds great. We just need a few more documents to finalize your stay.', isMe: false },
+        { id: 4, sender: 'You', text: 'Sure, what else do you need from my side?', isMe: true },
+        { id: 5, sender: 'Three Sapphire Place', text: 'Please provide a copy of your school ID and a recent 2x2 photo for the records.', isMe: false },
+        { id: 6, sender: 'You', text: 'I have those ready. Should I upload them here or send them via email?', isMe: true },
+        { id: 7, sender: 'Three Sapphire Place', text: 'You can upload them directly in the application portal. It\'s faster that way.', isMe: false },
+        { id: 8, sender: 'You', text: 'Understood. I\'ll do that right now. Thank you!', isMe: true },
+        { id: 9, sender: 'Three Sapphire Place', text: 'Excellent. Once uploaded, our team will verify them within 24 hours.', isMe: false },
+        { id: 10, sender: 'You', text: 'Perfect. Looking forward to it!', isMe: true },
+        { id: 11, sender: 'Three Sapphire Place', text: 'By the way, have you had a chance to check the house rules?', isMe: false },
+        { id: 12, sender: 'You', text: 'Not yet, could you send me a link or a summary?', isMe: true },
+        { id: 13, sender: 'Three Sapphire Place', text: 'Sure! I will attach the PDF in our next message. Basically, no guests after 10 PM and keep the noise down during study hours.', isMe: false },
+        { id: 14, sender: 'You', text: 'That sounds fair. I\'m usually at the library late anyway.', isMe: true },
+      ]
     },
     {
       id: 2,
       title: 'Narra Residences',
+      subtitle: 'Landlord',
       body: 'Hi Daphne! Your application is being reviewed by our do...',
       time: '2m ago',
       icon: 'iconamoon:email',
       unread: false,
       archived: false,
+      messages: [
+        { id: 1, sender: 'Narra Residences', text: 'Hello Daphne, your application has been received.', isMe: false },
+        { id: 2, sender: 'You', text: 'Thank you! When can I expect an update?', isMe: true },
+      ]
     },
     {
       id: 3,
       title: 'Past Dorm Stay',
+      subtitle: 'Landlord',
       body: 'Thank you for staying with us! Please leave a review...',
       time: '1mo ago',
       icon: 'iconamoon:email',
       unread: false,
       archived: true,
+      messages: [
+        { id: 1, sender: 'Past Dorm Stay', text: 'Thank you for staying with us! Please leave a review.', isMe: false },
+      ]
     },
     {
       id: 4,
       title: 'Archived Inquiry',
+      subtitle: 'Support',
       body: 'Hello, is this still available?',
       time: '2mo ago',
       icon: 'iconamoon:email',
       unread: false,
       archived: true,
+      messages: [
+        { id: 1, sender: 'Archived Inquiry', text: 'Hello, is this still available?', isMe: false },
+      ]
     },
   ]);
 
@@ -152,20 +183,30 @@ const DmsLanding: FunctionComponent = () => {
       }
     }
 
-    // For DM type
-    return (
-      <div className="text-center p-8 animate-fade-in relative z-10">
-        <h3 className="text-num-24 font-bold text-darkslategray">Direct Message Details</h3>
-        <p className="text-slategray">Viewing DM with ID: {selectedItem.id}</p>
-      </div>
-    );
+    if (selectedItem.type === 'dm') {
+      const dm = directMessages.find(d => d.id === selectedItem.id);
+      if (dm) {
+        return (
+          <div className="w-full h-full animate-fade-in relative z-10">
+            <ChatDetail
+              title={dm.title}
+              subtitle={dm.subtitle}
+              messages={dm.messages}
+              showInput={!dm.archived} // Show input for active, hide for archived
+            />
+          </div>
+        );
+      }
+    }
+
+    return null;
   };
 
   return (
-    <div className="w-full h-screen flex items-start font-inter overflow-hidden relative bg-[#fafafa] dark:bg-darkmode">
+    <div className="w-full h-screen flex items-start font-inter overflow-hidden relative bg-white dark:bg-darkmode">
       {/* Background Accents (Restricted to non-navbar area) */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="opacity-30">
+        <div className="opacity-20">
           <BgUpper className="absolute top-0 right-0 w-auto h-full" />
           <BgLower className="absolute -bottom-4 left-0 w-auto h-full" />
         </div>
