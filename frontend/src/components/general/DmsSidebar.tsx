@@ -1,91 +1,46 @@
-import { useState, type FunctionComponent } from 'react';
+import { useState, type FunctionComponent, type Dispatch, type SetStateAction } from 'react';
 import Message from '../general/InboxMessage';
 import { Icon } from '@iconify/react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-const DmsSidebar: FunctionComponent = () => {
+interface NotificationItem {
+  id: number;
+  title: string;
+  unread: boolean;
+  // ... other properties are handled in the parent, but we need these for rendering
+}
+
+interface DMItem {
+  id: number;
+  title: string;
+  body: string;
+  time: string;
+  icon: string;
+  unread: boolean;
+  unreadCount?: number;
+  archived: boolean;
+}
+
+interface DmsSidebarProps {
+  notifications: any[];
+  directMessages: DMItem[];
+  selectedItem: { type: 'notification' | 'dm'; id: number } | null;
+  onItemSelect: (type: 'notification' | 'dm', id: number) => void;
+  setNotifications: Dispatch<SetStateAction<any[]>>;
+  setDirectMessages: Dispatch<SetStateAction<DMItem[]>>;
+}
+
+const DmsSidebar: FunctionComponent<DmsSidebarProps> = ({
+  notifications,
+  directMessages,
+  selectedItem,
+  onItemSelect,
+}) => {
   const navigate = useNavigate();
-  const location = useLocation();
   const [searchQuery, setSearchQuery] = useState('');
   const [showAllNotifications, setShowAllNotifications] = useState(false);
   const [dmFilter, setDmFilter] = useState<'all' | 'unread'>('all');
   const [showAllArchive, setShowAllArchive] = useState(false);
-
-  const notifications = [
-    {
-      id: 1,
-      title: 'Invitation to Current Accommodation',
-      body: 'Quevin Custodio has invited you to join...',
-      time: '1:20 am',
-      icon: 'iconamoon:notification',
-      route: '/direct-messages/dorm-invitation',
-      unread: true,
-    },
-    {
-      id: 2,
-      title: 'Verification Status',
-      body: 'Hi Daphne! Your verification has been approved!',
-      time: '2m ago',
-      icon: 'iconamoon:notification',
-      unread: true,
-    },
-    {
-      id: 3,
-      title: 'Welcome to ATLAS!',
-      body: 'Hi Daphne! Welcome to ATLAS...',
-      time: '2m ago',
-      icon: 'iconamoon:notification',
-      unread: false,
-    },
-    {
-      id: 4,
-      title: 'New Message from Support',
-      body: 'We have received your report and are looking into it.',
-      time: '5m ago',
-      icon: 'iconamoon:notification',
-      unread: false,
-    },
-  ];
-
-  const directMessages = [
-    {
-      id: 1,
-      title: 'Three Sapphire Place',
-      body: 'Hi Daphne! Your application is being reviewed by our do...',
-      time: '1hr ago',
-      icon: 'iconamoon:email',
-      unread: true,
-      unreadCount: 5,
-      archived: false,
-    },
-    {
-      id: 2,
-      title: 'Narra Residences',
-      body: 'Hi Daphne! Your application is being reviewed by our do...',
-      time: '2m ago',
-      icon: 'iconamoon:email',
-      unread: false,
-      archived: false,
-    },
-    {
-      id: 3,
-      title: 'Past Dorm Stay',
-      body: 'Thank you for staying with us! Please leave a review...',
-      time: '1mo ago',
-      icon: 'iconamoon:email',
-      unread: false,
-      archived: true,
-    },
-    {
-      id: 4,
-      title: 'Archived Inquiry',
-      body: 'Hello, is this still available?',
-      time: '2mo ago',
-      icon: 'iconamoon:email',
-      unread: false,
-      archived: true,
-    },
-  ];
 
   const displayedNotifications = showAllNotifications ? notifications : notifications.slice(0, 2);
 
@@ -140,12 +95,12 @@ const DmsSidebar: FunctionComponent = () => {
               <Message
                 key={notif.id}
                 title={notif.title}
-                body={notif.body}
+                body={notif.body || notif.headline}
                 time={notif.time}
-                icon={notif.icon}
+                icon="iconamoon:notification"
                 unread={notif.unread}
-                onClick={notif.route ? () => navigate(notif.route) : undefined}
-                active={notif.route ? location.pathname === notif.route : false}
+                onClick={() => onItemSelect('notification', notif.id)}
+                active={selectedItem?.type === 'notification' && selectedItem?.id === notif.id}
               />
             ))}
           </div>
@@ -214,6 +169,8 @@ const DmsSidebar: FunctionComponent = () => {
                   icon={dm.icon}
                   unread={dm.unread}
                   unreadCount={dm.unreadCount}
+                  onClick={() => onItemSelect('dm', dm.id)}
+                  active={selectedItem?.type === 'dm' && selectedItem?.id === dm.id}
                 />
               ))
             ) : (
@@ -244,6 +201,8 @@ const DmsSidebar: FunctionComponent = () => {
                   icon={dm.icon}
                   unread={dm.unread}
                   unreadCount={dm.unreadCount}
+                  onClick={() => onItemSelect('dm', dm.id)}
+                  active={selectedItem?.type === 'dm' && selectedItem?.id === dm.id}
                 />
               ))}
             </div>
