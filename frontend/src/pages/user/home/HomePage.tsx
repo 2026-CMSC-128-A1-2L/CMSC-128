@@ -217,6 +217,7 @@ const HomePage: FunctionComponent = () => {
                         {filteredDorms.map((dorm) => (
                           <DormCard
                             key={dorm.id}
+                            id={dorm.id}
                             name={dorm.name}
                             rating={dorm.rating}
                             price={dorm.price}
@@ -276,6 +277,7 @@ const HomePage: FunctionComponent = () => {
                         {CATEGORY_DATA[viewAllCategory].map((dorm) => (
                           <DormCard
                             key={dorm.id}
+                            id={dorm.id}
                             name={dorm.name}
                             rating={dorm.rating}
                             price={dorm.price}
@@ -324,6 +326,7 @@ const HomePage: FunctionComponent = () => {
                         {pasaloDorms.map((dorm) => (
                           <div key={dorm.id} className="shrink-0">
                             <DormCard
+                              id={dorm.id}
                               name={dorm.name}
                               rating={dorm.rating}
                               price={dorm.price}
@@ -354,6 +357,7 @@ const HomePage: FunctionComponent = () => {
                         {popularDorms.map((dorm) => (
                           <div key={dorm.id} className="shrink-0">
                             <DormCard
+                              id={dorm.id}
                               name={dorm.name}
                               rating={dorm.rating}
                               price={dorm.price}
@@ -384,6 +388,7 @@ const HomePage: FunctionComponent = () => {
                         {nearDorms.map((dorm) => (
                           <div key={dorm.id} className="shrink-0">
                             <DormCard
+                              id={dorm.id}
                               name={dorm.name}
                               rating={dorm.rating}
                               price={dorm.price}
@@ -414,6 +419,7 @@ const HomePage: FunctionComponent = () => {
                         {mayLikeDorms.map((dorm) => (
                           <div key={dorm.id} className="shrink-0">
                             <DormCard
+                              id={dorm.id}
                               name={dorm.name}
                               rating={dorm.rating}
                               price={dorm.price}
@@ -442,6 +448,7 @@ const HomePage: FunctionComponent = () => {
                           {dormData.map((dorm) => (
                             <DormCard
                               key={dorm.id}
+                              id={dorm.id}
                               name={dorm.name}
                               rating={dorm.rating}
                               price={dorm.price}
