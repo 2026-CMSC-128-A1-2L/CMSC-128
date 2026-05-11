@@ -43,7 +43,7 @@ const Registration: FunctionComponent = () => {
         const response = await UserService.getSelf();
         if (cancelled) return;
         const user = response.data;
-        if (user.status !== 'setup') {
+        if (user.status !== 'setup' && user.userType) {
           if (user.userType === 'Landlord' || user.userType === 'Manager') {
             navigate('/landlord-homepage', { replace: true });
           } else if (user.userType === 'Admin') {

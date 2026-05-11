@@ -295,9 +295,16 @@ export const onboardSelf = async (
   userId: mongoose.Types.ObjectId,
   params: OnboardStudentParameters | OnboardManagerParameters,
 ) => {
+  const { userType, ...profileParams } = params;
   return await User.findOneAndUpdate(
     { _id: userId },
-    { $set: { ...params, status: 'unverified' } },
+    {
+      $set: {
+        ...profileParams,
+        userType,
+        status: 'unverified',
+      },
+    },
     {
       returnDocument: 'after',
       overwriteDiscriminatorKey: true,
