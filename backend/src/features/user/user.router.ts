@@ -5,7 +5,6 @@ import {
   isSelfOrSuperAdmin,
   setUserId,
   getUserId,
-  selfFilter,
   isLoggedIn,
   isVerifiedCheck,
 } from '../../middleware.js';
@@ -19,6 +18,7 @@ import {
   routeGetSelf,
   routeGetUser,
   routeOnboardSelf,
+  routeSubmitVerificationSelf,
 } from './user.controller.js';
 import { User } from './user.model.js';
 import { routeGetApplicationsByStudent } from '../application/application.controller.js';
@@ -76,6 +76,13 @@ router.delete('/me', isLoggedIn, routeDeleteSelf);
 router.post('/me/onboard', isLoggedIn, routeOnboardSelf);
 
 // ============================================================================
+// POST /api/users/me/verification
+//
+// The user submits uploaded verification documents for admin review.
+// ============================================================================
+router.post('/me/verification', isLoggedIn, routeSubmitVerificationSelf);
+
+// ============================================================================
 // GET /api/users/:userId/applications
 // ============================================================================
 router.get('/me/applications', setUserId, routeGetApplicationsByStudent);
@@ -129,7 +136,7 @@ router.delete('/:userId', isSuperAdmin, routeDeleteUser);
 router.use(
   '/:userId/documents',
   getUserId,
-  createDocumentRouter(selfFilter, isSuperAdmin, isSelfOrSuperAdmin, User),
+  createDocumentRouter(isSelfOrSuperAdmin, isSuperAdmin, isSelfOrSuperAdmin, User),
 );
 
 // ============================================================================

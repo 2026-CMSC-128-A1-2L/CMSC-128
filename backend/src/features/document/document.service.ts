@@ -62,7 +62,7 @@ export const createDeleteDocument =
     const result = await model
       .findOneAndUpdate(
         combineFilters<WithDocument>(filters, { _id: id, 'documents.docId': docId }),
-        { pull: { 'documents.$.files': fileKey } },
+        { $pull: { 'documents.$.files': fileKey } },
         { returnDocument: 'after' },
       )
       .lean();
@@ -80,7 +80,7 @@ export const createAcceptDocument =
     const result = await model
       .findOneAndUpdate(
         combineFilters<WithDocument>(filters, { _id: id, 'documents.docId': docId }),
-        { 'documents.$.status': 'accepted', message: null },
+        { $set: { 'documents.$.status': 'accepted', 'documents.$.message': null } },
         { returnDocument: 'after' },
       )
       .lean();
@@ -99,7 +99,7 @@ export const createRejectDocument =
     const result = await model
       .findOneAndUpdate(
         combineFilters<WithDocument>(filters, { _id: id, 'documents.docId': docId }),
-        { 'documents.$.status': 'rejected', message },
+        { $set: { 'documents.$.status': 'rejected', 'documents.$.message': message } },
         { returnDocument: 'after' },
       )
       .lean();

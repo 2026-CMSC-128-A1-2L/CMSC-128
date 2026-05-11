@@ -126,7 +126,7 @@ export const Manager = User.discriminator('Manager', new mongoose.Schema());
 export const Student = User.discriminator(
   'Student',
   new mongoose.Schema({
-    studentNumber: { type: String, required: true },
+    studentNumber: String,
     degreeProgram: String,
     preferences: {
       type: {

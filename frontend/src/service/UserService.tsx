@@ -8,6 +8,7 @@ import type {
   UpdateManagerRequestBody,
   OnboardSelfRequestBody,
   ApproveUserRequestBody,
+  SubmitVerificationRequestBody,
 } from '../interface/user';
 import { API_URL } from './constant';
 import { api } from './axiosInstance';
@@ -15,11 +16,8 @@ import { api } from './axiosInstance';
 export const UserService = {
   async getUsers(params: z.infer<typeof GetUsersQuerySchema>): Promise<GetUsersQuery> {
     try {
-      const kv = new URLSearchParams({
-        q: encodeURIComponent(JSON.stringify(params)),
-      }).toString();
-      const response = await axios.get<GetUsersQuery>(`${API_URL}/api/users?q=${kv}`, {
-        // headers
+      const response = await api.get<GetUsersQuery>('/api/users', {
+        params: { q: JSON.stringify(params) },
       });
       return response.data;
     } catch (error) {
@@ -40,9 +38,7 @@ export const UserService = {
 
   async getUser(userId: string) {
     try {
-      const response = await axios.get(`${API_URL}/api/users/${userId}`, {
-        // headers
-      });
+      const response = await api.get(`/api/users/${userId}`);
       return response.data;
     } catch (error) {
       console.error('Error fetching user:', error);
@@ -80,6 +76,16 @@ export const UserService = {
     }
   },
 
+  async submitVerification(body: SubmitVerificationRequestBody) {
+    try {
+      const response = await api.post('/api/users/me/verification', body);
+      return response.data;
+    } catch (error) {
+      console.error('Error submitting verification:', error);
+      throw error;
+    }
+  },
+
   async deleteUser(userId: string) {
     try {
       const response = await axios.delete(`${API_URL}/api/users/${userId}`, {
@@ -94,15 +100,7 @@ export const UserService = {
 
   async approveUser(userId: string, body: ApproveUserRequestBody) {
     try {
-      await axios.post(
-        `${API_URL}/api/users/${userId}/approve`,
-        {
-          ...body,
-        },
-        {
-          // headers
-        },
-      );
+      await api.post(`/api/users/${userId}/approve`, body ?? {});
     } catch (error) {
       console.error('Error approving user:', error);
       throw error;
@@ -111,13 +109,7 @@ export const UserService = {
 
   async rejectUser(userId: string) {
     try {
-      await axios.post(
-        `${API_URL}/api/users/${userId}/reject`,
-        {},
-        {
-          // headers
-        },
-      );
+      await api.post(`/api/users/${userId}/reject`, {});
     } catch (error) {
       console.error('Error rejecting user:', error);
       throw error;

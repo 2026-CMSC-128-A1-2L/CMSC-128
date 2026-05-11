@@ -3,9 +3,9 @@ import type { ClientSession, QueryFilter } from 'mongoose';
 import { Student, User } from './user.model.js';
 import { AppError } from '../../error.js';
 import { sendNotification } from '../notification/notification.service.js';
-import assert from 'node:assert';
-import { UserTypeType } from 'shared';
+import { UserStatus, UserTypeType } from 'shared';
 import type { StudentPreferences } from 'shared';
+import { File } from '../file/file.model.js';
 
 export type CreateUserParams = {
   firstName: string;
@@ -104,6 +104,8 @@ export const deleteUser = async (userId: mongoose.Types.ObjectId) => {
 type GetUsersArguments = {
   userId?: mongoose.Types.ObjectId | null;
   userType?: UserTypeType;
+  status?: UserStatus;
+  verificationStatus?: 'pending' | 'submitted' | 'rejected' | 'approved';
 };
 
 export const getUsers = async (params: GetUsersArguments) => {
@@ -114,13 +116,57 @@ export const getUsers = async (params: GetUsersArguments) => {
   if (params.userType) {
     filter.userType = params.userType;
   }
+  if (params.status) {
+    filter.status = params.status;
+  }
+  if (params.verificationStatus) {
+    filter.verificationStatus = params.verificationStatus;
+  }
 
   return await User.find(filter).lean();
 };
 
+type SubmitVerificationParameters = {
+  documents: {
+    docId: string;
+    name: string;
+    fileIds: string[];
+  }[];
+};
+
+export const submitVerification = async (
+  userId: mongoose.Types.ObjectId,
+  params: SubmitVerificationParameters,
+) => {
+  const user = await User.findById(userId);
+  if (!user) throw new AppError(404, 'User not found.');
+  if (user.status === 'setup') throw new AppError(422, 'Finish onboarding first.');
+  if (user.status === 'verified' || user.verificationStatus === 'approved') {
+    throw new AppError(422, 'User is already verified.');
+  }
+  if (user.status === 'disabled') throw new AppError(422, 'Disabled users cannot be verified.');
+
+  const uniqueFileIds = [...new Set(params.documents.flatMap((doc) => doc.fileIds))];
+  const ownedFileCount = await File.countDocuments({ key: { $in: uniqueFileIds }, userId });
+  if (ownedFileCount !== uniqueFileIds.length) {
+    throw new AppError(422, 'One or more uploaded files were not found.');
+  }
+
+  user.documents = params.documents.map((doc) => ({
+    docId: doc.docId,
+    name: doc.name,
+    status: 'pending',
+    files: [...new Set(doc.fileIds)],
+  }));
+  user.verificationStatus = 'submitted';
+  user.status = user.status === 'inactive' ? 'inactive' : 'unverified';
+
+  return await user.save();
+};
+
 type ApproveUserParams = {
-  degreeProgram: string;
-  studentNumber: string;
+  degreeProgram?: string;
+  studentNumber?: string;
 };
 
 export const approveUser = async (userId: mongoose.Types.ObjectId, params?: ApproveUserParams) => {
@@ -149,17 +195,24 @@ export const approveUser = async (userId: mongoose.Types.ObjectId, params?: Appr
 
   // all documents must be accepted first
   if (user.userType === 'Student') {
-    user.verificationStatus = 'approved';
-    user.status = 'verified';
-    assert.ok(params);
-    const student = Student.hydrate(user.toObject());
-    student.degreeProgram = params.degreeProgram;
-    student.studentNumber = params.studentNumber;
-    await student.save();
+    if (!params?.degreeProgram || !params.studentNumber) {
+      throw new AppError(422, 'Student number and degree program are required.');
+    }
+    await Student.findByIdAndUpdate(userId, {
+      $set: {
+        verificationStatus: 'approved',
+        status: 'verified',
+        degreeProgram: params.degreeProgram,
+        studentNumber: params.studentNumber,
+      },
+    });
   } else if (user.userType === 'Landlord') {
-    user.verificationStatus = 'approved';
-    user.status = 'verified';
-    await user.save();
+    await User.findByIdAndUpdate(userId, {
+      $set: {
+        verificationStatus: 'approved',
+        status: 'verified',
+      },
+    });
   } else {
     throw new AppError(422, `User of type '${user.userType}' cannot be verified.`);
   }
@@ -247,6 +300,7 @@ export const onboardSelf = async (
     { $set: { ...params, status: 'unverified' } },
     {
       returnDocument: 'after',
+      overwriteDiscriminatorKey: true,
     },
   ).lean();
 };
