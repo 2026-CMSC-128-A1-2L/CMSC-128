@@ -1,4 +1,5 @@
-import { useState, type MouseEventHandler } from 'react';
+import { useCallback, useEffect, useRef, useState, type MouseEventHandler } from 'react';
+import { createPortal } from 'react-dom';
 import { Link, useLocation } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import AtlasLogoText from '../../../assets/logo_atlas_text.svg?react';
@@ -78,6 +79,8 @@ const SideBar = ({ activeItem, onProfileClick, className = '' }: SideBarProps) =
   const location = useLocation();
   const [searchQuery, setSearchQuery] = useState('');
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const [profileMenuPosition, setProfileMenuPosition] = useState({ left: 0, bottom: 0 });
+  const profileButtonRef = useRef<HTMLButtonElement>(null);
   const { isDark, toggle } = useTheme();
 
   const resolvedActive: SideBarItemKey | undefined =
@@ -86,8 +89,20 @@ const SideBar = ({ activeItem, onProfileClick, className = '' }: SideBarProps) =
   const { user, logout } = useAuthStore();
   const username = user ? `${user.firstName} ${user.lastName}` : null;
   const navigate = useNavigate();
+  const updateProfileMenuPosition = useCallback(() => {
+    const profileButton = profileButtonRef.current;
+    if (!profileButton) return;
+
+    const rect = profileButton.getBoundingClientRect();
+    setProfileMenuPosition({
+      left: rect.right + 8,
+      bottom: window.innerHeight - rect.bottom,
+    });
+  }, []);
+
   onProfileClick = () => {
-    setProfileMenuOpen(!profileMenuOpen);
+    updateProfileMenuPosition();
+    setProfileMenuOpen((open) => !open);
   };
 
   const handleLogout = async () => {
@@ -95,6 +110,21 @@ const SideBar = ({ activeItem, onProfileClick, className = '' }: SideBarProps) =
     setProfileMenuOpen(false);
     navigate('/', { replace: true });
   };
+
+  useEffect(() => {
+    if (!profileMenuOpen) return;
+
+    updateProfileMenuPosition();
+
+    const handleWindowChange = () => updateProfileMenuPosition();
+    window.addEventListener('resize', handleWindowChange);
+    window.addEventListener('scroll', handleWindowChange, true);
+
+    return () => {
+      window.removeEventListener('resize', handleWindowChange);
+      window.removeEventListener('scroll', handleWindowChange, true);
+    };
+  }, [profileMenuOpen, updateProfileMenuPosition]);
 
   return (
     <div
@@ -254,6 +284,7 @@ const SideBar = ({ activeItem, onProfileClick, className = '' }: SideBarProps) =
         {/* Profile */}
         <div className="relative flex flex-row">
           <button
+            ref={profileButtonRef}
             type="button"
             onClick={onProfileClick}
             aria-label={username ?? 'Sign In'}
@@ -278,17 +309,26 @@ const SideBar = ({ activeItem, onProfileClick, className = '' }: SideBarProps) =
               </div>
             )}
           </button>
-          <div className="absolute left-full bottom-0 z-[10000] ml-2">
-            {profileMenuOpen && (
-              <UserMenuPopup
-                isOpen={profileMenuOpen}
-                onViewProfile={() => {
-                  navigate('/profile-switcher');
+          {profileMenuOpen &&
+            createPortal(
+              <div
+                className="fixed z-[2147483647]"
+                style={{
+                  left: profileMenuPosition.left,
+                  bottom: profileMenuPosition.bottom,
                 }}
-                onLogOut={handleLogout}
-              />
+              >
+                <UserMenuPopup
+                  isOpen={profileMenuOpen}
+                  onViewProfile={() => {
+                    setProfileMenuOpen(false);
+                    navigate('/profile-switcher');
+                  }}
+                  onLogOut={handleLogout}
+                />
+              </div>,
+              document.body,
             )}
-          </div>
         </div>
       </div>
     </div>
