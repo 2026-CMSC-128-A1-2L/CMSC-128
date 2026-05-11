@@ -9,7 +9,7 @@ const DmsSidebar: FunctionComponent = () => {
   const [searchQuery, setSearchQuery] = useState('');
 
   return (
-    <div className="w-72 h-screen relative overflow-hidden flex flex-col items-start py-10 pl-4 pr-3 box-border gap-2 text-left font-inter bg-white shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
+    <div className="w-72 h-screen relative overflow-hidden flex flex-col items-start py-10 pl-4 pr-3 box-border gap-2 text-left font-inter bg-white shadow-[4px_0_24px_rgba(0,0,0,0.02)] dark:bg-[#121212] dark:text-gray-100 dark:shadow-[4px_0_24px_rgba(0,0,0,0.25)]">
       <div className="w-full flex flex-col items-start gap-8">
         {/* Header & Search */}
         <div className="w-full flex items-center gap-2 text-[0.875rem]">
@@ -18,7 +18,7 @@ const DmsSidebar: FunctionComponent = () => {
             className="w-8 h-8 cursor-pointer shrink-0 hover:text-teal transition-colors"
             onClick={() => navigate(-1)}
           />
-          <div className="flex-1 px-3 py-2 rounded-num-8 bg-unavailable_action flex items-center gap-2 transition-all focus-within:ring-1 focus-within:ring-teal/30 focus-within:bg-white focus-within:shadow-sm">
+          <div className="flex-1 px-3 py-2 rounded-num-8 bg-unavailable_action flex items-center gap-2 transition-all focus-within:ring-1 focus-within:ring-teal/30 focus-within:bg-white focus-within:shadow-sm dark:bg-[#1e1e1e] dark:focus-within:bg-[#2a2a2a]">
             <Icon icon="material-symbols:search" className="w-4 h-4 text-unselected shrink-0" />
             <input
               type="text"
@@ -26,7 +26,7 @@ const DmsSidebar: FunctionComponent = () => {
               value={searchQuery}
               maxLength={50}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-transparent border-none outline-none text-num-14 font-medium text-darkgreen placeholder:text-unselected"
+              className="w-full bg-transparent border-none outline-none text-num-14 font-medium text-darkgreen placeholder:text-unselected dark:text-gray-200 dark:placeholder:text-gray-400"
             />
           </div>
         </div>
@@ -34,7 +34,7 @@ const DmsSidebar: FunctionComponent = () => {
         {/* Notifications Section */}
         <div className="self-stretch flex flex-col items-start gap-2 font-lora">
           <div className="self-stretch flex items-center justify-between py-1 font-inter">
-            <b className="relative flex items-start pl-2 text-num-18 text-[#2d3748]">
+            <b className="relative flex items-start pl-2 text-num-18 text-[#2d3748] dark:text-gray-100">
               Notifications
             </b>
             <span className="bg-teal/10 text-teal text-[10px] font-bold px-2 py-0.5 rounded-full">
@@ -73,7 +73,7 @@ const DmsSidebar: FunctionComponent = () => {
         {/* Direct Messages Section */}
         <div className="h-fit w-full flex flex-col items-start gap-4 font-lora">
           <div className="self-stretch flex items-end py-1 font-inter">
-            <b className="w-full flex-1 relative flex items-start text-num-18 pl-2 text-[#2d3748]">
+            <b className="w-full flex-1 relative flex items-start text-num-18 pl-2 text-[#2d3748] dark:text-gray-100">
               Direct Messages
             </b>
           </div>

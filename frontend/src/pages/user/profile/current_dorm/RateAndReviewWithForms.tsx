@@ -11,17 +11,21 @@ import TreeIcon from '../../../../../assets/environment_tree_icon.svg';
 import FilledTreeIcon from '../../../../../assets/environment_tree_icon_filled.svg';
 import SideBar from '../../../../components/user/SideBar';
 import BreadcrumbHeader from '../../../../components/general/Breadcrumb';
+import placeholder from '../../../../../assets/one_sapphire_place.png';
 
 const RateAndReview: FunctionComponent = () => {
   const navigate = useNavigate();
 
-  const onUserProfileTextClick = useCallback(() => {
-    navigate('/rate-review-upload');
-  }, [navigate]);
-
   const [qualityRating, setQualityRating] = useState(0);
   const [comfortRating, setComfortRating] = useState(0);
   const [environmentRating, setEnvironmentRating] = useState(0);
+
+  const isFormInvalid = qualityRating === 0 || comfortRating === 0 || environmentRating === 0;
+
+  const onUserProfileTextClick = useCallback(() => {
+    if (isFormInvalid) return;
+    navigate('/rate-review-upload');
+  }, [navigate, isFormInvalid]);
 
   return (
     <div className="w-full h-screen relative overflow-y-auto flex flex-col items-start isolate gap-2.5 text-left text-num-14 text-darkslategray-100 font-lora">
@@ -59,7 +63,7 @@ const RateAndReview: FunctionComponent = () => {
                     <div className="h-[195px] w-[928px] rounded-xl border-whitesmoke-200 border-solid border box-border flex items-center gap-2.5">
                       <img
                         className="h-[195px] w-[305px] rounded-tl-xl rounded-tr-none rounded-br-none rounded-bl-xl object-cover"
-                        alt=""
+                        src= {placeholder} alt=""
                       />
                       <div className="h-[195px] flex-1 rounded-2xl flex flex-col items-center py-num-0 px-num-12 box-border">
                         <div className="w-full h-[195px] flex flex-col items-center justify-center gap-0.5 max-w-full">
@@ -236,8 +240,12 @@ const RateAndReview: FunctionComponent = () => {
                     <button
                       className="absolute top-0 left-[627.93px] w-[108px] h-8 text-center text-white font-lora border-none bg-transparent cursor-pointer p-0 group"
                       onClick={onUserProfileTextClick}
+                      disabled={isFormInvalid}
                     >
-                      <div className="absolute h-[337.5%] w-[29.63%] top-full right-[70.37%] bottom-[-337.5%] left-[0%] shadow-[0px_0px_4px_rgba(0,0,0,0.25)] rounded-[6.17px] bg-darkslategray-200 transform-[rotate(-90deg)] origin-top-left group-hover:brightness-125 transition-all" />
+                      <div 
+                        className={`absolute h-[337.5%] w-[29.63%] top-full right-[70.37%] bottom-[-337.5%] left-[0%] shadow-[0px_0px_4px_rgba(0,0,0,0.25)] rounded-[6.17px] transform-[rotate(-90deg)] origin-top-left transition-all 
+                        ${isFormInvalid ? 'bg-gray-400 opacity-50' : 'bg-darkslategray-200 group-hover:brightness-125'}`} 
+                      />
                       <div className="absolute h-[101.25%] w-[100.28%] top-[0%] left-[0%] font-medium flex items-center justify-center text-[14px]">
                         Submit
                       </div>

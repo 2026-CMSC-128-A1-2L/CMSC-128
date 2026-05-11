@@ -1,11 +1,13 @@
-import type { ReactNode } from 'react';
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Icon } from '@iconify/react';
-import PageBackground from '../general/PageBackground';
-import SideBarLandlord, { type SideBarLandlordItemKey } from './SideBarLandlord';
-import LandlordFooter from './LandlordFooter';
-import TutorialBubble from '../../../../frontend/src/components/landlord/TutorialsForLandlord';
+import type { ReactNode } from "react";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Icon } from "@iconify/react";
+import PageBackground from "../general/PageBackground";
+import SideBarLandlord, {
+  type SideBarLandlordItemKey,
+} from "./SideBarLandlord";
+import LandlordFooter from "./LandlordFooter";
+import TutorialBubble from "../../../../frontend/src/components/landlord/TutorialsForLandlord";
 
 export type BreadcrumbItem = {
   label: string;
@@ -18,7 +20,11 @@ type LandlordLayoutProps = {
   children: ReactNode;
 };
 
-const LandlordLayout = ({ activeSidebarItem, breadcrumbs = [], children }: LandlordLayoutProps) => {
+const LandlordLayout = ({
+  activeSidebarItem,
+  breadcrumbs = [],
+  children,
+}: LandlordLayoutProps) => {
   const navigate = useNavigate();
   const [showHelp, setShowHelp] = useState(false);
 
@@ -27,24 +33,26 @@ const LandlordLayout = ({ activeSidebarItem, breadcrumbs = [], children }: Landl
       <PageBackground />
 
       <div className="relative z-10 flex flex-1 overflow-hidden">
-
         {/* Sidebar */}
         <SideBarLandlord
           activeItem={activeSidebarItem}
-          onProfileClick={() => navigate('/landlord/profile')}
-          onAddListing={() => navigate('/landlord/properties/new')}
+          onProfileClick={() => navigate("/landlord/profile")}
+          onAddListing={() => navigate("/landlord/properties/new")}
         />
 
         <div className="flex min-w-0 flex-1 flex-col overflow-hidden pl-[68px] md:pl-0">
-
           {/* Scrollable main area */}
           <main className="flex min-w-0 flex-1 flex-col overflow-y-auto">
             {breadcrumbs.length > 0 && (
-              <nav aria-label="Breadcrumb" className="flex h-[64px] shrink-0 items-end gap-[10px] p-[10px]">
+              <nav
+                aria-label="Breadcrumb"
+                className="flex h-[64px] shrink-0 items-end gap-[10px] p-[10px]"
+              >
                 <ol className="flex h-[24px] items-center gap-[6px]">
                   {breadcrumbs.map((item, idx) => {
                     const isLast = idx === breadcrumbs.length - 1;
-                    const labelClass = "font-['Lora',serif] text-[14px] font-semibold whitespace-nowrap";
+                    const labelClass =
+                      "font-['Lora',serif] text-[14px] font-semibold whitespace-nowrap";
                     return (
                       <li
                         key={`${item.to ?? item.label}-${item.label}`}
@@ -53,14 +61,14 @@ const LandlordLayout = ({ activeSidebarItem, breadcrumbs = [], children }: Landl
                         {item.to ? (
                           <Link
                             to={item.to}
-                            className={`${labelClass} text-[#096c5b] hover:underline`}
+                            className={`${labelClass} text-[#096c5b] hover:underline dark:text-teal-100`}
                           >
                             {item.label}
                           </Link>
                         ) : (
                           <span
-                            className={`${labelClass} text-[#2f3136]`}
-                            aria-current={isLast ? 'page' : undefined}
+                            className={`${labelClass} text-[#2f3136] dark:text-gray-200`}
+                            aria-current={isLast ? "page" : undefined}
                           >
                             {item.label}
                           </span>
@@ -68,7 +76,7 @@ const LandlordLayout = ({ activeSidebarItem, breadcrumbs = [], children }: Landl
                         {!isLast && (
                           <Icon
                             icon="iconamoon:arrow-right-2"
-                            className="h-[24px] w-[24px] text-[#2f3136]"
+                            className="h-[24px] w-[24px] text-[#2f3136] dark:text-gray-300"
                             aria-hidden="true"
                           />
                         )}
@@ -87,7 +95,6 @@ const LandlordLayout = ({ activeSidebarItem, breadcrumbs = [], children }: Landl
           <div className="relative z-10 shrink-0">
             <LandlordFooter />
           </div>
-
         </div>
       </div>
 
@@ -99,7 +106,7 @@ const LandlordLayout = ({ activeSidebarItem, breadcrumbs = [], children }: Landl
         <div
           className="w-16 h-16 drop-shadow-lg"
           style={{
-            background: 'linear-gradient(135deg, #096C5B, #16917C)',
+            background: "linear-gradient(135deg, #096C5B, #16917C)",
             WebkitMask:
               "url('https://api.iconify.design/iconoir/chat-bubble-question-solid.svg') no-repeat center / contain",
             mask: "url('https://api.iconify.design/iconoir/chat-bubble-question-solid.svg') no-repeat center / contain",

@@ -3,20 +3,43 @@ import { Icon } from '@iconify/react';
 import Tags from '../Filter/Tags';
 import Distance from '../Filter/DistanceMap';
 
-const Filter: FunctionComponent = () => {
-  const [minPrice, setMinPrice] = useState(0);
-  const [maxPrice, setMaxPrice] = useState(1000);
+interface FilterTabProps {
+  onClose: () => void;
+}
+
+const Filter: FunctionComponent<FilterTabProps> = ({ onClose }) => {
+  // State
+  const [minPrice, setMinPrice] = useState(2000);
+  const [maxPrice, setMaxPrice] = useState(15000);
+  const [activeThumb, setActiveThumb] = useState<'min' | 'max'>('min');
   const [pax, setPax] = useState<number | 'Any'>('Any');
   const [propertyType, setPropertyType] = useState('Dormitory');
   const [selectedEssentials, setSelectedEssentials] = useState<string[]>([]);
-  const [distance, setDistance] = useState(1); // default 1km
+  const [distance, setDistance] = useState(1);
 
+  // Constants
+  const PRICE_LIMITS = { min: 0, max: 30000, step: 500 };
+
+  // Handlers
   const handleReset = () => {
-    setMinPrice(0);
-    setMaxPrice(1000);
+    setMinPrice(2000);
+    setMaxPrice(15000);
     setPax('Any');
     setPropertyType('Dormitory');
     setSelectedEssentials([]);
+    setDistance(1);
+  };
+
+  const handleMinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Math.min(Number(e.target.value), maxPrice - PRICE_LIMITS.step);
+    setMinPrice(value);
+    setActiveThumb('min');
+  };
+
+  const handleMaxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Math.max(Number(e.target.value), minPrice + PRICE_LIMITS.step);
+    setMaxPrice(value);
+    setActiveThumb('max');
   };
 
   const handlePaxChange = (type: 'add' | 'minus') => {
@@ -27,136 +50,158 @@ const Filter: FunctionComponent = () => {
     }
   };
 
+  // Percentages for the colored track
+  const minPercent = (minPrice / PRICE_LIMITS.max) * 100;
+  const maxPercent = (maxPrice / PRICE_LIMITS.max) * 100;
+
+  // Shared Tailwind classes for the range thumbs to keep the code clean
+  const thumbStyles = `
+    [&::-webkit-slider-thumb]:pointer-events-auto 
+    [&::-webkit-slider-thumb]:appearance-none 
+    [&::-webkit-slider-thumb]:w-6 
+    [&::-webkit-slider-thumb]:h-6 
+    [&::-webkit-slider-thumb]:bg-white 
+    [&::-webkit-slider-thumb]:border-[3px] 
+    [&::-webkit-slider-thumb]:border-teal 
+    [&::-webkit-slider-thumb]:rounded-full 
+    [&::-webkit-slider-thumb]:cursor-pointer 
+    [&::-webkit-slider-thumb]:shadow-md
+    [&::-webkit-slider-thumb]:active:scale-115 
+    [&::-webkit-slider-thumb]:transition-transform
+    [&::-moz-range-thumb]:pointer-events-auto 
+    [&::-moz-range-thumb]:w-5 
+    [&::-moz-range-thumb]:h-5 
+    [&::-moz-range-thumb]:bg-white 
+    [&::-moz-range-thumb]:border-[3px] 
+    [&::-moz-range-thumb]:border-teal 
+    [&::-moz-range-thumb]:rounded-full 
+    [&::-moz-range-thumb]:cursor-pointer
+  `;
+
   return (
-    <div className="relative rounded-[14.1px] bg-white w-130 h-fit overflow-hidden flex flex-col items-start py-[2.643rem] px-[1.762rem] box-border gap-[0.881rem] text-left text-[0.771rem] text-teal font-inter shadow-lg">
-      <div className="w-full overflow-hidden flex items-center py-0 pl-0 pr-[0.662rem] gap-[0.55rem] text-center text-[1.322rem] text-gray">
-        <div className="flex-1 flex items-center">
-          <b className="relative leading-[1.763rem] text-black">Select filter</b>
+    <div className="flex flex-col h-full bg-white shadow-xl font-inter overflow-hidden">
+      
+      {/* --- STICKY HEADER --- */}
+      <div className="w-full flex items-center justify-between py-6 px-8 border-b border-whitesmoke shrink-0">
+        <b className="text-[1.322rem] leading-[1.763rem] text-black">Select filter</b>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={handleReset}
+            className="bg-unavailable_action rounded-num-16 flex items-center justify-center py-2 px-4 text-num-12 text-unselected font-bold hover:bg-lightcyan-300 transition-colors border-none cursor-pointer"
+          >
+            Reset Filter
+          </button>
+          <button onClick={onClose} className="flex items-center justify-center p-2 rounded-full hover:bg-whitesmoke transition-colors border-none bg-transparent cursor-pointer">
+            <Icon icon="material-symbols:close-rounded" className="w-7 h-7 text-gray" />
+          </button>
         </div>
-        <button
-          onClick={handleReset}
-          className="bg-unavailable_action rounded-num-16 baliceblue flex items-center justify-center py-2 px-4 text-num-12 text-unselected hover:bg-lightcyan-300 transition-colors border-none cursor-pointer"
-        >
-          <b className="relative">Reset Filter</b>
-        </button>
       </div>
 
-      {/* property type */}
-      <div className="w-full flex flex-col items-start gap-[1.1rem]">
-        <div className="w-full flex flex-col items-start py-[0.55rem] px-0 gap-[0.55rem]">
-          <div className="w-full flex flex-col items-start text-center text-dimgray">
-            <div className="w-full overflow-hidden flex flex-col items-start py-[0.55rem] px-0 gap-[0.55rem]">
-              <div className="self-stretch flex items-center">
-                <b className="relative text-darkgreen text-num-14">Property Type</b>
-              </div>
-
-              <div className="w-full flex items-center justify-between gap-2">
-                {[
-                  { id: 'Apartment', icon: 'roentgen:apartments-1-story' },
-                  {
-                    id: 'Dormitory',
-                    icon: 'roentgen:apartments-3-story-skillion-roof',
-                  },
-                  {
-                    id: 'Transient',
-                    icon: 'roentgen:apartments-1-story-gabled-roof',
-                  },
-                  { id: 'Bed Spacer', icon: 'ion:bed-sharp' },
-                ].map((type) => (
-                  <div
-                    key={type.id}
-                    onClick={() => setPropertyType(type.id)}
-                    className={`w-full cursor-pointer rounded-num-12 flex flex-col items-start p-[0.55rem] gap-[0.437rem]
-                      ${
-                        propertyType === type.id
-                          ? 'bg-lightcyan/45 text-teal'
-                          : 'bg-white text-dimgray border border-solid border-whitesmoke'
-                      }`}
-                  >
-                    <Icon icon={type.icon} className="w-5 h-5" />
-                    <div className="relative leading-[1.322rem] font-medium text-num-10 whitespace-nowrap">
-                      {type.id}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>{' '}
-          </div>
-
-          <div className="w-full overflow-hidden flex items-start p-[0.55rem] gap-[0.55rem] text-left">
-            <div className="flex-1 flex items-center">
-              <b className="relative text-black">Pax</b>
-            </div>
-            <div className="flex items-center gap-[0.55rem] text-teal">
-              <button
-                onClick={() => handlePaxChange('minus')}
-                className="bg-transparent border-none p-0 cursor-pointer flex items-center"
+      {/* --- SCROLLABLE BODY --- */}
+      <div className="flex-1 overflow-y-auto py-4 px-8 flex flex-col gap-8">
+        
+        {/* Property Type Section */}
+        <div className="w-full flex flex-col items-start gap-4">
+          <b className="text-darkgreen text-num-14">Property Type</b>
+          <div className="w-full grid grid-cols-4 gap-2">
+            {[
+              { id: 'Apartment', icon: 'roentgen:apartments-1-story' },
+              { id: 'Dormitory', icon: 'roentgen:apartments-3-story-skillion-roof' },
+              { id: 'Transient', icon: 'roentgen:apartments-1-story-gabled-roof' },
+              { id: 'Bed Spacer', icon: 'ion:bed-sharp' },
+            ].map((type) => (
+              <div
+                key={type.id}
+                onClick={() => setPropertyType(type.id)}
+                className={`cursor-pointer rounded-num-12 flex flex-col items-center justify-center p-3 gap-2 transition-all border border-solid
+                  ${propertyType === type.id 
+                    ? 'bg-lightcyan/45 text-teal border-teal' 
+                    : 'bg-white text-dimgray border-whitesmoke hover:border-teal/50'}`}
               >
-                <Icon icon="lsicon:minus-outline" className="w-4 h-4 text-teal" />
-              </button>
-              <div className="overflow-hidden flex flex-col items-center justify-center py0 px-[0.218rem] min-w-8">
-                <b className="self-stretch relative text-center">{pax}</b>
+                <Icon icon={type.icon} className="w-6 h-6" />
+                <div className="text-[0.65rem] font-bold text-center leading-tight">{type.id}</div>
               </div>
-              <button
-                onClick={() => handlePaxChange('add')}
-                className="bg-transparent border-none p-0 cursor-pointer flex items-center"
-              >
-                <Icon icon="formkit:add" className="w-4 h-4 text-teal" />
-              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Pax Section */}
+        <div className="w-full flex items-center justify-between py-2">
+          <b className="text-black text-num-14">Pax</b>
+          <div className="flex items-center gap-4 text-teal">
+            <button onClick={() => handlePaxChange('minus')} className="bg-transparent border border-solid border-teal/30 rounded-full p-1 cursor-pointer flex items-center hover:bg-teal/10">
+              <Icon icon="lsicon:minus-outline" className="w-5 h-5 text-teal" />
+            </button>
+            <b className="text-lg min-w-[2rem] text-center">{pax}</b>
+            <button onClick={() => handlePaxChange('add')} className="bg-transparent border border-solid border-teal/30 rounded-full p-1 cursor-pointer flex items-center hover:bg-teal/10">
+              <Icon icon="formkit:add" className="w-5 h-5 text-teal" />
+            </button>
+          </div>
+        </div>
+
+        {/* Price Range Section */}
+        <div className="w-full flex flex-col gap-6">
+          <b className="text-black text-num-14">Price Range</b>
+          
+          <div className="relative w-full h-10 flex items-center">
+            {/* The background track */}
+            <div className="absolute w-full h-1.5 bg-whitesmoke rounded-full" />
+            
+            {/* The active range highlight */}
+            <div 
+              className="absolute h-1.5 bg-teal rounded-full" 
+              style={{ left: `${minPercent}%`, right: `${100 - maxPercent}%` }}
+            />
+
+            {/* Min Input */}
+            <input
+              type="range"
+              min={PRICE_LIMITS.min}
+              max={PRICE_LIMITS.max}
+              step={PRICE_LIMITS.step}
+              value={minPrice}
+              onChange={handleMinChange}
+              className={`absolute w-full pointer-events-none appearance-none bg-transparent ${activeThumb === 'min' ? 'z-40' : 'z-30'} ${thumbStyles}`}
+            />
+
+            {/* Max Input */}
+            <input
+              type="range"
+              min={PRICE_LIMITS.min}
+              max={PRICE_LIMITS.max}
+              step={PRICE_LIMITS.step}
+              value={maxPrice}
+              onChange={handleMaxChange}
+              className={`absolute w-full pointer-events-none appearance-none bg-transparent ${activeThumb === 'max' ? 'z-40' : 'z-30'} ${thumbStyles}`}
+            />
+          </div>
+
+          <div className="flex items-center justify-center gap-4 text-dimgray">
+            <div className="flex-1 flex flex-col gap-1">
+              <span className="text-num-10 uppercase font-bold tracking-wider">Min Price</span>
+              <div className="py-3 px-4 bg-unavailable_action rounded-num-8 border border-solid border-whitesmoke font-bold text-teal">
+                ₱{minPrice.toLocaleString()}
+              </div>
+            </div>
+            <div className="flex-1 flex flex-col gap-1 text-right">
+              <span className="text-num-10 uppercase font-bold tracking-wider">Max Price</span>
+              <div className="py-3 px-4 bg-unavailable_action rounded-num-8 border border-solid border-whitesmoke font-bold text-teal">
+                ₱{maxPrice.toLocaleString()}
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* price */}
-      <div className="self-stretch flex flex-col items-start gap-[0.662rem] w-full">
-        <div className="flex items-center py-1 text-num-14">
-          <b className="relative text-black">Price Range</b>
+        {/* Essentials Section */}
+        <div className="w-full flex flex-col gap-4">
+          <b className="text-darkgreen text-num-14">Essentials</b>
+          <Tags selected={selectedEssentials} onChange={setSelectedEssentials} />
         </div>
 
-        <div className="w-full px-2">
-          <input
-            type="range"
-            min={0}
-            max={30000}
-            step={500}
-            value={maxPrice}
-            onChange={(e) => setMaxPrice(Number(e.target.value))}
-            className="w-full accent-teal cursor-pointer"
-          />
-        </div>
-
-        <div className="self-stretch flex items-center justify-center gap-[0.881rem] text-[0.661rem] text-dimgray font-lora">
-          <div className="flex-1 flex flex-col items-start py-[0.218rem] px-0 gap-[0.218rem]">
-            <div className="self-stretch tracking-num-0.02 font-semibold text-num-12">
-              Min Price
-            </div>
-            <div className="w-full h-fit text-num-12 font-inter rounded-num-8 border-whitesmoke border-solid border box-border flex items-center py-2 px-2 bg-unavailable_action">
-              ₱{minPrice.toLocaleString()}
-            </div>
-          </div>
-
-          <div className="flex-1 flex flex-col items-end justify-center py-[0.218rem] px-0 gap-[0.218rem] text-right">
-            <div className="self-stretch tracking-num-0.02 font-semibold text-num-12">
-              Max Price
-            </div>
-            <div className="w-full h-fit text-num-12 font-inter rounded-num-8 border-whitesmoke border-solid border box-border flex justify-end py-2 px-2 bg-unavailable_action">
-              ₱{maxPrice.toLocaleString()}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* essentials */}
-      <div className="w-full h-fit flex flex-col py-1 text-num-14 gap-2">
-        <b className="text-darkgreen font-inter">Essentials</b>
-        <Tags selected={selectedEssentials} onChange={setSelectedEssentials} />
-      </div>
-
-      <div className="w-full flex flex-col gap-4">
-        <b className="text-teal text-lg">Distance from Campus</b>
-        <Distance distance={distance} />
-        <div className="w-full px-2">
+        {/* Distance Section */}
+        <div className="w-full flex flex-col gap-4 pb-4">
+          <b className="text-teal text-[1.1rem]">Distance from Campus</b>
+          <Distance distance={distance} />
           <input
             type="range"
             min={0.1}
@@ -166,27 +211,26 @@ const Filter: FunctionComponent = () => {
             onChange={(e) => setDistance(parseFloat(e.target.value))}
             className="w-full accent-teal cursor-pointer"
           />
-        </div>
-        <div className="flex items-center justify-between">
-          <span className="font-bold text-gray-700">Kilometers</span>
-          <div className="flex items-center justify-center w-24 h-10 border border-gray-300 rounded-lg bg-white shadow-sm">
-            <span className="font-bold text-[#13634F]">{distance.toFixed(1)}</span>
-            <div className="flex flex-col ml-2 border-l border-gray-200 pl-1">
-              <Icon icon="heroicons:chevron-up-20-solid" className="w-3 h-3 text-gray-400" />
-              <Icon icon="heroicons:chevron-down-20-solid" className="w-3 h-3 text-gray-400" />
+          <div className="flex items-center justify-between">
+            <span className="font-bold text-dimgray">Kilometers</span>
+            <div className="flex items-center justify-center w-28 h-10 border border-solid border-whitesmoke rounded-lg bg-white shadow-sm gap-2 px-3">
+              <span className="font-bold text-teal text-lg">{distance.toFixed(1)}</span>
+              <div className="flex flex-col border-l border-whitesmoke pl-2">
+                <Icon icon="heroicons:chevron-up-20-solid" className="w-4 h-4 text-gray-400" />
+                <Icon icon="heroicons:chevron-down-20-solid" className="w-4 h-4 text-gray-400" />
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* apply */}
-      <button className="self-stretch overflow-hidden flex items-center justify-center p-[0.55rem] border-none bg-transparent cursor-pointer w-full mt-4">
-        <div className="flex-1 rounded-[14.1px] bg-teal flex items-center justify-center py-[0.662rem] px-[0.881rem] box-border max-w-full text-white hover:opacity-90 transition-opacity">
-          <b className="relative text-num-14">Apply Filter</b>
-        </div>
-      </button>
+      {/* --- STICKY FOOTER --- */}
+      <div className="p-8 border-t border-whitesmoke shrink-0 bg-white">
+        <button onClick={onClose} className="w-full bg-teal hover:bg-darkgreen text-white font-bold py-4 rounded-[14.1px] transition-all border-none cursor-pointer shadow-md text-num-14">
+          Apply Filter
+        </button>
+      </div>
     </div>
-    // </div>
   );
 };
 

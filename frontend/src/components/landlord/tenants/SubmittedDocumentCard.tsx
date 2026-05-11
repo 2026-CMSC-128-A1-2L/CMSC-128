@@ -2,11 +2,17 @@ import type { ReactNode } from 'react';
 import { Icon } from '@iconify/react';
 import type { SubmittedDocument } from '../../../data/landlordTenants';
 
+export type DocumentReviewStatus = 'pending' | 'approved' | 'rejected';
+
 type SubmittedDocumentCardProps = {
   document: SubmittedDocument;
   onView?: (document: SubmittedDocument) => void;
+  /** When false, only the view (eye) control is shown (validated tenant documents). Default true. */
+  showMoreMenu?: boolean;
   onMoreOptions?: (document: SubmittedDocument) => void;
   actionMenu?: ReactNode;
+  /** When set, shows status and hides the more menu for non-pending items. */
+  reviewStatus?: DocumentReviewStatus;
 };
 
 const kindIcon: Record<SubmittedDocument['kind'], string> = {
@@ -18,9 +24,13 @@ const kindIcon: Record<SubmittedDocument['kind'], string> = {
 const SubmittedDocumentCard = ({
   document,
   onView,
+  showMoreMenu = true,
   onMoreOptions,
   actionMenu,
+  reviewStatus = 'pending',
 }: SubmittedDocumentCardProps) => {
+  const menuAllowed = showMoreMenu && reviewStatus === 'pending';
+
   return (
     <div className="relative flex w-full flex-col items-start justify-center gap-[10px] overflow-hidden rounded-[16px] border border-solid border-[#f0f0f0] bg-white px-[32px] py-[10px]">
       <div className="flex w-full items-center justify-between pr-[24px]">
@@ -33,9 +43,24 @@ const SubmittedDocumentCard = ({
               {document.descriptor}
             </span>
           )}
+          {reviewStatus === 'approved' && (
+            <span className="rounded-full bg-[#e8f7f4] px-[10px] py-[2px] font-['Inter',sans-serif] text-[11px] font-bold text-[#096c5b]">
+              Approved
+            </span>
+          )}
+          {reviewStatus === 'rejected' && (
+            <span className="rounded-full bg-[#fef2f2] px-[10px] py-[2px] font-['Inter',sans-serif] text-[11px] font-bold text-[#dc2626]">
+              Rejected
+            </span>
+          )}
         </div>
 
-        <div className="flex w-[72px] shrink-0 items-center gap-[24px]">
+        <div
+          className={[
+            'flex shrink-0 items-center',
+            menuAllowed ? 'w-[72px] gap-[24px]' : 'w-[24px] justify-end',
+          ].join(' ')}
+        >
           <button
             type="button"
             onClick={() => onView?.(document)}
@@ -44,18 +69,20 @@ const SubmittedDocumentCard = ({
           >
             <Icon icon="iconamoon:eye" className="h-[24px] w-[24px]" aria-hidden="true" />
           </button>
-          <button
-            type="button"
-            onClick={() => onMoreOptions?.(document)}
-            aria-label={`More options for ${document.title}`}
-            className="flex h-[24px] w-[24px] cursor-pointer items-center justify-center text-[#2f3136] transition-colors hover:text-[#096c5b]"
-          >
-            <Icon
-              icon="qlementine-icons:menu-dots-16"
-              className="h-[24px] w-[24px]"
-              aria-hidden="true"
-            />
-          </button>
+          {menuAllowed && (
+            <button
+              type="button"
+              onClick={() => onMoreOptions?.(document)}
+              aria-label={`More options for ${document.title}`}
+              className="flex h-[24px] w-[24px] cursor-pointer items-center justify-center text-[#2f3136] transition-colors hover:text-[#096c5b]"
+            >
+              <Icon
+                icon="qlementine-icons:menu-dots-16"
+                className="h-[24px] w-[24px]"
+                aria-hidden="true"
+              />
+            </button>
+          )}
         </div>
       </div>
 

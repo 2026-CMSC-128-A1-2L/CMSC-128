@@ -1,16 +1,27 @@
-import { type FunctionComponent, useCallback } from 'react';
+import { type FunctionComponent, useCallback, useState } from 'react';
 import { Icon } from '@iconify/react';
 import Location from '../../../../../assets/pin_location_icon.svg';
 import House from '../../../../../assets/house_icon.svg';
 import UploadMedia from '../../../../../assets/upload_media_icon.svg';
 import { useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import SideBar from '../../../../components/user/SideBar';
 import BreadcrumbHeader from '../../../../components/general/Breadcrumb';
+import placeholder from '../../../../../assets/one_sapphire_place.png';
+import ConfirmReview from '../../../../components/user/Profile/ConfirmReview'; 
 
 const RateAndReview: FunctionComponent = () => {
+  const navigate = useNavigate();
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+
   const onUserProfileTextClick = useCallback(() => {
-    // Add your code here
+    setShowSuccessPopup(true);
   }, []);
+
+  const closePopup = () => {
+    setShowSuccessPopup(false);
+    navigate('/profile-switcher');
+  };
 
   // state to hold which file is being uploaded
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -31,6 +42,11 @@ const RateAndReview: FunctionComponent = () => {
 
   return (
     <div className="w-full h-screen relative overflow-y-auto flex flex-col items-start isolate gap-2.5 text-left text-num-14 text-darkslategray-100 font-lora">
+      {showSuccessPopup && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
+          <ConfirmReview onClose={closePopup} />
+        </div>
+      )}
       {/* <img className="w-[1440px] h-[1192px] absolute !!m-[0 important] top-0 left-0 shrink-0 z-0" alt="" /> */}
       <div className="w-full max-w-[1440px] min-h-screen overflow-hidden flex flex-col items-start z-1 mx-auto">
         <div className="self-stretch flex-1 overflow-hidden flex flex-col items-start">
@@ -66,7 +82,7 @@ const RateAndReview: FunctionComponent = () => {
                       <div className="h-[195px] w-[928px] rounded-xl border-whitesmoke-200 border-solid border box-border flex items-center gap-2.5">
                         <img
                           className="h-[195px] w-[305px] rounded-tl-xl rounded-tr-none rounded-br-none rounded-bl-xl object-cover"
-                          alt=""
+                          src={placeholder} alt=""
                         />
                         <div className="h-[195px] flex-1 rounded-num-16 flex flex-col items-center py-num-0 px-num-12 box-border">
                           <div className="w-full h-[195px] flex flex-col items-center justify-center gap-0.5 max-w-full">

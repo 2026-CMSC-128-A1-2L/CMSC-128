@@ -1,5 +1,5 @@
 import { Icon } from '@iconify/react';
-import placeholder from '../../../../../assets/logo_atlas_text.svg';
+import placeholder from '../../../../../assets/one_sapphire_place.png';
 import { Link, useNavigate } from 'react-router-dom';
 import { act, useState } from 'react';
 import React from 'react';
@@ -29,7 +29,7 @@ export default function CurrentDormCard({
     <div className="flex flex-col gap-5 max-w-4xl mx-auto">
       <div className="max-w-4xl mx-auto rounded-xl border border-[#f0f0f0] bg-white overflow-hidden shadow-sm text-black">
         {/* Property Image */}
-        <img src={propertyImageSrc} alt={propertyName} className="w-full h-auto object-cover" />
+        <img src={propertyImageSrc} alt={propertyName} className="w-[1200px] h-[400px] object-cover" />
 
         <div className="p-6">
           {/* Property Title */}
@@ -57,7 +57,9 @@ export default function CurrentDormCard({
           </div>
 
           {/* Action Button */}
-          <button className="w-full border border-[#f0f0f0] text-teal-700 text-sm font-semibold rounded-md py-3 flex items-center justify-center gap-2 hover:border-teal-500 cursor-pointer transition">
+          <button
+            onClick={() => navigate('/current-dorm')}
+            className="w-full border border-[#f0f0f0] text-teal-700 text-sm font-semibold rounded-md py-3 flex items-center justify-center gap-2 hover:border-teal-500 cursor-pointer transition">
             View Details
             <Icon icon="heroicons:arrow-top-right-on-square" className="w-4 h-4" />
           </button>
@@ -164,7 +166,7 @@ export default function CurrentDormCard({
 
           {activeTab === 'Rate and Review' && verified && (
             <div className="flex-1 flex flex-col items-center py-5 justify-between h-full">
-              <p className="text-2xl font-bold  text-[#024338]">Acommodation Review</p>
+              <p className="text-2xl font-bold  text-[#024338]">Accommodation Review</p>
 
               <p className="text-[14px] text-slategray">
                 {' '}
@@ -184,7 +186,7 @@ export default function CurrentDormCard({
 
           {activeTab === 'Rate and Review' && !verified && (
             <div className="flex-1 flex flex-col items-center justify-between h-full py-5">
-              <p className="text-2xl font-bold  text-[#024338]">Acommodation Review</p>
+              <p className="text-2xl font-bold  text-[#024338]">Accommodation Review</p>
 
               <p className="text-[14px] text-slategray">
                 {' '}

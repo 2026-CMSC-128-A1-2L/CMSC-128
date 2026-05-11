@@ -93,7 +93,7 @@ const LandlordFinance: FunctionComponent = () => {
   };
 
   const handleAddProperty = () => {
-    navigate('/landlord/properties/new');
+    navigate('/landlord/add-building');
   };
 
   return (
