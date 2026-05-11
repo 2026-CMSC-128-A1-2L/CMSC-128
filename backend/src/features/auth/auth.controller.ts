@@ -1,6 +1,6 @@
 import type { RequestHandler } from 'express';
 import z from 'zod';
-import { promisify } from 'util';
+import { promisify } from 'node:util';
 import { AppError } from '../../error.js';
 import { createTestUser, getUserByEmail } from '../user/user.service.js';
 
@@ -29,7 +29,7 @@ const testRegisterSchema = z.discriminatedUnion('userType', [
   }),
 ]);
 
-export const routeTestRegister: RequestHandler = async (req, res, next) => {
+export const routeTestRegister: RequestHandler = async (req, res, _next) => {
   const params = testRegisterSchema.parse(req.body);
   return res.status(200).send(await createTestUser(params));
 };
@@ -47,4 +47,21 @@ export const routeTestLogin: RequestHandler = async (req, res, next) => {
 
   await promisify(req.login.bind(req))(user as Express.User);
   res.status(200).send(req.user);
+};
+
+export const routeLogout: RequestHandler = (req, res, next) => {
+  req.logout((logoutError) => {
+    if (logoutError) {
+      return next(logoutError);
+    }
+
+    req.session.destroy((sessionError) => {
+      if (sessionError) {
+        return next(sessionError);
+      }
+
+      res.clearCookie('connect.sid');
+      return res.sendStatus(204);
+    });
+  });
 };

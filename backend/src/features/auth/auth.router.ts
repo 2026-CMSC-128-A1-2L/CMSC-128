@@ -1,7 +1,7 @@
 import { type RequestHandler, Router } from 'express';
 import passportGoogle from './google.js';
 import { isDevelopment } from '../../middleware.js';
-import { routeTestRegister, routeTestLogin } from './auth.controller.js';
+import { routeLogout, routeTestRegister, routeTestLogin } from './auth.controller.js';
 
 const router = Router();
 
@@ -39,6 +39,8 @@ router.get('/google/callback', (req, res, next) => {
     });
   })(req, res, next);
 });
+
+router.post('/logout', routeLogout);
 
 // creation of fake accounts endpoints
 router.post('/test/register', isDevelopment, routeTestRegister);

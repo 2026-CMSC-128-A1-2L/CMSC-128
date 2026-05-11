@@ -16,6 +16,7 @@ export default function UserMenuPopup({ isOpen, onViewProfile, onLogOut }: UserM
     <div className="absolute top-full left-0 mt-2 w-[220px] bg-[#f8f9fa] rounded-2xl p-3 shadow-[0px_4px_12px_rgba(0,0,0,0.1)] flex flex-col gap-2 font-inter z-50">
       {/* View Profile Button */}
       <button
+        type="button"
         onClick={onViewProfile}
         className="w-full py-2.5 bg-[#dcfce7] text-[#096c5b] font-medium text-[14px] rounded-full transition-colors hover:bg-[#bbf7d0] cursor-pointer"
       >
@@ -24,6 +25,7 @@ export default function UserMenuPopup({ isOpen, onViewProfile, onLogOut }: UserM
 
       {/* Log Out Button */}
       <button
+        type="button"
         onClick={onLogOut}
         className="w-full py-2.5 bg-white text-[#ef4444] border border-[#f0f0f0] font-medium text-[14px] rounded-full transition-colors hover:bg-gray-50 drop-shadow-sm cursor-pointer"
       >

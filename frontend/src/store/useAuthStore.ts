@@ -19,6 +19,7 @@ type AuthState = {
   isLoading: boolean;
   isInitialized: boolean;
   fetchMe: () => Promise<void>;
+  logout: () => Promise<void>;
 };
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -35,6 +36,14 @@ export const useAuthStore = create<AuthState>((set) => ({
       set({ user: null, isInitialized: true });
     } finally {
       set({ isLoading: false });
+    }
+  },
+
+  logout: async () => {
+    try {
+      await api.post('/api/auth/logout');
+    } finally {
+      set({ user: null, isInitialized: true, isLoading: false });
     }
   },
 }));

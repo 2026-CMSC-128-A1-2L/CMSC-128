@@ -72,12 +72,7 @@ const navItems = [
   },
 ];
 
-const SideBar = ({
-  activeItem,
-  onToggleDarkMode,
-  onProfileClick,
-  className = '',
-}: SideBarProps) => {
+const SideBar = ({ activeItem, onProfileClick, className = '' }: SideBarProps) => {
   const [collapsed, setCollapsed] = useState(false);
   const [internalHover, setInternalHover] = useState<SideBarItemKey>();
   const location = useLocation();
@@ -88,11 +83,17 @@ const SideBar = ({
   const resolvedActive: SideBarItemKey | undefined =
     activeItem ?? navItems.find((item) => location.pathname.startsWith(item.route))?.key;
 
-  const { user } = useAuthStore();
+  const { user, logout } = useAuthStore();
   const username = user ? `${user.firstName} ${user.lastName}` : null;
   const navigate = useNavigate();
   onProfileClick = () => {
     setProfileMenuOpen(!profileMenuOpen);
+  };
+
+  const handleLogout = async () => {
+    await logout();
+    setProfileMenuOpen(false);
+    navigate('/', { replace: true });
   };
 
   return (
@@ -285,7 +286,7 @@ const SideBar = ({
                 onViewProfile={() => {
                   navigate('/profile-switcher');
                 }}
-                onLogOut={() => {}}
+                onLogOut={handleLogout}
               />
             )}
           </div>
