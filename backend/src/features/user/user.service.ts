@@ -20,15 +20,28 @@ export type CreateUserParams = {
 
 export const createUser = async (params: CreateUserParams) => {
   const userResult = await User.findOne({
-    emails: params.email,
+    $or: [{ emails: params.email }, { email: params.email }, { 'auth.google': params.auth.google }],
     status: { $in: ['setup', 'verified', 'unverified'] },
   }).lean();
 
   if (userResult) {
+    const updates: { $set?: Record<string, unknown>; $addToSet?: Record<string, unknown> } = {};
+    if (!userResult.email) updates.$set = { email: params.email };
+    if (!userResult.emails?.includes(params.email)) {
+      updates.$addToSet = { emails: params.email };
+    }
+    if (!userResult.auth.google?.includes(params.auth.google)) {
+      updates.$addToSet = { ...updates.$addToSet, 'auth.google': params.auth.google };
+    }
+    if (Object.keys(updates).length > 0) {
+      await User.updateOne({ _id: userResult._id }, updates);
+      return await User.findById(userResult._id).lean();
+    }
     return userResult;
   }
 
   const newUser = new User({
+    email: params.email,
     firstName: params.firstName,
     middleName: params.middleName,
     lastName: params.lastName,
@@ -52,9 +65,11 @@ export const createTestUser = async (params: unknown) => {
 
 export const getUserByEmail = async (email: string, session?: ClientSession) => {
   if (session) {
-    return await User.findOne({ emails: email }).session(session).lean();
+    return await User.findOne({ $or: [{ emails: email }, { email }] })
+      .session(session)
+      .lean();
   } else {
-    return await User.findOne({ emails: email }).lean();
+    return await User.findOne({ $or: [{ emails: email }, { email }] }).lean();
   }
 };
 
@@ -70,6 +85,7 @@ export const deleteUser = async (userId: mongoose.Types.ObjectId) => {
       $set: {
         status: 'disabled',
         'auth.google': [],
+        email: `disabled:${userId.toString()}`,
         emails: [],
         documents: [],
       },
@@ -185,6 +201,9 @@ export const rejectUser = async (userId: mongoose.Types.ObjectId) => {
 };
 
 type UpdateUserParameters = Partial<{
+  firstName: string;
+  middleName: string;
+  lastName: string;
   profilePicture: string;
   address: string;
   contact: string;

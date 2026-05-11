@@ -1,23 +1,26 @@
 // service/user.ts
 import axios from 'axios';
-import z from 'zod';
-import { GetUsersQuerySchema } from 'shared';
-import type { GetUsersQuery, UpdateStudentRequestBody, UpdateManagerRequestBody, OnboardSelfRequestBody, ApproveUserRequestBody, UserFilter } from '../interface/user';
+import type z from 'zod';
+import type { GetUsersQuerySchema } from 'shared';
+import type {
+  GetUsersQuery,
+  UpdateStudentRequestBody,
+  UpdateManagerRequestBody,
+  OnboardSelfRequestBody,
+  ApproveUserRequestBody,
+} from '../interface/user';
 import { API_URL } from './constant';
+import { api } from './axiosInstance';
 
 export const UserService = {
-
   async getUsers(params: z.infer<typeof GetUsersQuerySchema>): Promise<GetUsersQuery> {
     try {
       const kv = new URLSearchParams({
         q: encodeURIComponent(JSON.stringify(params)),
       }).toString();
-      const response = await axios.get<GetUsersQuery>(
-        `${API_URL}/api/users?q=${kv}`,
-        {
-          // headers
-        }
-      );
+      const response = await axios.get<GetUsersQuery>(`${API_URL}/api/users?q=${kv}`, {
+        // headers
+      });
       return response.data;
     } catch (error) {
       console.error('Error fetching users:', error);
@@ -27,12 +30,7 @@ export const UserService = {
 
   async getSelf() {
     try {
-      const response = await axios.get(
-        `${API_URL}/api/users/me`,
-        {
-          // headers
-        }
-      );
+      const response = await api.get('/api/users/me');
       return response.data;
     } catch (error) {
       console.error('Error fetching self:', error);
@@ -42,12 +40,9 @@ export const UserService = {
 
   async getUser(userId: string) {
     try {
-      const response = await axios.get(
-        `${API_URL}/api/users/${userId}`,
-        {
-          // headers
-        }
-      );
+      const response = await axios.get(`${API_URL}/api/users/${userId}`, {
+        // headers
+      });
       return response.data;
     } catch (error) {
       console.error('Error fetching user:', error);
@@ -57,15 +52,7 @@ export const UserService = {
 
   async updateSelf(body: UpdateStudentRequestBody | UpdateManagerRequestBody) {
     try {
-      const response = await axios.patch(
-        `${API_URL}/api/users/me`,
-        {
-          ...body,
-        },
-        {
-          // headers
-        }
-      );
+      const response = await api.patch('/api/users/me', body);
       return response.data;
     } catch (error) {
       console.error('Error updating self:', error);
@@ -75,12 +62,7 @@ export const UserService = {
 
   async deleteSelf() {
     try {
-      const response = await axios.delete(
-        `${API_URL}/api/users/me`,
-        {
-          // headers
-        }
-      );
+      const response = await api.delete('/api/users/me');
       return response.data;
     } catch (error) {
       console.error('Error deleting self:', error);
@@ -88,18 +70,9 @@ export const UserService = {
     }
   },
 
-
   async onboardSelf(body: OnboardSelfRequestBody) {
     try {
-      const response = await axios.post(
-        `${API_URL}/api/users/me/onboard`,
-        {
-          ...body,
-        },
-        {
-          // headers
-        }
-      );
+      const response = await api.post('/api/users/me/onboard', body);
       return response.data;
     } catch (error) {
       console.error('Error onboarding self:', error);
@@ -107,15 +80,11 @@ export const UserService = {
     }
   },
 
-
   async deleteUser(userId: string) {
     try {
-      const response = await axios.delete(
-        `${API_URL}/api/users/${userId}`,
-        {
-          // headers
-        }
-      );
+      const response = await axios.delete(`${API_URL}/api/users/${userId}`, {
+        // headers
+      });
       return response.data;
     } catch (error) {
       console.error('Error deleting user:', error);
@@ -132,7 +101,7 @@ export const UserService = {
         },
         {
           // headers
-        }
+        },
       );
     } catch (error) {
       console.error('Error approving user:', error);
@@ -147,7 +116,7 @@ export const UserService = {
         {},
         {
           // headers
-        }
+        },
       );
     } catch (error) {
       console.error('Error rejecting user:', error);
@@ -157,12 +126,9 @@ export const UserService = {
 
   async getMyReports() {
     try {
-      const response = await axios.get(
-        `${API_URL}/api/users/me/reports`,
-        {
-          // headers
-        }
-      );
+      const response = await axios.get(`${API_URL}/api/users/me/reports`, {
+        // headers
+      });
       return response.data;
     } catch (error) {
       console.error('Error fetching my reports:', error);
@@ -170,15 +136,11 @@ export const UserService = {
     }
   },
 
-
   async getMyApplications() {
     try {
-      const response = await axios.get(
-        `${API_URL}/api/users/me/applications`,
-        {
-          // headers
-        }
-      );
+      const response = await axios.get(`${API_URL}/api/users/me/applications`, {
+        // headers
+      });
       return response.data;
     } catch (error) {
       console.error('Error fetching my applications:', error);
@@ -188,12 +150,9 @@ export const UserService = {
 
   async getMyRentals() {
     try {
-      const response = await axios.get(
-        `${API_URL}/api/users/me/rentals`,
-        {
-          // headers
-        }
-      );
+      const response = await axios.get(`${API_URL}/api/users/me/rentals`, {
+        // headers
+      });
       return response.data;
     } catch (error) {
       console.error('Error fetching my rentals:', error);
@@ -203,12 +162,9 @@ export const UserService = {
 
   async getMyBillings() {
     try {
-      const response = await axios.get(
-        `${API_URL}/api/users/me/billings`,
-        {
-          // headers
-        }
-      );
+      const response = await axios.get(`${API_URL}/api/users/me/billings`, {
+        // headers
+      });
       return response.data;
     } catch (error) {
       console.error('Error fetching my billings:', error);
@@ -218,12 +174,9 @@ export const UserService = {
 
   async getMyBookings() {
     try {
-      const response = await axios.get(
-        `${API_URL}/api/users/me/bookings`,
-        {
-          // headers
-        }
-      );
+      const response = await axios.get(`${API_URL}/api/users/me/bookings`, {
+        // headers
+      });
       return response.data;
     } catch (error) {
       console.error('Error fetching my bookings:', error);

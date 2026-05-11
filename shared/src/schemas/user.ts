@@ -19,6 +19,9 @@ export type StudentPreferences = z.infer<typeof StudentPreferenceSchema>;
 const ScheduleSchema = z.object({});
 
 const BaseProfileSchema = z.object({
+  firstName: z.string().min(1),
+  middleName: z.string(),
+  lastName: z.string().min(1),
   profilePicture: z.url(),
   address: z.string(),
   contact: z.string(),

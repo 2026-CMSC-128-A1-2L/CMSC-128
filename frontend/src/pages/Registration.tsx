@@ -1,8 +1,12 @@
-import { type FunctionComponent, useCallback, useState } from 'react';
+import { type FunctionComponent, useCallback, useEffect, useState } from 'react';
 import { Icon } from '@iconify/react';
+import { isAxiosError } from 'axios';
+import { useNavigate } from 'react-router-dom';
 import RegistrationProfile from '../components/general/RegistrationProfile';
 import RegistrationVerification from '../components/general/RegistrationVerification';
 import RegistrationFinalize from '../components/general/RegistrationFinalize';
+import { UserService } from '../service/UserService';
+import type { OnboardSelfRequestBody } from '../interface/user';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -19,37 +23,141 @@ export interface RegistrationProfileData {
 // ─── Component ────────────────────────────────────────────────────────────────
 
 const Registration: FunctionComponent = () => {
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
   const [profileData, setProfileData] = useState<RegistrationProfileData | null>(null);
+  const [isLoadingSelf, setIsLoadingSelf] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const onCancelClick = useCallback(() => {
-    // handle cancel / navigate away
-  }, []);
+    navigate('/home');
+  }, [navigate]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadSelf = async () => {
+      setIsLoadingSelf(true);
+      try {
+        const response = await UserService.getSelf();
+        if (cancelled) return;
+        const user = response.data;
+        const role =
+          user.userType === 'Student'
+            ? 'student'
+            : user.userType === 'Landlord'
+              ? 'landlord'
+              : user.userType === 'Manager'
+                ? 'manager'
+                : '';
+
+        setProfileData({
+          firstName: user.firstName ?? '',
+          middleName: user.middleName ?? '',
+          lastName: user.lastName ?? '',
+          contactNumber: user.contact ?? '',
+          email: user.emails?.[0] ?? user.email ?? '',
+          homeAddress: user.address ?? '',
+          role,
+        });
+      } catch (error) {
+        if (!cancelled && isAxiosError(error) && error.response?.status === 401) {
+          navigate('/home');
+        }
+      } finally {
+        if (!cancelled) setIsLoadingSelf(false);
+      }
+    };
+
+    loadSelf();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [navigate]);
 
   const goNext = () => setCurrentStep((s) => Math.min(s + 1, 2));
   const goBack = () => setCurrentStep((s) => Math.max(s - 1, 0));
 
   const handleProfileSubmit = (data: RegistrationProfileData) => {
     setProfileData(data);
+    setSubmitError(null);
     goNext();
   };
 
-  const handleFinalSubmit = () => {
-    console.log('=== Final Registration Data ===');
-    console.log(JSON.stringify(profileData, null, 2));
-    // navigate away or show success
+  const handleFinalSubmit = async () => {
+    if (!profileData || isSubmitting) return;
+
+    const userTypeByRole = {
+      student: 'Student',
+      landlord: 'Landlord',
+      manager: 'Manager',
+    } as const;
+
+    if (!profileData.role) {
+      setSubmitError('Please choose an account type before submitting.');
+      setCurrentStep(0);
+      return;
+    }
+
+    const body: OnboardSelfRequestBody = {
+      userType: userTypeByRole[profileData.role],
+      firstName: profileData.firstName.trim(),
+      middleName: profileData.middleName.trim(),
+      lastName: profileData.lastName.trim(),
+      contact: profileData.contactNumber.trim(),
+      address: profileData.homeAddress.trim(),
+    };
+
+    setIsSubmitting(true);
+    setSubmitError(null);
+    try {
+      await UserService.onboardSelf(body);
+      navigate(profileData.role === 'student' ? '/home' : '/landlord-homepage');
+    } catch (error) {
+      const message =
+        isAxiosError(error) && error.response?.data?.message
+          ? error.response.data.message
+          : 'Could not finish registration. Please try again.';
+      setSubmitError(message);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const renderStepContent = () => {
+    if (isLoadingSelf) {
+      return (
+        <div className="flex min-h-[260px] items-center justify-center text-sm font-semibold text-slategray">
+          Loading your account...
+        </div>
+      );
+    }
+
     switch (currentStep) {
       case 0:
-        return <RegistrationProfile onNextClick={handleProfileSubmit} />;
+        return (
+          <RegistrationProfile
+            initialData={profileData ?? undefined}
+            onNextClick={handleProfileSubmit}
+          />
+        );
       case 1:
         return <RegistrationVerification onNextClick={goNext} onBackClick={goBack} />;
       case 2:
+        if (!profileData) {
+          return (
+            <RegistrationProfile
+              initialData={profileData ?? undefined}
+              onNextClick={handleProfileSubmit}
+            />
+          );
+        }
         return (
           <RegistrationFinalize
-            data={profileData!}
+            data={profileData}
+            isSubmitting={isSubmitting}
             onBackClick={goBack}
             onSubmit={handleFinalSubmit}
           />
@@ -69,13 +177,14 @@ const Registration: FunctionComponent = () => {
     <div className="w-screen font-sans">
       <div className="px-20 pt-4 pb-12">
         {/* Cancel */}
-        <div
+        <button
+          type="button"
           className="flex items-center gap-1.5 py-4 cursor-pointer w-fit"
           onClick={onCancelClick}
         >
           <Icon icon="material-symbols:chevron-left" className="w-4 h-4 text-gray-700" />
           <span className="text-sm font-semibold text-gray-700">Cancel</span>
-        </div>
+        </button>
 
         <div className="rounded-3xl border border-whitesmoke px-10 pt-8 pb-10">
           <h1 className="text-2xl font-bold" style={{ color: '#1a5c50' }}>
@@ -94,7 +203,7 @@ const Registration: FunctionComponent = () => {
               style={{ minWidth: '160px' }}
             >
               {steps.map((step, i) => (
-                <div key={i} className="flex">
+                <div key={step.label} className="flex">
                   <div className="flex flex-col items-center mr-3">
                     <div
                       className="w-8 h-8 rounded-full shrink-0 flex items-center justify-center transition-colors duration-300"
@@ -143,6 +252,11 @@ const Registration: FunctionComponent = () => {
             {/* Step content */}
             <div className="flex-1 min-w-0">{renderStepContent()}</div>
           </div>
+          {submitError && (
+            <div className="mt-6 rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
+              {submitError}
+            </div>
+          )}
         </div>
       </div>
     </div>

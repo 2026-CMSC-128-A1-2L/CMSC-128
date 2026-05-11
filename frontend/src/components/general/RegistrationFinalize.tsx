@@ -1,5 +1,4 @@
 import type { FunctionComponent } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import type { RegistrationProfileData } from '../../pages/Registration';
 
@@ -7,8 +6,9 @@ import type { RegistrationProfileData } from '../../pages/Registration';
 
 interface RegistrationFinalizeProps {
   data: RegistrationProfileData;
+  isSubmitting?: boolean;
   onBackClick: () => void;
-  onSubmit: () => void;
+  onSubmit: () => void | Promise<void>;
 }
 
 // ─── Read-only field ──────────────────────────────────────────────────────────
@@ -42,15 +42,12 @@ const ROLE_LABELS: Record<string, string> = {
 
 const RegistrationFinalize: FunctionComponent<RegistrationFinalizeProps> = ({
   data,
+  isSubmitting = false,
   onBackClick,
   onSubmit,
 }) => {
-  const navigate = useNavigate();
-
   const handleSubmit = () => {
     onSubmit();
-    const destination = data.role === 'student' ? '/home' : '/landlord-homepage';
-    navigate(destination);
   };
 
   return (
@@ -128,10 +125,11 @@ const RegistrationFinalize: FunctionComponent<RegistrationFinalizeProps> = ({
           <button
             type="button"
             onClick={handleSubmit}
-            className="rounded-[45px] flex items-center justify-center py-2 px-8 cursor-pointer text-white hover:opacity-90 transition-opacity"
+            disabled={isSubmitting}
+            className="rounded-[45px] flex items-center justify-center py-2 px-8 cursor-pointer text-white hover:opacity-90 transition-opacity disabled:cursor-not-allowed disabled:opacity-70"
             style={{ background: '#1a5c50' }}
           >
-            <b className="relative">Looks good!</b>
+            <b className="relative">{isSubmitting ? 'Saving...' : 'Looks good!'}</b>
           </button>
         </div>
       </div>
