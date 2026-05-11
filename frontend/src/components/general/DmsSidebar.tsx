@@ -19,6 +19,7 @@ const DmsSidebar: FunctionComponent = () => {
       time: '1:20 am',
       icon: 'iconamoon:notification',
       route: '/direct-messages/dorm-invitation',
+      unread: true,
     },
     {
       id: 2,
@@ -26,6 +27,7 @@ const DmsSidebar: FunctionComponent = () => {
       body: 'Hi Daphne! Your verification has been approved!',
       time: '2m ago',
       icon: 'iconamoon:notification',
+      unread: true,
     },
     {
       id: 3,
@@ -33,6 +35,7 @@ const DmsSidebar: FunctionComponent = () => {
       body: 'Hi Daphne! Welcome to ATLAS...',
       time: '2m ago',
       icon: 'iconamoon:notification',
+      unread: false,
     },
     {
       id: 4,
@@ -40,6 +43,7 @@ const DmsSidebar: FunctionComponent = () => {
       body: 'We have received your report and are looking into it.',
       time: '5m ago',
       icon: 'iconamoon:notification',
+      unread: false,
     },
   ];
 
@@ -92,6 +96,8 @@ const DmsSidebar: FunctionComponent = () => {
     return true;
   });
 
+  const unreadCount = activeDMs.filter((dm) => dm.unread).length;
+
   const displayedArchivedDMs = showAllArchive ? archivedDMs : [];
 
   return (
@@ -136,6 +142,7 @@ const DmsSidebar: FunctionComponent = () => {
                 body={notif.body}
                 time={notif.time}
                 icon={notif.icon}
+                unread={notif.unread}
                 onClick={notif.route ? () => navigate(notif.route) : undefined}
                 active={notif.route ? location.pathname === notif.route : false}
               />
@@ -188,7 +195,9 @@ const DmsSidebar: FunctionComponent = () => {
               }`}
               onClick={() => setDmFilter('unread')}
             >
-              <b className="relative text-num-12 font-inter">Unread</b>
+              <b className="relative text-num-12 font-inter">
+                Unread {unreadCount > 0 && <span>{unreadCount}</span>}
+              </b>
             </button>
           </div>
 
@@ -202,6 +211,7 @@ const DmsSidebar: FunctionComponent = () => {
                   body={dm.body}
                   time={dm.time}
                   icon={dm.icon}
+                  unread={dm.unread}
                 />
               ))
             ) : (
@@ -230,6 +240,7 @@ const DmsSidebar: FunctionComponent = () => {
                   body={dm.body}
                   time={dm.time}
                   icon={dm.icon}
+                  unread={dm.unread}
                 />
               ))}
             </div>

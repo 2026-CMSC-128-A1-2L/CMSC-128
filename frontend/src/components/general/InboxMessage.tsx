@@ -8,6 +8,7 @@ interface InboxMessageProps {
   icon?: string;
   onClick?: () => void;
   active?: boolean;
+  unread?: boolean;
 }
 
 const InboxMessage: FunctionComponent<InboxMessageProps> = ({
@@ -17,6 +18,7 @@ const InboxMessage: FunctionComponent<InboxMessageProps> = ({
   icon = 'iconamoon:notification',
   onClick,
   active = false,
+  unread = false,
 }) => {
   return (
     <div
@@ -27,8 +29,10 @@ const InboxMessage: FunctionComponent<InboxMessageProps> = ({
       }`}
       onClick={onClick}
     >
-      <div className="self-stretch flex items-center">
-        <img className="w-[0.313rem] relative max-h-full" alt="" />
+      <div className="self-stretch flex items-center justify-center min-w-[8px]">
+        {unread && (
+          <div className="w-2 h-2 rounded-full bg-[#48BB78] shadow-[0_0_8px_rgba(72,187,120,0.4)]" />
+        )}
       </div>
       <div className="flex-1 flex flex-col items-start gap-0.5">
         <div className="self-stretch overflow-hidden flex items-start justify-end">
