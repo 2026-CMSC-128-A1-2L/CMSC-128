@@ -8,7 +8,8 @@ const DmsSidebar: FunctionComponent = () => {
   const location = useLocation();
   const [searchQuery, setSearchQuery] = useState('');
   const [showAllNotifications, setShowAllNotifications] = useState(false);
-  const [dmFilter, setDmFilter] = useState<'all' | 'unread' | 'archived'>('all');
+  const [dmFilter, setDmFilter] = useState<'all' | 'unread'>('all');
+  const [showAllArchive, setShowAllArchive] = useState(false);
 
   const notifications = [
     {
@@ -70,18 +71,31 @@ const DmsSidebar: FunctionComponent = () => {
       unread: false,
       archived: true,
     },
+    {
+      id: 4,
+      title: 'Archived Inquiry',
+      body: 'Hello, is this still available?',
+      time: '2mo ago',
+      icon: 'iconamoon:email',
+      unread: false,
+      archived: true,
+    },
   ];
 
   const displayedNotifications = showAllNotifications ? notifications : notifications.slice(0, 2);
 
-  const filteredDMs = directMessages.filter((dm) => {
-    if (dmFilter === 'archived') return dm.archived;
-    if (dmFilter === 'unread') return !dm.archived && dm.unread;
-    return !dm.archived;
+  const activeDMs = directMessages.filter((dm) => !dm.archived);
+  const archivedDMs = directMessages.filter((dm) => dm.archived);
+
+  const filteredActiveDMs = activeDMs.filter((dm) => {
+    if (dmFilter === 'unread') return dm.unread;
+    return true;
   });
 
+  const displayedArchivedDMs = showAllArchive ? archivedDMs : [];
+
   return (
-    <div className="w-72 h-screen relative overflow-hidden flex flex-col items-start py-10 pl-4 pr-3 box-border gap-2 text-left font-inter bg-white shadow-[4px_0_24px_rgba(0,0,0,0.02)] dark:bg-[#121212] dark:text-gray-100 dark:shadow-[4px_0_24px_rgba(0,0,0,0.25)]">
+    <div className="w-72 h-screen relative flex flex-col items-start py-10 pl-4 pr-3 box-border gap-2 text-left font-inter bg-white shadow-[4px_0_24px_rgba(0,0,0,0.02)] dark:bg-[#121212] dark:text-gray-100 dark:shadow-[4px_0_24px_rgba(0,0,0,0.25)] overflow-y-auto overflow-x-hidden">
       <div className="w-full flex flex-col items-start gap-8">
         {/* Header & Search */}
         <div className="w-full flex items-center gap-2 text-[0.875rem]">
@@ -178,32 +192,65 @@ const DmsSidebar: FunctionComponent = () => {
             </button>
           </div>
 
+          {/* Active Messages List */}
           <div className="w-full flex flex-col items-start gap-2 text-right text-[0.5rem]">
-            {filteredDMs.map((dm) => (
-              <Message
-                key={dm.id}
-                title={dm.title}
-                body={dm.body}
-                time={dm.time}
-                icon={dm.icon}
-              />
-            ))}
+            {filteredActiveDMs.length > 0 ? (
+              filteredActiveDMs.map((dm) => (
+                <Message
+                  key={dm.id}
+                  title={dm.title}
+                  body={dm.body}
+                  time={dm.time}
+                  icon={dm.icon}
+                />
+              ))
+            ) : (
+              <p className="w-full text-center text-num-12 text-dimgray py-4 font-inter">
+                No messages found
+              </p>
+            )}
           </div>
 
-          <button
-            className="w-full flex items-center justify-center gap-1 text-center group"
-            onClick={() => setDmFilter(dmFilter === 'archived' ? 'all' : 'archived')}
-          >
-            <div className="relative font-semibold text-num-12 text-teal group-hover:underline">
-              {dmFilter === 'archived' ? 'View All Messages' : 'View Archive'}
+          {/* Archive Section */}
+          <div className="w-full flex flex-col items-start gap-2 mt-4">
+            <div className="self-stretch flex items-center justify-between py-1 border-t border-whitesmoke pt-4">
+              <b className="relative flex items-start pl-2 text-num-14 text-slategray dark:text-gray-400 font-inter uppercase tracking-wider">
+                Archive
+              </b>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-whitesmoke text-slategray">
+                {archivedDMs.length}
+              </span>
             </div>
-            <Icon
-              icon="material-symbols-light:chevron-right"
-              className={`w-5 h-5 text-teal transition-transform ${
-                dmFilter === 'archived' ? 'rotate-180' : 'group-hover:translate-x-1'
-              }`}
-            />
-          </button>
+
+            <div className="w-full flex flex-col items-start gap-2 text-right text-[0.5rem]">
+              {displayedArchivedDMs.map((dm) => (
+                <Message
+                  key={dm.id}
+                  title={dm.title}
+                  body={dm.body}
+                  time={dm.time}
+                  icon={dm.icon}
+                />
+              ))}
+            </div>
+
+            <button
+              className="w-full flex items-center justify-center gap-1 text-center group mt-1"
+              onClick={() => setShowAllArchive(!showAllArchive)}
+            >
+              <div className="relative font-semibold text-num-12 text-teal group-hover:underline">
+                {showAllArchive ? 'Show Less' : 'View Archive'}
+              </div>
+              <Icon
+                icon={
+                  showAllArchive
+                    ? 'material-symbols-light:chevron-up'
+                    : 'material-symbols-light:chevron-right'
+                }
+                className="w-5 h-5 text-teal group-hover:translate-x-0.5 transition-transform"
+              />
+            </button>
+          </div>
         </div>
       </div>
     </div>
