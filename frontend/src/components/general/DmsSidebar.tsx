@@ -80,7 +80,7 @@ const DmsSidebar: FunctionComponent<DmsSidebarProps> = ({
         </div>
 
         {/* Notifications Section */}
-        <div className="self-stretch flex flex-col items-start gap-2 font-lora">
+        <div id="notif-section" className="self-stretch flex flex-col items-start gap-2 font-lora">
           <div className="self-stretch flex items-center justify-between py-1 font-inter">
             <b className="relative flex items-start pl-2 text-num-18 text-[#2d3748] dark:text-gray-100">
               Notifications
@@ -124,7 +124,7 @@ const DmsSidebar: FunctionComponent<DmsSidebarProps> = ({
         </div>
 
         {/* Direct Messages Section */}
-        <div className="h-fit w-full flex flex-col items-start gap-4 font-lora">
+        <div id="dm-section" className="h-fit w-full flex flex-col items-start gap-4 font-lora">
           <div className="self-stretch flex items-end py-1 font-inter">
             <b className="w-full flex-1 relative flex items-start text-num-18 pl-2 text-[#2d3748] dark:text-gray-100">
               Direct Messages
@@ -181,7 +181,7 @@ const DmsSidebar: FunctionComponent<DmsSidebarProps> = ({
           </div>
 
           {/* Archive Section */}
-          <div className="w-full flex flex-col items-start gap-2 mt-4">
+          <div id="archive-section" className="w-full flex flex-col items-start gap-2 mt-4">
             <div className="self-stretch flex items-center justify-between py-1 border-t border-whitesmoke pt-4">
               <b className="relative flex items-start pl-2 text-num-14 text-slategray dark:text-gray-400 font-inter uppercase tracking-wider">
                 Archive
