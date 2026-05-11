@@ -38,10 +38,10 @@ const InboxMessage: FunctionComponent<InboxMessageProps> = ({
           <div className="self-stretch overflow-hidden flex items-start py-1 px-[0.187rem]">
             <Icon icon={icon} className={`w-5 h-5 ${active ? 'text-teal' : ''}`} />
           </div>
-          <div className="flex-1 flex flex-col items-start gap-1">
+          <div className="flex-1 flex flex-col items-start gap-1 min-w-0">
             <div className="self-stretch flex items-center">
-              <b className="flex-1 relative overflow-hidden text-ellipsis whitespace-nowrap">
-                {title}
+              <b className="flex-1 relative truncate">
+                {title.length > 25 ? `${title.substring(0, 25)}...` : title}
               </b>
             </div>
             <div className="self-stretch relative text-[0.625rem] tracking-[0.02em] font-semibold font-lora text-dimgray [display:-webkit-inline-box] overflow-hidden text-ellipsis [-webkit-line-clamp:2] [-webkit-box-orient:vertical]">
