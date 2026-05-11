@@ -1,16 +1,13 @@
-// service/user.ts
-import axios from 'axios';
 import type z from 'zod';
 import type { GetUsersQuerySchema } from 'shared';
 import type {
-  GetUsersQuery,
-  UpdateStudentRequestBody,
-  UpdateManagerRequestBody,
-  OnboardSelfRequestBody,
   ApproveUserRequestBody,
+  GetUsersQuery,
+  OnboardSelfRequestBody,
   SubmitVerificationRequestBody,
+  UpdateManagerRequestBody,
+  UpdateStudentRequestBody,
 } from '../interface/user';
-import { API_URL } from './constant';
 import { api } from './axiosInstance';
 
 export const UserService = {
@@ -88,9 +85,7 @@ export const UserService = {
 
   async deleteUser(userId: string) {
     try {
-      const response = await axios.delete(`${API_URL}/api/users/${userId}`, {
-        // headers
-      });
+      const response = await api.delete(`/api/users/${userId}`);
       return response.data;
     } catch (error) {
       console.error('Error deleting user:', error);
@@ -118,9 +113,7 @@ export const UserService = {
 
   async getMyReports() {
     try {
-      const response = await axios.get(`${API_URL}/api/users/me/reports`, {
-        // headers
-      });
+      const response = await api.get('/api/users/me/reports');
       return response.data;
     } catch (error) {
       console.error('Error fetching my reports:', error);
@@ -130,9 +123,7 @@ export const UserService = {
 
   async getMyApplications() {
     try {
-      const response = await axios.get(`${API_URL}/api/users/me/applications`, {
-        // headers
-      });
+      const response = await api.get('/api/users/me/applications');
       return response.data;
     } catch (error) {
       console.error('Error fetching my applications:', error);
@@ -142,9 +133,7 @@ export const UserService = {
 
   async getMyRentals() {
     try {
-      const response = await axios.get(`${API_URL}/api/users/me/rentals`, {
-        // headers
-      });
+      const response = await api.get('/api/users/me/rentals');
       return response.data;
     } catch (error) {
       console.error('Error fetching my rentals:', error);
@@ -154,9 +143,7 @@ export const UserService = {
 
   async getMyBillings() {
     try {
-      const response = await axios.get(`${API_URL}/api/users/me/billings`, {
-        // headers
-      });
+      const response = await api.get('/api/users/me/billings');
       return response.data;
     } catch (error) {
       console.error('Error fetching my billings:', error);
@@ -166,9 +153,7 @@ export const UserService = {
 
   async getMyBookings() {
     try {
-      const response = await axios.get(`${API_URL}/api/users/me/bookings`, {
-        // headers
-      });
+      const response = await api.get('/api/users/me/bookings');
       return response.data;
     } catch (error) {
       console.error('Error fetching my bookings:', error);

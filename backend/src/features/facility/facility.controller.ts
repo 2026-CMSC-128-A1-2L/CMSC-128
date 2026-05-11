@@ -96,6 +96,8 @@ const getFacilityReviewRatings = async (facilityIds: mongoose.Types.ObjectId[]) 
 
   const ratingsByFacilityId = new Map<string, number[]>();
   for (const review of reviews) {
+    if (!review.ratings) continue;
+
     const ratingValues = [
       review.ratings.quality,
       review.ratings.comfort,

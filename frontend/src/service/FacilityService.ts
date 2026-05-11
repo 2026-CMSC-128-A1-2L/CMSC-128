@@ -10,7 +10,6 @@ import type {
 } from '../interface/facility';
 
 export const FacilityService = {
-
   async getFacilities() {
     try {
       const response = await api.get<{ data: GetFacilitiesResponse }>('/api/facilities');
@@ -77,9 +76,7 @@ export const FacilityService = {
 
   async getMonthlyIncome() {
     try {
-      const response = await api.get<{ data: number }>(
-        '/api/facilities/landlord/monthly-income',
-      );
+      const response = await api.get<{ data: number }>('/api/facilities/landlord/monthly-income');
       return response.data;
     } catch (error) {
       console.error('Failed to fetch monthly income:', error);
@@ -89,9 +86,7 @@ export const FacilityService = {
 
   async getOverdueTenants() {
     try {
-      const response = await api.get<{ data: unknown }>(
-        '/api/facilities/landlord/overdue-tenants',
-      );
+      const response = await api.get<{ data: unknown }>('/api/facilities/landlord/overdue-tenants');
       return response.data;
     } catch (error) {
       console.error('Failed to fetch overdue tenants:', error);
@@ -105,10 +100,7 @@ export const FacilityService = {
     body: UpdateManagerPermissionsBody,
   ) {
     try {
-      const response = await api.patch(
-        `/api/facilities/${facilityId}/managers/${managerId}`,
-        body,
-      );
+      const response = await api.patch(`/api/facilities/${facilityId}/managers/${managerId}`, body);
       return response.data;
     } catch (error) {
       console.error('Failed to update manager permissions:', error);
@@ -143,7 +135,13 @@ export const FacilityService = {
     }
   },
 
-  //CREATE LISTING -> ListingService.ts
-  //GET REVIEWS -> ReviewService.ts
-  //GET RATINGS -> RatingService.ts
+  async getFacilityBookings(facilityId: string) {
+    try {
+      const response = await api.get(`/api/facilities/${facilityId}/bookings`);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch facility bookings:', error);
+      throw error;
+    }
+  },
 };

@@ -109,6 +109,14 @@ router.get('/me/billings', setUserId, routeGetUserBillings);
 router.get('/me/bookings', setUserId, routeGetVisitBookingsByStudent);
 
 // ============================================================================
+// GET /api/users/me/reports
+//
+// Returns the logged-in user's own submitted reports and their statuses.
+// Used by students and landlords to track "Report Updates".
+// ============================================================================
+router.get('/me/reports', isVerifiedCheck, routeGetMyReports);
+
+// ============================================================================
 // GET /api/users/:userId
 //
 // Retrieves a user.
@@ -138,14 +146,6 @@ router.use(
   getUserId,
   createDocumentRouter(isSelfOrSuperAdmin, isSuperAdmin, isSelfOrSuperAdmin, User),
 );
-
-// ============================================================================
-// GET /api/users/me/reports
-//
-// Returns the logged-in user's own submitted reports and their statuses.
-// Used by students and landlords to track "Report Updates".
-// ============================================================================
-router.get('/me/reports', isVerifiedCheck, routeGetMyReports);
 
 // ============================================================================
 // POST /api/users/:userId/report
