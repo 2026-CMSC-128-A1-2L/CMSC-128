@@ -7,6 +7,78 @@ const DmsSidebar: FunctionComponent = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchQuery, setSearchQuery] = useState('');
+  const [showAllNotifications, setShowAllNotifications] = useState(false);
+  const [dmFilter, setDmFilter] = useState<'all' | 'unread' | 'archived'>('all');
+
+  const notifications = [
+    {
+      id: 1,
+      title: 'Invitation to Current Accommodation',
+      body: 'Quevin Custodio has invited you to join...',
+      time: '1:20 am',
+      icon: 'iconamoon:notification',
+      route: '/direct-messages/dorm-invitation',
+    },
+    {
+      id: 2,
+      title: 'Verification Status',
+      body: 'Hi Daphne! Your verification has been approved!',
+      time: '2m ago',
+      icon: 'iconamoon:notification',
+    },
+    {
+      id: 3,
+      title: 'Welcome to ATLAS!',
+      body: 'Hi Daphne! Welcome to ATLAS...',
+      time: '2m ago',
+      icon: 'iconamoon:notification',
+    },
+    {
+      id: 4,
+      title: 'New Message from Support',
+      body: 'We have received your report and are looking into it.',
+      time: '5m ago',
+      icon: 'iconamoon:notification',
+    },
+  ];
+
+  const directMessages = [
+    {
+      id: 1,
+      title: 'Three Sapphire Place',
+      body: 'Hi Daphne! Your application is being reviewed by our do...',
+      time: '1hr ago',
+      icon: 'iconamoon:email',
+      unread: true,
+      archived: false,
+    },
+    {
+      id: 2,
+      title: 'Narra Residences',
+      body: 'Hi Daphne! Your application is being reviewed by our do...',
+      time: '2m ago',
+      icon: 'iconamoon:email',
+      unread: false,
+      archived: false,
+    },
+    {
+      id: 3,
+      title: 'Past Dorm Stay',
+      body: 'Thank you for staying with us! Please leave a review...',
+      time: '1mo ago',
+      icon: 'iconamoon:email',
+      unread: false,
+      archived: true,
+    },
+  ];
+
+  const displayedNotifications = showAllNotifications ? notifications : notifications.slice(0, 2);
+
+  const filteredDMs = directMessages.filter((dm) => {
+    if (dmFilter === 'archived') return dm.archived;
+    if (dmFilter === 'unread') return !dm.archived && dm.unread;
+    return !dm.archived;
+  });
 
   return (
     <div className="w-72 h-screen relative overflow-hidden flex flex-col items-start py-10 pl-4 pr-3 box-border gap-2 text-left font-inter bg-white shadow-[4px_0_24px_rgba(0,0,0,0.02)] dark:bg-[#121212] dark:text-gray-100 dark:shadow-[4px_0_24px_rgba(0,0,0,0.25)]">
@@ -43,29 +115,33 @@ const DmsSidebar: FunctionComponent = () => {
           </div>
 
           <div className="w-[260px] flex flex-col items-start gap-2 text-right text-[0.5rem]">
-            <Message
-              title="Invitation to Current Accommodation"
-              body="Quevin Custodio has invited you to join..."
-              time="1:20 am"
-              icon="iconamoon:notification"
-              onClick={() => navigate('/direct-messages/dorm-invitation')}
-              active={location.pathname === '/direct-messages/dorm-invitation'}
-            />
-            <Message />
-            <Message
-              title="Welcome to ATLAS!"
-              body="Hi Daphne! Welcome to ATLAS..."
-              time="2m ago"
-            />
+            {displayedNotifications.map((notif) => (
+              <Message
+                key={notif.id}
+                title={notif.title}
+                body={notif.body}
+                time={notif.time}
+                icon={notif.icon}
+                onClick={notif.route ? () => navigate(notif.route) : undefined}
+                active={notif.route ? location.pathname === notif.route : false}
+              />
+            ))}
           </div>
 
-          <button className="w-full mt-1 flex items-center justify-center gap-1 group">
+          <button
+            className="w-full mt-1 flex items-center justify-center gap-1 group"
+            onClick={() => setShowAllNotifications(!showAllNotifications)}
+          >
             <div className="relative font-semibold text-num-12 text-teal group-hover:underline">
-              View All
+              {showAllNotifications ? 'Show Less' : 'View All'}
             </div>
             <Icon
-              icon="material-symbols-light:chevron-right"
-              className="w-5 h-5 text-teal group-hover:translate-x-1 transition-transform"
+              icon={
+                showAllNotifications
+                  ? 'material-symbols-light:chevron-up'
+                  : 'material-symbols-light:chevron-right'
+              }
+              className="w-5 h-5 text-teal group-hover:translate-x-0.5 transition-transform"
             />
           </button>
         </div>
@@ -80,33 +156,54 @@ const DmsSidebar: FunctionComponent = () => {
 
           {/* Filter Pills */}
           <div className="w-full flex items-start gap-2 pl-2">
-            <button className="h-fit rounded-full bg-darkgreen flex items-center justify-center py-1.5 px-5 transition-transform active:scale-95 shadow-md shadow-darkgreen/20">
-              <b className="relative text-num-12 font-inter text-white">All</b>
+            <button
+              className={`h-fit rounded-full flex items-center justify-center py-1.5 px-5 transition-all active:scale-95 ${
+                dmFilter === 'all'
+                  ? 'bg-darkgreen text-white shadow-md shadow-darkgreen/20'
+                  : 'bg-lightcyan text-teal hover:bg-teal/10'
+              }`}
+              onClick={() => setDmFilter('all')}
+            >
+              <b className="relative text-num-12 font-inter">All</b>
             </button>
-            <button className="h-fit rounded-full bg-lightcyan flex items-center justify-center py-1.5 px-5 transition-colors hover:bg-teal/10 active:scale-95">
-              <b className="relative text-num-12 font-inter text-teal">Unread</b>
+            <button
+              className={`h-fit rounded-full flex items-center justify-center py-1.5 px-5 transition-all active:scale-95 ${
+                dmFilter === 'unread'
+                  ? 'bg-darkgreen text-white shadow-md shadow-darkgreen/20'
+                  : 'bg-lightcyan text-teal hover:bg-teal/10'
+              }`}
+              onClick={() => setDmFilter('unread')}
+            >
+              <b className="relative text-num-12 font-inter">Unread</b>
             </button>
           </div>
 
           <div className="w-full flex flex-col items-start gap-2 text-right text-[0.5rem]">
-            <Message
-              title="Three Sapphire Place"
-              body="Hi Daphne! Your application is being reviewed by our do..."
-              time="1hr ago"
-              icon="iconamoon:email"
-            />
-            <Message
-              title="Narra Residences"
-              body="Hi Daphne! Your application is being reviewed by our do..."
-              time="2m ago"
-              icon="iconamoon:email"
-            />
+            {filteredDMs.map((dm) => (
+              <Message
+                key={dm.id}
+                title={dm.title}
+                body={dm.body}
+                time={dm.time}
+                icon={dm.icon}
+              />
+            ))}
           </div>
 
-          <div className="w-full flex items-center justify-center gap-1 text-center">
-            <div className="relative font-semibold text-num-12 text-teal">View Archive</div>
-            <Icon icon="material-symbols-light:chevron-right" className="w-5 h-5 text-teal" />
-          </div>
+          <button
+            className="w-full flex items-center justify-center gap-1 text-center group"
+            onClick={() => setDmFilter(dmFilter === 'archived' ? 'all' : 'archived')}
+          >
+            <div className="relative font-semibold text-num-12 text-teal group-hover:underline">
+              {dmFilter === 'archived' ? 'View All Messages' : 'View Archive'}
+            </div>
+            <Icon
+              icon="material-symbols-light:chevron-right"
+              className={`w-5 h-5 text-teal transition-transform ${
+                dmFilter === 'archived' ? 'rotate-180' : 'group-hover:translate-x-1'
+              }`}
+            />
+          </button>
         </div>
       </div>
     </div>
