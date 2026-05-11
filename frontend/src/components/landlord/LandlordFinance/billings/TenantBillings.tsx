@@ -6,14 +6,14 @@ import EditBillingPopup from './EditBillingPopup';
 import type { Billing } from '../types/billing';
 
 const TABLE_COLUMNS = [
-  { label: 'Room', className: 'w-[8%] min-w-[60px]' },
-  { label: 'Tenant Name', className: 'w-[18%] min-w-[140px]' },
-  { label: 'Rent', className: 'w-[9%] min-w-[80px]' },
-  { label: 'Utilities', className: 'w-[9%] min-w-[80px]' },
-  { label: 'Misc.', className: 'w-[9%] min-w-[80px]' },
-  { label: 'Total Due', className: 'w-[9%] min-w-[80px]' },
-  { label: 'Amount Paid', className: 'w-[10%] min-w-[80px]' },
-  { label: 'Status', className: 'w-[18%] min-w-[120px]' },
+  { label: 'Room', className: 'w-[8%]' },
+  { label: 'Tenant Name', className: 'w-[22%]' },
+  { label: 'Rent', className: 'w-[10%]' },
+  { label: 'Utilities', className: 'w-[10%]' },
+  { label: 'Misc.', className: 'w-[10%]' },
+  { label: 'Total Due', className: 'w-[10%]' },
+  { label: 'Amount Paid', className: 'w-[10%]' },
+  { label: 'Status', className: 'w-[18%]' },
 ];
 
 // Mock data by month - replace with API call
@@ -166,39 +166,23 @@ const fetchBillingsByMonth = async (month: string, year: number): Promise<Billin
 
 const getAvailableMonths = () => {
   const months = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December',
   ];
 
   const currentDate = new Date();
   const currentMonth = currentDate.getMonth();
   const currentYear = currentDate.getFullYear();
-
   const availableMonths = [];
 
   for (let i = 0; i <= 2; i++) {
     let monthIndex = currentMonth - i;
     let year = currentYear;
-
-    if (monthIndex < 0) {
-      monthIndex += 12;
-      year -= 1;
-    }
-
+    if (monthIndex < 0) { monthIndex += 12; year -= 1; }
     availableMonths.push({
       name: months[monthIndex],
       month: monthIndex,
-      year: year,
+      year,
       displayName: `${months[monthIndex]} ${year}`,
       startDate: new Date(year, monthIndex, 1),
       endDate: new Date(year, monthIndex + 1, 0),
@@ -215,12 +199,7 @@ const getAvailableRooms = () => {
 };
 
 const getRoomNumber = (billing: Billing): number => {
-  const roomMap: Record<string, number> = {
-    unit1: 1,
-    unit2: 2,
-    unit3: 3,
-    unit4: 4,
-  };
+  const roomMap: Record<string, number> = { unit1: 1, unit2: 2, unit3: 3, unit4: 4 };
   return roomMap[billing.unitId] || 0;
 };
 
@@ -256,23 +235,12 @@ const TenantBillingsTab: FunctionComponent = () => {
     }
   }, [selectedMonth]);
 
-  useEffect(() => {
-    loadBillings();
-  }, [loadBillings]);
+  useEffect(() => { loadBillings(); }, [loadBillings]);
 
   const handleStatusChange = async (billingId: string, status: Billing['paymentStatus']) => {
-    console.log(`Billing ${billingId} status changed to ${status}`);
     setBillings((prev) =>
       prev.map((b) => (b._id === billingId ? { ...b, paymentStatus: status } : b)),
     );
-  };
-
-  const handleAddBilling = () => {
-    setIsAddPopupOpen(true);
-  };
-
-  const handleCloseAddPopup = () => {
-    setIsAddPopupOpen(false);
   };
 
   const handleEditClick = (billing: Billing) => {
@@ -280,33 +248,18 @@ const TenantBillingsTab: FunctionComponent = () => {
     setIsEditPopupOpen(true);
   };
 
-  const handleCloseEditPopup = () => {
+  const handleSaveEdit = async (updatedBilling: Billing) => {
+    setBillings((prev) => prev.map((b) => (b._id === updatedBilling._id ? updatedBilling : b)));
     setIsEditPopupOpen(false);
     setSelectedBilling(null);
   };
 
-  const handleSaveEdit = async (updatedBilling: Billing) => {
-    setBillings((prev) => prev.map((b) => (b._id === updatedBilling._id ? updatedBilling : b)));
-    handleCloseEditPopup();
-  };
-
   const handleAddSubmit = async (data: {
-    room: string;
-    fullName: string;
-    rent: number;
-    utilities: number;
-    miscFees: number;
+    room: string; fullName: string; rent: number; utilities: number; miscFees: number;
   }) => {
     console.log('Add billing:', data);
-    // replace w/ actual API call to add billing
-    handleCloseAddPopup();
-    // refresh list
+    setIsAddPopupOpen(false);
     await loadBillings();
-  };
-
-  const handleMonthSelect = (month: any) => {
-    setSelectedMonth(month);
-    setIsMonthDropdownOpen(false);
   };
 
   const availableMonths = getAvailableMonths();
@@ -315,6 +268,7 @@ const TenantBillingsTab: FunctionComponent = () => {
   return (
     <>
       <div className="flex flex-col items-end gap-4 text-left text-[18px] font-inter w-full">
+        {/* Header row */}
         <div className="self-stretch flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-5 shrink-0">
           <b className="h-6 w-full sm:w-auto relative tracking-[-0.01em] flex items-center shrink-0 text-gray text-[20px] sm:text-[24px]">
             Tenant Billing Status
@@ -322,13 +276,11 @@ const TenantBillingsTab: FunctionComponent = () => {
           <div className="flex items-center gap-3 text-[10px] text-teal flex-wrap">
             {/* Add Billing */}
             <div
-              onClick={handleAddBilling}
+              onClick={() => setIsAddPopupOpen(true)}
               className="rounded-[10px] bg-lightcyan flex items-center py-2 px-4 sm:px-6 gap-2 sm:gap-3 shrink-0 cursor-pointer hover:opacity-90 transition-opacity"
             >
               <Icon icon="mdi:plus" className="h-3 w-3" />
-              <b className="h-[17px] flex items-center shrink-0 text-[12px] sm:text-[12px]">
-                Add Billing
-              </b>
+              <b className="h-[17px] flex items-center shrink-0 text-[12px]">Add Billing</b>
             </div>
 
             {/* Month Dropdown */}
@@ -346,16 +298,12 @@ const TenantBillingsTab: FunctionComponent = () => {
 
               {isMonthDropdownOpen && (
                 <>
-                  <div
-                    key="backdrop"
-                    className="fixed inset-0 z-10"
-                    onClick={() => setIsMonthDropdownOpen(false)}
-                  />
+                  <div className="fixed inset-0 z-10" onClick={() => setIsMonthDropdownOpen(false)} />
                   <div className="absolute top-full right-0 mt-1 w-[150px] z-20 bg-white border border-whitesmoke-200 rounded-lg shadow-lg overflow-hidden">
                     {availableMonths.map((month, index) => (
                       <div
                         key={`${month.month}-${month.year}`}
-                        onClick={() => handleMonthSelect(month)}
+                        onClick={() => { setSelectedMonth(month); setIsMonthDropdownOpen(false); }}
                         className={`w-full px-3 py-2 text-[12px] font-semibold text-center cursor-pointer transition-colors font-inter ${
                           selectedMonth.displayName === month.displayName
                             ? 'bg-darkslategray-200 text-white'
@@ -372,58 +320,61 @@ const TenantBillingsTab: FunctionComponent = () => {
           </div>
         </div>
 
-        <div className="w-full rounded-[12.75px] bg-white border-whitesmoke-200 border-solid border-2 box-border overflow-hidden relative">
-          <div className="w-full overflow-x-hidden">
-            <div className="w-full h-12 rounded-t-[12.75px] bg-darkslategray-200 flex items-center px-6 gap-4 text-[12px] sm:text-[14px] text-white font-inter">
-              {TABLE_COLUMNS.map(({ label, className }) => (
-                <div key={label} className={`${className} shrink-0`}>
-                  <b className="flex items-center justify-center">{label}</b>
-                </div>
-              ))}
-            </div>
+        {/* Table */}
+        <div className="w-full rounded-[12.75px] bg-white border-whitesmoke-200 border-solid border-2 box-border overflow-hidden">
+          <div className="w-full overflow-x-auto overflow-y-auto max-h-[600px]">
+            <table className="w-full border-collapse" style={{ minWidth: '700px' }}>
+              <thead className="sticky top-0 z-10">
+                <tr className="bg-darkslategray-200 rounded-t-[12.75px]">
+                  {TABLE_COLUMNS.map(({ label, className }) => (
+                    <th
+                      key={label}
+                      className={`${className} h-12 px-3 text-[12px] sm:text-[13px] text-white font-inter font-bold text-center whitespace-nowrap first:rounded-tl-[12.75px] last:rounded-tr-[12.75px]`}
+                    >
+                      {label}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
 
-            {/* Table body */}
-            <div className="w-full overflow-y-auto max-h-[600px] overflow-x-hidden">
-              {/* Loading state */}
-              {isLoading && (
-                <div className="w-full py-12 text-center text-darkslategray-100">
-                  Loading billings...
-                </div>
-              )}
+              <tbody>
+                {isLoading && (
+                  <tr>
+                    <td colSpan={TABLE_COLUMNS.length} className="py-12 text-center text-darkslategray-100 text-[13px]">
+                      Loading billings...
+                    </td>
+                  </tr>
+                )}
 
-              {/* No data state */}
-              {!isLoading && billings.length === 0 && (
-                <div className="w-full py-12 text-center text-darkslategray-100">
-                  No billings found for {selectedMonth.displayName}
-                </div>
-              )}
+                {!isLoading && billings.length === 0 && (
+                  <tr>
+                    <td colSpan={TABLE_COLUMNS.length} className="py-12 text-center text-darkslategray-100 text-[13px]">
+                      No billings found for {selectedMonth.displayName}
+                    </td>
+                  </tr>
+                )}
 
-              {/* Tenant rows */}
-              {!isLoading &&
-                billings.map((billing) => (
-                  <div key={billing._id} className="relative">
-                    <BillingRow
-                      billing={billing}
-                      roomNumber={getRoomNumber(billing)}
-                      tenantName={getTenantName(billing)}
-                      onStatusChange={handleStatusChange}
-                      onEditClick={handleEditClick}
-                      isOpen={openDropdownId === billing._id}
-                      onToggle={(id) => setOpenDropdownId(openDropdownId === id ? null : id)}
-                    />
-                  </div>
+                {!isLoading && billings.map((billing) => (
+                  <BillingRow
+                    key={billing._id}
+                    billing={billing}
+                    roomNumber={getRoomNumber(billing)}
+                    tenantName={getTenantName(billing)}
+                    onStatusChange={handleStatusChange}
+                    onEditClick={handleEditClick}
+                    isOpen={openDropdownId === billing._id}
+                    onToggle={(id) => setOpenDropdownId(openDropdownId === id ? null : id)}
+                  />
                 ))}
-
-              <div className="h-[200px]" />
-            </div>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
 
-      {/* Popups */}
       <AddBillingPopup
         isOpen={isAddPopupOpen}
-        onClose={handleCloseAddPopup}
+        onClose={() => setIsAddPopupOpen(false)}
         availableRooms={availableRooms}
         selectedMonth={selectedMonth.displayName}
         onSubmit={handleAddSubmit}
@@ -431,7 +382,7 @@ const TenantBillingsTab: FunctionComponent = () => {
 
       <EditBillingPopup
         isOpen={isEditPopupOpen}
-        onClose={handleCloseEditPopup}
+        onClose={() => { setIsEditPopupOpen(false); setSelectedBilling(null); }}
         billing={selectedBilling}
         onSave={handleSaveEdit}
       />

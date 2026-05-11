@@ -1,4 +1,5 @@
 import { type FunctionComponent, useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import type { Billing } from '../types/billing';
 
 interface BillingRowProps {
@@ -15,16 +16,11 @@ type PaymentStatus = 'unpaid' | 'paid' | 'overdue' | 'partially_paid';
 
 const getStatusDisplay = (status: PaymentStatus): string => {
   switch (status) {
-    case 'paid':
-      return 'Paid';
-    case 'partially_paid':
-      return 'Partial';
-    case 'overdue':
-      return 'Overdue';
-    case 'unpaid':
-      return 'Pending';
-    default:
-      return 'Select';
+    case 'paid': return 'Paid';
+    case 'partially_paid': return 'Partial';
+    case 'overdue': return 'Overdue';
+    case 'unpaid': return 'Pending';
+    default: return 'Select';
   }
 };
 
@@ -50,130 +46,122 @@ const BillingRow: FunctionComponent<BillingRowProps> = ({
 }) => {
   const [selectedStatus, setSelectedStatus] = useState<PaymentStatus | null>(billing.paymentStatus);
   const [isChanging, setIsChanging] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [dropdownPos, setDropdownPos] = useState<{ top: number; left: number } | null>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   const rentAmount = billing.breakdown.find((b) => b.name === 'Rent')?.amount || 0;
   const utilitiesAmount = billing.breakdown.find((b) => b.name === 'Utilities')?.amount || 0;
   const miscAmount = billing.breakdown.find((b) => b.name === 'Misc. Fees')?.amount || 0;
   const paidAmount = billing.paidAmount || 0;
 
+  // Calculate dropdown position when it opens
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        if (onToggle && isOpen) {
-          onToggle(billing._id);
-        }
-      }
-    };
+    if (isOpen && buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      setDropdownPos({
+        top: rect.bottom + 4,
+        left: rect.left + rect.width / 2,
+      });
+    }
+  }, [isOpen]);
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+  // Close dropdown on any scroll so the fixed position doesn't drift
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleScroll = () => { onToggle?.(billing._id); };
+    window.addEventListener('scroll', handleScroll, true); // capture phase catches all scroll events
+    return () => window.removeEventListener('scroll', handleScroll, true);
   }, [isOpen, onToggle, billing._id]);
 
   const handleStatusChange = (status: PaymentStatus) => {
     setIsChanging(true);
     setSelectedStatus(status);
-    if (onStatusChange) {
-      onStatusChange(billing._id, status);
-    }
-    if (onToggle) {
-      onToggle(billing._id);
-    }
-
-    setTimeout(() => {
-      setIsChanging(false);
-    }, 300);
+    onStatusChange?.(billing._id, status);
+    onToggle?.(billing._id);
+    setTimeout(() => setIsChanging(false), 300);
   };
 
   const handleToggle = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (onToggle) {
-      onToggle(billing._id);
-    }
-  };
-
-  const handleRowClick = () => {
-    if (onEditClick) {
-      onEditClick(billing);
-    }
+    onToggle?.(billing._id);
   };
 
   const displayStatus = selectedStatus ? getStatusDisplay(selectedStatus) : 'Select';
   const hasStatus = selectedStatus !== null;
 
-  return (
-    <div
-      onClick={handleRowClick}
-      className="w-full flex items-center gap-4 px-6 h-12 text-center text-[12px] sm:text-[13px] font-inter text-darkslategray-100 hover:bg-gray-50 transition-colors cursor-pointer"
-    >
-      <div className="w-[8%] min-w-[60px] flex items-center justify-center shrink-0 font-medium">
-        {roomNumber}
-      </div>
-      <div className="w-[18%] min-w-[140px] flex items-center justify-center shrink-0 font-medium truncate">
-        {tenantName}
-      </div>
-      <div className="w-[9%] min-w-[80px] flex items-center justify-center shrink-0">
-        {php(rentAmount)}
-      </div>
-      <div className="w-[9%] min-w-[80px] flex items-center justify-center shrink-0">
-        {php(utilitiesAmount)}
-      </div>
-      <div className="w-[9%] min-w-[80px] flex items-center justify-center shrink-0">
-        {php(miscAmount)}
-      </div>
-      <div className="w-[9%] min-w-[80px] flex items-center justify-center shrink-0 font-medium">
-        {php(billing.totalAmount)}
-      </div>
-      <div className="w-[10%] min-w-[80px] flex items-center justify-center shrink-0">
-        {php(paidAmount)}
-      </div>
-      <div
-        className="w-[18%] min-w-[120px] flex items-center justify-center py-2 px-0 shrink-0 relative"
-        ref={dropdownRef}
-      >
-        <button
-          onClick={handleToggle}
-          className={`w-[100px] rounded-lg ${
-            hasStatus && selectedStatus
-              ? `${statusGradients[selectedStatus]} flex items-center justify-center`
-              : 'bg-white border-whitesmoke-200 border-solid border'
-          } py-[4.5px] px-2 font-inter cursor-pointer transition-all duration-300 hover:opacity-90 ${
-            isChanging ? 'scale-95' : 'scale-100'
-          }`}
-        >
-          <b
-            className={`text-[10px] sm:text-[11px] font-medium transition-all duration-300 ${
-              hasStatus && selectedStatus ? 'text-white' : 'text-darkslategray-100'
-            } ${isChanging ? 'opacity-0' : 'opacity-100'}`}
-          >
-            {displayStatus}
-          </b>
-        </button>
+  const tdBase =
+    'px-3 h-12 text-center text-[12px] sm:text-[13px] font-inter text-darkslategray-100 whitespace-nowrap';
 
-        {isOpen && (
+  return (
+    <tr
+      onClick={() => onEditClick?.(billing)}
+      className="hover:bg-gray-50 transition-colors cursor-pointer border-b border-whitesmoke-200 last:border-b-0"
+    >
+      <td className={`${tdBase} font-medium`}>{roomNumber}</td>
+
+      <td className={`${tdBase} font-medium max-w-[160px] overflow-hidden text-ellipsis`}>
+        {tenantName}
+      </td>
+
+      <td className={tdBase}>{php(rentAmount)}</td>
+      <td className={tdBase}>{php(utilitiesAmount)}</td>
+      <td className={tdBase}>{php(miscAmount)}</td>
+      <td className={`${tdBase} font-medium`}>{php(billing.totalAmount)}</td>
+      <td className={tdBase}>{php(paidAmount)}</td>
+
+      {/* Status — stopPropagation so clicking doesn't open the edit popup */}
+      <td className={tdBase} onClick={(e) => e.stopPropagation()}>
+        <div className="flex items-center justify-center">
+          <button
+            ref={buttonRef}
+            onClick={handleToggle}
+            className={`w-[100px] rounded-lg ${
+              hasStatus && selectedStatus
+                ? `${statusGradients[selectedStatus]} flex items-center justify-center`
+                : 'bg-white border-whitesmoke-200 border-solid border'
+            } py-[4.5px] px-2 font-inter cursor-pointer transition-all duration-300 hover:opacity-90 ${
+              isChanging ? 'scale-95' : 'scale-100'
+            }`}
+          >
+            <b
+              className={`text-[10px] sm:text-[11px] font-medium transition-all duration-300 ${
+                hasStatus && selectedStatus ? 'text-white' : 'text-darkslategray-100'
+              } ${isChanging ? 'opacity-0' : 'opacity-100'}`}
+            >
+              {displayStatus}
+            </b>
+          </button>
+        </div>
+
+        {isOpen && dropdownPos && createPortal(
           <>
-            <div className="fixed inset-0 z-10" onClick={() => onToggle?.(billing._id)} />
-            <div className="absolute top-full left-1/2 -translate-x-1/2 mt-1 w-[100px] z-50 bg-white border border-whitesmoke-200 rounded-lg shadow-lg overflow-hidden">
+            <div
+              className="fixed inset-0 z-40"
+              onClick={(e) => { e.stopPropagation(); onToggle?.(billing._id); }}
+            />
+            <div
+              className="fixed z-50 w-[100px] bg-white border border-whitesmoke-200 rounded-lg shadow-lg overflow-hidden"
+              style={{
+                top: dropdownPos.top,
+                left: dropdownPos.left,
+                transform: 'translateX(-50%)',
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
               {statusOptions.map((status) => {
                 const isSelected = selectedStatus === status;
-                const statusDisplay = getStatusDisplay(status);
-
                 return (
                   <button
                     key={status}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleStatusChange(status);
-                    }}
+                    onClick={() => handleStatusChange(status)}
                     className={`w-full px-2 sm:px-3 py-2 text-[8px] sm:text-[10px] font-bold text-center hover:bg-gray-50 transition-colors font-inter ${
                       isSelected ? statusGradients[status] : ''
                     }`}
                   >
                     {isSelected ? (
-                      <span className="text-white">{statusDisplay}</span>
+                      <span className="text-white">{getStatusDisplay(status)}</span>
                     ) : (
                       <span
-                        className="bg-clip-text text-transparent"
                         style={{
                           backgroundImage: `linear-gradient(to bottom, ${
                             status === 'paid'
@@ -189,17 +177,18 @@ const BillingRow: FunctionComponent<BillingRowProps> = ({
                           backgroundClip: 'text',
                         }}
                       >
-                        {statusDisplay}
+                        {getStatusDisplay(status)}
                       </span>
                     )}
                   </button>
                 );
               })}
             </div>
-          </>
+          </>,
+          document.body,
         )}
-      </div>
-    </div>
+      </td>
+    </tr>
   );
 };
 
