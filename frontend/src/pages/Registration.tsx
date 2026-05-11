@@ -43,6 +43,17 @@ const Registration: FunctionComponent = () => {
         const response = await UserService.getSelf();
         if (cancelled) return;
         const user = response.data;
+        if (user.status !== 'setup') {
+          if (user.userType === 'Landlord' || user.userType === 'Manager') {
+            navigate('/landlord-homepage', { replace: true });
+          } else if (user.userType === 'Admin') {
+            navigate('/admin/analytics', { replace: true });
+          } else {
+            navigate('/home', { replace: true });
+          }
+          return;
+        }
+
         const role =
           user.userType === 'Student'
             ? 'student'

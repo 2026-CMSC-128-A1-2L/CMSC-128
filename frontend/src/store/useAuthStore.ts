@@ -1,6 +1,6 @@
-import axios from 'axios';
 import type { UserTypeType } from 'shared';
 import { create } from 'zustand';
+import { api } from '../service/axiosInstance';
 
 type User = {
   auth: {
@@ -29,9 +29,9 @@ export const useAuthStore = create<AuthState>((set) => ({
   fetchMe: async () => {
     try {
       set({ isLoading: true });
-      const { data } = await axios.get('/api/users/me');
+      const { data } = await api.get('/api/users/me');
       set({ user: data.data, isInitialized: true });
-    } catch (error) {
+    } catch {
       set({ user: null, isInitialized: true });
     } finally {
       set({ isLoading: false });
