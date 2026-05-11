@@ -13,6 +13,8 @@ const DmsLanding: FunctionComponent = () => {
   const [selectedItem, setSelectedItem] = useState<{ type: 'notification' | 'dm'; id: number } | null>(null);
 
   // Initial Data
+  const [notifications, setNotifications] = useState<any[]>([]);
+  /* UNCOMMENT BELOW FOR DUMMY DATA
   const [notifications, setNotifications] = useState([
     {
       id: 1,
@@ -59,7 +61,10 @@ const DmsLanding: FunctionComponent = () => {
       showButtons: false,
     },
   ]);
+  */
 
+  const [directMessages, setDirectMessages] = useState<any[]>([]);
+  /* UNCOMMENT BELOW FOR DUMMY DATA
   const [directMessages, setDirectMessages] = useState([
     {
       id: 1,
@@ -129,6 +134,7 @@ const DmsLanding: FunctionComponent = () => {
       ]
     },
   ]);
+  */
 
   const handleItemSelect = (type: 'notification' | 'dm', id: number) => {
     setSelectedItem({ type, id });
