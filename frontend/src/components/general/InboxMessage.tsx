@@ -26,14 +26,14 @@ const InboxMessage: FunctionComponent<InboxMessageProps> = ({
     <div
       className={`w-full relative rounded-xl border-solid border box-border flex flex-col pt-3 px-3 pb-4 gap-1 text-right text-[0.5rem] font-lora cursor-pointer transition-colors ${
         active
-          ? "bg-lightcyan border-teal-200 text-teal-800 shadow-sm shadow-teal/5"
-          : "bg-white border-whitesmoke text-slategray hover:bg-whitesmoke"
+          ? "bg-lightcyan border-teal-200 text-teal-800 shadow-sm shadow-teal/5 dark:bg-[#102c27] dark:border-[#72cbb8]/50 dark:text-[#b9eadf] dark:shadow-none"
+          : "bg-white border-whitesmoke text-slategray hover:bg-whitesmoke dark:bg-[#101111] dark:border-[#303331] dark:text-[#a4acba] dark:hover:bg-[#171918]"
       }`}
       onClick={onClick}
     >
       {/* Time Row */}
       <div className="self-stretch flex items-start justify-end h-3">
-        <div className="relative tracking-[0.04em] font-semibold text-right text-unselected">
+        <div className="relative tracking-[0.04em] font-semibold text-right text-unselected dark:text-[#a4acba]">
           {time}
         </div>
       </div>
@@ -48,11 +48,11 @@ const InboxMessage: FunctionComponent<InboxMessageProps> = ({
         </div>
 
         {/* Icon & Message Content */}
-        <div className="flex-1 flex items-start gap-1 text-left text-[0.813rem] text-darkslategray font-inter min-w-0">
+        <div className="flex-1 flex items-start gap-1 text-left text-[0.813rem] text-darkslategray font-inter dark:text-[#d7e0ef] min-w-0">
           <div className="flex items-center justify-center py-0.5 shrink-0">
             <Icon
               icon={icon}
-              className={`w-5 h-5 ${active || unread ? "text-teal" : "text-unselected"}`}
+              className={`w-5 h-5 ${active || unread ? "text-teal dark:text-[#72cbb8]" : "text-unselected dark:text-[#a4acba]"}`}
             />
           </div>
 
@@ -72,7 +72,7 @@ const InboxMessage: FunctionComponent<InboxMessageProps> = ({
             </div>
 
             {/* Body Text */}
-            <div className="self-stretch relative text-[0.625rem] tracking-[0.02em] font-semibold font-lora text-dimgray [display:-webkit-inline-box] overflow-hidden text-ellipsis [-webkit-line-clamp:2] [-webkit-box-orient:vertical] leading-relaxed">
+            <div className="self-stretch relative text-[0.625rem] tracking-[0.02em] font-semibold font-lora text-dimgray dark:text-[#a4acba] [display:-webkit-inline-box] overflow-hidden text-ellipsis [-webkit-line-clamp:2] [-webkit-box-orient:vertical] leading-relaxed">
               {body}
             </div>
           </div>

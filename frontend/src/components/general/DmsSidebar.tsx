@@ -67,7 +67,7 @@ const DmsSidebar: FunctionComponent<DmsSidebarProps> = ({
   const displayedArchivedDMs = showAllArchive ? archivedDMs : [];
 
   return (
-    <div className="w-72 h-screen relative flex flex-col items-start py-10 pl-4 pr-3 box-border gap-2 text-left font-inter bg-white shadow-[4px_0_24px_rgba(0,0,0,0.02)] dark:bg-[#121212] dark:text-gray-100 dark:shadow-[4px_0_24px_rgba(0,0,0,0.25)] overflow-y-auto overflow-x-hidden">
+    <div className="w-72 h-screen relative flex flex-col items-start py-10 pl-4 pr-3 box-border gap-2 text-left font-inter bg-white shadow-[4px_0_24px_rgba(0,0,0,0.02)] dark:bg-[#101111] dark:text-[#d7e0ef] dark:shadow-[4px_0_24px_rgba(0,0,0,0.25)] overflow-y-auto overflow-x-hidden">
       <div className="w-full flex flex-col items-start gap-8">
         {/* Header & Search */}
         <div className="w-full flex items-center gap-2 text-[0.875rem] dark:gap-5">
@@ -79,7 +79,7 @@ const DmsSidebar: FunctionComponent<DmsSidebarProps> = ({
           <div className="flex-1 px-3 py-2 rounded-num-8 bg-unavailable_action flex items-center gap-2 transition-all focus-within:ring-1 focus-within:ring-teal/30 focus-within:bg-white focus-within:shadow-sm dark:bg-[#202123] dark:focus-within:bg-[#2a2c2e] dark:focus-within:ring-[#72cbb8]/30 dark:shadow-none">
             <Icon
               icon="material-symbols:search"
-              className="w-4 h-4 text-unselected shrink-0"
+              className="w-4 h-4 text-unselected shrink-0 dark:text-[#a4acba]"
             />
             <input
               type="text"
@@ -158,8 +158,8 @@ const DmsSidebar: FunctionComponent<DmsSidebarProps> = ({
             <button
               className={`h-fit rounded-full flex items-center justify-center py-1.5 px-5 transition-all active:scale-95 ${
                 dmFilter === "all"
-                  ? "bg-teal text-white shadow-md shadow-teal/20"
-                  : "bg-lightcyan text-teal hover:bg-teal/10"
+                  ? "bg-teal text-white shadow-md shadow-teal/20 dark:bg-[#0d3a32] dark:text-[#d7e0ef] dark:shadow-none"
+                  : "bg-lightcyan text-teal hover:bg-teal/10 dark:bg-[#102c27] dark:text-[#72cbb8] dark:hover:bg-[#17352f]"
               }`}
               onClick={() => setDmFilter("all")}
             >
@@ -168,8 +168,8 @@ const DmsSidebar: FunctionComponent<DmsSidebarProps> = ({
             <button
               className={`h-fit rounded-full flex items-center justify-center py-1.5 px-5 transition-all active:scale-95 ${
                 dmFilter === "unread"
-                  ? "bg-teal text-white shadow-md shadow-teal/20"
-                  : "bg-lightcyan text-teal hover:bg-teal/10"
+                  ? "bg-teal text-white shadow-md shadow-teal/20 dark:bg-[#0d3a32] dark:text-[#d7e0ef] dark:shadow-none"
+                  : "bg-lightcyan text-teal hover:bg-teal/10 dark:bg-[#102c27] dark:text-[#72cbb8] dark:hover:bg-[#17352f]"
               }`}
               onClick={() => setDmFilter("unread")}
             >
@@ -201,7 +201,7 @@ const DmsSidebar: FunctionComponent<DmsSidebarProps> = ({
                 />
               ))
             ) : (
-              <p className="w-full text-center text-num-12 text-dimgray py-4 font-inter">
+              <p className="w-full text-center text-num-12 text-dimgray py-4 font-inter dark:text-[#a4acba]">
                 No messages found
               </p>
             )}
@@ -212,11 +212,11 @@ const DmsSidebar: FunctionComponent<DmsSidebarProps> = ({
             id="archive-section"
             className="w-full flex flex-col items-start gap-2 mt-4"
           >
-            <div className="self-stretch flex items-center justify-between py-1 border-t border-whitesmoke pt-4">
+            <div className="self-stretch flex items-center justify-between py-1 border-t border-whitesmoke pt-4 dark:border-[#303331]">
               <b className="relative flex items-start pl-2 text-num-14 text-slategray dark:text-gray-400 font-inter uppercase tracking-wider">
                 Archive
               </b>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-whitesmoke text-slategray">
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-whitesmoke text-slategray dark:bg-[#202221] dark:text-[#a4acba]">
                 {archivedDMs.length}
               </span>
             </div>

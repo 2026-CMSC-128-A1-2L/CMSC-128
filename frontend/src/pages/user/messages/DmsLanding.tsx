@@ -167,10 +167,10 @@ const DmsLanding: FunctionComponent = () => {
             className="w-80 h-auto object-contain opacity-80"
           />
           <div className="flex flex-col items-center gap-1 text-center">
-            <b className="text-num-18 text-darkslategray leading-tight">
+            <b className="text-num-18 text-darkslategray leading-tight dark:text-[#b9eadf]">
               No conversation selected
             </b>
-            <p className="text-num-14s font-medium text-dimgray">
+            <p className="text-num-14s font-medium text-dimgray dark:text-[#a4acba]">
               Select a tab to view specific message
             </p>
           </div>
@@ -219,16 +219,16 @@ const DmsLanding: FunctionComponent = () => {
   };
 
   return (
-    <div className="w-full h-screen flex items-start font-inter overflow-hidden relative bg-white dark:bg-darkmode">
+    <div className="user-messages-shell w-full h-screen flex items-start font-inter overflow-hidden relative bg-white text-[#2d3748] dark:bg-[#0f1010] dark:text-[#d7e0ef]">
       {/* Background Accents (Restricted to non-navbar area) */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="opacity-20">
+        <div className="opacity-50 dark:opacity-100">
           <BgUpper className="absolute top-0 right-0 w-auto h-full" />
           <BgLower className="absolute -bottom-4 left-0 w-auto h-full" />
         </div>
       </div>
 
-      <div className="sticky top-0 h-full w-fit shrink-0 border-r border-whitesmoke-300 z-20 bg-white dark:bg-darkmode">
+      <div className="sticky top-0 h-full w-fit shrink-0 border-r border-whitesmoke-300 z-20 bg-white dark:border-[#303331] dark:bg-[#101111]">
         <DmsSidebar
           notifications={notifications}
           directMessages={directMessages}

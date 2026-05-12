@@ -25,14 +25,14 @@ const NotificationDetail: FunctionComponent<NotificationDetailProps> = ({
   showButtons = true,
 }) => {
   return (
-    <div className="w-full max-w-4xl mx-auto bg-white rounded-[25px] border border-whitesmoke-200 shadow-sm overflow-hidden flex flex-col font-inter">
+    <div className="w-full max-w-4xl mx-auto bg-white rounded-[25px] border border-whitesmoke-200 shadow-sm dark:bg-[#101111] dark:border-[#303331] dark:shadow-none overflow-hidden flex flex-col font-inter">
       {/* Header */}
-      <div className="px-8 py-6 border-b border-whitesmoke-200 flex justify-between items-start">
+      <div className="px-8 py-6 border-b border-whitesmoke-200 dark:border-[#303331] flex justify-between items-start">
         <div className="flex flex-col gap-1">
-          <h1 className="text-num-24 font-bold text-darkslategray m-0">{title}</h1>
-          <span className="text-num-14 text-slategray font-medium font-lora">{subtitle}</span>
+          <h1 className="text-num-24 font-bold text-darkslategray dark:text-[#edf6f4] m-0">{title}</h1>
+          <span className="text-num-14 text-slategray dark:text-[#a4acba] font-medium font-lora">{subtitle}</span>
         </div>
-        <div className="text-right text-num-12 text-dimgray font-lora font-semibold">
+        <div className="text-right text-num-12 text-dimgray dark:text-[#a4acba] font-lora font-semibold">
           <div>{date}</div>
           <div>{time}</div>
         </div>
@@ -48,17 +48,17 @@ const NotificationDetail: FunctionComponent<NotificationDetailProps> = ({
         />
 
         {/* Headline */}
-        <h2 className="text-num-24 font-bold text-darkslategray max-w-2xl leading-tight">
+        <h2 className="text-num-24 font-bold text-darkslategray dark:text-[#edf6f4] max-w-2xl leading-tight">
           {headline}
         </h2>
 
         {/* Message Card */}
-        <div className="w-full max-w-xl bg-white shadow-[0px_0px_10px_rgba(0,0,0,0.05)] rounded-xl p-8 border border-whitesmoke-200 flex flex-col items-center">
-          <div className="text-darkslategray font-bold text-num-18 mb-4">Hi Daphne!</div>
-          <div className="text-darkslategray text-num-14 leading-relaxed whitespace-pre-wrap font-medium">
+        <div className="w-full max-w-xl bg-white shadow-[0px_0px_10px_rgba(0,0,0,0.05)] rounded-xl p-8 border border-whitesmoke-200 dark:bg-[#171918] dark:border-[#303331] dark:shadow-none flex flex-col items-center">
+          <div className="text-darkslategray font-bold text-num-18 dark:text-[#edf6f4] mb-4">Hi Daphne!</div>
+          <div className="text-darkslategray text-num-14 dark:text-[#d7e0ef] leading-relaxed whitespace-pre-wrap font-medium">
             {message}
           </div>
-          <div className="mt-4 text-num-12 font-semibold text-darkslategray font-lora">
+          <div className="mt-4 text-num-12 font-semibold text-darkslategray dark:text-[#a4acba] font-lora">
             This invitation will expire in 7 days.
           </div>
         </div>
