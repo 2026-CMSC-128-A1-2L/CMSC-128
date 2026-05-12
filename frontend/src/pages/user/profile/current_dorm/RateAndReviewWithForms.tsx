@@ -11,6 +11,7 @@ import TreeIcon from '../../../../../assets/environment_tree_icon.svg';
 import FilledTreeIcon from '../../../../../assets/environment_tree_icon_filled.svg';
 import SideBar from '../../../../components/user/SideBar';
 import BreadcrumbHeader from '../../../../components/general/Breadcrumb';
+import ProgressBar from '../../../../components/user/ProgressBar';
 import placeholder from '../../../../../assets/one_sapphire_place.png';
 
 const RateAndReview: FunctionComponent = () => {
@@ -126,26 +127,16 @@ const RateAndReview: FunctionComponent = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="self-stretch flex flex-col items-center py-6 px-num-32 text-center text-darkslategray-200 font-poppins">
-                    <div className="w-full flex items-center justify-center max-w-full">
-                      <div className="h-[93.9px] w-[784px] relative">
-                        <div className="absolute h-[9.16%] w-[32.64%] top-[29.9%] right-[56.29%] bottom-[60.94%] left-[11.07%] rounded-[34.55px] bg-darkslategray-200" />
-                        <div className="absolute h-[37.91%] w-[13.42%] top-[51.75%] left-[0%] leading-8 font-semibold flex items-center justify-center">
-                          Information
-                        </div>
-                        <div className="absolute h-[37.91%] w-[10.37%] top-[51.75%] left-[88.93%] font-semibold flex items-center justify-center">
-                          Finalize
-                        </div>
-                        <div className="absolute h-[37.91%] w-[11.2%] top-[51.75%] left-[43.71%] font-semibold flex items-center justify-center">
-                          Reviewing
-                        </div>
-                        <div className="absolute h-[9.16%] w-[34.44%] top-[26.45%] right-[10.65%] bottom-[64.39%] left-[54.91%] rounded-[34.55px] [background:linear-gradient(90deg,rgba(2,67,56,0.8),#b5c8c5)]" />
-                        <div className="absolute h-[37.91%] w-[4.57%] top-[12.65%] right-[48.41%] bottom-[49.44%] left-[47.03%] rounded-[50%] bg-darkslategray-200" />
-                        <div className="absolute h-[37.91%] w-[4.57%] top-[12.65%] right-[3.59%] bottom-[49.44%] left-[91.84%] rounded-[50%] bg-silver-100" />
-                        <div className="absolute h-[37.91%] w-[4.57%] top-[13.8%] right-[91.01%] bottom-[48.29%] left-[4.43%] rounded-[50%] bg-darkslategray-200" />
-                      </div>
+                    <div className="self-stretch flex flex-col items-center py-6 px-num-32 text-center font-poppins">
+                      <ProgressBar
+                        currentStepIndex={1}
+                        steps={[
+                          { key: 'information', label: 'Information' },
+                          { key: 'reviewing', label: 'Reviewing' },
+                          { key: 'finalize', label: 'Finalize' },
+                        ]}
+                      />
                     </div>
-                  </div>
                 </div>
                 <div className="self-stretch h-[405px] flex flex-col items-center gap-[117px] shrink-0 text-[18px] text-darkolivegreen">
                   <div className="self-stretch flex flex-col items-center justify-center py-num-12 px-num-32 gap-[37px]">

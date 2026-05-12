@@ -3,6 +3,7 @@ import { ObjectIdSchema, QuerySchema } from './common.js';
 
 // GET /units
 export const UnitFilterSchema = z.object({
+  facilityId: ObjectIdSchema.optional(),
   listingId: ObjectIdSchema.optional(),
   roomNumber: z.string().optional(),
   price: z.number().optional(),

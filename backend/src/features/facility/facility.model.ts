@@ -31,7 +31,7 @@ export type HousingFacilityType = {
     permissions: ManagerPermissionType;
   }[];
   location: {
-    coordinates: {
+    coordinates?: {
       lat: number;
       long: number;
     };
@@ -96,7 +96,7 @@ const HousingFacilitySchema = new mongoose.Schema<HousingFacilityType>(
           },
           { _id: false },
         ),
-        required: true,
+        required: false,
       },
       text: { type: String, required: true },
     },

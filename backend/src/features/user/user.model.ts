@@ -13,6 +13,7 @@ import {
 
 export type UserType = {
   _id: mongoose.Types.ObjectId;
+  email?: string;
   emails: string[];
 
   firstName: string;
@@ -45,6 +46,9 @@ export type ManagerType = UserType & {
 const userSchema = new mongoose.Schema<UserType>(
   {
     // Obtained through Google automatically after login with a Google email address.
+    // Kept for compatibility with older databases that still have a unique
+    // index on `email`; `emails` remains the source of truth in code.
+    email: String,
     emails: { type: [String], required: true, default: [] },
     profilePicture: String,
 
@@ -122,7 +126,7 @@ export const Manager = User.discriminator('Manager', new mongoose.Schema());
 export const Student = User.discriminator(
   'Student',
   new mongoose.Schema({
-    studentNumber: { type: String, required: true },
+    studentNumber: String,
     degreeProgram: String,
     preferences: {
       type: {

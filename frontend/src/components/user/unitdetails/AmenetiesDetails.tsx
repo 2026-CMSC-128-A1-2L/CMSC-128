@@ -1,30 +1,33 @@
 import type { FunctionComponent } from 'react';
 import { Icon } from '@iconify/react';
 
-const amenities = [
-  { icon: 'material-symbols:wifi', label: 'Wi-Fi' },
-  { icon: 'material-symbols:snowflake', label: 'Air Con' },
-  { icon: 'boxicons:cctv', label: 'CCTV' },
-  { icon: 'streamline:hotel-laundry', label: 'Laundry' },
-  { icon: 'carbon:police', label: '24/7 Guard' },
-  { icon: 'boxicons:desk', label: 'Study Desk' },
-  { icon: 'mdi:refrigerator-outline', label: 'Refrigerator' },
-  { icon: 'emojione-monotone:kitchen-knife', label: 'Kitchen' },
-];
+type Amenity = {
+  icon: string;
+  label: string;
+  active: boolean;
+};
 
-const AmenetiesDetails: FunctionComponent = () => (
+type AmenetiesDetailsProps = {
+  amenities: Amenity[];
+};
+
+const AmenetiesDetails: FunctionComponent<AmenetiesDetailsProps> = ({ amenities }) => (
   <div className="w-full flex flex-col gap-4 font-inter">
     <div className="px-5 py-2">
       <b className="text-xl text-black">Amenities</b>
     </div>
     <div className="px-5 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-      {amenities.map(({ icon, label }) => (
+      {amenities.map(({ icon, label, active }) => (
         <div
           key={label}
-          className="rounded-xl border border-whitesmoke-200 bg-white flex flex-col items-center py-5 px-3 gap-2"
+          className={`rounded-xl border flex flex-col items-center py-5 px-3 gap-2 ${
+            active
+              ? 'border-teal-200 bg-white text-gray'
+              : 'border-whitesmoke-200 bg-whitesmoke-100 text-silver'
+          }`}
         >
-          <Icon icon={icon} className="w-6 h-6" color="#096C5B" />
-          <b className="text-sm text-gray text-center">{label}</b>
+          <Icon icon={icon} className="w-6 h-6" color={active ? '#096C5B' : '#B8B8B8'} />
+          <b className="text-sm text-center">{label}</b>
         </div>
       ))}
     </div>

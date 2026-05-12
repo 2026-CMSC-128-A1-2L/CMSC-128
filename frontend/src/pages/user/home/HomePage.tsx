@@ -1,11 +1,12 @@
-import { type FunctionComponent, useRef, useState, useEffect } from 'react';
+﻿import { type FunctionComponent, useEffect, useRef, useState } from 'react';
 import { Icon } from '@iconify/react';
+import { useSearchParams } from 'react-router-dom';
 import SideBar from '../../../components/user/SideBar';
 import DormCard from '../../../components/user/DormCard';
-import { dormData } from '../../../data/dorms';
 import Banner from '../../../components/general/Banner';
 import FilterTab from '../../../components/user/Filter/FilterTab';
 import LoadingPage from '../../general/LoadingPage';
+import { useFacilities, type DormCardData } from '../../../hooks/useFacilities';
 
 const CARD_WIDTH = 280;
 const CARD_GAP = 24;
@@ -15,7 +16,7 @@ const useCarousel = (total: number) => {
   const [current, setCurrent] = useState(0);
 
   const scrollTo = (index: number) => {
-    const clamped = Math.max(0, Math.min(index, total - 1));
+    const clamped = Math.max(0, Math.min(index, Math.max(total - 1, 0)));
     setCurrent(clamped);
     trackRef.current?.scrollTo({
       left: clamped * (CARD_WIDTH + CARD_GAP),
@@ -35,201 +36,310 @@ const CATEGORY_LABELS: Record<NonNullable<ViewAllCategory>, string> = {
   mayLike: 'Listings You May Like',
 };
 
-const pasaloDorms = dormData;
-const popularDorms = dormData;
-const nearDorms = dormData;
-const mayLikeDorms = dormData;
+const NavArrows = ({
+  current,
+  total,
+  scrollTo,
+}: {
+  current: number;
+  total: number;
+  scrollTo: (i: number) => void;
+}) => (
+  <div className="flex items-center gap-[8px]">
+    <button
+      type="button"
+      onClick={() => scrollTo(current - 1)}
+      disabled={current === 0 || total === 0}
+      className="flex h-[32px] w-[32px] items-center justify-center rounded-full border border-[#f0f0f0] bg-white transition-opacity hover:opacity-70 disabled:opacity-30 dark:border-[#303331] dark:bg-[#101111] dark:text-[#a4acba]"
+      aria-label="Previous property"
+    >
+      <Icon icon="solar:arrow-left-bold" className="h-[16px] w-[16px] text-[#2f3136] dark:text-[#a4acba]" />
+    </button>
+    <button
+      type="button"
+      onClick={() => scrollTo(current + 1)}
+      disabled={current === total - 1 || total === 0}
+      className="flex h-[32px] w-[32px] items-center justify-center rounded-full bg-[#e0f7f4] transition-opacity hover:opacity-70 disabled:opacity-30 dark:bg-[#12342e]"
+      aria-label="Next property"
+    >
+      <Icon icon="solar:arrow-right-bold" className="h-[16px] w-[16px] text-[#096c5b] dark:text-[#72cbb8]" />
+    </button>
+  </div>
+);
 
-const CATEGORY_DATA: Record<NonNullable<ViewAllCategory>, typeof dormData> = {
-  pasalo: pasaloDorms,
-  popular: popularDorms,
-  near: nearDorms,
-  mayLike: mayLikeDorms,
+const ViewAllLink = ({
+  category,
+  onViewAll,
+}: {
+  category: NonNullable<ViewAllCategory>;
+  onViewAll: (category: ViewAllCategory) => void;
+}) => (
+  <button
+    type="button"
+    className="w-fit h-fit flex items-end justify-center gap-1 pt-4 cursor-pointer text-center text-[0.75rem] text-teal-100 font-lora dark:text-[#72cbb8]"
+    onClick={() => onViewAll(category)}
+  >
+    <div className="relative [text-decoration:underline] tracking-num-0.02 font-semibold">
+      View All
+    </div>
+    <Icon icon="radix-icons:arrow-top-right" className="w-3 h-3" />
+  </button>
+);
+
+const CarouselSection = ({
+  title,
+  items,
+  category,
+  onViewAll,
+  infoIcon,
+}: {
+  title: string;
+  items: DormCardData[];
+  category: NonNullable<ViewAllCategory>;
+  onViewAll: (category: ViewAllCategory) => void;
+  infoIcon?: boolean;
+}) => {
+  const carousel = useCarousel(items.length);
+
+  return (
+    <div className="w-full min-w-0 flex flex-col items-start justify-center gap-6 dark:text-white">
+      <div className="w-full h-fit flex items-center justify-between gap-4">
+        <div className="h-full flex items-center gap-2 min-w-0">
+          <div className="w-fit h-full flex items-start gap-2 min-w-0">
+            <b className="w-fit relative flex items-start">{title}</b>
+            {infoIcon && <Icon icon="material-symbols-light:info-outline" className="w-5 h-5 shrink-0" />}
+          </div>
+          <ViewAllLink category={category} onViewAll={onViewAll} />
+        </div>
+        <NavArrows current={carousel.current} total={carousel.total} scrollTo={carousel.scrollTo} />
+      </div>
+      <div
+        ref={carousel.trackRef}
+        className="w-full max-w-full flex gap-6 overflow-x-auto scroll-smooth pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
+        {items.map((dorm) => (
+          <div key={dorm.id} className="shrink-0">
+            <DormCard {...dorm} />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 };
 
+const EmptyState = ({ onBack, label }: { onBack: () => void; label: string }) => (
+  <div className="w-full flex flex-col items-center justify-center py-20 gap-3 text-center">
+    <Icon icon="mdi:home-search-outline" className="w-16 h-16 text-unselected dark:text-[#91a0b0]" />
+    <p className="text-[1rem] font-semibold text-dimgray dark:text-[#d7e0ef]">{label}</p>
+    <button
+      type="button"
+      onClick={onBack}
+      className="mt-2 px-5 py-2 rounded-full bg-[#e0f7f4] text-[#096c5b] text-[0.8rem] font-semibold hover:opacity-80 transition-opacity dark:bg-[#12342e] dark:text-[#72cbb8]"
+    >
+      Back to home
+    </button>
+  </div>
+);
+
+const ErrorState = ({ message, onRetry }: { message: string; onRetry: () => void }) => (
+  <div className="w-full flex flex-col items-center justify-center py-20 gap-3 text-center">
+    <Icon icon="mdi:alert-circle-outline" className="w-16 h-16 text-red-400" />
+    <p className="text-[1rem] font-semibold text-dimgray dark:text-[#d7e0ef]">Could not load listings</p>
+    <p className="text-[0.875rem] text-unselected max-w-xs dark:text-[#a4acba]">{message}</p>
+    <button
+      type="button"
+      onClick={onRetry}
+      className="mt-2 px-5 py-2 rounded-full bg-[#e0f7f4] text-[#096c5b] text-[0.8rem] font-semibold hover:opacity-80 transition-opacity dark:bg-[#12342e] dark:text-[#72cbb8]"
+    >
+      Try again
+    </button>
+  </div>
+);
+
 const HomePage: FunctionComponent = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const toggleFilter = () => setIsFilterOpen(!isFilterOpen);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [testLoading, setTestLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState(searchParams.get('search') ?? '');
   const [viewAllCategory, setViewAllCategory] = useState<ViewAllCategory>(null);
+  const { facilities, isLoading, error, refetch } = useFacilities();
 
-  const pasalo  = useCarousel(pasaloDorms.length);
-  const popular = useCarousel(popularDorms.length);
-  const near    = useCarousel(nearDorms.length);
-  const mayLike = useCarousel(mayLikeDorms.length);
+  const pasaloDorms = facilities.slice(0, 10);
+  const popularDorms = facilities.slice(0, 10);
+  const nearDorms = facilities.slice(0, 10);
+  const mayLikeDorms = facilities.slice(0, 10);
 
-  useEffect(() => {
-    const timer = setTimeout(() => setTestLoading(false), 3000);
-    return () => clearTimeout(timer);
-  }, []);
+  const CATEGORY_DATA: Record<NonNullable<ViewAllCategory>, DormCardData[]> = {
+    pasalo: pasaloDorms,
+    popular: popularDorms,
+    near: nearDorms,
+    mayLike: mayLikeDorms,
+  };
 
   const isSearching = searchTerm.trim().length > 0;
-
   const filteredDorms = isSearching
-    ? dormData.filter(
+    ? facilities.filter(
         (dorm) =>
           dorm.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          dorm.location.toLowerCase().includes(searchTerm.toLowerCase())
+          dorm.location.toLowerCase().includes(searchTerm.toLowerCase()),
       )
-    : dormData;
+    : facilities;
 
   const handleViewAll = (category: ViewAllCategory) => {
     setViewAllCategory(category);
     setSearchTerm('');
+    setSearchParams((currentParams) => {
+      const nextParams = new URLSearchParams(currentParams);
+      nextParams.delete('search');
+      return nextParams;
+    }, { replace: true });
   };
-
-  const handleClearViewAll = () => setViewAllCategory(null);
 
   const handleSearch = (value: string) => {
     setSearchTerm(value);
+    const nextParams = new URLSearchParams(searchParams);
+    if (value.trim()) {
+      nextParams.set('search', value);
+    } else {
+      nextParams.delete('search');
+    }
+    setSearchParams(nextParams, { replace: true });
     if (value.trim().length > 0) setViewAllCategory(null);
   };
 
-  if (testLoading) return <LoadingPage />;
+  useEffect(() => {
+    const searchFromUrl = searchParams.get('search') ?? '';
+    setSearchTerm(searchFromUrl);
+    if (searchFromUrl.trim()) setViewAllCategory(null);
+  }, [searchParams]);
 
-  const NavArrows = ({
-    current,
-    total,
-    scrollTo,
-  }: {
-    current: number;
-    total: number;
-    scrollTo: (i: number) => void;
-  }) => (
-    <div className="flex items-center gap-[8px]">
-      <button
-        onClick={() => scrollTo(current - 1)}
-        disabled={current === 0}
-        className="flex h-[32px] w-[32px] items-center justify-center rounded-full border border-[#f0f0f0] bg-white transition-opacity hover:opacity-70 disabled:opacity-30"
-        aria-label="Previous property"
-      >
-        <Icon icon="solar:arrow-left-bold" className="h-[16px] w-[16px] text-[#2f3136]" />
-      </button>
-      <button
-        onClick={() => scrollTo(current + 1)}
-        disabled={current === total - 1}
-        className="flex h-[32px] w-[32px] items-center justify-center rounded-full bg-[#e0f7f4] transition-opacity hover:opacity-70 disabled:opacity-30"
-        aria-label="Next property"
-      >
-        <Icon icon="solar:arrow-right-bold" className="h-[16px] w-[16px] text-[#096c5b]" />
-      </button>
-    </div>
-  );
-
-  const ViewAllLink = ({ category }: { category: NonNullable<ViewAllCategory> }) => (
-    <div
-      className="w-fit h-fit flex items-end justify-center gap-1 pt-4 cursor-pointer text-center text-[0.75rem] text-teal-100 font-lora"
-      onClick={() => handleViewAll(category)}
-    >
-      <div className="relative [text-decoration:underline] tracking-num-0.02 font-semibold">
-        View All
-      </div>
-      <Icon icon="radix-icons:arrow-top-right" className="w-3 h-3" />
-    </div>
-  );
+  if (isLoading) return <LoadingPage />;
 
   return (
-    <div className="min-h-screen w-full flex items-stretch text-left text-[0.875rem] text-dimgray font-inter overflow-x-hidden">
+    <div className="min-h-screen w-full flex items-stretch text-left text-[0.875rem] text-dimgray font-inter overflow-x-hidden dark:bg-[#0f1010] dark:text-[#d7e0ef]">
       <SideBar />
       <div className="flex-1 min-w-0 flex flex-col h-screen overflow-y-auto pt-8 sm:pt-12 px-4 sm:px-6 lg:px-8 xl:pr-20 pb-16">
         <div className="w-full min-w-0 flex flex-col items-start gap-16 sm:gap-20">
           <div className="w-full min-w-0 flex flex-col items-start">
             <div className="w-full overflow-hidden flex items-center pb-6 box-border">
-              <div className="w-full flex items-center transition-all duration-300 bg-[#f8f9fa] rounded-num-12 py-3 pl-3 pr-4 border border-transparent focus-within:bg-white focus-within:shadow-[0_8px_10px_rgb(0,0,0,0.06)] focus-within:transform focus-within:-translate-y-[1px]">
-                <Icon icon="ic:outline-search" className="w-5 h-5 text-unselected shrink-0" />
+              <div className="w-full flex items-center transition-all duration-300 bg-[#f8f9fa] rounded-num-12 py-3 pl-3 pr-4 border border-transparent focus-within:bg-white focus-within:shadow-[0_8px_10px_rgb(0,0,0,0.06)] focus-within:transform focus-within:-translate-y-[1px] dark:bg-[#1f2022] dark:focus-within:bg-[#232526] dark:focus-within:shadow-none">
+                <Icon icon="ic:outline-search" className="w-5 h-5 text-unselected shrink-0 dark:text-[#91a0b0]" />
                 <input
                   type="text"
-                  placeholder="Search for Dorms, Apartments, or Locations"
+                  placeholder="Search for Dorms, Apartments, or Locations (e.g. UPLB, Umali Subdivision)"
                   value={searchTerm}
                   maxLength={50}
-                  onChange={(e) => handleSearch(e.target.value)}
-                  className="w-full bg-transparent border-none outline-none text-num-14 font-semibold text-darkgreen placeholder:text-unselected placeholder:font-normal"
+                  onChange={(event) => handleSearch(event.target.value)}
+                  className="w-full bg-transparent border-none outline-none text-num-14 font-semibold text-darkgreen placeholder:text-unselected placeholder:font-normal dark:text-[#d7e0ef] dark:placeholder:text-[#91a0b0]"
                 />
                 {searchTerm && (
-                  <button onClick={() => handleSearch('')} className="text-unselected hover:text-darkgreen">
+                  <button
+                    type="button"
+                    onClick={() => handleSearch('')}
+                    className="text-unselected hover:text-darkgreen dark:text-[#91a0b0] dark:hover:text-white"
+                  >
                     <Icon icon="material-symbols:close-rounded" className="w-4 h-4" />
                   </button>
                 )}
               </div>
             </div>
-            <div className="w-full flex flex-col items-start gap-6 text-[1.5rem] text-gray">
+
+            <div className="w-full flex flex-col items-start gap-6 text-[1.5rem] text-gray dark:text-[#edf6f4]">
               <div className="w-full flex items-center justify-between box-border">
                 <div className="w-full h-8 flex-1 flex flex-col items-start justify-center">
-                  <b className="relative leading-8 text-teal">Mabuhay, iskolar!</b>
+                  <b className="relative leading-8 text-teal dark:text-[#72cbb8]">Mabuhay, iskolar!</b>
                 </div>
                 <div className="w-fit h-fit flex items-center">
-                  <div
-                    onClick={toggleFilter}
-                    className="h-10 w-10 rounded-full bg-whitesmoke-100 flex items-center justify-center cursor-pointer hover:bg-lightcyan/45 transition-colors"
+                  <button
+                    type="button"
+                    onClick={() => setIsFilterOpen(true)}
+                    className="h-10 w-10 rounded-full bg-whitesmoke-100 flex items-center justify-center cursor-pointer hover:bg-lightcyan/45 transition-colors dark:bg-[#242526] dark:text-[#d7e0ef] dark:hover:bg-[#2d302f]"
                   >
                     <Icon icon="mage:filter" className="w-6 h-6" />
-                  </div>
+                  </button>
+
                   {isFilterOpen && (
                     <div className="fixed inset-0 z-100 flex justify-end">
-                      <div
+                      <button
+                        type="button"
                         className="absolute inset-0 bg-preview/45 backdrop-blur-sm"
-                        onClick={toggleFilter}
+                        onClick={() => setIsFilterOpen(false)}
+                        aria-label="Close filters"
                       />
-                      <div className="relative z-10 w-full max-w-[500px] h-full bg-white animate-in slide-in-from-right duration-500">
-                        <FilterTab onClose={toggleFilter} />
+                      <div className="relative z-10 w-full max-w-[500px] h-full bg-white animate-in slide-in-from-right duration-500 overflow-y-auto dark:bg-[#101111]">
+                        <div className="p-4 flex justify-between items-center border-b dark:border-[#303331]">
+                          <h2 className="text-xl font-bold">Filters</h2>
+                          <button
+                            type="button"
+                            onClick={() => setIsFilterOpen(false)}
+                            className="p-2 hover:bg-gray-100 rounded-full dark:hover:bg-[#242526]"
+                          >
+                            <Icon icon="material-symbols:close" className="w-6 h-6" />
+                          </button>
+                        </div>
+                        <FilterTab onClose={() => setIsFilterOpen(false)} />
                       </div>
                     </div>
                   )}
                 </div>
               </div>
+
               <div className="w-full min-w-0 flex flex-col items-start gap-10">
-                {isSearching ? (
+                {error ? (
+                  <ErrorState message={error} onRetry={refetch} />
+                ) : isSearching ? (
                   <div className="w-full flex flex-col items-start gap-6">
-                    <div className="w-full flex items-center justify-between">
+                    <div className="w-full flex items-center justify-between gap-4">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <b className="text-[1rem] text-darkgreen">
-                          Results for <span className="text-teal">"{searchTerm}"</span>
+                        <b className="text-[1rem] text-darkgreen dark:text-[#edf6f4]">
+                          Results for <span className="text-teal dark:text-[#72cbb8]">&quot;{searchTerm}&quot;</span>
                         </b>
-                        <span className="text-[0.75rem] text-unselected font-normal">
-                          — {filteredDorms.length} listing{filteredDorms.length !== 1 ? 's' : ''} found
+                        <span className="text-[0.75rem] text-unselected font-normal dark:text-[#91a0b0]">
+                          - {filteredDorms.length} listing{filteredDorms.length !== 1 ? 's' : ''} found
                         </span>
                       </div>
                       <button
+                        type="button"
                         onClick={() => handleSearch('')}
-                        className="text-[0.75rem] text-teal-100 underline font-semibold hover:opacity-70 transition-opacity whitespace-nowrap"
+                        className="text-[0.75rem] text-teal-100 underline font-semibold hover:opacity-70 transition-opacity whitespace-nowrap dark:text-[#72cbb8]"
                       >
                         Clear search
                       </button>
                     </div>
+
                     {filteredDorms.length > 0 ? (
                       <div className="w-full flex flex-wrap gap-6 py-1">
                         {filteredDorms.map((dorm) => (
-                          <DormCard key={dorm.id} id={dorm.id} name={dorm.name} rating={dorm.rating} price={dorm.price} location={dorm.location} image={dorm.image} room_types={dorm.room_types} />
+                          <DormCard key={dorm.id} {...dorm} />
                         ))}
                       </div>
                     ) : (
-                      <div className="w-full flex flex-col items-center justify-center py-20 gap-3 text-center">
-                        <Icon icon="mdi:home-search-outline" className="w-16 h-16 text-unselected" />
-                        <p className="text-[1rem] font-semibold text-dimgray">No listings found</p>
-                        <p className="text-[0.875rem] text-unselected max-w-xs">
-                          We couldn't find any dorms matching <span className="font-medium">"{searchTerm}"</span>. Try a different name or location.
-                        </p>
-                        <button onClick={() => handleSearch('')} className="mt-2 px-5 py-2 rounded-full bg-[#e0f7f4] text-[#096c5b] text-[0.8rem] font-semibold hover:opacity-80 transition-opacity">
-                          Back to all listings
-                        </button>
-                      </div>
+                      <EmptyState onBack={() => handleSearch('')} label={`No listings found for "${searchTerm}"`} />
                     )}
                   </div>
-
                 ) : viewAllCategory ? (
                   <div className="w-full flex flex-col items-start gap-6">
-                    <div className="w-full flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <button onClick={handleClearViewAll} className="flex items-center justify-center h-8 w-8 rounded-full bg-whitesmoke-100 hover:bg-lightcyan/45 transition-colors">
-                          <Icon icon="solar:arrow-left-bold" className="w-4 h-4 text-darkgreen" />
+                    <div className="w-full flex items-center justify-between gap-4">
+                      <div className="flex items-center gap-3 flex-wrap">
+                        <button
+                          type="button"
+                          onClick={() => setViewAllCategory(null)}
+                          className="flex items-center justify-center h-8 w-8 rounded-full bg-whitesmoke-100 hover:bg-lightcyan/45 transition-colors dark:bg-[#242526] dark:hover:bg-[#2d302f]"
+                        >
+                          <Icon icon="solar:arrow-left-bold" className="w-4 h-4 text-darkgreen dark:text-[#d7e0ef]" />
                         </button>
-                        <b className="text-[1rem] text-darkgreen">{CATEGORY_LABELS[viewAllCategory]}</b>
-                        <span className="text-[0.75rem] text-unselected font-normal">
-                          — {CATEGORY_DATA[viewAllCategory].length} listing{CATEGORY_DATA[viewAllCategory].length !== 1 ? 's' : ''}
+                        <b className="text-[1rem] text-darkgreen dark:text-[#edf6f4]">
+                          {CATEGORY_LABELS[viewAllCategory]}
+                        </b>
+                        <span className="text-[0.75rem] text-unselected font-normal dark:text-[#91a0b0]">
+                          - {CATEGORY_DATA[viewAllCategory].length} listing
+                          {CATEGORY_DATA[viewAllCategory].length !== 1 ? 's' : ''}
                         </span>
                       </div>
-                      <button onClick={handleClearViewAll} className="text-[0.75rem] text-teal-100 underline font-semibold hover:opacity-70 transition-opacity whitespace-nowrap">
+                      <button
+                        type="button"
+                        onClick={() => setViewAllCategory(null)}
+                        className="text-[0.75rem] text-teal-100 underline font-semibold hover:opacity-70 transition-opacity whitespace-nowrap dark:text-[#72cbb8]"
+                      >
                         Back to home
                       </button>
                     </div>
@@ -237,62 +347,53 @@ const HomePage: FunctionComponent = () => {
                     {CATEGORY_DATA[viewAllCategory].length > 0 ? (
                       <div className="w-full flex flex-wrap gap-6 py-1">
                         {CATEGORY_DATA[viewAllCategory].map((dorm) => (
-                          <DormCard key={dorm.id} id={dorm.id} name={dorm.name} rating={dorm.rating} price={dorm.price} location={dorm.location} image={dorm.image} room_types={dorm.room_types} />
+                          <DormCard key={dorm.id} {...dorm} />
                         ))}
                       </div>
                     ) : (
-                      <div className="w-full flex flex-col items-center justify-center py-20 gap-3 text-center">
-                        <Icon icon="mdi:home-search-outline" className="w-16 h-16 text-unselected" />
-                        <p className="text-[1rem] font-semibold text-dimgray">No listings available</p>
-                        <p className="text-[0.875rem] text-unselected max-w-xs">
-                          There are currently no listings under {CATEGORY_LABELS[viewAllCategory]}.
-                        </p>
-                        <button onClick={handleClearViewAll} className="mt-2 px-5 py-2 rounded-full bg-[#e0f7f4] text-[#096c5b] text-[0.8rem] font-semibold hover:opacity-80 transition-opacity">
-                          Back to home
-                        </button>
-                      </div>
+                      <EmptyState
+                        onBack={() => setViewAllCategory(null)}
+                        label={`No listings under ${CATEGORY_LABELS[viewAllCategory]}`}
+                      />
                     )}
                   </div>
-
                 ) : (
                   <>
-                    {[
-                      { label: 'Pasalo Units', category: 'pasalo' as const, carousel: pasalo, dorms: pasaloDorms, showInfo: true },
-                      { label: 'Popular Listings', category: 'popular' as const, carousel: popular, dorms: popularDorms },
-                      { label: 'Near Campus', category: 'near' as const, carousel: near, dorms: nearDorms },
-                      { label: 'Listings You May Like', category: 'mayLike' as const, carousel: mayLike, dorms: mayLikeDorms },
-                    ].map(({ label, category, carousel, dorms, showInfo }) => (
-                      <div key={category} className="w-full min-w-0 flex flex-col items-start justify-center gap-6 dark:text-white">
-                        <div className="w-full h-fit flex items-center justify-between">
-                          <div className="h-full flex items-center gap-2">
-                            <div className="flex items-center gap-2">
-                              <b className="w-fit relative flex items-start">{label}</b>
-                              {showInfo && <Icon icon="material-symbols-light:info-outline" className="w-5 h-5" />}
-                            </div>
-                            <ViewAllLink category={category} />
-                          </div>
-                          <NavArrows current={carousel.current} total={carousel.total} scrollTo={carousel.scrollTo} />
-                        </div>
-                        <div
-                          ref={carousel.trackRef}
-                          className="w-full max-w-full flex gap-6 overflow-x-auto scroll-smooth pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-                        >
-                          {dorms.map((dorm) => (
-                            <div key={dorm.id} className="shrink-0">
-                              <DormCard id={dorm.id} name={dorm.name} rating={dorm.rating} price={dorm.price} location={dorm.location} image={dorm.image} room_types={dorm.room_types} />
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    ))}
+                    <CarouselSection
+                      title="Pasalo Units"
+                      items={pasaloDorms}
+                      category="pasalo"
+                      onViewAll={handleViewAll}
+                      infoIcon
+                    />
+                    <CarouselSection
+                      title="Popular Listings"
+                      items={popularDorms}
+                      category="popular"
+                      onViewAll={handleViewAll}
+                    />
+                    <CarouselSection
+                      title="Near Campus"
+                      items={nearDorms}
+                      category="near"
+                      onViewAll={handleViewAll}
+                    />
+                    <CarouselSection
+                      title="Listings You May Like"
+                      items={mayLikeDorms}
+                      category="mayLike"
+                      onViewAll={handleViewAll}
+                    />
+
                     <Banner />
+
                     <div className="w-full min-w-0 flex flex-col items-start justify-center gap-6">
                       <div className="w-full h-10 flex items-center">
                         <b className="w-fit flex items-center">All Listings</b>
                       </div>
                       <div className="w-full flex flex-wrap gap-6 py-1">
-                        {dormData.map((dorm) => (
-                          <DormCard key={dorm.id} id={dorm.id} name={dorm.name} rating={dorm.rating} price={dorm.price} location={dorm.location} image={dorm.image} room_types={dorm.room_types} />
+                        {facilities.map((dorm) => (
+                          <DormCard key={dorm.id} {...dorm} />
                         ))}
                       </div>
                     </div>

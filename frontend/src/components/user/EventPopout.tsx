@@ -69,9 +69,9 @@ const EventPopout: FunctionComponent<EventPopoutType> = ({ className = '', onClo
 
   return (
     <div
-      className={`w-96 h-auto relative max-w-full max-h-full overflow-auto text-left text-num-12 text-black font-inter ${className}`}
+      className={`w-96 h-auto relative max-w-full max-h-full overflow-auto text-left text-num-12 text-black font-inter dark:text-[#edf6f4] ${className}`}
     >
-      <div className="absolute top-0 left-0 rounded-md bg-white w-full h-full p-6" />
+      <div className="absolute top-0 left-0 rounded-md bg-white w-full h-full p-6 dark:bg-[#101111] dark:border dark:border-[#303331]" />
       <Icon
         icon="ic:round-close"
         className="absolute top-3 right-3 w-8 h-8 cursor-pointer hover:opacity-70"
