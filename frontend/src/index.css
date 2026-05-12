@@ -133,3 +133,32 @@ body {
     background-color: #17362f;
   }
 }
+@layer utilities {
+  .dark .user-finance-shell .bg-white {
+    background-color: #101111;
+  }
+
+  .dark .user-finance-shell .bg-lightcyan-100,
+  .dark .user-finance-shell .bg-lightcyan-200 {
+    background-color: #0d241f;
+  }
+
+  .dark .user-finance-shell .border-whitesmoke-200 {
+    border-color: #303331;
+  }
+
+  .dark .user-finance-shell .hover\:shadow-md:hover,
+  .dark .user-finance-shell .hover\:shadow-sm:hover {
+    box-shadow: none;
+  }
+}
+@layer utilities {
+  .dark .user-messages-shell .bg-white {
+    background-color: #101111;
+  }
+
+  .dark .user-messages-shell .border-whitesmoke,
+  .dark .user-messages-shell .border-whitesmoke-200 {
+    border-color: #303331;
+  }
+}

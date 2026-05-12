@@ -1,5 +1,6 @@
 import { type FunctionComponent, useState } from 'react';
 import DmsSidebar from '../../../components/general/DmsSidebar';
+import PageBackground from '../../../components/general/PageBackground';
 import oswald from '../../../../assets/owl_inbox.png';
 import TutorialIcon from '../../../../assets/help-chat.svg';
 import TutorialBubble from '../messages/DMsTutorial';
@@ -12,25 +13,26 @@ const DmsLanding: FunctionComponent = () => {
     location.pathname === '/direct-messages' || location.pathname === '/direct-messages/';
 
   return (
-    <div className="w-full h-screen flex items-start font-inter overflow-hidden relative">
-      <div className="sticky top-0 h-full w-fit shrink-0 border-r border-whitesmoke z-10 bg-transparent">
+    <div className="user-messages-shell w-full h-screen flex items-start font-inter overflow-hidden relative bg-white dark:bg-[#101111]">
+      <PageBackground />
+      <div className="sticky top-0 h-full w-fit shrink-0 border-r border-whitesmoke z-10 bg-transparent dark:border-[#303331]">
         <DmsSidebar />
       </div>
       <TutorialBubble show={showHelp} onClose={() => setShowHelp(false)} />
 
-      <div className="bg-transparent flex-1 h-full flex flex-col items-center justify-center relative overflow-y-auto overflow-x-hidden z-10">
+      <div className="bg-transparent flex-1 h-full flex flex-col items-center justify-center relative overflow-y-auto overflow-x-hidden z-10 dark:text-[#edf6f4]">
         {isBaseRoute ? (
           <div className="flex flex-col items-center gap-4">
             <img
               src={oswald}
               alt="No conversation selected"
-              className="w-80 h-auto object-contain"
+              className="w-80 md:w-[28rem] h-auto object-contain"
             />
             <div className="flex flex-col items-center gap-1">
-              <b className="text-num-18 text-darkslategray leading-tight">
+              <b className="text-num-18 text-darkslategray leading-tight dark:text-[#b9eadf]">
                 No conversation selected
               </b>
-              <p className="text-num-14s font-medium text-dimgray">
+              <p className="text-num-14s font-medium text-dimgray dark:text-[#a4acba]">
                 Select a tab to view specific message
               </p>
             </div>

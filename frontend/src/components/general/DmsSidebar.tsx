@@ -9,16 +9,16 @@ const DmsSidebar: FunctionComponent = () => {
   const [searchQuery, setSearchQuery] = useState('');
 
   return (
-    <div className="w-72 h-screen relative overflow-hidden flex flex-col items-start py-10 pl-4 pr-3 box-border gap-2 text-left font-inter bg-white shadow-[4px_0_24px_rgba(0,0,0,0.02)] dark:bg-[#101111] dark:text-[#d7e0ef] dark:shadow-[4px_0_24px_rgba(0,0,0,0.25)]">
-      <div className="w-full flex flex-col items-start gap-8">
+    <div className="w-72 h-screen relative overflow-hidden flex flex-col items-start py-10 pl-4 pr-3 box-border gap-2 text-left font-inter bg-white shadow-[4px_0_24px_rgba(0,0,0,0.02)] dark:w-[26.5rem] dark:bg-[#101111] dark:text-[#d7e0ef] dark:shadow-none dark:py-12 dark:px-[1.875rem]">
+      <div className="w-full flex flex-col items-start gap-8 dark:gap-10">
         {/* Header & Search */}
-        <div className="w-full flex items-center gap-2 text-[0.875rem]">
+        <div className="w-full flex items-center gap-2 text-[0.875rem] dark:gap-5">
           <Icon
             icon="material-symbols-light:chevron-left"
-            className="w-8 h-8 cursor-pointer shrink-0 hover:text-teal transition-colors"
+            className="w-8 h-8 cursor-pointer shrink-0 hover:text-teal transition-colors dark:text-[#edf6f4]"
             onClick={() => navigate(-1)}
           />
-          <div className="flex-1 px-3 py-2 rounded-num-8 bg-unavailable_action flex items-center gap-2 transition-all focus-within:ring-1 focus-within:ring-teal/30 focus-within:bg-white focus-within:shadow-sm dark:bg-[#242526] dark:focus-within:bg-[#2d302f]">
+          <div className="flex-1 px-3 py-2 rounded-num-8 bg-unavailable_action flex items-center gap-2 transition-all focus-within:ring-1 focus-within:ring-teal/30 focus-within:bg-white focus-within:shadow-sm dark:bg-[#202123] dark:focus-within:bg-[#2a2c2e] dark:focus-within:ring-[#72cbb8]/30 dark:shadow-none">
             <Icon icon="material-symbols:search" className="w-4 h-4 text-unselected shrink-0" />
             <input
               type="text"
@@ -34,15 +34,15 @@ const DmsSidebar: FunctionComponent = () => {
         {/* Notifications Section */}
         <div className="self-stretch flex flex-col items-start gap-2 font-lora">
           <div className="self-stretch flex items-center justify-between py-1 font-inter">
-            <b className="relative flex items-start pl-2 text-num-18 text-[#2d3748] dark:text-[#d7e0ef]">
+            <b className="relative flex items-start pl-2 text-num-18 text-[#2d3748] dark:text-[#d7e0ef] dark:text-[1.65rem]">
               Notifications
             </b>
-            <span className="bg-teal/10 text-teal text-[10px] font-bold px-2 py-0.5 rounded-full">
+            <span className="bg-teal/10 text-teal text-[10px] font-bold px-2 py-0.5 rounded-full dark:bg-[#102c27] dark:text-[#72cbb8]">
               New
             </span>
           </div>
 
-          <div className="w-[260px] flex flex-col items-start gap-2 text-right text-[0.5rem]">
+          <div className="w-[260px] flex flex-col items-start gap-2 text-right text-[0.5rem] dark:w-full dark:gap-3">
             <Message
               title="Invitation to Current Accommodation"
               body="Quevin Custodio has invited you to join..."
@@ -60,12 +60,12 @@ const DmsSidebar: FunctionComponent = () => {
           </div>
 
           <button className="w-full mt-1 flex items-center justify-center gap-1 group">
-            <div className="relative font-semibold text-num-12 text-teal group-hover:underline">
+            <div className="relative font-semibold text-num-12 text-teal group-hover:underline dark:text-[#72cbb8]">
               View All
             </div>
             <Icon
               icon="material-symbols-light:chevron-right"
-              className="w-5 h-5 text-teal group-hover:translate-x-1 transition-transform"
+              className="w-5 h-5 text-teal group-hover:translate-x-1 transition-transform dark:text-[#72cbb8]"
             />
           </button>
         </div>
@@ -73,18 +73,18 @@ const DmsSidebar: FunctionComponent = () => {
         {/* Direct Messages Section */}
         <div className="h-fit w-full flex flex-col items-start gap-4 font-lora">
           <div className="self-stretch flex items-end py-1 font-inter">
-            <b className="w-full flex-1 relative flex items-start text-num-18 pl-2 text-[#2d3748] dark:text-[#d7e0ef]">
+            <b className="w-full flex-1 relative flex items-start text-num-18 pl-2 text-[#2d3748] dark:text-[#d7e0ef] dark:text-[1.65rem]">
               Direct Messages
             </b>
           </div>
 
           {/* Filter Pills */}
           <div className="w-full flex items-start gap-2 pl-2">
-            <button className="h-fit rounded-full bg-darkgreen flex items-center justify-center py-1.5 px-5 transition-transform active:scale-95 shadow-md shadow-darkgreen/20">
+            <button className="h-fit rounded-full bg-darkgreen flex items-center justify-center py-1.5 px-5 transition-transform active:scale-95 shadow-md shadow-darkgreen/20 dark:bg-[#0d3a32] dark:shadow-none">
               <b className="relative text-num-12 font-inter text-white">All</b>
             </button>
-            <button className="h-fit rounded-full bg-lightcyan flex items-center justify-center py-1.5 px-5 transition-colors hover:bg-teal/10 active:scale-95">
-              <b className="relative text-num-12 font-inter text-teal">Unread</b>
+            <button className="h-fit rounded-full bg-lightcyan flex items-center justify-center py-1.5 px-5 transition-colors hover:bg-teal/10 active:scale-95 dark:bg-[#0d3a32] dark:hover:bg-[#164e43]">
+              <b className="relative text-num-12 font-inter text-teal dark:text-[#72cbb8]">Unread</b>
             </button>
           </div>
 
@@ -104,8 +104,8 @@ const DmsSidebar: FunctionComponent = () => {
           </div>
 
           <div className="w-full flex items-center justify-center gap-1 text-center">
-            <div className="relative font-semibold text-num-12 text-teal">View Archive</div>
-            <Icon icon="material-symbols-light:chevron-right" className="w-5 h-5 text-teal" />
+            <div className="relative font-semibold text-num-12 text-teal dark:text-[#72cbb8]">View Archive</div>
+            <Icon icon="material-symbols-light:chevron-right" className="w-5 h-5 text-teal dark:text-[#72cbb8]" />
           </div>
         </div>
       </div>
