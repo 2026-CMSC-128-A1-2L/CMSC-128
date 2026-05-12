@@ -1,36 +1,21 @@
 import type { FunctionComponent } from 'react';
 
-const details = [
-  ['ROOM TYPE', 'Transient'],
-  ['FLOOR AREA', '18 sqm'],
-  ['FLOOR LEVELS', '2 Floors'],
-  ['MAX OCCUPANCY', '4 Person'],
-  ['BATHROOM', 'Shared (Floor)'],
-  ['FURNISHING', 'Semi-Furnished'],
-  ['GENDER POLICY', 'Female Only'],
-  ['LEASE TERM', 'Min. 6 months'],
-  ['MOVE-IN DATE', 'Min. 6 months'],
-];
+type AboutDetailsProps = {
+  description?: string;
+  details: {
+    label: string;
+    value: string;
+  }[];
+  included: {
+    label: string;
+    active: boolean;
+  }[];
+};
 
-const included = [
-  { label: 'Wi-Fi', active: true },
-  { label: 'Water (shared)', active: true },
-  { label: 'Trash Collection', active: true },
-  { label: 'Electricity', active: false },
-  { label: 'Laundry', active: false },
-];
-
-const AboutDetails: FunctionComponent = () => (
+const AboutDetails: FunctionComponent<AboutDetailsProps> = ({ description, details, included }) => (
   <div className="w-full flex flex-col gap-6 text-left font-inter">
-    <p className="px-5 text-sm font-medium font-lora text-gray">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-      labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-      laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
-      voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-      <br />
-      <br />
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-      labore et dolore magna aliqua.
+    <p className="px-5 text-sm font-medium font-lora text-gray whitespace-pre-line">
+      {description?.trim() || 'No property description has been provided yet.'}
     </p>
 
     <div>
@@ -38,7 +23,7 @@ const AboutDetails: FunctionComponent = () => (
         <b className="text-xl text-black">Unit Details</b>
       </div>
       <div className="px-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-        {details.map(([label, value]) => (
+        {details.map(({ label, value }) => (
           <div
             key={label}
             className="rounded-xl border border-whitesmoke bg-white p-3 flex flex-col gap-1"

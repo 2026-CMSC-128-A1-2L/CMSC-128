@@ -1,4 +1,4 @@
-import { CreateReviewBodySchema, UpdateReviewBodySchema, ReviewParamsSchema } from 'shared';
+import type { CreateReviewBodySchema, UpdateReviewBodySchema, ReviewParamsSchema } from 'shared';
 import type z from 'zod';
 
 export type CreateReviewBody = z.infer<typeof CreateReviewBodySchema>;

@@ -7,7 +7,7 @@ import SideBarLandlord, {
   type SideBarLandlordItemKey,
 } from "./SideBarLandlord";
 import LandlordFooter from "./LandlordFooter";
-import TutorialBubble from "../../pages/landlord/dashboard/LandlordHomepageTutorials";
+import TutorialBubble from "./TutorialsForLandlord";
 
 export type BreadcrumbItem = {
   label: string;
@@ -26,27 +26,24 @@ const LandlordLayout = ({
   children,
 }: LandlordLayoutProps) => {
   const navigate = useNavigate();
-
   const [showHelp, setShowHelp] = useState(false);
 
   return (
-    <div className="relative min-h-screen">
+    <div className="landlord-shell relative flex h-screen w-screen flex-col overflow-hidden">
       <PageBackground />
-      <div className="relative z-10 flex min-h-screen flex-col">
-        <div className="flex flex-1 items-stretch">
-          <div className="sticky top-0 h-screen self-start">
-            <SideBarLandlord
-              activeItem={activeSidebarItem}
-              onProfileClick={() => navigate("/landlord/profile/switcher")}
-              onAddListing={() => navigate("/landlord/properties/new")}
-            />
-          </div>
+      <div className="relative z-10 flex flex-1 overflow-hidden">
+        <SideBarLandlord
+          activeItem={activeSidebarItem}
+          onProfileClick={() => navigate("/landlord/profile/switcher")}
+          onAddListing={() => navigate("/landlord/properties/new")}
+        />
 
-          <div className="flex min-w-0 flex-1 flex-col px-[32px] pr-[80px] pb-[32px]">
+        <div className="flex min-w-0 flex-1 flex-col overflow-hidden pl-[68px] md:pl-0">
+          <main className="flex min-w-0 flex-1 flex-col overflow-y-auto">
             {breadcrumbs.length > 0 && (
               <nav
                 aria-label="Breadcrumb"
-                className="flex h-[64px] items-end gap-[10px] p-[10px]"
+                className="flex h-[64px] shrink-0 items-end gap-[10px] p-[10px]"
               >
                 <ol className="flex h-[24px] items-center gap-[6px]">
                   {breadcrumbs.map((item, idx) => {
@@ -56,18 +53,18 @@ const LandlordLayout = ({
                     return (
                       <li
                         key={`${item.to ?? item.label}-${item.label}`}
-                        className="flex items-center gap-[6px]"
+                        className="flex items-center gap-[6px] pl-2 pb-2"
                       >
                         {item.to ? (
                           <Link
                             to={item.to}
-                            className={`${labelClass} text-[#096c5b] hover:underline`}
+                            className={`${labelClass} text-[#096c5b] hover:underline dark:text-teal-100`}
                           >
                             {item.label}
                           </Link>
                         ) : (
                           <span
-                            className={`${labelClass} text-[#2f3136]`}
+                            className={`${labelClass} text-[#2f3136] dark:text-[#d7e0ef]`}
                             aria-current={isLast ? "page" : undefined}
                           >
                             {item.label}
@@ -76,7 +73,7 @@ const LandlordLayout = ({
                         {!isLast && (
                           <Icon
                             icon="iconamoon:arrow-right-2"
-                            className="h-[24px] w-[24px] text-[#2f3136]"
+                            className="h-[24px] w-[24px] text-[#2f3136] dark:text-[#a4acba]"
                             aria-hidden="true"
                           />
                         )}
@@ -86,14 +83,33 @@ const LandlordLayout = ({
                 </ol>
               </nav>
             )}
-            <div className="pl-[10px] flex-1">{children}</div>
+
+            <div className="flex-1 px-4 pb-8 pt-0 sm:px-6 md:px-8 lg:px-[32px] dark:text-[#d7e0ef]">
+              {children}
+            </div>
+          </main>
+
+          <div className="relative z-10 shrink-0">
+            <LandlordFooter />
           </div>
         </div>
-
-        <div className="self-stretch h-20 shrink-0 overflow-hidden z-[1] flex flex-col items-stretch">
-          <LandlordFooter />
-        </div>
       </div>
+
+      <div
+        className="fixed bottom-10 right-10 z-[9999] cursor-pointer transition-all hover:scale-110 active:scale-95"
+        onClick={() => setShowHelp(!showHelp)}
+      >
+        <div
+          className="w-16 h-16 drop-shadow-lg"
+          style={{
+            background: "linear-gradient(135deg, #096C5B, #16917C)",
+            WebkitMask:
+              "url('https://api.iconify.design/iconoir/chat-bubble-question-solid.svg') no-repeat center / contain",
+            mask: "url('https://api.iconify.design/iconoir/chat-bubble-question-solid.svg') no-repeat center / contain",
+          }}
+        />
+      </div>
+      <TutorialBubble show={showHelp} onClose={() => setShowHelp(false)} />
     </div>
   );
 };

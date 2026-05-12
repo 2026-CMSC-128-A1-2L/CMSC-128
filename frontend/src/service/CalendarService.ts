@@ -1,21 +1,25 @@
-import axios from 'axios';
-import z from 'zod';
+import type z from 'zod';
+import type { GetCalendarQuerySchema } from 'shared';
 import type { GetCalendarQuery } from '../interface/calendar';
-import { API_URL } from './constant';
+import { api } from './axiosInstance';
+
+export type CalendarEvent = {
+  type: 'booking' | 'billing' | 'move-in' | 'move-out';
+  date: string;
+  title: string;
+  referenceId: string;
+};
+
+type CalendarResponse = {
+  data: CalendarEvent[];
+};
 
 export const CalendarService = {
-
-  async getCalendar(params: z.infer<GetCalendarQuery>): Promise<GetCalendarQuery> {
+  async getCalendar(params: z.infer<typeof GetCalendarQuerySchema>): Promise<CalendarResponse> {
     try {
-      const kv = new URLSearchParams({
-        q: encodeURIComponent(JSON.stringify(params)),
-      }).toString();
-      const response = await axios.get<GetCalendarQuery>(
-        `${API_URL}/api/calendar?q=${kv}`,
-        {
-          // headers
-        }
-      );
+      const response = await api.get<CalendarResponse>('/api/calendar', {
+        params,
+      });
       return response.data;
     } catch (error) {
       console.error('Error fetching calendar:', error);
@@ -23,14 +27,13 @@ export const CalendarService = {
     }
   },
 
-  async getUpcomingEvents() {
+  async getCalendarEvents(year: number, month: number): Promise<CalendarResponse> {
+    return this.getCalendar({ year, month } as GetCalendarQuery);
+  },
+
+  async getUpcomingEvents(): Promise<CalendarResponse> {
     try {
-      const response = await axios.get(
-        `${API_URL}/api/calendar/upcoming`,
-        {
-          // headers
-        }
-      );
+      const response = await api.get<CalendarResponse>('/api/calendar/upcoming');
       return response.data;
     } catch (error) {
       console.error('Error fetching upcoming events:', error);

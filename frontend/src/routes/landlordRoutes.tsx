@@ -23,96 +23,47 @@ import LandlordPropertyFinance from "../pages/landlord/finance/LandlordPropertyF
 import EditBuilding from "../pages/landlord/properties/EditBuilding";
 
 const landlordRoutes = [
-  <Route
-    key="landlord-home"
-    path="/landlord-homepage"
-    element={<LandlordHomepage />}
-  />,
-  <Route
-    key="landlord-profile-switcher"
-    path="/landlord/profile"
-    element={<LandlordProfile />}
-  />,
+  <Route key="landlord-home" path="/landlord-homepage" element={<LandlordHomepage />} />,
+  <Route key="landlord-profile" path="/landlord/profile" element={<LandlordProfile />} />,
   <Route
     key="landlord-profile-verification"
     path="/landlord/profile/verification"
-    element={<LandlordVerif />} //modified from <LandlordProfileVerification />
+    element={<LandlordVerif />}
   />,
   <Route
     key="landlord-profile-switcher"
     path="/landlord/profile/switcher"
     element={<LandlordProfileSwitcher />}
   />,
-
-  <Route
-    key="landlord-dashboard"
-    path="/landlord/dashboard"
-    element={<LandlordDashboard />}
-  />,
-  <Route
-    key="landlord-messages"
-    path="/landlord/messages"
-    element={<LandlordMessages />}
-  />,
-  <Route
-    key="landlord-properties"
-    path="/landlord/properties"
-    element={<LandlordProperties />}
-  />,
+  <Route key="landlord-dashboard" path="/landlord/dashboard" element={<LandlordDashboard />} />,
+  <Route key="landlord-messages" path="/landlord/messages" element={<LandlordMessages />} />,
+  <Route key="landlord-properties" path="/landlord/properties" element={<LandlordProperties />} />,
   <Route
     key="landlord-properties-new"
     path="/landlord/properties/new"
     element={<LandlordNewListing />}
   />,
-
   <Route
     key="landlord-properties-edit"
     path="/landlord/properties/edit/:propertyId"
     element={<EditBuilding />}
   />,
-
   <Route
     key="landlord-properties-building-info"
     path="/landlord/properties/:id"
     element={<BuildingInfo />}
   />,
-  <Route
-    key="landlord-managers"
-    path="/landlord/managers"
-    element={<LandlordManagers />}
-  />,
-  <Route
-    key="landlord-tenants"
-    path="/landlord/tenants"
-    element={<LandlordTenants />}
-  />,
-  <Route
-    key="landlord-visits"
-    path="/landlord/visits"
-    element={<LandlordVisits />}
-  />,
+  <Route key="landlord-managers" path="/landlord/managers" element={<LandlordManagers />} />,
+  <Route key="landlord-tenants" path="/landlord/tenants" element={<LandlordTenants />} />,
+  <Route key="landlord-visits" path="/landlord/visits" element={<LandlordVisits />} />,
   <Route
     key="landlord-property-finance"
     path="/landlord/finance/property/:propertyId"
     element={<LandlordPropertyFinance />}
   />,
-  <Route
-    key="landlord-finance"
-    path="/landlord/finance"
-    element={<LandlordFinance />}
-  />,
-  <Route
-    key="landlord-settings"
-    path="/landlord/settings"
-    element={<LandlordSettings />}
-  />,
-
-  <Route
-    key="landlord-add-building"
-    path="/landlord/add-building"
-    element={<AddBuilding />}
-  />,
-
+  <Route key="landlord-finance" path="/landlord/finance" element={<LandlordFinance />} />,
+  <Route key="landlord-settings" path="/landlord/settings" element={<LandlordSettings />} />,
+  <Route key="landlord-add-building" path="/landlord/add-building" element={<AddBuilding />} />,
   <Route
     key="landlord-tenants-unvalidated"
     path="/landlord/tenants/unvalidated"
@@ -129,7 +80,7 @@ const landlordRoutes = [
     element={<LandlordTenantDetail />}
   />,
   <Route
-    key="landlord-tenants-detail"
+    key="landlord-managers-detail"
     path="/landlord/managers/:id"
     element={<LandlordManagersSpecific />}
   />,

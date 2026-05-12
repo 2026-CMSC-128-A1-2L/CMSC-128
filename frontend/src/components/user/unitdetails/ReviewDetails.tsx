@@ -1,33 +1,34 @@
-import type { FunctionComponent } from 'react';
+import { useState, type FunctionComponent } from 'react';
 import ReviewCard from './ReviewCard';
 import RatingBreakdown from './RatingBreakdown';
 
-const ratingRows = [
-  { star: 5, width: '72.16%', count: 9 },
-  { star: 4, width: '18.22%', count: 2 },
-  { star: 3, width: '9.04%', count: 1 },
-  { star: 2, width: '0%', count: 0 },
-  { star: 1, width: '0%', count: 0 },
-];
+type ReviewDetailsProps = {
+  overallScore: number;
+  totalReviews: number;
+  rows: { star: number; width: string; count: number }[];
+  reviews: {
+    id: string;
+    initials: string;
+    name: string;
+    date: string;
+    rating: string;
+    text: string;
+  }[];
+};
 
-const reviews = [
-  {
-    initials: 'DC',
-    name: 'Daphne Canape',
-    date: 'February 2026',
-    rating: '4.3 / 5.0',
-    text: 'Very clean room and the landlord is super responsive. Wi-Fi is fast and the location is perfect for UPLB students. Highly recommend!',
-  },
-  {
-    initials: 'QC',
-    name: 'Quevin Custodio',
-    date: 'January 2026',
-    rating: '4.3 / 5.0',
-    text: 'Good value for money. The shared bathroom is kept clean. Would definitely recommend for incoming freshmen looking for affordable housing near campus.',
-  },
-];
+const ReviewDetails: FunctionComponent<ReviewDetailsProps> = ({
+  overallScore,
+  totalReviews,
+  rows,
+  reviews,
+}) => {
+  const [showAllReviews, setShowAllReviews] = useState(false);
+  const visibleReviews = showAllReviews ? reviews : reviews.slice(0, 2);
+  const hasMoreReviews = reviews.length > visibleReviews.length;
+  const buttonLabel = showAllReviews
+    ? 'Show fewer reviews'
+    : `View all ${totalReviews} review${totalReviews === 1 ? '' : 's'}`;
 
-const ReviewDetails: FunctionComponent = () => {
   return (
     <div className="w-full relative flex flex-col items-start gap-[29px] text-center text-num-18 text-gray font-inter">
       <div className="self-stretch flex flex-col items-center gap-[26px] text-black">
@@ -36,23 +37,33 @@ const ReviewDetails: FunctionComponent = () => {
             <b className="relative tracking-num--0_01">Reviews</b>
           </div>
           <div className="self-stretch flex flex-col items-start py-2 px-4 sm:px-10 text-center text-[48px] text-darkslategray font-lora">
-            <RatingBreakdown overallScore={4.7} totalReviews={12} rows={ratingRows} />
+            <RatingBreakdown overallScore={overallScore} totalReviews={totalReviews} rows={rows} />
           </div>
         </div>
 
         <div className="w-full flex flex-col items-start gap-8 px-4 text-num-12 text-silver font-lora">
-          {reviews.map((review) => (
-            <ReviewCard key={review.name} {...review} />
-          ))}
+          {visibleReviews.length > 0 ? (
+            visibleReviews.map((review) => <ReviewCard key={review.id} {...review} />)
+          ) : (
+            <div className="w-full rounded-xl border border-whitesmoke bg-white px-5 py-4 text-left text-sm font-semibold text-silver">
+              No approved reviews yet.
+            </div>
+          )}
         </div>
 
-        <div className="self-stretch flex flex-col items-start py-2 px-16 text-[14px]">
-          <div className="self-stretch relative">
-            <div className="relative h-max w-full py-2 shadow-[0px_0px_4px_rgba(0,0,0,0.25)] rounded-[10px] bg-white">
-              <div className="w-full flex items-center justify-center">View all 12 reviews</div>
-            </div>
+        {reviews.length > 2 && (
+          <div className="self-stretch flex flex-col items-start py-2 px-4 sm:px-16 text-[14px]">
+            <button
+              type="button"
+              onClick={() => setShowAllReviews((isShowing) => !isShowing)}
+              className="relative h-max w-full rounded-[10px] bg-white py-2 font-semibold text-darkslategray shadow-[0px_0px_4px_rgba(0,0,0,0.25)] transition-colors hover:bg-lightcyan"
+            >
+              {hasMoreReviews
+                ? `${buttonLabel} (${reviews.length - visibleReviews.length} more)`
+                : buttonLabel}
+            </button>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
