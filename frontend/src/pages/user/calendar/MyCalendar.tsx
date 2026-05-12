@@ -1,5 +1,6 @@
 import { type FunctionComponent, useState, useCallback } from 'react';
 import Footer from '../../../components/general/Footer';
+import PageBackground from '../../../components/general/PageBackground';
 import SideBar from '../../../components/user/SideBar';
 import MiniCalendar from '../../../components/user/user-calendar/MiniCalendar';
 import EventPopout from '../../../components/user/EventPopout';
@@ -62,11 +63,12 @@ const MyCalendar: FunctionComponent = () => {
 
   return (
     <>
-      <div className="user-calendar-shell flex min-h-screen font-inter text-black dark:bg-[#0f1010] dark:text-[#edf6f4]">
+      <div className="user-calendar-shell relative flex min-h-screen font-inter text-black dark:bg-[#0f1010] dark:text-[#edf6f4]">
+        <PageBackground />
         <div className="sticky top-0 h-screen shrink-0 z-10">
           <SideBar />
         </div>
-        <div className="flex flex-1 flex-col min-w-0 overflow-y-auto">
+        <div className="relative z-10 flex flex-1 flex-col min-w-0 overflow-y-auto">
           <div className="flex-1 flex flex-col px-4 sm:px-8 pt-16 pr-4 sm:pr-20">
             <div className="flex flex-col gap-4 sm:gap-8 flex-1">
               {/* Header Section */}

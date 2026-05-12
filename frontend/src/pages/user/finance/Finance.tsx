@@ -3,6 +3,7 @@ import { type FunctionComponent, useState, useEffect } from 'react';
 import { Icon } from '@iconify/react';
 import SideBar from '../../../components/user/SideBar';
 import Footer from '../../../components/general/Footer';
+import PageBackground from '../../../components/general/PageBackground';
 import DownloadBillings from '../../../components/user/finance/DownloadBillings';
 import SubmitReceipt from '../../../components/user/finance/SubmitReceipt';
 import MonthlyExpensesChart from '../../../components/user/finance/MonthlyExpensesChart';
@@ -159,11 +160,12 @@ const TenantFinancePage: FunctionComponent = () => {
   const othersAmount = currentBilling?.breakdown.find((b) => b.name === 'Others')?.amount || 300;
 
   const layout = (content: React.ReactNode) => (
-    <div className="user-finance-shell flex min-h-screen font-inter text-darkslategray dark:bg-[#0f1010] dark:text-[#edf6f4]">
+    <div className="user-finance-shell relative flex min-h-screen font-inter text-darkslategray dark:bg-[#0f1010] dark:text-[#edf6f4]">
+      <PageBackground />
       <div className="sticky top-0 h-screen shrink-0 z-10">
         <SideBar />
       </div>
-      <div className="flex flex-1 flex-col min-w-0 overflow-y-auto dark:bg-[#0f1010]">{content}</div>
+      <div className="relative z-10 flex flex-1 flex-col min-w-0 overflow-y-auto">{content}</div>
     </div>
   );
 
