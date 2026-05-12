@@ -6,8 +6,7 @@ import Switch from '../../../components/landlord/ProfileToVerificationSwitch';
 import LandlordProfileView from '../profile/LandlordProfile';
 import LandlordVerificationView from '../profile/verification/LandlordProfileVerification';
 import TutorialProfileBubble from './LandlordProfileTutorials';
-import TutorialVerifBubble from '../profile/verification/TutorialsForLandlord'; 
-import TutorialIcon from '../../../../assets/help-chat.svg';
+import TutorialVerifBubble from '../profile/verification/TutorialsForLandlord';
 
 const landlord: LandlordInfo = {
   displayName: 'Quevin Custodio',
@@ -18,13 +17,19 @@ const landlord: LandlordInfo = {
   verified: false,
 };
 
-const ProfileSwitcherLandlord = () => {
-  const [activeTab, setActiveTab] = useState<'user profile' | 'verification'>('user profile');
+type ProfileTab = 'user profile' | 'verification';
+
+type ProfileSwitcherLandlordProps = {
+  initialTab?: ProfileTab;
+};
+
+const ProfileSwitcherLandlord = ({ initialTab = 'user profile' }: ProfileSwitcherLandlordProps) => {
+  const [activeTab, setActiveTab] = useState<ProfileTab>(initialTab);
   const [showHelp, setShowHelp] = useState(false);
 
-  const handleTabChange = (tab: 'user profile' | 'verification') => {
+  const handleTabChange = (tab: ProfileTab) => {
     setActiveTab(tab);
-    setShowHelp(false); 
+    setShowHelp(false);
   };
 
   return (
@@ -34,10 +39,10 @@ const ProfileSwitcherLandlord = () => {
         { label: activeTab === 'user profile' ? 'Profile' : 'Verification' },
       ]}
     >
-      <div className="flex w-full flex-col gap-[12px] rounded-[16px] bg-white/70 p-[8px] pb-[32px]">
+      <div className="landlord-profile-shell flex w-full flex-col gap-[20px] rounded-[16px] bg-white/70 p-[8px] pb-[32px] dark:bg-[#101111]/92 dark:text-[#edf6f4]">
         <LandlordInfoCard info={landlord} />
 
-        <div className="h-px w-full bg-[#e5e7eb]/70" />
+        <div className="h-px w-full bg-[#e5e7eb]/70 dark:bg-[#303331]" />
 
         <Switch activeTab={activeTab} setActiveTab={handleTabChange} />
 
@@ -57,13 +62,6 @@ const ProfileSwitcherLandlord = () => {
         <TutorialVerifBubble show={showHelp} onClose={() => setShowHelp(false)} />
       )}
       
-      {/* ======= FLOATING ICON ========== */}
-      <div
-        className="fixed bottom-10 right-10 z-1000 cursor-pointer transition-all hover:scale-110 active:scale-95"
-        onClick={() => setShowHelp(!showHelp)}
-      >
-        <img src={TutorialIcon} alt="Help" className="w-16 h-16 drop-shadow-lg" />
-      </div>
     </LandlordLayout>
   );
 };

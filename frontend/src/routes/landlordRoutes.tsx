@@ -1,6 +1,4 @@
 import LandlordHomepage from "../pages/landlord/dashboard/LandlordHomepage";
-import LandlordProfile from "../pages/landlord/profile/LandlordProfile";
-import LandlordVerif from "../pages/landlord/profile/verification/LandlordProfileVerification";
 import LandlordDashboard from "../pages/landlord/dashboard/LandlordHomepage";
 import LandlordMessages from "../pages/landlord/messages/LandlordMessages";
 import LandlordProperties from "../pages/landlord/properties/LandlordProperties";
@@ -24,11 +22,11 @@ import EditBuilding from "../pages/landlord/properties/EditBuilding";
 
 const landlordRoutes = [
   <Route key="landlord-home" path="/landlord-homepage" element={<LandlordHomepage />} />,
-  <Route key="landlord-profile" path="/landlord/profile" element={<LandlordProfile />} />,
+  <Route key="landlord-profile" path="/landlord/profile" element={<LandlordProfileSwitcher />} />,
   <Route
     key="landlord-profile-verification"
     path="/landlord/profile/verification"
-    element={<LandlordVerif />}
+    element={<LandlordProfileSwitcher initialTab="verification" />}
   />,
   <Route
     key="landlord-profile-switcher"
