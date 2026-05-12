@@ -58,19 +58,19 @@ const NavArrows = ({
       type="button"
       onClick={() => scrollTo(current - 1)}
       disabled={current === 0}
-      className="flex h-[32px] w-[32px] items-center justify-center rounded-full border border-[#f0f0f0] bg-white transition-opacity hover:opacity-70 disabled:opacity-30"
+      className="flex h-[32px] w-[32px] items-center justify-center rounded-full border border-[#f0f0f0] bg-white transition-opacity hover:opacity-70 disabled:opacity-30 dark:border-[#303331] dark:bg-[#101111] dark:text-[#a4acba]"
       aria-label="Previous property"
     >
-      <Icon icon="solar:arrow-left-bold" className="h-[16px] w-[16px] text-[#2f3136]" />
+      <Icon icon="solar:arrow-left-bold" className="h-[16px] w-[16px] text-[#2f3136] dark:text-[#a4acba]" />
     </button>
     <button
       type="button"
       onClick={() => scrollTo(current + 1)}
       disabled={current === total - 1}
-      className="flex h-[32px] w-[32px] items-center justify-center rounded-full bg-[#e0f7f4] transition-opacity hover:opacity-70 disabled:opacity-30"
+      className="flex h-[32px] w-[32px] items-center justify-center rounded-full bg-[#e0f7f4] transition-opacity hover:opacity-70 disabled:opacity-30 dark:bg-[#12342e]"
       aria-label="Next property"
     >
-      <Icon icon="solar:arrow-right-bold" className="h-[16px] w-[16px] text-[#096c5b]" />
+      <Icon icon="solar:arrow-right-bold" className="h-[16px] w-[16px] text-[#096c5b] dark:text-[#72cbb8]" />
     </button>
   </div>
 );
@@ -84,7 +84,7 @@ const ViewAllLink = ({
 }) => (
   <button
     type="button"
-    className="w-fit h-fit flex items-end justify-center gap-1 pt-4 cursor-pointer text-center text-[0.75rem] text-teal-100 font-lora"
+    className="w-fit h-fit flex items-end justify-center gap-1 pt-4 cursor-pointer text-center text-[0.75rem] text-teal-100 font-lora dark:text-[#72cbb8]"
     onClick={() => onViewAll(category)}
   >
     <div className="relative [text-decoration:underline] tracking-num-0.02 font-semibold">
@@ -150,7 +150,7 @@ const CarouselSection = ({
 const EmptyState = ({ onBack, label }: { onBack: () => void; label: string }) => (
   <div className="w-full flex flex-col items-center justify-center py-20 gap-3 text-center">
     <Icon icon="mdi:home-search-outline" className="w-16 h-16 text-unselected" />
-    <p className="text-[1rem] font-semibold text-dimgray">{label}</p>
+    <p className="text-[1rem] font-semibold text-dimgray dark:text-[#d7e0ef]">{label}</p>
     <button
       type="button"
       onClick={onBack}
@@ -164,8 +164,8 @@ const EmptyState = ({ onBack, label }: { onBack: () => void; label: string }) =>
 const ErrorState = ({ message, onRetry }: { message: string; onRetry: () => void }) => (
   <div className="w-full flex flex-col items-center justify-center py-20 gap-3 text-center">
     <Icon icon="mdi:alert-circle-outline" className="w-16 h-16 text-red-400" />
-    <p className="text-[1rem] font-semibold text-dimgray">Could not load listings</p>
-    <p className="text-[0.875rem] text-unselected max-w-xs">{message}</p>
+    <p className="text-[1rem] font-semibold text-dimgray dark:text-[#d7e0ef]">Could not load listings</p>
+    <p className="text-[0.875rem] text-unselected max-w-xs dark:text-[#a4acba]">{message}</p>
     <button
       type="button"
       onClick={onRetry}
@@ -237,32 +237,32 @@ const HomePage: FunctionComponent = () => {
   if (isLoading) return <LoadingPage />;
 
   return (
-    <div className="w-full flex items-start text-left text-[0.875rem] text-dimgray font-inter gap-8">
+    <div className="w-full min-h-screen flex items-start text-left text-[0.875rem] text-dimgray font-inter gap-8 dark:text-[#d7e0ef]">
       <div className="sticky top-0 h-screen w-fit shrink-0">
         <SideBar />
       </div>
 
       {/* right frame */}
-      <div className="w-full min-w-0 h-fit flex items-start pt-15 pr-20 pb-20">
+      <div className="w-full min-w-0 min-h-screen flex items-start pt-15 pr-20 pb-20">
         <div className="h-fit w-full min-w-0 flex flex-col items-start gap-80">
           <div className="w-full min-w-0 flex flex-col items-start">
             {/* search bar */}
             <div className="w-full h-full overflow-hidden flex items-center pb-6 box-border">
-              <div className="w-full flex items-center transition-all duration-300 bg-[#f8f9fa] rounded-num-12 py-3 pl-3 pr-4 border border-transparent focus-within:bg-white focus-within:shadow-[0_8px_10px_rgb(0,0,0,0.06)] focus-within:transform focus-within:-translate-y-[1px]">
-                <Icon icon="ic:outline-search" className="w-5 h-5 text-unselected shrink-0" />
+              <div className="w-full flex items-center transition-all duration-300 bg-[#f8f9fa] rounded-num-12 py-3 pl-3 pr-4 border border-transparent focus-within:bg-white focus-within:shadow-[0_8px_10px_rgb(0,0,0,0.06)] focus-within:transform focus-within:-translate-y-[1px] dark:bg-[#1f2022] dark:focus-within:bg-[#232526] dark:focus-within:shadow-none">
+                <Icon icon="ic:outline-search" className="w-5 h-5 text-unselected shrink-0 dark:text-[#91a0b0]" />
                 <input
                   type="text"
                   placeholder="Search for Dorms, Apartments, or Locations (e.g. UPLB, Umali Subdivision)"
                   value={searchTerm}
                   maxLength={50}
                   onChange={(e) => handleSearch(e.target.value)}
-                  className="w-full bg-transparent border-none outline-none text-num-14 font-semibold text-darkgreen placeholder:text-unselected placeholder:font-normal"
+                  className="w-full bg-transparent border-none outline-none text-num-14 font-semibold text-darkgreen placeholder:text-unselected placeholder:font-normal dark:text-[#d7e0ef] dark:placeholder:text-[#91a0b0]"
                 />
                 {searchTerm && (
                   <button
                     type="button"
                     onClick={() => handleSearch('')}
-                    className="text-unselected hover:text-darkgreen"
+                    className="text-unselected hover:text-darkgreen dark:text-[#91a0b0] dark:hover:text-white"
                   >
                     <Icon icon="material-symbols:close-rounded" className="w-4 h-4" />
                   </button>
@@ -270,17 +270,17 @@ const HomePage: FunctionComponent = () => {
               </div>
             </div>
 
-            <div className="w-full flex flex-col items-start gap-6 text-[1.5rem] text-gray">
+            <div className="w-full flex flex-col items-start gap-6 text-[1.5rem] text-gray dark:text-[#edf6f4]">
               {/* greeting / filter button */}
               <div className="w-full flex items-center justify-between box-border">
                 <div className="w-full h-8 flex-1 flex flex-col items-start justify-center">
-                  <b className="relative leading-8 text-teal">Mabuhay, iskolar!</b>
+                  <b className="relative leading-8 text-teal dark:text-[#72cbb8]">Mabuhay, iskolar!</b>
                 </div>
                 <div className="w-fit h-fit flex items-center">
                   <button
                     type="button"
                     onClick={() => setIsFilterOpen(true)}
-                    className="h-10 w-10 rounded-full bg-whitesmoke-100 flex items-center justify-center cursor-pointer hover:bg-lightcyan/45 transition-colors"
+                    className="h-10 w-10 rounded-full bg-whitesmoke-100 flex items-center justify-center cursor-pointer hover:bg-lightcyan/45 transition-colors dark:bg-[#242526] dark:text-[#d7e0ef] dark:hover:bg-[#2d302f]"
                   >
                     <Icon icon="mage:filter" className="w-6 h-6" />
                   </button>
@@ -293,13 +293,13 @@ const HomePage: FunctionComponent = () => {
                         onClick={() => setIsFilterOpen(false)}
                         aria-label="Close filters"
                       />
-                      <div className="relative z-10 w-full max-w-[500px] h-full bg-white animate-in slide-in-from-right duration-500 overflow-y-auto">
-                        <div className="p-4 flex justify-between items-center border-b">
+                      <div className="relative z-10 w-full max-w-[500px] h-full bg-white animate-in slide-in-from-right duration-500 overflow-y-auto dark:bg-[#101111]">
+                        <div className="p-4 flex justify-between items-center border-b dark:border-[#303331]">
                           <h2 className="text-xl font-bold">Filters</h2>
                           <button
                             type="button"
                             onClick={() => setIsFilterOpen(false)}
-                            className="p-2 hover:bg-gray-100 rounded-full"
+                            className="p-2 hover:bg-gray-100 rounded-full dark:hover:bg-[#242526]"
                           >
                             <Icon icon="material-symbols:close" className="w-6 h-6" />
                           </button>
@@ -320,10 +320,10 @@ const HomePage: FunctionComponent = () => {
                   <div className="w-full flex flex-col items-start gap-6">
                     <div className="w-full flex items-center justify-between">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <b className="text-[1rem] text-darkgreen">
-                          Results for <span className="text-teal">"{searchTerm}"</span>
+                        <b className="text-[1rem] text-darkgreen dark:text-[#edf6f4]">
+                          Results for <span className="text-teal dark:text-[#72cbb8]">"{searchTerm}"</span>
                         </b>
-                        <span className="text-[0.75rem] text-unselected font-normal">
+                        <span className="text-[0.75rem] text-unselected font-normal dark:text-[#91a0b0]">
                           — {filteredDorms.length} listing{filteredDorms.length !== 1 ? 's' : ''}{' '}
                           found
                         </span>
@@ -331,7 +331,7 @@ const HomePage: FunctionComponent = () => {
                       <button
                         type="button"
                         onClick={() => handleSearch('')}
-                        className="text-[0.75rem] text-teal-100 underline font-semibold hover:opacity-70 transition-opacity whitespace-nowrap"
+                        className="text-[0.75rem] text-teal-100 underline font-semibold hover:opacity-70 transition-opacity whitespace-nowrap dark:text-[#72cbb8]"
                       >
                         Clear search
                       </button>
@@ -358,14 +358,14 @@ const HomePage: FunctionComponent = () => {
                         <button
                           type="button"
                           onClick={() => setViewAllCategory(null)}
-                          className="flex items-center justify-center h-8 w-8 rounded-full bg-whitesmoke-100 hover:bg-lightcyan/45 transition-colors"
+                          className="flex items-center justify-center h-8 w-8 rounded-full bg-whitesmoke-100 hover:bg-lightcyan/45 transition-colors dark:bg-[#242526] dark:hover:bg-[#2d302f]"
                         >
-                          <Icon icon="solar:arrow-left-bold" className="w-4 h-4 text-darkgreen" />
+                          <Icon icon="solar:arrow-left-bold" className="w-4 h-4 text-darkgreen dark:text-[#d7e0ef]" />
                         </button>
-                        <b className="text-[1rem] text-darkgreen">
+                        <b className="text-[1rem] text-darkgreen dark:text-[#edf6f4]">
                           {CATEGORY_LABELS[viewAllCategory]}
                         </b>
-                        <span className="text-[0.75rem] text-unselected font-normal">
+                        <span className="text-[0.75rem] text-unselected font-normal dark:text-[#91a0b0]">
                           — {CATEGORY_DATA[viewAllCategory].length} listing
                           {CATEGORY_DATA[viewAllCategory].length !== 1 ? 's' : ''}
                         </span>
@@ -373,7 +373,7 @@ const HomePage: FunctionComponent = () => {
                       <button
                         type="button"
                         onClick={() => setViewAllCategory(null)}
-                        className="text-[0.75rem] text-teal-100 underline font-semibold hover:opacity-70 transition-opacity whitespace-nowrap"
+                        className="text-[0.75rem] text-teal-100 underline font-semibold hover:opacity-70 transition-opacity whitespace-nowrap dark:text-[#72cbb8]"
                       >
                         Back to home
                       </button>

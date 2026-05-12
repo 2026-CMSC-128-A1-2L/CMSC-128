@@ -127,14 +127,14 @@ const DormCard: FunctionComponent<DormCardProps> = ({
       ? createPortal(
           <div
             data-expanded-panel="true"
-            className="fixed z-[1000] animate-fade-in rounded-[15.31px] border border-whitesmoke-200 bg-white px-4 py-3 text-left font-inter text-black shadow-[0_12px_28px_rgba(0,0,0,0.16)]"
+            className="fixed z-[1000] animate-fade-in rounded-[15.31px] border border-whitesmoke-200 bg-white px-4 py-3 text-left font-inter text-black shadow-[0_12px_28px_rgba(0,0,0,0.16)] dark:border-[#303331] dark:bg-[#141515] dark:text-white"
             style={{
               left: panelPosition.left,
               top: panelPosition.top,
               width: panelPosition.width,
             }}
           >
-            <div className="mb-2 text-num-12 h-fit font-semibold text-dimgray font-lora">
+            <div className="mb-2 text-num-12 h-fit font-semibold text-dimgray font-lora dark:text-[#a4acba]">
               Available Listings:
             </div>
             {room_types.length > 0 ? (
@@ -155,12 +155,12 @@ const DormCard: FunctionComponent<DormCardProps> = ({
                       onClick={(event) => handleRoomClick(event, isFull)}
                       className={`flex justify-between rounded-md px-2 py-1 text-left text-num-12 font-inter transition-colors ${
                         isFull
-                          ? 'cursor-not-allowed bg-whitesmoke-100 text-silver'
-                          : 'text-black hover:bg-lightcyan'
+                          ? 'cursor-not-allowed bg-whitesmoke-100 text-silver dark:bg-[#202221] dark:text-[#69717b]'
+                          : 'text-black hover:bg-lightcyan dark:text-[#d7e0ef] dark:hover:bg-[#1f3a34]'
                       }`}
                     >
                       <span className="font-bold">{room.pax}</span>
-                      <span className={isFull ? 'text-silver' : 'text-dimgray'}>
+                      <span className={isFull ? 'text-silver dark:text-[#69717b]' : 'text-dimgray dark:text-[#a4acba]'}>
                         {isFull ? 'Full' : `${currencyFormatter.format(room.price)}/month`}
                       </span>
                     </button>
@@ -168,7 +168,7 @@ const DormCard: FunctionComponent<DormCardProps> = ({
                 })}
               </div>
             ) : (
-              <p className="text-num-12 text-unselected">No listings available yet.</p>
+              <p className="text-num-12 text-unselected dark:text-[#a4acba]">No listings available yet.</p>
             )}
           </div>,
           document.body,
@@ -188,23 +188,23 @@ const DormCard: FunctionComponent<DormCardProps> = ({
           isExpanded ? 'z-40' : 'z-0'
         }`}
       >
-        <div className="relative z-10 flex h-full w-full flex-col items-start overflow-hidden rounded-[15.31px] border border-solid border-whitesmoke bg-white shadow-sm transition-shadow hover:shadow-lg">
+        <div className="relative z-10 flex h-full w-full flex-col items-start overflow-hidden rounded-[15.31px] border border-solid border-whitesmoke bg-white shadow-sm transition-shadow hover:shadow-lg dark:border-[#303331] dark:bg-[#101111] dark:shadow-none dark:hover:border-[#45665e]">
           <img className="w-66 h-30 object-cover" src={image} alt={name} />
 
           <div className="w-full flex flex-col py-2 px-3 gap-2">
             <div className="w-full flex flex-col items-start gap-0">
               <div className="w-full h-fit flex items-start gap-1">
                 <b className="w-full relative flex items-center text-num-16">{name}</b>
-                <div className="w-fit h-fit flex items-center gap-1 text-[0.718rem] font-lora text-darkslategray-200">
-                  <Icon icon="material-symbols:star-rounded" className="w-5 h-5 text-[#f5b642]" />
+                <div className="w-fit h-fit flex items-center gap-1 text-[0.718rem] font-lora text-darkslategray-200 dark:text-white">
+                  <Icon icon="material-symbols:star-rounded" className="w-5 h-5 text-[#f5b642] dark:text-white" />
                   <div className="relative font-semibold">{rating}</div>
                 </div>
               </div>
-              <b className="relative text-num-14 text-teal">{priceRange(price.min, price.max)}</b>
+              <b className="relative text-num-14 text-teal dark:text-[#72cbb8]">{priceRange(price.min, price.max)}</b>
             </div>
 
             <div className="w-full h-fit flex flex-col gap-1">
-              <div className="w-full relative flex items-center gap-1 text-left text-dimgray font-lora">
+              <div className="w-full relative flex items-center gap-1 text-left text-dimgray font-lora dark:text-[#a4acba]">
                 <Icon icon="material-symbols-light:location-on" className="w-3 h-3" />
                 <div className="flex-1 relative text-num-10 font-semibold">{location}</div>
               </div>
@@ -219,7 +219,7 @@ const DormCard: FunctionComponent<DormCardProps> = ({
                 >
                   <Icon
                     icon={isExpanded ? 'bi:chevron-compact-up' : 'bi:chevron-compact-down'}
-                    className="w-6 h-6 text-teal"
+                    className="w-6 h-6 text-teal dark:text-[#72cbb8]"
                   />
                 </button>
               </div>
