@@ -466,24 +466,25 @@ const UserLanding: FunctionComponent = () => {
                       key={item.num}
                       className={`w-num-1172 relative ${reveal(providesReveal.isVisible, delays[i])}`}
                     >
-                      <button
-                        type="button"
-                        onClick={() => toggleProvides(i)}
-                        className="w-full bg-white border-teal-200 border-solid border-b box-border flex items-center gap-[67px] py-[46px] px-[28px] cursor-pointer text-left"
-                      >
+                      <div className="w-full bg-white border-teal-200 border-solid border-b box-border flex items-center gap-[67px] py-[46px] px-[28px] text-left">
                         <b className="h-num-37 w-num-48.7 relative flex items-center justify-center shrink-0 text-num-36 font-poppins">
                           {item.num}
                         </b>
                         <b className="flex-1 text-num-28 font-inter text-darkslategray-200 text-left">
                           {item.title}
                         </b>
-                        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full transition-colors duration-200 hover:bg-[#0c8873]/10">
+                        <button
+                          type="button"
+                          onClick={() => toggleProvides(i)}
+                          className="flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-full transition-colors duration-200 hover:bg-[#0c8873]/10"
+                          aria-label={`${isOpen ? 'Collapse' : 'Expand'} ${item.title}`}
+                        >
                           <Icon
                             icon="lucide:plus"
                             className={`h-[26px] w-[26px] transition-transform duration-300 ${isOpen ? 'rotate-45 text-teal-200' : ''}`}
                           />
-                        </span>
-                      </button>
+                        </button>
+                      </div>
                       <div
                         className={`overflow-hidden transition-all duration-400 ease-in-out bg-[#F0FAF8] border-teal-200 border-solid border-b ${isOpen ? 'max-h-48 opacity-100' : 'max-h-0 opacity-0'}`}
                       >
