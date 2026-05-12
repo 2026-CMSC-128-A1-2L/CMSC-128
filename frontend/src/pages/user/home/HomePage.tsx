@@ -294,7 +294,8 @@ const HomePage: FunctionComponent = () => {
                         aria-label="Close filters"
                       />
                       <div className="relative z-10 w-full max-w-[500px] h-full bg-white animate-in slide-in-from-right duration-500 overflow-y-auto">
-                        <div className="p-4 flex justify-between items-center border-b">
+                        {/* removed redundant filters and close header */}
+                        {/* <div className="p-4 flex justify-between items-center border-b">
                           <h2 className="text-xl font-bold">Filters</h2>
                           <button
                             type="button"
@@ -303,7 +304,7 @@ const HomePage: FunctionComponent = () => {
                           >
                             <Icon icon="material-symbols:close" className="w-6 h-6" />
                           </button>
-                        </div>
+                        </div> */}
                         <FilterTab onClose={() => setIsFilterOpen(false)} />
                       </div>
                     </div>
