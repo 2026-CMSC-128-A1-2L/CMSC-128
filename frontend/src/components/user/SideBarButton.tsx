@@ -27,27 +27,27 @@ const SideBarButton = ({ icon, label, state = 'default', onClick }: SideBarButto
         className={[
           'h-12 w-1.5 shrink-0 rounded-sm transition-colors duration-200',
           active
-            ? 'bg-[#096c5b]'
+            ? 'bg-[#096c5b] dark:bg-[#72cbb8]'
             : hovered
-              ? 'bg-[#BEEDE1]'
-              : 'bg-transparent group-hover:bg-[#BEEDE1]',
+              ? 'bg-[#BEEDE1] dark:bg-[#1f3a34]'
+              : 'bg-transparent group-hover:bg-[#BEEDE1] dark:group-hover:bg-[#1f3a34]',
         ].join(' ')}
       />
       <span
         className={[
           'flex h-11 flex-1 items-center gap-2 rounded-xl px-1 transition-colors duration-200',
-          !active && 'group-hover:bg-[#F0FAF6]',
+          !active && 'group-hover:bg-[#F0FAF6] dark:group-hover:bg-[#17201d]',
         ].join(' ')}
       >
         <Icon
           icon={icon}
-          className={['w-7 h-7', active ? 'text-[#096c5b]' : 'text-[#2d3748]'].join(' ')}
+          className={['w-7 h-7', active ? 'text-[#096c5b] dark:text-[#72cbb8]' : 'text-[#2d3748] dark:text-[#d7e0ef]'].join(' ')}
           aria-hidden="true"
         />
         <span
           className={[
             'font-semibold text-[14px]',
-            active ? 'text-[#096c5b]' : 'text-[#2d3748]',
+            active ? 'text-[#096c5b] dark:text-[#72cbb8]' : 'text-[#2d3748] dark:text-[#d7e0ef]',
           ].join(' ')}
         >
           {label}
