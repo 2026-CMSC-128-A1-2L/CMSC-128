@@ -6,6 +6,7 @@ import { Icon } from '@iconify/react';
 import VerifiedBadge from '../../../../../assets/verified_badge.svg';
 import TutorialBubble from '../../../../components/landlord/TutorialsForLandlord';
 import TutorialIcon from '../../../../../assets/help-chat.svg';
+import ProgressBar from '../../../../components/user/ProgressBar';
 
 const LandlordVerif: FunctionComponent = () => {
   const [verificationStep, _setVerificationStep] = useState(2); // 0: submit, 1: reviewing, 2: finish
@@ -121,30 +122,7 @@ const LandlordVerif: FunctionComponent = () => {
                             </div>
                             <div className="self-stretch flex flex-col items-start gap-12 shrink-0 text-white">
                               <div className="self-stretch flex flex-col items-center justify-center text-darkslategray-200 font-poppins">
-                                <div className="w-[723px] h-[87px] relative">
-                                  <div
-                                    className={`absolute h-[9.2%] w-[32.64%] top-[29.89%] right-[56.29%] bottom-[60.92%] left-[11.07%] rounded-[34.55px] ${verificationStep >= 1 ? '[background:linear-gradient(90deg,rgba(2,67,56,0.8),#b5c8c5_99.99%)]' : '[background:linear-gradient(90deg,rgba(2,67,56,0.8),#b5c8c5_99.99%)]'}`}
-                                  />
-                                  <div className="absolute h-[37.93%] w-[13.42%] top-[51.72%] left-[0%] leading-8 font-semibold flex items-center justify-center">
-                                    Submit
-                                  </div>
-                                  <div className="absolute h-[37.93%] w-[10.37%] top-[51.72%] left-[88.93%] font-semibold flex items-center justify-center">
-                                    Finish
-                                  </div>
-                                  <div className="absolute h-[37.93%] w-[11.2%] top-[51.72%] left-[43.71%] font-semibold flex items-center justify-center">
-                                    Reviewing
-                                  </div>
-                                  <div
-                                    className={`absolute h-[9.2%] w-[34.44%] top-[26.44%] right-[10.65%] bottom-[64.37%] left-[54.91%] rounded-[34.55px] ${verificationStep >= 2 ? '[background:linear-gradient(90deg,rgba(2,67,56,0.8),#b5c8c5_99.99%)]' : 'bg-silver'}`}
-                                  />
-                                  <div
-                                    className={`absolute h-[37.93%] w-[4.56%] top-[12.64%] right-[48.41%] bottom-[49.43%] left-[47.03%] rounded-[50%] ${verificationStep >= 1 ? 'bg-darkslategray-200' : 'bg-silver'}`}
-                                  />
-                                  <div
-                                    className={`absolute h-[37.93%] w-[4.56%] top-[12.64%] right-[3.6%] bottom-[49.43%] left-[91.84%] rounded-[50%] ${verificationStep >= 2 ? 'bg-darkslategray-200' : 'bg-silver'}`}
-                                  />
-                                  <div className="absolute h-[37.93%] w-[4.56%] top-[13.79%] right-[91.01%] bottom-[48.28%] left-[4.43%] rounded-[50%] bg-darkslategray-200" />
-                                </div>
+                                <ProgressBar currentStepIndex={verificationStep} />
                               </div>
                             </div>
 
