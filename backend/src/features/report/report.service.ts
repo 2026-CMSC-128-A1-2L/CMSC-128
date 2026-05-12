@@ -29,7 +29,9 @@ export type ResolveReportArgs = {
 };
 
 export const getReports = async () => {
-  return await Report.find().sort({ createdAt: -1 });
+  return await Report.find()
+    .populate('userId', 'firstName middleName lastName emails')
+    .sort({ createdAt: -1 });
 };
 
 export const getReport = async (reportId: mongoose.Types.ObjectId) => {
