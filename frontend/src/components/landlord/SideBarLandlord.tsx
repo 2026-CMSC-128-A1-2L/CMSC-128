@@ -5,7 +5,7 @@ import {
   useState,
   type MouseEventHandler,
 } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Icon } from "@iconify/react";
 import AtlasLogo from "../../../assets/logo_atlas_text.svg?react";
 import AtlasLogoMin from "../../../assets/atlas logo (for white bg).png";
@@ -244,15 +244,20 @@ const SideBarLandlord = ({
 
         {/* Logo */}
         <div className="flex h-[40px] items-center justify-center overflow-hidden">
-          {collapsed ? (
-            <img
-              className="h-[28px] w-[28px]"
-              src={AtlasLogoMin}
-              aria-label="Atlas"
-            />
-          ) : (
-            <AtlasLogo className="h-full w-[128px]" aria-label="Atlas" />
-          )}
+          <Link 
+            to="/landlord/dashboard" 
+            className="flex h-[40px] items-center justify-center overflow-hidden cursor-pointer hover:opacity-80 transition-opacity"
+          >
+            {collapsed ? (
+              <img
+                className="h-[28px] w-[28px]"
+                src={AtlasLogoMin}
+                alt="Atlas Home"
+              />
+            ) : (
+              <AtlasLogo className="h-full w-[128px]" aria-label="Atlas Home" />
+            )}
+          </Link>
         </div>
 
         <div className="flex w-full flex-col gap-[32px]">

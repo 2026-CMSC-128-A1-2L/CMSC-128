@@ -151,17 +151,24 @@ const SideBar = ({ activeItem, onProfileClick, className = '' }: SideBarProps) =
         />
       </button>
 
+
       {/* Logo */}
       <div className="flex items-center justify-center px-4 w-full">
-        {collapsed ? (
-          <img src={AtlasLogoMin} className="w-7 h-7 text-[#2d3748]" aria-label="Atlas" />
-        ) : (
-          <AtlasLogoText className="fill-[#2d3748] w-32 h-auto" />
-        )}
+        <Link to="/home" className="cursor-pointer hover:opacity-80 transition-opacity">
+          {collapsed ? (
+            <img 
+              src={AtlasLogoMin} 
+              className="w-7 h-7 text-[#2d3748]" 
+              alt="Atlas Logo" 
+            />
+          ) : (
+            <AtlasLogoText className="fill-[#2d3748] w-32 h-auto" />
+          )}
+        </Link>
       </div>
 
       {/* Search */}
-      <div className="w-full px-4">
+      {/* <div className="w-full px-4">
         {collapsed ? (
           <div className="flex justify-center">
             <button
@@ -185,7 +192,6 @@ const SideBar = ({ activeItem, onProfileClick, className = '' }: SideBarProps) =
               className="flex-1 bg-transparent border-none outline-none text-[12px] font-semibold text-[#2d3748] placeholder:text-[#9ca3af] w-full pr-1"
             />
 
-            {/* Clear Button - only shows when there is text */}
             {searchQuery && (
               <button
                 type="button"
@@ -205,7 +211,7 @@ const SideBar = ({ activeItem, onProfileClick, className = '' }: SideBarProps) =
             </button>
           </div>
         )}
-      </div>
+      </div> */}
 
       {/* Nav */}
       <nav className="flex w-full flex-col gap-3">
