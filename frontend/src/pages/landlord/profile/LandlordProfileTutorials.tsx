@@ -11,89 +11,34 @@ const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose 
 
   const helpContent = [
     {
-      title: 'Statistics',
-      text: 'You can monitor your property’s performance in real-time!',
-      position: 'top-[45px] left-[450px]',
-      total: 4,
-      currentStep: 1,
-    },
-    {
-      title: 'Statistics',
-      text: 'This section provides a quick summary of your monthly revenue, total tenant count, and...',
-      position: 'top-[40px] left-[450px]',
-      total: 4,
-      currentStep: 2,
-    },
-    {
-      title: 'Statistics',
-      text: 'any overdue payments that require your attention. You may send reminders to your tenants...',
-      position: 'top-[40px] left-[450px]',
-      total: 4,
-      currentStep: 3,
-    },
-    {
-      title: 'Statistics',
-      text: 'regarding overdue rent or upcoming dues with a single click!',
-      position: 'top-[45px] left-[450px]',
-      total: 4,
-      currentStep: 4,
-    },
-    {
-      title: 'Current Properties',
-      text: 'This section shows all of your registered properties!',
-      position: 'top-[290px] left-[600px]',
-      total: 4,
-      currentStep: 1,
-    },
-    {
-      title: 'Current Properties',
-      text: 'Each card shows your current occupancy rate to help identify which units have vacancies.',
-      position: 'top-[275px] left-[600px]',
-      total: 4,
-      currentStep: 2,
-    },
-    {
-      title: 'Current Properties',
-      text: 'You may also track your earnings and any pending dues for each property.',
-      position: 'top-[280px] left-[600px]',
-      total: 4,
-      currentStep: 3,
-    },
-    {
-      title: 'Current Properties',
-      text: 'Click on the arrow icon to manage room assignments, update rules, or edit property photos.',
-      position: 'top-[275px] left-[600px]',
-      total: 4,
-      currentStep: 4,
-    },
-    {
-      title: 'Pending Applications',
-      text: 'You can have an overview of your current tenant applications here. To view more details...',
-      position: 'top-[620px] left-[480px]',
+      title: 'Landlord Profile',
+      text: 'This is your profile page!',
+      position: 'top-[50px] left-[390px]',
       total: 2,
       currentStep: 1,
     },
     {
-      title: 'Pending Applications',
-      text: 'click “View All” to be redirected to all of your pending applications under “My Tenants” tab.',
-      position: 'top-[620px] left-[480px]',
+      title: 'Landlord Profile',
+      text: 'Here, you can view your personal information and modify it as needed.',
+      position: 'top-[30px] left-[390px]',
       total: 2,
       currentStep: 2,
     },
     {
-      title: 'Scheduled Visits',
-      text: 'You can have an overview of scheduled visits from potential tenants. To view more details...',
-      position: 'top-[620px] left-[1070px]',
-      total: 2,
+      title: 'Availability',
+      text: 'This section is your availability schedule. You can set your available time slots for potential tenant visits.',
+      position: 'top-[480px] left-[390px]',
+      total: 1,
       currentStep: 1,
     },
     {
-      title: 'Scheduled Visits',
-      text: 'click “View All” to be redirected to your calendar. You may accept or decline visits from tenants.',
-      position: 'top-[620px] left-[1070px]',
-      total: 2,
-      currentStep: 2,
+      title: 'Managed Properties',
+      text: 'This section shows all of your registered properties. You can manage your properties and track their performance here.',
+      position: 'top-[650px] left-[540px]',
+      total: 1,
+      currentStep: 1,
     },
+
   ];
 
   if (!show) return null;
@@ -159,7 +104,6 @@ const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose 
                   </button>
                 )}
 
-{/* for commit purposes, ignore pls hahaha */}
                 <button
                   onClick={handleNext}
                   className="w-[54px] rounded-lg bg-[#d0dbe3] py-1 text-[12px] text-[#2f3136] font-semibold font-lora text-center cursor-pointer hover:brightness-95 transition-all"

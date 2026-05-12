@@ -7,7 +7,7 @@ import SideBarLandlord, {
   type SideBarLandlordItemKey,
 } from "./SideBarLandlord";
 import LandlordFooter from "./LandlordFooter";
-import TutorialBubble from "../../../../frontend/src/components/landlord/TutorialsForLandlord";
+import TutorialBubble from "./TutorialsForLandlord";
 
 export type BreadcrumbItem = {
   label: string;
@@ -31,17 +31,14 @@ const LandlordLayout = ({
   return (
     <div className="landlord-shell relative flex h-screen w-screen flex-col overflow-hidden">
       <PageBackground />
-
       <div className="relative z-10 flex flex-1 overflow-hidden">
-        {/* Sidebar */}
         <SideBarLandlord
           activeItem={activeSidebarItem}
-          onProfileClick={() => navigate("/landlord/profile")}
+          onProfileClick={() => navigate("/landlord/profile/switcher")}
           onAddListing={() => navigate("/landlord/properties/new")}
         />
 
         <div className="flex min-w-0 flex-1 flex-col overflow-hidden pl-[68px] md:pl-0">
-          {/* Scrollable main area */}
           <main className="flex min-w-0 flex-1 flex-col overflow-y-auto">
             {breadcrumbs.length > 0 && (
               <nav
@@ -98,7 +95,6 @@ const LandlordLayout = ({
         </div>
       </div>
 
-      {/*Tutorial*/}
       <div
         className="fixed bottom-10 right-10 z-[9999] cursor-pointer transition-all hover:scale-110 active:scale-95"
         onClick={() => setShowHelp(!showHelp)}
