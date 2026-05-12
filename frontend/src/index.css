@@ -162,3 +162,19 @@ body {
     border-color: #303331;
   }
 }
+@keyframes dark-mode-icon-turn {
+  from {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(180deg) scale(1.12);
+  }
+  to {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
+.dark-mode-icon-turn {
+  animation: dark-mode-icon-turn 520ms ease-in-out;
+  transform-origin: center;
+}

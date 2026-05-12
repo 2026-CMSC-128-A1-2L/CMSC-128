@@ -73,12 +73,13 @@ const navItems = [
   },
 ];
 
-const SideBar = ({ activeItem, onProfileClick, className = '' }: SideBarProps) => {
+const SideBar = ({ activeItem, onToggleDarkMode, onProfileClick, className = '' }: SideBarProps) => {
   const [collapsed, setCollapsed] = useState(false);
   const [internalHover, setInternalHover] = useState<SideBarItemKey>();
   const location = useLocation();
   const [searchQuery, setSearchQuery] = useState('');
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const [darkModeIconSpinning, setDarkModeIconSpinning] = useState(false);
   const [profileMenuPosition, setProfileMenuPosition] = useState({ left: 0, bottom: 0 });
   const profileButtonRef = useRef<HTMLButtonElement>(null);
   const { isDark, toggle } = useTheme();
@@ -109,6 +110,15 @@ const SideBar = ({ activeItem, onProfileClick, className = '' }: SideBarProps) =
     await logout();
     setProfileMenuOpen(false);
     navigate('/', { replace: true });
+  };
+
+  const handleDarkModeClick: MouseEventHandler<HTMLButtonElement> = (event) => {
+    setDarkModeIconSpinning(true);
+    if (onToggleDarkMode) {
+      onToggleDarkMode(event);
+      return;
+    }
+    toggle();
   };
 
   useEffect(() => {
@@ -255,7 +265,7 @@ const SideBar = ({ activeItem, onProfileClick, className = '' }: SideBarProps) =
         {/* Dark mode */}
         <button
           type="button"
-          onClick={toggle}
+          onClick={handleDarkModeClick}
           aria-label="Toggle dark mode"
           className={[
             'flex w-full cursor-pointer items-center hover:bg-[#F0FAF6] transition-colors dark:hover:bg-[#17201d]',
@@ -265,12 +275,16 @@ const SideBar = ({ activeItem, onProfileClick, className = '' }: SideBarProps) =
           {!collapsed && <span className="h-11 w-2 shrink-0 rounded-sm bg-transparent" />}
           <span className="flex items-center gap-4 rounded-xl px-1">
             <Icon
-              icon='ph:moon-bold'
-              className="h-6 w-6 shrink-0 text-black dark:text-white"
+              icon="gg:dark-mode"
+              onAnimationEnd={() => setDarkModeIconSpinning(false)}
+              className={[
+                'h-6 w-6 shrink-0 text-[#001d18] dark:text-white',
+                darkModeIconSpinning ? 'dark-mode-icon-turn' : '',
+              ].join(' ')}
             />
             {!collapsed && (
               <span className="font-semibold text-[14px] text-[#2d3748] dark:text-[#d7e0ef]">
-                Dark Mode
+                {isDark ? 'Light Mode' : 'Dark Mode'}
               </span>
             )}
           </span>
