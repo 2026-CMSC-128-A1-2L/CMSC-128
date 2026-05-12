@@ -63,3 +63,44 @@ body {
     border-color: #303331;
   }
 }
+@layer utilities {
+  /* dark-readable-text-overrides: keep neutral text readable while preserving green accents */
+  .dark .text-black,
+  .dark .text-darkgreen,
+  .dark .text-darkslategray,
+  .dark .text-darkslategray-100,
+  .dark .text-darkslategray-200,
+  .dark .text-gray,
+  .dark .text-gray-200,
+  .dark .text-\[\#000\],
+  .dark .text-\[\#001d18\],
+  .dark .text-\[\#0B251C\],
+  .dark .text-\[\#0b251c\],
+  .dark .text-\[\#2d3748\],
+  .dark .text-\[\#2f3136\],
+  .dark .text-\[\#024338\] {
+    color: #edf6f4;
+  }
+
+  .dark .text-dimgray,
+  .dark .text-unselected,
+  .dark .text-slategray,
+  .dark .text-\[\#666\],
+  .dark .text-\[\#757575\],
+  .dark .text-\[\#64748b\],
+  .dark .text-\[\#8a9099\],
+  .dark .placeholder\:text-unselected::placeholder,
+  .dark .placeholder\:text-slategray::placeholder,
+  .dark .placeholder\:text-\[\#666\]::placeholder {
+    color: #a4acba;
+  }
+
+  .dark .text-teal,
+  .dark .text-teal-100,
+  .dark .text-teal-200,
+  .dark .text-\[\#096c5b\],
+  .dark .text-\[\#0c8873\],
+  .dark .text-\[\#2f8677\] {
+    color: #72cbb8;
+  }
+}

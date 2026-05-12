@@ -4,7 +4,7 @@ import unchecked_radio_button from '../../../../assets/unchecked_button.svg';
 import { useTheme } from '../../utilities/DarkMode';
 
 const Preferences: FunctionComponent = () => {
-  const { isDark, toggle } = useTheme();
+  const { isDark, setTheme } = useTheme();
 
   return (
     <div className="self-stretch rounded-t-num-0 rounded-b-num-16 border-whitesmoke-200 border-solid border overflow-hidden flex flex-col items-start py-6 px-6 sm:px-num-32 gap-6 text-center text-[24px] text-black">
@@ -26,7 +26,7 @@ const Preferences: FunctionComponent = () => {
           {/* Light Mode card */}
           <button
             type="button"
-            onClick={() => isDark && toggle()}
+            onClick={() => setTheme('light')}
             className={[
               'w-full lg:w-1/2 flex flex-col items-start gap-2.5 bg-transparent border-none p-0 text-left',
               !isDark ? 'cursor-default' : 'cursor-pointer group',
@@ -89,7 +89,7 @@ const Preferences: FunctionComponent = () => {
           {/* Dark Mode card */}
           <button
             type="button"
-            onClick={() => !isDark && toggle()}
+            onClick={() => setTheme('dark')}
             className={[
               'w-full lg:w-1/2 flex flex-col items-start gap-2.5 bg-transparent border-none p-0 text-left',
               isDark ? 'cursor-default' : 'cursor-pointer group',
