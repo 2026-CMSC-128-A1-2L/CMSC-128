@@ -210,3 +210,52 @@ body {
     background-color: #0d3a32;
   }
 }
+@layer utilities {
+  .dark .landlord-profile-shell {
+    background-color: rgba(16, 17, 17, 0.92);
+  }
+
+  .dark .landlord-profile-shell .bg-white,
+  .dark .landlord-profile-shell .bg-white\/70 {
+    background-color: #101111;
+  }
+
+  .dark .landlord-profile-shell .bg-\[\#eaf6f2\] {
+    background-color: #102c27;
+  }
+
+  .dark .landlord-profile-shell .bg-\[\#e5e7eb\] {
+    background-color: #2b2d31;
+  }
+
+  .dark .landlord-profile-shell .ring-\[\#f0f0f0\],
+  .dark .landlord-profile-shell .border-\[\#f0f0f0\],
+  .dark .landlord-profile-shell .border-whitesmoke-200 {
+    border-color: #303331;
+    --tw-ring-color: #303331;
+  }
+
+  .dark .landlord-profile-shell .shadow-\[0_1px_4px_0_rgba\(0\,0\,0\,0\.08\)\],
+  .dark .landlord-profile-shell .hover\:shadow-\[0_4px_12px_0_rgba\(0\,0\,0\,0\.12\)\]:hover {
+    box-shadow: none;
+  }
+
+  .dark .landlord-profile-shell .text-black,
+  .dark .landlord-profile-shell .text-\[\#2f3136\] {
+    color: #edf6f4;
+  }
+
+  .dark .landlord-profile-shell .text-\[\#666\],
+  .dark .landlord-profile-shell .text-\[\#9ca3af\] {
+    color: #a4acba;
+  }
+
+  .dark .landlord-profile-shell .text-\[\#096c5b\],
+  .dark .landlord-profile-shell .text-\[\#024338\] {
+    color: #72cbb8;
+  }
+
+  .dark .landlord-profile-shell .hover\:bg-\[\#eaf6f2\]\/60:hover {
+    background-color: #17201d;
+  }
+}

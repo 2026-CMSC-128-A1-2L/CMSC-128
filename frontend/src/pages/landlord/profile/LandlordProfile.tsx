@@ -28,14 +28,14 @@ const properties: Property[] = [
   {
     id: '1',
     name: 'Tri-AD Hall Dormitory',
-    location: 'Umali Subdivision, Los BaÃ±os',
+    location: 'Umali Subdivision, Los Baños',
     rating: 4.3,
     image: dorm1,
   },
   {
     id: '2',
     name: 'Two Sapphire Place',
-    location: 'Umali Subdivision, Los BaÃ±os',
+    location: 'Umali Subdivision, Los Baños',
     rating: 3.7,
     image: dorm2,
   },
@@ -167,10 +167,10 @@ const LandlordProfile = () => {
         { label: 'Verification Status', to: '/landlord/profile/verification' },
       ]}
     >
-      <div className="flex w-full flex-col gap-[12px] rounded-[16px] bg-white/70 p-[8px] pb-[32px]">
+      <div className="landlord-profile-shell flex w-full flex-col gap-[12px] rounded-[16px] bg-white/70 p-[8px] pb-[32px] dark:bg-[#101111]/92 dark:text-[#edf6f4]">
         <LandlordInfoCard info={landlord} />
 
-        <div className="h-px w-full bg-[#e5e7eb]/70" />
+        <div className="h-px w-full bg-[#e5e7eb]/70 dark:bg-[#303331]" />
 
         <section className="flex flex-col gap-[16px] px-[32px]">
           <SectionHeader title="Availability" />
@@ -185,7 +185,7 @@ const LandlordProfile = () => {
           </div>
         </section>
 
-        <div className="h-px w-full bg-[#e5e7eb]/70" />
+        <div className="h-px w-full bg-[#e5e7eb]/70 dark:bg-[#303331]" />
 
         <section className="flex flex-col gap-[16px] px-[32px]">
           <SectionHeader title="Managed Properties" onEdit={() => {}} />
