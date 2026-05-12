@@ -66,6 +66,8 @@ export interface BuildingInformationData {
   managers: ManagerData[];
   payment: PaymentData;
   requirements: RequirementItem[];
+  allowPasalo: boolean;
+  allowOcularVisit: boolean;
 }
 
 interface BuildingStore {
@@ -134,6 +136,8 @@ const defaultState: BuildingInformationData = {
   managers: [],
   payment: defaultPayment,
   requirements: defaultRequirements,
+  allowPasalo: false,
+  allowOcularVisit: false,
 };
 
 // ─── Store ────────────────────────────────────────────────────────────────────
@@ -160,7 +164,7 @@ export const useBuildingStore = create<BuildingStore>((set) => ({
       buildingInfo: {
         ...state.buildingInfo,
         requirements: state.buildingInfo.requirements.map((req) =>
-          req.id === id ? { ...req, file, date } : req,
+          req.id === id ? { ...req, file, date } : req
         ),
       },
     })),
@@ -182,7 +186,7 @@ export const useBuildingStore = create<BuildingStore>((set) => ({
       buildingInfo: {
         ...state.buildingInfo,
         roomTypes: state.buildingInfo.roomTypes.map((rt) =>
-          rt.id === id ? { ...rt, ...data } : rt,
+          rt.id === id ? { ...rt, ...data } : rt
         ),
       },
     })),
@@ -202,7 +206,9 @@ export const useBuildingStore = create<BuildingStore>((set) => ({
       buildingInfo: {
         ...state.buildingInfo,
         roomTypes: state.buildingInfo.roomTypes.map((rt) =>
-          rt.id === roomTypeId ? { ...rt, rooms: [...rt.rooms, defaultRoom()] } : rt,
+          rt.id === roomTypeId
+            ? { ...rt, rooms: [...rt.rooms, defaultRoom()] }
+            : rt
         ),
       },
     })),
@@ -214,10 +220,12 @@ export const useBuildingStore = create<BuildingStore>((set) => ({
         roomTypes: state.buildingInfo.roomTypes.map((rt) =>
           rt.id === roomTypeId
             ? {
-                ...rt,
-                rooms: rt.rooms.map((room) => (room.id === roomId ? { ...room, ...data } : room)),
-              }
-            : rt,
+              ...rt,
+              rooms: rt.rooms.map((room) =>
+                room.id === roomId ? { ...room, ...data } : room
+              ),
+            }
+            : rt
         ),
       },
     })),
@@ -229,7 +237,7 @@ export const useBuildingStore = create<BuildingStore>((set) => ({
         roomTypes: state.buildingInfo.roomTypes.map((rt) =>
           rt.id === roomTypeId
             ? { ...rt, rooms: rt.rooms.filter((room) => room.id !== roomId) }
-            : rt,
+            : rt
         ),
       },
     })),
