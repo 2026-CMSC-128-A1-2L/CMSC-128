@@ -11,10 +11,11 @@ import type {
   SearchFacilitiesResponseBodySchema,
 } from 'shared';
 
-
 export type CreateFacilityBody = z.infer<typeof CreateFacilityRequestBodySchema>;
 export type UpdateFacilityBody = z.infer<typeof UpdateFacilityRequestBodySchema>;
-export type UpdateManagerPermissionsBody = z.infer<typeof UpdateManagerPermissionsRequestBodySchema>;
+export type UpdateManagerPermissionsBody = z.infer<
+  typeof UpdateManagerPermissionsRequestBodySchema
+>;
 export type FacilityFilter = z.infer<typeof FacilityFilterSchema>;
 export type SearchFacilitiesBody = z.infer<typeof SearchFacilitiesRequestBodySchema>;
 export type GetFacilitiesResponse = z.infer<typeof GetFacilitiesResponseBodySchema>;

@@ -11,17 +11,22 @@ import TreeIcon from '../../../../../assets/environment_tree_icon.svg';
 import FilledTreeIcon from '../../../../../assets/environment_tree_icon_filled.svg';
 import SideBar from '../../../../components/user/SideBar';
 import BreadcrumbHeader from '../../../../components/general/Breadcrumb';
+import ProgressBar from '../../../../components/user/ProgressBar';
+import placeholder from '../../../../../assets/one_sapphire_place.png';
 
 const RateAndReview: FunctionComponent = () => {
   const navigate = useNavigate();
 
-  const onUserProfileTextClick = useCallback(() => {
-    navigate('/rate-review-upload');
-  }, [navigate]);
-
   const [qualityRating, setQualityRating] = useState(0);
   const [comfortRating, setComfortRating] = useState(0);
   const [environmentRating, setEnvironmentRating] = useState(0);
+
+  const isFormInvalid = qualityRating === 0 || comfortRating === 0 || environmentRating === 0;
+
+  const onUserProfileTextClick = useCallback(() => {
+    if (isFormInvalid) return;
+    navigate('/rate-review-upload');
+  }, [navigate, isFormInvalid]);
 
   return (
     <div className="w-full h-screen relative overflow-y-auto flex flex-col items-start isolate gap-2.5 text-left text-num-14 text-darkslategray-100 font-lora">
@@ -59,7 +64,7 @@ const RateAndReview: FunctionComponent = () => {
                     <div className="h-[195px] w-[928px] rounded-xl border-whitesmoke-200 border-solid border box-border flex items-center gap-2.5">
                       <img
                         className="h-[195px] w-[305px] rounded-tl-xl rounded-tr-none rounded-br-none rounded-bl-xl object-cover"
-                        alt=""
+                        src= {placeholder} alt=""
                       />
                       <div className="h-[195px] flex-1 rounded-2xl flex flex-col items-center py-num-0 px-num-12 box-border">
                         <div className="w-full h-[195px] flex flex-col items-center justify-center gap-0.5 max-w-full">
@@ -122,26 +127,16 @@ const RateAndReview: FunctionComponent = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="self-stretch flex flex-col items-center py-6 px-num-32 text-center text-darkslategray-200 font-poppins">
-                    <div className="w-full flex items-center justify-center max-w-full">
-                      <div className="h-[93.9px] w-[784px] relative">
-                        <div className="absolute h-[9.16%] w-[32.64%] top-[29.9%] right-[56.29%] bottom-[60.94%] left-[11.07%] rounded-[34.55px] bg-darkslategray-200" />
-                        <div className="absolute h-[37.91%] w-[13.42%] top-[51.75%] left-[0%] leading-8 font-semibold flex items-center justify-center">
-                          Information
-                        </div>
-                        <div className="absolute h-[37.91%] w-[10.37%] top-[51.75%] left-[88.93%] font-semibold flex items-center justify-center">
-                          Finalize
-                        </div>
-                        <div className="absolute h-[37.91%] w-[11.2%] top-[51.75%] left-[43.71%] font-semibold flex items-center justify-center">
-                          Reviewing
-                        </div>
-                        <div className="absolute h-[9.16%] w-[34.44%] top-[26.45%] right-[10.65%] bottom-[64.39%] left-[54.91%] rounded-[34.55px] [background:linear-gradient(90deg,rgba(2,67,56,0.8),#b5c8c5)]" />
-                        <div className="absolute h-[37.91%] w-[4.57%] top-[12.65%] right-[48.41%] bottom-[49.44%] left-[47.03%] rounded-[50%] bg-darkslategray-200" />
-                        <div className="absolute h-[37.91%] w-[4.57%] top-[12.65%] right-[3.59%] bottom-[49.44%] left-[91.84%] rounded-[50%] bg-silver-100" />
-                        <div className="absolute h-[37.91%] w-[4.57%] top-[13.8%] right-[91.01%] bottom-[48.29%] left-[4.43%] rounded-[50%] bg-darkslategray-200" />
-                      </div>
+                    <div className="self-stretch flex flex-col items-center py-6 px-num-32 text-center font-poppins">
+                      <ProgressBar
+                        currentStepIndex={1}
+                        steps={[
+                          { key: 'information', label: 'Information' },
+                          { key: 'reviewing', label: 'Reviewing' },
+                          { key: 'finalize', label: 'Finalize' },
+                        ]}
+                      />
                     </div>
-                  </div>
                 </div>
                 <div className="self-stretch h-[405px] flex flex-col items-center gap-[117px] shrink-0 text-[18px] text-darkolivegreen">
                   <div className="self-stretch flex flex-col items-center justify-center py-num-12 px-num-32 gap-[37px]">
@@ -236,8 +231,12 @@ const RateAndReview: FunctionComponent = () => {
                     <button
                       className="absolute top-0 left-[627.93px] w-[108px] h-8 text-center text-white font-lora border-none bg-transparent cursor-pointer p-0 group"
                       onClick={onUserProfileTextClick}
+                      disabled={isFormInvalid}
                     >
-                      <div className="absolute h-[337.5%] w-[29.63%] top-full right-[70.37%] bottom-[-337.5%] left-[0%] shadow-[0px_0px_4px_rgba(0,0,0,0.25)] rounded-[6.17px] bg-darkslategray-200 transform-[rotate(-90deg)] origin-top-left group-hover:brightness-125 transition-all" />
+                      <div 
+                        className={`absolute h-[337.5%] w-[29.63%] top-full right-[70.37%] bottom-[-337.5%] left-[0%] shadow-[0px_0px_4px_rgba(0,0,0,0.25)] rounded-[6.17px] transform-[rotate(-90deg)] origin-top-left transition-all 
+                        ${isFormInvalid ? 'bg-gray-400 opacity-50' : 'bg-darkslategray-200 group-hover:brightness-125'}`} 
+                      />
                       <div className="absolute h-[101.25%] w-[100.28%] top-[0%] left-[0%] font-medium flex items-center justify-center text-[14px]">
                         Submit
                       </div>

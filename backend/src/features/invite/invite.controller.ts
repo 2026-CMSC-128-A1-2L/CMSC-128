@@ -24,7 +24,7 @@ export const routeInviteManager: RequestHandler = async (req, res, _next) => {
 // manager accepts an invite from landlord
 export const routeAcceptInvite: RequestHandler = async (req, res, _next) => {
   assert.ok(req.user);
-  const token = z.string().parse(req.params.token);
+  const token = z.string().parse(req.params.inviteId);
   const invite = await acceptInvite(token, req.user.emails);
   await sendNotification(
     invite.landlordId,
@@ -38,7 +38,7 @@ export const routeAcceptInvite: RequestHandler = async (req, res, _next) => {
 // manager declines an invite
 export const routeDeclineInvite: RequestHandler = async (req, res, _next) => {
   assert.ok(req.user);
-  const token = z.string().parse(req.params.token);
+  const token = z.string().parse(req.params.inviteId);
   const invite = await declineInvite(token, req.user.emails);
   await sendNotification(
     invite.landlordId,
@@ -50,7 +50,7 @@ export const routeDeclineInvite: RequestHandler = async (req, res, _next) => {
 };
 
 // get specific invites
-export const routeGetInviteById: RequestHandler = async (req, res, next) => {
+export const routeGetInviteById: RequestHandler = async (req, res, _next) => {
   const token = z.string().parse(req.params.inviteId);
   const invite = await Invite.findOne({ token, ...res.locals.filters });
   if (!invite) throw new AppError(404, 'Invite not found.');
@@ -58,7 +58,7 @@ export const routeGetInviteById: RequestHandler = async (req, res, next) => {
 };
 
 // landlord to delete/retract invites to add a manager
-export const routeDeleteInvite: RequestHandler = async (req, res, next) => {
+export const routeDeleteInvite: RequestHandler = async (req, res, _next) => {
   assert.ok(req.user);
   const token = z.string().parse(req.params.inviteId);
   const invite = await Invite.findOne({ token, landlordId: req.user._id });

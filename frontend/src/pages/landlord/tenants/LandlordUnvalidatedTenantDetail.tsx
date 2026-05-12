@@ -1,10 +1,13 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import LandlordLayout from '../../../components/landlord/LandlordLayout';
 import TenantAvatar from '../../../components/landlord/tenants/TenantAvatar';
 import TenantInfoField from '../../../components/landlord/tenants/TenantInfoField';
 import TenantProfileHeader from '../../../components/landlord/tenants/TenantProfileHeader';
-import SubmittedDocumentCard from '../../../components/landlord/tenants/SubmittedDocumentCard';
+import SubmittedDocumentCard, {
+  type DocumentReviewStatus,
+} from '../../../components/landlord/tenants/SubmittedDocumentCard';
+import ApproveDocumentPopup from '../../../components/landlord/tenants/popups/ApproveDocumentPopup';
 import FileActionPopup from '../../../components/landlord/tenants/popups/FileActionPopup';
 import RejectDocumentPopup from '../../../components/landlord/tenants/popups/RejectDocumentPopup';
 import { getPendingApplicationById, type SubmittedDocument } from '../../../data/landlordTenants';
@@ -15,20 +18,41 @@ const LandlordUnvalidatedTenantDetail = () => {
   const application = tenantId ? getPendingApplicationById(tenantId) : undefined;
   const [openFileMenuId, setOpenFileMenuId] = useState<string | null>(null);
   const [rejectTarget, setRejectTarget] = useState<SubmittedDocument | null>(null);
+  const [approveTarget, setApproveTarget] = useState<SubmittedDocument | null>(null);
+  const [docReview, setDocReview] = useState<Record<string, DocumentReviewStatus>>({});
+
+  useEffect(() => {
+    if (!application) return;
+    const next: Record<string, DocumentReviewStatus> = {};
+    application.documents.forEach((d) => {
+      next[d.id] = 'pending';
+    });
+    setDocReview(next);
+    setOpenFileMenuId(null);
+    setRejectTarget(null);
+    setApproveTarget(null);
+  }, [application]);
+
+  const hasDocuments = Boolean(application && application.documents.length > 0);
+
+  const allDocumentsApproved = useMemo(() => {
+    if (!application) return true;
+    if (application.documents.length === 0) return true;
+    return application.documents.every((d) => docReview[d.id] === 'approved');
+  }, [application, docReview]);
+
+  const handleRejectApplication = () => {
+    navigate('/landlord/tenants/unvalidated');
+  };
+
+  const handleApproveApplication = () => {
+    if (!allDocumentsApproved) return;
+    navigate('/landlord/tenants');
+  };
 
   if (!application) {
     return <Navigate to="/landlord/tenants/unvalidated" replace />;
   }
-
-  const hasDocuments = application.documents.length > 0;
-
-  const handleReject = () => {
-    navigate('/landlord/tenants/unvalidated');
-  };
-
-  const handleApprove = () => {
-    navigate('/landlord/tenants');
-  };
 
   return (
     <LandlordLayout
@@ -99,15 +123,16 @@ const LandlordUnvalidatedTenantDetail = () => {
                     <SubmittedDocumentCard
                       key={document.id}
                       document={document}
-                      onMoreOptions={() =>
-                        setOpenFileMenuId((prev) => (prev === document.id ? null : document.id))
+                      reviewStatus={docReview[document.id] ?? 'pending'}
+                      onMoreOptions={(doc) =>
+                        setOpenFileMenuId((prev) => (prev === doc.id ? null : doc.id))
                       }
                       actionMenu={
                         <FileActionPopup
                           isOpen={openFileMenuId === document.id}
                           onApprove={() => {
                             setOpenFileMenuId(null);
-                            handleApprove();
+                            setApproveTarget(document);
                           }}
                           onReject={() => {
                             setOpenFileMenuId(null);
@@ -119,23 +144,37 @@ const LandlordUnvalidatedTenantDetail = () => {
                   ))}
                 </div>
 
-                <div className="flex w-full items-center justify-center gap-[10px] px-[12px] pt-[8px]">
-                  <button
-                    type="button"
-                    onClick={handleReject}
-                    className="flex cursor-pointer items-center justify-center rounded-[16px] bg-[#f1f5f9] px-[16px] py-[12px] font-['Inter',sans-serif] text-[14px] font-bold transition-colors duration-200 hover:bg-[#e5edf4]"
-                  >
-                    <span className="bg-linear-to-b from-[#c00f0f] to-[#e44f4f] bg-clip-text text-transparent">
-                      Reject
-                    </span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleApprove}
-                    className="flex cursor-pointer items-center justify-center rounded-[16px] bg-[#cbf6ed] px-[24px] py-[12px] font-['Inter',sans-serif] text-[14px] font-bold text-[#096c5b] transition-colors duration-200 hover:bg-[#b4efe1]"
-                  >
-                    Approve
-                  </button>
+                {!allDocumentsApproved && (
+                  <p className="px-[12px] text-center font-['Inter',sans-serif] text-[13px] font-medium text-[#64748b]">
+                    Every document must be approved before you can accept this applicant.
+                  </p>
+                )}
+
+                <div className="flex w-full flex-col items-center justify-center gap-[10px] px-[12px] pt-[8px]">
+                  <div className="flex items-center justify-center gap-[10px]">
+                    <button
+                      type="button"
+                      onClick={handleRejectApplication}
+                      className="flex cursor-pointer items-center justify-center rounded-[16px] bg-[#f1f5f9] px-[16px] py-[12px] font-['Inter',sans-serif] text-[14px] font-bold transition-colors duration-200 hover:bg-[#e5edf4]"
+                    >
+                      <span className="bg-linear-to-b from-[#c00f0f] to-[#e44f4f] bg-clip-text text-transparent">
+                        Reject
+                      </span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleApproveApplication}
+                      disabled={!allDocumentsApproved}
+                      className={[
+                        "flex cursor-pointer items-center justify-center rounded-[16px] px-[24px] py-[12px] font-['Inter',sans-serif] text-[14px] font-bold transition-colors duration-200",
+                        allDocumentsApproved
+                          ? 'bg-[#cbf6ed] text-[#096c5b] hover:bg-[#b4efe1]'
+                          : 'cursor-not-allowed bg-[#e8ecf1] text-[#94a3b8]',
+                      ].join(' ')}
+                    >
+                      Approve
+                    </button>
+                  </div>
                 </div>
               </>
             )}
@@ -143,11 +182,26 @@ const LandlordUnvalidatedTenantDetail = () => {
         </div>
       </div>
 
+      <ApproveDocumentPopup
+        document={approveTarget}
+        isOpen={Boolean(approveTarget)}
+        onClose={() => setApproveTarget(null)}
+        onConfirm={() => {
+          if (approveTarget) {
+            setDocReview((prev) => ({ ...prev, [approveTarget.id]: 'approved' }));
+          }
+        }}
+      />
+
       <RejectDocumentPopup
         document={rejectTarget}
         isOpen={Boolean(rejectTarget)}
         onClose={() => setRejectTarget(null)}
-        onConfirm={() => navigate('/landlord/tenants/unvalidated')}
+        onConfirm={() => {
+          if (rejectTarget) {
+            setDocReview((prev) => ({ ...prev, [rejectTarget.id]: 'rejected' }));
+          }
+        }}
       />
     </LandlordLayout>
   );

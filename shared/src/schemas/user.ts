@@ -1,7 +1,9 @@
 import z from 'zod';
 import { ObjectIdSchema, QuerySchema } from './common.js';
 import {
+  USER_STATUS,
   USER_TYPES,
+  VERIFICATION_STATUS,
   UTILITY_PREFERENCES,
   AMENITY_PREFERENCES,
   NEIGHBORHOOD_FEATURES,
@@ -19,6 +21,9 @@ export type StudentPreferences = z.infer<typeof StudentPreferenceSchema>;
 const ScheduleSchema = z.object({});
 
 const BaseProfileSchema = z.object({
+  firstName: z.string().min(1),
+  middleName: z.string(),
+  lastName: z.string().min(1),
   profilePicture: z.url(),
   address: z.string(),
   contact: z.string(),
@@ -48,11 +53,27 @@ export const OnboardSelfRequestBodySchema = z.discriminatedUnion('userType', [
   OnboardManagerRequestBodySchema,
 ]);
 
+// POST /users/me/verification
+export const SubmitVerificationRequestBodySchema = z.object({
+  documents: z
+    .array(
+      z.object({
+        docId: z.string().min(1),
+        name: z.string().min(1),
+        fileIds: z.array(z.string().min(1)).min(1),
+      }),
+    )
+    .min(1),
+});
+
 // POST /users/:userId/approve
 export const ApproveUserRequestBodySchema = z
   .object({
-    degreeProgram: z.string(),
-    studentNumber: z.string().regex(/^[0-9]{9}$/, 'Must be exactly 9 digits'),
+    degreeProgram: z.string().optional(),
+    studentNumber: z
+      .string()
+      .regex(/^[0-9]{9}$/, 'Must be exactly 9 digits')
+      .optional(),
   })
   .optional();
 
@@ -60,6 +81,8 @@ export const ApproveUserRequestBodySchema = z
 export const UserFilterSchema = z.object({
   userId: ObjectIdSchema.optional(),
   userType: z.enum(USER_TYPES).optional(),
+  status: z.enum(USER_STATUS).optional(),
+  verificationStatus: z.enum(VERIFICATION_STATUS).optional(),
 });
 
 export const GetUsersQuerySchema = QuerySchema(UserFilterSchema);
