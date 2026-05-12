@@ -255,8 +255,8 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
                 <div
                   onClick={() => setBuildingInfo({ ...buildingInfo, allowPasalo: !buildingInfo.allowPasalo })}
                   className={`self-stretch rounded-2xl flex items-center py-4 px-5 gap-4 cursor-pointer transition-all select-none border-[1.5px] ${buildingInfo.allowPasalo
-                    ? 'border-teal-600 bg-[#f4faf9]' // Light minty background
-                    : 'border-gray-100 bg-white hover:border-gray-200'
+                      ? 'border-teal-600 bg-[#f4faf9]'
+                      : 'border-transparent bg-white hover:border-gray-200 hover:bg-gray-50/50'
                     }`}
                 >
                   {/* Icon box */}
@@ -280,8 +280,8 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
 
                   {/* Badge */}
                   <span className={`text-xs font-semibold rounded-full px-3 py-1 shrink-0 transition-colors ${buildingInfo.allowPasalo
-                    ? 'bg-[#4a8a7f] text-white'
-                    : 'bg-gray-400 text-white'
+                      ? 'bg-[#4a8a7f] text-white'
+                      : 'bg-gray-400 text-white'
                     }`}>
                     {buildingInfo.allowPasalo ? 'Enabled' : 'Off'}
                   </span>
@@ -298,8 +298,8 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
                 <div
                   onClick={() => setBuildingInfo({ ...buildingInfo, allowOcularVisit: !buildingInfo.allowOcularVisit })}
                   className={`self-stretch rounded-2xl flex items-center py-4 px-5 gap-4 cursor-pointer transition-all select-none border-[1.5px] ${buildingInfo.allowOcularVisit
-                    ? 'border-teal-600 bg-[#f4faf9]'
-                    : 'border-gray-100 bg-white hover:border-gray-200'
+                      ? 'border-teal-600 bg-[#f4faf9]'
+                      : 'border-transparent bg-white hover:border-gray-200 hover:bg-gray-50/50'
                     }`}
                 >
                   {/* Icon box */}
@@ -323,8 +323,8 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
 
                   {/* Badge */}
                   <span className={`text-xs font-semibold rounded-full px-3 py-1 shrink-0 transition-colors ${buildingInfo.allowOcularVisit
-                    ? 'bg-[#4a8a7f] text-white'
-                    : 'bg-gray-400 text-white'
+                      ? 'bg-[#4a8a7f] text-white'
+                      : 'bg-gray-400 text-white'
                     }`}>
                     {buildingInfo.allowOcularVisit ? 'Enabled' : 'Off'}
                   </span>
@@ -338,8 +338,7 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNe
                 </div>
 
               </div>
-            </div>
-            {/* ── Add Managers ── */}
+            </div>            {/* ── Add Managers ── */}
             <div className="self-stretch overflow-hidden flex flex-col items-start p-num-10 gap-2.5">
               <div className="self-stretch flex items-center">
                 <b className="relative tracking-num--0_01">Add Managers</b>
