@@ -75,7 +75,7 @@ const buildFacilityFilterQuery = (
   }
 
   if (filters.landlordId != null) {
-    queryFilter.landlord = filters.landlordId;
+    queryFilter.landlordId = filters.landlordId;
   }
 
   if (filters.location?.text) {
@@ -356,7 +356,7 @@ export const updateManagerPermissions = async (
   await facility.save();
 
   // cascade removal to all listings under this facility
-  await Listing.updateMany({ facilityId: facilityId }, { $pull: { managers: { userId } } });
+  await Listing.updateMany({ facilityId: facilityId }, { $set: { managers: { userId } } });
 };
 
 export const approveFacility = async (

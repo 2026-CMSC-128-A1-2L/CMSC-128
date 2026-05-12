@@ -1,4 +1,9 @@
-import { CreateBookingBodySchema, UpdateBookingStatusBodySchema, BookingFilterSchema, GetBookingsQuerySchema } from 'shared';
+import type {
+  CreateBookingBodySchema,
+  UpdateBookingStatusBodySchema,
+  BookingFilterSchema,
+  GetBookingsQuerySchema,
+} from 'shared';
 import type z from 'zod';
 
 export type CreateBookingBody = z.infer<typeof CreateBookingBodySchema>;

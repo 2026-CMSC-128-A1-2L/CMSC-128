@@ -17,3 +17,245 @@ body {
     border-width: 0;
   }
 }
+
+@layer base {
+  .dark {
+    color-scheme: dark;
+  }
+}
+
+@layer utilities {
+  .dark .landlord-shell .bg-white {
+    background-color: #101111;
+  }
+
+  .dark .landlord-shell .bg-aliceblue,
+  .dark .landlord-shell .bg-whitesmoke-100,
+  .dark .landlord-shell .bg-unavailable_action,
+  .dark .landlord-shell .bg-\[\#f0f0f0\],
+  .dark .landlord-shell .bg-\[\#f0f7ff\],
+  .dark .landlord-shell .bg-\[\#f7f7f7\],
+  .dark .landlord-shell .bg-\[\#f8fafc\] {
+    background-color: #1f2022;
+  }
+
+  .dark .landlord-shell .text-black,
+  .dark .landlord-shell .text-\[\#001d18\],
+  .dark .landlord-shell .text-\[\#2f3136\] {
+    color: #edf6f4;
+  }
+
+  .dark .landlord-shell .text-\[\#666\],
+  .dark .landlord-shell .text-dimgray,
+  .dark .landlord-shell .text-unselected {
+    color: #a4acba;
+  }
+
+  .dark .landlord-shell .text-\[\#096c5b\],
+  .dark .landlord-shell .text-teal {
+    color: #72cbb8;
+  }
+
+  .dark .landlord-shell .border-\[\#f0f0f0\],
+  .dark .landlord-shell .border-whitesmoke,
+  .dark .landlord-shell .border-whitesmoke-200,
+  .dark .landlord-shell .border-gainsboro {
+    border-color: #303331;
+  }
+}
+@layer utilities {
+  /* dark-readable-text-overrides: keep neutral text readable while preserving green accents */
+  .dark .text-black,
+  .dark .text-darkgreen,
+  .dark .text-darkslategray,
+  .dark .text-darkslategray-100,
+  .dark .text-darkslategray-200,
+  .dark .text-gray,
+  .dark .text-gray-200,
+  .dark .text-\[\#000\],
+  .dark .text-\[\#001d18\],
+  .dark .text-\[\#0B251C\],
+  .dark .text-\[\#0b251c\],
+  .dark .text-\[\#2d3748\],
+  .dark .text-\[\#2f3136\],
+  .dark .text-\[\#024338\] {
+    color: #edf6f4;
+  }
+
+  .dark .text-dimgray,
+  .dark .text-unselected,
+  .dark .text-slategray,
+  .dark .text-\[\#666\],
+  .dark .text-\[\#757575\],
+  .dark .text-\[\#64748b\],
+  .dark .text-\[\#8a9099\],
+  .dark .placeholder\:text-unselected::placeholder,
+  .dark .placeholder\:text-slategray::placeholder,
+  .dark .placeholder\:text-\[\#666\]::placeholder {
+    color: #a4acba;
+  }
+
+  .dark .text-teal,
+  .dark .text-teal-100,
+  .dark .text-teal-200,
+  .dark .text-\[\#096c5b\],
+  .dark .text-\[\#0c8873\],
+  .dark .text-\[\#2f8677\] {
+    color: #72cbb8;
+  }
+}
+@layer utilities {
+  .dark .user-calendar-shell .bg-white {
+    background-color: #101111;
+  }
+
+  .dark .user-calendar-shell .bg-whitesmoke-100,
+  .dark .user-calendar-shell .bg-\[\#f8fafc\],
+  .dark .user-calendar-shell .bg-\[\#f7f7f7\] {
+    background-color: #1f2022;
+  }
+
+  .dark .user-calendar-shell .border-whitesmoke-200,
+  .dark .user-calendar-shell .border-gainsboro {
+    border-color: #303331;
+  }
+
+  .dark .user-calendar-shell .hover\:bg-whitesmoke-100:hover,
+  .dark .user-calendar-shell .hover\:bg-whitesmoke-200:hover,
+  .dark .user-calendar-shell .hover\:bg-gray-50:hover,
+  .dark .user-calendar-shell .hover\:bg-gray-100:hover,
+  .dark .user-calendar-shell .hover\:bg-blue-50:hover {
+    background-color: #1f2022;
+  }
+
+  .dark .user-calendar-shell .bg-lightcyan,
+  .dark .user-calendar-shell .bg-lightcyan-100 {
+    background-color: #17362f;
+  }
+}
+@layer utilities {
+  .dark .user-finance-shell .bg-white {
+    background-color: #101111;
+  }
+
+  .dark .user-finance-shell .bg-lightcyan-100,
+  .dark .user-finance-shell .bg-lightcyan-200 {
+    background-color: #0d241f;
+  }
+
+  .dark .user-finance-shell .border-whitesmoke-200 {
+    border-color: #303331;
+  }
+
+  .dark .user-finance-shell .hover\:shadow-md:hover,
+  .dark .user-finance-shell .hover\:shadow-sm:hover {
+    box-shadow: none;
+  }
+}
+@layer utilities {
+  .dark .user-messages-shell .bg-white {
+    background-color: #101111;
+  }
+
+  .dark .user-messages-shell .border-whitesmoke,
+  .dark .user-messages-shell .border-whitesmoke-200 {
+    border-color: #303331;
+  }
+}
+@keyframes dark-mode-icon-turn {
+  from {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(180deg) scale(1.12);
+  }
+  to {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
+.dark-mode-icon-turn {
+  animation: dark-mode-icon-turn 520ms ease-in-out;
+  transform-origin: center;
+}
+@layer utilities {
+  .dark .user-profile-shell .bg-white {
+    background-color: #101111;
+  }
+
+  .dark .user-profile-shell .border-whitesmoke-200,
+  .dark .user-profile-shell .border-\[\#f0f0f0\] {
+    border-color: #303331;
+  }
+
+  .dark .user-profile-shell .text-black,
+  .dark .user-profile-shell .text-darkslategray-100,
+  .dark .user-profile-shell .text-darkslategray-200 {
+    color: #edf6f4;
+  }
+
+  .dark .user-profile-shell .text-dimgray,
+  .dark .user-profile-shell .text-slategray {
+    color: #a4acba;
+  }
+
+  .dark .user-profile-shell .text-\[\#096C5B\],
+  .dark .user-profile-shell .text-\[\#096c5b\],
+  .dark .user-profile-shell .text-teal-700,
+  .dark .user-profile-shell .text-teal-100 {
+    color: #72cbb8;
+  }
+
+  .dark .user-profile-shell .bg-\[\#f1f5f9\] {
+    background-color: #0d3a32;
+  }
+}
+@layer utilities {
+  .dark .landlord-profile-shell {
+    background-color: rgba(16, 17, 17, 0.92);
+  }
+
+  .dark .landlord-profile-shell .bg-white,
+  .dark .landlord-profile-shell .bg-white\/70 {
+    background-color: #101111;
+  }
+
+  .dark .landlord-profile-shell .bg-\[\#eaf6f2\] {
+    background-color: #102c27;
+  }
+
+  .dark .landlord-profile-shell .bg-\[\#e5e7eb\] {
+    background-color: #2b2d31;
+  }
+
+  .dark .landlord-profile-shell .ring-\[\#f0f0f0\],
+  .dark .landlord-profile-shell .border-\[\#f0f0f0\],
+  .dark .landlord-profile-shell .border-whitesmoke-200 {
+    border-color: #303331;
+    --tw-ring-color: #303331;
+  }
+
+  .dark .landlord-profile-shell .shadow-\[0_1px_4px_0_rgba\(0\,0\,0\,0\.08\)\],
+  .dark .landlord-profile-shell .hover\:shadow-\[0_4px_12px_0_rgba\(0\,0\,0\,0\.12\)\]:hover {
+    box-shadow: none;
+  }
+
+  .dark .landlord-profile-shell .text-black,
+  .dark .landlord-profile-shell .text-\[\#2f3136\] {
+    color: #edf6f4;
+  }
+
+  .dark .landlord-profile-shell .text-\[\#666\],
+  .dark .landlord-profile-shell .text-\[\#9ca3af\] {
+    color: #a4acba;
+  }
+
+  .dark .landlord-profile-shell .text-\[\#096c5b\],
+  .dark .landlord-profile-shell .text-\[\#024338\] {
+    color: #72cbb8;
+  }
+
+  .dark .landlord-profile-shell .hover\:bg-\[\#eaf6f2\]\/60:hover {
+    background-color: #17201d;
+  }
+}

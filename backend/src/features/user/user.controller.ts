@@ -6,6 +6,7 @@ import {
   OnboardSelfRequestBodySchema,
   ApproveUserRequestBodySchema,
   ObjectIdSchema,
+  SubmitVerificationRequestBodySchema,
 } from 'shared';
 import {
   getUsers,
@@ -15,6 +16,7 @@ import {
   updateSelf,
   rejectUser,
   onboardSelf,
+  submitVerification,
 } from './user.service.js';
 import { AppError } from '../../error.js';
 import assert from 'node:assert';
@@ -57,10 +59,19 @@ export const routeUpdateSelf: RequestHandler = async (req, res, _next) => {
 export const routeOnboardSelf: RequestHandler = async (req, res, _next) => {
   assert.ok(req.user);
   const userId = req.user._id;
-  if (req.user.status !== 'setup') throw new AppError(422, 'Already done onboarding.');
+  if (req.user.status !== 'setup' && req.user.userType) {
+    throw new AppError(422, 'Already done onboarding.');
+  }
   const body = OnboardSelfRequestBodySchema.parse(req.body);
   const user = await onboardSelf(userId, body);
   if (!user) throw new AppError(404, 'User not found.');
+  res.status(200).json({ data: user });
+};
+
+export const routeSubmitVerificationSelf: RequestHandler = async (req, res, _next) => {
+  assert.ok(req.user);
+  const body = SubmitVerificationRequestBodySchema.parse(req.body);
+  const user = await submitVerification(req.user._id, body);
   res.status(200).json({ data: user });
 };
 

@@ -84,6 +84,8 @@ const UserFacilitySchema = BaseUserFacilitySchema.extend({
 const UserListing = z.object({
   name: z.string(),
   price: RangeSchema(z.number()),
+  unitCount: z.int().optional(),
+  availableUnitCount: z.int().optional(),
   pasalo: z
     .array(
       z.object({
@@ -111,13 +113,18 @@ export const UserFacilityDetailedSchema = BaseUserFacilitySchema.extend({
   ),
   listings: z.array(
     z.object({
+      id: ObjectIdSchema,
+      name: z.string(),
+      roomType: z.enum(ROOM_TYPES),
       description: z.string().optional(),
-      tags: z.map(z.string(), z.union([z.string(), z.number(), z.boolean()])),
+      tags: z.record(z.string(), z.union([z.string(), z.number(), z.boolean()])),
       cost: z.object({
         rent: z.number(),
         estimatedUtilities: z.number(),
         securityDeposit: z.number(),
       }),
+      unitCount: z.int(),
+      availableUnitCount: z.int(),
       media: z.array(
         z.object({
           sourceType: z.string(),

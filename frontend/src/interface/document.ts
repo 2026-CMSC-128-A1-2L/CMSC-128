@@ -1,4 +1,11 @@
-import { AddDocumentParamsSchema, AddDocumentBodySchema, DeleteDocumentParamsSchema, AcceptDocumentParamsSchema, RejectDocumentParamsSchema, RejectDocumentBodySchema } from 'shared'
+import type {
+  AddDocumentParamsSchema,
+  AddDocumentBodySchema,
+  DeleteDocumentParamsSchema,
+  AcceptDocumentParamsSchema,
+  RejectDocumentParamsSchema,
+  RejectDocumentBodySchema,
+} from 'shared';
 import type z from 'zod';
 
 export type AddDocumentBody = z.infer<typeof AddDocumentBodySchema>;

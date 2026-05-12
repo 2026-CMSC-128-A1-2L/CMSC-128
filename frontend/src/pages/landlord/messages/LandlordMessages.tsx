@@ -1,16 +1,19 @@
-import { type FunctionComponent, useState } from 'react';
-import DmsSidebar from '../../../components/general/DmsSidebar';
-import oswald from '../../../../assets/owl_inbox.png';
-import TutorialIcon from '../../../../assets/help-chat.svg';
-import TutorialBubble from '../../user/messages/DMsTutorial';
-import NotificationDetail from '../../../components/general/NotificationDetail';
-import ChatDetail from '../../../components/general/ChatDetail';
-import BgUpper from '../../../../assets/bg-upper.svg?react';
-import BgLower from '../../../../assets/bg-lower.svg?react';
+import { type FunctionComponent, useState } from "react";
+import DmsSidebar from "../../../components/general/DmsSidebar";
+import oswald from "../../../../assets/owl_inbox.png";
+import TutorialIcon from "../../../../assets/help-chat.svg";
+import TutorialBubble from "../../user/messages/DMsTutorial";
+import NotificationDetail from "../../../components/general/NotificationDetail";
+import ChatDetail from "../../../components/general/ChatDetail";
+import BgUpper from "../../../../assets/bg-upper.svg?react";
+import BgLower from "../../../../assets/bg-lower.svg?react";
 
 const LandlordMessages: FunctionComponent = () => {
   const [showHelp, setShowHelp] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<{ type: 'notification' | 'dm'; id: number } | null>(null);
+  const [selectedItem, setSelectedItem] = useState<{
+    type: "notification" | "dm";
+    id: number;
+  } | null>(null);
 
   // Landlord-specific Mock Data
   const [notifications, setNotifications] = useState<any[]>([]);
@@ -102,14 +105,20 @@ const LandlordMessages: FunctionComponent = () => {
   ]);
   */
 
-  const handleItemSelect = (type: 'notification' | 'dm', id: number) => {
+  const handleItemSelect = (type: "notification" | "dm", id: number) => {
     setSelectedItem({ type, id });
-    
+
     // Mark as read
-    if (type === 'notification') {
-      setNotifications(prev => prev.map(n => n.id === id ? { ...n, unread: false } : n));
+    if (type === "notification") {
+      setNotifications((prev) =>
+        prev.map((n) => (n.id === id ? { ...n, unread: false } : n)),
+      );
     } else {
-      setDirectMessages(prev => prev.map(dm => dm.id === id ? { ...dm, unread: false, unreadCount: 0 } : dm));
+      setDirectMessages((prev) =>
+        prev.map((dm) =>
+          dm.id === id ? { ...dm, unread: false, unreadCount: 0 } : dm,
+        ),
+      );
     }
   };
 
@@ -126,7 +135,7 @@ const LandlordMessages: FunctionComponent = () => {
             <b className="text-num-18 text-darkslategray leading-tight dark:text-gray-100">
               No conversation selected
             </b>
-            <p className="text-num-14s font-medium text-dimgray dark:text-gray-300">
+            <p className="text-num-14s font-medium text-dimgray dark:text-[#a4acba]">
               Select a tab to view specific message
             </p>
           </div>
@@ -134,8 +143,8 @@ const LandlordMessages: FunctionComponent = () => {
       );
     }
 
-    if (selectedItem.type === 'notification') {
-      const notif = notifications.find(n => n.id === selectedItem.id);
+    if (selectedItem.type === "notification") {
+      const notif = notifications.find((n) => n.id === selectedItem.id);
       if (notif) {
         return (
           <div className="w-full h-full p-8 box-border animate-slide-up overflow-y-auto flex items-center justify-center relative z-10">
@@ -155,8 +164,8 @@ const LandlordMessages: FunctionComponent = () => {
       }
     }
 
-    if (selectedItem.type === 'dm') {
-      const dm = directMessages.find(d => d.id === selectedItem.id);
+    if (selectedItem.type === "dm") {
+      const dm = directMessages.find((d) => d.id === selectedItem.id);
       if (dm) {
         return (
           <div className="w-full h-full animate-fade-in relative z-10">
@@ -185,7 +194,7 @@ const LandlordMessages: FunctionComponent = () => {
       </div>
 
       <div className="sticky top-0 h-full w-fit shrink-0 border-r border-whitesmoke-300 z-20 bg-white dark:bg-darkmode">
-        <DmsSidebar 
+        <DmsSidebar
           notifications={notifications}
           directMessages={directMessages}
           selectedItem={selectedItem}
@@ -194,7 +203,7 @@ const LandlordMessages: FunctionComponent = () => {
           setDirectMessages={setDirectMessages}
         />
       </div>
-      
+
       <TutorialBubble show={showHelp} onClose={() => setShowHelp(false)} />
 
       {/* Main Content Area */}
@@ -207,7 +216,11 @@ const LandlordMessages: FunctionComponent = () => {
         className="fixed bottom-32 right-10 z-[1000] cursor-pointer transition-all hover:scale-110 active:scale-95"
         onClick={() => setShowHelp(!showHelp)}
       >
-        <img src={TutorialIcon} alt="Help" className="w-16 h-16 drop-shadow-lg" />
+        <img
+          src={TutorialIcon}
+          alt="Help"
+          className="w-16 h-16 drop-shadow-lg"
+        />
       </div>
     </div>
   );

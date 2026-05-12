@@ -129,7 +129,7 @@ const Managers = () => {
                               open={menuOpen}
                               onClose={() => setOpenMenuId(null)}
                               onAction={(action) => handleAction(manager, action)}
-                              managerName={manager.displayName}
+                              subjectName={manager.displayName}
                             />
                           </div>
                         </div>

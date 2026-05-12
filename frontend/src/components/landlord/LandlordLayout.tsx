@@ -1,11 +1,13 @@
-import type { ReactNode } from 'react';
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Icon } from '@iconify/react';
-import PageBackground from '../general/PageBackground';
-import SideBarLandlord, { type SideBarLandlordItemKey } from './SideBarLandlord';
-import LandlordFooter from './LandlordFooter';
-import TutorialBubble from '../../../../frontend/src/components/landlord/TutorialsForLandlord';
+import type { ReactNode } from "react";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Icon } from "@iconify/react";
+import PageBackground from "../general/PageBackground";
+import SideBarLandlord, {
+  type SideBarLandlordItemKey,
+} from "./SideBarLandlord";
+import LandlordFooter from "./LandlordFooter";
+import TutorialBubble from "./TutorialsForLandlord";
 
 export type BreadcrumbItem = {
   label: string;
@@ -18,27 +20,31 @@ type LandlordLayoutProps = {
   children: ReactNode;
 };
 
-const LandlordLayout = ({ activeSidebarItem, breadcrumbs = [], children }: LandlordLayoutProps) => {
+const LandlordLayout = ({
+  activeSidebarItem,
+  breadcrumbs = [],
+  children,
+}: LandlordLayoutProps) => {
   const navigate = useNavigate();
-
   const [showHelp, setShowHelp] = useState(false);
 
   return (
-    <div className="relative min-h-screen text-[#001d18] dark:text-gray-100">
+    <div className="landlord-shell relative flex h-screen w-screen flex-col overflow-hidden">
       <PageBackground />
-      <div className="relative z-10 flex min-h-screen flex-col">
-        <div className="flex flex-1 items-stretch">
-          <div className="sticky top-0 h-screen self-start">
-            <SideBarLandlord
-              activeItem={activeSidebarItem}
-              onProfileClick={() => navigate('/landlord/profile')}
-              onAddListing={() => navigate('/landlord/properties/new')}
-            />
-          </div>
+      <div className="relative z-10 flex flex-1 overflow-hidden">
+        <SideBarLandlord
+          activeItem={activeSidebarItem}
+          onProfileClick={() => navigate("/landlord/profile/switcher")}
+          onAddListing={() => navigate("/landlord/properties/new")}
+        />
 
-          <div className="flex min-w-0 flex-1 flex-col px-[32px] pr-[80px] pb-[32px]">
+        <div className="flex min-w-0 flex-1 flex-col overflow-hidden pl-[68px] md:pl-0">
+          <main className="flex min-w-0 flex-1 flex-col overflow-y-auto">
             {breadcrumbs.length > 0 && (
-              <nav aria-label="Breadcrumb" className="flex h-[64px] items-end gap-[10px] p-[10px]">
+              <nav
+                aria-label="Breadcrumb"
+                className="flex h-[64px] shrink-0 items-end gap-[10px] p-[10px]"
+              >
                 <ol className="flex h-[24px] items-center gap-[6px]">
                   {breadcrumbs.map((item, idx) => {
                     const isLast = idx === breadcrumbs.length - 1;
@@ -47,7 +53,7 @@ const LandlordLayout = ({ activeSidebarItem, breadcrumbs = [], children }: Landl
                     return (
                       <li
                         key={`${item.to ?? item.label}-${item.label}`}
-                        className="flex items-center gap-[6px]"
+                        className="flex items-center gap-[6px] pl-2 pb-2"
                       >
                         {item.to ? (
                           <Link
@@ -58,8 +64,8 @@ const LandlordLayout = ({ activeSidebarItem, breadcrumbs = [], children }: Landl
                           </Link>
                         ) : (
                           <span
-                            className={`${labelClass} text-[#2f3136] dark:text-gray-200`}
-                            aria-current={isLast ? 'page' : undefined}
+                            className={`${labelClass} text-[#2f3136] dark:text-[#d7e0ef]`}
+                            aria-current={isLast ? "page" : undefined}
                           >
                             {item.label}
                           </span>
@@ -67,7 +73,7 @@ const LandlordLayout = ({ activeSidebarItem, breadcrumbs = [], children }: Landl
                         {!isLast && (
                           <Icon
                             icon="iconamoon:arrow-right-2"
-                            className="h-[24px] w-[24px] text-[#2f3136] dark:text-gray-300"
+                            className="h-[24px] w-[24px] text-[#2f3136] dark:text-[#a4acba]"
                             aria-hidden="true"
                           />
                         )}
@@ -77,15 +83,18 @@ const LandlordLayout = ({ activeSidebarItem, breadcrumbs = [], children }: Landl
                 </ol>
               </nav>
             )}
-            <div className="pl-[10px] flex-1">{children}</div>
+
+            <div className="flex-1 px-4 pb-8 pt-0 sm:px-6 md:px-8 lg:px-[32px] dark:text-[#d7e0ef]">
+              {children}
+            </div>
+          </main>
+
+          <div className="relative z-10 shrink-0">
+            <LandlordFooter />
           </div>
         </div>
-
-        <div className="self-stretch h-20 shrink-0 overflow-hidden z-[1] flex flex-col items-stretch">
-          <LandlordFooter />
-        </div>
       </div>
-      {/* ======= FLOATING ICON FOR TUTORIAL ======= */}
+
       <div
         className="fixed bottom-10 right-10 z-[9999] cursor-pointer transition-all hover:scale-110 active:scale-95"
         onClick={() => setShowHelp(!showHelp)}
@@ -93,7 +102,7 @@ const LandlordLayout = ({ activeSidebarItem, breadcrumbs = [], children }: Landl
         <div
           className="w-16 h-16 drop-shadow-lg"
           style={{
-            background: 'linear-gradient(135deg, #096C5B, #16917C)',
+            background: "linear-gradient(135deg, #096C5B, #16917C)",
             WebkitMask:
               "url('https://api.iconify.design/iconoir/chat-bubble-question-solid.svg') no-repeat center / contain",
             mask: "url('https://api.iconify.design/iconoir/chat-bubble-question-solid.svg') no-repeat center / contain",
