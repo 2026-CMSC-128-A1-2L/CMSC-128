@@ -94,8 +94,9 @@ const LandlordLayout = ({
           </div>
         </div>
       </div>
-
-      <div
+      {/* mali to eh, nagpapakita sa lahat ng pages eh*/}
+      {/*Tutorial*/}
+      {/* <div
         className="fixed bottom-10 right-10 z-[9999] cursor-pointer transition-all hover:scale-110 active:scale-95"
         onClick={() => setShowHelp(!showHelp)}
       >
@@ -108,8 +109,8 @@ const LandlordLayout = ({
             mask: "url('https://api.iconify.design/iconoir/chat-bubble-question-solid.svg') no-repeat center / contain",
           }}
         />
-      </div>
-      <TutorialBubble show={showHelp} onClose={() => setShowHelp(false)} />
+      </div> */}
+      {/* <TutorialBubble show={showHelp} onClose={() => setShowHelp(false)} /> */}
     </div>
   );
 };

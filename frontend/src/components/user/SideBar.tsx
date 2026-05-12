@@ -1,21 +1,27 @@
-﻿import { useCallback, useEffect, useRef, useState, type MouseEventHandler } from 'react';
-import { createPortal } from 'react-dom';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Icon } from '@iconify/react';
-import AtlasLogoText from '../../../assets/logo_atlas_text.svg?react';
-import AtlasLogoMin from '../../../assets/atlas logo (for white bg).png';
-import SideBarButton, { type SideBarButtonState } from './SideBarButton';
-import { useAuthStore } from '../../store/useAuthStore';
-import UserMenuPopup from './UserMenuPopup';
-import { useTheme } from '../../pages/utilities/DarkMode';
+﻿import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type MouseEventHandler,
+} from "react";
+import { createPortal } from "react-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Icon } from "@iconify/react";
+import AtlasLogoText from "../../../assets/logo_atlas_text.svg?react";
+import AtlasLogoMin from "../../../assets/atlas logo (for white bg).png";
+import SideBarButton, { type SideBarButtonState } from "./SideBarButton";
+import { useAuthStore } from "../../store/useAuthStore";
+import UserMenuPopup from "./UserMenuPopup";
+import { useTheme } from "../../pages/utilities/DarkMode";
 
 export type SideBarItemKey =
-  | 'home'
-  | 'messages'
-  | 'bookmarks'
-  | 'calendar'
-  | 'finance'
-  | 'settings';
+  | "home"
+  | "messages"
+  | "bookmarks"
+  | "calendar"
+  | "finance"
+  | "settings";
 
 type UserInfo = { name?: string; signedIn?: boolean; avatarUrl?: string };
 
@@ -28,29 +34,69 @@ type SideBarProps = {
 };
 
 const navItems = [
-  { key: 'home' as const, label: 'Home', iconFill: 'mdi:home', iconOut: 'mdi:home-outline', route: '/home' },
-  { key: 'messages' as const, label: 'Messages', iconFill: 'material-symbols:mail', iconOut: 'material-symbols:mail-outline', route: '/direct-messages' },
-  { key: 'bookmarks' as const, label: 'Bookmarks', iconFill: 'material-symbols:bookmark', iconOut: 'material-symbols:bookmark-outline', route: '/bookmark' },
-  { key: 'calendar' as const, label: 'My Calendar', iconFill: 'mdi:calendar', iconOut: 'mdi:calendar-outline', route: '/my-calendar' },
-  { key: 'finance' as const, label: 'Finance', iconFill: 'majesticons:creditcard', iconOut: 'majesticons:creditcard-line', route: '/finance' },
-  { key: 'settings' as const, label: 'Settings', iconFill: 'tabler:settings', iconOut: 'tabler:settings', route: '/settings' },
+  {
+    key: "home" as const,
+    label: "Home",
+    iconFill: "mdi:home",
+    iconOut: "mdi:home-outline",
+    route: "/home",
+  },
+  {
+    key: "messages" as const,
+    label: "Messages",
+    iconFill: "material-symbols:mail",
+    iconOut: "material-symbols:mail-outline",
+    route: "/direct-messages",
+  },
+  {
+    key: "bookmarks" as const,
+    label: "Bookmarks",
+    iconFill: "material-symbols:bookmark",
+    iconOut: "material-symbols:bookmark-outline",
+    route: "/bookmark",
+  },
+  {
+    key: "calendar" as const,
+    label: "My Calendar",
+    iconFill: "mdi:calendar",
+    iconOut: "mdi:calendar-outline",
+    route: "/my-calendar",
+  },
+  {
+    key: "finance" as const,
+    label: "Finance",
+    iconFill: "majesticons:creditcard",
+    iconOut: "majesticons:creditcard-line",
+    route: "/finance",
+  },
+  {
+    key: "settings" as const,
+    label: "Settings",
+    iconFill: "tabler:settings",
+    iconOut: "tabler:settings",
+    route: "/settings",
+  },
 ];
 
-const isSmallScreen = () => typeof window !== 'undefined' && window.innerWidth < 768;
+const isSmallScreen = () =>
+  typeof window !== "undefined" && window.innerWidth < 768;
 
 const SideBar = ({
   activeItem,
   onToggleDarkMode,
   onProfileClick,
-  className = '',
+  className = "",
 }: SideBarProps) => {
   const [collapsed, setCollapsed] = useState(() => isSmallScreen());
   const [isMobile, setIsMobile] = useState(() => isSmallScreen());
   const [internalHover, setInternalHover] = useState<SideBarItemKey>();
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [darkModeIconSpinning, setDarkModeIconSpinning] = useState(false);
-  const [profileMenuPosition, setProfileMenuPosition] = useState({ left: 0, bottom: 0 });
+  const [profileMenuPosition, setProfileMenuPosition] = useState({
+    left: 0,
+    bottom: 0,
+  });
   const location = useLocation();
   const navigate = useNavigate();
   const profileButtonRef = useRef<HTMLButtonElement>(null);
@@ -61,7 +107,8 @@ const SideBar = ({
   const username = user ? `${user.firstName} ${user.lastName}` : null;
 
   const resolvedActive: SideBarItemKey | undefined =
-    activeItem ?? navItems.find((item) => location.pathname.startsWith(item.route))?.key;
+    activeItem ??
+    navItems.find((item) => location.pathname.startsWith(item.route))?.key;
 
   const updateProfileMenuPosition = useCallback(() => {
     const profileButton = profileButtonRef.current;
@@ -81,8 +128,8 @@ const SideBar = ({
       if (small) setCollapsed(true);
     };
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   useEffect(() => {
@@ -97,23 +144,27 @@ const SideBar = ({
     const handleWindowChange = () => updateProfileMenuPosition();
     const handlePointerDown = (event: MouseEvent) => {
       const target = event.target as Node;
-      if (profileButtonRef.current?.contains(target) || profileMenuRef.current?.contains(target)) return;
+      if (
+        profileButtonRef.current?.contains(target) ||
+        profileMenuRef.current?.contains(target)
+      )
+        return;
       setProfileMenuOpen(false);
     };
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setProfileMenuOpen(false);
+      if (event.key === "Escape") setProfileMenuOpen(false);
     };
 
-    window.addEventListener('resize', handleWindowChange);
-    window.addEventListener('scroll', handleWindowChange, true);
-    window.addEventListener('mousedown', handlePointerDown);
-    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener("resize", handleWindowChange);
+    window.addEventListener("scroll", handleWindowChange, true);
+    window.addEventListener("mousedown", handlePointerDown);
+    window.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      window.removeEventListener('resize', handleWindowChange);
-      window.removeEventListener('scroll', handleWindowChange, true);
-      window.removeEventListener('mousedown', handlePointerDown);
-      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener("resize", handleWindowChange);
+      window.removeEventListener("scroll", handleWindowChange, true);
+      window.removeEventListener("mousedown", handlePointerDown);
+      window.removeEventListener("keydown", handleKeyDown);
     };
   }, [profileMenuOpen, updateProfileMenuPosition]);
 
@@ -126,7 +177,7 @@ const SideBar = ({
   const handleLogout = async () => {
     await logout();
     setProfileMenuOpen(false);
-    navigate('/', { replace: true });
+    navigate("/", { replace: true });
   };
 
   const handleDarkModeClick: MouseEventHandler<HTMLButtonElement> = (event) => {
@@ -146,8 +197,10 @@ const SideBar = ({
     if (isMobile) setCollapsed(true);
   };
 
-  const positionClass = isMobile ? 'fixed top-0 left-0 z-40 h-screen' : 'relative h-full min-h-screen';
-  const widthClass = collapsed ? 'w-[68px]' : 'w-[200px]';
+  const positionClass = isMobile
+    ? "fixed top-0 left-0 z-40 h-screen"
+    : "relative h-full min-h-screen";
+  const widthClass = collapsed ? "w-[68px]" : "w-[200px]";
 
   return (
     <>
@@ -159,25 +212,34 @@ const SideBar = ({
         />
       )}
 
-      <div className={['block md:hidden shrink-0', widthClass].join(' ')} aria-hidden="true" />
+      <div
+        className={["block md:hidden shrink-0", widthClass].join(" ")}
+        aria-hidden="true"
+      />
 
       <div
         className={[
-          'flex shrink-0 flex-col items-center overflow-visible border-r border-solid border-[#f0f0f0] py-8 gap-8 transition-[width] duration-200 text-[#2d3748] dark:border-[#303331] dark:text-[#d7e0ef]',
-          isMobile && !collapsed ? 'bg-white dark:bg-[#101111]' : 'bg-transparent',
+          "flex shrink-0 flex-col items-center overflow-visible border-r border-solid border-[#f0f0f0] py-8 gap-8 transition-[width] duration-200 text-[#2d3748] dark:border-[#303331] dark:text-[#d7e0ef]",
+          isMobile && !collapsed
+            ? "bg-white dark:bg-[#101111]"
+            : "bg-transparent",
           positionClass,
           widthClass,
           className,
-        ].join(' ')}
+        ].join(" ")}
       >
         <button
           type="button"
           onClick={() => setCollapsed((current) => !current)}
-          aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           className="absolute -right-3 top-6 z-50 flex h-6 w-6 items-center justify-center rounded-full border border-[#f0f0f0] bg-white shadow-sm text-[#666] hover:text-teal-600 transition-colors dark:border-[#303331] dark:bg-[#1f2022] dark:text-[#d7e0ef] dark:hover:text-[#72cbb8]"
         >
           <Icon
-            icon={collapsed ? 'material-symbols:chevron-right-rounded' : 'material-symbols:chevron-left-rounded'}
+            icon={
+              collapsed
+                ? "material-symbols:chevron-right-rounded"
+                : "material-symbols:chevron-left-rounded"
+            }
             className="h-4 w-4"
           />
         </button>
@@ -190,7 +252,7 @@ const SideBar = ({
           )}
         </div>
 
-        <div className="w-full px-4">
+        {/* <div className="w-full px-4">
           {collapsed ? (
             <div className="flex justify-center">
               <button
@@ -210,33 +272,43 @@ const SideBar = ({
                 value={searchQuery}
                 maxLength={50}
                 onChange={(event) => setSearchQuery(event.target.value)}
-                onKeyDown={(event) => event.key === 'Enter' && console.log('Searching for:', searchQuery)}
+                onKeyDown={(event) =>
+                  event.key === "Enter" &&
+                  console.log("Searching for:", searchQuery)
+                }
                 className="flex-1 bg-transparent border-none outline-none text-[12px] font-semibold text-[#2d3748] placeholder:text-[#9ca3af] w-full pr-1 dark:text-[#d7e0ef] dark:placeholder:text-[#a4acba]"
               />
               {searchQuery && (
                 <button
                   type="button"
-                  onClick={() => setSearchQuery('')}
+                  onClick={() => setSearchQuery("")}
                   className="mr-1 text-[#9ca3af] hover:text-[#2d3748] transition-colors dark:hover:text-white"
                 >
-                  <Icon icon="material-symbols:close-rounded" className="w-4 h-4" />
+                  <Icon
+                    icon="material-symbols:close-rounded"
+                    className="w-4 h-4"
+                  />
                 </button>
               )}
               <button
                 type="button"
                 className="shrink-0 hover:scale-110 transition-transform"
-                onClick={() => console.log('Searching for:', searchQuery)}
+                onClick={() => console.log("Searching for:", searchQuery)}
               >
                 <Icon icon="ic:outline-search" className="w-5 h-5" />
               </button>
             </div>
           )}
-        </div>
+        </div> */}
 
         <nav className="flex w-full flex-col gap-3">
           {navItems.map((item) => {
             const state: SideBarButtonState =
-              item.key === resolvedActive ? 'clicked' : item.key === internalHover ? 'hovered' : 'default';
+              item.key === resolvedActive
+                ? "clicked"
+                : item.key === internalHover
+                  ? "hovered"
+                  : "default";
 
             return (
               <Link
@@ -245,28 +317,39 @@ const SideBar = ({
                 className="w-full relative"
                 onClick={handleNavClick}
                 onMouseEnter={() => setInternalHover(item.key)}
-                onMouseLeave={() => setInternalHover((previous) => (previous === item.key ? undefined : previous))}
+                onMouseLeave={() =>
+                  setInternalHover((previous) =>
+                    previous === item.key ? undefined : previous,
+                  )
+                }
               >
                 <span
                   aria-hidden="true"
                   className={[
-                    'absolute left-0 top-1/2 -translate-y-1/2 w-[3px] rounded-r-[3px] bg-teal-600 transition-all duration-200 dark:bg-[#72cbb8]',
-                    state === 'clicked' ? 'h-[24px] opacity-100' : 'h-0 opacity-0',
-                  ].join(' ')}
+                    "absolute left-0 top-1/2 -translate-y-1/2 w-[3px] rounded-r-[3px] bg-teal-600 transition-all duration-200 dark:bg-[#72cbb8]",
+                    state === "clicked"
+                      ? "h-[24px] opacity-100"
+                      : "h-0 opacity-0",
+                  ].join(" ")}
                 />
                 {collapsed ? (
                   <div
                     title={item.label}
                     className={[
-                      'flex justify-center items-center h-11 transition-colors hover:bg-[#F0FAF6] dark:hover:bg-[#17201d]',
-                      state === 'clicked' ? 'text-teal-600 dark:text-[#72cbb8]' : 'text-[#2d3748] dark:text-[#d7e0ef]',
-                    ].join(' ')}
+                      "flex justify-center items-center h-11 transition-colors hover:bg-[#F0FAF6] dark:hover:bg-[#17201d]",
+                      state === "clicked"
+                        ? "text-teal-600 dark:text-[#72cbb8]"
+                        : "text-[#2d3748] dark:text-[#d7e0ef]",
+                    ].join(" ")}
                   >
-                    <Icon icon={state === 'clicked' ? item.iconFill : item.iconOut} className="w-7 h-7" />
+                    <Icon
+                      icon={state === "clicked" ? item.iconFill : item.iconOut}
+                      className="w-7 h-7"
+                    />
                   </div>
                 ) : (
                   <SideBarButton
-                    icon={state === 'clicked' ? item.iconFill : item.iconOut}
+                    icon={state === "clicked" ? item.iconFill : item.iconOut}
                     label={item.label}
                     state={state}
                   />
@@ -282,23 +365,25 @@ const SideBar = ({
             onClick={handleDarkModeClick}
             aria-label="Toggle dark mode"
             className={[
-              'flex w-full cursor-pointer items-center hover:bg-[#F0FAF6] transition-colors dark:hover:bg-[#17201d]',
-              collapsed ? 'justify-center h-11' : 'gap-6 pr-5',
-            ].join(' ')}
+              "flex w-full cursor-pointer items-center hover:bg-[#F0FAF6] transition-colors dark:hover:bg-[#17201d]",
+              collapsed ? "justify-center h-11" : "gap-6 pr-5",
+            ].join(" ")}
           >
-            {!collapsed && <span className="h-11 w-2 shrink-0 rounded-sm bg-transparent" />}
+            {!collapsed && (
+              <span className="h-11 w-2 shrink-0 rounded-sm bg-transparent" />
+            )}
             <span className="flex items-center gap-4 rounded-xl px-1">
               <Icon
                 icon="gg:dark-mode"
                 onAnimationEnd={() => setDarkModeIconSpinning(false)}
                 className={[
-                  'h-6 w-6 shrink-0 text-[#001d18] dark:text-white',
-                  darkModeIconSpinning ? 'dark-mode-icon-turn' : '',
-                ].join(' ')}
+                  "h-6 w-6 shrink-0 text-[#001d18] dark:text-white",
+                  darkModeIconSpinning ? "dark-mode-icon-turn" : "",
+                ].join(" ")}
               />
               {!collapsed && (
                 <span className="font-semibold text-[14px] text-[#2d3748] dark:text-[#d7e0ef]">
-                  {isDark ? 'Light Mode' : 'Dark Mode'}
+                  {isDark ? "Light Mode" : "Dark Mode"}
                 </span>
               )}
             </span>
@@ -313,21 +398,34 @@ const SideBar = ({
               ref={profileButtonRef}
               type="button"
               onClick={handleProfileClick}
-              aria-label={username ?? 'Sign In'}
+              aria-label={username ?? "Sign In"}
               className={[
-                'flex w-full cursor-pointer items-center overflow-hidden hover:bg-[#F0FAF6] transition-colors dark:hover:bg-[#17201d]',
-                collapsed ? 'justify-center py-2' : 'gap-2 pl-8 pr-5 py-2.5',
-              ].join(' ')}
+                "flex w-full cursor-pointer items-center overflow-hidden hover:bg-[#F0FAF6] transition-colors dark:hover:bg-[#17201d]",
+                collapsed ? "justify-center py-2" : "gap-2 pl-8 pr-5 py-2.5",
+              ].join(" ")}
             >
               {user?.profilePicture ? (
-                <img src={user.profilePicture} alt="" className="w-7 h-7 rounded-full object-cover shrink-0" />
+                <img
+                  src={user.profilePicture}
+                  alt=""
+                  className="w-7 h-7 rounded-full object-cover shrink-0"
+                />
               ) : (
-                <Icon icon="bi:person-circle" className="w-7 h-7 shrink-0 text-[#2d3748] dark:text-[#d7e0ef]" />
+                <Icon
+                  icon="bi:person-circle"
+                  className="w-7 h-7 shrink-0 text-[#2d3748] dark:text-[#d7e0ef]"
+                />
               )}
               {!collapsed && (
                 <div className="flex flex-col items-start gap-1 overflow-hidden">
-                  <b className="text-[14px] text-[#2d3748] dark:text-[#d7e0ef]">{username ?? 'Sign In'}</b>
-                  {!user && <span className="text-[10px] text-[#9ca3af] font-bold dark:text-[#a4acba]">to continue</span>}
+                  <b className="text-[14px] text-[#2d3748] dark:text-[#d7e0ef]">
+                    {username ?? "Sign In"}
+                  </b>
+                  {!user && (
+                    <span className="text-[10px] text-[#9ca3af] font-bold dark:text-[#a4acba]">
+                      to continue
+                    </span>
+                  )}
                 </div>
               )}
             </button>
@@ -345,7 +443,7 @@ const SideBar = ({
                     isOpen={profileMenuOpen}
                     onViewProfile={() => {
                       setProfileMenuOpen(false);
-                      navigate('/profile-switcher');
+                      navigate("/profile-switcher");
                     }}
                     onLogOut={handleLogout}
                   />
