@@ -1,4 +1,4 @@
-import { type FunctionComponent, useEffect, useRef, useState } from 'react';
+﻿import { type FunctionComponent, useEffect, useRef, useState } from 'react';
 import { Icon } from '@iconify/react';
 import { useSearchParams } from 'react-router-dom';
 import SideBar from '../../../components/user/SideBar';
@@ -8,19 +8,15 @@ import FilterTab from '../../../components/user/Filter/FilterTab';
 import LoadingPage from '../../general/LoadingPage';
 import { useFacilities, type DormCardData } from '../../../hooks/useFacilities';
 
-// ─── Constants ───────────────────────────────────────────────────────────────
-
 const CARD_WIDTH = 280;
 const CARD_GAP = 24;
-
-// ─── Carousel hook ───────────────────────────────────────────────────────────
 
 const useCarousel = (total: number) => {
   const trackRef = useRef<HTMLDivElement>(null);
   const [current, setCurrent] = useState(0);
 
   const scrollTo = (index: number) => {
-    const clamped = Math.max(0, Math.min(index, total - 1));
+    const clamped = Math.max(0, Math.min(index, Math.max(total - 1, 0)));
     setCurrent(clamped);
     trackRef.current?.scrollTo({
       left: clamped * (CARD_WIDTH + CARD_GAP),
@@ -31,8 +27,6 @@ const useCarousel = (total: number) => {
   return { trackRef, current, scrollTo, total };
 };
 
-// ─── View-all types ───────────────────────────────────────────────────────────
-
 type ViewAllCategory = 'pasalo' | 'popular' | 'near' | 'mayLike' | null;
 
 const CATEGORY_LABELS: Record<NonNullable<ViewAllCategory>, string> = {
@@ -41,8 +35,6 @@ const CATEGORY_LABELS: Record<NonNullable<ViewAllCategory>, string> = {
   near: 'Near Campus',
   mayLike: 'Listings You May Like',
 };
-
-// ─── Sub-components (lifted out of HomePage to avoid re-creation on render) ──
 
 const NavArrows = ({
   current,
@@ -57,7 +49,7 @@ const NavArrows = ({
     <button
       type="button"
       onClick={() => scrollTo(current - 1)}
-      disabled={current === 0}
+      disabled={current === 0 || total === 0}
       className="flex h-[32px] w-[32px] items-center justify-center rounded-full border border-[#f0f0f0] bg-white transition-opacity hover:opacity-70 disabled:opacity-30 dark:border-[#303331] dark:bg-[#101111] dark:text-[#a4acba]"
       aria-label="Previous property"
     >
@@ -66,7 +58,7 @@ const NavArrows = ({
     <button
       type="button"
       onClick={() => scrollTo(current + 1)}
-      disabled={current === total - 1}
+      disabled={current === total - 1 || total === 0}
       className="flex h-[32px] w-[32px] items-center justify-center rounded-full bg-[#e0f7f4] transition-opacity hover:opacity-70 disabled:opacity-30 dark:bg-[#12342e]"
       aria-label="Next property"
     >
@@ -94,8 +86,6 @@ const ViewAllLink = ({
   </button>
 );
 
-// ─── Carousel section ─────────────────────────────────────────────────────────
-
 const CarouselSection = ({
   title,
   items,
@@ -105,21 +95,21 @@ const CarouselSection = ({
 }: {
   title: string;
   items: DormCardData[];
-  category: ViewAllCategory;
-  onViewAll: (c: ViewAllCategory) => void;
+  category: NonNullable<ViewAllCategory>;
+  onViewAll: (category: ViewAllCategory) => void;
   infoIcon?: boolean;
 }) => {
   const carousel = useCarousel(items.length);
 
   return (
     <div className="w-full min-w-0 flex flex-col items-start justify-center gap-6 dark:text-white">
-      <div className="w-full h-fit flex items-center justify-between">
-        <div className="h-full flex items-center gap-2">
-          <div className="w-fit h-full flex items-start gap-2">
+      <div className="w-full h-fit flex items-center justify-between gap-4">
+        <div className="h-full flex items-center gap-2 min-w-0">
+          <div className="w-fit h-full flex items-start gap-2 min-w-0">
             <b className="w-fit relative flex items-start">{title}</b>
-            {infoIcon && <Icon icon="material-symbols-light:info-outline" className="w-5 h-5" />}
+            {infoIcon && <Icon icon="material-symbols-light:info-outline" className="w-5 h-5 shrink-0" />}
           </div>
-          {category && <ViewAllLink category={category} onViewAll={onViewAll} />}
+          <ViewAllLink category={category} onViewAll={onViewAll} />
         </div>
         <NavArrows current={carousel.current} total={carousel.total} scrollTo={carousel.scrollTo} />
       </div>
@@ -129,15 +119,7 @@ const CarouselSection = ({
       >
         {items.map((dorm) => (
           <div key={dorm.id} className="shrink-0">
-            <DormCard
-              id={dorm.id}
-              name={dorm.name}
-              rating={dorm.rating}
-              price={dorm.price}
-              location={dorm.location}
-              image={dorm.image}
-              room_types={dorm.room_types}
-            />
+            <DormCard {...dorm} />
           </div>
         ))}
       </div>
@@ -145,16 +127,14 @@ const CarouselSection = ({
   );
 };
 
-// ─── Empty / error states ─────────────────────────────────────────────────────
-
 const EmptyState = ({ onBack, label }: { onBack: () => void; label: string }) => (
   <div className="w-full flex flex-col items-center justify-center py-20 gap-3 text-center">
-    <Icon icon="mdi:home-search-outline" className="w-16 h-16 text-unselected" />
+    <Icon icon="mdi:home-search-outline" className="w-16 h-16 text-unselected dark:text-[#91a0b0]" />
     <p className="text-[1rem] font-semibold text-dimgray dark:text-[#d7e0ef]">{label}</p>
     <button
       type="button"
       onClick={onBack}
-      className="mt-2 px-5 py-2 rounded-full bg-[#e0f7f4] text-[#096c5b] text-[0.8rem] font-semibold hover:opacity-80 transition-opacity"
+      className="mt-2 px-5 py-2 rounded-full bg-[#e0f7f4] text-[#096c5b] text-[0.8rem] font-semibold hover:opacity-80 transition-opacity dark:bg-[#12342e] dark:text-[#72cbb8]"
     >
       Back to home
     </button>
@@ -169,26 +149,20 @@ const ErrorState = ({ message, onRetry }: { message: string; onRetry: () => void
     <button
       type="button"
       onClick={onRetry}
-      className="mt-2 px-5 py-2 rounded-full bg-[#e0f7f4] text-[#096c5b] text-[0.8rem] font-semibold hover:opacity-80 transition-opacity"
+      className="mt-2 px-5 py-2 rounded-full bg-[#e0f7f4] text-[#096c5b] text-[0.8rem] font-semibold hover:opacity-80 transition-opacity dark:bg-[#12342e] dark:text-[#72cbb8]"
     >
       Try again
     </button>
   </div>
 );
 
-// ─── HomePage ─────────────────────────────────────────────────────────────────
-
 const HomePage: FunctionComponent = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState(searchParams.get('search') ?? '');
   const [viewAllCategory, setViewAllCategory] = useState<ViewAllCategory>(null);
-
-  // Real data from the backend
   const { facilities, isLoading, error, refetch } = useFacilities();
 
-  // Category slices — swap these for real filtered endpoints later.
-  // For now we slice the same list to populate the carousels.
   const pasaloDorms = facilities.slice(0, 10);
   const popularDorms = facilities.slice(0, 10);
   const nearDorms = facilities.slice(0, 10);
@@ -202,7 +176,6 @@ const HomePage: FunctionComponent = () => {
   };
 
   const isSearching = searchTerm.trim().length > 0;
-
   const filteredDorms = isSearching
     ? facilities.filter(
         (dorm) =>
@@ -214,6 +187,11 @@ const HomePage: FunctionComponent = () => {
   const handleViewAll = (category: ViewAllCategory) => {
     setViewAllCategory(category);
     setSearchTerm('');
+    setSearchParams((currentParams) => {
+      const nextParams = new URLSearchParams(currentParams);
+      nextParams.delete('search');
+      return nextParams;
+    }, { replace: true });
   };
 
   const handleSearch = (value: string) => {
@@ -237,17 +215,12 @@ const HomePage: FunctionComponent = () => {
   if (isLoading) return <LoadingPage />;
 
   return (
-    <div className="w-full min-h-screen flex items-start text-left text-[0.875rem] text-dimgray font-inter gap-8 dark:text-[#d7e0ef]">
-      <div className="sticky top-0 h-screen w-fit shrink-0">
-        <SideBar />
-      </div>
-
-      {/* right frame */}
-      <div className="w-full min-w-0 min-h-screen flex items-start pt-15 pr-20 pb-20">
-        <div className="h-fit w-full min-w-0 flex flex-col items-start gap-80">
+    <div className="min-h-screen w-full flex items-stretch text-left text-[0.875rem] text-dimgray font-inter overflow-x-hidden dark:bg-[#0f1010] dark:text-[#d7e0ef]">
+      <SideBar />
+      <div className="flex-1 min-w-0 flex flex-col h-screen overflow-y-auto pt-8 sm:pt-12 px-4 sm:px-6 lg:px-8 xl:pr-20 pb-16">
+        <div className="w-full min-w-0 flex flex-col items-start gap-16 sm:gap-20">
           <div className="w-full min-w-0 flex flex-col items-start">
-            {/* search bar */}
-            <div className="w-full h-full overflow-hidden flex items-center pb-6 box-border">
+            <div className="w-full overflow-hidden flex items-center pb-6 box-border">
               <div className="w-full flex items-center transition-all duration-300 bg-[#f8f9fa] rounded-num-12 py-3 pl-3 pr-4 border border-transparent focus-within:bg-white focus-within:shadow-[0_8px_10px_rgb(0,0,0,0.06)] focus-within:transform focus-within:-translate-y-[1px] dark:bg-[#1f2022] dark:focus-within:bg-[#232526] dark:focus-within:shadow-none">
                 <Icon icon="ic:outline-search" className="w-5 h-5 text-unselected shrink-0 dark:text-[#91a0b0]" />
                 <input
@@ -255,7 +228,7 @@ const HomePage: FunctionComponent = () => {
                   placeholder="Search for Dorms, Apartments, or Locations (e.g. UPLB, Umali Subdivision)"
                   value={searchTerm}
                   maxLength={50}
-                  onChange={(e) => handleSearch(e.target.value)}
+                  onChange={(event) => handleSearch(event.target.value)}
                   className="w-full bg-transparent border-none outline-none text-num-14 font-semibold text-darkgreen placeholder:text-unselected placeholder:font-normal dark:text-[#d7e0ef] dark:placeholder:text-[#91a0b0]"
                 />
                 {searchTerm && (
@@ -271,7 +244,6 @@ const HomePage: FunctionComponent = () => {
             </div>
 
             <div className="w-full flex flex-col items-start gap-6 text-[1.5rem] text-gray dark:text-[#edf6f4]">
-              {/* greeting / filter button */}
               <div className="w-full flex items-center justify-between box-border">
                 <div className="w-full h-8 flex-1 flex flex-col items-start justify-center">
                   <b className="relative leading-8 text-teal dark:text-[#72cbb8]">Mabuhay, iskolar!</b>
@@ -289,7 +261,7 @@ const HomePage: FunctionComponent = () => {
                     <div className="fixed inset-0 z-100 flex justify-end">
                       <button
                         type="button"
-                        className="absolute inset-0 bg-preview/45 backdrop"
+                        className="absolute inset-0 bg-preview/45 backdrop-blur-sm"
                         onClick={() => setIsFilterOpen(false)}
                         aria-label="Close filters"
                       />
@@ -312,20 +284,17 @@ const HomePage: FunctionComponent = () => {
               </div>
 
               <div className="w-full min-w-0 flex flex-col items-start gap-10">
-                {/* Error state */}
                 {error ? (
                   <ErrorState message={error} onRetry={refetch} />
                 ) : isSearching ? (
-                  /* Search results */
                   <div className="w-full flex flex-col items-start gap-6">
-                    <div className="w-full flex items-center justify-between">
+                    <div className="w-full flex items-center justify-between gap-4">
                       <div className="flex items-center gap-2 flex-wrap">
                         <b className="text-[1rem] text-darkgreen dark:text-[#edf6f4]">
-                          Results for <span className="text-teal dark:text-[#72cbb8]">"{searchTerm}"</span>
+                          Results for <span className="text-teal dark:text-[#72cbb8]">&quot;{searchTerm}&quot;</span>
                         </b>
                         <span className="text-[0.75rem] text-unselected font-normal dark:text-[#91a0b0]">
-                          — {filteredDorms.length} listing{filteredDorms.length !== 1 ? 's' : ''}{' '}
-                          found
+                          - {filteredDorms.length} listing{filteredDorms.length !== 1 ? 's' : ''} found
                         </span>
                       </div>
                       <button
@@ -344,17 +313,13 @@ const HomePage: FunctionComponent = () => {
                         ))}
                       </div>
                     ) : (
-                      <EmptyState
-                        onBack={() => handleSearch('')}
-                        label={`No listings found for "${searchTerm}"`}
-                      />
+                      <EmptyState onBack={() => handleSearch('')} label={`No listings found for "${searchTerm}"`} />
                     )}
                   </div>
                 ) : viewAllCategory ? (
-                  /* View all category */
                   <div className="w-full flex flex-col items-start gap-6">
-                    <div className="w-full flex items-center justify-between">
-                      <div className="flex items-center gap-3">
+                    <div className="w-full flex items-center justify-between gap-4">
+                      <div className="flex items-center gap-3 flex-wrap">
                         <button
                           type="button"
                           onClick={() => setViewAllCategory(null)}
@@ -366,7 +331,7 @@ const HomePage: FunctionComponent = () => {
                           {CATEGORY_LABELS[viewAllCategory]}
                         </b>
                         <span className="text-[0.75rem] text-unselected font-normal dark:text-[#91a0b0]">
-                          — {CATEGORY_DATA[viewAllCategory].length} listing
+                          - {CATEGORY_DATA[viewAllCategory].length} listing
                           {CATEGORY_DATA[viewAllCategory].length !== 1 ? 's' : ''}
                         </span>
                       </div>
@@ -393,7 +358,6 @@ const HomePage: FunctionComponent = () => {
                     )}
                   </div>
                 ) : (
-                  /* Default home view */
                   <>
                     <CarouselSection
                       title="Pasalo Units"
@@ -423,12 +387,11 @@ const HomePage: FunctionComponent = () => {
 
                     <Banner />
 
-                    {/* All listings */}
-                    <div className="w-full min-w-0 self-stretch flex flex-col items-start justify-center gap-6">
+                    <div className="w-full min-w-0 flex flex-col items-start justify-center gap-6">
                       <div className="w-full h-10 flex items-center">
                         <b className="w-fit flex items-center">All Listings</b>
                       </div>
-                      <div className="w-full flex flex-wrap gap-6">
+                      <div className="w-full flex flex-wrap gap-6 py-1">
                         {facilities.map((dorm) => (
                           <DormCard key={dorm.id} {...dorm} />
                         ))}
