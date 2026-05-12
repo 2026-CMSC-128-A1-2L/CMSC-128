@@ -1,11 +1,13 @@
-import type { ReactNode } from 'react';
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Icon } from '@iconify/react';
-import PageBackground from '../general/PageBackground';
-import SideBarLandlord, { type SideBarLandlordItemKey } from './SideBarLandlord';
-import LandlordFooter from './LandlordFooter';
-import TutorialBubble from '../../pages/landlord/dashboard/LandlordHomepageTutorials';
+import type { ReactNode } from "react";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Icon } from "@iconify/react";
+import PageBackground from "../general/PageBackground";
+import SideBarLandlord, {
+  type SideBarLandlordItemKey,
+} from "./SideBarLandlord";
+import LandlordFooter from "./LandlordFooter";
+import TutorialBubble from "../../pages/landlord/dashboard/LandlordHomepageTutorials";
 
 export type BreadcrumbItem = {
   label: string;
@@ -18,7 +20,11 @@ type LandlordLayoutProps = {
   children: ReactNode;
 };
 
-const LandlordLayout = ({ activeSidebarItem, breadcrumbs = [], children }: LandlordLayoutProps) => {
+const LandlordLayout = ({
+  activeSidebarItem,
+  breadcrumbs = [],
+  children,
+}: LandlordLayoutProps) => {
   const navigate = useNavigate();
 
   const [showHelp, setShowHelp] = useState(false);
@@ -31,14 +37,17 @@ const LandlordLayout = ({ activeSidebarItem, breadcrumbs = [], children }: Landl
           <div className="sticky top-0 h-screen self-start">
             <SideBarLandlord
               activeItem={activeSidebarItem}
-              onProfileClick={() => navigate('/landlord/profile')}
-              onAddListing={() => navigate('/landlord/properties/new')}
+              onProfileClick={() => navigate("/landlord/profile/switcher")}
+              onAddListing={() => navigate("/landlord/properties/new")}
             />
           </div>
 
           <div className="flex min-w-0 flex-1 flex-col px-[32px] pr-[80px] pb-[32px]">
             {breadcrumbs.length > 0 && (
-              <nav aria-label="Breadcrumb" className="flex h-[64px] items-end gap-[10px] p-[10px]">
+              <nav
+                aria-label="Breadcrumb"
+                className="flex h-[64px] items-end gap-[10px] p-[10px]"
+              >
                 <ol className="flex h-[24px] items-center gap-[6px]">
                   {breadcrumbs.map((item, idx) => {
                     const isLast = idx === breadcrumbs.length - 1;
@@ -59,7 +68,7 @@ const LandlordLayout = ({ activeSidebarItem, breadcrumbs = [], children }: Landl
                         ) : (
                           <span
                             className={`${labelClass} text-[#2f3136]`}
-                            aria-current={isLast ? 'page' : undefined}
+                            aria-current={isLast ? "page" : undefined}
                           >
                             {item.label}
                           </span>
