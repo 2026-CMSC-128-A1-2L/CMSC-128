@@ -62,7 +62,7 @@ const MyCalendar: FunctionComponent = () => {
 
   return (
     <>
-      <div className="flex min-h-screen font-inter text-black">
+      <div className="user-calendar-shell flex min-h-screen font-inter text-black dark:bg-[#0f1010] dark:text-[#edf6f4]">
         <div className="sticky top-0 h-screen shrink-0 z-10">
           <SideBar />
         </div>
@@ -71,8 +71,8 @@ const MyCalendar: FunctionComponent = () => {
             <div className="flex flex-col gap-4 sm:gap-8 flex-1">
               {/* Header Section */}
               <div className="flex flex-col gap-3">
-                <b className="text-xl sm:text-2xl leading-8 text-black">My Calendar</b>
-                <div className="h-0.5 bg-whitesmoke-200" />
+                <b className="text-xl sm:text-2xl leading-8 text-black dark:text-[#edf6f4]">My Calendar</b>
+                <div className="h-0.5 bg-whitesmoke-200 dark:bg-[#303331]" />
               </div>
 
               {/* Main Content - Two Column Layout */}
@@ -80,7 +80,7 @@ const MyCalendar: FunctionComponent = () => {
                 {/* LEFT SIDEBAR */}
                 <div className="w-full lg:w-72 flex flex-col gap-6 shrink-0">
                   {/* Mini Calendar Container */}
-                  <div className="bg-white rounded-num-8 p-3 sm:p-4 border border-whitesmoke-200 w-full overflow-hidden">
+                  <div className="bg-white rounded-num-8 p-3 sm:p-4 border border-whitesmoke-200 w-full overflow-hidden dark:bg-[#101111] dark:border-[#303331]">
                     <MiniCalendar
                       currentDate={currentDate}
                       onPrevMonth={handlePrevMonth}
@@ -94,7 +94,7 @@ const MyCalendar: FunctionComponent = () => {
 
                 {/* RIGHT MAIN CONTENT */}
                 <div className="flex-1 flex flex-col gap-6 min-w-0">
-                  <div className="rounded-2xl bg-white border border-whitesmoke-200 flex flex-col p-6">
+                  <div className="rounded-2xl bg-white border border-whitesmoke-200 flex flex-col p-6 dark:bg-[#101111] dark:border-[#303331]">
                     <MainCalendarGrid
                       currentDate={currentDate}
                       onPrevMonth={handlePrevMonth}

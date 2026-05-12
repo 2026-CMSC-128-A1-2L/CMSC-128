@@ -179,12 +179,12 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
   return (
     <div className="w-full flex flex-col gap-4">
       {/* Mini calendar */}
-      <div className="rounded-xl bg-white border border-whitesmoke-200 flex flex-col items-center p-4 gap-4">
+      <div className="rounded-xl bg-white border border-whitesmoke-200 flex flex-col items-center p-4 gap-4 dark:bg-[#101111] dark:border-[#303331]">
         {/* Nav */}
         <div className="self-stretch flex items-center gap-3">
           <button
             onClick={onPrevMonth}
-            className="rounded-full p-2 hover:bg-whitesmoke-100 transition-colors"
+            className="rounded-full p-2 hover:bg-whitesmoke-100 transition-colors dark:hover:bg-[#1f2022]"
           >
             <Icon icon="ic:round-chevron-left" className="h-5 w-5" />
           </button>
@@ -193,7 +193,7 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
             <div className="flex-1 relative">
               <button
                 onClick={() => setShowMonthDropdown(!showMonthDropdown)}
-                className="w-full rounded-md border border-gainsboro flex items-center p-2 gap-1 text-xs hover:bg-gray-50"
+                className="w-full rounded-md border border-gainsboro flex items-center p-2 gap-1 text-xs hover:bg-gray-50 dark:border-[#303331] dark:bg-[#141515] dark:text-[#edf6f4] dark:hover:bg-[#1f2022]"
               >
                 <span className="flex-1">{monthName}</span>
                 <Icon
@@ -204,13 +204,13 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
                 />
               </button>
               {showMonthDropdown && (
-                <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gainsboro rounded-md z-10 shadow-lg max-h-48 overflow-y-auto">
+                <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gainsboro rounded-md z-10 shadow-lg max-h-48 overflow-y-auto dark:bg-[#141515] dark:border-[#303331]">
                   {MONTH_SHORT.map((m, idx) => (
                     <button
                       key={m}
                       onClick={() => handleMonthSelect(idx)}
                       className={`w-full text-left px-3 py-2 text-xs hover:bg-blue-50 ${
-                        idx === month ? 'bg-lightcyan-100 font-bold' : ''
+                        idx === month ? 'bg-lightcyan-100 text-teal-200 font-bold dark:bg-[#17362f] dark:text-[#72cbb8]' : ''
                       }`}
                     >
                       {m}
@@ -224,7 +224,7 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
             <div className="flex-1 relative">
               <button
                 onClick={() => setShowYearDropdown(!showYearDropdown)}
-                className="w-full rounded-md border border-gainsboro flex items-center p-2 gap-1 text-xs hover:bg-gray-50"
+                className="w-full rounded-md border border-gainsboro flex items-center p-2 gap-1 text-xs hover:bg-gray-50 dark:border-[#303331] dark:bg-[#141515] dark:text-[#edf6f4] dark:hover:bg-[#1f2022]"
               >
                 <span className="flex-1">{yearStr}</span>
                 <Icon
@@ -233,13 +233,13 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
                 />
               </button>
               {showYearDropdown && (
-                <div className="absolute top-full right-0 left-0 mt-1 bg-white border border-gainsboro rounded-md z-10 shadow-lg max-h-48 overflow-y-auto">
+                <div className="absolute top-full right-0 left-0 mt-1 bg-white border border-gainsboro rounded-md z-10 shadow-lg max-h-48 overflow-y-auto dark:bg-[#141515] dark:border-[#303331]">
                   {yearRange.map((y) => (
                     <button
                       key={y}
                       onClick={() => handleYearSelect(y)}
                       className={`w-full text-left px-3 py-2 text-xs hover:bg-blue-50 ${
-                        y === year ? 'bg-lightcyan-100 font-bold' : ''
+                        y === year ? 'bg-lightcyan-100 text-teal-200 font-bold dark:bg-[#17362f] dark:text-[#72cbb8]' : ''
                       }`}
                     >
                       {y}
@@ -251,7 +251,7 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
           </div>
           <button
             onClick={onNextMonth}
-            className="rounded-full p-2 hover:bg-whitesmoke-100 transition-colors"
+            className="rounded-full p-2 hover:bg-whitesmoke-100 transition-colors dark:hover:bg-[#1f2022]"
           >
             <Icon icon="ic:round-chevron-right" className="h-5 w-5" />
           </button>
@@ -279,10 +279,10 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
                       onClick={() => handleDateClick(day)}
                       disabled={day === null}
                       className={[
-                        'rounded-md flex items-center justify-center p-2 aspect-square transition-colors',
-                        day === null ? 'cursor-default' : 'cursor-pointer hover:bg-gray-100',
+                        'rounded-md flex items-center justify-center p-2 aspect-square transition-colors dark:text-[#edf6f4]',
+                        day === null ? 'cursor-default opacity-40' : 'cursor-pointer hover:bg-gray-100 dark:hover:bg-[#1f2022]',
                         isTodayDay
-                          ? 'bg-lightcyan-100 text-teal-200 font-bold hover:bg-lightcyan-200'
+                          ? 'bg-lightcyan-100 text-teal-200 font-bold hover:bg-lightcyan-200 dark:bg-[#17362f] dark:text-[#72cbb8] dark:hover:bg-[#1c473d]'
                           : '',
                       ].join(' ')}
                     >
@@ -312,7 +312,7 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
                   const dayEvents = getEventsForDay(eventDate.getDate());
                   onDateClick?.(eventDate, dayEvents);
                 }}
-                className="w-full h-12 rounded-num-8 border border-whitesmoke-200 box-border overflow-hidden flex items-center p-3 gap-2 hover:bg-whitesmoke-200 transition-colors cursor-pointer font-inter"
+                className="w-full h-12 rounded-num-8 border border-whitesmoke-200 box-border overflow-hidden flex items-center p-3 gap-2 hover:bg-whitesmoke-200 transition-colors cursor-pointer font-inter dark:border-[#303331] dark:bg-[#101111] dark:hover:bg-[#1f2022]"
               >
                 <Icon icon={getEventIcon(event.type)} className="h-6 w-6 shrink-0 text-teal" />
                 <div className="flex-1 flex items-center justify-between min-w-0 gap-2">

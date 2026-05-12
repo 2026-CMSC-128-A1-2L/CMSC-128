@@ -104,3 +104,32 @@ body {
     color: #72cbb8;
   }
 }
+@layer utilities {
+  .dark .user-calendar-shell .bg-white {
+    background-color: #101111;
+  }
+
+  .dark .user-calendar-shell .bg-whitesmoke-100,
+  .dark .user-calendar-shell .bg-\[\#f8fafc\],
+  .dark .user-calendar-shell .bg-\[\#f7f7f7\] {
+    background-color: #1f2022;
+  }
+
+  .dark .user-calendar-shell .border-whitesmoke-200,
+  .dark .user-calendar-shell .border-gainsboro {
+    border-color: #303331;
+  }
+
+  .dark .user-calendar-shell .hover\:bg-whitesmoke-100:hover,
+  .dark .user-calendar-shell .hover\:bg-whitesmoke-200:hover,
+  .dark .user-calendar-shell .hover\:bg-gray-50:hover,
+  .dark .user-calendar-shell .hover\:bg-gray-100:hover,
+  .dark .user-calendar-shell .hover\:bg-blue-50:hover {
+    background-color: #1f2022;
+  }
+
+  .dark .user-calendar-shell .bg-lightcyan,
+  .dark .user-calendar-shell .bg-lightcyan-100 {
+    background-color: #17362f;
+  }
+}
