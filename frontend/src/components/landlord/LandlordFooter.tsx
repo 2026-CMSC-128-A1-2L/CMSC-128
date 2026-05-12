@@ -8,11 +8,11 @@ const LandlordFooter = () => {
         <div className="flex w-full items-center justify-center gap-x-3 sm:gap-x-6 lg:gap-x-[48px] flex-nowrap">
           <div className="hidden sm:flex items-center gap-1.5 sm:gap-[8px] shrink-0">
             <AtlasLogo
-              className="h-[32px] w-[36px] lg:h-[42px] lg:w-[48px] shrink-0"
+              className="h-[32px] w-[36px] lg:h-[42px] lg:w-[48px] shrink-0 fill-[#2d3748] dark:fill-[#d7e0ef]"
               aria-label="Atlas"
             />
             <div className="flex items-center gap-1 sm:gap-[12px]">
-              <span className="flex items-center gap-[2px] sm:gap-[4px] font-['Inter',sans-serif] text-[10px] lg:text-[14px] font-bold text-[#666] whitespace-nowrap">
+              <span className="flex items-center gap-[2px] sm:gap-[4px] font-['Inter',sans-serif] text-[10px] lg:text-[14px] font-bold text-[#666] dark:text-[#a4acba] whitespace-nowrap">
                 <Icon
                   icon="ph:copyright-bold"
                   className="h-[14px] w-[14px] lg:h-[20px] lg:w-[20px] shrink-0"
@@ -20,17 +20,17 @@ const LandlordFooter = () => {
                 />
                 2026
               </span>
-              <span className="font-['Inter',sans-serif] text-[10px] lg:text-[14px] font-bold text-[#666] whitespace-nowrap">
+              <span className="font-['Inter',sans-serif] text-[10px] lg:text-[14px] font-bold text-[#666] dark:text-[#a4acba] whitespace-nowrap">
                 ATLAS Team
               </span>
             </div>
-            <span className="font-['Inter',sans-serif] text-[10px] lg:text-[14px] font-bold text-[#666] whitespace-nowrap">
+            <span className="font-['Inter',sans-serif] text-[10px] lg:text-[14px] font-bold text-[#666] dark:text-[#a4acba] whitespace-nowrap">
               All Rights Reserved
             </span>
           </div>
 
           <div className="flex items-center gap-x-3 sm:gap-x-6 lg:gap-x-[48px] flex-nowrap shrink-0">
-            <nav className="flex flex-col items-center gap-[6px] lg:gap-[10px] whitespace-nowrap font-['Inter',sans-serif] text-[9px] sm:text-[10px] lg:text-[14px] font-bold text-[#666] shrink-0">
+            <nav className="flex flex-col items-center gap-[6px] lg:gap-[10px] whitespace-nowrap font-['Inter',sans-serif] text-[9px] sm:text-[10px] lg:text-[14px] font-bold text-[#666] dark:text-[#a4acba] shrink-0">
               <a href="#" className="hover:underline">
                 Browse Dorms
               </a>
@@ -38,7 +38,7 @@ const LandlordFooter = () => {
                 List your property
               </a>
             </nav>
-            <nav className="flex flex-col items-center gap-[6px] lg:gap-[10px] whitespace-nowrap font-['Inter',sans-serif] text-[9px] sm:text-[10px] lg:text-[14px] font-bold text-[#666] shrink-0">
+            <nav className="flex flex-col items-center gap-[6px] lg:gap-[10px] whitespace-nowrap font-['Inter',sans-serif] text-[9px] sm:text-[10px] lg:text-[14px] font-bold text-[#666] dark:text-[#a4acba] shrink-0">
               <a href="#" className="hover:underline">
                 About
               </a>
@@ -46,7 +46,7 @@ const LandlordFooter = () => {
                 Contact Us
               </a>
             </nav>
-            <nav className="flex flex-col items-center gap-[6px] lg:gap-[10px] whitespace-nowrap font-['Inter',sans-serif] text-[9px] sm:text-[10px] lg:text-[14px] font-bold text-[#666] shrink-0">
+            <nav className="flex flex-col items-center gap-[6px] lg:gap-[10px] whitespace-nowrap font-['Inter',sans-serif] text-[9px] sm:text-[10px] lg:text-[14px] font-bold text-[#666] dark:text-[#a4acba] shrink-0">
               <a href="#" className="hover:underline">
                 Privacy Policy
               </a>

@@ -7,7 +7,7 @@ import SideBarLandlord, {
   type SideBarLandlordItemKey,
 } from "./SideBarLandlord";
 import LandlordFooter from "./LandlordFooter";
-import TutorialBubble from "../../../../frontend/src/components/landlord/TutorialsForLandlord";
+import TutorialBubble from "./TutorialsForLandlord";
 
 export type BreadcrumbItem = {
   label: string;
@@ -29,19 +29,16 @@ const LandlordLayout = ({
   const [showHelp, setShowHelp] = useState(false);
 
   return (
-    <div className="relative flex h-screen w-screen flex-col overflow-hidden">
+    <div className="landlord-shell relative flex h-screen w-screen flex-col overflow-hidden">
       <PageBackground />
-
       <div className="relative z-10 flex flex-1 overflow-hidden">
-        {/* Sidebar */}
         <SideBarLandlord
           activeItem={activeSidebarItem}
-          onProfileClick={() => navigate("/landlord/profile")}
+          onProfileClick={() => navigate("/landlord/profile/switcher")}
           onAddListing={() => navigate("/landlord/properties/new")}
         />
 
         <div className="flex min-w-0 flex-1 flex-col overflow-hidden pl-[68px] md:pl-0">
-          {/* Scrollable main area */}
           <main className="flex min-w-0 flex-1 flex-col overflow-y-auto">
             {breadcrumbs.length > 0 && (
               <nav
@@ -67,7 +64,7 @@ const LandlordLayout = ({
                           </Link>
                         ) : (
                           <span
-                            className={`${labelClass} text-[#2f3136] dark:text-gray-200`}
+                            className={`${labelClass} text-[#2f3136] dark:text-[#d7e0ef]`}
                             aria-current={isLast ? "page" : undefined}
                           >
                             {item.label}
@@ -76,7 +73,7 @@ const LandlordLayout = ({
                         {!isLast && (
                           <Icon
                             icon="iconamoon:arrow-right-2"
-                            className="h-[24px] w-[24px] text-[#2f3136] dark:text-gray-300"
+                            className="h-[24px] w-[24px] text-[#2f3136] dark:text-[#a4acba]"
                             aria-hidden="true"
                           />
                         )}
@@ -87,7 +84,7 @@ const LandlordLayout = ({
               </nav>
             )}
 
-            <div className="flex-1 px-4 pb-8 pt-0 sm:px-6 md:px-8 lg:px-[32px]">
+            <div className="flex-1 px-4 pb-8 pt-0 sm:px-6 md:px-8 lg:px-[32px] dark:text-[#d7e0ef]">
               {children}
             </div>
           </main>

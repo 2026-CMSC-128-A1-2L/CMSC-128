@@ -121,6 +121,7 @@ const SideBarLandlord = ({
   const [collapsed, setCollapsed] = useState(() => isSmallScreen());
   const [isMobile, setIsMobile] = useState(() => isSmallScreen());
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const [darkModeIconSpinning, setDarkModeIconSpinning] = useState(false);
   const [profileMenuPlacement, setProfileMenuPlacement] = useState<
     "top" | "bottom"
   >("top");
@@ -210,7 +211,7 @@ const SideBarLandlord = ({
     <>
       {isMobile && !collapsed && (
         <div
-          className="fixed inset-0 z-30 bg-black/30 backdrop-blur-sm"
+          className="fixed inset-0 z-30 bg-black/30 backdrop-blur-sm dark:bg-black/60"
           aria-hidden="true"
           onClick={handleBackdropClick}
         />
@@ -218,8 +219,10 @@ const SideBarLandlord = ({
 
       <aside
         className={[
-          "flex shrink-0 flex-col items-center gap-[32px] border border-solid border-[#f0f0f0] pt-[24px] pb-[30px] transition-[width] duration-200",
-          isMobile && !collapsed ? "bg-white" : "bg-transparent",
+          "flex shrink-0 flex-col items-center gap-[32px] border-r border-solid border-[#f0f0f0] pt-[24px] pb-[30px] transition-[width] duration-200 dark:border-[#303331] dark:text-[#d7e0ef]",
+          isMobile && !collapsed
+            ? "bg-white dark:bg-[#101111]"
+            : "bg-transparent",
           positionClass,
           w,
           className,
@@ -230,7 +233,7 @@ const SideBarLandlord = ({
           type="button"
           onClick={() => setCollapsed((c) => !c)}
           aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-          className="absolute -right-[12px] top-[24px] z-50 flex h-[24px] w-[24px] items-center justify-center rounded-full border border-[#f0f0f0] bg-white shadow-sm text-[#666] transition-colors hover:text-[#096c5b]"
+          className="absolute -right-[12px] top-[24px] z-50 flex h-[24px] w-[24px] items-center justify-center rounded-full border border-[#f0f0f0] bg-white shadow-sm text-[#666] transition-colors hover:text-[#096c5b] dark:border-[#303331] dark:bg-[#1f2022] dark:text-[#d7e0ef] dark:hover:text-[#72cbb8]"
         >
           <Icon
             icon={
@@ -244,8 +247,8 @@ const SideBarLandlord = ({
 
         {/* Logo */}
         <div className="flex h-[40px] items-center justify-center overflow-hidden">
-          <Link 
-            to="/landlord/dashboard" 
+          <Link
+            to="/landlord/dashboard"
             className="flex h-[40px] items-center justify-center overflow-hidden cursor-pointer hover:opacity-80 transition-opacity"
           >
             {collapsed ? (
@@ -272,7 +275,7 @@ const SideBarLandlord = ({
                 type="button"
                 onClick={onAddListing}
                 aria-label="Add new listing"
-                className="flex h-[36px] w-[36px] items-center justify-center rounded-full bg-[#096c5b] text-white transition-colors hover:bg-[#075a4c]"
+                className="flex h-[36px] w-[36px] items-center justify-center rounded-full bg-[#096c5b] text-white transition-colors hover:bg-[#075a4c] dark:bg-[#12342e] dark:text-[#72cbb8] dark:hover:bg-[#1f3a34]"
               >
                 <Icon
                   icon="material-symbols:add-rounded"
@@ -283,14 +286,14 @@ const SideBarLandlord = ({
               <button
                 type="button"
                 onClick={onAddListing}
-                className="flex w-full cursor-pointer items-center overflow-hidden rounded-[100px] bg-[#f0f0f0] pl-[17px] pr-[12px] transition-colors duration-200 ease-in-out hover:bg-[#e6e6e6]"
+                className="flex w-full cursor-pointer items-center overflow-hidden rounded-[100px] bg-[#f0f0f0] pl-[17px] pr-[12px] transition-colors duration-200 ease-in-out hover:bg-[#e6e6e6] dark:bg-[#242526] dark:hover:bg-[#2d302f]"
               >
                 <span className="flex flex-1 items-start overflow-hidden py-[10px]">
-                  <span className="font-['Inter',sans-serif] text-[10px] font-semibold leading-normal whitespace-nowrap text-[#666]">
+                  <span className="font-['Inter',sans-serif] text-[10px] font-semibold leading-normal whitespace-nowrap text-[#666] dark:text-[#a4acba]">
                     Add New Listing
                   </span>
                 </span>
-                <span className="flex h-[32px] w-[32px] items-center justify-center rounded-[100px] bg-[#096c5b] text-white transition-colors duration-200 ease-in-out">
+                <span className="flex h-[32px] w-[32px] items-center justify-center rounded-[100px] bg-[#096c5b] text-white transition-colors duration-200 ease-in-out dark:bg-[#12342e] dark:text-[#72cbb8]">
                   <Icon
                     icon="material-symbols:add-rounded"
                     className="h-[24px] w-[24px]"
@@ -319,7 +322,7 @@ const SideBarLandlord = ({
                   onMouseLeave={() =>
                     setInternalHover((p) => (p === item.key ? undefined : p))
                   }
-                  className="relative transition-colors duration-150 hover:bg-[#F0FAF6]"
+                  className="relative transition-colors duration-150 hover:bg-[#F0FAF6] dark:hover:bg-[#17201d]"
                   title={collapsed ? item.label : undefined}
                 >
                   {/* Left active bar */}
@@ -340,7 +343,9 @@ const SideBarLandlord = ({
                       aria-label={item.label}
                       className={[
                         "flex h-[44px] w-full items-center justify-center",
-                        state === "clicked" ? "text-[#096c5b]" : "text-[#666]",
+                        state === "clicked"
+                          ? "text-[#096c5b] dark:text-[#72cbb8]"
+                          : "text-[#666] dark:text-[#d7e0ef]",
                       ].join(" ")}
                     >
                       <Icon icon={item.icon} className="h-[20px] w-[20px]" />
@@ -364,10 +369,17 @@ const SideBarLandlord = ({
           {/* Dark mode */}
           <button
             type="button"
-            onClick={onToggleDarkMode}
+            onClick={(event) => {
+              setDarkModeIconSpinning(true);
+              if (onToggleDarkMode) {
+                onToggleDarkMode(event);
+                return;
+              }
+              toggle();
+            }}
             aria-label="Toggle dark mode"
             className={[
-              "flex cursor-pointer items-center transition-colors hover:bg-[#F0FAF6]",
+              "flex cursor-pointer items-center transition-colors hover:bg-[#F0FAF6] dark:hover:bg-[#17201d]",
               collapsed
                 ? "h-[44px] w-full justify-center"
                 : "w-[180px] gap-[24px] pr-[20px]",
@@ -376,7 +388,7 @@ const SideBarLandlord = ({
             {!collapsed && (
               <span
                 aria-hidden="true"
-                className="h-[44px] w-[8px] shrink-0 rounded-[4px] bg-white"
+                className="h-[44px] w-[8px] shrink-0 rounded-[4px] bg-transparent opacity-0"
               />
             )}
             <span
@@ -387,19 +399,23 @@ const SideBarLandlord = ({
             >
               <Icon
                 icon="gg:dark-mode"
-                className="h-[24px] w-[24px] shrink-0 text-[#001d18]"
+                onAnimationEnd={() => setDarkModeIconSpinning(false)}
+                className={[
+                  "h-[24px] w-[24px] shrink-0 text-[#001d18] dark:text-white",
+                  darkModeIconSpinning ? "dark-mode-icon-turn" : "",
+                ].join(" ")}
                 aria-hidden="true"
               />
               {!collapsed && (
-                <span className="font-['Inter',sans-serif] text-[14px] font-semibold leading-normal text-[#001d18]">
-                  Dark Mode
+                <span className="font-['Inter',sans-serif] text-[14px] font-semibold leading-normal text-[#001d18] dark:text-[#d7e0ef]">
+                  {isDark ? "Light Mode" : "Dark Mode"}
                 </span>
               )}
             </span>
           </button>
 
           <div className="flex w-full flex-col items-start px-[20px]">
-            <div className="h-[2px] w-full rounded-[100px] bg-[#f0f0f0]" />
+            <div className="h-[2px] w-full rounded-[100px] bg-[#f0f0f0] dark:bg-[#303331]" />
           </div>
 
           {/* Profile with dropdown */}
@@ -407,7 +423,7 @@ const SideBarLandlord = ({
             {isProfileMenuOpen && !collapsed && (
               <div
                 className={[
-                  "absolute left-[20px] z-30 flex h-[68px] w-[171px] flex-col gap-[7px] rounded-[9px] border border-solid border-[#f0f0f0] bg-[#f7f7f7] px-[11px] py-[9px] shadow-[0_4px_18px_rgba(0,0,0,0.1)]",
+                  "absolute left-[20px] z-30 flex h-[68px] w-[171px] flex-col gap-[7px] rounded-[9px] border border-solid border-[#f0f0f0] bg-[#f7f7f7] px-[11px] py-[9px] shadow-[0_4px_18px_rgba(0,0,0,0.1)] dark:border-[#303331] dark:bg-[#141515] dark:shadow-[0_8px_24px_rgba(0,0,0,0.35)]",
                   profileMenuPlacement === "bottom"
                     ? "top-full mt-[8px]"
                     : "bottom-full mb-[8px]",
@@ -416,14 +432,14 @@ const SideBarLandlord = ({
                 <button
                   type="button"
                   onClick={handleViewProfileClick}
-                  className="h-[21px] w-full cursor-pointer rounded-[9px] bg-[#cbf6ed] text-center font-['Inter',sans-serif] text-[11px] font-medium text-[#096c5b] transition-colors duration-150 hover:brightness-95"
+                  className="h-[21px] w-full cursor-pointer rounded-[9px] bg-[#cbf6ed] text-center font-['Inter',sans-serif] text-[11px] font-medium text-[#096c5b] transition-colors duration-150 hover:brightness-95 dark:bg-[#12342e] dark:text-[#72cbb8]"
                 >
                   View Profile
                 </button>
                 <button
                   type="button"
                   onClick={handleSignOutClick}
-                  className="h-[21px] w-full cursor-pointer rounded-[9px] border border-solid border-[#f0f0f0] bg-white bg-gradient-to-b from-[#c00f0f] to-[#e44f4f] bg-clip-text text-center font-['Inter',sans-serif] text-[11px] font-medium text-transparent transition-colors duration-150 hover:bg-[#f9f9f9]"
+                  className="h-[21px] w-full cursor-pointer rounded-[9px] border border-solid border-[#f0f0f0] bg-white bg-gradient-to-b from-[#ff7b7b] to-[#e44f4f] bg-clip-text text-center font-['Inter',sans-serif] text-[11px] font-medium text-transparent transition-colors duration-150 hover:bg-[#f9f9f9] dark:border-[#303331] dark:bg-[#101111] dark:hover:bg-[#202221]"
                 >
                   Log Out
                 </button>
@@ -437,13 +453,13 @@ const SideBarLandlord = ({
               aria-expanded={isProfileMenuOpen}
               aria-label={`${user.name} profile`}
               className={[
-                "flex cursor-pointer items-center overflow-hidden py-[10px] transition-colors duration-200 ease-in-out hover:bg-[#F0FAF6]",
+                "flex cursor-pointer items-center overflow-hidden py-[10px] transition-colors duration-200 ease-in-out hover:bg-[#F0FAF6] dark:hover:bg-[#17201d]",
                 collapsed
                   ? "w-full justify-center"
                   : "w-full gap-[8px] pl-[32px] pr-[20px]",
               ].join(" ")}
             >
-              <span className="flex h-[36px] w-[36px] shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#e5e7eb] text-[#9ca3af]">
+              <span className="flex h-[36px] w-[36px] shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#e5e7eb] text-[#9ca3af] dark:bg-[#242526] dark:text-[#a4acba]">
                 {user.avatarUrl ? (
                   <img
                     src={user.avatarUrl}
@@ -460,7 +476,7 @@ const SideBarLandlord = ({
               </span>
               {!collapsed && (
                 <span className="flex flex-col items-start justify-center gap-[4px] overflow-hidden">
-                  <span className="font-['Inter',sans-serif] text-[14px] font-bold leading-normal whitespace-nowrap text-[#096c5b]">
+                  <span className="font-['Inter',sans-serif] text-[14px] font-bold leading-normal whitespace-nowrap text-[#096c5b] dark:text-[#72cbb8]">
                     {user.name}
                   </span>
                   {user.verified && (
@@ -470,7 +486,7 @@ const SideBarLandlord = ({
                       </span>
                       <Icon
                         icon="material-symbols:verified"
-                        className="h-[10px] w-[10px] text-[#0c8873]"
+                        className="h-[10px] w-[10px] text-[#0c8873] dark:text-[#72cbb8]"
                         aria-hidden="true"
                       />
                     </span>

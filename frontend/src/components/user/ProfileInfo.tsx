@@ -226,17 +226,17 @@ const ProfileInfo = () => {
   const isStudent = user?.userType === 'Student';
 
   return (
-    <div className="self-stretch h-[382px] rounded-2xl flex flex-col items-start gap-3">
+    <div className="self-stretch h-[382px] rounded-2xl flex flex-col items-start gap-3 dark:text-[#a4acba]">
       <div className="self-stretch rounded-2xl overflow-hidden flex flex-col items-start p-num-32">
         <div className="self-stretch flex flex-col items-start gap-2.5">
           <b className="relative">{roleLabel(user?.userType)} Profile</b>
-          <div className="flex items-center justify-center gap-2.5 text-[24px] text-darkslategray-200">
+          <div className="flex items-center justify-center gap-2.5 text-[24px] text-darkslategray-200 dark:text-[#b9eadf]">
             <b className="relative leading-8">
               {isLoading ? 'Loading profile...' : formatName(user)}
             </b>
             {isVerified && <img className="h-6 w-6 relative" alt="Verified" src={VerifiedBadge} />}
           </div>
-          <b className="relative text-[#096c5b]">{email}</b>
+          <b className="relative text-[#096c5b] dark:text-[#72cbb8]">{email}</b>
           {error && <span className="text-xs font-semibold text-red-500">{error}</span>}
         </div>
       </div>
@@ -310,7 +310,7 @@ const ProfileInfo = () => {
                       setContactNumber(onlyNums);
                     }
                   }}
-                  className="border-b border-[#096C5B] text-[14px] bg-transparent outline-none w-[200px] py-1"
+                  className="border-b border-[#096C5B] text-[14px] bg-transparent outline-none w-[200px] py-1 dark:border-[#72cbb8] dark:text-[#edf6f4]"
                   onKeyDown={(e) => e.key === 'Enter' && handleSave()}
                 />
               ) : (
@@ -345,7 +345,7 @@ const ProfileInfo = () => {
                     const isValidChar = /^[a-zA-Z0-9\s.,\-#]*$/.test(val);
                     if (isValidChar && val.length <= 100) setHomeAddress(val);
                   }}
-                  className="border-b border-[#096C5B] text-[14px] bg-transparent outline-none w-[300px] py-1 text-black"
+                  className="border-b border-[#096C5B] text-[14px] bg-transparent outline-none w-[300px] py-1 text-black dark:border-[#72cbb8] dark:text-[#edf6f4]"
                   onKeyDown={(e) => e.key === 'Enter' && handleSaveAddress()}
                 />
               ) : (
@@ -386,12 +386,12 @@ const ProfileInfo = () => {
 
               <Link
                 to="/finance"
-                className="flex items-center gap-1 text-[12px] text-teal-100 cursor-pointer hover:underline"
+                className="flex items-center gap-1 text-[12px] text-teal-100 cursor-pointer hover:underline dark:text-[#72cbb8]"
               >
-                <div className="relative font-medium text-[#096c5b]">See Finance</div>
+                <div className="relative font-medium text-[#096c5b] dark:text-[#72cbb8]">See Finance</div>
                 <Icon
                   icon="solar:arrow-right-up-linear"
-                  className="h-4 w-4 relative text-[#096c5b]"
+                  className="h-4 w-4 relative text-[#096c5b] dark:text-[#72cbb8]"
                 />
               </Link>
             </div>
