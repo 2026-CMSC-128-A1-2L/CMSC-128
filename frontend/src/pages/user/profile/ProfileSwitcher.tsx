@@ -5,6 +5,7 @@ import CurrentDormCard from "./current_dorm/CurrentDormCard";
 import UserVerif from "./verification/UserVerif";
 import Sidebar from "../../../components/user/SideBar";
 import Footer from "../../../components/general/Footer";
+import PageBackground from "../../../components/general/PageBackground";
 import Switch from "../../../components/user/CurrentDormToVerificationSwitch";
 import ProfileInfo from "../../../components/user/ProfileInfo";
 import { Icon } from "@iconify/react";
@@ -29,8 +30,9 @@ const ProfileSwitcher = () => {
   const verified = true;
 
   return (
-    <div className="w-full h-screen relative overflow-y-auto flex flex-col items-start isolate gap-2.5 text-left text-num-14 text-darkslategray-100 font-inter">
-      <div className="w-full max-w-[1440px] flex items-start">
+    <div className="user-profile-shell w-full h-screen relative overflow-y-auto flex flex-col items-start isolate gap-2.5 text-left text-num-14 text-darkslategray-100 font-inter dark:bg-[#0f1010] dark:text-[#edf6f4]">
+      <PageBackground />
+      <div className="relative z-10 w-full max-w-[1440px] flex items-start">
           <div className="sticky top-0 left-0 h-screen w-[200px] hidden md:block shrink-0 z-10">
             <Sidebar />
           </div>
@@ -55,7 +57,7 @@ const ProfileSwitcher = () => {
                 </div>
               </div>
 
-              <div className="self-stretch min-h-[800px] rounded-2xl bg-white flex flex-col items-start gap-3 text-center text-dimgray font-inter pb-10">
+              <div className="self-stretch min-h-[800px] rounded-2xl bg-white flex flex-col items-start gap-3 text-center text-dimgray font-inter pb-10 dark:bg-transparent dark:text-[#a4acba]">
                 <ProfileInfo />
 
                 <div className="self-stretch flex flex-col items-start gap-12">

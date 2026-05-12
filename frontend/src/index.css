@@ -178,3 +178,35 @@ body {
   animation: dark-mode-icon-turn 520ms ease-in-out;
   transform-origin: center;
 }
+@layer utilities {
+  .dark .user-profile-shell .bg-white {
+    background-color: #101111;
+  }
+
+  .dark .user-profile-shell .border-whitesmoke-200,
+  .dark .user-profile-shell .border-\[\#f0f0f0\] {
+    border-color: #303331;
+  }
+
+  .dark .user-profile-shell .text-black,
+  .dark .user-profile-shell .text-darkslategray-100,
+  .dark .user-profile-shell .text-darkslategray-200 {
+    color: #edf6f4;
+  }
+
+  .dark .user-profile-shell .text-dimgray,
+  .dark .user-profile-shell .text-slategray {
+    color: #a4acba;
+  }
+
+  .dark .user-profile-shell .text-\[\#096C5B\],
+  .dark .user-profile-shell .text-\[\#096c5b\],
+  .dark .user-profile-shell .text-teal-700,
+  .dark .user-profile-shell .text-teal-100 {
+    color: #72cbb8;
+  }
+
+  .dark .user-profile-shell .bg-\[\#f1f5f9\] {
+    background-color: #0d3a32;
+  }
+}
