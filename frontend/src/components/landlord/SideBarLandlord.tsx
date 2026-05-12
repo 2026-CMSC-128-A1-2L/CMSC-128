@@ -116,11 +116,12 @@ const SideBarLandlord = ({
   className = "",
 }: SideBarLandlordProps) => {
   const navigate = useNavigate();
-  const { toggle } = useTheme();
+  const { isDark, toggle } = useTheme();
   const [internalHover, setInternalHover] = useState<SideBarLandlordItemKey>();
   const [collapsed, setCollapsed] = useState(() => isSmallScreen());
   const [isMobile, setIsMobile] = useState(() => isSmallScreen());
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const [darkModeIconSpinning, setDarkModeIconSpinning] = useState(false);
   const [profileMenuPlacement, setProfileMenuPlacement] = useState<
     "top" | "bottom"
   >("top");
@@ -359,7 +360,14 @@ const SideBarLandlord = ({
           {/* Dark mode */}
           <button
             type="button"
-            onClick={onToggleDarkMode ?? toggle}
+            onClick={(event) => {
+              setDarkModeIconSpinning(true);
+              if (onToggleDarkMode) {
+                onToggleDarkMode(event);
+                return;
+              }
+              toggle();
+            }}
             aria-label="Toggle dark mode"
             className={[
               "flex cursor-pointer items-center transition-colors hover:bg-[#F0FAF6] dark:hover:bg-[#17201d]",
@@ -382,12 +390,16 @@ const SideBarLandlord = ({
             >
               <Icon
                 icon="gg:dark-mode"
-                className="h-[24px] w-[24px] shrink-0 text-[#001d18] dark:text-white"
+                onAnimationEnd={() => setDarkModeIconSpinning(false)}
+                className={[
+                  'h-[24px] w-[24px] shrink-0 text-[#001d18] dark:text-white',
+                  darkModeIconSpinning ? 'dark-mode-icon-turn' : '',
+                ].join(' ')}
                 aria-hidden="true"
               />
               {!collapsed && (
                 <span className="font-['Inter',sans-serif] text-[14px] font-semibold leading-normal text-[#001d18] dark:text-[#d7e0ef]">
-                  Dark Mode
+                  {isDark ? 'Light Mode' : 'Dark Mode'}
                 </span>
               )}
             </span>
