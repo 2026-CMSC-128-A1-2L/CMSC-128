@@ -5,6 +5,7 @@ import AtlasText from '../../assets/logo_atlas_text.svg?react';
 import map from '../../assets/map.svg';
 import AutoImageSwitcher from '../components/general/AutoImageSwitcher';
 import SignInPopUp from '../components/general/SignInPopUp';
+import LandingFAQ from '../components/general/LandingFAQ';
 
 import { Icon } from '@iconify/react';
 import { useState, useRef, useEffect } from 'react';
@@ -47,6 +48,43 @@ const UserLanding: FunctionComponent = () => {
   const [showSignIn, setShowSignIn] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
 
+  const [openProvides, setOpenProvides] = useState<number | null>(null);
+  const toggleProvides = (i: number) => setOpenProvides(prev => (prev === i ? null : i));
+
+  const providesItems = [
+    {
+      num: '01',
+      title: 'A centralized, reliable source of dormitory information',
+      detail:
+        'ATLAS aggregates all dormitory listings in one place so students never have to chase scattered posts or outdated flyers. Every listing is verified and kept up-to-date by landlords, giving you accurate information when you need it most.',
+    },
+    {
+      num: '02',
+      title: 'A streamlined digital application and management system',
+      detail:
+        'Gone are the days of paper forms and manual tracking. Students submit applications online, landlords review them digitally, and the entire workflow — from submission to approval — is tracked in real time.',
+    },
+    {
+      num: '03',
+      title: 'Improved coordination and communication between tenants and providers',
+      detail:
+        'Built-in messaging and notification tools keep tenants and landlords on the same page. Lease updates, maintenance requests, and announcements are delivered instantly, reducing miscommunication and delays.',
+    },
+    {
+      num: '04',
+      title: 'Greater transparency, accessibility, and accountability in dormitory-related processes',
+      detail:
+        'Every action in ATLAS is logged and traceable. Tenants can see exactly where their application stands, and landlords are held accountable to the information they publish — fostering a fairer, more transparent housing ecosystem.',
+    },
+    {
+      num: '05',
+      title: 'Safety and compliance information built into every listing',
+      detail:
+        'Each listing includes emergency contacts, hazard disclosures, and safety certifications so tenants can make informed decisions before committing to a place to live.',
+    },
+  ];
+
+
   // Scroll reveal animations -- watchers for the specific section, and ilalabas yung section once it's vieweed or like scrolled na
   const whatIsReveal = useScrollReveal();
   const cardsReveal = useScrollReveal();
@@ -54,7 +92,6 @@ const UserLanding: FunctionComponent = () => {
   const coreFeaturesReveal = useScrollReveal();
   const purposeReveal = useScrollReveal(0.1);
   const providesReveal = useScrollReveal(0.05);
-  const faqReveal = useScrollReveal();
 
   // Section refs for nav scroll
   const containerRef = useRef<HTMLDivElement>(null);
@@ -90,7 +127,6 @@ const UserLanding: FunctionComponent = () => {
               <div className="flex-1 flex flex-col items-start justify-center">
                 <div className="flex items-center gap-2">
                   <AtlasText className="w-32 h-auto fill-darkslategray" fill="#024338" />
-                  <Icon icon="mdi-light:chevron-down" className="h-6 w-6 relative" />
                 </div>
               </div>
               <div className="self-stretch flex items-center gap-12 text-center text-teal-200">
@@ -422,183 +458,45 @@ const UserLanding: FunctionComponent = () => {
                 What does ATLAS provide?
               </div>
               <div className="w-[1173px] flex flex-col items-end text-center text-num-36 font-poppins">
-                <div
-                  className={`w-num-1172 h-num-138 relative ${reveal(providesReveal.isVisible, 'delay-100')}`}
-                >
-                  <div className="absolute top-0 left-0 bg-white border-teal-200 border-solid border-b box-border w-num-1172 h-num-138" />
-                  <div className="absolute top-[46px] left-[28.08px] flex items-center gap-[67px]">
-                    <b className="h-num-37 w-num-48.7 relative flex items-center justify-center shrink-0">
-                      01
-                    </b>
-                    <b className="h-num-55 w-num-914 relative text-num-28 flex font-inter text-darkslategray-200 text-left items-center shrink-0">
-                      A centralized, reliable source of dormitory information
-                    </b>
-                    <Icon icon="lucide:plus" className="h-[26px] w-[26px]" />
-                  </div>
-                </div>
-                <div
-                  className={`w-num-1172 h-num-138 relative ${reveal(providesReveal.isVisible, 'delay-200')}`}
-                >
-                  <div className="absolute top-0 left-0 bg-white border-teal-200 border-solid border-b box-border w-num-1172 h-num-138" />
-                  <div className="absolute top-[46px] left-[28.08px] flex items-center gap-[67px]">
-                    <b className="h-num-37 w-num-48.7 relative flex items-center justify-center shrink-0">
-                      02
-                    </b>
-                    <b className="h-num-55 w-num-914 relative text-num-28 flex font-inter text-darkslategray-200 text-left items-center shrink-0">
-                      A streamlined digital application and management system
-                    </b>
-                    <Icon icon="lucide:plus" className="h-[26px] w-[26px]" />
-                  </div>
-                </div>
-                <div
-                  className={`w-num-1172 h-num-138 relative ${reveal(providesReveal.isVisible, 'delay-300')}`}
-                >
-                  <div className="absolute top-0 left-0 bg-white border-teal-200 border-solid border-b box-border w-num-1172 h-num-138" />
-                  <div className="absolute top-[46px] left-[28.08px] flex items-center gap-[67px]">
-                    <b className="h-num-37 w-num-48.7 relative flex items-center justify-center shrink-0">
-                      03
-                    </b>
-                    <b className="h-num-55 w-num-914 relative text-num-28 flex font-inter text-darkslategray-200 text-left items-center shrink-0">
-                      Improved coordination and communication between tenants and providers
-                    </b>
-                    <Icon icon="lucide:plus" className="h-[26px] w-[26px]" />
-                  </div>
-                </div>
-                <div
-                  className={`w-num-1172 h-num-138 relative ${reveal(providesReveal.isVisible, 'delay-[400ms]')}`}
-                >
-                  <div className="absolute top-0 left-0 bg-white border-teal-200 border-solid border-b box-border w-num-1172 h-num-138" />
-                  <div className="absolute top-[46px] left-[28.08px] flex items-center gap-[67px]">
-                    <b className="h-num-37 w-num-48.7 relative flex items-center justify-center shrink-0">
-                      04
-                    </b>
-                    <b className="h-num-55 w-num-914 relative text-num-28 flex font-inter text-darkslategray-200 text-left items-center shrink-0">
-                      Greater transparency, accessibility, and accountability in dormitory-related
-                      processes
-                    </b>
-                    <Icon icon="lucide:plus" className="h-[26px] w-[26px]" />
-                  </div>
-                </div>
-                <div
-                  className={`w-num-1172 h-num-138 relative ${reveal(providesReveal.isVisible, 'delay-[500ms]')}`}
-                >
-                  <div className="absolute top-0 left-0 bg-white border-teal-200 border-solid border-b box-border w-num-1172 h-num-138" />
-                  <b className="absolute top-[55px] left-[28.08px] flex items-center justify-center w-num-48.7 h-num-37">
-                    05
-                  </b>
-                  <b className="absolute top-[46px] left-[127px] text-num-28 flex font-inter text-darkslategray-200 text-left items-center w-num-914 h-num-55">
-                    Safety and compliance information built into every listing
-                  </b>
-                  <Icon
-                    icon="lucide:plus"
-                    className="absolute top-[52px] left-[1123px] w-[26px] h-[26px]"
-                  />
-                </div>
+                {providesItems.map((item, i) => {
+                  const delays = ['delay-100','delay-200','delay-300','delay-[400ms]','delay-[500ms]'];
+                  const isOpen = openProvides === i;
+                  return (
+                    <div
+                      key={item.num}
+                      className={`w-num-1172 relative ${reveal(providesReveal.isVisible, delays[i])}`}
+                    >
+                      <button
+                        type="button"
+                        onClick={() => toggleProvides(i)}
+                        className="w-full bg-white border-teal-200 border-solid border-b box-border flex items-center gap-[67px] py-[46px] px-[28px] cursor-pointer hover:bg-teal-50 transition-colors duration-200 text-left"
+                      >
+                        <b className="h-num-37 w-num-48.7 relative flex items-center justify-center shrink-0 text-num-36 font-poppins">
+                          {item.num}
+                        </b>
+                        <b className="flex-1 text-num-28 font-inter text-darkslategray-200 text-left">
+                          {item.title}
+                        </b>
+                        <Icon
+                          icon="lucide:plus"
+                          className={`h-[26px] w-[26px] shrink-0 transition-transform duration-300 ${isOpen ? 'rotate-45 text-teal-200' : ''}`}
+                        />
+                      </button>
+                      <div
+                        className={`overflow-hidden transition-all duration-400 ease-in-out bg-[#F0FAF8] border-teal-200 border-solid border-b ${isOpen ? 'max-h-48 opacity-100' : 'max-h-0 opacity-0'}`}
+                      >
+                        <p className="px-[28px] py-4 text-num-18 font-inter text-gray-300 leading-relaxed text-left pl-[143px]">
+                          {item.detail}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
             <div ref={faqRef} />
-            <div
-              ref={faqReveal.ref}
-              className={`w-screen flex flex-col items-center py-0 px-[79px] box-border gap-[52px] z-3 shrink-0 text-[100px] text-darkslategray-200 ${reveal(faqReveal.isVisible)}`}
-            >
-              <div className="self-stretch h-[71px] w-screen relative">
-                <b className="flex items-center w-screen h-[71px]">FAQs</b>
-              </div>
-              <div className="w-[1280px] h-[504px] relative text-num-18 text-gray-300 font-lora">
-                <div className="absolute h-[13.49%] w-[99.69%] top-[19.05%] right-[0%] bottom-[67.46%] left-[0.31%]">
-                  <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] shadow-[0px_7px_20px_rgba(0,0,0,0.1)] rounded-t-num-10 rounded-b-num-0 bg-gray-500 border-gray-500 border-solid border-[5px] box-border" />
-                  <img
-                    className="absolute h-[22.06%] w-[0.47%] top-[59.83%] right-[4.47%] bottom-[18.11%] left-[95.06%] max-w-full overflow-hidden max-h-full object-contain"
-                    alt=""
-                  />
-                  <b className="absolute h-[48.53%] w-[29.4%] top-[26.47%] left-[4.15%] flex items-center">
-                    Who can use atlas as a tenant?
-                  </b>
-                </div>
-                <div className="absolute h-[13.49%] w-[99.69%] top-[32.54%] right-[0%] bottom-[53.97%] left-[0.31%]">
-                  <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] shadow-[0px_7px_20px_rgba(0,0,0,0.1)] bg-gray-500 border-gray-500 border-solid border-[5px] box-border" />
-                  <img
-                    className="absolute h-[22.06%] w-[0.47%] top-[59.83%] right-[4.47%] bottom-[18.11%] left-[95.06%] max-w-full overflow-hidden max-h-full object-contain"
-                    alt=""
-                  />
-                  <b className="absolute h-[48.53%] w-[39.64%] top-[26.47%] left-[4.1%] flex items-center">
-                    How do I search for available dormitories?
-                  </b>
-                </div>
-                <div className="absolute h-[13.49%] w-[99.69%] top-[46.03%] right-[0%] bottom-[40.48%] left-[0.31%]">
-                  <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] shadow-[0px_7px_20px_rgba(0,0,0,0.1)] bg-gray-500 border-gray-500 border-solid border-[5px] box-border" />
-                  <img
-                    className="absolute h-[22.06%] w-[0.47%] top-[59.83%] right-[4.47%] bottom-[18.11%] left-[95.06%] max-w-full overflow-hidden max-h-full object-contain"
-                    alt=""
-                  />
-                  <b className="absolute h-[48.53%] w-[44.37%] top-[26.47%] left-[4.1%] flex items-center">
-                    Can I apply for a dorm directly through ATLAS?
-                  </b>
-                </div>
-                <div className="absolute h-[13.49%] w-[99.69%] top-[59.52%] right-[0%] bottom-[26.98%] left-[0.31%]">
-                  <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] shadow-[0px_7px_20px_rgba(0,0,0,0.1)] bg-gray-500 border-gray-500 border-solid border-[5px] box-border" />
-                  <img
-                    className="absolute h-[22.06%] w-[0.47%] top-[59.83%] right-[4.47%] bottom-[18.11%] left-[95.06%] max-w-full overflow-hidden max-h-full object-contain"
-                    alt=""
-                  />
-                  <b className="absolute h-[48.53%] w-[44.37%] top-[26.47%] left-[4.1%] flex items-center">
-                    Is my personal information safe on ATLAS?
-                  </b>
-                </div>
-                <div className="absolute h-[13.49%] w-[99.69%] top-[73.02%] right-[0%] bottom-[13.49%] left-[0.31%]">
-                  <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] shadow-[0px_7px_20px_rgba(0,0,0,0.1)] bg-gray-500 border-gray-500 border-solid border-[5px] box-border" />
-                  <img
-                    className="absolute h-[22.06%] w-[0.47%] top-[59.83%] right-[4.47%] bottom-[18.11%] left-[95.06%] max-w-full overflow-hidden max-h-full object-contain"
-                    alt=""
-                  />
-                  <b className="absolute h-[48.53%] w-[29.4%] top-[26.47%] left-[4.15%] flex items-center">
-                    ...
-                  </b>
-                </div>
-                <div className="absolute h-[13.49%] w-[99.69%] top-[86.51%] right-[0%] bottom-[0%] left-[0.31%]">
-                  <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] shadow-[0px_7px_20px_rgba(0,0,0,0.1)] rounded-t-num-0 rounded-b-num-10 bg-gray-500 border-gray-500 border-solid border-[5px] box-border" />
-                  <img
-                    className="absolute h-[22.06%] w-[0.47%] top-[59.83%] right-[4.47%] bottom-[18.11%] left-[95.06%] max-w-full overflow-hidden max-h-full object-contain"
-                    alt=""
-                  />
-                  <b className="absolute h-[48.53%] w-[29.4%] top-[26.47%] left-[4.15%] flex items-center">
-                    ...
-                  </b>
-                </div>
-                <div className="absolute h-[16.47%] w-full top-[0%] right-[0%] bottom-[83.53%] left-[0%] text-center text-num-14 font-poppins">
-                  <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] shadow-[0px_7px_20px_rgba(0,0,0,0.1)] rounded-num-10 bg-gray-500 border-gray-500 border-solid border-[5px] box-border" />
-                  <div className="absolute h-[69.88%] w-[12.57%] top-[18.07%] right-[10.39%] bottom-[12.05%] left-[77.04%]">
-                    <b className="absolute h-[48.28%] w-full top-[51.72%] left-[0%] flex items-center justify-center">
-                      OTHERS
-                    </b>
-                    <Icon
-                      icon="mynaui:dots-circle"
-                      className="absolute h-[51.72%] w-[31.65%] top-[0%] right-[34.99%] bottom-[48.28%] left-[33.37%] max-w-full overflow-hidden max-h-full"
-                    />
-                  </div>
-                  <div className="absolute h-[69.88%] w-[9.3%] top-[18.07%] right-[45.31%] bottom-[12.05%] left-[45.39%]">
-                    <b className="absolute h-[48.28%] w-full top-[51.72%] left-[0%] flex items-center justify-center">
-                      LANDLORDS
-                    </b>
-                    <Icon
-                      icon="material-symbols:home-outline-rounded"
-                      className="absolute h-[51.72%] w-[31.65%] top-[0%] right-[34.99%] bottom-[48.28%] left-[33.37%] max-w-full overflow-hidden max-h-full"
-                    />
-                  </div>
-                  <div className="absolute h-[69.88%] w-[7.41%] top-[18.07%] right-[79.6%] bottom-[12.05%] left-[13%]">
-                    <b className="absolute h-[48.28%] w-full top-[51.72%] left-[0%] flex items-center justify-center">
-                      TENANTS
-                    </b>
-                    <Icon
-                      icon="ic:baseline-person-pin"
-                      className="absolute h-[51.72%] w-[31.65%] top-[0%] right-[34.99%] bottom-[48.28%] left-[33.37%] max-w-full overflow-hidden max-h-full"
-                    />
-                  </div>
-                  <div className="absolute h-[9.64%] w-[33.34%] top-[90.36%] right-[66.66%] bottom-[0%] left-[0%] rounded-[100px] bg-teal-200" />
-                </div>
-              </div>
-            </div>
+            <LandingFAQ />
           </div>
         </div>
 
