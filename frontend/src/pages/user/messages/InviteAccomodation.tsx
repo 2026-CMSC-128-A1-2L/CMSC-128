@@ -69,7 +69,13 @@ const InviteAccomodation: FunctionComponent = () => {
                   <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-[23.9px] w-full sm:w-auto">
                     <div
                       className="w-full sm:w-[148px] rounded-[17.89px] flex items-center justify-center py-2.5 sm:py-[11.9px] px-[35.8px] box-border cursor-pointer transition-transform hover:scale-105 active:scale-95 font-inter"
-                      onClick={() => navigate(-1)}
+                      onClick={() => {
+                        if (window.history.length > 2) {
+                          navigate(-2);
+                        } else {
+                          navigate('/landlord/messages');
+                        }
+                      }}
                     >
                       <div className="relative font-semibold inline-block">Cancel</div>
                     </div>
