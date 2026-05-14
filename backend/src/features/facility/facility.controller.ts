@@ -21,6 +21,7 @@ import {
   searchFacilities,
   getMonthlyIncomeByLandlord,
   getOverdueTenantsByLandlord,
+  getTenantsByLandlord,
 } from './facility.service.js';
 
 import { getListings } from '../listing/listing.service.js';
@@ -341,5 +342,13 @@ export const routeGetMonthlyIncomeByLandlord: RequestHandler = async (req, res, 
 export const routeGetOverdueTenantsByLandlord: RequestHandler = async (req, res, _next) => {
   assert.ok(req.user);
   const data = await getOverdueTenantsByLandlord(req.user._id);
+  res.status(200).json({ data });
+};
+
+// GET /api/facilities/landlord/tenants
+// Returns all tenants across all facilities owned by the landlord.
+export const routeGetTenantsByLandlord: RequestHandler = async (req, res, _next) => {
+  assert.ok(req.user);
+  const data = await getTenantsByLandlord(req.user._id);
   res.status(200).json({ data });
 };
