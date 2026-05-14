@@ -1,5 +1,5 @@
-// frontend/src/pages/user/finance/Finance.tsx
-import { type FunctionComponent, useState, useEffect } from 'react';
+import { type FunctionComponent, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import SideBar from '../../../components/user/SideBar';
 import Footer from '../../../components/general/Footer';
@@ -7,124 +7,63 @@ import PageBackground from '../../../components/general/PageBackground';
 import DownloadBillings from '../../../components/user/finance/DownloadBillings';
 import SubmitReceipt from '../../../components/user/finance/SubmitReceipt';
 import MonthlyExpensesChart from '../../../components/user/finance/MonthlyExpensesChart';
-import type {
-  TenantBilling,
-  UpcomingPayment,
-} from '../../../components/user/finance/types/tenantFinance';
+import { useFinance } from '../../../hooks/useFinance';
+import type { BillListItem } from '../../../hooks/useFinance';
 
-// Mock data - replace with API calls
-const fetchCurrentBilling = async (): Promise<TenantBilling | null> => {
-  return {
-    _id: 'billing_1',
-    userId: 'user_1',
-    unitId: 'unit_1',
-    facilityId: 'facility_1',
-    dueDate: '2026-04-15',
-    paymentDate: null,
-    paidAmount: null,
-    totalAmount: 4950,
-    paymentStatus: 'unpaid',
-    breakdown: [
-      { name: 'Monthly Rent', amount: 3000 },
-      { name: 'Electricity', amount: 800 },
-      { name: 'Water', amount: 350 },
-      { name: 'Internet', amount: 500 },
-      { name: 'Others', amount: 300 },
-    ],
-    createdAt: '2026-03-01',
-    updatedAt: '2026-03-01',
-  };
-};
+const formatDate = (iso: string) =>
+  new Date(iso).toLocaleDateString('en-US', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+  });
 
-const fetchUpcomingPayments = async (): Promise<UpcomingPayment[]> => {
-  const currentDate = new Date();
-  const currentMonth = currentDate.toLocaleString('default', { month: 'long' });
-  const currentYear = currentDate.getFullYear();
-
-  return [
-    {
-      id: '1',
-      dueDate: `${currentMonth} 15, ${currentYear} (Current)`,
-      amount: 4950,
-      billingId: 'billing_1',
-      isCurrent: true,
-    },
-    {
-      id: '2',
-      dueDate: `May 15, ${currentYear}`,
-      amount: 4950,
-      billingId: 'billing_2',
-      isCurrent: false,
-    },
-    {
-      id: '3',
-      dueDate: `June 15, ${currentYear}`,
-      amount: 4950,
-      billingId: 'billing_3',
-      isCurrent: false,
-    },
-  ];
-};
-
-const getPaymentStatusDisplay = (status: string): { text: string; gradient: string } => {
+const getPaymentStatusDisplay = (
+  status: string,
+): { text: string; gradient: string } => {
   switch (status) {
     case 'paid':
       return {
         text: 'PAID',
-        gradient: 'bg-gradient-to-b from-[#5dc2a8] to-[#0c8873] bg-clip-text text-transparent',
+        gradient:
+          'bg-gradient-to-b from-[#5dc2a8] to-[#0c8873] bg-clip-text text-transparent',
       };
     case 'overdue':
       return {
         text: 'OVERDUE',
-        gradient: 'bg-gradient-to-b from-[#c00f0f] to-[#e44f4f] bg-clip-text text-transparent',
+        gradient:
+          'bg-gradient-to-b from-[#c00f0f] to-[#e44f4f] bg-clip-text text-transparent',
       };
     case 'partially_paid':
       return {
         text: 'PARTIAL',
-        gradient: 'bg-gradient-to-t from-[#ffc273] to-[#fa7900] bg-clip-text text-transparent',
+        gradient:
+          'bg-gradient-to-t from-[#ffc273] to-[#fa7900] bg-clip-text text-transparent',
       };
     default:
       return {
         text: 'PENDING',
-        gradient: 'bg-gradient-to-b from-[#c29722] to-[#f6b709] bg-clip-text text-transparent',
+        gradient:
+          'bg-gradient-to-b from-[#c29722] to-[#f6b709] bg-clip-text text-transparent',
       };
   }
 };
 
+
 const TenantFinancePage: FunctionComponent = () => {
-  const [currentBilling, setCurrentBilling] = useState<TenantBilling | null>(null);
-  const [upcomingPayments, setUpcomingPayments] = useState<UpcomingPayment[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const { dashboard, isLoading, error, refetch } = useFinance();
+  const navigate = useNavigate();
+
   const [isSubmitReceiptOpen, setIsSubmitReceiptOpen] = useState(false);
-  const [selectedPayment, setSelectedPayment] = useState<UpcomingPayment | null>(null);
+  const [selectedBill, setSelectedBill] = useState<BillListItem | null>(null);
 
-  useEffect(() => {
-    const loadData = async () => {
-      setIsLoading(true);
-      try {
-        const [billing, payments] = await Promise.all([
-          fetchCurrentBilling(),
-          fetchUpcomingPayments(),
-        ]);
-        setCurrentBilling(billing);
-        setUpcomingPayments(payments);
-      } catch (error) {
-        console.error('Failed to load finance data:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    loadData();
-  }, []);
-
-  const handlePayNow = (payment: UpcomingPayment) => {
-    setSelectedPayment(payment);
+  const handlePayNow = (bill: BillListItem) => {
+    setSelectedBill(bill);
     setIsSubmitReceiptOpen(true);
   };
 
   const handleCloseSubmitReceipt = () => {
     setIsSubmitReceiptOpen(false);
-    setSelectedPayment(null);
+    setSelectedBill(null);
   };
 
   const handleSubmitReceipt = (data: {
@@ -133,31 +72,37 @@ const TenantFinancePage: FunctionComponent = () => {
     receiptFile: File | null;
     accountName?: string;
   }) => {
-    console.log('Submitting receipt for payment:', selectedPayment, data);
-    // Here you would make an API call to submit the payment
+    console.log('Receipt submitted for billing:', selectedBill?._id, data);
     handleCloseSubmitReceipt();
+    refetch();
   };
 
-  const paymentStatus = currentBilling
-    ? getPaymentStatusDisplay(currentBilling.paymentStatus)
-    : {
-        text: 'PENDING',
-        gradient: 'bg-gradient-to-b from-[#c29722] to-[#f6b709] bg-clip-text text-transparent',
-      };
+  const summary = dashboard?.summary;
+  const facility = dashboard?.facilityDetails;
 
-  const totalDue = currentBilling?.totalAmount || 0;
-  const outstandingBalance = currentBilling?.paidAmount
-    ? currentBilling.totalAmount - currentBilling.paidAmount
-    : totalDue;
+  // Outstanding balance
+  const totalDue = summary?.totalOutstanding ?? 0;
+  const paymentStatus = getPaymentStatusDisplay(summary?.currentStatus ?? 'unpaid');
 
-  const rentAmount =
-    currentBilling?.breakdown.find((b) => b.name === 'Monthly Rent')?.amount || 3000;
-  const electricityAmount =
-    currentBilling?.breakdown.find((b) => b.name === 'Electricity')?.amount || 800;
-  const waterAmount = currentBilling?.breakdown.find((b) => b.name === 'Water')?.amount || 350;
-  const internetAmount =
-    currentBilling?.breakdown.find((b) => b.name === 'Internet')?.amount || 500;
-  const othersAmount = currentBilling?.breakdown.find((b) => b.name === 'Others')?.amount || 300;
+  // Breakdown
+  const latestMonth = dashboard?.monthlyStatistics?.[0];
+  const breakdown = latestMonth?.breakdown ?? [];
+
+  const rentAmount = breakdown.find((b) => b.name === 'Monthly Rent')?.amount ?? 0;
+  const electricityAmount = breakdown.find((b) => b.name === 'Electricity')?.amount ?? 0;
+  const waterAmount = breakdown.find((b) => b.name === 'Water')?.amount ?? 0;
+  const internetAmount = breakdown.find((b) => b.name === 'Internet')?.amount ?? 0;
+  const othersAmount = breakdown.find((b) => b.name === 'Others')?.amount ?? 0;
+  const breakdownTotal = breakdown.reduce((sum, b) => sum + b.amount, 0);
+
+  // Monthly chart data
+  const monthlyStats = [...(dashboard?.monthlyStatistics ?? [])].reverse(); // oldest → newest
+
+  // Unpaid bills
+  const unpaidPayments = dashboard?.unpaidPayments ?? [];
+
+  // Paid bills
+  const billingHistory = dashboard?.billingHistory ?? [];
 
   const layout = (content: React.ReactNode) => (
     <div className="user-finance-shell relative flex min-h-screen font-inter text-darkslategray dark:bg-[#0f1010] dark:text-[#edf6f4]">
@@ -165,16 +110,69 @@ const TenantFinancePage: FunctionComponent = () => {
       <div className="sticky top-0 h-screen shrink-0 z-10">
         <SideBar />
       </div>
-      <div className="relative z-10 flex flex-1 flex-col min-w-0 overflow-y-auto">{content}</div>
+      <div className="relative z-10 flex flex-1 flex-col min-w-0 overflow-y-auto">
+        {content}
+      </div>
     </div>
   );
 
   if (isLoading)
     return layout(
       <div className="flex-1 flex items-center justify-center py-20">
-        <div>Loading finance data...</div>
+        <div>Loading finance data…</div>
       </div>,
     );
+
+  if (error) {
+    const hasNoAccommodation =
+      error.toLowerCase().includes('facility not found') ||
+      error.toLowerCase().includes('not found') ||
+      error.toLowerCase().includes('404');
+
+    if (hasNoAccommodation) {
+      return layout(
+        <div className="flex-1 flex flex-col items-center justify-center gap-6 py-20 px-6 text-center">
+          <div className="flex flex-col items-center gap-4">
+            <div className="rounded-full bg-lightcyan-100 p-6 dark:bg-[#0d241f]">
+              <Icon
+                icon="mdi-light:home-off"
+                className="w-16 h-16 text-teal dark:text-[#72cbb8]"
+              />
+            </div>
+            <div className="flex flex-col gap-2 max-w-sm">
+              <b className="text-xl text-black dark:text-[#edf6f4]">
+                No accommodation yet
+              </b>
+              <p className="text-sm text-dimgray leading-relaxed">
+                You don't have an active dorm or accommodation. Browse available
+                listings and find a place that fits you.
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={() => navigate('/home')}
+            className="flex items-center gap-2 px-6 py-3 rounded-xl bg-lightcyan-100 text-teal font-semibold hover:opacity-90 transition-opacity dark:bg-[#0d3a32] dark:text-[#72cbb8]"
+          >
+            <Icon icon="mdi-light:home" className="w-5 h-5" />
+            Browse Listings
+          </button>
+        </div>,
+      );
+    }
+
+    // Actual unexpected error — show retry
+    return layout(
+      <div className="flex-1 flex flex-col items-center justify-center py-20 gap-4">
+        <p className="text-crimson font-semibold">{error}</p>
+        <button
+          onClick={refetch}
+          className="px-4 py-2 rounded-xl bg-lightcyan-100 text-teal font-semibold hover:opacity-90"
+        >
+          Retry
+        </button>
+      </div>,
+    );
+  }
 
   return (
     <>
@@ -192,22 +190,26 @@ const TenantFinancePage: FunctionComponent = () => {
             {/* Property info */}
             <div className="flex flex-col gap-1 px-2 mb-6 text-darkslategray dark:text-[#72cbb8]">
               <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
-                <b className="text-xl md:text-2xl font-inter">One Sapphire Place</b>
+                <b className="text-xl md:text-2xl font-inter">
+                  {facility?.name ?? '—'}
+                </b>
                 <DownloadBillings
-                  billingId={currentBilling?._id}
-                  month={new Date().toLocaleString('default', { month: 'long', year: 'numeric' })}
+                  billingId={unpaidPayments[0]?._id}
+                  month={new Date().toLocaleString('default', {
+                    month: 'long',
+                    year: 'numeric',
+                  })}
                 />
               </div>
-              <div className="flex items-start gap-2 px-2">
-                <Icon icon="mdi-light:map-marker" className="h-5 w-5 shrink-0 mt-0.5" />
-                <b className="text-sm break-words">
-                  Lot 3, Block 17, Sapphire St, Umali Subd, Los Ba�os, Philippines, 4030
-                </b>
-              </div>
-              <div className="flex items-center gap-2 px-2">
-                <Icon icon="mdi-light:phone" className="h-5 w-5 shrink-0" />
-                <b className="text-sm">0969 014 8776</b>
-              </div>
+              {facility?.address && (
+                <div className="flex items-start gap-2 px-2">
+                  <Icon
+                    icon="mdi-light:map-marker"
+                    className="h-5 w-5 shrink-0 mt-0.5"
+                  />
+                  <b className="text-sm break-words">{facility.address}</b>
+                </div>
+              )}
             </div>
 
             {/* Three column layout */}
@@ -230,25 +232,47 @@ const TenantFinancePage: FunctionComponent = () => {
                       <b className="flex-1">Description</b>
                       <b className="flex-1">Amount</b>
                     </div>
-                    <div className="flex flex-col gap-2 font-lora text-left text-[10px] md:text-xs">
-                      {[
-                        ['Monthly Rent', rentAmount],
-                        ['Electricity', electricityAmount],
-                        ['Water', waterAmount],
-                        ['Internet', internetAmount],
-                        ['Others', othersAmount],
-                      ].map(([label, amt]) => (
-                        <div key={label as string} className="flex justify-between py-2">
-                          <span className="flex-1 font-semibold tracking-wide">{label}</span>
-                          <span className="flex-1 font-semibold tracking-wide">
-                            Php {(amt as number).toFixed(2)}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
+                    {breakdown.length > 0 ? (
+                      <div className="flex flex-col gap-2 font-lora text-left text-[10px] md:text-xs">
+                        {breakdown.map(({ name, amount }) => (
+                          <div key={name} className="flex justify-between py-2">
+                            <span className="flex-1 font-semibold tracking-wide">
+                              {name}
+                            </span>
+                            <span className="flex-1 font-semibold tracking-wide">
+                              Php {amount.toFixed(2)}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      /* Fallback individual rows when breakdown isn't in stats */
+                      <div className="flex flex-col gap-2 font-lora text-left text-[10px] md:text-xs">
+                        {(
+                          [
+                            ['Monthly Rent', rentAmount],
+                            ['Electricity', electricityAmount],
+                            ['Water', waterAmount],
+                            ['Internet', internetAmount],
+                            ['Others', othersAmount],
+                          ] as [string, number][]
+                        ).map(([label, amt]) => (
+                          <div key={label} className="flex justify-between py-2">
+                            <span className="flex-1 font-semibold tracking-wide">
+                              {label}
+                            </span>
+                            <span className="flex-1 font-semibold tracking-wide">
+                              Php {amt.toFixed(2)}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                     <div className="flex justify-between gap-2.5 text-teal pt-2 border-t border-whitesmoke-200 dark:border-[#303331] dark:text-[#72cbb8]">
                       <b className="flex-1">Total</b>
-                      <b className="flex-1">Php {totalDue.toFixed(2)}</b>
+                      <b className="flex-1">
+                        Php {(breakdownTotal || totalDue).toFixed(2)}
+                      </b>
                     </div>
                   </div>
                 </div>
@@ -261,7 +285,7 @@ const TenantFinancePage: FunctionComponent = () => {
                     <b className="text-sm md:text-base">Outstanding Balance</b>
                     <div className="flex gap-2.5 text-xl md:text-2xl">
                       <b>Php</b>
-                      <b>{outstandingBalance.toFixed(2)}</b>
+                      <b>{(summary?.totalOutstanding ?? 0).toFixed(2)}</b>
                     </div>
                   </div>
                   <div className="flex-1 rounded-2xl bg-white border border-whitesmoke-200 p-3 md:p-4 flex flex-col gap-2.5 dark:bg-[#101111] dark:border-[#303331] dark:text-[#72cbb8]">
@@ -273,40 +297,55 @@ const TenantFinancePage: FunctionComponent = () => {
                     </b>
                   </div>
                 </div>
+
                 <div className="w-full overflow-x-auto">
-                  <MonthlyExpensesChart />
+                  <MonthlyExpensesChart monthlyStats={monthlyStats} />
                 </div>
+
+                {/* Upcoming / unpaid payments */}
                 <div className="flex flex-col gap-2.5 p-2 md:p-2.5 font-inter text-sm dark:text-[#72cbb8]">
-                  <b className="text-base md:text-lg tracking-tight">Upcoming Payments</b>
+                  <b className="text-base md:text-lg tracking-tight">
+                    Upcoming Payments
+                  </b>
                   <div className="h-0.5 border border-whitesmoke-200 dark:border-[#303331]" />
-                  {upcomingPayments.map((payment) => (
-                    <div
-                      key={payment.id}
-                      className="rounded-lg border border-whitesmoke-200 flex flex-col sm:flex-row items-start sm:items-center justify-between py-3 px-3 gap-3 transition-all duration-200 hover:shadow-md dark:bg-[#101111] dark:border-[#303331] dark:hover:bg-[#141515]"
-                    >
-                      <div className="flex items-center gap-2.5">
-                        <div
-                          className={`h-5 w-5 rounded-[4px] shrink-0 ${
-                            payment.isCurrent
-                              ? 'bg-gradient-to-b from-[#024338] to-[#096c5b]'
-                              : 'bg-gradient-to-b from-[#c29722] to-[#f6b709]'
-                          }`}
-                        />
-                        <div className="flex flex-col gap-1">
-                          <div className="font-semibold">{payment.dueDate}</div>
-                          <div className="text-[11px] font-semibold font-lora text-dimgray">
-                            Php {payment.amount.toFixed(2)}
+
+                  {unpaidPayments.length === 0 ? (
+                    <p className="text-dimgray text-center py-4">
+                      No upcoming payments 🎉
+                    </p>
+                  ) : (
+                    unpaidPayments.map((bill, idx) => (
+                      <div
+                        key={bill._id}
+                        className="rounded-lg border border-whitesmoke-200 flex flex-col sm:flex-row items-start sm:items-center justify-between py-3 px-3 gap-3 transition-all duration-200 hover:shadow-md dark:bg-[#101111] dark:border-[#303331] dark:hover:bg-[#141515]"
+                      >
+                        <div className="flex items-center gap-2.5">
+                          <div
+                            className={`h-5 w-5 rounded-[4px] shrink-0 ${
+                              idx === 0
+                                ? 'bg-gradient-to-b from-[#024338] to-[#096c5b]'
+                                : 'bg-gradient-to-b from-[#c29722] to-[#f6b709]'
+                            }`}
+                          />
+                          <div className="flex flex-col gap-1">
+                            <div className="font-semibold">
+                              {formatDate(bill.dueDate)}
+                              {idx === 0 ? ' (Current)' : ''}
+                            </div>
+                            <div className="text-[11px] font-semibold font-lora text-dimgray">
+                              Php {bill.totalAmount.toFixed(2)}
+                            </div>
                           </div>
                         </div>
+                        <button
+                          onClick={() => handlePayNow(bill)}
+                          className="w-full sm:w-[90px] rounded-xl bg-lightcyan-100 py-2.5 px-3 text-teal font-semibold hover:opacity-90 transition-opacity whitespace-nowrap text-center dark:bg-[#0d3a32] dark:text-[#72cbb8]"
+                        >
+                          Pay Now
+                        </button>
                       </div>
-                      <button
-                        onClick={() => handlePayNow(payment)}
-                        className="w-full sm:w-[90px] rounded-xl bg-lightcyan-100 py-2.5 px-3 text-teal font-semibold hover:opacity-90 transition-opacity whitespace-nowrap text-center dark:bg-[#0d3a32] dark:text-[#72cbb8]"
-                      >
-                        Pay Now
-                      </button>
-                    </div>
-                  ))}
+                    ))
+                  )}
                 </div>
               </div>
 
@@ -318,21 +357,23 @@ const TenantFinancePage: FunctionComponent = () => {
                 <div className="flex flex-col gap-2.5 px-0">
                   <b className="text-sm md:text-base px-2">Past Bills</b>
                   <div className="flex flex-col gap-2 px-2 md:px-3 text-xs">
-                    {[
-                      ['January 15, 2026', 4500],
-                      ['February 15, 2026', 4500],
-                      ['March 15, 2026', 4500],
-                    ].map(([date, amt]) => (
-                      <div
-                        key={date as string}
-                        className="rounded-lg border border-whitesmoke-200 flex flex-col py-2 px-3 gap-1 transition-all duration-200 hover:shadow-sm dark:border-[#303331] dark:bg-[#101111] dark:hover:bg-[#141515]"
-                      >
-                        <div className="font-semibold">{date}</div>
-                        <div className="text-[10px] font-semibold font-lora text-dimgray">
-                          Php {(amt as number).toFixed(2)}
+                    {billingHistory.length === 0 ? (
+                      <p className="text-dimgray text-center py-4">No past bills</p>
+                    ) : (
+                      billingHistory.map((bill) => (
+                        <div
+                          key={bill._id}
+                          className="rounded-lg border border-whitesmoke-200 flex flex-col py-2 px-3 gap-1 transition-all duration-200 hover:shadow-sm dark:border-[#303331] dark:bg-[#101111] dark:hover:bg-[#141515]"
+                        >
+                          <div className="font-semibold">
+                            {formatDate(bill.dueDate)}
+                          </div>
+                          <div className="text-[10px] font-semibold font-lora text-dimgray">
+                            Php {bill.totalAmount.toFixed(2)}
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      ))
+                    )}
                   </div>
                 </div>
               </div>
@@ -341,12 +382,15 @@ const TenantFinancePage: FunctionComponent = () => {
           <Footer />
         </>,
       )}
-      {selectedPayment && (
+
+      {/* Submit Receipt modal */}
+      {selectedBill && (
         <SubmitReceipt
           isOpen={isSubmitReceiptOpen}
           onClose={handleCloseSubmitReceipt}
-          dueDate={selectedPayment.dueDate}
-          dueAmount={selectedPayment.amount}
+          billingId={selectedBill._id}
+          dueDate={formatDate(selectedBill.dueDate)}
+          dueAmount={selectedBill.totalAmount}
           onSubmit={handleSubmitReceipt}
         />
       )}
