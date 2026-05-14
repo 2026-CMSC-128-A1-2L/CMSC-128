@@ -16,3 +16,4 @@ export type GetListingsQuery = z.infer<typeof GetListingsQuerySchema>;
 export type CreateListingBody = z.infer<typeof CreateListingBodySchema>;
 export type UpdateListingBody = z.infer<typeof UpdateListingBodySchema>;
 export type UpdateListingTagsResponseBody = z.infer<typeof UpdateListingTagsResponseBodySchema>;
+export type UpdateListingTagsBody = UpdateListingTagsResponseBody;

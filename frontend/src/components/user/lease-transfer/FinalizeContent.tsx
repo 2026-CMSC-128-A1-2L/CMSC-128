@@ -1,7 +1,11 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import InfoIcon from '../../../../assets/infoicon_icon.svg';
 import FinalizeDisplayLines from './FinalizeDisplayLines';
 import CheckboxItem from '../user-report/CheckboxItem';
+import ConfirmTransfer1 from '../../../components/user/Profile/ConfirmTransfer1'; 
+import ConfirmTransfer2 from '../Profile/ConfirmTransfer2';
+
 interface FinalizeContentProps {
   leaseTransferStages: number;
   setLeaseTransferStages: any;
@@ -12,10 +16,42 @@ interface FinalizeContentProps {
 export default function FinalizeContent(props: FinalizeContentProps) {
   const { leaseTransferStages, setLeaseTransferStages, DormitoryName, RoomNumber } = props;
   const Property = `${DormitoryName} - ${RoomNumber}`;
+  const navigate = useNavigate();
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [showSuccessPopup2, setShowSuccessPopup2] = useState(false);
+
+  const onUserProfileTextClick = useCallback(() => {
+    setShowSuccessPopup(true);
+  }, []);
+
+  const closePopup = () => {
+    setShowSuccessPopup(false);
+  };
+
+  const onNext = useCallback(() => {
+    setShowSuccessPopup(false); 
+    setShowSuccessPopup2(true); 
+  }, []); 
+
+  const closePopup2 = () => {
+    setShowSuccessPopup2(false); 
+    navigate('/profile-switcher'); 
+  }
+  
   const [isAgreed, setIsAgreed] = useState(false);
   return (
     <>
       <div className="flex text-lora font-bold items-end px-15 gap-2 mb-2">
+        {showSuccessPopup && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
+            <ConfirmTransfer1 onClose={closePopup} onConfirm={onNext} />
+          </div>
+        )}
+        {showSuccessPopup2 && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
+            <ConfirmTransfer2 onClose={closePopup2} />
+          </div>
+        )}
         <img src={InfoIcon} alt="" className="w-5 h-5 " />
         <p className=" text-[18px]">Finalize</p>
       </div>
@@ -116,9 +152,7 @@ export default function FinalizeContent(props: FinalizeContentProps) {
             className={`px-4 py-1  rounded-full bg-[#f1f5f9]
                             ${isAgreed ? 'text-[#096c5b] cursor-pointer' : 'text-[#cfcfcf]'}
                             `}
-            onClick={() => {
-              console.log('you pressed the button');
-            }}
+            onClick={onUserProfileTextClick}
             disabled={!isAgreed}
           >
             Finalize

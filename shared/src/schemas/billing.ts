@@ -67,7 +67,7 @@ export const UpdateBillingPaymentRequestBodySchema = z.object({
   amount: z.number(),
 });
 
-export const submitBillingPaymentArgumentsSchema = z.object({
+export const SubmitBillingPaymentArgumentsSchema = z.object({
   file: z.string(),
   paymentMethod: z.enum(['gcash', 'bank_transfer']),
 });

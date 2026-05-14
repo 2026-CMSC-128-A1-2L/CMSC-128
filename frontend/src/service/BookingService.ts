@@ -23,7 +23,7 @@ export const BookingService = {
     }
   },
 
-  async getBooking(params: z.infer<typeof GetBookingsQuerySchema>): Promise<GetBookingsQuery> {
+  async getBookings(params: z.infer<typeof GetBookingsQuerySchema>): Promise<GetBookingsQuery> {
     try {
       const kv = new URLSearchParams({
         q: encodeURIComponent(JSON.stringify(params)),

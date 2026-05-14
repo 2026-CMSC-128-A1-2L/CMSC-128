@@ -1,4 +1,4 @@
-import { type FunctionComponent, useState } from 'react';
+import { type FunctionComponent, useState, useEffect } from 'react';
 import { Icon } from '@iconify/react';
 
 interface TutorialBubbleProps {
@@ -8,51 +8,74 @@ interface TutorialBubbleProps {
 
 const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose }) => {
   const [step, setStep] = useState(1);
+  const [bubblePos, setBubblePos] = useState({ top: 0, left: 0 });
 
   const helpContent = [
     {
       title: 'Notifications',
       text: 'This is where ATLAS sends you active notifications to keep you up-to-date!',
-      position: 'top-[60px] left-[190px]',
+      targetId: 'notif-section',
       total: 2,
       currentStep: 1,
     },
     {
       title: 'Notifications',
       text: 'Look out for updates on your submissions and important system announcements.',
-      position: 'top-[60px] left-[190px]',
+      targetId: 'notif-section',
       total: 2,
       currentStep: 2,
     },
     {
       title: 'Direct Messages',
       text: 'Connect directly with tenants, dorm managers, or landlords through messages!',
-      position: 'top-[320px] left-[190px]',
+      targetId: 'dm-section',
       total: 2,
       currentStep: 1,
     },
     {
       title: 'Direct Messages',
       text: 'Quickly catch up by fltering for unread messages to stay on top of your conversations.',
-      position: 'top-[320px] left-[190px]',
+      targetId: 'dm-section',
       total: 2,
       currentStep: 2,
     },
     {
       title: 'Archived Messages',
       text: 'Read messages are moved to the archive after 7 days.',
-      position: 'top-[600px] left-[190px]',
+      targetId: 'archive-section',
       total: 2,
       currentStep: 1,
     },
     {
       title: 'Archived Messages',
       text: 'This is to help you focus on your most recent and active conversations.',
-      position: 'top-[600px] left-[190px]',
+      targetId: 'archive-section',
       total: 2,
       currentStep: 2,
     },
   ];
+
+  useEffect(() => {
+    if (!show) return;
+
+    const updatePosition = () => {
+      const currentContent = helpContent[step - 1];
+      const target = document.getElementById(currentContent.targetId);
+      
+      if (target) {
+        const rect = target.getBoundingClientRect();
+        // Point to the middle of the section
+        setBubblePos({
+          top: rect.top + (rect.height / 2) - 40, // Center the bubble vertically relative to target
+          left: rect.right - 10, // Slight overlap for the arrow
+        });
+      }
+    };
+
+    updatePosition();
+    window.addEventListener('resize', updatePosition);
+    return () => window.removeEventListener('resize', updatePosition);
+  }, [show, step]);
 
   if (!show) return null;
 
@@ -75,7 +98,8 @@ const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose 
 
   return (
     <div
-      className={`absolute ${current.position} z-999 flex flex-col items-start animate-in fade-in zoom-in duration-200 transition-all`}
+      style={{ top: `${bubblePos.top}px`, left: `${bubblePos.left}px` }}
+      className="fixed z-999 flex flex-row items-center animate-in fade-in zoom-in duration-200 transition-all pointer-events-auto"
     >
       <div className="w-[232px] flex flex-row items-center">
         <Icon icon="ph:caret-left-fill" className="text-aliceblue w-14 h-15 mr-[-23px] z-10" />

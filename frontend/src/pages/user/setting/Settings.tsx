@@ -15,7 +15,7 @@ const Settings: FunctionComponent = () => {
         <SideBar />
       </div>
       <div className="flex flex-1 flex-col min-w-0 overflow-y-auto">
-        <div className="flex-1 px-4 sm:px-8 lg:px-20 pt-16">
+        <div className="flex-1 px-4 sm:px-8 lg:px-20 pt-16 pb-20">
           <PropertyTabs>
             <PropertyTab text="General" element={<General />} />
             <PropertyTab text="Security" element={<Security />} />

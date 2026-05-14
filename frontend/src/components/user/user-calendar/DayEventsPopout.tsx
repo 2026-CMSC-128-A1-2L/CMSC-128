@@ -69,9 +69,9 @@ const DayEventsPopout: FunctionComponent<DayEventsPopoutType> = ({
 
   return (
     <div
-      className={`w-96 max-w-full max-h-full overflow-auto relative text-left text-num-12 text-black font-inter ${className}`}
+      className={`w-96 max-w-full max-h-full overflow-auto relative text-left text-num-12 text-black font-inter dark:text-[#edf6f4] ${className}`}
     >
-      <div className="relative bg-white rounded-lg p-6 shadow-lg">
+      <div className="relative bg-white rounded-lg p-6 shadow-lg dark:bg-[#101111] dark:border dark:border-[#303331]">
         <Icon
           icon="ic:round-close"
           className="absolute top-3 right-3 w-8 h-8 cursor-pointer hover:opacity-70"
@@ -80,7 +80,7 @@ const DayEventsPopout: FunctionComponent<DayEventsPopoutType> = ({
 
         <div className="text-lg font-semibold mb-2">{formattedDate}</div>
 
-        <div className="border-t border-whitesmoke-200 pt-4">
+        <div className="border-t border-whitesmoke-200 pt-4 dark:border-[#303331]">
           {events.length === 0 ? (
             <div className="text-center py-4 text-dimgray">No events for this day</div>
           ) : (
@@ -88,7 +88,7 @@ const DayEventsPopout: FunctionComponent<DayEventsPopoutType> = ({
               {events.map((event) => (
                 <div
                   key={event.referenceId}
-                  className="flex items-start gap-3 pb-3 border-b border-whitesmoke-200 last:border-b-0"
+                  className="flex items-start gap-3 pb-3 border-b border-whitesmoke-200 last:border-b-0 dark:border-[#303331]"
                 >
                   <Icon
                     icon={getEventIcon(event.type)}

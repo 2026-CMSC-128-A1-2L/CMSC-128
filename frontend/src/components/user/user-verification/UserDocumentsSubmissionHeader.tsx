@@ -4,6 +4,7 @@ interface UserDocumentsSubmissionHeaderProps {
   uploadedCount: number;
   totalCount: number;
   canSubmit: boolean;
+  isSubmitting?: boolean;
   onSubmit: () => void;
 }
 
@@ -11,6 +12,7 @@ const UserDocumentsSubmissionHeader = ({
   uploadedCount,
   totalCount,
   canSubmit,
+  isSubmitting = false,
   onSubmit,
 }: UserDocumentsSubmissionHeaderProps) => {
   return (
@@ -26,13 +28,17 @@ const UserDocumentsSubmissionHeader = ({
       </div>
       <button
         type="button"
-        disabled={!canSubmit}
+        disabled={!canSubmit || isSubmitting}
         onClick={onSubmit}
-        className="h-8 w-24 rounded-num-16 bg-aliceblue flex items-center justify-center py-num-0 px-num-12 box-border text-num-14 text-slategray hover:bg-lightcyan-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className={[
+          'flex h-[32px] w-[96px] items-center justify-center rounded-[16px] px-[12px]',
+          'font-["Inter",sans-serif] text-[14px] font-bold transition-colors duration-200',
+          canSubmit
+            ? 'cursor-pointer bg-[#096c5b] text-white hover:bg-[#075a4c]'
+            : 'cursor-not-allowed bg-[#f1f5f9] text-[#64748b]',
+        ].join(' ')}
       >
-        <div className="h-8 w-24 rounded-num-16 bg-white flex items-center justify-center py-num-0 px-num-12 box-border shrink-0">
-          <b className="relative">Submit</b>
-        </div>
+        {isSubmitting ? 'Sending' : 'Submit'}
       </button>
     </div>
   );

@@ -1,8 +1,7 @@
-import axios from 'axios';
-import z from 'zod';
-import { GetUnitsRequestQuerySchema } from 'shared';
-import type { GetUnitsRequestQuery, CreateUnitBody } from '../interface/unit';
-import { API_URL } from './constant';
+import type z from 'zod';
+import type { GetUnitsRequestQuerySchema } from 'shared';
+import type { CreateUnitBody, GetUnitsRequestQuery, UpdateUnitBody } from '../interface/unit';
+import { api } from './axiosInstance';
 
 export const UnitService = {
   //FOREIGN -> Listing Route
@@ -20,7 +19,7 @@ export const UnitService = {
       );
       return response.data;
     } catch (error) {
-      console.error('Error creating listing:', error);
+      console.error('Error creating unit:', error);
       throw error;
     }
   },
@@ -53,7 +52,7 @@ export const UnitService = {
     }
   },
 
-  async updateUnit(unitId: string) {
+  async updateUnit(unitId: string, body: UpdateUnitBody) {
     try {
       const response = await axios.patch(`${API_URL}/api/units/${unitId}`);
 
@@ -78,4 +77,33 @@ export const UnitService = {
   //GET rentals by unit -> RentalService
   //GET unit billings -> BillingService
   //
+  async getUnitsByListing(listingId: string) {
+    try {
+      const response = await api.get(`/api/listings/${listingId}/units`);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch listing units: ', error);
+      throw error;
+    }
+  },
+
+  async getUnitRentals(unitId: string) {
+    try {
+      const response = await api.get(`/api/units/${unitId}/rentals`);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch unit rentals: ', error);
+      throw error;
+    }
+  },
+
+  async getUnitBillings(unitId: string) {
+    try {
+      const response = await api.get(`/api/units/${unitId}/billings`);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch unit billings: ', error);
+      throw error;
+    }
+  },
 };

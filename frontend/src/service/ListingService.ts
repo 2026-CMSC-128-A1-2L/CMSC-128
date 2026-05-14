@@ -117,4 +117,13 @@ export const ListingService = {
   // GET Listing Reviews -> ReviewService
   // POST Create Review -> ReviewService
   // POST Report Listing -> ReportService
+  async getListingUnits(listingId: string) {
+    try {
+      const response = await api.get(`/api/listings/${listingId}/units`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching listing units:', error);
+      throw error;
+    }
+  },
 };

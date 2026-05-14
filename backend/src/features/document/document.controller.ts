@@ -1,5 +1,4 @@
 import type { RequestHandler } from 'express';
-import z from 'zod';
 import {
   type ModelWithDocument,
   createGetDocuments,
@@ -11,6 +10,14 @@ import {
 } from './document.service.js';
 import type mongoose from 'mongoose';
 import type { QueryFilter } from 'mongoose';
+import {
+  AcceptDocumentParamsSchema,
+  AddDocumentBodySchema,
+  AddDocumentParamsSchema,
+  DeleteDocumentParamsSchema,
+  RejectDocumentBodySchema,
+  RejectDocumentParamsSchema,
+} from 'shared';
 import assert from 'node:assert';
 
 // GET ../documents
@@ -23,15 +30,6 @@ export const routeGetDocuments = (model: ModelWithDocument): RequestHandler => {
     });
   };
 };
-
-// POST ../documents/:docId/files
-const AddDocumentParamsSchema = z.object({
-  docId: z.string(),
-});
-
-const AddDocumentBodySchema = z.object({
-  fileId: z.string(),
-});
 
 export const routeAddDocument = (model: ModelWithDocument): RequestHandler => {
   const addDocument = createAddDocument(model);
@@ -51,12 +49,6 @@ export const routeAddDocument = (model: ModelWithDocument): RequestHandler => {
   };
 };
 
-// DELETE ../documents/:docId/files/:fileId
-const DeleteDocumentParamsSchema = z.object({
-  docId: z.string(),
-  fileId: z.string(),
-});
-
 export const routeDeleteDocument = (model: ModelWithDocument): RequestHandler => {
   const deleteDocument = createDeleteDocument(model);
   return async (req, res, _next) => {
@@ -73,11 +65,6 @@ export const routeDeleteDocument = (model: ModelWithDocument): RequestHandler =>
   };
 };
 
-// POST ../documents/:docId/accept
-const AcceptDocumentParamsSchema = z.object({
-  docId: z.string(),
-});
-
 export const routeAcceptDocument = (model: ModelWithDocument): RequestHandler => {
   const acceptDocument = createAcceptDocument(model);
   return async (req, res, _next) => {
@@ -93,15 +80,6 @@ export const routeAcceptDocument = (model: ModelWithDocument): RequestHandler =>
     });
   };
 };
-
-// POST ../documents/:docId/reject
-const RejectDocumentParamsSchema = z.object({
-  docId: z.string(),
-});
-
-const RejectDocumentBodySchema = z.object({
-  message: z.string(),
-});
 
 export const routeRejectDocument = (
   model: ModelWithDocument,

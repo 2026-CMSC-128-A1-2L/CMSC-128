@@ -3,7 +3,7 @@ import {
   CreateBillingBodySchema,
   GetBillingsQuerySchema,
   ObjectIdSchema,
-  submitBillingPaymentArgumentsSchema,
+  SubmitBillingPaymentArgumentsSchema,
   UpdateBillingPaymentRequestBodySchema,
   UpdateBillingRequestBodySchema,
 } from 'shared';
@@ -49,7 +49,7 @@ export const routeUpdateBilling: RequestHandler = async (req, res, _next) => {
   res.status(200).json({ data: billing });
 };
 
-export const routeUpdateBillingPayment: RequestHandler = async (req, res, next) => {
+export const routeUpdateBillingPayment: RequestHandler = async (req, res, _next) => {
   const billingId = ObjectIdSchema.parse(req.params.billingId);
   const params = UpdateBillingPaymentRequestBodySchema.parse(req.body);
   const billing = await updateBillingPayment(billingId, params.amount, res.locals.filters);
@@ -57,41 +57,41 @@ export const routeUpdateBillingPayment: RequestHandler = async (req, res, next) 
 };
 
 // GET /users/me/billings
-export const routeGetUserBillings: RequestHandler = async (req, res, next) => {
+export const routeGetUserBillings: RequestHandler = async (req, res, _next) => {
   // using the setUserId middleware, the userId is in params.
   const userId = ObjectIdSchema.parse(req.params.userId);
   res.status(200).json({ data: await getBillings({ userId }, res.locals.filters) });
 };
 
 // GET /units/:unitId/billings
-export const routeGetUnitBillings: RequestHandler = async (req, res, next) => {
+export const routeGetUnitBillings: RequestHandler = async (req, res, _next) => {
   const unitId = ObjectIdSchema.parse(req.params.unitId);
   res.status(200).json({ data: await getBillings({ unitId }, res.locals.filters) });
 };
 
 // GET /billings/summary
-export const routeGetBillingsSummary: RequestHandler = async (req, res, next) => {
+export const routeGetBillingsSummary: RequestHandler = async (req, res, _next) => {
   assert.ok(req.user);
   const userId = ObjectIdSchema.parse(req.user._id);
   const billingsSummary = await getBillingsSummary(userId, res.locals.filters);
   res.status(200).json({ data: billingsSummary });
 };
 
-export const routeGetFacilityBillingsSummary: RequestHandler = async (req, res, next) => {
+export const routeGetFacilityBillingsSummary: RequestHandler = async (req, res, _next) => {
   const facilityId = ObjectIdSchema.parse(req.params.facilityId);
   const billingsSummary = await getfacilityBilling(facilityId, req.query, res.locals.filters);
   res.status(200).json({ data: billingsSummary });
 };
 
-export const routeGetUserBillingDashboard: RequestHandler = async (req, res, next) => {
+export const routeGetUserBillingDashboard: RequestHandler = async (req, res, _next) => {
   const userId = ObjectIdSchema.parse(req.params.userId);
   const data = await getUserBillings(userId, req.query, res.locals.filters);
   res.status(200).json({ data });
 };
 
-export const routeSubmitBillingPayment: RequestHandler = async (req, res, next) => {
+export const routeSubmitBillingPayment: RequestHandler = async (req, res, _next) => {
   const billingId = ObjectIdSchema.parse(req.params.billingId);
-  const params = submitBillingPaymentArgumentsSchema.parse(req.body);
+  const params = SubmitBillingPaymentArgumentsSchema.parse(req.body);
   const billing = await sumbitBillingPayment(billingId, params, res.locals.filters);
   res.status(200).json({ data: billing });
 };

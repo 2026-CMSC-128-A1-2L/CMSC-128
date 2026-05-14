@@ -45,7 +45,7 @@ Due Date: ${new Date().toLocaleDateString()}
   return (
     <div
       onClick={handleDownloadBilling}
-      className={`w-[200px] rounded-xl bg-lightcyan-100 overflow-hidden shrink-0 flex items-center justify-center p-2.5 box-border gap-2.5 cursor-pointer text-center text-sm text-teal transition-all duration-200 hover:opacity-90 hover:scale-[1.02] active:scale-95 ${
+      className={`w-[200px] rounded-xl bg-lightcyan-100 overflow-hidden shrink-0 flex items-center justify-center p-2.5 box-border gap-2.5 cursor-pointer text-center text-sm text-teal transition-all duration-200 hover:opacity-90 hover:scale-[1.02] active:scale-95 dark:bg-[#0d3a32] dark:text-[#72cbb8] ${
         isDownloading ? 'opacity-50 cursor-wait' : ''
       }`}
     >

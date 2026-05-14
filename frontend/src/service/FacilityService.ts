@@ -1,4 +1,4 @@
-import axios from 'axios';
+import { api } from './axiosInstance';
 import type {
   CreateFacilityBody,
   UpdateFacilityBody,
@@ -8,7 +8,6 @@ import type {
   GetFacilityResponse,
   SearchFacilitiesResponse,
 } from '../interface/facility';
-import { API_URL } from './constant';
 
 export const FacilityService = {
   async getFacilities() {
@@ -194,4 +193,13 @@ export const FacilityService = {
   //CREATE LISTING -> ListingService.ts
   //GET REVIEWS -> ReviewService.ts
   //GET RATINGS -> RatingService.ts
+  async getFacilityBookings(facilityId: string) {
+    try {
+      const response = await api.get(`/api/facilities/${facilityId}/bookings`);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch facility bookings:', error);
+      throw error;
+    }
+  },
 };

@@ -1,4 +1,4 @@
-import { type FunctionComponent, useEffect, useState, useRef } from 'react';
+import { FunctionComponent, useEffect, useState, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { Icon } from '@iconify/react';
 import Lightbox from 'yet-another-react-lightbox';
@@ -27,12 +27,8 @@ interface BuildingFormValues {
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 
-const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({
-  onNextClick,
-  onPrevClick,
-}) => {
-  const { buildingInfo, setBuildingInfo, addRoomType, addManager, removeManager } =
-    useBuildingStore();
+const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({ onNextClick, onPrevClick }) => {
+  const { buildingInfo, setBuildingInfo, addRoomType, addManager, removeManager } = useBuildingStore();
 
   const [activePopup, setActivePopup] = useState<'none' | 'add1' | 'add2'>('none');
   const [lastInvitedEmail, setLastInvitedEmail] = useState('');
@@ -40,20 +36,16 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({
   const [lightboxIndex, setLightboxIndex] = useState(-1);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm<BuildingFormValues>({
-    defaultValues: {
-      name: buildingInfo.name,
-      typeOfBuilding: buildingInfo.typeOfBuilding,
-      location: buildingInfo.location,
-      about: buildingInfo.about,
-    },
-    mode: 'onChange',
-  });
+  const { register, handleSubmit, watch, formState: { errors } } =
+    useForm<BuildingFormValues>({
+      defaultValues: {
+        name: buildingInfo.name,
+        typeOfBuilding: buildingInfo.typeOfBuilding,
+        location: buildingInfo.location,
+        about: buildingInfo.about,
+      },
+      mode: 'onChange',
+    });
 
   useEffect(() => {
     const subscription = watch((values) => {
@@ -103,6 +95,8 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({
       roomTypes: buildingInfo.roomTypes,
       managers: buildingInfo.managers,
       payment: buildingInfo.payment,
+      allowPasalo: buildingInfo.allowPasalo,
+      allowOcularVisit: buildingInfo.allowOcularVisit,
     };
     console.log('=== Building Information Form Data ===');
     console.log(JSON.stringify(fullData, null, 2));
@@ -116,7 +110,8 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({
         className="relative w-full flex flex-col items-start justify-center gap-2.5 text-center text-num-18 text-teal-200 font-inter"
       >
         <div className="w-[880px] flex flex-col items-start">
-          <div className="w-[880px] rounded-2xl bg-white border-whitesmoke border-solid border box-border flex flex-col items-start py-8 px-12 gap-3">
+          <div className="w-[880px] rounded-2xl bg-white border-whitesmoke border-solid border-[1px] box-border flex flex-col items-start py-8 px-12 gap-3">
+
             {/* ── Building Information ── */}
             <div className="self-stretch flex flex-col items-start gap-6">
               <div className="self-stretch flex items-center">
@@ -127,62 +122,47 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({
                   <div className="flex-1 flex flex-col items-start gap-3">
                     <b className="relative">Name</b>
                     <div className="self-stretch flex flex-col gap-1">
-                      <div className="self-stretch rounded-num-12 bg-aliceblue border-whitesmoke border-solid border flex items-center py-3 px-num-16">
+                      <div className="self-stretch rounded-num-12 bg-aliceblue border-whitesmoke border-solid border-[1px] flex items-center py-3 px-num-16">
                         <input
                           {...register('name', { required: 'Building name is required' })}
                           placeholder="Aa"
-                          className="flex-1 bg-transparent text-sm text-black placeholder-slategray outline-none font-medium leading-num-24"
+                          className="flex-1 bg-transparent text-sm text-gray-700 placeholder-slategray outline-none font-medium leading-num-24"
                         />
                       </div>
-                      {errors.name && (
-                        <span className="text-xs text-red-500">{errors.name.message}</span>
-                      )}
+                      {errors.name && <span className="text-xs text-red-500">{errors.name.message}</span>}
                     </div>
                   </div>
                   <div className="flex-1 flex flex-col items-start gap-3">
-                    <b className="self-stretch h-[15.2px] relative flex items-center shrink-0">
-                      Type of Building
-                    </b>
+                    <b className="self-stretch h-[15.2px] relative flex items-center shrink-0">Type of Building</b>
                     <div className="self-stretch flex flex-col gap-1">
-                      <div className="self-stretch h-12 rounded-num-12 bg-aliceblue border-whitesmoke border-solid border box-border flex items-center px-4">
+                      <div className="self-stretch h-12 rounded-num-12 bg-aliceblue border-whitesmoke border-solid border-[1px] box-border flex items-center px-4">
                         <select
-                          {...register('typeOfBuilding', {
-                            required: 'Please select a building type',
-                          })}
-                          className="flex-1 bg-transparent text-sm text-black outline-none font-medium appearance-none cursor-pointer"
+                          {...register('typeOfBuilding', { required: 'Please select a building type' })}
+                          className="flex-1 bg-transparent text-sm text-gray-700 outline-none font-medium appearance-none cursor-pointer"
                         >
                           <option value="">Select type</option>
+                          <option value="residential">Residential</option>
+                          <option value="commercial">Commercial</option>
                           <option value="dormitory">Dormitory</option>
-                          <option value="appartment">Appartment</option>
-                          <option value="bedspacer">Bed Spacer</option>
-                          <option value="transient">Transient</option>
+                          <option value="mixed">Mixed Use</option>
                         </select>
-                        <Icon
-                          icon="mynaui:chevron-down"
-                          className="w-5 h-5 shrink-0 pointer-events-none"
-                        />
+                        <Icon icon="mynaui:chevron-down" className="w-5 h-5 shrink-0 pointer-events-none" />
                       </div>
-                      {errors.typeOfBuilding && (
-                        <span className="text-xs text-red-500">
-                          {errors.typeOfBuilding.message}
-                        </span>
-                      )}
+                      {errors.typeOfBuilding && <span className="text-xs text-red-500">{errors.typeOfBuilding.message}</span>}
                     </div>
                   </div>
                 </div>
                 <div className="self-stretch flex flex-col items-start gap-3">
                   <b className="relative">Location</b>
                   <div className="self-stretch flex flex-col gap-1">
-                    <div className="self-stretch rounded-num-12 bg-aliceblue border-whitesmoke border-solid border flex items-center py-3 px-num-16">
+                    <div className="self-stretch rounded-num-12 bg-aliceblue border-whitesmoke border-solid border-[1px] flex items-center py-3 px-num-16">
                       <input
                         {...register('location', { required: 'Location is required' })}
                         placeholder="Aa"
-                        className="flex-1 bg-transparent text-sm text-black placeholder-slategray outline-none font-medium leading-num-24"
+                        className="flex-1 bg-transparent text-sm text-gray-700 placeholder-slategray outline-none font-medium leading-num-24"
                       />
                     </div>
-                    {errors.location && (
-                      <span className="text-xs text-red-500">{errors.location.message}</span>
-                    )}
+                    {errors.location && <span className="text-xs text-red-500">{errors.location.message}</span>}
                   </div>
                 </div>
               </div>
@@ -197,7 +177,7 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({
                 {...register('about', { required: 'Please provide a description' })}
                 placeholder="Aa"
                 rows={5}
-                className="self-stretch rounded-num-12 bg-aliceblue border-whitesmoke border-solid border py-3 px-num-16 text-left text-num-14 text-slategray outline-none font-medium resize-none leading-num-24"
+                className="self-stretch rounded-num-12 bg-aliceblue border-whitesmoke border-solid border-[1px] py-3 px-num-16 text-left text-num-14 text-slategray outline-none font-medium resize-none leading-num-24"
               />
               {errors.about && <span className="text-xs text-red-500">{errors.about.message}</span>}
             </div>
@@ -209,10 +189,7 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({
               </div>
               <div className="self-stretch overflow-hidden flex items-start flex-wrap content-start py-num-10 px-0 gap-2">
                 {images.map((src, index) => (
-                  <div
-                    key={index}
-                    className="relative group h-[100px] w-[100px] rounded-num-12 border-whitesmoke border-solid border overflow-hidden bg-gray-50 shrink-0"
-                  >
+                  <div key={index} className="relative group h-[100px] w-[100px] rounded-num-12 border-whitesmoke border-solid border-[1px] overflow-hidden bg-gray-50 shrink-0">
                     <img
                       src={src}
                       alt={`Building preview ${index + 1}`}
@@ -221,10 +198,7 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({
                     />
                     <button
                       type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleRemoveImage(index);
-                      }}
+                      onClick={(e) => { e.stopPropagation(); handleRemoveImage(index); }}
                       className="absolute top-1 right-1 bg-white/80 backdrop-blur-sm rounded-full p-1 shadow-sm opacity-0 group-hover:opacity-100 transition-opacity text-red-500 hover:text-red-700"
                     >
                       <Icon icon="material-symbols:close" className="w-4 h-4" />
@@ -233,18 +207,11 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({
                 ))}
                 <div
                   onClick={() => fileInputRef.current?.click()}
-                  className="h-[100px] w-[100px] rounded-num-12 border-whitesmoke border-solid border box-border overflow-hidden shrink-0 flex flex-col items-center justify-center p-num-10 cursor-pointer hover:bg-gray-50 transition-colors text-slategray"
+                  className="h-[100px] w-[100px] rounded-num-12 border-whitesmoke border-solid border-[1px] box-border overflow-hidden shrink-0 flex flex-col items-center justify-center p-num-10 cursor-pointer hover:bg-gray-50 transition-colors text-slategray"
                 >
                   <Icon icon="material-symbols:add-photo-alternate-outline" className="w-8 h-8" />
                 </div>
-                <input
-                  type="file"
-                  multiple
-                  accept="image/*"
-                  ref={fileInputRef}
-                  onChange={handleFileChange}
-                  className="hidden"
-                />
+                <input type="file" multiple accept="image/*" ref={fileInputRef} onChange={handleFileChange} className="hidden" />
               </div>
             </div>
 
@@ -253,7 +220,7 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({
               <div className="self-stretch flex items-center">
                 <b className="relative tracking-num--0_01">Room Types</b>
               </div>
-              <div className="self-stretch flex flex-col gap-3 text-left text-num-14 text-black">
+              <div className="self-stretch flex flex-col gap-3 text-left text-num-14 text-gray">
                 {buildingInfo.roomTypes.map((rt) => (
                   <RoomTypeItem key={rt.id} roomType={rt} />
                 ))}
@@ -277,7 +244,101 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({
               </div>
             </div>
 
-            {/* ── Add Managers ── */}
+            {/* ── Building Policies ── */}
+            <div className="self-stretch overflow-hidden flex flex-col items-start p-num-10 gap-3">
+              <div className="self-stretch flex items-center">
+                <b className="relative tracking-num--0_01 text-teal-900">Building Policies</b>
+              </div>
+              <div className="self-stretch flex flex-col gap-2.5">
+
+                {/* Allow Pasalo */}
+                <div
+                  onClick={() => setBuildingInfo({ ...buildingInfo, allowPasalo: !buildingInfo.allowPasalo })}
+                  className={`self-stretch rounded-2xl flex items-center py-4 px-5 gap-4 cursor-pointer transition-all select-none border-[1.5px] ${buildingInfo.allowPasalo
+                      ? 'border-teal-600 bg-[#f4faf9]'
+                      : 'border-transparent bg-white hover:border-gray-200 hover:bg-gray-50/50'
+                    }`}
+                >
+                  {/* Icon box */}
+                  <div className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 transition-colors ${buildingInfo.allowPasalo ? 'bg-[#34655d]' : 'bg-[#f0f2f5]'
+                    }`}>
+                    <Icon
+                      icon="material-symbols:swap-horiz-rounded"
+                      className={`w-5 h-5 transition-colors ${buildingInfo.allowPasalo ? 'text-white' : 'text-slategray'}`}
+                    />
+                  </div>
+
+                  {/* Text */}
+                  <div className="flex flex-col flex-1 gap-0.5 text-left">
+                    <b className={`text-sm transition-colors ${buildingInfo.allowPasalo ? 'text-[#1a3a34]' : 'text-slategray'}`}>
+                      Allow Pasalo
+                    </b>
+                    <span className={`text-xs font-medium transition-colors ${buildingInfo.allowPasalo ? 'text-[#34655d]' : 'text-slategray'}`}>
+                      Tenants may transfer their lease to another person
+                    </span>
+                  </div>
+
+                  {/* Badge */}
+                  <span className={`text-xs font-semibold rounded-full px-3 py-1 shrink-0 transition-colors ${buildingInfo.allowPasalo
+                      ? 'bg-[#4a8a7f] text-white'
+                      : 'bg-gray-400 text-white'
+                    }`}>
+                    {buildingInfo.allowPasalo ? 'Enabled' : 'Off'}
+                  </span>
+
+                  {/* Toggle */}
+                  <div className={`h-[26px] w-[48px] relative rounded-full shrink-0 transition-colors ${buildingInfo.allowPasalo ? 'bg-[#42a391]' : 'bg-gray-800'
+                    }`}>
+                    <div className={`absolute top-[3px] h-5 w-5 rounded-full bg-white shadow-sm transition-all duration-200 ${buildingInfo.allowPasalo ? 'left-[25px]' : 'left-[3px]'
+                      }`} />
+                  </div>
+                </div>
+
+                {/* Allow Ocular Visit */}
+                <div
+                  onClick={() => setBuildingInfo({ ...buildingInfo, allowOcularVisit: !buildingInfo.allowOcularVisit })}
+                  className={`self-stretch rounded-2xl flex items-center py-4 px-5 gap-4 cursor-pointer transition-all select-none border-[1.5px] ${buildingInfo.allowOcularVisit
+                      ? 'border-teal-600 bg-[#f4faf9]'
+                      : 'border-transparent bg-white hover:border-gray-200 hover:bg-gray-50/50'
+                    }`}
+                >
+                  {/* Icon box */}
+                  <div className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 transition-colors ${buildingInfo.allowOcularVisit ? 'bg-[#34655d]' : 'bg-[#f0f2f5]'
+                    }`}>
+                    <Icon
+                      icon="material-symbols:visibility-outline-rounded"
+                      className={`w-5 h-5 transition-colors ${buildingInfo.allowOcularVisit ? 'text-white' : 'text-slategray'}`}
+                    />
+                  </div>
+
+                  {/* Text */}
+                  <div className="flex flex-col flex-1 gap-0.5 text-left">
+                    <b className={`text-sm transition-colors ${buildingInfo.allowOcularVisit ? 'text-[#1a3a34]' : 'text-slategray'}`}>
+                      Allow Ocular Visit
+                    </b>
+                    <span className={`text-xs font-medium transition-colors ${buildingInfo.allowOcularVisit ? 'text-[#34655d]' : 'text-slategray'}`}>
+                      Prospective tenants may request an in-person visit to the property
+                    </span>
+                  </div>
+
+                  {/* Badge */}
+                  <span className={`text-xs font-semibold rounded-full px-3 py-1 shrink-0 transition-colors ${buildingInfo.allowOcularVisit
+                      ? 'bg-[#4a8a7f] text-white'
+                      : 'bg-gray-400 text-white'
+                    }`}>
+                    {buildingInfo.allowOcularVisit ? 'Enabled' : 'Off'}
+                  </span>
+
+                  {/* Toggle */}
+                  <div className={`h-[26px] w-[48px] relative rounded-full shrink-0 transition-colors ${buildingInfo.allowOcularVisit ? 'bg-[#42a391]' : 'bg-gray-800'
+                    }`}>
+                    <div className={`absolute top-[3px] h-5 w-5 rounded-full bg-white shadow-sm transition-all duration-200 ${buildingInfo.allowOcularVisit ? 'left-[25px]' : 'left-[3px]'
+                      }`} />
+                  </div>
+                </div>
+
+              </div>
+            </div>            {/* ── Add Managers ── */}
             <div className="self-stretch overflow-hidden flex flex-col items-start p-num-10 gap-2.5">
               <div className="self-stretch flex items-center">
                 <b className="relative tracking-num--0_01">Add Managers</b>
@@ -302,22 +363,20 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({
                 </div>
               )}
               <div
-                className="rounded-num-12 bg-aliceblue border-whitesmoke border-solid border flex items-center py-2 px-num-16 gap-2.5 text-left text-num-14 text-slategray cursor-pointer hover:bg-blue-100 transition-colors"
+                className="rounded-num-12 bg-aliceblue border-whitesmoke border-solid border-[1px] flex items-center py-2 px-num-16 gap-2.5 text-left text-num-14 text-slategray cursor-pointer hover:bg-blue-100 transition-colors"
                 onClick={() => setActivePopup('add1')}
               >
                 <div className="relative leading-num-24 font-medium">Invite Managers</div>
                 <Icon icon="material-symbols:add-rounded" className="w-4 h-4" />
               </div>
             </div>
+
           </div>
         </div>
 
         {/* ── Back / Next ── */}
         <div className="w-[903px] overflow-hidden flex items-center justify-center py-0 px-num-10 box-border gap-2.5 text-num-14 text-dimgray">
-          <div
-            className="rounded-[45px] flex items-center justify-center py-2 px-8 cursor-pointer"
-            onClick={onPrevClick}
-          >
+          <div className="rounded-[45px] flex items-center justify-center py-2 px-8 cursor-pointer" onClick={onPrevClick}>
             <b className="relative">Back</b>
           </div>
           <button
@@ -340,20 +399,14 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({
 
       {activePopup === 'add1' && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div
-            className="relative shadow-2xl rounded-tl-[26px]"
-            onClick={(e) => e.stopPropagation()}
-          >
+          <div className="relative shadow-2xl rounded-tl-[26px]" onClick={(e) => e.stopPropagation()}>
             <AddManager1 onCancel={() => setActivePopup('none')} onSend={handleManagerSend} />
           </div>
         </div>
       )}
       {activePopup === 'add2' && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div
-            className="relative shadow-2xl rounded-tl-[26px]"
-            onClick={(e) => e.stopPropagation()}
-          >
+          <div className="relative shadow-2xl rounded-tl-[26px]" onClick={(e) => e.stopPropagation()}>
             <AddManager2 onClose={() => setActivePopup('none')} email={lastInvitedEmail} />
           </div>
         </div>

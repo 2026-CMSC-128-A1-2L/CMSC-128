@@ -2,6 +2,7 @@ import { type FunctionComponent, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import LandlordLayout from '../../../components/landlord/LandlordLayout';
+import NotifyTenantsPopup from '../../../components/landlord/NotifyTenantsPopup';
 import sapphire1 from '../../../../assets/sapphire1.jpg';
 import sapphire2 from '../../../../assets/sapphire2.jpg';
 import sapphire3 from '../../../../assets/sapphire3.png';
@@ -24,32 +25,7 @@ const STATS = [
   { label: 'Overdue Rent', value: '1', sub: 'Tenant', subColor: 'text-[#666]' },
 ];
 
-const PROPERTIES = [
-  {
-    id: '1',
-    name: 'Two Sapphire Place',
-    img: sapphire1,
-    occupied: '18/24',
-    income: '₱89,400.00',
-    balance: '₱12,600.00',
-  },
-  {
-    id: '2',
-    name: 'One Sapphire Place',
-    img: sapphire2,
-    occupied: '20/24',
-    income: '₱89,400.00',
-    balance: '₱12,600.00',
-  },
-  {
-    id: '3',
-    name: 'Three Sapphire Place',
-    img: sapphire3,
-    occupied: '18/24',
-    income: '₱89,400.00',
-    balance: '₱12,600.00',
-  },
-];
+import { BUILDINGS } from '../../../data/buildings';
 
 const PENDING = [
   { name: 'Daphne Dayne', email: 'dcanape@up.edu.ph' },
@@ -107,8 +83,9 @@ const CARD_GAP = 16;
 const LandlordHomepage: FunctionComponent = () => {
   const trackRef = useRef<HTMLDivElement>(null);
   const [current, setCurrent] = useState(0);
-  const total = PROPERTIES.length;
+  const total = BUILDINGS.length;
   const [searchQuery, setSearchQuery] = useState('');
+  const [showNotify, setShowNotify] = useState(false);
 
   const scrollTo = (index: number) => {
     const clamped = Math.max(0, Math.min(index, total - 1));
@@ -123,7 +100,7 @@ const LandlordHomepage: FunctionComponent = () => {
 
   return (
     <LandlordLayout activeSidebarItem="dashboard" breadcrumbs={[]}>
-      <div className="flex w-full flex-col gap-[48px] pt-[16px] lg:flex-row lg:items-start">
+      <div className="flex w-full flex-col gap-[48px] pt-[60px] lg:flex-row lg:items-start">
         {/* Main column */}
         <div className="flex flex-1 flex-col gap-[48px] min-w-0">
           {/* Search */}
@@ -178,7 +155,7 @@ const LandlordHomepage: FunctionComponent = () => {
             </div>
             <div className="grid grid-cols-1 gap-[12px] sm:grid-cols-2 xl:grid-cols-4">
               {STATS.map((s) => (
-                <div
+                <Link to="/landlord/finance"
                   key={s.label}
                   className="flex flex-col items-center justify-center gap-[8px] rounded-[16px] border border-[#f0f0f0] bg-white p-[12px] text-center"
                 >
@@ -204,7 +181,7 @@ const LandlordHomepage: FunctionComponent = () => {
                       {s.sub}
                     </span>
                   )}
-                </div>
+                </Link>
               ))}
               <div className="flex flex-col items-center justify-center gap-[8px] rounded-[16px] bg-[#096c5b] p-[12px] text-center">
                 <Icon
@@ -215,7 +192,7 @@ const LandlordHomepage: FunctionComponent = () => {
                 <b className="font-['Inter',sans-serif] text-[18px] tracking-[-0.01em] text-[#f0f0f0]">
                   Pay Reminder
                 </b>
-                <button className="flex items-center gap-[8px] rounded-full bg-[#f0f0f0] px-[12px] py-[4px] transition-opacity hover:opacity-80">
+                <button type="button" onClick={() => setShowNotify(true)} className="flex items-center gap-[8px] rounded-full bg-[#f0f0f0] px-[12px] py-[4px] transition-opacity hover:opacity-80">
                   <span className="font-['Inter',sans-serif] text-[12px] font-medium text-[#096c5b]">
                     Notify your tenants
                   </span>
@@ -280,18 +257,18 @@ const LandlordHomepage: FunctionComponent = () => {
               ref={trackRef}
               className="flex gap-[16px] overflow-x-auto scroll-smooth pb-[8px] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             >
-              {PROPERTIES.map((p) => (
+              {BUILDINGS.map((b) => (
                 <Link
-                  key={p.name}
-                  to={`/landlord/properties/${p.id}`} // Dynamic Route
+                  key={b.name}
+                  to={`/landlord/properties/${b.id}`} // Dynamic Route
                   className="flex shrink-0 flex-col overflow-hidden rounded-[10px] bg-white shadow-[0px_4px_20px_rgba(0,0,0,0.15)] transition-transform hover:scale-[1.02]"
                   style={{ width: CARD_WIDTH }}
                 >
-                  <img src={p.img} alt={p.name} className="h-[120px] w-full object-cover" />
+                  <img src={b.img} alt={b.name} className="h-[120px] w-full object-cover" />
                   <div className="flex flex-col gap-[8px] p-[12px]">
                     <div className="flex items-center justify-between gap-[8px]">
                       <b className="truncate font-['Inter',sans-serif] text-[16px] tracking-[-0.01em] text-black">
-                        {p.name}
+                        {b.name}
                       </b>
                       <span className="flex shrink-0 items-center gap-[4px] rounded-[5px] border border-[#096c5b] px-[8px] py-[2px]">
                         <span className="h-[6px] w-[6px] rounded-full bg-[#096c5b]" />
@@ -307,7 +284,7 @@ const LandlordHomepage: FunctionComponent = () => {
                         aria-hidden="true"
                       />
                       <b className="font-['Poppins',sans-serif] text-[14px] tracking-[-0.01em] text-[#666]">
-                        {p.occupied}
+                        {b.occupiedUnits}
                       </b>
                     </div>
                     <div className="flex items-center justify-between">
@@ -325,7 +302,7 @@ const LandlordHomepage: FunctionComponent = () => {
                             WebkitTextFillColor: 'transparent',
                           }}
                         >
-                          {p.income}
+                          {b.income}
                         </b>
                       </div>
                       <div className="flex items-center gap-[6px]">
@@ -342,7 +319,7 @@ const LandlordHomepage: FunctionComponent = () => {
                             WebkitTextFillColor: 'transparent',
                           }}
                         >
-                          {p.balance}
+                          {b.outstanding}
                         </b>
                       </div>
                       {/* Changed eye icon from Link to simple Icon since parent is now a Link */}
@@ -401,7 +378,7 @@ const LandlordHomepage: FunctionComponent = () => {
         </div>
 
         {/* Right sidebar */}
-        <aside className="flex w-full flex-col gap-[32px] lg:w-[280px] lg:shrink-0">
+        <aside className="flex w-full flex-col gap-[32px] lg:w-[280px] lg:shrink-0 lg:pt-[60px]">
           <div className="flex flex-col gap-[8px]">
             <Avatar className="h-[74px] w-[74px]" />
             <div className="flex items-center gap-[6px]">
@@ -453,6 +430,7 @@ const LandlordHomepage: FunctionComponent = () => {
       >
         <img src={TutorialIcon} alt="Help" className="w-16 h-16 drop-shadow-lg" />
       </div>
+      <NotifyTenantsPopup isOpen={showNotify} onClose={() => setShowNotify(false)} />
     </LandlordLayout>
   );
 };
