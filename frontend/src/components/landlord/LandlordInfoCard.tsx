@@ -113,15 +113,13 @@ const handleSaveAddress = () => {
 
   // redact contact number except for first 2 digits
   const redactContact = (number: string) => {
-    if (number.length < 2) return number;
-    return number.substring(0, 2) + '*'.repeat(number.length - 2);
-  };
-
+  if (!number || number.length < 2) return number ?? PLACEHOLDER;
+  return number.substring(0, 2) + '*'.repeat(number.length - 2);
+};
 
   //stateful contact number variable to be used for input field
-  const [contactNumberOnEdit,setContactNumberOnEdit]=useState(info.contactNumber)
-
-  const [homeAddressOnEdit,setHomeAddressOnEdit]=useState(info.homeAddress)
+  const [contactNumberOnEdit, setContactNumberOnEdit] = useState(info.contactNumber ?? '');
+  const [homeAddressOnEdit, setHomeAddressOnEdit] = useState(info.homeAddress ?? '');
   return (
     <section className="flex flex-col gap-[24px] rounded-[16px] px-[32px] pt-[32px] pb-[24px]">
       <header className="flex flex-col items-start gap-[4px]">

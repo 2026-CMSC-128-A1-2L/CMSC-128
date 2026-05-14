@@ -90,7 +90,10 @@ export const getListingReviews = async (
 export const getFacilityReviews = async (facilityId: mongoose.Types.ObjectId) => {
   const facility = await HousingFacility.findById(facilityId);
   if (!facility) throw new AppError(404, 'Facility not found.');
-  return await Review.find({ facilityId });
+  return await Review.find({ facilityId, status: 'approved' }).populate(
+    'userId',
+    'firstName lastName',
+  );
 };
 
 const addReviewFromAverage = async (review: ReviewType) => {

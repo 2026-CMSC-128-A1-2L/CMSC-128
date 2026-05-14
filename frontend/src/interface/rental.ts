@@ -1,4 +1,11 @@
-import { UpdateRentalBodySchema, RentalFilterSchema, GetRentalsQuerySchema, RentalParamsSchema, MoveInBodySchema, MoveOutBodySchema } from 'shared';
+import type {
+  UpdateRentalBodySchema,
+  RentalFilterSchema,
+  GetRentalsQuerySchema,
+  RentalParamsSchema,
+  MoveInBodySchema,
+  MoveOutBodySchema,
+} from 'shared';
 import type z from 'zod';
 
 export type UpdateRentalBody = z.infer<typeof UpdateRentalBodySchema>;

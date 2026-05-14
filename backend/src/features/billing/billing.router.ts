@@ -5,6 +5,7 @@ import {
   routeGetBilling,
   routeUpdateBilling,
   routeUpdateBillingPayment,
+  routeSubmitBillingPayment,
   routeGetBillingsSummary,
   routeGetUserBillingDashboard,
 } from './billing.controller.js';
@@ -44,6 +45,19 @@ router.get('/', isSuperAdmin, routeGetBillings);
 // POST /api/billings
 // ============================================================================
 router.post('/', manageBillingsFilter, routeCreateBilling);
+
+// ============================================================================
+// GET /api/billings/summary
+//
+// Use this to get information for Landlord Finance page.
+// .dashboard to get details for the main dashboard
+// .billingCards to get access to data for the cards.
+// ============================================================================
+router.get('/landlord/summary', manageBillingsFilter, routeGetBillingsSummary);
+
+router.get('/facility/:facilityId/summary', manageBillingsFilter, routeGetBillingsSummary);
+
+router.get('/users/:userId/dashboard', selfFilter, routeGetUserBillingDashboard);
 
 // ============================================================================
 // GET /api/billings/:billingId
@@ -86,23 +100,10 @@ router.use(
 );
 
 // ============================================================================
-// GET /api/billings/summary
-//
-// Use this to get information for Landlord Finance page.
-// .dashboard to get details for the main dashboard
-// .billingCards to get access to data for the cards.
-// ============================================================================
-router.get('/landlord/summary', manageBillingsFilter, routeGetBillingsSummary);
-
-router.get('/facility/:facilityId/summary', manageBillingsFilter, routeGetBillingsSummary);
-
-router.get('/users/:userId/dashboard', selfFilter, routeGetUserBillingDashboard);
-
-// ============================================================================
 // POST /api/billings/:billingId/submit-payment
 //
 // This is used by the tenant to submit their payment for a billing.
 // ============================================================================
-router.post('/:billingId/submit-payment', selfFilter, routeUpdateBillingPayment);
+router.post('/:billingId/submit-payment', selfFilter, routeSubmitBillingPayment);
 
 export default router;

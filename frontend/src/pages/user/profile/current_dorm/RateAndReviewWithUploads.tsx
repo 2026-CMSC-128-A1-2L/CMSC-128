@@ -1,16 +1,28 @@
-import { type FunctionComponent, useCallback } from 'react';
+import { type FunctionComponent, useCallback, useState } from 'react';
 import { Icon } from '@iconify/react';
 import Location from '../../../../../assets/pin_location_icon.svg';
 import House from '../../../../../assets/house_icon.svg';
 import UploadMedia from '../../../../../assets/upload_media_icon.svg';
 import { useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import SideBar from '../../../../components/user/SideBar';
 import BreadcrumbHeader from '../../../../components/general/Breadcrumb';
+import ProgressBar from '../../../../components/user/ProgressBar';
+import placeholder from '../../../../../assets/one_sapphire_place.png';
+import ConfirmReview from '../../../../components/user/Profile/ConfirmReview'; 
 
 const RateAndReview: FunctionComponent = () => {
+  const navigate = useNavigate();
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+
   const onUserProfileTextClick = useCallback(() => {
-    // Add your code here
+    setShowSuccessPopup(true);
   }, []);
+
+  const closePopup = () => {
+    setShowSuccessPopup(false);
+    navigate('/profile-switcher');
+  };
 
   // state to hold which file is being uploaded
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -31,6 +43,11 @@ const RateAndReview: FunctionComponent = () => {
 
   return (
     <div className="w-full h-screen relative overflow-y-auto flex flex-col items-start isolate gap-2.5 text-left text-num-14 text-darkslategray-100 font-lora">
+      {showSuccessPopup && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
+          <ConfirmReview onClose={closePopup} />
+        </div>
+      )}
       {/* <img className="w-[1440px] h-[1192px] absolute !!m-[0 important] top-0 left-0 shrink-0 z-0" alt="" /> */}
       <div className="w-full max-w-[1440px] min-h-screen overflow-hidden flex flex-col items-start z-1 mx-auto">
         <div className="self-stretch flex-1 overflow-hidden flex flex-col items-start">
@@ -66,7 +83,7 @@ const RateAndReview: FunctionComponent = () => {
                       <div className="h-[195px] w-[928px] rounded-xl border-whitesmoke-200 border-solid border box-border flex items-center gap-2.5">
                         <img
                           className="h-[195px] w-[305px] rounded-tl-xl rounded-tr-none rounded-br-none rounded-bl-xl object-cover"
-                          alt=""
+                          src={placeholder} alt=""
                         />
                         <div className="h-[195px] flex-1 rounded-num-16 flex flex-col items-center py-num-0 px-num-12 box-border">
                           <div className="w-full h-[195px] flex flex-col items-center justify-center gap-0.5 max-w-full">
@@ -129,25 +146,15 @@ const RateAndReview: FunctionComponent = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="self-stretch flex flex-col items-center py-6 px-num-32 text-center text-darkslategray-200 font-poppins">
-                      <div className="w-full flex items-center justify-center max-w-full">
-                        <div className="h-[93.9px] w-[784px] relative">
-                          <div className="absolute h-[9.16%] w-[32.64%] top-[29.9%] right-[56.29%] bottom-[60.94%] left-[11.07%] rounded-[34.55px] bg-darkslategray-200" />
-                          <div className="absolute h-[37.91%] w-[13.42%] top-[51.75%] left-[0%] leading-8 font-semibold flex items-center justify-center">
-                            Information
-                          </div>
-                          <div className="absolute h-[37.91%] w-[10.37%] top-[51.75%] left-[88.93%] font-semibold flex items-center justify-center">
-                            Finalize
-                          </div>
-                          <div className="absolute h-[37.91%] w-[11.2%] top-[51.75%] left-[43.71%] font-semibold flex items-center justify-center">
-                            Reviewing
-                          </div>
-                          <div className="absolute h-[9.16%] w-[34.44%] top-[26.45%] right-[10.65%] bottom-[64.39%] left-[54.91%] rounded-[34.55px] bg-darkslategray-200" />
-                          <div className="absolute h-[37.91%] w-[4.57%] top-[12.65%] right-[48.41%] bottom-[49.44%] left-[47.03%] rounded-[50%] bg-darkslategray-200" />
-                          <div className="absolute h-[37.91%] w-[4.57%] top-[12.65%] right-[3.59%] bottom-[49.44%] left-[91.84%] rounded-[50%] bg-darkslategray-200" />
-                          <div className="absolute h-[37.91%] w-[4.57%] top-[13.8%] right-[91.01%] bottom-[48.29%] left-[4.43%] rounded-[50%] bg-darkslategray-200" />
-                        </div>
-                      </div>
+                    <div className="self-stretch flex flex-col items-center py-6 px-num-32 text-center font-poppins">
+                      <ProgressBar
+                        currentStepIndex={2}
+                        steps={[
+                          { key: 'information', label: 'Information' },
+                          { key: 'reviewing', label: 'Reviewing' },
+                          { key: 'finalize', label: 'Finalize' },
+                        ]}
+                      />
                     </div>
                   </div>
                   <div className="self-stretch h-[405px] flex flex-col items-center gap-[18px] shrink-0 text-darkslategray-100 font-inter">

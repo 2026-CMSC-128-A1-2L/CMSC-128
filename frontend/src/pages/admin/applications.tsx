@@ -1,19 +1,143 @@
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Icon } from '@iconify/react';
 import SideBarAdmin from '../../components/admin/SideBarAdmin';
 import AdminPageTransition from '../../components/admin/AdminPageTransition';
-import { Icon } from '@iconify/react';
+import AdminPagination from '../../components/admin/AdminPagination';
+import ApplicantReviewModal, {
+  type VerificationApplicant,
+  type VerificationDocument,
+  getDisplayName,
+  formatRole,
+} from '../../components/admin/ApplicantReviewModal';
+import { DocumentService } from '../../service/DocumentService';
+import { UserService } from '../../service/UserService';
 
-const tableHeaders = ['Name', 'Age', 'Sex', 'Province', 'Classification', 'Details'];
+const tableHeaders = ['Name', 'Email', 'Role', 'Submitted Docs', 'Status', 'Details'];
 
-const tableData = Array.from({ length: 9 }, (_, index) => ({
-  id: `application-${index + 1}`,
-  name: 'Vicencio, Erik',
-  age: 22,
-  sex: 'Male',
-  province: 'Laguna',
-  classification: 'Renter',
-}));
+const getApplicationStatusLabel = (user: VerificationApplicant) => {
+  if (user.verificationStatus === 'submitted') return 'For Review';
+  if (user.verificationStatus === 'rejected') return 'Rejected';
+  if (user.verificationStatus === 'approved') return 'Approved';
+  return 'Pending';
+};
 
 function Applications() {
+  const [applicants, setApplicants] = useState<VerificationApplicant[]>([]);
+  const [selectedApplicantId, setSelectedApplicantId] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+  const [actionMessage, setActionMessage] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [rejectionMessages, setRejectionMessages] = useState<Record<string, string>>({});
+  const [studentNumber, setStudentNumber] = useState('');
+  const [degreeProgram, setDegreeProgram] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const itemsPerPage = 10;
+
+  const selectedApplicant = applicants.find((u) => u._id === selectedApplicantId) ?? null;
+
+  const filteredApplicants = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return applicants;
+    return applicants.filter((u) =>
+      [getDisplayName(u), u.emails?.[0], u.userType, u.address, u.contact]
+        .filter(Boolean).join(' ').toLowerCase().includes(q),
+    );
+  }, [applicants, searchQuery]);
+
+  const totalPages = Math.ceil(filteredApplicants.length / itemsPerPage);
+  const paginatedApplicants = useMemo(() => {
+    const start = (currentPage - 1) * itemsPerPage;
+    return filteredApplicants.slice(start, start + itemsPerPage);
+  }, [filteredApplicants, currentPage]);
+
+  const loadApplicants = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await UserService.getUsers<VerificationApplicant>({ verificationStatus: 'submitted' });
+      const users = response.data ?? [];
+      setApplicants(users);
+      setSelectedApplicantId((cur) =>
+        cur && users.some((u: VerificationApplicant) => u._id === cur) ? cur : (users[0]?._id ?? null),
+      );
+    } catch {
+      setError('Could not load verification applications.');
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => { loadApplicants(); }, [loadApplicants]);
+
+  const openModal = (userId: string) => {
+    setSelectedApplicantId(userId);
+    setStudentNumber('');
+    setDegreeProgram('');
+    setActionMessage(null);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => { setIsModalOpen(false); setSelectedApplicantId(null); };
+
+  const updateDocs = (documents: VerificationDocument[]) => {
+    if (!selectedApplicant) return;
+    setApplicants((cur) => cur.map((u) => (u._id === selectedApplicant._id ? { ...u, documents } : u)));
+  };
+
+  const handleAcceptDocument = async (docId: string) => {
+    if (!selectedApplicant) return;
+    setActionMessage(null); setError(null);
+    try {
+      const res = await DocumentService.acceptDocument('users', selectedApplicant._id, docId);
+      updateDocs(res.data ?? []);
+      setActionMessage('Document accepted.');
+    } catch { setError('Could not accept this document.'); }
+  };
+
+  const handleRejectDocument = async (docId: string) => {
+    if (!selectedApplicant) return;
+    const message = rejectionMessages[docId]?.trim() || 'Please resubmit a clearer document.';
+    setActionMessage(null); setError(null);
+    try {
+      const res = await DocumentService.rejectDocument('users', selectedApplicant._id, docId, message);
+      updateDocs(res.data ?? []);
+      setActionMessage('Document rejected.');
+    } catch { setError('Could not reject this document.'); }
+  };
+
+  const handleApproveApplicant = async () => {
+    if (!selectedApplicant) return;
+    if (!selectedApplicant.documents.every((d) => d.status === 'accepted')) {
+      setError('Accept all submitted documents before approving the user.'); return;
+    }
+    if (selectedApplicant.userType === 'Student') {
+      if (!/^[0-9]{9}$/.test(studentNumber.trim()) || !degreeProgram.trim()) {
+        setError('Enter the student number and degree program before approving a student.'); return;
+      }
+    }
+    setActionMessage(null); setError(null);
+    try {
+      await UserService.approveUser(
+        selectedApplicant._id,
+        selectedApplicant.userType === 'Student' ? { studentNumber: studentNumber.trim(), degreeProgram: degreeProgram.trim() } : undefined,
+      );
+      setActionMessage(`${getDisplayName(selectedApplicant)} has been verified.`);
+      await loadApplicants(); closeModal();
+    } catch { setError('Could not approve this user.'); }
+  };
+
+  const handleRejectApplicant = async () => {
+    if (!selectedApplicant) return;
+    setActionMessage(null); setError(null);
+    try {
+      await UserService.rejectUser(selectedApplicant._id);
+      setActionMessage(`${getDisplayName(selectedApplicant)} has been rejected.`);
+      await loadApplicants(); closeModal();
+    } catch { setError('Could not reject this user. Reject at least one document first.'); }
+  };
+
   return (
     <AdminPageTransition>
       <div className="relative -mx-[calc((100vw-100%)/2)] flex w-screen flex-col min-h-screen">
@@ -23,67 +147,78 @@ function Applications() {
             <h1 className="font-['Outfit'] text-[48px] font-bold text-black">Dashboard</h1>
 
             <div className="mt-6 rounded-xl bg-white p-6">
-              {/* Section header with search */}
               <div className="mb-4 flex items-center justify-between">
                 <h2 className="font-['Poppins'] text-[36px] font-bold text-[#001d18] drop-shadow-[0px_4px_4px_rgba(0,0,0,0.1)]">
-                  Applications
+                  Verification Applications
                 </h2>
                 <div className="flex h-9 w-75.75 items-center gap-2 rounded-full border border-[#d0d0d0] bg-white px-4">
                   <Icon icon="solar:magnifer-outline" className="h-4 w-4 text-[#7c8db5]" />
                   <input
                     type="text"
+                    value={searchQuery}
+                    onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
                     placeholder="Search"
                     className="flex-1 bg-transparent font-['Poppins'] text-sm text-black outline-none placeholder:text-[#7c8db5]"
                   />
                 </div>
               </div>
 
-              {/* Table */}
-              <div className="overflow-hidden rounded-2xl shadow-[0px_0px_20px_0px_rgba(0,0,0,0.5)]">
+              {error && (
+                <div className="mb-4 rounded-xl border border-red-100 bg-red-50 px-4 py-3 font-['Poppins'] text-sm font-semibold text-red-700">{error}</div>
+              )}
+              {actionMessage && (
+                <div className="mb-4 rounded-xl border border-emerald-100 bg-emerald-50 px-4 py-3 font-['Poppins'] text-sm font-semibold text-emerald-700">{actionMessage}</div>
+              )}
+
+              <div className="overflow-hidden rounded-2xl shadow-[0px_0px_20px_0px_rgba(0,0,0,0.35)]">
                 <table className="w-full">
                   <thead>
                     <tr className="bg-[#024338]">
-                      {tableHeaders.map((header) => (
-                        <th
-                          key={header}
-                          className="px-6 py-4 text-left font-['Poppins'] text-[20px] font-bold text-white"
-                        >
-                          {header}
-                        </th>
+                      {tableHeaders.map((h) => (
+                        <th key={h} className="px-6 py-4 text-left font-['Poppins'] text-[18px] font-bold text-white">{h}</th>
                       ))}
                     </tr>
                   </thead>
                   <tbody>
-                    {tableData.map((row) => (
-                      <tr key={row.id} className="border-b border-[#f0f0f0]">
-                        <td className="px-6 py-3 font-['Poppins'] text-[20px] font-medium text-black">
-                          {row.name}
-                        </td>
-                        <td className="px-6 py-3 font-['Poppins'] text-[20px] font-medium text-black">
-                          {row.age}
-                        </td>
-                        <td className="px-6 py-3 font-['Poppins'] text-[20px] font-medium text-black">
-                          {row.sex}
-                        </td>
-                        <td className="px-6 py-3 font-['Poppins'] text-[20px] font-medium text-black">
-                          {row.province}
-                        </td>
-                        <td className="px-6 py-3 font-['Poppins'] text-[20px] font-medium text-black">
-                          {row.classification}
-                        </td>
-                        <td className="px-6 py-3">
-                          <button
-                            type="button"
-                            className="cursor-pointer bg-[#024338] px-6 py-2 font-['Poppins'] text-[20px] font-bold text-white"
-                          >
-                            View
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
+                    {isLoading ? (
+                      <tr><td colSpan={tableHeaders.length} className="px-6 py-8 text-center">Loading applications...</td></tr>
+                    ) : paginatedApplicants.length === 0 ? (
+                      <tr><td colSpan={tableHeaders.length} className="px-6 py-8 text-center">No submitted verification applications.</td></tr>
+                    ) : (
+                      paginatedApplicants.map((row) => (
+                        <tr key={row._id} className="border-b border-[#f0f0f0]">
+                          <td className="px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black">{getDisplayName(row)}</td>
+                          <td className="px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black">{row.emails?.[0] ?? 'No email'}</td>
+                          <td className="px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black">{formatRole(row.userType)}</td>
+                          <td className="px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black">{row.documents?.filter((d) => d.files.length > 0).length ?? 0}</td>
+                          <td className="px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black">{getApplicationStatusLabel(row)}</td>
+                          <td className="px-6 py-3">
+                            <button type="button" onClick={() => openModal(row._id)} className="cursor-pointer rounded-lg bg-[#024338] px-5 py-2 font-['Poppins'] text-[16px] font-bold text-white">View</button>
+                          </td>
+                        </tr>
+                      ))
+                    )}
                   </tbody>
                 </table>
+                <AdminPagination currentPage={currentPage} totalPages={totalPages} totalItems={filteredApplicants.length} itemsPerPage={itemsPerPage} onPageChange={setCurrentPage} />
               </div>
+
+              <ApplicantReviewModal
+                isOpen={isModalOpen}
+                applicant={selectedApplicant}
+                studentNumber={studentNumber}
+                degreeProgram={degreeProgram}
+                rejectionMessages={rejectionMessages}
+                error={error}
+                onClose={closeModal}
+                onStudentNumberChange={setStudentNumber}
+                onDegreeProgramChange={setDegreeProgram}
+                onRejectionMessageChange={(docId, val) => setRejectionMessages((cur) => ({ ...cur, [docId]: val }))}
+                onAcceptDocument={handleAcceptDocument}
+                onRejectDocument={handleRejectDocument}
+                onApproveUser={handleApproveApplicant}
+                onRejectUser={handleRejectApplicant}
+              />
             </div>
           </div>
         </div>

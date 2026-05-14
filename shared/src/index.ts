@@ -4,6 +4,7 @@ export * from './schemas/application.js';
 export * from './schemas/billing.js';
 export * from './schemas/booking.js';
 export * from './schemas/bookmark.js';
+export * from './schemas/calendar.js';
 export * from './schemas/common.js';
 export * from './schemas/conversation.js';
 export * from './schemas/facility.js';

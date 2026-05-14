@@ -1,23 +1,14 @@
-import axios from 'axios';
 import type { Profile } from '../interface/profile';
-import { API_URL } from './constant';
+import { api } from './axiosInstance';
 
 export const ProfileService = {
-  async getProfile(userId: string) {
+  async getProfile(userId: string): Promise<{ data: Profile }> {
     try {
-      const response = await axios.get(
-        `${API_URL}/api/profiles/${userId}`,
-        {
-          //headers
-        },
-      );
-
+      const response = await api.get<{ data: Profile }>(`/api/profiles/${userId}`);
       return response.data;
     } catch (error) {
-      console.error("Failed to fetch profile: ", error)
-      throw error
+      console.error('Failed to fetch profile: ', error);
+      throw error;
     }
   },
-
-
-}
+};

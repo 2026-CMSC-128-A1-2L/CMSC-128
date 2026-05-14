@@ -1,18 +1,10 @@
-import axios from 'axios';
 import type { CreateReviewBody, UpdateReviewBody } from '../interface/review';
-import { API_URL } from './constant';
+import { api } from './axiosInstance';
 
 export const ReviewService = {
-
-  //FOREIGN -> Listing Router
   async getListingReviews(listingId: string) {
     try {
-      const response = await axios.get(
-        `${API_URL}/api/listings/${listingId}/reviews`,
-        {
-          // headers
-        }
-      );
+      const response = await api.get(`/api/listings/${listingId}/reviews`);
       return response.data;
     } catch (error) {
       console.error('Error fetching listing reviews:', error);
@@ -20,18 +12,9 @@ export const ReviewService = {
     }
   },
 
-  //FOREIGN -> Listing Router
   async createReview(listingId: string, body: CreateReviewBody) {
     try {
-      const response = await axios.post(
-        `${API_URL}/api/listings/${listingId}/reviews`,
-        {
-          ...body,
-        },
-        {
-          // headers
-        }
-      );
+      const response = await api.post(`/api/listings/${listingId}/reviews`, body);
       return response.data;
     } catch (error) {
       console.error('Error creating review:', error);
@@ -39,17 +22,9 @@ export const ReviewService = {
     }
   },
 
-
-  //FOREIGN -> Facility Router
-
   async getFacilityReviews(facilityId: string) {
     try {
-      const response = await axios.get(
-        `${API_URL}/api/facilities/${facilityId}/reviews`,
-        {
-          // headers
-        }
-      );
+      const response = await api.get(`/api/facilities/${facilityId}/reviews`);
       return response.data;
     } catch (error) {
       console.error('Error fetching facility reviews:', error);
@@ -57,16 +32,9 @@ export const ReviewService = {
     }
   },
 
-  //FOREIGN -> Facility Router
-
   async getAverageRatingsByFacility(facilityId: string) {
     try {
-      const response = await axios.get(
-        `${API_URL}/api/facilities/${facilityId}/average-ratings`,
-        {
-          // headers
-        }
-      );
+      const response = await api.get(`/api/facilities/${facilityId}/average-ratings`);
       return response.data;
     } catch (error) {
       console.error('Error fetching average ratings:', error);
@@ -74,18 +42,9 @@ export const ReviewService = {
     }
   },
 
-
-
-
-
   async getReviews() {
     try {
-      const response = await axios.get(
-        `${API_URL}/api/reviews`,
-        {
-          // headers
-        }
-      );
+      const response = await api.get('/api/reviews');
       return response.data;
     } catch (error) {
       console.error('Error fetching reviews:', error);
@@ -95,15 +54,7 @@ export const ReviewService = {
 
   async updateReview(reviewId: string, body: UpdateReviewBody) {
     try {
-      const response = await axios.patch(
-        `${API_URL}/api/reviews/${reviewId}`,
-        {
-          ...body,
-        },
-        {
-          // headers
-        }
-      );
+      const response = await api.patch(`/api/reviews/${reviewId}`, body);
       return response.data;
     } catch (error) {
       console.error('Error updating review:', error);
@@ -113,13 +64,7 @@ export const ReviewService = {
 
   async approveReview(reviewId: string) {
     try {
-      const response = await axios.post(
-        `${API_URL}/api/reviews/${reviewId}/approve`,
-        {},
-        {
-          // headers
-        }
-      );
+      const response = await api.post(`/api/reviews/${reviewId}/approve`, {});
       return response.data;
     } catch (error) {
       console.error('Error approving review:', error);
@@ -129,13 +74,7 @@ export const ReviewService = {
 
   async rejectReview(reviewId: string) {
     try {
-      const response = await axios.post(
-        `${API_URL}/api/reviews/${reviewId}/reject`,
-        {},
-        {
-          // headers
-        }
-      );
+      const response = await api.post(`/api/reviews/${reviewId}/reject`, {});
       return response.data;
     } catch (error) {
       console.error('Error rejecting review:', error);
@@ -145,19 +84,11 @@ export const ReviewService = {
 
   async deleteReview(reviewId: string) {
     try {
-      const response = await axios.delete(
-        `${API_URL}/api/reviews/${reviewId}`,
-        {
-          // headers
-        }
-      );
+      const response = await api.delete(`/api/reviews/${reviewId}`);
       return response.data;
     } catch (error) {
       console.error('Error deleting review:', error);
       throw error;
     }
   },
-
-
-
 };

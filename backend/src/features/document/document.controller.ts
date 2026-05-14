@@ -1,5 +1,4 @@
 import type { RequestHandler } from 'express';
-import z from 'zod';
 import {
   type ModelWithDocument,
   createGetDocuments,
@@ -11,7 +10,15 @@ import {
 } from './document.service.js';
 import type mongoose from 'mongoose';
 import type { QueryFilter } from 'mongoose';
-import { AddDocumentBodySchema, AddDocumentParamsSchema, DeleteDocumentParamsSchema, AcceptDocumentParamsSchema, RejectDocumentParamsSchema, RejectDocumentBodySchema } from 'shared';
+import {
+  AcceptDocumentParamsSchema,
+  AddDocumentBodySchema,
+  AddDocumentParamsSchema,
+  DeleteDocumentParamsSchema,
+  RejectDocumentBodySchema,
+  RejectDocumentParamsSchema,
+} from 'shared';
+import assert from 'node:assert';
 
 // GET ../documents
 export const routeGetDocuments = (model: ModelWithDocument): RequestHandler => {
@@ -23,8 +30,6 @@ export const routeGetDocuments = (model: ModelWithDocument): RequestHandler => {
     });
   };
 };
-
-
 
 export const routeAddDocument = (model: ModelWithDocument): RequestHandler => {
   const addDocument = createAddDocument(model);

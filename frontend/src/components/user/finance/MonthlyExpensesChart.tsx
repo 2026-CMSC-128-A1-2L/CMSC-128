@@ -1,4 +1,5 @@
 import { type FunctionComponent, useState } from 'react';
+import { useTheme } from '../../../pages/utilities/DarkMode';
 
 {
   /*
@@ -28,6 +29,7 @@ const ALL_EXPENSES = [4500, 4850, 4300, 4500, 4700, 4900, 5100, 4950, 5200, 5050
 type TimeRange = '12' | '6';
 
 const MonthlyExpensesChart: FunctionComponent = () => {
+  const { isDark } = useTheme();
   const [selectedRange, setSelectedRange] = useState<TimeRange>('12');
 
   const getChartData = () => {
@@ -48,7 +50,7 @@ const MonthlyExpensesChart: FunctionComponent = () => {
   };
 
   return (
-    <div className="w-full h-[280px] rounded-[16px] bg-white border-whitesmoke-200 border-solid border box-border flex flex-col items-center justify-center py-6 px-4 relative gap-2.5">
+    <div className="w-full h-[280px] rounded-[16px] bg-white border-whitesmoke-200 border-solid border box-border flex flex-col items-center justify-center py-6 px-4 relative gap-2.5 dark:bg-[#101111] dark:border-[#303331] dark:text-[#72cbb8]">
       {/* Header with Toggle Button */}
       <div className="w-full flex items-center justify-center gap-3 z-10">
         <b className="h-6 flex-1 text-[18px] tracking-[-0.01em] flex items-center">
@@ -56,7 +58,7 @@ const MonthlyExpensesChart: FunctionComponent = () => {
         </b>
         <button
           onClick={toggleRange}
-          className="rounded-lg bg-darkslategray-200 hover:bg-teal-200 transition-colors flex items-center justify-center p-2 cursor-pointer w-[100px]"
+          className="rounded-lg bg-darkslategray-200 hover:bg-teal-200 transition-colors flex items-center justify-center p-2 cursor-pointer w-[100px] dark:bg-[#0d3a32] dark:hover:bg-[#164e43]"
         >
           <span className="text-[10px] font-semibold text-white whitespace-nowrap">
             {selectedRange === '12' ? '12 Months' : '6 Months'}
@@ -66,7 +68,7 @@ const MonthlyExpensesChart: FunctionComponent = () => {
 
       {/* Chart */}
       <div className="w-full flex flex-col items-start gap-2.5">
-        <div className="w-full h-40 rounded-[10px] bg-white flex flex-col items-center pt-[26px] pb-[11px] px-3 box-border gap-1.5">
+        <div className="w-full h-40 rounded-[10px] bg-white flex flex-col items-center pt-[26px] pb-[11px] px-3 box-border gap-1.5 dark:bg-[#101111]">
           <div className="w-full h-[108px] flex items-end justify-around">
             {months.map((month, i) => (
               <div
@@ -75,20 +77,26 @@ const MonthlyExpensesChart: FunctionComponent = () => {
                 style={{
                   width: selectedRange === '6' ? 'clamp(25px, 12%, 45px)' : 'clamp(20px, 7%, 35px)',
                   height: `${heights[i]}%`,
-                  backgroundColor: i === months.length - 1 ? '#024338' : '#096c5b',
+                  backgroundColor: isDark
+                    ? i === months.length - 1
+                      ? '#0f5a4d'
+                      : '#2d806d'
+                    : i === months.length - 1
+                      ? '#024338'
+                      : '#096c5b',
                 }}
               />
             ))}
           </div>
           <div className="w-full flex justify-around">
             {months.map((month) => (
-              <div key={month} className="tracking-[0.04em] font-semibold text-[8px] text-black">
+              <div key={month} className="tracking-[0.04em] font-semibold text-[8px] text-black dark:text-[#edf6f4]">
                 {month}
               </div>
             ))}
           </div>
         </div>
-        <div className="w-full flex items-start justify-between text-left text-[12px] text-silver">
+        <div className="w-full flex items-start justify-between text-left text-[12px] text-silver dark:text-[#a4acba]">
           <div className="flex items-end gap-1">
             <div
               className="h-[15px] w-[15px] rounded-[5px]"

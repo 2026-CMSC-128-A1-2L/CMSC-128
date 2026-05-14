@@ -5,8 +5,11 @@ export const createBookmark = async (
   userId: mongoose.Types.ObjectId,
   listingId: mongoose.Types.ObjectId,
 ) => {
-  const newBookmark = new Bookmark({ userId: userId, listingId: listingId });
-  return await newBookmark.save();
+  return await Bookmark.findOneAndUpdate(
+    { userId, listingId },
+    { $setOnInsert: { userId, listingId } },
+    { upsert: true, returnDocument: 'after' },
+  );
 };
 
 export const deleteBookmark = async (
@@ -18,7 +21,7 @@ export const deleteBookmark = async (
 
 // Sort field mapping: query param -> aggregation field
 const SORT_FIELD_MAP: Record<string, string> = {
-  date: 'createdAt',
+  date: 'bookmarkCreated',
   name: 'facilityName',
   price: 'minPrice',
 };
@@ -66,6 +69,42 @@ export const getBookmarksByUser = async (
         as: 'units',
       },
     },
+    {
+      $lookup: {
+        from: 'reviews',
+        let: { facilityId: '$facility._id' },
+        pipeline: [
+          {
+            $match: {
+              $expr: { $eq: ['$facilityId', '$$facilityId'] },
+              status: 'approved',
+            },
+          },
+          {
+            $project: {
+              rating: {
+                $avg: ['$ratings.quality', '$ratings.comfort', '$ratings.environment'],
+              },
+            },
+          },
+        ],
+        as: 'reviews',
+      },
+    },
+    {
+      $addFields: {
+        availableUnitCount: {
+          $size: {
+            $filter: {
+              input: '$units',
+              as: 'unit',
+              cond: { $eq: ['$$unit.isAvailable', true] },
+            },
+          },
+        },
+        unitCount: { $size: '$units' },
+      },
+    },
 
     // 6. Shape the response to match the reference schema
     {
@@ -75,6 +114,7 @@ export const getBookmarksByUser = async (
         bookmarkCreated: '$createdAt',
         userId: '$userId',
         listingId: '$listingId',
+        facilityId: '$facility._id',
 
         // Facility info
         facilityName: { $ifNull: ['$facility.name', null] },
@@ -82,42 +122,39 @@ export const getBookmarksByUser = async (
 
         // Average of the three review categories
         facilityRating: {
-          $cond: {
-            if: { $gt: [{ $ifNull: ['$facility.reviewCount', 0] }, 0] },
-            then: {
-              $round: [
-                {
-                  $avg: [
-                    '$facility.qualityAvg',
-                    '$facility.comfortAvg',
-                    '$facility.environmentAvg',
-                  ],
-                },
-                1,
-              ],
-            },
-            else: null,
-          },
+          $cond: [
+            { $gt: [{ $size: '$reviews' }, 0] },
+            { $round: [{ $avg: '$reviews.rating' }, 1] },
+            null,
+          ],
         },
 
         // Minimum unit price for this listing
         minPrice: {
-          $cond: {
-            if: { $gt: [{ $size: '$units' }, 0] },
-            then: { $min: '$units.price' },
-            else: null,
-          },
+          $cond: [{ $gt: [{ $size: '$units' }, 0] }, { $min: '$units.price' }, null],
         },
 
         // Listing details
         roomType: '$listing.roomType',
+        roomLabel: { $ifNull: ['$listing.tags.roomLabel', '$listing.roomType'] },
+        listingDescription: '$listing.description',
         capacity: '$listing.capacity',
-        media: '$listing.media',
+        media: {
+          $cond: [
+            { $gt: [{ $size: { $ifNull: ['$listing.media', []] } }, 0] },
+            '$listing.media',
+            '$facility.media',
+          ],
+        },
+        unitCount: '$unitCount',
+        availableUnitCount: '$availableUnitCount',
 
         // TODO: Derive currentListingStatus from unit availability and active transfers
         // For now, returns null. When implemented, should be one of:
         // 'occupied' | 'pa-move out na' | 'open' | 'pasalo'
-        currentListingStatus: { $literal: null },
+        currentListingStatus: {
+          $cond: [{ $gt: ['$availableUnitCount', 0] }, 'open', 'occupied'],
+        },
       },
     },
 

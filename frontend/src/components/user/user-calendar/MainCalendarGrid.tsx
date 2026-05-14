@@ -98,9 +98,9 @@ const MainCalendarGrid: FunctionComponent<MainCalendarGridProps> = ({
   };
 
   return (
-    <div className="w-full flex flex-col bg-white">
+    <div className="w-full flex flex-col bg-white dark:bg-[#101111]">
       {/* Month header */}
-      <div className="flex items-center justify-center px-4 py-4 text-xl sm:text-2xl font-bold text-black">
+      <div className="flex items-center justify-center px-4 py-4 text-xl sm:text-2xl font-bold text-black dark:text-[#edf6f4]">
         {monthName}
       </div>
 
@@ -124,12 +124,12 @@ const MainCalendarGrid: FunctionComponent<MainCalendarGridProps> = ({
               key={i}
               className={`min-h-20 sm:min-h-28 p-1 sm:p-3 rounded border transition-colors ${
                 inactive
-                  ? 'bg-whitesmoke-100 border-whitesmoke-200 cursor-default'
+                  ? 'bg-whitesmoke-100 border-whitesmoke-200 cursor-default dark:bg-[#1f2022] dark:border-[#303331] dark:text-[#a4acba]'
                   : isTodayDay
-                    ? 'bg-lightcyan border-teal'
+                    ? 'bg-lightcyan border-teal dark:bg-[#17362f] dark:border-[#72cbb8]'
                     : hasEvents
-                      ? 'bg-white border-whitesmoke-200 cursor-default'
-                      : 'bg-white border-whitesmoke-200 cursor-default'
+                      ? 'bg-white border-whitesmoke-200 cursor-default dark:bg-[#101111] dark:border-[#303331]'
+                      : 'bg-white border-whitesmoke-200 cursor-default dark:bg-[#101111] dark:border-[#303331]'
               }`}
             >
               <div className="text-xs sm:text-num-14 font-semibold text-dimgray mb-1">{day}</div>
@@ -142,7 +142,7 @@ const MainCalendarGrid: FunctionComponent<MainCalendarGridProps> = ({
                       // Show all events for this day instead of individual event
                       onEventClick?.(event);
                     }}
-                    className="w-full text-left px-1 sm:px-1.5 py-0.5 rounded bg-gradient-to-r from-blue-100 to-blue-50 hover:from-blue-200 hover:to-blue-100 transition-colors truncate cursor-pointer"
+                    className="w-full text-left px-1 sm:px-1.5 py-0.5 rounded bg-gradient-to-r from-blue-100 to-blue-50 hover:from-blue-200 hover:to-blue-100 transition-colors truncate cursor-pointer dark:from-[#17362f] dark:to-[#21443c] dark:hover:from-[#1c473d] dark:hover:to-[#28574c]"
                   >
                     <span className="font-semibold text-xs truncate block">{event.title}</span>
                   </button>

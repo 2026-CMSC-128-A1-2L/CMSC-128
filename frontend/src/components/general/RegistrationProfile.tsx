@@ -1,4 +1,4 @@
-import { type FunctionComponent, useState } from 'react';
+import { type FunctionComponent, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Icon } from '@iconify/react';
 import type { RegistrationProfileData } from '../../pages/Registration';
@@ -6,6 +6,7 @@ import type { RegistrationProfileData } from '../../pages/Registration';
 // ─── Props ────────────────────────────────────────────────────────────────────
 
 interface RegistrationProfileProps {
+  initialData?: Partial<RegistrationProfileData>;
   onNextClick: (data: RegistrationProfileData) => void;
 }
 
@@ -23,17 +24,43 @@ const ROLES: { value: RegistrationProfileData['role']; label: string; icon: stri
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-const RegistrationProfile: FunctionComponent<RegistrationProfileProps> = ({ onNextClick }) => {
-  const [selectedRole, setSelectedRole] = useState<RegistrationProfileData['role']>('');
+const RegistrationProfile: FunctionComponent<RegistrationProfileProps> = ({
+  initialData,
+  onNextClick,
+}) => {
+  const [selectedRole, setSelectedRole] = useState<RegistrationProfileData['role']>(
+    initialData?.role ?? '',
+  );
   const [roleError, setRoleError] = useState('');
 
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<Omit<RegistrationProfileData, 'role'>>({
     mode: 'onChange',
+    defaultValues: {
+      firstName: initialData?.firstName ?? '',
+      middleName: initialData?.middleName ?? '',
+      lastName: initialData?.lastName ?? '',
+      contactNumber: initialData?.contactNumber ?? '',
+      email: initialData?.email ?? '',
+      homeAddress: initialData?.homeAddress ?? '',
+    },
   });
+
+  useEffect(() => {
+    reset({
+      firstName: initialData?.firstName ?? '',
+      middleName: initialData?.middleName ?? '',
+      lastName: initialData?.lastName ?? '',
+      contactNumber: initialData?.contactNumber ?? '',
+      email: initialData?.email ?? '',
+      homeAddress: initialData?.homeAddress ?? '',
+    });
+    setSelectedRole(initialData?.role ?? '');
+  }, [initialData, reset]);
 
   const onSubmit = (data: Omit<RegistrationProfileData, 'role'>) => {
     if (!selectedRole) {
@@ -108,8 +135,9 @@ const RegistrationProfile: FunctionComponent<RegistrationProfileProps> = ({ onNe
                   required: 'Email is required',
                   pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: 'Enter a valid email' },
                 })}
+                readOnly={Boolean(initialData?.email)}
                 placeholder="Email"
-                className="flex-1 bg-transparent text-sm font-medium text-black placeholder-slategray outline-none leading-6"
+                className="flex-1 bg-transparent text-sm font-medium text-black placeholder-slategray outline-none leading-6 read-only:text-dimgray"
               />
             </div>
             {errors.email && (

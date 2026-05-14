@@ -1,4 +1,4 @@
-import type { MouseEvent } from 'react';
+import type { MouseEvent, ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import type { PaymentStatus, Tenant } from '../../../data/landlordTenants';
@@ -35,52 +35,73 @@ const STATUS_MAP: Record<PaymentStatus, StatusDescriptor> = {
 type TenantCardProps = {
   tenant: Tenant;
   to: string;
-  onMoreOptions?: (tenant: Tenant) => void;
+  /** Whether the kebab actions menu is open (for `aria-expanded`). */
+  menuOpen?: boolean;
+  onKebabClick?: (tenant: Tenant) => void;
+  /** Popover anchored next to the kebab (e.g. Message / Report / Remove). */
+  actionMenu?: ReactNode;
 };
 
-const TenantCard = ({ tenant, to, onMoreOptions }: TenantCardProps) => {
+const TenantCard = ({
+  tenant,
+  to,
+  menuOpen = false,
+  onKebabClick,
+  actionMenu,
+}: TenantCardProps) => {
   const status = STATUS_MAP[tenant.billingStatus];
 
   const handleMore = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     event.stopPropagation();
-    onMoreOptions?.(tenant);
+    onKebabClick?.(tenant);
   };
 
   return (
-    <Link
-      to={to}
-      className="group flex w-full flex-col gap-[10px] rounded-[16px] border border-solid border-[#f0f0f0] bg-white p-[12px] transition-shadow duration-200 hover:shadow-[0_4px_12px_0_rgba(0,0,0,0.08)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#096c5b]/40"
-      aria-label={`View tenant ${tenant.displayName}`}
-    >
+    <div className="group flex w-full flex-col gap-[10px] rounded-[16px] border border-solid border-[#f0f0f0] bg-white p-[12px] shadow-none transition-shadow duration-200 hover:shadow-[0_4px_12px_0_rgba(0,0,0,0.08)] focus-within:ring-2 focus-within:ring-[#096c5b]/40">
       <div className="flex w-full items-center gap-[10px] px-[16px] py-[10px]">
-        <TenantAvatar photoUrl={tenant.photoUrl} name={tenant.displayName} size={72} />
-
-        <div className="flex min-w-0 flex-1 flex-col justify-center gap-[8px] px-[4px] py-[8px]">
-          <p className="truncate font-['Inter',sans-serif] text-[18px] font-bold tracking-[-0.18px] text-black">
-            {tenant.displayName}
-          </p>
-          <div className="flex flex-col gap-[4px] font-['Inter',sans-serif] text-[14px] font-medium text-[#666]">
-            <span className="truncate">{tenant.unit}</span>
-            <span className="truncate">{tenant.contactNumber}</span>
-          </div>
-        </div>
-
-        <button
-          type="button"
-          onClick={handleMore}
-          aria-label={`More options for ${tenant.displayName}`}
-          className="flex h-[32px] w-[28px] shrink-0 cursor-pointer items-center justify-center text-[#2f3136] transition-colors hover:text-[#096c5b]"
+        <Link
+          to={to}
+          className="flex min-w-0 flex-1 items-center gap-[10px] outline-none focus-visible:ring-2 focus-visible:ring-[#096c5b]/40 focus-visible:ring-offset-2"
+          aria-label={`View tenant ${tenant.displayName}`}
         >
-          <Icon
-            icon="iconamoon:menu-kebab-vertical"
-            className="h-[28px] w-[28px]"
-            aria-hidden="true"
-          />
-        </button>
+          <TenantAvatar photoUrl={tenant.photoUrl} name={tenant.displayName} size={72} />
+
+          <div className="flex min-w-0 flex-1 flex-col justify-center gap-[8px] px-[4px] py-[8px]">
+            <p className="truncate font-['Inter',sans-serif] text-[18px] font-bold tracking-[-0.18px] text-black">
+              {tenant.displayName}
+            </p>
+            <div className="flex flex-col gap-[4px] font-['Inter',sans-serif] text-[14px] font-medium text-[#666]">
+              <span className="truncate">{tenant.unit}</span>
+              <span className="truncate">{tenant.contactNumber}</span>
+            </div>
+          </div>
+        </Link>
+
+        <div className="relative shrink-0 self-start pt-[6px]">
+          <button
+            type="button"
+            onClick={handleMore}
+            aria-haspopup="menu"
+            aria-expanded={menuOpen}
+            aria-label={`More options for ${tenant.displayName}`}
+            className="flex h-[32px] w-[28px] cursor-pointer items-center justify-center text-[#2f3136] transition-colors hover:text-[#096c5b]"
+          >
+            <Icon
+              icon="iconamoon:menu-kebab-vertical"
+              className="h-[28px] w-[28px]"
+              aria-hidden="true"
+            />
+          </button>
+          {actionMenu}
+        </div>
       </div>
 
-      <div className="flex w-full items-center gap-[4px] p-[16px]">
+      <Link
+        to={to}
+        className="flex w-full items-center gap-[4px] p-[16px] outline-none focus-visible:ring-2 focus-visible:ring-[#096c5b]/40 focus-visible:ring-offset-2"
+        aria-label={`View billing for ${tenant.displayName}`}
+      >
         <div className="flex flex-1 flex-col gap-[4px]">
           <span
             className={[
@@ -103,8 +124,8 @@ const TenantCard = ({ tenant, to, onMoreOptions }: TenantCardProps) => {
         >
           <Icon icon={status.icon} className="h-[32px] w-[32px]" />
         </span>
-      </div>
-    </Link>
+      </Link>
+    </div>
   );
 };
 

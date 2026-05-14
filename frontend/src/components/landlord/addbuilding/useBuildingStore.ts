@@ -10,12 +10,36 @@ export interface RoomData {
   user_occupant: string[];
 }
 
+// Mirrors the backend Tag schema's dataType discriminator
+export type TagDataType =
+  | { name: 'enum'; values: string[] }
+  | { name: 'numeric'; min?: number; max?: number }
+  | { name: 'boolean' };
+
+// A tag definition fetched from the backend
+export interface TagDefinition {
+  _id: string;
+  name: string;
+  displayName: string;
+  isRequired: boolean;
+  dataType: TagDataType;
+}
+
+// A tag that has been selected and assigned a value for a specific room type
+export interface TagValue {
+  tagId: string;           // references TagDefinition._id
+  name: string;            // snapshot of TagDefinition.name
+  displayName: string;     // snapshot of TagDefinition.displayName
+  dataType: TagDataType;   // snapshot for rendering the right input
+  value: string | boolean | number | null; // the assigned value
+}
+
 export interface RoomTypeData {
   id: string;
   name: string;
   roomType: string;
   capacity: string;
-  tags: string[];
+  tags: TagValue[];        // was string[]
   about: string;
   images: string[];
   rooms: RoomData[];
@@ -66,6 +90,8 @@ export interface BuildingInformationData {
   managers: ManagerData[];
   payment: PaymentData;
   requirements: RequirementItem[];
+  allowPasalo: boolean;
+  allowOcularVisit: boolean;
 }
 
 interface BuildingStore {
@@ -83,6 +109,11 @@ interface BuildingStore {
   addRoom: (roomTypeId: string) => void;
   updateRoom: (roomTypeId: string, roomId: string, data: Partial<RoomData>) => void;
   removeRoom: (roomTypeId: string, roomId: string) => void;
+
+  // Tag actions (scoped to a parent room type by roomTypeId)
+  addTag: (roomTypeId: string, tag: TagValue) => void;
+  updateTagValue: (roomTypeId: string, tagId: string, value: TagValue['value']) => void;
+  removeTag: (roomTypeId: string, tagId: string) => void;
 
   addManager: (manager: ManagerData) => void;
   removeManager: (email: string) => void;
@@ -134,6 +165,8 @@ const defaultState: BuildingInformationData = {
   managers: [],
   payment: defaultPayment,
   requirements: defaultRequirements,
+  allowPasalo: false,
+  allowOcularVisit: false,
 };
 
 // ─── Store ────────────────────────────────────────────────────────────────────
@@ -160,7 +193,7 @@ export const useBuildingStore = create<BuildingStore>((set) => ({
       buildingInfo: {
         ...state.buildingInfo,
         requirements: state.buildingInfo.requirements.map((req) =>
-          req.id === id ? { ...req, file, date } : req,
+          req.id === id ? { ...req, file, date } : req
         ),
       },
     })),
@@ -182,7 +215,7 @@ export const useBuildingStore = create<BuildingStore>((set) => ({
       buildingInfo: {
         ...state.buildingInfo,
         roomTypes: state.buildingInfo.roomTypes.map((rt) =>
-          rt.id === id ? { ...rt, ...data } : rt,
+          rt.id === id ? { ...rt, ...data } : rt
         ),
       },
     })),
@@ -202,7 +235,9 @@ export const useBuildingStore = create<BuildingStore>((set) => ({
       buildingInfo: {
         ...state.buildingInfo,
         roomTypes: state.buildingInfo.roomTypes.map((rt) =>
-          rt.id === roomTypeId ? { ...rt, rooms: [...rt.rooms, defaultRoom()] } : rt,
+          rt.id === roomTypeId
+            ? { ...rt, rooms: [...rt.rooms, defaultRoom()] }
+            : rt
         ),
       },
     })),
@@ -214,10 +249,12 @@ export const useBuildingStore = create<BuildingStore>((set) => ({
         roomTypes: state.buildingInfo.roomTypes.map((rt) =>
           rt.id === roomTypeId
             ? {
-                ...rt,
-                rooms: rt.rooms.map((room) => (room.id === roomId ? { ...room, ...data } : room)),
-              }
-            : rt,
+              ...rt,
+              rooms: rt.rooms.map((room) =>
+                room.id === roomId ? { ...room, ...data } : room
+              ),
+            }
+            : rt
         ),
       },
     })),
@@ -229,7 +266,53 @@ export const useBuildingStore = create<BuildingStore>((set) => ({
         roomTypes: state.buildingInfo.roomTypes.map((rt) =>
           rt.id === roomTypeId
             ? { ...rt, rooms: rt.rooms.filter((room) => room.id !== roomId) }
-            : rt,
+            : rt
+        ),
+      },
+    })),
+
+  // ── Tags (scoped to a RoomType) ───────────────────────────────────────────
+
+  addTag: (roomTypeId, tag) =>
+    set((state) => ({
+      buildingInfo: {
+        ...state.buildingInfo,
+        roomTypes: state.buildingInfo.roomTypes.map((rt) =>
+          rt.id === roomTypeId
+            // Prevent duplicate tag IDs
+            ? rt.tags.some((t) => t.tagId === tag.tagId)
+              ? rt
+              : { ...rt, tags: [...rt.tags, tag] }
+            : rt
+        ),
+      },
+    })),
+
+  updateTagValue: (roomTypeId, tagId, value) =>
+    set((state) => ({
+      buildingInfo: {
+        ...state.buildingInfo,
+        roomTypes: state.buildingInfo.roomTypes.map((rt) =>
+          rt.id === roomTypeId
+            ? {
+              ...rt,
+              tags: rt.tags.map((t) =>
+                t.tagId === tagId ? { ...t, value } : t
+              ),
+            }
+            : rt
+        ),
+      },
+    })),
+
+  removeTag: (roomTypeId, tagId) =>
+    set((state) => ({
+      buildingInfo: {
+        ...state.buildingInfo,
+        roomTypes: state.buildingInfo.roomTypes.map((rt) =>
+          rt.id === roomTypeId
+            ? { ...rt, tags: rt.tags.filter((t) => t.tagId !== tagId) }
+            : rt
         ),
       },
     })),
