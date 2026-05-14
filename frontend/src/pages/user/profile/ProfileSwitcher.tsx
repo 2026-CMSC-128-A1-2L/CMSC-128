@@ -13,15 +13,6 @@ import { Icon } from "@iconify/react";
 const ProfileSwitcher = () => {
   const [activeTab, setActiveTab] = useState<"dorm" | "verification">("dorm");
 
-  const onArrowUpClick = useCallback(() => {
-    const anchor = document.querySelector(
-      "[data-scroll-to='searchBarContainer']",
-    );
-    if (anchor) {
-      anchor.scrollIntoView({ block: "start", behavior: "smooth" });
-    }
-  }, []);
-
   const propertyImageSrc = undefined;
   const propertyName = undefined;
   const unitNumber = undefined;
