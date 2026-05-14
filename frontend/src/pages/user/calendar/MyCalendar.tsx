@@ -1,4 +1,4 @@
-import { type FunctionComponent, useState, useCallback } from 'react';
+import { type FunctionComponent, useState, useCallback, useEffect } from 'react';
 import Footer from '../../../components/general/Footer';
 import PageBackground from '../../../components/general/PageBackground';
 import SideBar from '../../../components/user/SideBar';
@@ -7,7 +7,7 @@ import EventPopout from '../../../components/user/EventPopout';
 import DayEventsPopout from '../../../components/user/user-calendar/DayEventsPopout';
 import PortalPopup from '../../../components/general/PortalPopup';
 import MainCalendarGrid from '../../../components/user/user-calendar/MainCalendarGrid';
-import type { CalendarEvent } from '../../../service/CalendarService';
+import { CalendarService, type CalendarEvent } from '../../../service/CalendarService';
 
 const MyCalendar: FunctionComponent = () => {
   const [isEventPopoutOpen, setEventPopoutOpen] = useState(false);
@@ -16,6 +16,41 @@ const MyCalendar: FunctionComponent = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedDayEvents, setSelectedDayEvents] = useState<CalendarEvent[]>([]);
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [events, setEvents] = useState<CalendarEvent[]>([]);
+  const [upcomingEvents, setUpcomingEvents] = useState<CalendarEvent[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchMonthEvents = async () => {
+      setLoading(true);
+      try {
+        const response = await CalendarService.getCalendarEvents(
+          currentDate.getFullYear(),
+          currentDate.getMonth() + 1,
+        );
+        setEvents(response.data);
+      } catch (error) {
+        console.error('Failed to load month events:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMonthEvents();
+  }, [currentDate]);
+
+  useEffect(() => {
+    const fetchUpcoming = async () => {
+      try {
+        const response = await CalendarService.getUpcomingEvents();
+        setUpcomingEvents(response.data);
+      } catch (error) {
+        console.error('Failed to load upcoming events:', error);
+      }
+    };
+
+    fetchUpcoming();
+  }, []);
 
   const openEventPopout = useCallback((event: CalendarEvent) => {
     const eventDate = new Date(event.date);
@@ -85,6 +120,9 @@ const MyCalendar: FunctionComponent = () => {
                   <div className="bg-white rounded-num-8 p-3 sm:p-4 border border-whitesmoke-200 w-full overflow-hidden dark:bg-[#101111] dark:border-[#303331]">
                     <MiniCalendar
                       currentDate={currentDate}
+                      events={events}
+                      upcomingEvents={upcomingEvents}
+                      loading={loading}
                       onPrevMonth={handlePrevMonth}
                       onNextMonth={handleNextMonth}
                       onDateChange={handleDateChange}
@@ -99,6 +137,7 @@ const MyCalendar: FunctionComponent = () => {
                   <div className="rounded-2xl bg-white border border-whitesmoke-200 flex flex-col p-6 dark:bg-[#101111] dark:border-[#303331]">
                     <MainCalendarGrid
                       currentDate={currentDate}
+                      events={events}
                       onPrevMonth={handlePrevMonth}
                       onNextMonth={handleNextMonth}
                       onEventClick={openEventPopout}
