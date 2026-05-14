@@ -1,17 +1,22 @@
-import type z from 'zod';
-import type { GetBookingsQuerySchema } from 'shared';
-import type {
-  CreateBookingBody,
-  GetBookingsQuery,
-  UpdateBookingStatusBody,
-} from '../interface/booking';
-import { api } from './axiosInstance';
+import axios from 'axios';
+import z from 'zod';
+import type { GetBookingsQuery, CreateBookingBody } from '../interface/booking';
+import { GetBookingsQuerySchema } from 'shared';
+import { API_URL } from './constant';
 
 export const BookingService = {
   async createBooking(body: CreateBookingBody) {
     try {
-      const response = await api.post('/api/bookings', body);
-      return response.data;
+      const response = await axios.post(
+        `${API_URL}/api/bookings/`,
+        {
+          ...body,
+        },
+        {
+          //headers
+        },
+      );
+      return response.data();
     } catch (error) {
       console.error('Error creating booking', error);
       throw error;
@@ -20,9 +25,12 @@ export const BookingService = {
 
   async getBookings(params: z.infer<typeof GetBookingsQuerySchema>): Promise<GetBookingsQuery> {
     try {
-      const response = await api.get<GetBookingsQuery>('/api/bookings', {
-        params: { q: JSON.stringify(params) },
-      });
+      const kv = new URLSearchParams({
+        q: encodeURIComponent(JSON.stringify(params)),
+      }).toString();
+
+      const response = await axios.get<GetBookingsQuery>(`${API_URL}/api/bookings?q=${kv}`, {});
+
       return response.data;
     } catch (error) {
       console.error('Failed to fetch bookings:', error);
@@ -30,14 +38,17 @@ export const BookingService = {
     }
   },
 
-  async getBooking(params: z.infer<typeof GetBookingsQuerySchema>): Promise<GetBookingsQuery> {
-    return this.getBookings(params);
-  },
-
-  async updateBookingStatus(bookingId: string, body: UpdateBookingStatusBody) {
+  async updateBookingStatus(bookingId: string) {
     try {
-      const response = await api.patch(`/api/bookings/${bookingId}`, body);
-      return response.data;
+      const response = await axios.patch(
+        `${API_URL}/bookings/${bookingId}`,
+        {},
+        {
+          //headers
+        },
+      );
+
+      return response.data();
     } catch (error) {
       console.error('Failed to update booking:', error);
       throw error;
@@ -46,8 +57,15 @@ export const BookingService = {
 
   async cancelBooking(bookingId: string) {
     try {
-      const response = await api.delete(`/api/bookings/${bookingId}`);
-      return response.data;
+      const response = await axios.delete(
+        `${API_URL}/bookings/${bookingId}`,
+
+        {
+          //headers
+        },
+      );
+
+      return response.data();
     } catch (error) {
       console.error('Failed to delete booking:', error);
       throw error;

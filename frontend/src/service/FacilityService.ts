@@ -12,7 +12,12 @@ import type {
 export const FacilityService = {
   async getFacilities() {
     try {
-      const response = await api.get<{ data: GetFacilitiesResponse }>('/api/facilities');
+      const response = await axios.get<{ data: GetFacilitiesResponse }>(
+        `${API_URL}/api/facilities`,
+        {
+          // headers
+        },
+      );
       return response.data;
     } catch (error) {
       console.error('Failed to fetch facilities:', error);
@@ -22,9 +27,14 @@ export const FacilityService = {
 
   async searchFacilities(body: SearchFacilitiesBody) {
     try {
-      const response = await api.post<{ data: SearchFacilitiesResponse }>(
-        '/api/facilities/search',
-        body,
+      const response = await axios.post<{ data: SearchFacilitiesResponse }>(
+        `${API_URL}/api/facilities/search`,
+        {
+          ...body,
+        },
+        {
+          // headers
+        },
       );
       return response.data;
     } catch (error) {
@@ -35,7 +45,15 @@ export const FacilityService = {
 
   async createFacility(body: CreateFacilityBody) {
     try {
-      const response = await api.post('/api/facilities', body);
+      const response = await axios.post(
+        `${API_URL}/api/facilities`,
+        {
+          ...body,
+        },
+        {
+          // headers
+        },
+      );
       return response.data;
     } catch (error) {
       console.error('Failed to create facility:', error);
@@ -45,7 +63,15 @@ export const FacilityService = {
 
   async updateFacility(facilityId: string, body: UpdateFacilityBody) {
     try {
-      const response = await api.patch(`/api/facilities/${facilityId}`, body);
+      const response = await axios.patch(
+        `${API_URL}/api/facilities/${facilityId}`,
+        {
+          ...body,
+        },
+        {
+          // headers
+        },
+      );
       return response.data;
     } catch (error) {
       console.error('Failed to update facility:', error);
@@ -55,7 +81,9 @@ export const FacilityService = {
 
   async deleteFacility(facilityId: string) {
     try {
-      await api.delete(`/api/facilities/${facilityId}`);
+      await axios.delete(`${API_URL}/api/facilities/${facilityId}`, {
+        // headers
+      });
     } catch (error) {
       console.error('Failed to delete facility:', error);
       throw error;
@@ -64,8 +92,11 @@ export const FacilityService = {
 
   async getFacility(facilityId: string) {
     try {
-      const response = await api.get<{ data: GetFacilityResponse }>(
-        `/api/facilities/${facilityId}`,
+      const response = await axios.get<{ data: GetFacilityResponse }>(
+        `${API_URL}/api/facilities/${facilityId}`,
+        {
+          // headers
+        },
       );
       return response.data;
     } catch (error) {
@@ -76,7 +107,12 @@ export const FacilityService = {
 
   async getMonthlyIncome() {
     try {
-      const response = await api.get<{ data: number }>('/api/facilities/landlord/monthly-income');
+      const response = await axios.get<{ data: number }>(
+        `${API_URL}/api/facilities/landlord/monthly-income`,
+        {
+          // headers
+        },
+      );
       return response.data;
     } catch (error) {
       console.error('Failed to fetch monthly income:', error);
@@ -86,7 +122,12 @@ export const FacilityService = {
 
   async getOverdueTenants() {
     try {
-      const response = await api.get<{ data: unknown }>('/api/facilities/landlord/overdue-tenants');
+      const response = await axios.get<{ data: unknown }>(
+        `${API_URL}/api/facilities/landlord/overdue-tenants`,
+        {
+          // headers
+        },
+      );
       return response.data;
     } catch (error) {
       console.error('Failed to fetch overdue tenants:', error);
@@ -100,7 +141,15 @@ export const FacilityService = {
     body: UpdateManagerPermissionsBody,
   ) {
     try {
-      const response = await api.patch(`/api/facilities/${facilityId}/managers/${managerId}`, body);
+      const response = await axios.patch(
+        `${API_URL}/api/facilities/${facilityId}/managers/${managerId}`,
+        {
+          ...body,
+        },
+        {
+          // headers
+        },
+      );
       return response.data;
     } catch (error) {
       console.error('Failed to update manager permissions:', error);
@@ -110,7 +159,9 @@ export const FacilityService = {
 
   async removeManager(facilityId: string, managerId: string) {
     try {
-      await api.delete(`/api/facilities/${facilityId}/managers/${managerId}`);
+      await axios.delete(`${API_URL}/api/facilities/${facilityId}/managers/${managerId}`, {
+        // headers
+      });
     } catch (error) {
       console.error('Failed to remove manager:', error);
       throw error;
@@ -119,7 +170,9 @@ export const FacilityService = {
 
   async approveFacility(facilityId: string) {
     try {
-      await api.post(`/api/facilities/${facilityId}/approve`);
+      await axios.post(`/api/facilities/${facilityId}/approve`, {
+        // headers
+      });
     } catch (error) {
       console.error('Failed to approve facility:', error);
       throw error;
@@ -128,13 +181,18 @@ export const FacilityService = {
 
   async rejectFacility(facilityId: string) {
     try {
-      await api.post(`/api/facilities/${facilityId}/reject`);
+      await axios.post(`/api/facilities/${facilityId}/reject`, {
+        // headers
+      });
     } catch (error) {
       console.error('Failed to reject facility:', error);
       throw error;
     }
   },
 
+  //CREATE LISTING -> ListingService.ts
+  //GET REVIEWS -> ReviewService.ts
+  //GET RATINGS -> RatingService.ts
   async getFacilityBookings(facilityId: string) {
     try {
       const response = await api.get(`/api/facilities/${facilityId}/bookings`);
