@@ -99,7 +99,7 @@ const UnitDetails: FunctionComponent = () => {
         (listing) =>
           selectedRoomType != null &&
           roomButtonLabel(listing.label).toLowerCase() ===
-            roomButtonLabel(selectedRoomType).toLowerCase(),
+          roomButtonLabel(selectedRoomType).toLowerCase(),
       );
 
       setSelectedListingId((matchingListing ?? availableListings[0])?.id ?? '');
@@ -202,10 +202,10 @@ const UnitDetails: FunctionComponent = () => {
   const overallScore =
     reviewRatings.length > 0
       ? Number(
-          (reviewRatings.reduce((sum, rating) => sum + rating, 0) / reviewRatings.length).toFixed(
-            1,
-          ),
-        )
+        (reviewRatings.reduce((sum, rating) => sum + rating, 0) / reviewRatings.length).toFixed(
+          1,
+        ),
+      )
       : 0;
   const ratingRows = [5, 4, 3, 2, 1].map((star) => {
     const count = reviewRatings.filter((rating) => Math.round(rating) === star).length;
@@ -217,8 +217,8 @@ const UnitDetails: FunctionComponent = () => {
     const initials = `${firstName[0] ?? 'S'}${lastName[0] ?? ''}`.toUpperCase();
     const date = review.createdAt
       ? new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric' }).format(
-          new Date(review.createdAt),
-        )
+        new Date(review.createdAt),
+      )
       : 'Recently';
 
     return {
@@ -340,11 +340,10 @@ const UnitDetails: FunctionComponent = () => {
                     type="button"
                     onClick={handleBookmarkToggle}
                     disabled={!selectedListing || isBookmarkSaving}
-                    className={`rounded border border-teal-200 py-2 px-6 transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${
-                      isSelectedListingBookmarked
+                    className={`rounded border border-teal-200 py-2 px-6 transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${isSelectedListingBookmarked
                         ? 'bg-lightcyan text-darkslategray-200'
                         : 'hover:bg-lightcyan'
-                    }`}
+                      }`}
                   >
                     {isBookmarkSaving ? 'SAVING' : isSelectedListingBookmarked ? 'SAVED' : 'SAVE'}
                   </button>
@@ -398,11 +397,10 @@ const UnitDetails: FunctionComponent = () => {
                             key={listing.id}
                             type="button"
                             onClick={() => setSelectedListingId(listing.id)}
-                            className={`rounded-lg border py-2 px-3 text-center font-semibold text-xs shadow transition-colors ${
-                              isSelected
+                            className={`rounded-lg border py-2 px-3 text-center font-semibold text-xs shadow transition-colors ${isSelected
                                 ? 'border-darkslategray-200 bg-darkslategray-200 text-white'
                                 : 'border-transparent bg-white text-black hover:bg-lightcyan'
-                            }`}
+                              }`}
                           >
                             {roomButtonLabel(listing.label)}
                           </button>
@@ -427,25 +425,22 @@ const UnitDetails: FunctionComponent = () => {
                     <button
                       type="button"
                       onClick={() => setIsLeaseMenuOpen((isOpen) => !isOpen)}
-                      className={`shadow rounded-lg border w-full flex items-center justify-between py-2.5 px-3 gap-2 text-left transition-all ${
-                        isLeaseMenuOpen
+                      className={`shadow rounded-lg border w-full flex items-center justify-between py-2.5 px-3 gap-2 text-left transition-all ${isLeaseMenuOpen
                           ? 'border-teal-200 bg-lightcyan/40 ring-2 ring-lightcyan'
                           : 'border-transparent bg-white hover:bg-lightcyan/20'
-                      }`}
+                        }`}
                     >
                       <span
-                        className={`font-semibold text-xs ${
-                          leaseDuration ? 'text-black' : 'text-silver'
-                        }`}
+                        className={`font-semibold text-xs ${leaseDuration ? 'text-black' : 'text-silver'
+                          }`}
                       >
                         {leaseDuration || 'Choose lease duration'}
                       </span>
                       <span className="grid h-7 w-7 place-items-center rounded-full bg-whitesmoke-100 text-teal-200">
                         <Icon
                           icon="mdi:chevron-down"
-                          className={`h-4 w-4 transition-transform ${
-                            isLeaseMenuOpen ? 'rotate-180' : ''
-                          }`}
+                          className={`h-4 w-4 transition-transform ${isLeaseMenuOpen ? 'rotate-180' : ''
+                            }`}
                         />
                       </span>
                     </button>
@@ -463,11 +458,10 @@ const UnitDetails: FunctionComponent = () => {
                                 setLeaseDuration(duration);
                                 setIsLeaseMenuOpen(false);
                               }}
-                              className={`flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-xs font-semibold transition-colors ${
-                                isSelected
+                              className={`flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-xs font-semibold transition-colors ${isSelected
                                   ? 'bg-darkslategray-200 text-white'
                                   : 'text-gray hover:bg-lightcyan'
-                              }`}
+                                }`}
                             >
                               <span>{duration}</span>
                               {isSelected && (
@@ -490,9 +484,8 @@ const UnitDetails: FunctionComponent = () => {
                       type="date"
                       value={moveInDate}
                       onChange={(event) => setMoveInDate(event.target.value)}
-                      className={`flex-1 bg-transparent outline-none font-semibold text-xs ${
-                        moveInDate ? 'text-black' : 'text-silver'
-                      }`}
+                      className={`flex-1 bg-transparent outline-none font-semibold text-xs ${moveInDate ? 'text-black' : 'text-silver'
+                        }`}
                     />
                     <Icon icon="mdi:calendar" className="h-4 w-4" />
                   </div>
