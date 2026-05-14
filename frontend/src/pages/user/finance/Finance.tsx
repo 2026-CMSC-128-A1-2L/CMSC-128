@@ -125,9 +125,7 @@ const TenantFinancePage: FunctionComponent = () => {
 
   if (error) {
     const hasNoAccommodation =
-      error.toLowerCase().includes('facility not found') ||
-      error.toLowerCase().includes('not found') ||
-      error.toLowerCase().includes('404');
+      error.toLowerCase().includes('no active rental');
 
     if (hasNoAccommodation) {
       return layout(
