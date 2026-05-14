@@ -11,13 +11,31 @@ import { Icon } from '@iconify/react';
 import { Link } from 'react-router-dom';
 import { UserService } from '../../../service/UserService';
 
-type RentalSummary = { status?: string };
+type RentalSummary = {
+  status?: string;
+  facilityId?: string | { name?: string };
+  unitId?: string | { roomNumber?: string };
+  expectedMoveInDate?: string;
+  expectedMoveOutDate?: string;
+  actualMoveInDate?: string;
+  actualMoveOutDate?: string;
+};
 type ApplicationSummary = {
   _id?: string;
   id?: string;
   status?: string;
-  facilityId?: string | { name?: string };
+  facilityId?: string | { name?: string; media?: { value?: string }[] };
   listingId?: string | { roomType?: string };
+  unitId?: string | { roomNumber?: string };
+  leaseDuration?: '6-months' | '12-months';
+  moveInDate?: string;
+};
+type CurrentDormDetails = {
+  propertyImageSrc?: string;
+  propertyName?: string;
+  unitNumber?: string;
+  contractDuration?: string;
+  leaseEndDate?: string;
 };
 
 const getDataArray = <T,>(response: unknown): T[] => {
@@ -77,9 +95,58 @@ const CurrentApplicationsList = ({ applications }: { applications: ApplicationSu
   </div>
 );
 
+const formatDate = (date?: string | Date | null) => {
+  if (!date) return undefined;
+  const parsedDate = new Date(date);
+  if (Number.isNaN(parsedDate.getTime())) return undefined;
+  return parsedDate.toLocaleDateString('en-US', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+  });
+};
+
+const getLeaseEndDate = (moveInDate?: string, leaseDuration?: '6-months' | '12-months') => {
+  if (!moveInDate || !leaseDuration) return undefined;
+  const parsedDate = new Date(moveInDate);
+  if (Number.isNaN(parsedDate.getTime())) return undefined;
+  parsedDate.setMonth(parsedDate.getMonth() + (leaseDuration === '6-months' ? 6 : 12));
+  return formatDate(parsedDate);
+};
+
+const getContractDurationLabel = (leaseDuration?: string) => {
+  if (leaseDuration === '6-months') return '6 Months';
+  if (leaseDuration === '12-months') return '1 Year';
+  return undefined;
+};
+
+const getApprovedDormDetails = (application: ApplicationSummary): CurrentDormDetails => ({
+  propertyImageSrc:
+    typeof application.facilityId === 'object'
+      ? application.facilityId.media?.[0]?.value
+      : undefined,
+  propertyName:
+    typeof application.facilityId === 'object' ? application.facilityId.name : 'Approved Dorm',
+  unitNumber:
+    typeof application.unitId === 'object'
+      ? application.unitId.roomNumber
+      : typeof application.listingId === 'object'
+        ? application.listingId.roomType
+        : 'Assigned Unit',
+  contractDuration: getContractDurationLabel(application.leaseDuration),
+  leaseEndDate: getLeaseEndDate(application.moveInDate, application.leaseDuration),
+});
+
+const getRentalDormDetails = (rental: RentalSummary): CurrentDormDetails => ({
+  propertyName: typeof rental.facilityId === 'object' ? rental.facilityId.name : 'Current Dorm',
+  unitNumber: typeof rental.unitId === 'object' ? rental.unitId.roomNumber : 'Assigned Unit',
+  contractDuration: 'Current Lease',
+  leaseEndDate: formatDate(rental.actualMoveOutDate ?? rental.expectedMoveOutDate),
+});
+
 const ProfileSwitcher = () => {
   const [activeTab, setActiveTab] = useState<'dorm' | 'verification'>('dorm');
-  const [hasCurrentDorm, setHasCurrentDorm] = useState(false);
+  const [currentDorm, setCurrentDorm] = useState<CurrentDormDetails | null>(null);
   const [applications, setApplications] = useState<ApplicationSummary[]>([]);
 
   const onArrowUpClick = useCallback(() => {
@@ -89,11 +156,6 @@ const ProfileSwitcher = () => {
     }
   }, []);
 
-  const propertyImageSrc = undefined;
-  const propertyName = undefined;
-  const unitNumber = undefined;
-  const contractDuration = undefined;
-  const leaseEndDate = undefined;
   const verified = true;
 
   useEffect(() => {
@@ -109,11 +171,22 @@ const ProfileSwitcher = () => {
 
       if (rentalsResponse.status === 'fulfilled') {
         const rentals = getDataArray<RentalSummary>(rentalsResponse.value);
-        setHasCurrentDorm(rentals.some((rental) => rental.status === 'active'));
+        const currentRental =
+          rentals.find((rental) => rental.status === 'active') ??
+          rentals.find((rental) => rental.status === 'inactive');
+        if (currentRental) setCurrentDorm(getRentalDormDetails(currentRental));
       }
 
       if (applicationsResponse.status === 'fulfilled') {
-        setApplications(getDataArray<ApplicationSummary>(applicationsResponse.value));
+        const fetchedApplications = getDataArray<ApplicationSummary>(applicationsResponse.value);
+        const approvedApplication = fetchedApplications.find(
+          (application) => application.status === 'approved',
+        );
+
+        setApplications(
+          fetchedApplications.filter((application) => application.status !== 'approved'),
+        );
+        if (approvedApplication) setCurrentDorm(getApprovedDormDetails(approvedApplication));
       }
     };
 
@@ -154,13 +227,13 @@ const ProfileSwitcher = () => {
 
                 <div className="self-stretch w-full">
                   {activeTab === 'dorm' ? (
-                    hasCurrentDorm ? (
+                    currentDorm ? (
                       <CurrentDormCard
-                        propertyImageSrc={propertyImageSrc}
-                        propertyName={propertyName}
-                        unitNumber={unitNumber}
-                        contractDuration={contractDuration}
-                        leaseEndDate={leaseEndDate}
+                        propertyImageSrc={currentDorm.propertyImageSrc}
+                        propertyName={currentDorm.propertyName}
+                        unitNumber={currentDorm.unitNumber}
+                        contractDuration={currentDorm.contractDuration}
+                        leaseEndDate={currentDorm.leaseEndDate}
                         verified={verified}
                       />
                     ) : (

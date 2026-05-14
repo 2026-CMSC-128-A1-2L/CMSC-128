@@ -50,6 +50,43 @@ type RawUnit = {
   isAvailable?: boolean;
 };
 
+type AssignmentMode = 'manual' | 'matching';
+
+type MatchingOptionKey = 'autoMatching' | 'yearBatch' | 'degreeProgram' | 'emptyRoom' | 'random';
+
+const matchingOptions: Array<{
+  key: MatchingOptionKey;
+  title: string;
+  description: string;
+}> = [
+  {
+    key: 'autoMatching',
+    title: 'Auto Matching',
+    description: 'Match this user with any common existing roommate already in your accommodations',
+  },
+  {
+    key: 'yearBatch',
+    title: 'Year Batch',
+    description:
+      'Match this user with an available roommate sharing a similar year and batch number',
+  },
+  {
+    key: 'degreeProgram',
+    title: 'Degree Program',
+    description: 'Match this user with an available roommate sharing a similar degree program',
+  },
+  {
+    key: 'emptyRoom',
+    title: 'Empty Room/Unit',
+    description: 'Assign this user to any available empty room',
+  },
+  {
+    key: 'random',
+    title: 'Random',
+    description: 'Randomly assign this user to any available room',
+  },
+];
+
 const getDataArray = <T,>(response: unknown): T[] => {
   if (Array.isArray(response)) return response as T[];
   if (response && typeof response === 'object' && 'data' in response) {
@@ -71,10 +108,10 @@ const mapApplication = (application: RawApplication): PendingApplication => {
   const displayName = formatName(application.userId);
   const documents: SubmittedDocument[] =
     application.documents?.flatMap((document) =>
-      (document.files?.length ? document.files : ['']).map((fileId, index) => ({
+      (document.files ?? []).map((fileId, index) => ({
         id: `${document.docId ?? document.name}-${index}`,
         title: document.name ?? document.docId ?? 'Document',
-        fileName: fileId || 'No file uploaded',
+        fileName: fileId,
         submittedAt: 'Submitted',
         kind:
           fileId.toLowerCase().endsWith('.png') || fileId.toLowerCase().endsWith('.jpg')
@@ -121,6 +158,16 @@ const LandlordUnvalidatedTenantDetail = () => {
   const [application, setApplication] = useState<PendingApplication | null>(null);
   const [availableUnits, setAvailableUnits] = useState<RawUnit[]>([]);
   const [selectedUnitId, setSelectedUnitId] = useState('');
+  const [assignmentMode, setAssignmentMode] = useState<AssignmentMode>('manual');
+  const [selectedMatchingOptions, setSelectedMatchingOptions] = useState<
+    Record<MatchingOptionKey, boolean>
+  >({
+    autoMatching: true,
+    yearBatch: false,
+    degreeProgram: true,
+    emptyRoom: true,
+    random: true,
+  });
   const [isLoading, setIsLoading] = useState(true);
   const [openFileMenuId, setOpenFileMenuId] = useState<string | null>(null);
   const [rejectTarget, setRejectTarget] = useState<SubmittedDocument | null>(null);
@@ -180,12 +227,25 @@ const LandlordUnvalidatedTenantDetail = () => {
   }, [application]);
 
   const hasDocuments = Boolean(application && application.documents.length > 0);
+  const isInitialScreening = rawApplication?.status === 'pending';
+  const isFinalReview = rawApplication?.status === 'finalized';
 
   const allDocumentsApproved = useMemo(() => {
     if (!application) return true;
-    if (application.documents.length === 0) return true;
+    if (rawApplication?.status === 'finalized' && application.documents.length === 0) return false;
     return application.documents.every((d) => docReview[d.id] === 'approved');
-  }, [application, docReview]);
+  }, [application, docReview, rawApplication?.status]);
+
+  const fallbackUnitId = availableUnits[0]?._id ?? availableUnits[0]?.id ?? '';
+  const unitIdForApproval =
+    assignmentMode === 'manual'
+      ? selectedUnitId
+      : selectedUnitId ||
+        fallbackUnitId ||
+        rawApplication?.unitId?._id ||
+        rawApplication?.unitId?.id ||
+        '';
+  const canApproveInitialScreening = Boolean(unitIdForApproval);
 
   const handleRejectApplication = () => {
     if (!tenantId) return;
@@ -198,10 +258,11 @@ const LandlordUnvalidatedTenantDetail = () => {
     if (!tenantId || !rawApplication) return;
     if (rawApplication.status === 'finalized' && !isLandlord) return;
     if (rawApplication.status === 'finalized' && !allDocumentsApproved) return;
-    if (rawApplication.status === 'pending' && !selectedUnitId) return;
+    if (rawApplication.status === 'pending' && !unitIdForApproval) return;
 
     void ApplicationService.approveApplication(tenantId, {
-      unitId: selectedUnitId || rawApplication.unitId?._id || rawApplication.unitId?.id || tenantId,
+      unitId:
+        unitIdForApproval || rawApplication.unitId?._id || rawApplication.unitId?.id || tenantId,
     }).finally(() => navigate('/landlord/tenants/unvalidated'));
   };
 
@@ -251,7 +312,7 @@ const LandlordUnvalidatedTenantDetail = () => {
               size={200}
             />
 
-            <div className="grid w-full grid-cols-2 gap-x-[32px] gap-y-[16px]">
+            <div className="grid w-full min-w-0 grid-cols-1 gap-x-[28px] gap-y-[18px] sm:grid-cols-2">
               <TenantInfoField label="Full Name">{application.fullName}</TenantInfoField>
               <TenantInfoField label="Home Address">{application.homeAddress}</TenantInfoField>
               <TenantInfoField label="Contact number">{application.contactNumber}</TenantInfoField>
@@ -264,26 +325,6 @@ const LandlordUnvalidatedTenantDetail = () => {
                 {application.monthlyDueDate}
               </TenantInfoField>
               <TenantInfoField label="Mode of Payment">{application.modeOfPayment}</TenantInfoField>
-              {rawApplication?.status === 'pending' && (
-                <div className="col-span-2 flex flex-col gap-[6px] text-left font-['Inter',sans-serif]">
-                  <span className="text-[12px] font-bold text-[#666]">Assign Unit</span>
-                  <select
-                    value={selectedUnitId}
-                    onChange={(event) => setSelectedUnitId(event.target.value)}
-                    className="rounded-[12px] border border-[#f0f0f0] px-[12px] py-[10px] text-[14px] font-bold text-[#2f3136]"
-                  >
-                    {availableUnits.length === 0 ? (
-                      <option value="">No available units</option>
-                    ) : (
-                      availableUnits.map((unit) => (
-                        <option key={unit._id ?? unit.id} value={unit._id ?? unit.id}>
-                          {unit.roomNumber ?? 'Available unit'}
-                        </option>
-                      ))
-                    )}
-                  </select>
-                </div>
-              )}
             </div>
           </section>
 
@@ -296,17 +337,144 @@ const LandlordUnvalidatedTenantDetail = () => {
                 id="submitted-documents-heading"
                 className="font-['Inter',sans-serif] text-[24px] font-bold leading-[32px] whitespace-nowrap text-[#2f3136]"
               >
-                Submitted Documents
+                {isInitialScreening ? 'Initial Screening' : 'Submitted Documents'}
               </h2>
               <span className="font-['Inter',sans-serif] text-[14px] font-medium whitespace-nowrap text-[#666]">
                 ({application.studentCategory})
               </span>
             </div>
 
-            {!hasDocuments ? (
-              <p className="font-['Inter',sans-serif] text-[14px] font-bold text-[#666]">
-                Applicant has not submitted any documents yet.
-              </p>
+            {isInitialScreening ? (
+              <>
+                <div className="flex min-h-[160px] flex-col justify-center gap-[16px] rounded-[16px] border border-solid border-[#f0f0f0] bg-[#fbfbfb] p-[24px] font-['Inter',sans-serif]">
+                  <p className="text-[16px] font-bold text-[#2f3136]">
+                    Review this applicant for initial screening.
+                  </p>
+                  <p className="max-w-[620px] text-[14px] font-medium leading-[22px] text-[#666]">
+                    Approving initial screening will move this application to the student&apos;s
+                    finalization step, where they can upload the required files for landlord review.
+                  </p>
+                </div>
+
+                <div className="overflow-hidden rounded-[18px] border border-solid border-[#f0f0f0] bg-white font-['Inter',sans-serif]">
+                  <div className="bg-linear-to-br from-[#096c5b] to-[#16917c] px-[24px] py-[22px] text-white">
+                    <h3 className="text-[24px] font-bold leading-[30px]">Add New Tenant</h3>
+                    <p className="mt-[4px] text-[14px] font-bold leading-[20px] text-[#e8f7f5]">
+                      Add your new tenant to a specific room/unit
+                    </p>
+                  </div>
+
+                  <div className="flex flex-col gap-[22px] p-[24px]">
+                    <div className="flex flex-col gap-[10px]">
+                      <span className="text-[14px] font-bold text-[#666]">Email Address</span>
+                      <div className="rounded-[12px] border border-[#f0f0f0] px-[16px] py-[12px] text-[14px] font-medium text-[#64748b]">
+                        {application.email}
+                      </div>
+                      <p className="max-w-[620px] text-[16px] font-bold leading-[22px] text-[#082f2a]">
+                        Upon finalization, our system will send an email to this tenant for
+                        confirmation of their new accommodation.
+                      </p>
+                    </div>
+
+                    <div className="flex flex-col gap-[14px]">
+                      <div className="flex flex-col gap-[10px] sm:flex-row sm:items-center sm:justify-between">
+                        <span className="text-[14px] font-bold text-[#666]">Unit Assignment</span>
+                        <div className="grid grid-cols-2 rounded-[14px] bg-[#f1f5f9] p-[4px] text-[13px] font-bold">
+                          <button
+                            type="button"
+                            onClick={() => setAssignmentMode('manual')}
+                            className={[
+                              'rounded-[10px] px-[14px] py-[8px] transition-colors',
+                              assignmentMode === 'manual'
+                                ? 'bg-white text-[#096c5b] shadow-[0_1px_4px_rgba(15,23,42,0.08)]'
+                                : 'text-[#64748b] hover:text-[#2f3136]',
+                            ].join(' ')}
+                          >
+                            Manual
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setAssignmentMode('matching');
+                              setSelectedUnitId((current) => current || fallbackUnitId);
+                            }}
+                            className={[
+                              'rounded-[10px] px-[14px] py-[8px] transition-colors',
+                              assignmentMode === 'matching'
+                                ? 'bg-white text-[#096c5b] shadow-[0_1px_4px_rgba(15,23,42,0.08)]'
+                                : 'text-[#64748b] hover:text-[#2f3136]',
+                            ].join(' ')}
+                          >
+                            Matching
+                          </button>
+                        </div>
+                      </div>
+
+                      {assignmentMode === 'manual' ? (
+                        <div className="flex flex-col gap-[8px]">
+                          <select
+                            value={selectedUnitId}
+                            onChange={(event) => setSelectedUnitId(event.target.value)}
+                            className="min-h-[46px] rounded-[12px] border border-[#e2e8f0] px-[14px] py-[10px] text-[14px] font-bold text-[#2f3136] outline-none transition-colors focus:border-[#096c5b]"
+                          >
+                            {availableUnits.length === 0 ? (
+                              <option value="">No available units</option>
+                            ) : (
+                              availableUnits.map((unit) => (
+                                <option key={unit._id ?? unit.id} value={unit._id ?? unit.id}>
+                                  {unit.roomNumber ?? 'Available unit'}
+                                </option>
+                              ))
+                            )}
+                          </select>
+                          <p className="text-[12px] font-medium leading-[18px] text-[#64748b]">
+                            Choose the room/unit before approving this initial screening.
+                          </p>
+                        </div>
+                      ) : (
+                        <div className="flex flex-col gap-[8px]">
+                          {matchingOptions.map((option) => (
+                            <label
+                              key={option.key}
+                              className="flex cursor-pointer items-center gap-[16px] rounded-[12px] px-[12px] py-[10px] transition-colors hover:bg-[#f8fafc]"
+                            >
+                              <span className="min-w-0 flex-1">
+                                <span className="block text-[15px] font-bold leading-[20px] text-[#082f2a]">
+                                  {option.title}
+                                </span>
+                                <span className="block max-w-[560px] text-[12px] font-medium leading-[17px] text-[#666]">
+                                  {option.description}
+                                </span>
+                              </span>
+                              <input
+                                type="checkbox"
+                                checked={selectedMatchingOptions[option.key]}
+                                onChange={(event) =>
+                                  setSelectedMatchingOptions((prev) => ({
+                                    ...prev,
+                                    [option.key]: event.target.checked,
+                                  }))
+                                }
+                                className="h-[22px] w-[22px] accent-[#096c5b]"
+                              />
+                            </label>
+                          ))}
+                          <p className="text-[12px] font-medium leading-[18px] text-[#64748b]">
+                            Matching approval will use the next available unit while keeping these
+                            preferences visible for the assignment decision.
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </>
+            ) : !hasDocuments ? (
+              <div className="flex min-h-[220px] items-center justify-center rounded-[16px] border border-solid border-[#f0f0f0] bg-[#fbfbfb] p-[24px]">
+                <p className="font-['Inter',sans-serif] text-[14px] font-bold text-[#666]">
+                  Applicant has not submitted any documents yet.
+                </p>
+              </div>
             ) : (
               <>
                 <div className="flex flex-col gap-[12px]">
@@ -335,50 +503,48 @@ const LandlordUnvalidatedTenantDetail = () => {
                   ))}
                 </div>
 
-                {rawApplication?.status === 'finalized' && !allDocumentsApproved && (
+                {isFinalReview && !allDocumentsApproved && (
                   <p className="px-[12px] text-center font-['Inter',sans-serif] text-[13px] font-medium text-[#64748b]">
                     Every document must be approved before final landlord approval.
                   </p>
                 )}
-
-                <div className="flex w-full flex-col items-center justify-center gap-[10px] px-[12px] pt-[8px]">
-                  <div className="flex items-center justify-center gap-[10px]">
-                    <button
-                      type="button"
-                      onClick={handleRejectApplication}
-                      className="flex cursor-pointer items-center justify-center rounded-[16px] bg-[#f1f5f9] px-[16px] py-[12px] font-['Inter',sans-serif] text-[14px] font-bold transition-colors duration-200 hover:bg-[#e5edf4]"
-                    >
-                      <span className="bg-linear-to-b from-[#c00f0f] to-[#e44f4f] bg-clip-text text-transparent">
-                        Reject
-                      </span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleApproveApplication}
-                      disabled={
-                        rawApplication?.status === 'pending'
-                          ? !selectedUnitId
-                          : !isLandlord || !allDocumentsApproved
-                      }
-                      className={[
-                        "flex cursor-pointer items-center justify-center rounded-[16px] px-[24px] py-[12px] font-['Inter',sans-serif] text-[14px] font-bold transition-colors duration-200",
-                        (
-                          rawApplication?.status === 'pending'
-                            ? Boolean(selectedUnitId)
-                            : isLandlord && allDocumentsApproved
-                        )
-                          ? 'bg-[#cbf6ed] text-[#096c5b] hover:bg-[#b4efe1]'
-                          : 'cursor-not-allowed bg-[#e8ecf1] text-[#94a3b8]',
-                      ].join(' ')}
-                    >
-                      {rawApplication?.status === 'pending'
-                        ? 'Approve Initial Screening'
-                        : 'Final Approve'}
-                    </button>
-                  </div>
-                </div>
               </>
             )}
+
+            <div className="flex w-full flex-col items-center justify-center gap-[10px] px-[12px] pt-[8px]">
+              <div className="flex items-center justify-center gap-[10px]">
+                <button
+                  type="button"
+                  onClick={handleRejectApplication}
+                  className="flex cursor-pointer items-center justify-center rounded-[16px] bg-[#f1f5f9] px-[16px] py-[12px] font-['Inter',sans-serif] text-[14px] font-bold transition-colors duration-200 hover:bg-[#e5edf4]"
+                >
+                  <span className="bg-linear-to-b from-[#c00f0f] to-[#e44f4f] bg-clip-text text-transparent">
+                    Reject
+                  </span>
+                </button>
+                <button
+                  type="button"
+                  onClick={handleApproveApplication}
+                  disabled={
+                    isInitialScreening
+                      ? !canApproveInitialScreening
+                      : !isLandlord || !allDocumentsApproved
+                  }
+                  className={[
+                    "flex cursor-pointer items-center justify-center rounded-[16px] px-[24px] py-[12px] font-['Inter',sans-serif] text-[14px] font-bold transition-colors duration-200",
+                    (
+                      isInitialScreening
+                        ? canApproveInitialScreening
+                        : isLandlord && allDocumentsApproved
+                    )
+                      ? 'bg-[#cbf6ed] text-[#096c5b] hover:bg-[#b4efe1]'
+                      : 'cursor-not-allowed bg-[#e8ecf1] text-[#94a3b8]',
+                  ].join(' ')}
+                >
+                  {isInitialScreening ? 'Approve Initial Screening' : 'Final Approve'}
+                </button>
+              </div>
+            </div>
           </section>
         </div>
       </div>

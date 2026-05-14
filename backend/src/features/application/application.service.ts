@@ -14,6 +14,7 @@ import { combineFilters } from '../../middleware.js';
 import { isUnitFull } from '../unit/unit.service.js';
 import { Listing } from '../listing/listing.model.js';
 import { File } from '../file/file.model.js';
+import { createRental } from '../rental/rental.service.js';
 
 export type GetApplicationsArguments = NullablePartial<{
   userId: mongoose.Types.ObjectId;
@@ -70,6 +71,12 @@ const GetApplicationsCursorSchema = CursorSchema(
   }),
 );
 
+const getExpectedMoveOutDate = (moveInDate: Date, leaseDuration: '6-months' | '12-months') => {
+  const moveOutDate = new Date(moveInDate);
+  moveOutDate.setMonth(moveOutDate.getMonth() + (leaseDuration === '6-months' ? 6 : 12));
+  return moveOutDate;
+};
+
 export const getApplications = async (
   query: GetApplicationsArguments,
   filters: QueryFilter<ApplicationType>,
@@ -95,7 +102,7 @@ export const getApplications = async (
       'userId',
       'firstName middleName lastName emails email contact address studentNumber profilePicture',
     )
-    .populate('facilityId', 'name location')
+    .populate('facilityId', 'name location media')
     .populate('listingId', 'roomType capacity tags')
     .populate('unitId', 'roomNumber price location')
     .sort({ createdAt: -1, _id: -1 })
@@ -115,7 +122,7 @@ export const getApplicationById = async (
       'userId',
       'firstName middleName lastName emails email contact address studentNumber profilePicture',
     )
-    .populate('facilityId', 'name location')
+    .populate('facilityId', 'name location media')
     .populate('listingId', 'roomType capacity tags')
     .populate('unitId', 'roomNumber price location');
 };
@@ -190,6 +197,19 @@ export const approveFinalApplication = async (
   if (application.status !== 'finalized') {
     throw new AppError(422, `Applications that are '${application.status}' cannot be approved.`);
   }
+
+  if (!application.unitId) {
+    throw new AppError(422, 'Application must have an assigned unit before final approval.');
+  }
+
+  await createRental({
+    userId: application.userId,
+    facilityId: application.facilityId,
+    unitId: application.unitId,
+    applicationId: application._id,
+    expectedMoveInDate: application.moveInDate,
+    expectedMoveOutDate: getExpectedMoveOutDate(application.moveInDate, application.leaseDuration),
+  });
 
   application.status = 'approved';
   const { subject, content } = statusMessages[application.status];

@@ -48,6 +48,7 @@ export const includeSelf: RequestHandler = (req, res, next) => {
   res.locals.filters = {
     $or: [res.locals.filters, { userId: req.user._id }],
   };
+  next();
 };
 
 type ManagerEntry = {

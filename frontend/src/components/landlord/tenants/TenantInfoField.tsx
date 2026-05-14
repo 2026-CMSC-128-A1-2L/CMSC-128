@@ -12,13 +12,13 @@ const TenantInfoField = ({
   valueClassName = 'text-black',
 }: TenantInfoFieldProps) => {
   return (
-    <div className="flex flex-col items-start gap-[4px]">
-      <span className="font-['Inter',sans-serif] text-[14px] font-bold whitespace-nowrap text-[#666]">
+    <div className="flex min-w-0 flex-col items-start gap-[4px]">
+      <span className="max-w-full font-['Inter',sans-serif] text-[14px] font-bold text-[#666]">
         {label}
       </span>
       <span
         className={[
-          "font-['Inter',sans-serif] text-[14px] font-bold whitespace-nowrap",
+          "max-w-full whitespace-normal break-words font-['Inter',sans-serif] text-[14px] font-bold leading-[20px]",
           valueClassName,
         ].join(' ')}
       >
