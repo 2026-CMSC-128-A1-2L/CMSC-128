@@ -73,7 +73,7 @@ const ApplicantReviewModal = ({
 
   return (
     <AdminPopupOverlay onClose={onClose}>
-      <div className="flex w-[640px] max-h-[90vh] flex-col overflow-hidden rounded-tl-[32px] bg-white">
+      <div className="flex w-[640px] max-h-[90vh] flex-col overflow-hidden rounded-tl-[32px] bg-white dark:bg-[#141515] dark:border dark:border-[#303331]">
         {/* Teal Gradient Header */}
         <div className="w-full shrink-0 rounded-tl-[32px] bg-gradient-to-b from-[#096c5b] to-[#16917c] px-[57px] py-3">
           <div className="w-full py-8 pb-2">
@@ -87,48 +87,48 @@ const ApplicantReviewModal = ({
         </div>
 
         {/* Scrollable Body */}
-        <div className="flex-1 overflow-y-auto px-12 pt-8 pb-6">
+        <div className="flex-1 overflow-y-auto px-12 pt-8 pb-6 bg-white dark:bg-[#141515]">
           {/* Applicant Info */}
           <div className="mb-6">
-            <p className="font-['Inter',sans-serif] text-[18px] font-bold tracking-[-0.18px] text-[#001d18]">
+            <p className="font-['Inter',sans-serif] text-[18px] font-bold tracking-[-0.18px] text-[#001d18] dark:text-[#d7e0ef]">
               {getDisplayName(applicant)}
             </p>
-            <p className="mt-1 font-['Inter',sans-serif] text-[14px] font-medium text-[#666]">
+            <p className="mt-1 font-['Inter',sans-serif] text-[14px] font-medium text-[#666] dark:text-[#a4acba]">
               {applicant.emails?.[0]} &bull; {formatRole(applicant.userType)}
             </p>
             {applicant.contact && (
-              <p className="mt-1 font-['Inter',sans-serif] text-[14px] font-medium text-[#666]">
-                Contact: <span className="font-bold text-[#2f3136]">{applicant.contact}</span>
+              <p className="mt-1 font-['Inter',sans-serif] text-[14px] font-medium text-[#666] dark:text-[#a4acba]">
+                Contact: <span className="font-bold text-[#2f3136] dark:text-[#d7e0ef]">{applicant.contact}</span>
               </p>
             )}
           </div>
 
           {/* Student Fields */}
           {applicant.userType === 'Student' && (
-            <div className="mb-6 grid grid-cols-2 gap-4 rounded-[16px] border border-[#e5e7eb] bg-[#f8fffe] p-5">
+            <div className="mb-6 grid grid-cols-2 gap-4 rounded-[16px] border border-[#e5e7eb] dark:border-[#303331] bg-[#f8fffe] dark:bg-[#17201d] p-5">
               <label className="flex flex-col gap-1.5">
-                <span className="font-['Inter',sans-serif] text-[14px] font-bold text-[#666]">Student Number</span>
+                <span className="font-['Inter',sans-serif] text-[14px] font-bold text-[#666] dark:text-[#a4acba]">Student Number</span>
                 <input
                   value={studentNumber}
                   onChange={(e) => onStudentNumberChange(e.target.value)}
                   placeholder="202400001"
-                  className="rounded-[12px] border border-[#d0d0d0] bg-white px-4 py-2.5 font-['Inter',sans-serif] text-[14px] font-medium text-black outline-none transition-colors focus:border-[#096c5b]"
+                  className="rounded-[12px] border border-[#d0d0d0] dark:border-[#404341] bg-white dark:bg-[#1f2022] px-4 py-2.5 font-['Inter',sans-serif] text-[14px] font-medium text-black dark:text-[#d7e0ef] outline-none transition-colors focus:border-[#096c5b] dark:focus:border-[#72cbb8]"
                 />
               </label>
               <label className="flex flex-col gap-1.5">
-                <span className="font-['Inter',sans-serif] text-[14px] font-bold text-[#666]">Degree Program</span>
+                <span className="font-['Inter',sans-serif] text-[14px] font-bold text-[#666] dark:text-[#a4acba]">Degree Program</span>
                 <input
                   value={degreeProgram}
                   onChange={(e) => onDegreeProgramChange(e.target.value)}
                   placeholder="BS Computer Science"
-                  className="rounded-[12px] border border-[#d0d0d0] bg-white px-4 py-2.5 font-['Inter',sans-serif] text-[14px] font-medium text-black outline-none transition-colors focus:border-[#096c5b]"
+                  className="rounded-[12px] border border-[#d0d0d0] dark:border-[#404341] bg-white dark:bg-[#1f2022] px-4 py-2.5 font-['Inter',sans-serif] text-[14px] font-medium text-black dark:text-[#d7e0ef] outline-none transition-colors focus:border-[#096c5b] dark:focus:border-[#72cbb8]"
                 />
               </label>
             </div>
           )}
 
           {/* Label */}
-          <p className="mb-3 font-['Inter',sans-serif] text-[14px] font-bold text-[#666]">
+          <p className="mb-3 font-['Inter',sans-serif] text-[14px] font-bold text-[#666] dark:text-[#a4acba]">
             Submitted Documents
           </p>
 
@@ -137,18 +137,18 @@ const ApplicantReviewModal = ({
             {applicant.documents?.map((doc) => (
               <div
                 key={doc.docId}
-                className="rounded-[16px] border border-[#e5e7eb] bg-white p-5 shadow-[0px_1px_4px_0px_rgba(0,0,0,0.06)] transition-shadow hover:shadow-[0px_2px_8px_0px_rgba(0,0,0,0.1)]"
+                className="rounded-[16px] border border-[#e5e7eb] dark:border-[#303331] bg-white dark:bg-[#1f2022] p-5 shadow-[0px_1px_4px_0px_rgba(0,0,0,0.06)] transition-shadow hover:shadow-[0px_2px_8px_0px_rgba(0,0,0,0.1)]"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-[12px] bg-[#edf7f5]">
-                      <Icon icon="solar:document-text-bold" className="h-5 w-5 text-[#096c5b]" />
+                    <div className="flex h-10 w-10 items-center justify-center rounded-[12px] bg-[#edf7f5] dark:bg-[#12342e]">
+                      <Icon icon="solar:document-text-bold" className="h-5 w-5 text-[#096c5b] dark:text-[#72cbb8]" />
                     </div>
                     <div>
-                      <p className="font-['Inter',sans-serif] text-[16px] font-bold text-[#001d18]">
+                      <p className="font-['Inter',sans-serif] text-[16px] font-bold text-[#001d18] dark:text-[#d7e0ef]">
                         {doc.name}
                       </p>
-                      <p className="font-['Inter',sans-serif] text-[13px] font-medium text-[#64748b]">
+                      <p className="font-['Inter',sans-serif] text-[13px] font-medium text-[#64748b] dark:text-[#a4acba]">
                         {doc.files.length} file{doc.files.length !== 1 ? 's' : ''} attached
                       </p>
                     </div>
@@ -170,7 +170,7 @@ const ApplicantReviewModal = ({
                       value={rejectionMessages[doc.docId] ?? ''}
                       onChange={(e) => onRejectionMessageChange(doc.docId, e.target.value)}
                       placeholder="Rejection reason (optional)"
-                      className="mt-3 w-full rounded-[12px] border border-[#e5e7eb] bg-[#fafafa] px-4 py-2.5 font-['Inter',sans-serif] text-[13px] font-medium text-black outline-none transition-colors placeholder:text-[#94a3b8] focus:border-[#096c5b]"
+                      className="mt-3 w-full rounded-[12px] border border-[#e5e7eb] dark:border-[#303331] bg-[#fafafa] dark:bg-[#141515] px-4 py-2.5 font-['Inter',sans-serif] text-[13px] font-medium text-black dark:text-[#d7e0ef] outline-none transition-colors placeholder:text-[#94a3b8] dark:placeholder:text-[#a4acba] focus:border-[#096c5b] dark:focus:border-[#72cbb8]"
                     />
                     <div className="mt-3 flex justify-end gap-3">
                       <button
@@ -183,7 +183,7 @@ const ApplicantReviewModal = ({
                       <button
                         type="button"
                         onClick={() => onAcceptDocument(doc.docId)}
-                        className="rounded-[12px] bg-[#cbf6ed] px-5 py-2 font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] transition-opacity hover:opacity-80"
+                        className="rounded-[12px] bg-[#cbf6ed] dark:bg-[#12342e] px-5 py-2 font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] dark:text-[#72cbb8] transition-opacity hover:opacity-80"
                       >
                         Accept
                       </button>
@@ -202,7 +202,7 @@ const ApplicantReviewModal = ({
         </div>
 
         {/* Footer Buttons */}
-        <div className="flex shrink-0 items-center justify-center gap-4 border-t border-[#f0f0f0] px-12 py-5">
+        <div className="flex shrink-0 items-center justify-center gap-4 border-t border-[#f0f0f0] dark:border-[#303331] bg-white dark:bg-[#141515] px-12 py-5">
           <button
             type="button"
             onClick={onClose}
@@ -220,7 +220,7 @@ const ApplicantReviewModal = ({
           <button
             type="button"
             onClick={onApproveUser}
-            className="rounded-[12px] bg-[#cbf6ed] px-6 py-2 font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] transition-opacity hover:opacity-80"
+            className="rounded-[12px] bg-[#cbf6ed] dark:bg-[#12342e] px-6 py-2 font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] dark:text-[#72cbb8] transition-opacity hover:opacity-80"
           >
             Approve User
           </button>

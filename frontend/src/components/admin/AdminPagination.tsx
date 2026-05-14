@@ -16,8 +16,8 @@ const AdminPagination = ({
   if (totalPages <= 1) return null;
 
   return (
-    <div className="flex items-center justify-between border-t border-[#f0f0f0] bg-white px-6 py-4">
-      <span className="font-['Poppins'] text-sm text-[#7c8db5]">
+    <div className="flex items-center justify-between border-t border-[#f0f0f0] dark:border-[#303331] bg-white dark:bg-[#101111] px-6 py-4">
+      <span className="font-['Poppins'] text-sm text-[#7c8db5] dark:text-[#a4acba]">
         Showing {(currentPage - 1) * itemsPerPage + 1} to{' '}
         {Math.min(currentPage * itemsPerPage, totalItems)} of {totalItems} entries
       </span>
@@ -26,7 +26,7 @@ const AdminPagination = ({
           type="button"
           onClick={() => onPageChange(Math.max(1, currentPage - 1))}
           disabled={currentPage === 1}
-          className="rounded-lg border border-[#e5e7eb] px-3 py-1 font-['Poppins'] text-sm font-medium text-black disabled:opacity-50"
+          className="rounded-lg border border-[#e5e7eb] dark:border-[#303331] px-3 py-1 font-['Poppins'] text-sm font-medium text-black dark:text-[#d7e0ef] disabled:opacity-50"
         >
           Previous
         </button>
@@ -34,7 +34,7 @@ const AdminPagination = ({
           type="button"
           onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
           disabled={currentPage === totalPages}
-          className="rounded-lg border border-[#e5e7eb] px-3 py-1 font-['Poppins'] text-sm font-medium text-black disabled:opacity-50"
+          className="rounded-lg border border-[#e5e7eb] dark:border-[#303331] px-3 py-1 font-['Poppins'] text-sm font-medium text-black dark:text-[#d7e0ef] disabled:opacity-50"
         >
           Next
         </button>
