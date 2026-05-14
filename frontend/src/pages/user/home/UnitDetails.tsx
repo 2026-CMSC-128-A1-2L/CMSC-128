@@ -6,7 +6,7 @@ import { Icon } from '@iconify/react';
 import axios from 'axios';
 import PropertyTabs from '../../../components/user/unitdetails/PropertyTabs';
 import ImageCarousel from '../../../components/user/unitdetails/ImageCarousel';
-
+import BreadcrumbHeader from '../../../components/general/Breadcrumb';
 import AboutDetails from '../../../components/user/unitdetails/AboutDetails';
 import AmenetiesDetails from '../../../components/user/unitdetails/AmenetiesDetails';
 import RulesDetails from '../../../components/user/unitdetails/RulesDetails';
@@ -267,7 +267,7 @@ const UnitDetails: FunctionComponent = () => {
     <div className="flex min-h-screen font-lora text-darkslategray-100">
       {showSignIn && <SignInPopUp onClose={() => setShowSignIn(false)} />}
       {/* Sidebar */}
-      <div className="sticky top-0 h-screen shrink-0 z-10">
+      <div className="sticky top-0 h-screen shrink-0 z-10 font-inter">
         <SideBar />
       </div>
 
@@ -278,14 +278,15 @@ const UnitDetails: FunctionComponent = () => {
           <div
             className="flex items-center gap-1.5 text-sm font-semibold flex-wrap"
             data-scroll-to="searchBarContainer"
-          >
-            <span>Home</span>
-            <Icon icon="iconamoon:arrow-right-2" className="w-5 h-5" />
-            <span>Facilities</span>
-            <Icon icon="iconamoon:arrow-right-2" className="w-5 h-5" />
-            <span>{facility.name}</span>
+          > 
+            <BreadcrumbHeader
+            routes={[
+              { name: 'Home', url: '/home' },
+              { name: 'Facilities',url:`/home`},
+              { name: facility.name,url:`/facilities/${facilityId}` } 
+            ]} >
+            </BreadcrumbHeader>
           </div>
-
           {/* Search */}
           <form
             onSubmit={submitSearch}

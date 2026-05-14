@@ -4,6 +4,7 @@ import SideBar from '../../../components/user/SideBar';
 import { Icon } from '@iconify/react';
 import Footer from '../../../components/general/Footer';
 import Banner from '../../../components/general/Banner';
+import BreadcrumbHeader from '../../../components/general/Breadcrumb';
 
 const ContactUs: FunctionComponent = () => {
   const [formData, setFormData] = useState({
@@ -36,11 +37,12 @@ const ContactUs: FunctionComponent = () => {
               <div className="flex-1 flex flex-col px-4 sm:px-8 pt-0 pr-4 sm:pr-20">
                 <div className="flex-1 flex flex-col items-start">
                   <div className="self-stretch h-16 overflow-hidden shrink-0 flex items-end p-num-10 box-border gap-2.5">
-                    <div className="h-6 flex items-center gap-1.5">
-                      <div className="relative font-semibold">Home</div>
-                      <Icon icon="iconamoon:arrow-right-2" className="w-6 h-6 rounded-[100px]" />
-                      <div className="relative font-semibold">Contact Us</div>
-                    </div>
+                    <BreadcrumbHeader
+                    routes={[
+                      { name: 'Home', url: '/home' },
+                      { name: 'Contact Us' },
+                    ]}>
+                    </BreadcrumbHeader>
                     <div className="w-[704px] rounded-num-12 bg-aliceblue overflow-hidden shrink-0 hidden items-center py-num-10 px-6 box-border gap-2.5 text-dimgray font-inter">
                       <img className="h-6 w-6 relative" alt="" />
                       <b className="relative">
@@ -48,6 +50,7 @@ const ContactUs: FunctionComponent = () => {
                       </b>
                     </div>
                   </div>
+                  
                   <div className="self-stretch flex-1 flex flex-col items-center gap-8 text-center text-darkslategray-200 font-inter">
                     <div className="self-stretch flex flex-col items-center justify-center gap-2 text-darkslategray-100">
                       <b className="w-[262px] relative flex items-center justify-center">

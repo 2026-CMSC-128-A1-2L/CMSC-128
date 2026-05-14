@@ -26,7 +26,7 @@ export default function BreadcrumbHeader({ routes }: BreadcrumbHeaderProps) {
   if (!routes || routes.length === 0) return null;
 
   return (
-    <div className="flex py-2 items-center font-lora text-num-14 font-semibold">
+    <div className="flex py-2 items-center font-inter text-num-14 font-semibold">
       {routes.map((route, index) => {
         // Check if this is the current page we are on
         const isLast = index === routes.length - 1;
