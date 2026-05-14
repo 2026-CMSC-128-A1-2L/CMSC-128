@@ -1,4 +1,3 @@
-// frontend/src/components/user/finance/SubmitReceipt.tsx
 import { type FunctionComponent, useState, useRef } from 'react';
 import { Icon } from '@iconify/react';
 import PortalPopup from '../../../components/general/PortalPopup';
