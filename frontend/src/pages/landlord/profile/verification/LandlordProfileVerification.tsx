@@ -5,15 +5,15 @@ import VerificationProgress, {
 import DocumentsSubmissionHeader from '../../../../components/landlord/LandlordVerification/DocumentsSubmissionHeader';
 import DocumentsUploadList from '../../../../components/landlord/LandlordVerification/DocumentsUploadList';
 import { documents } from '../../../../components/landlord/LandlordVerification/DocumentsData';
-
+import { useNavigate } from 'react-router-dom';
+import LandlordProfileSwitch from '../component/LandlordProfileSwitch';
 const LandlordProfileVerification = () => {
+  const navigate = useNavigate();
   const [uploads, setUploads] = useState<Record<string, File | undefined>>({});
   const [error] = useState<string | null>('Could not load your verification status.');
-
-  const step: VerificationStep = 'submit';
+  const [step, setStep] = useState<VerificationStep>('submit'); // ← now stateful
 
   const uploadedCount = useMemo(() => Object.values(uploads).filter(Boolean).length, [uploads]);
-
   const canSubmit = uploadedCount === documents.length;
 
   const handleFile = (id: string, file: File) => {
@@ -22,6 +22,7 @@ const LandlordProfileVerification = () => {
 
   const handleSubmit = () => {
     console.log('Submitting documents:', uploads);
+    setStep('reviewing'); // ← advance step on submit
   };
 
   return (
@@ -40,6 +41,7 @@ const LandlordProfileVerification = () => {
         uploadedCount={uploadedCount}
         totalCount={documents.length}
         canSubmit={canSubmit}
+        statefulVerificationStep={step} // ← now passed down
         onSubmit={handleSubmit}
       />
 
