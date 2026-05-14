@@ -1,5 +1,6 @@
 import { type FunctionComponent, useCallback, useState } from 'react';
 import { Icon } from '@iconify/react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import Verified from '../../../../../assets/verified_badge.svg';
 import Photo from '../../../../../assets/photo.svg';
 import Sidebar from '../../../../components/user/SideBar';
@@ -7,14 +8,29 @@ import Footer from '../../../../components/general/Footer';
 import CancelApplication1 from '../../../../components/user/Profile/CancelApplication1';
 import CancelApplication2 from '../../../../components/user/Profile/CancelApplication2';
 import FinalizeApplication from '../../../../components/user/Profile/FinalizeApplication';
+import { ApplicationService } from '../../../../service/ApplicationService';
+import { FileService } from '../../../../service/FileService';
+
+const documentRequirements = {
+  id: 'official-id',
+  consent: 'parental-consent',
+  contract: 'tenancy-contract',
+} as const;
 
 const FinalizedApplicationPage1a: FunctionComponent = () => {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const applicationId = searchParams.get('applicationId') ?? '';
   // States for each requirement
   const [isIdUploaded, setIsIdUploaded] = useState(false);
   const [isConsentUploaded, setIsConsentUploaded] = useState(false);
   const [isContractUploaded, setIsContractUploaded] = useState(false);
+  const [fileNames, setFileNames] = useState<Record<string, string>>({});
   const [isSubmitPopupVisible, setIsSubmitPopupVisible] = useState(false);
   const [cancelStage, setCancelStage] = useState<null | 'confirming' | 'success'>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [uploadingDoc, setUploadingDoc] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   // Calculate total uploaded count
   const uploadedCount = [isIdUploaded, isConsentUploaded, isContractUploaded].filter(
@@ -22,11 +38,45 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
   ).length;
   const allUploaded = uploadedCount === 3;
 
-  const onSubmitTextClick = useCallback(() => {
-    if (allUploaded) {
+  const onSubmitTextClick = useCallback(async () => {
+    if (!allUploaded || !applicationId) return;
+
+    setIsSubmitting(true);
+    setError(null);
+
+    try {
+      await ApplicationService.finalizeApplication(applicationId);
       setIsSubmitPopupVisible(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Could not submit your finalized application.');
+    } finally {
+      setIsSubmitting(false);
     }
-  }, [allUploaded]);
+  }, [allUploaded, applicationId]);
+
+  const uploadDocument = useCallback(
+    async (docId: string, file: File, onUploaded: () => void) => {
+      if (!applicationId) {
+        setError('Missing application id. Please open this page from your applications list.');
+        return;
+      }
+
+      setUploadingDoc(docId);
+      setError(null);
+
+      try {
+        const uploadedFile = await FileService.uploadFile(file);
+        await ApplicationService.addApplicationDocument(applicationId, docId, uploadedFile.key);
+        setFileNames((prev) => ({ ...prev, [docId]: file.name }));
+        onUploaded();
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Could not upload this document.');
+      } finally {
+        setUploadingDoc(null);
+      }
+    },
+    [applicationId],
+  );
 
   const onCancelClick = useCallback(() => {
     setCancelStage('confirming');
@@ -168,7 +218,8 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
                         </div>
                         <div className="self-stretch h-8 flex items-center justify-center gap-6 text-[24px] text-darkslategray-100">
                           <b className="relative leading-8">Finalize Your Application</b>
-                          <div
+                          <button
+                            type="button"
                             className={`relative text-num-12 font-medium cursor-pointer border-b border-solid transition-all 
                               ${
                                 uploadedCount === 0
@@ -178,7 +229,7 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
                             onClick={uploadedCount > 0 ? onCancelClick : undefined}
                           >
                             Cancel
-                          </div>
+                          </button>
                         </div>
                       </div>
 
@@ -205,14 +256,24 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
                             </div>
                           ) : (
                             //pag naka on na sya
-                            <div className="h-8 w-full relative rounded-2xl bg-lightcyan flex items-center justify-center py-0 px-3 box-border text-center text-sm text-teal font-inter">
-                              <b className="relative cursor-pointer" onClick={onSubmitTextClick}>
-                                Submit
+                            <button
+                              type="button"
+                              className="h-8 w-full relative rounded-2xl bg-lightcyan flex items-center justify-center py-0 px-3 box-border text-center text-sm text-teal font-inter"
+                              onClick={onSubmitTextClick}
+                              disabled={isSubmitting}
+                            >
+                              <b className="relative cursor-pointer">
+                                {isSubmitting ? 'Submitting' : 'Submit'}
                               </b>
-                            </div>
+                            </button>
                           )}
                         </div>
                       </div>
+                      {error && (
+                        <div className="self-stretch px-num-32 text-left text-sm font-bold text-red-500">
+                          {error}
+                        </div>
+                      )}
 
                       {/* Document 1: Official University ID */}
                       <div className="self-stretch flex flex-col items-center justify-center py-num-0 px-num-32 text-left">
@@ -235,20 +296,35 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
                                 />
                               </div>
                             </div>
-                            <div
-                              className="w-[852px] h-[88px] rounded-num-16 border-dimgray border-dashed border box-border overflow-hidden shrink-0 flex items-center py-num-12 px-4 text-black cursor-pointer"
-                              onClick={() => setIsIdUploaded(true)}
-                            >
+                            <label className="w-[852px] h-[88px] rounded-num-16 border-dimgray border-dashed border box-border overflow-hidden shrink-0 flex items-center py-num-12 px-4 text-black cursor-pointer">
+                              <input
+                                type="file"
+                                accept="image/png,image/jpeg"
+                                className="hidden"
+                                disabled={uploadingDoc === documentRequirements.id}
+                                onChange={(event) => {
+                                  const file = event.target.files?.[0];
+                                  if (file) {
+                                    void uploadDocument(documentRequirements.id, file, () =>
+                                      setIsIdUploaded(true),
+                                    );
+                                  }
+                                }}
+                              />
                               <div className="h-16 flex items-center gap-6">
                                 <Icon icon="icons8:upload-2" className="h-16 w-16 relative" />
                                 <div className="flex flex-col items-start justify-center gap-2">
-                                  <b className="relative">Upload the document</b>
+                                  <b className="relative">
+                                    {uploadingDoc === documentRequirements.id
+                                      ? 'Uploading...'
+                                      : 'Upload the document'}
+                                  </b>
                                   <div className="relative text-num-12 tracking-[0.02em] font-semibold font-lora text-slategray">
                                     .jpg or .png less than 500KB
                                   </div>
                                 </div>
                               </div>
-                            </div>
+                            </label>
                           </div>
                         ) : (
                           <div className="w-[916px] rounded-2xl bg-white border-whitesmoke border-solid border box-border overflow-hidden flex flex-col items-start justify-center py-2.5 px-8 gap-2.5 font-inter text-sm text-darkslategray">
@@ -270,7 +346,9 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
                             <div className="w-[852px] h-[88px] flex items-center py-3 gap-2.5 text-black">
                               <Icon icon="bi:file-earmark-image" className="w-16 h-16 relative" />
                               <div className="flex flex-col items-start justify-center gap-2">
-                                <b className="relative">id.png</b>
+                                <b className="relative">
+                                  {fileNames[documentRequirements.id] ?? 'id.png'}
+                                </b>
                                 <div className="relative text-xs tracking-[0.02em] font-semibold font-lora text-slategray">
                                   Submitted: 02 April 2026
                                 </div>
@@ -305,20 +383,35 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
                                 />
                               </div>
                             </div>
-                            <div
-                              className="w-[852px] h-[88px] rounded-num-16 border-dimgray border-dashed border box-border flex items-center py-num-12 px-4 text-black cursor-pointer"
-                              onClick={() => setIsConsentUploaded(true)}
-                            >
+                            <label className="w-[852px] h-[88px] rounded-num-16 border-dimgray border-dashed border box-border flex items-center py-num-12 px-4 text-black cursor-pointer">
+                              <input
+                                type="file"
+                                accept="application/pdf"
+                                className="hidden"
+                                disabled={uploadingDoc === documentRequirements.consent}
+                                onChange={(event) => {
+                                  const file = event.target.files?.[0];
+                                  if (file) {
+                                    void uploadDocument(documentRequirements.consent, file, () =>
+                                      setIsConsentUploaded(true),
+                                    );
+                                  }
+                                }}
+                              />
                               <div className="h-16 flex items-center gap-6">
                                 <Icon icon="icons8:upload-2" className="h-16 w-16 relative" />
                                 <div className="flex flex-col items-start justify-center gap-2">
-                                  <b className="relative">Upload the document</b>
+                                  <b className="relative">
+                                    {uploadingDoc === documentRequirements.consent
+                                      ? 'Uploading...'
+                                      : 'Upload the document'}
+                                  </b>
                                   <div className="relative text-num-12 tracking-[0.02em] font-semibold font-lora text-slategray">
                                     .pdf less than 500KB
                                   </div>
                                 </div>
                               </div>
-                            </div>
+                            </label>
                           </div>
                         ) : (
                           <div className="w-[916px] rounded-2xl bg-white border-whitesmoke border-solid border box-border overflow-hidden flex flex-col items-start justify-center py-2.5 px-8 gap-2.5 font-inter text-sm text-darkslategray">
@@ -347,7 +440,9 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
                             <div className="w-[852px] h-[88px] flex items-center py-3 gap-2.5 text-black">
                               <Icon icon="bi:file-earmark-pdf" className="w-16 h-16 relative" />
                               <div className="flex flex-col items-start justify-center gap-2">
-                                <b className="relative">consent_form.pdf</b>
+                                <b className="relative">
+                                  {fileNames[documentRequirements.consent] ?? 'consent_form.pdf'}
+                                </b>
                                 <div className="relative text-xs tracking-[0.02em] font-semibold font-lora text-slategray">
                                   Submitted: 02 April 2026
                                 </div>
@@ -382,20 +477,35 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
                                 />
                               </div>
                             </div>
-                            <div
-                              className="w-[852px] h-[88px] rounded-num-16 border-dimgray border-dashed border flex items-center py-num-12 px-4 text-black cursor-pointer"
-                              onClick={() => setIsContractUploaded(true)}
-                            >
+                            <label className="w-[852px] h-[88px] rounded-num-16 border-dimgray border-dashed border flex items-center py-num-12 px-4 text-black cursor-pointer">
+                              <input
+                                type="file"
+                                accept="application/pdf"
+                                className="hidden"
+                                disabled={uploadingDoc === documentRequirements.contract}
+                                onChange={(event) => {
+                                  const file = event.target.files?.[0];
+                                  if (file) {
+                                    void uploadDocument(documentRequirements.contract, file, () =>
+                                      setIsContractUploaded(true),
+                                    );
+                                  }
+                                }}
+                              />
                               <div className="h-16 flex items-center gap-6">
                                 <Icon icon="icons8:upload-2" className="h-16 w-16 relative" />
                                 <div className="flex flex-col items-start justify-center gap-2">
-                                  <b className="relative">Upload the document</b>
+                                  <b className="relative">
+                                    {uploadingDoc === documentRequirements.contract
+                                      ? 'Uploading...'
+                                      : 'Upload the document'}
+                                  </b>
                                   <div className="relative text-num-12 tracking-[0.02em] font-semibold font-lora text-slategray">
                                     .pdf less than 500KB
                                   </div>
                                 </div>
                               </div>
-                            </div>
+                            </label>
                           </div>
                         ) : (
                           <div className="w-[916px] rounded-2xl bg-white border-whitesmoke border-solid border box-border overflow-hidden flex flex-col items-start justify-center py-2.5 px-8 gap-2.5 font-inter text-sm text-darkslategray">
@@ -424,7 +534,10 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
                             <div className="w-[852px] h-[88px] flex items-center py-3 gap-2.5 text-black">
                               <Icon icon="bi:file-earmark-pdf" className="w-16 h-16 relative" />
                               <div className="flex flex-col items-start justify-center gap-2">
-                                <b className="relative">tenancy_contract.pdf</b>
+                                <b className="relative">
+                                  {fileNames[documentRequirements.contract] ??
+                                    'tenancy_contract.pdf'}
+                                </b>
                                 <div className="relative text-xs tracking-[0.02em] font-semibold font-lora text-slategray">
                                   Submitted: 02 April 2026
                                 </div>
@@ -445,7 +558,12 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
         </div>
         {isSubmitPopupVisible && (
           <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-            <FinalizeApplication onContinue={() => setIsSubmitPopupVisible(false)} />
+            <FinalizeApplication
+              onContinue={() => {
+                setIsSubmitPopupVisible(false);
+                navigate('/applications');
+              }}
+            />
           </div>
         )}
       </div>

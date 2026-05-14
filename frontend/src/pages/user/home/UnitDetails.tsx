@@ -20,6 +20,7 @@ import { useFacilities, type DormCardData } from '../../../hooks/useFacilities';
 import { useFacilityDetails } from '../../../hooks/useFacilityDetails';
 import { useBookmarks } from '../../../hooks/useBookmarks';
 import { BookmarkService } from '../../../service/BookmarkService';
+import { ApplicationService } from '../../../service/ApplicationService';
 
 const currencyFormatter = new Intl.NumberFormat('en-PH', {
   style: 'currency',
@@ -28,8 +29,14 @@ const currencyFormatter = new Intl.NumberFormat('en-PH', {
 });
 
 const roomButtonLabel = (label: string) => label.replace(/\s*\([^)]*\)\s*$/, '');
+const objectIdPattern = /^[a-f\d]{24}$/i;
 
 const leaseDurations = ['1 sem', '2 sem', '1 year'];
+const leaseDurationValues: Record<string, '6-months' | '12-months'> = {
+  '1 sem': '6-months',
+  '2 sem': '12-months',
+  '1 year': '12-months',
+};
 const amenityTagIcons: Record<string, string> = {
   hasWifi: 'material-symbols:wifi',
   hasAircon: 'material-symbols:snowflake',
@@ -90,6 +97,8 @@ const UnitDetails: FunctionComponent = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isBookmarkSaving, setIsBookmarkSaving] = useState(false);
   const [bookmarkError, setBookmarkError] = useState<string | null>(null);
+  const [applicationError, setApplicationError] = useState<string | null>(null);
+  const [isSubmittingApplication, setIsSubmittingApplication] = useState(false);
   const [showSignIn, setShowSignIn] = useState(false);
   const availableListings = useMemo(() => facility?.listings ?? [], [facility]);
 
@@ -99,7 +108,7 @@ const UnitDetails: FunctionComponent = () => {
         (listing) =>
           selectedRoomType != null &&
           roomButtonLabel(listing.label).toLowerCase() ===
-          roomButtonLabel(selectedRoomType).toLowerCase(),
+            roomButtonLabel(selectedRoomType).toLowerCase(),
       );
 
       setSelectedListingId((matchingListing ?? availableListings[0])?.id ?? '');
@@ -202,10 +211,10 @@ const UnitDetails: FunctionComponent = () => {
   const overallScore =
     reviewRatings.length > 0
       ? Number(
-        (reviewRatings.reduce((sum, rating) => sum + rating, 0) / reviewRatings.length).toFixed(
-          1,
-        ),
-      )
+          (reviewRatings.reduce((sum, rating) => sum + rating, 0) / reviewRatings.length).toFixed(
+            1,
+          ),
+        )
       : 0;
   const ratingRows = [5, 4, 3, 2, 1].map((star) => {
     const count = reviewRatings.filter((rating) => Math.round(rating) === star).length;
@@ -217,8 +226,8 @@ const UnitDetails: FunctionComponent = () => {
     const initials = `${firstName[0] ?? 'S'}${lastName[0] ?? ''}`.toUpperCase();
     const date = review.createdAt
       ? new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric' }).format(
-        new Date(review.createdAt),
-      )
+          new Date(review.createdAt),
+        )
       : 'Recently';
 
     return {
@@ -260,6 +269,50 @@ const UnitDetails: FunctionComponent = () => {
       );
     } finally {
       setIsBookmarkSaving(false);
+    }
+  };
+
+  const handleSubmitApplication = async () => {
+    if (!selectedListing) {
+      setApplicationError('Please choose an available room before submitting.');
+      return;
+    }
+
+    if (!objectIdPattern.test(selectedListing.id)) {
+      setApplicationError('Room details are still loading. Please try again in a moment.');
+      return;
+    }
+
+    if (!leaseDuration || !moveInDate) {
+      setApplicationError('Please choose your lease duration and preferred move-in date.');
+      return;
+    }
+
+    setIsSubmittingApplication(true);
+    setApplicationError(null);
+
+    try {
+      const moveIn = new Date(`${moveInDate}T00:00:00.000Z`);
+      await ApplicationService.createApplication({
+        listingId: selectedListing.id,
+        leaseDuration: leaseDurationValues[leaseDuration],
+        moveInDate: moveIn,
+        message: messageToLandlord.trim() || null,
+      });
+      navigate('/applications');
+    } catch (err) {
+      const status = axios.isAxiosError(err) ? err.response?.status : undefined;
+      if (status === 401) {
+        setShowSignIn(true);
+        return;
+      }
+
+      const apiMessage = axios.isAxiosError(err)
+        ? (err.response?.data as { error?: { message?: string } })?.error?.message
+        : undefined;
+      setApplicationError(apiMessage ?? 'Failed to submit your application.');
+    } finally {
+      setIsSubmittingApplication(false);
     }
   };
 
@@ -340,10 +393,11 @@ const UnitDetails: FunctionComponent = () => {
                     type="button"
                     onClick={handleBookmarkToggle}
                     disabled={!selectedListing || isBookmarkSaving}
-                    className={`rounded border border-teal-200 py-2 px-6 transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${isSelectedListingBookmarked
+                    className={`rounded border border-teal-200 py-2 px-6 transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${
+                      isSelectedListingBookmarked
                         ? 'bg-lightcyan text-darkslategray-200'
                         : 'hover:bg-lightcyan'
-                      }`}
+                    }`}
                   >
                     {isBookmarkSaving ? 'SAVING' : isSelectedListingBookmarked ? 'SAVED' : 'SAVE'}
                   </button>
@@ -397,10 +451,11 @@ const UnitDetails: FunctionComponent = () => {
                             key={listing.id}
                             type="button"
                             onClick={() => setSelectedListingId(listing.id)}
-                            className={`rounded-lg border py-2 px-3 text-center font-semibold text-xs shadow transition-colors ${isSelected
+                            className={`rounded-lg border py-2 px-3 text-center font-semibold text-xs shadow transition-colors ${
+                              isSelected
                                 ? 'border-darkslategray-200 bg-darkslategray-200 text-white'
                                 : 'border-transparent bg-white text-black hover:bg-lightcyan'
-                              }`}
+                            }`}
                           >
                             {roomButtonLabel(listing.label)}
                           </button>
@@ -425,22 +480,25 @@ const UnitDetails: FunctionComponent = () => {
                     <button
                       type="button"
                       onClick={() => setIsLeaseMenuOpen((isOpen) => !isOpen)}
-                      className={`shadow rounded-lg border w-full flex items-center justify-between py-2.5 px-3 gap-2 text-left transition-all ${isLeaseMenuOpen
+                      className={`shadow rounded-lg border w-full flex items-center justify-between py-2.5 px-3 gap-2 text-left transition-all ${
+                        isLeaseMenuOpen
                           ? 'border-teal-200 bg-lightcyan/40 ring-2 ring-lightcyan'
                           : 'border-transparent bg-white hover:bg-lightcyan/20'
-                        }`}
+                      }`}
                     >
                       <span
-                        className={`font-semibold text-xs ${leaseDuration ? 'text-black' : 'text-silver'
-                          }`}
+                        className={`font-semibold text-xs ${
+                          leaseDuration ? 'text-black' : 'text-silver'
+                        }`}
                       >
                         {leaseDuration || 'Choose lease duration'}
                       </span>
                       <span className="grid h-7 w-7 place-items-center rounded-full bg-whitesmoke-100 text-teal-200">
                         <Icon
                           icon="mdi:chevron-down"
-                          className={`h-4 w-4 transition-transform ${isLeaseMenuOpen ? 'rotate-180' : ''
-                            }`}
+                          className={`h-4 w-4 transition-transform ${
+                            isLeaseMenuOpen ? 'rotate-180' : ''
+                          }`}
                         />
                       </span>
                     </button>
@@ -458,10 +516,11 @@ const UnitDetails: FunctionComponent = () => {
                                 setLeaseDuration(duration);
                                 setIsLeaseMenuOpen(false);
                               }}
-                              className={`flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-xs font-semibold transition-colors ${isSelected
+                              className={`flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-xs font-semibold transition-colors ${
+                                isSelected
                                   ? 'bg-darkslategray-200 text-white'
                                   : 'text-gray hover:bg-lightcyan'
-                                }`}
+                              }`}
                             >
                               <span>{duration}</span>
                               {isSelected && (
@@ -484,8 +543,9 @@ const UnitDetails: FunctionComponent = () => {
                       type="date"
                       value={moveInDate}
                       onChange={(event) => setMoveInDate(event.target.value)}
-                      className={`flex-1 bg-transparent outline-none font-semibold text-xs ${moveInDate ? 'text-black' : 'text-silver'
-                        }`}
+                      className={`flex-1 bg-transparent outline-none font-semibold text-xs ${
+                        moveInDate ? 'text-black' : 'text-silver'
+                      }`}
                     />
                     <Icon icon="mdi:calendar" className="h-4 w-4" />
                   </div>
@@ -533,13 +593,22 @@ const UnitDetails: FunctionComponent = () => {
               </div>
 
               <div className="w-full flex flex-col gap-2 font-poppins text-white">
-                <Link
-                  to="/applications"
-                  className="w-full rounded-lg bg-darkslategray-200 flex items-center justify-center gap-2 py-3 px-4"
+                {applicationError && (
+                  <p className="text-xs font-semibold text-red-500 font-lora text-center">
+                    {applicationError}
+                  </p>
+                )}
+                <button
+                  type="button"
+                  onClick={handleSubmitApplication}
+                  disabled={isSubmittingApplication}
+                  className="w-full rounded-lg bg-darkslategray-200 flex items-center justify-center gap-2 py-3 px-4 disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  <span className="font-medium text-sm">Submit Application</span>
+                  <span className="font-medium text-sm">
+                    {isSubmittingApplication ? 'Submitting...' : 'Submit Application'}
+                  </span>
                   <Icon icon="formkit:arrowright" className="h-5 w-5" />
-                </Link>
+                </button>
                 <p className="text-xs text-dimgray font-lora text-center">
                   Landlord will respond within 24–48 hrs.
                   <br />

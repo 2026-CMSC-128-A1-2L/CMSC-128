@@ -101,9 +101,15 @@ const facilityManagerFilter =
     if (permission) {
       managerCriteria[`permissions.${permission}`] = true;
     }
-    const facilityIds = await HousingFacility.find({
-      managers: { $elemMatch: managerCriteria },
-    }).distinct('_id');
+
+    const facilityFilter: QueryFilter<HousingFacilityType> =
+      req.user.userType === 'Landlord'
+        ? {
+            $or: [{ landlordId: req.user._id }, { managers: { $elemMatch: managerCriteria } }],
+          }
+        : { managers: { $elemMatch: managerCriteria } };
+
+    const facilityIds = await HousingFacility.find(facilityFilter).distinct('_id');
 
     res.locals.filters = {
       facilityId: { $in: facilityIds },

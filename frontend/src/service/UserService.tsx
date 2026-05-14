@@ -128,7 +128,9 @@ export const UserService = {
 
   async getMyApplications() {
     try {
-      const response = await api.get('/api/users/me/applications');
+      const response = await api.get('/api/users/me/applications', {
+        params: { q: JSON.stringify({ limit: 50 }) },
+      });
       return response.data;
     } catch (error) {
       console.error('Error fetching my applications:', error);
