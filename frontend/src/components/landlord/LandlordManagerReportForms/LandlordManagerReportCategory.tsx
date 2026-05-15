@@ -21,9 +21,9 @@ type Props = {
   isLastCategory: boolean;
   onToggle: (itemKey: string) => void;
   onToggleAll: () => void;
-  onCancel: () => void;
   onBack: () => void;
   onNext: () => void;
+  type?: 'manager' | 'tenant';
 };
 
 const CheckSvg = ({ size = 14 }: { size?: number }) => (
@@ -69,8 +69,8 @@ const Checkbox: FunctionComponent<{ active: boolean; onToggle: () => void; ariaL
     className={[
       'inline-flex h-[24px] w-[24px] shrink-0 cursor-pointer items-center justify-center rounded-[4px] transition-colors',
       active
-        ? 'bg-[#096c5b] shadow-[0_0_2px_rgba(0,0,0,0.25)]'
-        : 'bg-[#f0f0f0] shadow-[0_0_2px_rgba(0,0,0,0.25)]',
+        ? 'bg-[#096c5b] shadow-[0_0_2px_rgba(0,0,0,0.25)] dark:bg-[#12342e]'
+        : 'bg-[#f0f0f0] shadow-[0_0_2px_rgba(0,0,0,0.25)] dark:bg-[#1f2022] dark:border dark:border-[#303331]',
     ].join(' ')}
   >
     {active ? <CheckSvg size={14} /> : null}
@@ -89,11 +89,12 @@ const LandlordManagerReportCategory: FunctionComponent<Props> = ({
   onCancel,
   onBack,
   onNext,
+  type = 'manager',
 }) => {
   const allChecked = category.items.every((item) => selected.has(item.key));
 
   return (
-    <div className="relative flex max-h-[90vh] w-[612px] flex-col items-center overflow-hidden rounded-[26px] bg-white">
+    <div className="relative flex max-h-[90vh] w-[612px] flex-col items-center overflow-hidden rounded-[26px] bg-white dark:bg-[#141515]">
       {/* Header */}
       <div
         className="flex w-full flex-col items-start justify-center pl-[57px] pr-[32px] py-[12px]"
@@ -104,10 +105,10 @@ const LandlordManagerReportCategory: FunctionComponent<Props> = ({
       >
         <div className="flex w-full flex-col items-start justify-center pb-[8px] pt-[32px]">
           <b className="font-['Poppins',sans-serif] text-[32px] leading-[normal] text-white">
-            Report Manager
+            {type === 'tenant' ? 'Report Tenant' : 'Report Manager'}
           </b>
           <b className="font-['Inter',sans-serif] text-[18px] leading-[normal] tracking-[-0.18px] text-[#f1f5f9]">
-            Report your dorm manager
+            Report your {type === 'tenant' ? 'tenant' : 'dorm manager'}
           </b>
         </div>
       </div>
@@ -115,16 +116,16 @@ const LandlordManagerReportCategory: FunctionComponent<Props> = ({
       {/* Body */}
       <div className="flex w-full flex-1 flex-col gap-[48px] overflow-y-auto px-[48px] pt-[32px] pb-[20px]">
         <div className="flex w-full flex-col gap-[12px]">
-          <span className="font-['Inter',sans-serif] text-[14px] font-bold text-[#666]">
+          <span className="font-['Inter',sans-serif] text-[14px] font-bold text-[#666] dark:text-[#a4acba]">
             Email Address
           </span>
-          <div className="flex h-[48px] w-full items-center rounded-[12px] border border-solid border-[#f0f0f0] px-[16px] py-[4px]">
-            <span className="font-['Inter',sans-serif] text-[14px] font-medium leading-[24px] text-[#64748b]">
+          <div className="flex h-[48px] w-full items-center rounded-[12px] border border-solid border-[#f0f0f0] dark:border-[#303331] px-[16px] py-[4px]">
+            <span className="font-['Inter',sans-serif] text-[14px] font-medium leading-[24px] text-[#64748b] dark:text-[#d7e0ef]">
               {managerEmail}
             </span>
           </div>
           <div className="flex w-full items-center justify-center px-[8px]">
-            <p className="flex-1 font-['Inter',sans-serif] text-[18px] font-bold leading-[normal] tracking-[-0.18px] text-black">
+            <p className="flex-1 font-['Inter',sans-serif] text-[18px] font-bold leading-[normal] tracking-[-0.18px] text-black dark:text-[#d7e0ef]">
               You are reporting {managerName}. Please select all that apply:
             </p>
           </div>
@@ -132,11 +133,11 @@ const LandlordManagerReportCategory: FunctionComponent<Props> = ({
 
         <div className="flex w-full flex-col gap-[12px]">
           <div className="flex w-full items-end pr-[22px]">
-            <span className="flex-1 font-['Inter',sans-serif] text-[14px] font-bold text-[#666]">
+            <span className="flex-1 font-['Inter',sans-serif] text-[14px] font-bold text-[#666] dark:text-[#a4acba]">
               {category.title}
             </span>
             <div className="flex items-center gap-[11px]">
-              <span className="font-['Inter',sans-serif] text-[12px] font-medium text-[#64748b]">
+              <span className="font-['Inter',sans-serif] text-[12px] font-medium text-[#64748b] dark:text-[#a4acba]">
                 Select All
               </span>
               <Checkbox
@@ -165,15 +166,15 @@ const LandlordManagerReportCategory: FunctionComponent<Props> = ({
                   }}
                   className={[
                     'flex w-full cursor-pointer items-center gap-[16px] rounded-[12px] py-[12px] pl-[24px] pr-[22px] text-left transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[#096c5b]/40',
-                    active ? 'bg-[#f0fdf9]' : 'hover:bg-[#fafafa]',
+                    active ? 'bg-[#f0fdf9] dark:bg-[#1f3a34]' : 'hover:bg-[#fafafa] dark:hover:bg-[#1f2022]',
                   ].join(' ')}
                 >
                   <div className="flex flex-1 flex-col gap-[4px]">
-                    <span className="font-['Inter',sans-serif] text-[14px] font-bold text-black">
+                    <span className="font-['Inter',sans-serif] text-[14px] font-bold text-black dark:text-[#d7e0ef]">
                       {item.title}
                     </span>
                     {hasDesc && (
-                      <span className="font-['Inter',sans-serif] text-[12px] font-medium text-[#666]">
+                      <span className="font-['Inter',sans-serif] text-[12px] font-medium text-[#666] dark:text-[#a4acba]">
                         {item.desc}
                       </span>
                     )}
@@ -192,7 +193,7 @@ const LandlordManagerReportCategory: FunctionComponent<Props> = ({
           <button
             type="button"
             onClick={onCancel}
-            className="rounded-[12px] px-[24px] py-[8px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#ef4444] transition-opacity hover:opacity-70"
+            className="rounded-[12px] px-[24px] py-[8px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#ef4444] dark:text-red-400 transition-opacity hover:opacity-70"
           >
             Cancel
           </button>
@@ -200,7 +201,7 @@ const LandlordManagerReportCategory: FunctionComponent<Props> = ({
           <button
             type="button"
             onClick={onBack}
-            className="rounded-[12px] px-[24px] py-[8px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#666] transition-opacity hover:opacity-70"
+            className="rounded-[12px] px-[24px] py-[8px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#666] dark:text-[#a4acba] transition-opacity hover:opacity-70"
           >
             Back
           </button>
@@ -208,7 +209,7 @@ const LandlordManagerReportCategory: FunctionComponent<Props> = ({
         <button
           type="button"
           onClick={onNext}
-          className="rounded-[12px] bg-[#cbf6ed] px-[24px] py-[8px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] transition-opacity hover:opacity-80"
+          className="rounded-[12px] bg-[#cbf6ed] dark:bg-[#12342e] px-[24px] py-[8px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] dark:text-[#72cbb8] transition-opacity hover:opacity-80"
         >
           {isLastCategory ? 'Continue' : 'Next'}
         </button>

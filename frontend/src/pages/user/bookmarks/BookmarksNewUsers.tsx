@@ -1,6 +1,6 @@
 import type { FunctionComponent } from 'react';
 import { Icon } from '@iconify/react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import SideBar from '../../../components/user/SideBar';
 import Footer from '../../../components/general/Footer';
@@ -31,38 +31,32 @@ type BookmarkCardProps = {
 };
 
 const BookmarkCard: FunctionComponent<BookmarkCardProps> = ({ bookmark, onRemove }) => {
-  const navigate = useNavigate();
   const image = bookmark.media?.[0]?.value ?? placeholderImage;
   const isFull = bookmark.availableUnitCount <= 0 && bookmark.unitCount > 0;
   const roomLabel = formatRoomLabel(bookmark);
-
-  const openDetails = () => {
-    if (!bookmark.facilityId) return;
-
-    navigate(`/facilities/${bookmark.facilityId}`, {
-      state: {
-        selectedRoomType: roomLabel,
-      },
-    });
-  };
+  const detailsPath = `/facilities/${bookmark.facilityId}`;
+  const detailsState = { selectedRoomType: roomLabel };
 
   return (
-    <div className="w-full rounded-xl border border-whitesmoke-200 bg-white shadow-sm overflow-hidden flex flex-col md:flex-row">
-      <button
-        type="button"
-        onClick={openDetails}
-        className="h-44 md:h-auto md:w-72 shrink-0 bg-whitesmoke-100"
-      >
+    <div className="relative w-full overflow-hidden rounded-xl border border-whitesmoke-200 bg-white shadow-sm transition-shadow hover:shadow-md flex flex-col md:flex-row">
+      <Link
+        to={detailsPath}
+        state={detailsState}
+        className="absolute inset-0 z-10 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-200"
+        aria-label={`View ${bookmark.facilityName ?? roomLabel}`}
+      />
+
+      <div className="h-44 md:h-auto md:w-72 shrink-0 bg-whitesmoke-100">
         <img
           src={image}
           alt={bookmark.facilityName ?? roomLabel}
           className="h-full w-full object-cover"
         />
-      </button>
+      </div>
 
       <div className="flex min-w-0 flex-1 flex-col gap-4 p-5">
         <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
-          <button type="button" onClick={openDetails} className="min-w-0 text-left">
+          <div className="min-w-0 text-left">
             <div className="flex flex-wrap items-center gap-2">
               <b className="text-xl text-darkslategray-200">
                 {bookmark.facilityName ?? 'Facility'}
@@ -79,12 +73,15 @@ const BookmarkCard: FunctionComponent<BookmarkCardProps> = ({ bookmark, onRemove
               <Icon icon="material-symbols-light:location-on" className="h-4 w-4" />
               <span>{bookmark.facilityLoc ?? 'Location unavailable'}</span>
             </div>
-          </button>
+          </div>
 
           <button
             type="button"
-            onClick={() => onRemove(bookmark.listingId)}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-whitesmoke-200 text-teal-200 transition-colors hover:bg-lightcyan"
+            onClick={(event) => {
+              event.stopPropagation();
+              void onRemove(bookmark.listingId);
+            }}
+            className="relative z-20 flex h-10 w-10 items-center justify-center rounded-full border border-whitesmoke-200 text-teal-200 transition-colors hover:bg-lightcyan"
             aria-label={`Remove ${roomLabel} bookmark`}
           >
             <Icon icon="material-symbols:bookmark-remove-outline" className="h-5 w-5" />

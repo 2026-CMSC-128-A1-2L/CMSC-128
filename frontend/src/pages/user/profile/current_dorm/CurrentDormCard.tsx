@@ -56,13 +56,6 @@ export default function CurrentDormCard({
             </div>
           </div>
 
-          {/* Action Button */}
-          <button
-            onClick={() => navigate('/current-dorm')}
-            className="w-full border border-[#f0f0f0] text-teal-700 text-sm font-semibold rounded-md py-3 flex items-center justify-center gap-2 hover:border-teal-500 cursor-pointer transition dark:border-[#303331] dark:text-[#72cbb8] dark:hover:border-[#72cbb8]">
-            View Details
-            <Icon icon="heroicons:arrow-top-right-on-square" className="w-4 h-4" />
-          </button>
         </div>
       </div>
       <div className="self-stretch flex items-start justify-center pt-num-24 px-num-32 pb-20 gap-6 text-num-14 text-black dark:text-[#edf6f4]">
@@ -195,7 +188,7 @@ export default function CurrentDormCard({
 
               <button
                 className="px-4 py-1 text-gray-100 bg-[#f1f5f9] rounded-full dark:bg-[#202123] dark:text-[#a4acba]"
-                onClick={() => {}}
+                onClick={() => { }}
               >
                 Proceed
               </button>
@@ -231,7 +224,7 @@ export default function CurrentDormCard({
 
               <button
                 className="px-4 py-1 text-gray-100 bg-[#f1f5f9] rounded-full dark:bg-[#202123] dark:text-[#a4acba]"
-                onClick={() => {}}
+                onClick={() => { }}
               >
                 Proceed
               </button>
@@ -270,7 +263,7 @@ export default function CurrentDormCard({
 
               <button
                 className="px-4 py-1  text-gray-100  bg-[#f1f5f9] rounded-full"
-                onClick={() => {}}
+                onClick={() => { }}
               >
                 Proceed
               </button>

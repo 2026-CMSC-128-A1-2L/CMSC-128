@@ -200,8 +200,8 @@ const TenantsToolbar: FunctionComponent<TenantsToolbarProps> = ({
                           className={[
                             'rounded-full px-[14px] py-[6px] font-["Inter",sans-serif] text-[13px] font-semibold transition-colors',
                             active
-                              ? 'bg-[#096c5b] text-white'
-                              : 'bg-[#f3f4f6] text-[#374151] hover:bg-[#e5e7eb]',
+                              ? 'bg-[#096c5b] text-white dark:bg-[#12342e] dark:text-[#72cbb8]'
+                              : 'bg-[#f3f4f6] text-[#374151] hover:bg-[#e5e7eb] dark:bg-[#242526] dark:text-[#a4acba] dark:hover:bg-[#2d302f]',
                           ].join(' ')}
                         >
                           {opt.label}
@@ -251,10 +251,10 @@ const TenantsToolbar: FunctionComponent<TenantsToolbarProps> = ({
                   >
                     Facility
                   </label>
-                  <div className="flex items-center gap-[8px] rounded-[12px] border border-solid border-[#f0f0f0] bg-[#fafafa] px-[12px] py-[8px] transition-colors focus-within:border-[#096c5b]/40 focus-within:bg-white">
+                  <div className="flex items-center gap-[8px] rounded-[12px] border border-solid border-[#f0f0f0] bg-[#fafafa] px-[12px] py-[8px] transition-colors focus-within:border-[#096c5b]/40 focus-within:bg-white dark:border-[#303331] dark:bg-[#1f2022] dark:focus-within:border-[#72cbb8]/40 dark:focus-within:bg-[#101111]">
                     <Icon
                       icon="material-symbols:search-rounded"
-                      className="h-[20px] w-[20px] shrink-0 text-[#64748b]"
+                      className="h-[20px] w-[20px] shrink-0 text-[#64748b] dark:text-[#a4acba]"
                       aria-hidden
                     />
                     <input
@@ -264,7 +264,7 @@ const TenantsToolbar: FunctionComponent<TenantsToolbarProps> = ({
                       placeholder="Dorm or apartment name..."
                       value={filter.facilityQuery}
                       onChange={(e) => onFilterChange({ facilityQuery: e.target.value })}
-                      className="min-w-0 flex-1 bg-transparent font-['Inter',sans-serif] text-[14px] font-medium text-[#2f3136] outline-none placeholder:text-[#9ca3af]"
+                      className="min-w-0 flex-1 bg-transparent font-['Inter',sans-serif] text-[14px] font-medium text-[#2f3136] dark:text-[#d7e0ef] outline-none placeholder:text-[#9ca3af] dark:placeholder:text-[#6b7280]"
                       autoComplete="off"
                     />
                   </div>

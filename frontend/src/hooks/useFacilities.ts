@@ -10,7 +10,13 @@ export type DormCardData = {
   price: { min: number; max: number };
   location: string;
   image: string;
-  room_types: { pax: string; price: number; unitCount?: number; availableUnitCount?: number }[];
+  room_types: {
+    id?: string;
+    pax: string;
+    price: number;
+    unitCount?: number;
+    availableUnitCount?: number;
+  }[];
 };
 
 // GetFacilitiesResponse is an array of ManagerFacilitySchema | UserFacilitySchema.
@@ -19,6 +25,7 @@ export type DormCardData = {
 // ManagerFacilitySchema / UserFacilityDetailedSchema adds `media`.
 type FacilityItem = GetFacilitiesResponse[number];
 type FacilityListingSummary = {
+  id?: unknown;
   name: string;
   price: {
     min: number;
@@ -65,6 +72,7 @@ function mapToCardData(facility: FacilityItem): DormCardData {
         };
   const roomTypes =
     facilityWithListings.listings?.map((listing: FacilityListingSummary) => ({
+      id: typeof listing.id === 'string' ? listing.id : String(listing.id ?? ''),
       pax: listing.name,
       price: listing.price.min,
       unitCount: listing.unitCount,
