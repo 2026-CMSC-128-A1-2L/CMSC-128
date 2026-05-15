@@ -7,6 +7,7 @@ export type VisitSlot = {
   visitorName: string;
   backgroundColor?: string;
   dayOfWeek: number;
+  startDate: Date;
 };
 
 export type LandlordEventPopoutType = {
@@ -35,9 +36,13 @@ const LandlordEventPopout: FunctionComponent<LandlordEventPopoutType> = ({
           <Icon icon="ic:round-person" className="w-12 h-12 text-teal shrink-0 mt-1" />
           <div className="flex-1">
             <div className="text-lg font-semibold text-dimgray mb-2">{event.visitorName}</div>
-            <div className="text-sm text-gray mb-4">Visit Time: {event.time}</div>
-            <div className="text-xs text-dimgray">
-              <span className="font-semibold">Visit ID:</span> {event.id}
+            <div className="text-sm text-gray">Visit Time: {event.time}</div>
+            <div className="text-sm text-gray">
+              Visit Date: {event.startDate.toLocaleDateString('en-US', {
+                month: 'long',
+                day: 'numeric',
+                year: 'numeric',
+              })}
             </div>
           </div>
         </div>

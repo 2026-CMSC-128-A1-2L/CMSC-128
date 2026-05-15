@@ -7,6 +7,7 @@ export type VisitSlot = {
   visitorName: string;
   backgroundColor?: string;
   dayOfWeek: number;
+  startDate: Date;
 };
 
 export type LandlordDayEventsPopoutType = {
