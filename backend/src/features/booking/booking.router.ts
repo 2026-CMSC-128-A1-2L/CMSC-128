@@ -4,6 +4,7 @@ import {
   routeCreateBooking,
   routeCancelBooking,
   routeUpdateBookingStatus,
+  routeGetAvailableVisitSlots,
 } from './booking.controller.js';
 import {
   isSuperAdmin,
@@ -18,6 +19,15 @@ const router = Router();
 // GET /api/bookings
 // ============================================================================
 router.get('/', isSuperAdmin, routeGetBookings);
+
+// ============================================================================
+// GET /api/bookings/facilities/:facilityId/available-slots
+// ============================================================================
+router.get(
+  '/facilities/:facilityId/available-slots',
+  isVerifiedStudent,
+  routeGetAvailableVisitSlots,
+);
 
 // ============================================================================
 // POST /api/bookings
