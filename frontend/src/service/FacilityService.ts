@@ -12,8 +12,8 @@ import type {
 export const FacilityService = {
   async getFacilities() {
     try {
-      const response = await axios.get<{ data: GetFacilitiesResponse }>(
-        `${API_URL}/api/facilities`,
+      const response = await api.get<{ data: GetFacilitiesResponse }>(
+        `/api/facilities`,
         {
           // headers
         },
@@ -27,8 +27,8 @@ export const FacilityService = {
 
   async searchFacilities(body: SearchFacilitiesBody) {
     try {
-      const response = await axios.post<{ data: SearchFacilitiesResponse }>(
-        `${API_URL}/api/facilities/search`,
+      const response = await api.post<{ data: SearchFacilitiesResponse }>(
+        `/api/facilities/search`,
         {
           ...body,
         },
@@ -45,8 +45,8 @@ export const FacilityService = {
 
   async createFacility(body: CreateFacilityBody) {
     try {
-      const response = await axios.post(
-        `${API_URL}/api/facilities`,
+      const response = await api.post(
+        `/api/facilities`,
         {
           ...body,
         },
@@ -63,8 +63,8 @@ export const FacilityService = {
 
   async updateFacility(facilityId: string, body: UpdateFacilityBody) {
     try {
-      const response = await axios.patch(
-        `${API_URL}/api/facilities/${facilityId}`,
+      const response = await api.patch(
+        `/api/facilities/${facilityId}`,
         {
           ...body,
         },
@@ -81,7 +81,7 @@ export const FacilityService = {
 
   async deleteFacility(facilityId: string) {
     try {
-      await axios.delete(`${API_URL}/api/facilities/${facilityId}`, {
+      await api.delete(`/api/facilities/${facilityId}`, {
         // headers
       });
     } catch (error) {
@@ -92,8 +92,8 @@ export const FacilityService = {
 
   async getFacility(facilityId: string) {
     try {
-      const response = await axios.get<{ data: GetFacilityResponse }>(
-        `${API_URL}/api/facilities/${facilityId}`,
+      const response = await api.get<{ data: GetFacilityResponse }>(
+        `/api/facilities/${facilityId}`,
         {
           // headers
         },
@@ -107,8 +107,8 @@ export const FacilityService = {
 
   async getMonthlyIncome() {
     try {
-      const response = await axios.get<{ data: number }>(
-        `${API_URL}/api/facilities/landlord/monthly-income`,
+      const response = await api.get<{ data: number }>(
+        `/api/facilities/landlord/monthly-income`,
         {
           // headers
         },
@@ -122,8 +122,8 @@ export const FacilityService = {
 
   async getOverdueTenants() {
     try {
-      const response = await axios.get<{ data: unknown }>(
-        `${API_URL}/api/facilities/landlord/overdue-tenants`,
+      const response = await api.get<{ data: unknown }>(
+        `/api/facilities/landlord/overdue-tenants`,
         {
           // headers
         },
@@ -141,8 +141,8 @@ export const FacilityService = {
     body: UpdateManagerPermissionsBody,
   ) {
     try {
-      const response = await axios.patch(
-        `${API_URL}/api/facilities/${facilityId}/managers/${managerId}`,
+      const response = await api.patch(
+        `/api/facilities/${facilityId}/managers/${managerId}`,
         {
           ...body,
         },
@@ -159,7 +159,7 @@ export const FacilityService = {
 
   async removeManager(facilityId: string, managerId: string) {
     try {
-      await axios.delete(`${API_URL}/api/facilities/${facilityId}/managers/${managerId}`, {
+      await api.delete(`/api/facilities/${facilityId}/managers/${managerId}`, {
         // headers
       });
     } catch (error) {
@@ -170,7 +170,7 @@ export const FacilityService = {
 
   async approveFacility(facilityId: string) {
     try {
-      await axios.post(`/api/facilities/${facilityId}/approve`, {
+      await api.post(`/api/facilities/${facilityId}/approve`, {
         // headers
       });
     } catch (error) {
@@ -181,7 +181,7 @@ export const FacilityService = {
 
   async rejectFacility(facilityId: string) {
     try {
-      await axios.post(`/api/facilities/${facilityId}/reject`, {
+      await api.post(`/api/facilities/${facilityId}/reject`, {
         // headers
       });
     } catch (error) {
