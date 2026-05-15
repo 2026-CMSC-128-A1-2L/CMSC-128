@@ -156,21 +156,19 @@ const DmsSidebar: FunctionComponent<DmsSidebarProps> = ({
           {/* Filter Pills */}
           <div className="w-full flex items-start gap-2 pl-2">
             <button
-              className={`h-fit rounded-full flex items-center justify-center py-1.5 px-5 transition-all active:scale-95 ${
-                dmFilter === "all"
+              className={`h-fit rounded-full flex items-center justify-center py-1.5 px-5 transition-all active:scale-95 ${dmFilter === "all"
                   ? "bg-teal text-white shadow-md shadow-teal/20 dark:bg-[#0d3a32] dark:text-[#d7e0ef] dark:shadow-none"
                   : "bg-lightcyan text-teal hover:bg-teal/10 dark:bg-[#102c27] dark:text-[#72cbb8] dark:hover:bg-[#17352f]"
-              }`}
+                }`}
               onClick={() => setDmFilter("all")}
             >
               <b className="relative text-num-12 font-inter">All</b>
             </button>
             <button
-              className={`h-fit rounded-full flex items-center justify-center py-1.5 px-5 transition-all active:scale-95 ${
-                dmFilter === "unread"
+              className={`h-fit rounded-full flex items-center justify-center py-1.5 px-5 transition-all active:scale-95 ${dmFilter === "unread"
                   ? "bg-teal text-white shadow-md shadow-teal/20 dark:bg-[#0d3a32] dark:text-[#d7e0ef] dark:shadow-none"
                   : "bg-lightcyan text-teal hover:bg-teal/10 dark:bg-[#102c27] dark:text-[#72cbb8] dark:hover:bg-[#17352f]"
-              }`}
+                }`}
               onClick={() => setDmFilter("unread")}
             >
               <b className="relative text-num-12 font-inter flex items-center gap-1">

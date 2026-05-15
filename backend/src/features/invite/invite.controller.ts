@@ -1,7 +1,14 @@
 import type { RequestHandler } from 'express';
 import { CreateInviteManagerBodySchema } from 'shared';
 import { sendNotification } from '../notification/notification.service.js';
-import { inviteManager, acceptInvite, declineInvite, getInvites } from './invite.service.js';
+import {
+  inviteManager,
+  acceptInvite,
+  declineInvite,
+  acceptStudentInvite,
+  declineStudentInvite,
+  getInvites,
+} from './invite.service.js';
 import { AppError } from '../../error.js';
 import { Invite } from './invite.model.js';
 import z from 'zod';
@@ -65,5 +72,33 @@ export const routeDeleteInvite: RequestHandler = async (req, res, _next) => {
   if (!invite) throw new AppError(404, 'Invite not found.');
   if (invite.status !== 'pending') throw new AppError(400, 'Can only cancel pending invites.');
   await invite.deleteOne();
+  res.sendStatus(204);
+};
+
+// student accepts a legacy tenant invite from landlord
+export const routeAcceptStudentInvite: RequestHandler = async (req, res, _next) => {
+  assert.ok(req.user);
+  const token = z.string().parse(req.params.inviteId);
+  const invite = await acceptStudentInvite(token, req.user.emails);
+  await sendNotification(
+    invite.landlordId,
+    'Student Invite Accepted',
+    `A student has accepted your invite to join the facility.`,
+  );
+
+  res.sendStatus(204);
+};
+
+// student declines a legacy tenant invite
+export const routeDeclineStudentInvite: RequestHandler = async (req, res, _next) => {
+  assert.ok(req.user);
+  const token = z.string().parse(req.params.inviteId);
+  const invite = await declineStudentInvite(token, req.user.emails);
+  await sendNotification(
+    invite.landlordId,
+    'Student Invite Declined',
+    `A student has declined your invite to join the facility.`,
+  );
+
   res.sendStatus(204);
 };

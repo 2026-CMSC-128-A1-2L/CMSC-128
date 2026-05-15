@@ -1,13 +1,14 @@
-import type { ReactNode } from 'react';
+import { useEffect, useReducer, useState, type ReactNode } from 'react';
 import { Icon } from '@iconify/react';
 import { Link } from 'react-router-dom';
 
+//changed contact number and home address to necessary fields in landlord info
 export type LandlordInfo = {
   displayName: string;
   email: string;
   fullName: string;
-  contactNumber?: string;
-  homeAddress?: string;
+  contactNumber: string;
+  homeAddress: string;
   role: string;
   employees: string[];
   verified: boolean;
@@ -19,6 +20,14 @@ type LandlordInfoCardProps = {
   onEditContact?: () => void;
   onEditHomeAddress?: () => void;
   verificationHref?: string;
+  activeTab: 'info' | 'verification';
+  setActiveTab: (tab: 'info' | 'verification') => void;
+  setContactNumber:any;
+  setHomeAddress:any;
+  setIsEditing:any;
+  isEditing:boolean;
+  setIsEditingAddress:any;
+  isEditingAddress:boolean;
 };
 
 const PLACEHOLDER = '- - - - -';
@@ -75,7 +84,42 @@ const LandlordInfoCard = ({
   onEditContact,
   onEditHomeAddress,
   verificationHref = '/landlord/profile/verification',
+  activeTab,
+  setActiveTab,
+  setContactNumber,
+  setHomeAddress,
+  setIsEditing,
+  isEditing,
+  setIsEditingAddress,
+  isEditingAddress
 }: LandlordInfoCardProps) => {
+
+  
+const handleSaveAddress = () => {
+    const cleaned = homeAddressOnEdit.trim().replace(/\s\s+/g, ' ');
+    setHomeAddress(cleaned);
+    setIsEditingAddress(false);
+  };
+
+  // save changes and exit editing mode
+  const handleSave = () => {
+    if (contactNumberOnEdit.length !== 11) {
+      return;
+    }
+    const newContact=contactNumberOnEdit
+    setContactNumber(newContact)
+    setIsEditing(false)
+  };
+
+  // redact contact number except for first 2 digits
+  const redactContact = (number: string) => {
+  if (!number || number.length < 2) return number ?? PLACEHOLDER;
+  return number.substring(0, 2) + '*'.repeat(number.length - 2);
+};
+
+  //stateful contact number variable to be used for input field
+  const [contactNumberOnEdit, setContactNumberOnEdit] = useState(info.contactNumber ?? '');
+  const [homeAddressOnEdit, setHomeAddressOnEdit] = useState(info.homeAddress ?? '');
   return (
     <section className="flex flex-col gap-[24px] rounded-[16px] px-[32px] pt-[32px] pb-[24px]">
       <header className="flex flex-col items-start gap-[4px]">
@@ -105,10 +149,47 @@ const LandlordInfoCard = ({
         <div className="flex flex-col gap-[16px]">
           <Field label="Name">{info.fullName}</Field>
           <Field label="Contact number" onEdit={onEditContact}>
-            {info.contactNumber || PLACEHOLDER}
+                      {isEditing ? (
+                <input
+                  type="text"
+                  value={contactNumberOnEdit}
+                  placeholder="09*********"
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    const onlyNums = val.replace(/[^0-9]/g, '');
+
+                    // Requirement: Must start with 09 and limit to 11 digits
+                    if (onlyNums.length === 0) {
+                      setContactNumberOnEdit('');
+                    } else if (onlyNums.length === 1) {
+                      if (onlyNums === '0') setContactNumberOnEdit('0');
+                    } else if (onlyNums.startsWith('09') && onlyNums.length <= 11) {
+                      setContactNumberOnEdit(onlyNums);
+                    }
+                  }}
+                  className="border-b border-[#096C5B] text-[14px] bg-transparent outline-none w-[200px] py-1"
+                  onKeyDown={(e) => e.key === 'Enter' && handleSave()}
+                />
+              ) : (
+              redactContact(contactNumberOnEdit)
+              )}
           </Field>
           <Field label="Home Address" onEdit={onEditHomeAddress}>
-            {info.homeAddress || PLACEHOLDER}
+              {isEditingAddress ? (
+                <input
+                  type="text"
+                  value={homeAddressOnEdit}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    const isValidChar = /^[a-zA-Z0-9\s.,\-#]*$/.test(val);
+                    if (isValidChar && val.length <= 100) setHomeAddressOnEdit(val);
+                  }}
+                  className="border-b border-[#096C5B] text-[14px] bg-transparent outline-none w-[300px] py-1 text-black"
+                  onKeyDown={(e) => e.key === 'Enter' && handleSaveAddress()}
+                />
+              ) : (
+                homeAddressOnEdit
+              )}
           </Field>
         </div>
 
@@ -127,8 +208,14 @@ const LandlordInfoCard = ({
               </ul>
             )}
           </Field>
-          <Field label="Verification Status" to={verificationHref}>
-            <span className="inline-flex items-center gap-[4px] text-[#096c5b] group-hover:underline">
+
+            {/* removed "to" component here, repaced with a div */}
+          <div
+        className="group flex flex-col items-start gap-[4px] rounded-[6px] transition-colors hover:bg-[#eaf6f2]/60 cursor-pointer"
+        onClick={() => setActiveTab('verification')} 
+          >
+          <Field label="Verification Status"  >
+            <span className="inline-flex items-center gap-[4px] text-[#096c5b] group-hover:underline"  >
               {info.verified ? 'Verified' : 'Unverified'}
               {info.verified && (
                 <Icon
@@ -143,7 +230,7 @@ const LandlordInfoCard = ({
                 aria-hidden="true"
               />
             </span>
-          </Field>
+          </Field></div>
         </div>
       </div>
     </section>

@@ -19,6 +19,7 @@ import {
   rejectFinalApplication,
   rejectInitialApplication,
   finalizeApplication,
+  addApplicationDocument,
 } from './application.service.js';
 import type { QueryFilter } from 'mongoose';
 import type { ApplicationType } from './application.model.js';
@@ -28,7 +29,11 @@ import assert from 'node:assert';
 export const routeCreateApplication: RequestHandler = async (req, res, _next) => {
   assert.ok(req.user);
   const params = CreateApplicationBodySchema.parse(req.body);
-  const newApplication = await createApplication(req.user._id, params.listingId);
+  const newApplication = await createApplication(req.user._id, params.listingId, {
+    leaseDuration: params.leaseDuration,
+    moveInDate: params.moveInDate,
+    message: params.message,
+  });
 
   res.status(201).json({ id: newApplication.id });
 };
@@ -88,8 +93,11 @@ export const routeDeleteApplication: RequestHandler = async (req, res, _next) =>
 export const routeApproveApplication: ApplicationHandler = async (req, res, _next) => {
   assert.ok(req.user);
   const applicationId = ObjectIdSchema.parse(req.params.applicationId);
+  const application = await getApplicationById(applicationId, res.locals.filters);
+  if (!application) throw new AppError(404, 'Application not found.');
+
   let updatedApplication: ApplicationType | undefined;
-  if (req.user.userType === 'Landlord') {
+  if (req.user.userType === 'Landlord' && application.status === 'finalized') {
     updatedApplication = await approveFinalApplication(applicationId, res.locals.filters);
   } else {
     const params = ApproveApplicationRequestBodySchema.parse(req.body);
@@ -106,8 +114,11 @@ export const routeApproveApplication: ApplicationHandler = async (req, res, _nex
 export const routeRejectApplication: ApplicationHandler = async (req, res, _next) => {
   assert.ok(req.user);
   const applicationId = ObjectIdSchema.parse(req.params.applicationId);
+  const application = await getApplicationById(applicationId, res.locals.filters);
+  if (!application) throw new AppError(404, 'Application not found.');
+
   let updatedApplication: ApplicationType | undefined;
-  if (req.user.userType === 'Landlord') {
+  if (req.user.userType === 'Landlord' && application.status === 'finalized') {
     updatedApplication = await rejectFinalApplication(applicationId, res.locals.filters);
   } else {
     updatedApplication = await rejectInitialApplication(applicationId, res.locals.filters);
@@ -131,9 +142,24 @@ export const routeAssignApplicationUnit: RequestHandler = async (req, res, _next
 export const routeFinalizeApplication: ApplicationHandler = async (req, res, _next) => {
   assert.ok(req.user);
   const applicationId = ObjectIdSchema.parse(req.params.applicationId);
-  let updatedApplication: ApplicationType | undefined;
-  updatedApplication = await finalizeApplication(applicationId, res.locals.filters);
+  const updatedApplication = await finalizeApplication(applicationId, res.locals.filters);
 
   if (!updatedApplication) throw new AppError(404, 'Application not found.');
   res.status(200).send(updatedApplication);
+};
+
+export const routeAddApplicationDocument: RequestHandler = async (req, res, _next) => {
+  assert.ok(req.user);
+  const applicationId = ObjectIdSchema.parse(req.params.applicationId);
+  const docId = String(req.params.docId);
+  const fileId = String((req.body as { fileId?: unknown }).fileId ?? '');
+  if (!fileId) throw new AppError(422, 'fileId is required.');
+
+  const updatedApplication = await addApplicationDocument(
+    applicationId,
+    docId,
+    fileId,
+    req.user._id,
+  );
+  res.status(200).json({ data: updatedApplication });
 };

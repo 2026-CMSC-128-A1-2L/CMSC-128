@@ -3,9 +3,10 @@ import { useState, type FunctionComponent } from 'react';
 type Props = {
   onBack: () => void;
   onSubmit: () => void;
+  type?: 'manager' | 'tenant';
 };
 
-const LandlordManagerReportConfirm: FunctionComponent<Props> = ({ onBack, onSubmit }) => {
+const LandlordManagerReportConfirm: FunctionComponent<Props> = ({ onBack, onSubmit, type = 'manager' }) => {
   const [acknowledged, setAcknowledged] = useState(false);
 
   const handleSubmit = () => {
@@ -14,7 +15,7 @@ const LandlordManagerReportConfirm: FunctionComponent<Props> = ({ onBack, onSubm
   };
 
   return (
-    <div className="relative flex w-[612px] flex-col items-center overflow-hidden rounded-[26px] bg-white">
+    <div className="relative flex w-[612px] flex-col items-center overflow-hidden rounded-[26px] bg-white dark:bg-[#141515]">
       {/* Header */}
       <div
         className="flex w-full flex-col items-start justify-center pl-[57px] pr-[32px] py-[12px]"
@@ -25,10 +26,10 @@ const LandlordManagerReportConfirm: FunctionComponent<Props> = ({ onBack, onSubm
       >
         <div className="flex w-full flex-col items-start justify-center pb-[8px] pt-[32px]">
           <b className="font-['Poppins',sans-serif] text-[32px] leading-[normal] text-white">
-            Report Manager
+            {type === 'tenant' ? 'Report Tenant' : 'Report Manager'}
           </b>
           <b className="font-['Inter',sans-serif] text-[18px] leading-[normal] tracking-[-0.18px] text-[#f1f5f9]">
-            Report your dorm manager
+            Report your {type === 'tenant' ? 'tenant' : 'dorm manager'}
           </b>
         </div>
       </div>
@@ -45,8 +46,8 @@ const LandlordManagerReportConfirm: FunctionComponent<Props> = ({ onBack, onSubm
             className={[
               'mt-[4px] flex h-[20px] w-[20px] shrink-0 items-center justify-center rounded-[4px] transition-colors',
               acknowledged
-                ? 'bg-[#096c5b] shadow-[0_0_2px_rgba(0,0,0,0.25)]'
-                : 'bg-[#f0f0f0] shadow-[0_0_2px_rgba(0,0,0,0.25)]',
+                ? 'bg-[#096c5b] shadow-[0_0_2px_rgba(0,0,0,0.25)] dark:bg-[#12342e]'
+                : 'bg-[#f0f0f0] shadow-[0_0_2px_rgba(0,0,0,0.25)] dark:bg-[#1f2022] dark:border dark:border-[#303331]',
             ].join(' ')}
           >
             {acknowledged && (
@@ -68,10 +69,10 @@ const LandlordManagerReportConfirm: FunctionComponent<Props> = ({ onBack, onSubm
               </svg>
             )}
           </button>
-          <p className="flex-1 text-center font-['Inter',sans-serif] text-[14px] font-medium leading-[25px] text-black">
+          <p className="flex-1 text-center font-['Inter',sans-serif] text-[14px] font-medium leading-[25px] text-black dark:text-[#d7e0ef]">
             I declare that all information and reports submitted are{' '}
-            <span className="font-bold text-[#096c5b]">truthful</span>,{' '}
-            <span className="font-bold text-[#096c5b]">complete</span>, and{' '}
+            <span className="font-bold text-[#096c5b] dark:text-[#72cbb8]">truthful</span>,{' '}
+            <span className="font-bold text-[#096c5b] dark:text-[#72cbb8]">complete</span>, and{' '}
             <span className="font-bold text-[#096c5b]">based on verified facts</span> to the best of
             my knowledge. I acknowledge that any false or misleading information may lead to
             consequences in accordance with applicable rules and regulations.
@@ -84,7 +85,7 @@ const LandlordManagerReportConfirm: FunctionComponent<Props> = ({ onBack, onSubm
         <button
           type="button"
           onClick={onBack}
-          className="rounded-[12px] px-[24px] py-[8px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#ef4444] transition-opacity hover:opacity-70"
+          className="rounded-[12px] px-[24px] py-[8px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#ef4444] dark:text-red-400 transition-opacity hover:opacity-70"
         >
           Cancel
         </button>
@@ -93,7 +94,7 @@ const LandlordManagerReportConfirm: FunctionComponent<Props> = ({ onBack, onSubm
           onClick={handleSubmit}
           disabled={!acknowledged}
           className={[
-            'rounded-[12px] bg-[#cbf6ed] px-[24px] py-[8px] font-["Inter",sans-serif] text-[14px] font-semibold text-[#096c5b] transition-opacity',
+            'rounded-[12px] bg-[#cbf6ed] dark:bg-[#12342e] px-[24px] py-[8px] font-["Inter",sans-serif] text-[14px] font-semibold text-[#096c5b] dark:text-[#72cbb8] transition-opacity',
             acknowledged ? 'hover:opacity-80' : 'cursor-not-allowed opacity-50',
           ].join(' ')}
         >

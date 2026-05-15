@@ -572,5 +572,9 @@ export const sumbitBillingPayment = async (
     message: `Payment method: ${data.paymentMethod}`,
   };
   billing.documents.push(receiptDocument);
-  return await billing.save();
+  return await Billing.findByIdAndUpdate(
+    billingId,
+    { $push: { documents: receiptDocument } },
+    { returnDocument: 'after', runValidators: false },
+  );
 };

@@ -15,6 +15,7 @@ type Props = {
   isOpen: boolean;
   onClose: () => void;
   manager: Manager | null;
+  type?: 'manager' | 'tenant';
 };
 
 const REPORT_CATEGORIES: ReportCategory[] = [
@@ -92,7 +93,7 @@ const REPORT_CATEGORIES: ReportCategory[] = [
   },
 ];
 
-const ReportManagerModal: FunctionComponent<Props> = ({ isOpen, onClose, manager }) => {
+const ReportManagerModal: FunctionComponent<Props> = ({ isOpen, onClose, manager, type = 'manager' }) => {
   // step 0..3 = categories; 4 = confirm; 5 = success
   const [step, setStep] = useState(0);
   const [selected, setSelected] = useState<Set<string>>(new Set());
@@ -172,6 +173,7 @@ const ReportManagerModal: FunctionComponent<Props> = ({ isOpen, onClose, manager
             onCancel={handleClose}
             onBack={() => setStep((s) => Math.max(0, s - 1))}
             onNext={() => setStep((s) => s + 1)}
+            type={type}
           />
         )}
 
@@ -179,10 +181,11 @@ const ReportManagerModal: FunctionComponent<Props> = ({ isOpen, onClose, manager
           <LandlordManagerReportConfirm
             onBack={() => setStep((s) => s - 1)}
             onSubmit={handleSubmit}
+            type={type}
           />
         )}
 
-        {step === totalCategorySteps + 1 && <LandlordManagerReportSuccess onClose={handleClose} />}
+        {step === totalCategorySteps + 1 && <LandlordManagerReportSuccess onClose={handleClose} type={type} />}
       </div>
     </PortalPopup>
   );

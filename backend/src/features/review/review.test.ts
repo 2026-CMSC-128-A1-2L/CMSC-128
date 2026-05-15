@@ -26,8 +26,7 @@ describe('Reviews API', () => {
   // - A primary listing used by most tests
   // - A second listing (mediaListing) used only by the mediaUrls test to avoid
   //   hitting the one-review-per-listing constraint from the first test
-  // - A unit + active rental (with actualMoveInDate 2 months ago) for the student
-  //   on each listing, satisfying the active-tenant and 1-month-stay checks
+  // - A unit + active rental for the student on each listing, satisfying the active-tenant check
   beforeAll(async () => {
     const facility = await buildHousingFacility.create({
       landlordId: landlord._id,
@@ -64,12 +63,10 @@ describe('Reviews API', () => {
 
     mediaListingId = mediaListing._id.toString();
 
-    const moveInDate = new Date();
-    moveInDate.setMonth(moveInDate.getMonth() - 2); // 2 months ago — satisfies the 1-month rule
-
     // Create a unit + rental for the primary listing
     const unit = await new Unit({
       listingId: listing._id,
+      facilityId: facility._id,
       roomNumber: 'REVIEW-TEST-101',
       capacity: 1,
       price: 5000,
@@ -80,12 +77,12 @@ describe('Reviews API', () => {
       facilityId: facility._id,
       unitId: unit._id,
       status: 'active',
-      actualMoveInDate: moveInDate,
     }).save();
 
     // Create a unit + rental for the media listing so the student passes the tenant check there too
     const mediaUnit = await new Unit({
       listingId: mediaListing._id,
+      facilityId: facility._id,
       roomNumber: 'REVIEW-MEDIA-101',
       capacity: 1,
       price: 5000,
@@ -96,16 +93,15 @@ describe('Reviews API', () => {
       facilityId: facility._id,
       unitId: mediaUnit._id,
       status: 'active',
-      actualMoveInDate: moveInDate,
     }).save();
   });
 
   // ============================================================================
   // POST /api/listings/:listingId/reviews
   //
-  // Creates a new review for a listing. Only active tenants of that listing
-  // who have stayed for at least 1 month may submit. One review per listing.
-  // Created reviews start as "pending" until approved by an admin.
+  // Creates a new review for a listing. Only active tenants of that listing may submit.
+  // One review per listing.
+  // Created reviews are approved immediately.
   // ============================================================================
   describe('POST /api/listings/:listingId/reviews', () => {
     describe('Authentication', () => {
@@ -116,7 +112,7 @@ describe('Reviews API', () => {
         expect(response).statusToBe(401);
       });
 
-      // Happy path: student is an active tenant with actualMoveInDate 2 months ago.
+      // Happy path: student is an active tenant.
       // Verifies the review is created and the returned document has an _id.
       // Also captures reviewId for use in PATCH and DELETE tests below.
       it('should create a review as an active tenant student', async () => {
@@ -126,6 +122,7 @@ describe('Reviews API', () => {
         });
         expect(response).statusToBe(201);
         expect(response.body.data._id).toBeDefined();
+        expect(response.body.data.status).toBe('approved');
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         reviewId = response.body.data._id;
       });
@@ -186,12 +183,15 @@ describe('Reviews API', () => {
       });
 
       // The student already created a review for listingId above.
-      // A second attempt on the same listing must be rejected.
-      it('should return 409 when the student already reviewed this listing', async () => {
+      // A second attempt updates the existing review draft instead of creating a duplicate.
+      it('should update the existing review when the student reviews the same listing again', async () => {
         const response = await studentAgent.post(`/api/listings/${listingId}/reviews`).send({
           ratings: { quality: 3, comfort: 3, environment: 3 },
         });
-        expect(response).statusToBe(409);
+        expect(response).statusToBe(201);
+        expect(response.body.data._id).toBe(reviewId);
+        expect(response.body.data.ratings.quality).toBe(3);
+        expect(response.body.data.status).toBe('approved');
       });
 
       // Uses mediaListingId (a separate listing) to avoid the 409 from above.
@@ -205,6 +205,7 @@ describe('Reviews API', () => {
         expect(response).statusToBe(201);
         expect(response.body.data.media).toHaveLength(2);
         expect(response.body.data.media[0].sourceType).toBe('external');
+        expect(response.body.data.status).toBe('approved');
       });
     });
   });
@@ -316,8 +317,7 @@ describe('Reviews API', () => {
   // ============================================================================
   describe('GET /api/facilities/:facilityId/average-ratings', () => {
     describe('Logic', () => {
-      // Approves the review first (admin action) so it counts toward the average,
-      // then checks that all expected fields are present in the response.
+      // Reviews are approved immediately, so they count toward the average right away.
       it('should return average ratings for a facility with reviews', async () => {
         await adminAgent.post(`/api/reviews/${reviewId}/approve`);
         const response = await studentAgent.get(`/api/facilities/${facilityId}/average-ratings`);
