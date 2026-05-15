@@ -82,10 +82,10 @@ const Managers = () => {
                         <div
                           key={cardKey}
                           onClick={() => navigate(`/landlord/managers/${manager.id}`)}
-                          className="flex w-[331px] cursor-pointer items-center justify-between rounded-[8px] px-[16px] py-[10px] transition-colors hover:bg-[#f9f9f9]"
+                          className="flex w-[331px] cursor-pointer items-center justify-between rounded-[8px] px-[16px] py-[10px] transition-colors hover:bg-[#f9f9f9] dark:hover:bg-[#1f2022]"
                         >
                           <div className="flex items-center gap-[10px]">
-                            <span className="flex h-[48px] w-[48px] shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#e5e7eb] text-[#9ca3af]">
+                            <span className="flex h-[48px] w-[48px] shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#e5e7eb] text-[#9ca3af] dark:bg-[#242526] dark:text-[#a4acba]">
                               {manager.photoUrl ? (
                                 <img
                                   src={manager.photoUrl}
@@ -101,10 +101,10 @@ const Managers = () => {
                               )}
                             </span>
                             <div className="flex flex-col gap-[2px]">
-                              <span className="font-['Inter',sans-serif] text-[16px] font-bold tracking-[-0.01em] text-black">
+                              <span className="font-['Inter',sans-serif] text-[16px] font-bold tracking-[-0.01em] text-black dark:text-[#d7e0ef]">
                                 {manager.displayName}
                               </span>
-                              <span className="font-['Inter',sans-serif] text-[14px] text-[#666]">
+                              <span className="font-['Inter',sans-serif] text-[14px] text-[#666] dark:text-[#a4acba]">
                                 {manager.email}
                               </span>
                             </div>

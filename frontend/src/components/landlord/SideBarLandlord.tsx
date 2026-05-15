@@ -49,7 +49,7 @@ const navItems: Array<{
   {
     key: "dashboard",
     label: "Dashboard",
-    icon: "solar:home-2-outline",
+    icon: "solar:home-outline",
     route: "/landlord/dashboard",
   },
   {
