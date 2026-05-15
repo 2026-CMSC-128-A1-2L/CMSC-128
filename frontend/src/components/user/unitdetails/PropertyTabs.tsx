@@ -32,15 +32,15 @@ const PropertyTabs: FunctionComponent<{ children: React.ReactElement<TabProps>[]
                 type="button"
                 onClick={() => setActiveTab(tab)}
                 className={`py-4 flex-1 relative tracking-num--0_01 flex items-center justify-center cursor-pointer transition-colors duration-200
-                ${activeTab === tab ? 'text-teal-600 dark:text-[#72cbb8]' : 'text-gray hover:text-teal-600 dark:text-[#edf6f4] dark:hover:text-[#72cbb8]'}`}
+                ${activeTab === tab ? 'text-teal-600' : 'text-gray hover:text-teal-600'}`}
               >
                 <b>{tab}</b>
               </button>
             ))}
           </div>
-          <div className="w-full relative h-[2px] bg-gainsboro dark:bg-[#303331]">
+          <div className="w-full relative h-[2px] bg-gainsboro">
             <div
-              className="absolute top-0 h-full bg-teal-600 transition-all duration-300 ease-in-out dark:bg-[#2f8677]"
+              className="absolute top-0 h-full bg-teal-600 transition-all duration-300 ease-in-out"
               style={{
                 width: `${width}px`,
                 transform: `translateX(${activeIndex * width}px)`,

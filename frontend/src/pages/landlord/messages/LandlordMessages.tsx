@@ -213,7 +213,7 @@ const LandlordMessages: FunctionComponent = () => {
 
       {/* ======= FLOATING ICON ========== */}
       <div
-        className="help-button-animated bottom-32 right-10 z-[1000] cursor-pointer transition-all hover:scale-110 active:scale-95"
+        className="fixed bottom-32 right-10 z-[1000] cursor-pointer transition-all hover:scale-110 active:scale-95"
         onClick={() => setShowHelp(!showHelp)}
       >
         <img
