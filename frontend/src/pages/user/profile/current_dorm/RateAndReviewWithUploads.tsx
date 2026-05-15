@@ -1,6 +1,7 @@
 import { type FunctionComponent, useCallback, useState, useRef } from 'react';
 import { Icon } from '@iconify/react';
-import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import Location from '../../../../../assets/pin_location_icon.svg';
 import House from '../../../../../assets/house_icon.svg';
@@ -8,34 +9,97 @@ import UploadMedia from '../../../../../assets/upload_media_icon.svg';
 import SideBar from '../../../../components/user/SideBar';
 import BreadcrumbHeader from '../../../../components/general/Breadcrumb';
 import ProgressBar from '../../../../components/user/ProgressBar';
-import placeholder from '../../../../../assets/one_sapphire_place.png';
 import ConfirmReview from '../../../../components/user/Profile/ConfirmReview';
+import { FileService } from '../../../../service/FileService';
+import { ReviewService } from '../../../../service/ReviewService';
+import { useCurrentDormReviewDetails } from './useCurrentDormReviewDetails';
+
+type ReviewDraft = {
+  listingId?: string;
+  ratings?: {
+    quality: number;
+    comfort: number;
+    environment: number;
+  };
+  description?: string;
+};
+
+const getErrorMessage = (error: unknown) => {
+  if (axios.isAxiosError(error)) {
+    const data = error.response?.data;
+    if (data && typeof data === 'object') {
+      if ('message' in data && typeof data.message === 'string') return data.message;
+      if ('error' in data && typeof data.error === 'string') return data.error;
+      if (
+        'error' in data &&
+        data.error &&
+        typeof data.error === 'object' &&
+        'message' in data.error &&
+        typeof data.error.message === 'string'
+      ) {
+        return data.error.message;
+      }
+    }
+  }
+
+  return error instanceof Error ? error.message : 'Could not submit your review.';
+};
 
 const RateAndReview: FunctionComponent = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const draft = location.state as ReviewDraft | null;
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [selectedFiles, setSelectedFiles] = useState<(File | null)[]>([null, null]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const { details, isLoading, error } = useCurrentDormReviewDetails();
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const fileInputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
-  const onUserProfileTextClick = useCallback(() => {
-    setShowSuccessPopup(true);
-  }, []);
+  const onUserProfileTextClick = useCallback(async () => {
+    if (isSubmitting) return;
+    if (!draft?.listingId || !draft.ratings) {
+      navigate('/rate-review-form');
+      return;
+    }
+
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      const uploadedFiles = await Promise.all(
+        selectedFiles.filter((file): file is File => Boolean(file)).map(FileService.uploadFile),
+      );
+      await ReviewService.createReview(draft.listingId, {
+        ratings: draft.ratings,
+        description: draft.description,
+        mediaUrls: uploadedFiles.map((file) => file.key),
+      });
+      setShowSuccessPopup(true);
+    } catch (err) {
+      setSubmitError(getErrorMessage(err));
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [draft?.listingId, draft?.ratings, draft?.description, selectedFiles, navigate, isSubmitting]);
 
   const closePopup = () => {
     setShowSuccessPopup(false);
     navigate('/profile-switcher');
   };
 
-  const handleClicking = () => {
-    fileInputRef.current?.click();
+  const handleClicking = (index: number) => {
+    fileInputRefs.current[index]?.click();
   };
 
-  const handleFileSelection = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelection = (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
 
     if (file) {
-      console.log('Selected file:', file.name);
-      // add code
+      setSelectedFiles((files) =>
+        files.map((existing, fileIndex) => (fileIndex === index ? file : existing)),
+      );
     }
   };
 
@@ -70,8 +134,7 @@ const RateAndReview: FunctionComponent = () => {
                   <div className="w-[704px] rounded-xl bg-aliceblue overflow-hidden shrink-0 hidden items-center py-num-10 px-6 box-border gap-2.5 text-dimgray font-inter">
                     <img className="h-6 w-6 relative" alt="" />
                     <b className="relative">
-                      Search for Dorms, Apartments, or Locations (e.g. UPLB,
-                      Umali Subdivision)
+                      Search for Dorms, Apartments, or Locations (e.g. UPLB, Umali Subdivision)
                     </b>
                   </div>
                 </div>
@@ -82,8 +145,8 @@ const RateAndReview: FunctionComponent = () => {
                       <div className="h-[195px] w-[928px] rounded-xl border-whitesmoke-200 border-solid border box-border flex items-center gap-2.5">
                         <img
                           className="h-[195px] w-[305px] rounded-tl-xl rounded-tr-none rounded-br-none rounded-bl-xl object-cover"
-                          src={placeholder}
-                          alt=""
+                          src={details?.dormitoryImage}
+                          alt={details?.dormitoryName ?? 'Current dorm'}
                         />
 
                         <div className="h-[195px] flex-1 rounded-num-16 flex flex-col items-center py-num-0 px-num-12 box-border">
@@ -91,33 +154,25 @@ const RateAndReview: FunctionComponent = () => {
                             <div className="self-stretch flex flex-col items-start py-num-12 px-num-0 gap-0.5">
                               <div className="self-stretch flex items-center justify-center text-[24px] font-inter">
                                 <b className="flex-1 relative leading-8">
-                                  One Sapphire Place
+                                  {details?.dormitoryName ?? 'Current Dorm'}
                                 </b>
                               </div>
 
                               <div className="self-stretch flex items-center py-num-0 px-num-12 gap-2">
-                                <img
-                                  className="w-[9px] relative max-h-full"
-                                  alt=""
-                                  src={House}
-                                />
+                                <img className="w-[9px] relative max-h-full" alt="" src={House} />
                                 <div className="flex items-center justify-center">
                                   <div className="relative font-medium">
-                                    Batong Malake, Los Banos, Laguna
+                                    {details?.dormitoryAddress ?? 'Address unavailable'}
                                   </div>
                                 </div>
                               </div>
 
                               <div className="self-stretch flex items-center py-num-0 px-num-12 gap-[7px]">
-                                <img
-                                  className="h-[9px] w-[9px] relative"
-                                  alt=""
-                                  src={Location}
-                                />
+                                <img className="h-[9px] w-[9px] relative" alt="" src={Location} />
                                 <div className="flex items-center justify-center">
                                   <div className="relative">
                                     <span className="font-medium">
-                                      Quevin Custodio{' '}
+                                      {details?.landlordName ?? 'Dorm Landlord'}{' '}
                                     </span>
                                     <span className="text-[8px] tracking-[0.04em] font-semibold text-silver">
                                       Landlord
@@ -127,15 +182,11 @@ const RateAndReview: FunctionComponent = () => {
                               </div>
 
                               <div className="self-stretch flex items-center py-num-0 px-num-12 gap-[7px]">
-                                <img
-                                  className="h-[9px] w-[9px] relative"
-                                  alt=""
-                                  src={Location}
-                                />
+                                <img className="h-[9px] w-[9px] relative" alt="" src={Location} />
                                 <div className="flex items-center justify-center">
                                   <div className="relative">
                                     <span className="font-medium">
-                                      Nathaniel Cunanan{' '}
+                                      {details?.managerName ?? 'Dorm Manager'}{' '}
                                     </span>
                                     <span className="text-[8px] tracking-[0.04em] font-semibold text-silver">
                                       Dorm Manager
@@ -149,21 +200,21 @@ const RateAndReview: FunctionComponent = () => {
                               <div className="h-[42.8px] w-[118.6px] relative">
                                 <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] rounded-[8.91px] bg-lightcyan border-teal border-solid border-[0.9px] box-border" />
                                 <div className="absolute h-[56.31%] w-[81.2%] top-[20.83%] left-[9.77%] font-medium flex items-center justify-center">
-                                  Single Room
+                                  {details?.roomType ?? 'Selected Room'}
                                 </div>
                               </div>
 
                               <div className="h-[42px] w-[74px] relative">
                                 <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] rounded-[8.91px] bg-lightcyan border-teal border-solid border-[0.9px] box-border" />
                                 <div className="absolute h-[56.19%] w-[81.22%] top-[20.83%] left-[9.77%] font-medium flex items-center justify-center">
-                                  ~18 sqm
+                                  {details?.roomNumber ?? 'Assigned Unit'}
                                 </div>
                               </div>
 
                               <div className="h-[42px] w-[268px] relative">
                                 <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] rounded-[8.91px] bg-lightcyan border-teal border-solid border-[0.9px] box-border" />
                                 <div className="absolute h-[56.19%] w-[81.19%] top-[20.83%] left-[9.77%] font-medium flex items-center justify-center">
-                                  Contract: April 2026 - April 2027
+                                  {details?.contractLabel ?? 'Current Lease'}
                                 </div>
                               </div>
                             </div>
@@ -185,6 +236,17 @@ const RateAndReview: FunctionComponent = () => {
                   </div>
 
                   <div className="self-stretch h-[405px] flex flex-col items-center gap-[18px] shrink-0 text-darkslategray-100 font-inter">
+                    {(isLoading || error || submitError) && (
+                      <div
+                        className={`w-[916px] rounded-xl border px-4 py-3 text-center text-sm font-semibold ${
+                          error || submitError
+                            ? 'border-crimson/30 bg-crimson/5 text-crimson'
+                            : 'border-whitesmoke-200 bg-aliceblue text-dimgray'
+                        }`}
+                      >
+                        {submitError ?? error ?? 'Loading your current dorm details...'}
+                      </div>
+                    )}
                     <div className="self-stretch flex flex-col items-start">
                       <div className="self-stretch flex flex-col items-center justify-center py-num-0 px-num-32">
                         <div className="w-[916px] rounded-num-16 bg-white border-whitesmoke-200 border-solid border box-border overflow-hidden flex flex-col items-start justify-center py-num-10 px-num-32 gap-2.5">
@@ -200,10 +262,7 @@ const RateAndReview: FunctionComponent = () => {
                             </div>
 
                             <div className="w-[168px] flex items-center gap-6 shrink-0">
-                              <Icon
-                                icon="iconamoon:eye"
-                                className="h-6 w-6 relative"
-                              />
+                              <Icon icon="iconamoon:eye" className="h-6 w-6 relative" />
                               <Icon
                                 icon="qlementine-icons:menu-dots-16"
                                 className="h-6 w-6 relative"
@@ -211,35 +270,34 @@ const RateAndReview: FunctionComponent = () => {
                             </div>
                           </div>
 
-                          <div
-                            onClick={handleClicking}
+                          <button
+                            type="button"
+                            onClick={() => handleClicking(0)}
                             className="w-[852px] h-[88px] rounded-num-16 border-dimgray border-dashed border box-border overflow-hidden shrink-0 flex items-center py-num-12 px-4 text-black cursor-pointer hover:bg-gray-50 transition-colors"
                           >
                             <input
                               type="file"
-                              ref={fileInputRef}
-                              onChange={handleFileSelection}
+                              ref={(element) => {
+                                fileInputRefs.current[0] = element;
+                              }}
+                              onChange={(event) => handleFileSelection(0, event)}
                               accept="image/png, image/jpeg"
                               className="hidden"
                             />
 
                             <div className="h-16 flex items-center gap-6">
-                              <img
-                                className="h-16 w-16 relative"
-                                alt=""
-                                src={UploadMedia}
-                              />
+                              <img className="h-16 w-16 relative" alt="" src={UploadMedia} />
 
                               <div className="flex flex-col items-start justify-center gap-2">
                                 <b className="relative">
-                                  Upload the document
+                                  {selectedFiles[0]?.name ?? 'Upload the document'}
                                 </b>
                                 <div className="relative text-[12px] tracking-[0.02em] font-semibold font-lora text-slategray">
                                   .jpg or .png
                                 </div>
                               </div>
                             </div>
-                          </div>
+                          </button>
                         </div>
                       </div>
 
@@ -257,10 +315,7 @@ const RateAndReview: FunctionComponent = () => {
                             </div>
 
                             <div className="w-[168px] flex items-center gap-6 shrink-0">
-                              <Icon
-                                icon="iconamoon:eye"
-                                className="h-6 w-6 relative"
-                              />
+                              <Icon icon="iconamoon:eye" className="h-6 w-6 relative" />
                               <Icon
                                 icon="qlementine-icons:menu-dots-16"
                                 className="h-6 w-6 relative"
@@ -268,45 +323,48 @@ const RateAndReview: FunctionComponent = () => {
                             </div>
                           </div>
 
-                          <div
-                            onClick={handleClicking}
+                          <button
+                            type="button"
+                            onClick={() => handleClicking(1)}
                             className="w-[852px] h-[88px] rounded-num-16 border-dimgray border-dashed border box-border overflow-hidden shrink-0 flex items-center py-num-12 px-4 text-black cursor-pointer hover:bg-gray-50 transition-colors"
                           >
                             <input
                               type="file"
-                              ref={fileInputRef}
-                              onChange={handleFileSelection}
+                              ref={(element) => {
+                                fileInputRefs.current[1] = element;
+                              }}
+                              onChange={(event) => handleFileSelection(1, event)}
                               accept="image/png, image/jpeg"
                               className="hidden"
                             />
 
                             <div className="h-16 flex items-center gap-6">
-                              <img
-                                className="h-16 w-16 relative"
-                                alt=""
-                                src={UploadMedia}
-                              />
+                              <img className="h-16 w-16 relative" alt="" src={UploadMedia} />
 
                               <div className="flex flex-col items-start justify-center gap-2">
                                 <b className="relative">
-                                  Upload the document
+                                  {selectedFiles[1]?.name ?? 'Upload the document'}
                                 </b>
                                 <div className="relative text-[12px] tracking-[0.02em] font-semibold font-lora text-slategray">
                                   .jpg or .png
                                 </div>
                               </div>
                             </div>
-                          </div>
+                          </button>
                         </div>
                       </div>
                     </div>
 
-                    <div
-                      className="h-8 rounded-num-16 bg-aliceblue flex items-center justify-center py-num-0 px-4 box-border cursor-pointer text-center text-teal"
+                    <button
+                      type="button"
+                      className={`h-8 rounded-num-16 bg-aliceblue flex items-center justify-center py-num-0 px-4 box-border text-center text-teal ${
+                        isSubmitting ? 'cursor-wait opacity-60' : 'cursor-pointer'
+                      }`}
                       onClick={onUserProfileTextClick}
+                      disabled={isSubmitting}
                     >
-                      <b className="relative">Proceed</b>
-                    </div>
+                      <b className="relative">{isSubmitting ? 'Submitting...' : 'Proceed'}</b>
+                    </button>
                   </div>
                 </div>
               </div>

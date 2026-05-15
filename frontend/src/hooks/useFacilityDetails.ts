@@ -44,6 +44,7 @@ export type FacilityReview = {
   createdAt?: string;
   rating: number;
   description: string;
+  mediaUrls: string[];
 };
 
 export type FacilityDetailsData = {
@@ -225,6 +226,25 @@ type RawReview = {
     environment?: number;
   };
   description?: string;
+  media?: {
+    value?: string;
+  }[];
+};
+
+const toPublicReviewMediaUrl = (value?: string) => {
+  if (!value) return undefined;
+  const key = getReviewMediaKey(value);
+  return key ? `/api/files/public?key=${encodeURIComponent(key)}` : undefined;
+};
+
+const getReviewMediaKey = (value: string) => {
+  if (!value.startsWith('http')) return value.replace(/^\/+/, '');
+
+  try {
+    return new URL(value).pathname.replace(/^\/+/, '');
+  } catch {
+    return undefined;
+  }
 };
 
 const mapReview = (review: RawReview): FacilityReview => {
@@ -247,6 +267,10 @@ const mapReview = (review: RawReview): FacilityReview => {
     createdAt: review.createdAt,
     rating,
     description: review.description ?? '',
+    mediaUrls:
+      review.media
+        ?.map((item) => toPublicReviewMediaUrl(item.value))
+        .filter((url): url is string => Boolean(url)) ?? [],
   };
 };
 

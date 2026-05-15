@@ -5,7 +5,7 @@ import { HousingFacility } from '../facility/facility.model.js';
 import { Listing, ListingType } from '../listing/listing.model.js';
 import { Rental } from '../rental/rental.model.js';
 import { Unit } from '../unit/unit.model.js';
-import { Review, ReviewType } from './review.model.js';
+import { Review } from './review.model.js';
 import { QueryFilter } from 'mongoose';
 
 type Ratings = {
@@ -28,6 +28,17 @@ export type UpdateReviewArguments = {
   description?: string;
 };
 
+const getPublicR2Url = (value: string) => {
+  if (value.startsWith('http')) return value;
+
+  const publicOrigin = process.env.R2_PUBLIC_URL;
+  if (!publicOrigin) return value;
+
+  const normalizedOrigin = publicOrigin.replace(/\/+$/, '');
+  const normalizedKey = value.replace(/^\/+/, '');
+  return `${normalizedOrigin}/${normalizedKey}`;
+};
+
 export const createReview = async (
   listingId: mongoose.Types.ObjectId,
   data: CreateReviewArguments,
@@ -45,21 +56,23 @@ export const createReview = async (
   });
   if (!activeRental) throw new AppError(422, 'Only active tenants can leave a review.');
 
-  // Must have stayed for at least 1 month
-  const moveInDate = activeRental.actualMoveInDate;
-  if (!moveInDate) throw new AppError(422, 'Move-in date has not been recorded yet.');
-  const oneMonthAgo = new Date();
-  oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
-  if (moveInDate > oneMonthAgo) {
-    throw new AppError(422, 'You must have stayed for at least 1 month before leaving a review.');
-  }
-
-  // One review per user per listing
-  const existing = await Review.findOne({ userId: data.userId, listingId });
-  if (existing) throw new AppError(409, 'You have already reviewed this listing.');
-
   const media =
-    data.mediaUrls?.map((url) => ({ sourceType: 'external' as const, value: url })) ?? [];
+    data.mediaUrls?.map((url) => ({
+      sourceType: 'external' as const,
+      value: getPublicR2Url(url),
+    })) ?? [];
+
+  // One review per user per listing. A new submission replaces the user's existing review draft.
+  const existing = await Review.findOne({ userId: data.userId, listingId });
+  if (existing) {
+    existing.set({
+      ratings: data.ratings,
+      description: data.description,
+      media,
+      status: 'approved',
+    });
+    return await existing.save();
+  }
 
   const newReview = new Review({
     userId: data.userId,
@@ -68,6 +81,7 @@ export const createReview = async (
     ratings: data.ratings,
     description: data.description,
     media,
+    status: 'approved',
   });
 
   return await newReview.save();
@@ -96,53 +110,15 @@ export const getFacilityReviews = async (facilityId: mongoose.Types.ObjectId) =>
   );
 };
 
-const addReviewFromAverage = async (review: ReviewType) => {
-  const { facilityId, ratings } = review;
-  const { quality, comfort, environment } = ratings;
-
-  const facility = await HousingFacility.findById(facilityId);
-  if (!facility) throw new AppError(404, 'Facility not found.');
-  const { qualityAvg, comfortAvg, environmentAvg, reviewCount } = facility;
-
-  facility.qualityAvg = (qualityAvg * reviewCount + quality) / (reviewCount + 1);
-  facility.comfortAvg = (comfortAvg * reviewCount + comfort) / (reviewCount + 1);
-  facility.environmentAvg = (environmentAvg * reviewCount + environment) / (reviewCount + 1);
-  facility.reviewCount += 1;
-
-  await facility.save();
-};
-
-const removeReviewFromAverage = async (review: ReviewType) => {
-  const { facilityId, ratings } = review;
-  const { quality, comfort, environment } = ratings;
-
-  const facility = await HousingFacility.findById(facilityId);
-  if (!facility) throw new AppError(404, 'Facility not found.');
-  const { qualityAvg, comfortAvg, environmentAvg, reviewCount } = facility;
-
-  if (reviewCount <= 1) {
-    facility.qualityAvg = 0;
-    facility.comfortAvg = 0;
-    facility.environmentAvg = 0;
-    facility.reviewCount = 0;
-  } else {
-    facility.qualityAvg = (qualityAvg * reviewCount - quality) / (reviewCount - 1);
-    facility.comfortAvg = (comfortAvg * reviewCount - comfort) / (reviewCount - 1);
-    facility.environmentAvg = (environmentAvg * reviewCount - environment) / (reviewCount - 1);
-    facility.reviewCount -= 1;
-  }
-
-  await facility.save();
-};
-
 export const updateReview = async (data: UpdateReviewArguments) => {
   const review = await Review.findOne({ _id: data.reviewId, userId: data.userId });
   if (!review) throw new AppError(404, 'Review not found.');
 
-  // NOTE: if pre is approved, post is pending, so it should be removed from the average.
-  if (review.status === 'approved') await removeReviewFromAverage(review as ReviewType);
-
-  review.set({ ratings: data.ratings, description: data.description, status: 'pending' });
+  review.set({
+    ratings: data.ratings ?? review.ratings,
+    description: data.description ?? review.description,
+    status: 'approved',
+  });
   return await review.save();
 };
 
@@ -157,9 +133,6 @@ export const updateReviewStatus = async (
   );
   if (!review) throw new AppError(404, 'Review not found.');
 
-  // NOTE: no previous check is done because it is assumed that it came from pending
-  if (status === 'approved') await addReviewFromAverage(review as ReviewType);
-
   return review;
 };
 
@@ -169,8 +142,6 @@ export const deleteReview = async (
 ) => {
   const review = await Review.findOne({ _id: reviewId, userId });
   if (!review) throw new AppError(404, 'Review not found.');
-
-  if (review.status === 'approved') await removeReviewFromAverage(review as ReviewType);
 
   return await review.deleteOne();
 };
