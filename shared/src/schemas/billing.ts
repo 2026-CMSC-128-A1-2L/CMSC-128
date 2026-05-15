@@ -60,6 +60,8 @@ export const UpdateBillingRequestBodySchema = z
         amount: z.number(),
       }),
     ),
+    paymentStatus: z.enum(['unpaid', 'paid', 'overdue', 'partially_paid']),
+    paidAmount: z.number().nullable().optional(),
   })
   .partial();
 
