@@ -4,6 +4,7 @@ import { AppError } from '../../error.js';
 import { combineFilters } from '../../middleware.js';
 import { HousingFacility, type HousingFacilityType } from '../facility/facility.model.js';
 import { type BookingType, VisitBooking } from './booking.model.js';
+import { VisitAvailability } from '../availability/availability.model.js';
 import { buildQuery } from '../../utils.js';
 import type { BookingStatusType } from 'shared';
 
@@ -35,8 +36,8 @@ export type GetBookingArguments = {
   message: string;
 };
 
-const DEFAULT_VISIT_START_HOUR = 9;
-const DEFAULT_VISIT_END_HOUR = 17;
+const DEFAULT_VISIT_START_HOUR = 8;
+const DEFAULT_VISIT_END_HOUR = 18;
 const VISIT_SLOT_MINUTES = 60;
 
 const isSameSlot = (left: Date, right: Date) => left.getTime() === right.getTime();
@@ -50,18 +51,24 @@ const getDayBounds = (date: Date) => {
   return { dayStart, dayEnd };
 };
 
-const getDefaultVisitStarts = (date: Date) => {
+const getAvailableTimesFromGrid = (grid: boolean[][], date: Date) => {
   const { dayStart } = getDayBounds(date);
-  const dayOfWeek = dayStart.getDay();
+  const dayOfWeek = dayStart.getDay(); // 0-6
 
-  // TODO: Replace these default hours with persisted landlord/manager availability.
-  return dayOfWeek === 0 || dayOfWeek === 6
-    ? []
-    : Array.from({ length: DEFAULT_VISIT_END_HOUR - DEFAULT_VISIT_START_HOUR }, (_, index) => {
+  const availableSlots: Date[] = [];
+  for (let hourIdx = 0; hourIdx < 10; hourIdx++) {
+    if (grid[hourIdx][dayOfWeek]) {
       const start = new Date(dayStart);
-      start.setHours(DEFAULT_VISIT_START_HOUR + index, 0, 0, 0);
-      return start;
-    });
+      start.setHours(DEFAULT_VISIT_START_HOUR + hourIdx, 0, 0, 0);
+      availableSlots.push(start);
+    }
+  }
+  return availableSlots;
+};
+
+const getDefaultAvailabilityGrid = () => {
+  const grid = Array.from({ length: 10 }, () => Array(7).fill(false));
+  return grid;
 };
 
 export const getAvailableVisitSlots = async (
@@ -74,7 +81,9 @@ export const getAvailableVisitSlots = async (
   if (!facility.allowVisit) return [];
 
   const { dayStart, dayEnd } = getDayBounds(date);
-  const availableStarts = getDefaultVisitStarts(date).filter((start) => start > new Date());
+  const availability = await VisitAvailability.findOne({ landlordId: facility.landlordId });
+  const grid = availability?.grid ?? getDefaultAvailabilityGrid();
+  const availableStarts = getAvailableTimesFromGrid(grid, date).filter((start) => start > new Date());
 
   const bookedSlots = await VisitBooking.find({
     facilityId,
@@ -109,7 +118,9 @@ export const createBooking = async (
   if (!facility) throw new AppError(404, 'Facility not found.');
   if (!facility.allowVisit) throw new AppError(422, 'This facility is not accepting visits.');
 
-  const selectedSlotStart = getDefaultVisitStarts(data.startDate).find((slotStart) =>
+  const availability = await VisitAvailability.findOne({ landlordId: facility.landlordId });
+  const grid = availability?.grid ?? getDefaultAvailabilityGrid();
+  const selectedSlotStart = getAvailableTimesFromGrid(grid, data.startDate).find((slotStart) =>
     isSameSlot(slotStart, data.startDate),
   );
   if (!selectedSlotStart) {
