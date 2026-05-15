@@ -7,7 +7,12 @@ export type AvailabilityType = {
 
 const availabilitySchema = new mongoose.Schema<AvailabilityType>(
   {
-    landlordId: { type: mongoose.Schema.Types.ObjectId, ref: 'Landlord', required: true, unique: true },
+    landlordId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Landlord',
+      required: true,
+      unique: true,
+    },
     grid: {
       type: [[Boolean]],
       default: () => Array.from({ length: 10 }, () => Array(7).fill(false)),
@@ -15,7 +20,7 @@ const availabilitySchema = new mongoose.Schema<AvailabilityType>(
   },
   {
     timestamps: true,
-    collection: 'visitavailabilities'
+    collection: 'visitavailabilities',
   },
 );
 

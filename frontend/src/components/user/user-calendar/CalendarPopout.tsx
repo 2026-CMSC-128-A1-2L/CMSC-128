@@ -226,98 +226,98 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
 
   return (
     <div
-      className={`w-[760px] max-w-full max-h-full overflow-auto rounded-[16px] bg-white px-6 py-6 text-left text-num-14 text-dimgray font-inter shadow-xl sm:px-10 ${className}`}
+      className={`w-[680px] max-w-full max-h-full overflow-auto rounded-[14px] bg-white px-5 py-5 text-left text-num-14 text-dimgray font-inter shadow-xl sm:px-8 ${className}`}
     >
       <div className="relative text-center">
         <button
           type="button"
           onClick={onClose}
-          className="absolute right-0 top-0 grid h-8 w-8 place-items-center rounded-full text-dimgray hover:bg-whitesmoke-100"
+          className="absolute right-0 top-0 grid h-7 w-7 place-items-center rounded-full text-dimgray hover:bg-whitesmoke-100"
           aria-label="Close booking form"
         >
           <Icon icon="material-symbols:close-rounded" className="h-5 w-5" />
         </button>
-        <div className="text-base font-bold text-[#666]">Booking a visit for</div>
-        <h2 className="mt-1.5 text-[26px] font-extrabold leading-tight text-[#004236] sm:text-[30px]">
+        <div className="text-sm font-bold text-[#666]">Booking a visit for</div>
+        <h2 className="mt-1 text-[22px] font-extrabold leading-tight text-[#004236] sm:text-[26px]">
           {facilityName}
         </h2>
-        <p className="mx-auto mt-1.5 max-w-[390px] text-center text-[14px] font-bold leading-5 text-black font-lora">
+        <p className="mx-auto mt-1.5 max-w-[340px] text-center text-[12px] font-bold leading-4 text-black font-lora">
           {facilityAddress}
         </p>
       </div>
 
-      <div className="my-5 h-0.5 rounded-full bg-whitesmoke-300" />
+      <div className="my-4 h-0.5 rounded-full bg-whitesmoke-300" />
 
-      <div className="grid gap-8 lg:grid-cols-[1fr_300px]">
-        <div className="flex flex-col gap-3">
-          <b className="text-[22px] tracking-num--0_01 text-black">Your booking details</b>
-          <div className="grid gap-3">
+      <div className="grid gap-7 lg:grid-cols-[1fr_270px]">
+        <div className="flex flex-col gap-2.5">
+          <b className="text-[19px] tracking-num--0_01 text-black">Your booking details</b>
+          <div className="grid gap-2.5">
             <label className="grid gap-1.5">
-              <span className="text-base font-bold text-[#666]">First name</span>
+              <span className="text-sm font-bold text-[#666]">First name</span>
               <input
                 value={isLoadingUser ? 'Loading...' : firstName}
                 readOnly
                 placeholder="First name"
-                className="h-[44px] rounded-[20px] bg-white px-4 text-base font-medium text-black shadow-[0_1px_8px_rgba(0,0,0,0.2)] outline-none placeholder:text-[#9b9b9b]"
+                className="h-[38px] rounded-[18px] bg-white px-3 text-sm font-medium text-black shadow-[0_1px_7px_rgba(0,0,0,0.18)] outline-none placeholder:text-[#9b9b9b]"
               />
             </label>
             <label className="grid gap-1.5">
-              <span className="text-base font-bold text-[#666]">Last name</span>
+              <span className="text-sm font-bold text-[#666]">Last name</span>
               <input
                 value={isLoadingUser ? 'Loading...' : lastName}
                 readOnly
                 placeholder="Last name"
-                className="h-[44px] rounded-[20px] bg-white px-4 text-base font-medium text-black shadow-[0_1px_8px_rgba(0,0,0,0.2)] outline-none placeholder:text-[#9b9b9b]"
+                className="h-[38px] rounded-[18px] bg-white px-3 text-sm font-medium text-black shadow-[0_1px_7px_rgba(0,0,0,0.18)] outline-none placeholder:text-[#9b9b9b]"
               />
             </label>
             <label className="grid gap-1.5">
-              <span className="text-base font-bold text-[#666]">Email address</span>
+              <span className="text-sm font-bold text-[#666]">Email address</span>
               <input
                 value={isLoadingUser ? 'Loading...' : email}
                 readOnly
                 placeholder="Email addr."
-                className="h-[44px] rounded-[20px] bg-white px-4 text-base font-medium text-black shadow-[0_1px_8px_rgba(0,0,0,0.2)] outline-none placeholder:text-[#9b9b9b]"
+                className="h-[38px] rounded-[18px] bg-white px-3 text-sm font-medium text-black shadow-[0_1px_7px_rgba(0,0,0,0.18)] outline-none placeholder:text-[#9b9b9b]"
               />
             </label>
             <label className="grid gap-1.5">
-              <span className="text-base font-bold text-[#666]">Home address</span>
+              <span className="text-sm font-bold text-[#666]">Home address</span>
               <input
                 value={isLoadingUser ? 'Loading...' : (user?.address ?? '')}
                 readOnly
                 placeholder="Home address"
-                className="h-[44px] rounded-[20px] bg-white px-4 text-sm font-medium text-black shadow-[0_1px_8px_rgba(0,0,0,0.2)] outline-none placeholder:text-[#9b9b9b]"
+                className="h-[38px] rounded-[18px] bg-white px-3 text-xs font-medium text-black shadow-[0_1px_7px_rgba(0,0,0,0.18)] outline-none placeholder:text-[#9b9b9b]"
               />
             </label>
             <label className="grid gap-1.5">
-              <span className="text-base font-bold text-[#666]">
-                Message <span className="text-sm font-semibold text-slategray">(optional)</span>
+              <span className="text-sm font-bold text-[#666]">
+                Message <span className="text-xs font-semibold text-slategray">(optional)</span>
               </span>
               <textarea
                 value={message}
                 onChange={(event) => setMessage(event.target.value)}
                 placeholder="Add a note for the landlord or manager"
-                className="min-h-[70px] resize-none rounded-[18px] border border-transparent bg-white px-4 py-2.5 text-sm font-medium text-black shadow-[0_1px_8px_rgba(0,0,0,0.16)] outline-none placeholder:text-[#9b9b9b] focus:border-teal-200"
+                className="min-h-[58px] resize-none rounded-[16px] border border-transparent bg-white px-3 py-2 text-xs font-medium text-black shadow-[0_1px_7px_rgba(0,0,0,0.14)] outline-none placeholder:text-[#9b9b9b] focus:border-teal-200"
               />
             </label>
           </div>
         </div>
 
-        <div className="flex flex-col gap-4">
-          <b className="text-[22px] tracking-num--0_01 text-black">Date and Time</b>
-          <div className="rounded-[16px] border border-[#dedede] bg-white p-4">
-            <div className="mb-4 flex items-center gap-2 text-black">
+        <div className="flex flex-col gap-3">
+          <b className="text-[19px] tracking-num--0_01 text-black">Date and Time</b>
+          <div className="rounded-[14px] border border-[#dedede] bg-white p-3.5">
+            <div className="mb-3 flex items-center gap-1.5 text-black">
               <button
                 type="button"
                 onClick={() => goToMonth(-1)}
-                className="grid h-8 w-8 place-items-center rounded-full hover:bg-whitesmoke-100"
+                className="grid h-7 w-7 place-items-center rounded-full hover:bg-whitesmoke-100"
                 aria-label="Previous month"
               >
-                <Icon icon="material-symbols:chevron-left-rounded" className="h-6 w-6" />
+                <Icon icon="material-symbols:chevron-left-rounded" className="h-5 w-5" />
               </button>
               <select
                 value={month}
                 onChange={(event) => handleMonthSelect(Number(event.target.value))}
-                className="h-8 flex-1 rounded-lg border border-[#dedede] bg-white px-2 text-sm font-medium outline-none"
+                className="h-7 flex-1 rounded-lg border border-[#dedede] bg-white px-2 text-xs font-medium outline-none"
               >
                 {MONTHS.map((monthLabel, index) => (
                   <option key={monthLabel} value={index}>
@@ -328,7 +328,7 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
               <select
                 value={year}
                 onChange={(event) => handleYearSelect(Number(event.target.value))}
-                className="h-8 flex-1 rounded-lg border border-[#dedede] bg-white px-2 text-sm font-medium outline-none"
+                className="h-7 flex-1 rounded-lg border border-[#dedede] bg-white px-2 text-xs font-medium outline-none"
               >
                 {years.map((yearOption) => (
                   <option key={yearOption} value={yearOption}>
@@ -339,21 +339,21 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
               <button
                 type="button"
                 onClick={() => goToMonth(1)}
-                className="grid h-8 w-8 place-items-center rounded-full hover:bg-whitesmoke-100"
+                className="grid h-7 w-7 place-items-center rounded-full hover:bg-whitesmoke-100"
                 aria-label="Next month"
               >
-                <Icon icon="material-symbols:chevron-right-rounded" className="h-6 w-6" />
+                <Icon icon="material-symbols:chevron-right-rounded" className="h-5 w-5" />
               </button>
             </div>
 
-            <div className="grid grid-cols-7 gap-y-1.5 text-center">
+            <div className="grid grid-cols-7 gap-y-1 text-center">
               {DAYS.map((day) => (
-                <div key={day} className="pb-1 text-xs font-medium text-[#777]">
+                <div key={day} className="pb-0.5 text-[10px] font-medium text-[#777]">
                   {day}
                 </div>
               ))}
               {calendarCells.map(({ key, day }) => {
-                if (day == null) return <div key={key} className="h-8" />;
+                if (day == null) return <div key={key} className="h-7" />;
 
                 const dateValue = formatDateInput(new Date(year, month, day));
                 const isPast = dateValue < today;
@@ -365,7 +365,7 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
                     type="button"
                     disabled={isPast}
                     onClick={() => selectCalendarDay(day)}
-                    className={`mx-auto grid h-8 w-8 place-items-center rounded-lg text-sm font-medium transition-colors disabled:cursor-not-allowed ${
+                    className={`mx-auto grid h-7 w-7 place-items-center rounded-lg text-xs font-medium transition-colors disabled:cursor-not-allowed ${
                       isSelected
                         ? 'bg-[#bdf1e6] text-[#006f5e] font-bold'
                         : isPast
@@ -380,14 +380,14 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
             </div>
           </div>
 
-          <div className="flex items-center justify-center gap-4 text-black">
-            <Icon icon="solar:clock-circle-outline" className="h-7 w-7" />
-            <div className="relative w-[165px]">
+          <div className="flex items-center justify-center gap-3 text-black">
+            <Icon icon="solar:clock-circle-outline" className="h-6 w-6" />
+            <div className="relative w-[145px]">
               <button
                 type="button"
                 onClick={() => setTimeMenuOpen((isOpen) => !isOpen)}
                 disabled={isLoadingSlots || availableSlots.length === 0}
-                className="flex h-[48px] w-full items-center justify-between rounded-xl border border-whitesmoke-300 bg-white px-3 text-left text-base font-semibold text-[#5d5d5d] shadow-sm disabled:cursor-not-allowed disabled:opacity-60 font-lora"
+                className="flex h-[40px] w-full items-center justify-between rounded-lg border border-whitesmoke-300 bg-white px-2.5 text-left text-sm font-semibold text-[#5d5d5d] shadow-sm disabled:cursor-not-allowed disabled:opacity-60 font-lora"
               >
                 <span className="truncate">
                   {isLoadingSlots
@@ -400,7 +400,7 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
                 </span>
                 <Icon
                   icon="material-symbols:keyboard-arrow-down-rounded"
-                  className={`h-5 w-5 shrink-0 text-[#356c65] transition-transform ${
+                  className={`h-4 w-4 shrink-0 text-[#356c65] transition-transform ${
                     isTimeMenuOpen ? 'rotate-180' : ''
                   }`}
                 />
@@ -437,11 +437,11 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
         </p>
       )}
 
-      <div className="mt-5 flex items-center justify-center gap-14">
+      <div className="mt-4 flex items-center justify-center gap-12">
         <button
           type="button"
           onClick={onClose}
-          className="h-9 rounded-num-16 px-5 text-lg font-medium text-red-500 hover:bg-red-50"
+          className="h-8 rounded-num-16 px-4 text-base font-medium text-red-500 hover:bg-red-50"
         >
           Cancel
         </button>
@@ -449,7 +449,7 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
           type="button"
           onClick={handleBook}
           disabled={isSubmitting || isLoadingUser || isLoadingSlots}
-          className="h-10 rounded-[20px] bg-aliceblue px-7 text-lg font-bold text-teal-200 disabled:cursor-not-allowed disabled:opacity-60"
+          className="h-9 rounded-[18px] bg-aliceblue px-6 text-base font-bold text-teal-200 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isSubmitting ? 'Booking...' : 'Book'}
         </button>
