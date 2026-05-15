@@ -146,7 +146,10 @@ export const getBookings = async (
   query: Partial<GetBookingArguments>,
   filters: QueryFilter<BookingType>,
 ) => {
-  return await VisitBooking.where(filters).find(buildQuery<BookingType>(query));
+  return await VisitBooking.where(filters)
+    .find(buildQuery<BookingType>(query))
+    .populate('userId', 'firstName lastName')
+    .populate('facilityId', 'name');
 };
 
 export const updateBookingStatus = async (

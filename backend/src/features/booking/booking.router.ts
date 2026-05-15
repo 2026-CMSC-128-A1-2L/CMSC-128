@@ -19,7 +19,7 @@ const router = Router();
 // ============================================================================
 // GET /api/bookings
 // ============================================================================
-router.get('/', isLoggedIn, manageBookingsFilter, routeGetBookings);
+router.get('/', isLoggedIn, (req, res, next) => { console.log('ROUTER: User Type:', req.user?.userType); next(); }, manageBookingsFilter, (req, res, next) => { console.log('ROUTER: Passed manageBookingsFilter'); next(); }, routeGetBookings);
 
 // ============================================================================
 // GET /api/bookings/facilities/:facilityId/available-slots
