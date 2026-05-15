@@ -10,15 +10,9 @@ import type {
 } from '../interface/billing';
 import { api } from './axiosInstance';
 import { FacilityService } from './FacilityService';
-import { RentalService } from './RentalService';
 import { UnitService } from './UnitService';
 
 export const BillingService = {
-  async getLandlordSummary() {
-    const response = await api.get('/api/billings/landlord/summary');
-    return response.data;
-  },
-
   async getBillings(params: z.infer<typeof GetBillingsQuerySchema>): Promise<GetBillingsQuery> {
     const response = await api.get<GetBillingsQuery>('/api/billings', {
       params: { q: JSON.stringify(params) },
@@ -52,78 +46,89 @@ export const BillingService = {
   },
 
   async getUnitBillings(unitId: string) {
-    const response = await api.get(`/api/units/${unitId}/billings`);
-    return response.data;
+    try {
+      const response = await api.get(`/api/units/${unitId}/billings`);
+      return response.data;
+    } catch (error) {
+      console.warn(`Failed to fetch billings for unit ${unitId}:`, error);
+      return { data: [] };
+    }
   },
 
-  async getFacilityBillings(facilityId: string): Promise<GetBillingsQuery> {
-    return this.getBillings({ facilityId });
-  },
+  async getAllBillingsForListings(listingIds: string[]): Promise<any[]> {
+    if (listingIds.length === 0) return [];
 
-  async getFacilitySummary(facilityId: string) {
-    const facilityRes = await FacilityService.getFacility(facilityId);
-    const facility = facilityRes.data;
-
-    const billingsRes = await this.getFacilityBillings(facilityId);
-    const billings = billingsRes.data; // array of billing objects
-
-    const unitsRes = await UnitService.getUnits({ facilityId });
-    const totalUnits = unitsRes.data.length;
-
-    const occupiedUnits = await this.getOccupiedUnitCount(facilityId);
-
-    const totalIncome = billings
-      .filter((b: any) => b.paymentStatus === 'paid')
-      .reduce((sum: number, b: any) => sum + b.totalAmount, 0);
-
-    const totalOutstanding = billings
-      .filter((b: any) => b.paymentStatus !== 'paid')
-      .reduce((sum: number, b: any) => sum + b.totalAmount, 0);
-
-    const collectionRate =
-      totalIncome + totalOutstanding === 0
-        ? 0
-        : Math.round((totalIncome / (totalIncome + totalOutstanding)) * 100);
-
-    const occupancyRate = totalUnits === 0 ? 0 : Math.round((occupiedUnits / totalUnits) * 100);
-
-    const breakdownMap = new Map<string, number>();
-    billings
-      .filter((b: any) => b.paymentStatus === 'paid')
-      .forEach((b: any) => {
-        b.breakdown.forEach((item: { name: string; amount: number }) => {
-          breakdownMap.set(item.name, (breakdownMap.get(item.name) || 0) + item.amount);
-        });
-      });
-    const incomeBreakdown = Array.from(breakdownMap.entries()).map(([name, value]) => ({
-      name,
-      value,
-    }));
-
-    return {
-      data: {
-        facilityInfo: {
-          id: facility._id,
-          name: facility.name,
-          address: facility.location?.text ?? 'Unknown Address',
-        },
-        overview: {
-          occupancyRate,
-          collectionRate,
-        },
-        breakdown: {
-          monthlyIncome: totalIncome,
-          incomeBreakdown,
-        },
-      },
-    };
-  },
-
-  async getOccupiedUnitCount(facilityId: string): Promise<number> {
-    const rentalsRes = await RentalService.getRentals({ facilityId, status: 'active' });
-    const occupiedUnitIds = new Set(
-      (rentalsRes.data as any[]).map((r: any) => r.unitId?._id ?? r.unitId)
+    const unitsByListing = await Promise.all(
+      listingIds.map(async (listingId) => {
+        try {
+          const res = await UnitService.getUnitsByListing(listingId);
+          if (res.data?.data && Array.isArray(res.data.data)) return res.data.data;
+          if (res.data && Array.isArray(res.data)) return res.data;
+          if (Array.isArray(res)) return res;
+          return [];
+        } catch (err) {
+          console.warn(`Failed to fetch units for listing ${listingId}:`, err);
+          return [];
+        }
+      })
     );
-    return occupiedUnitIds.size;
+
+    const allUnits: any[] = unitsByListing.flat();
+
+    const billingsByUnit = await Promise.all(
+      allUnits.map(async (unit: any) => {
+        const unitId = unit._id ?? unit.id;
+        if (!unitId) return [];
+        try {
+          const res = await this.getUnitBillings(unitId);
+          let billings: any[] = [];
+          if (res.data?.data && Array.isArray(res.data.data)) billings = res.data.data;
+          else if (res.data && Array.isArray(res.data)) billings = res.data;
+          else if (Array.isArray(res)) billings = res;
+
+          const activeRentals: any[] = (unit.currentRentals ?? []).filter(
+            (r: any) => r.status === 'active'
+          );
+
+          const stampedRentalId = activeRentals[0]?._id ?? null;
+          const stampedTenantName = activeRentals
+            .map((r: any) => {
+              const u = r.userId;
+              return typeof u === 'object'
+                ? `${u.firstName ?? ''} ${u.lastName ?? ''}`.trim()
+                : '';
+            })
+            .filter(Boolean)
+            .join(', ');
+
+          return billings.map((b: any) => ({
+            ...b,
+            roomNumber: b.roomNumber || unit.roomNumber || '',
+            _stampedRentalId: stampedRentalId,
+            _stampedTenantName: stampedTenantName,
+          }));
+        } catch (err) {
+          console.warn(`Failed to fetch billings for unit ${unitId}:`, err);
+          return [];
+        }
+      })
+    );
+
+    return billingsByUnit.flat();
+  },
+
+  async getAllBillingsForFacility(facilityId: string): Promise<any[]> {
+    try {
+      const facilityRes = await FacilityService.getFacility(facilityId);
+      const facility = facilityRes.data ?? facilityRes;
+      const listings: any[] = facility.listings || [];
+      const listingIds = listings.map((l: any) => l.id).filter(Boolean);
+      const billings = await this.getAllBillingsForListings(listingIds);
+      billings.forEach((b: any) => { b.facilityId = b.facilityId ?? facilityId; });
+      return billings;
+    } catch (err) {
+      console.error('Failed to fetch all billings for facility:', err);
+      return [];
+    }
   },
 };

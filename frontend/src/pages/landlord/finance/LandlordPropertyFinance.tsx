@@ -1,3 +1,4 @@
+// frontend/src/pages/landlord/LandlordPropertyFinance.tsx
 import { type FunctionComponent, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import LandlordLayout, { type BreadcrumbItem } from '../../../components/landlord/LandlordLayout';
@@ -15,8 +16,20 @@ const LandlordPropertyFinance: FunctionComponent = () => {
   const [activeTab, setActiveTab] = useState<TabType>('overview');
   const [isTransitioning, setIsTransitioning] = useState(false);
 
-  const { facilityInfo, overview, monthlyIncome, incomeBreakdown, billings, isBillingsLoading, isLoading, error, refetch, refetchBillings } =
-    useFacilityFinance(propertyId);
+  const { 
+    facilityInfo, 
+    overview, 
+    monthlyIncome, 
+    incomeBreakdown, 
+    billings, 
+    unitRentalMap,
+    isBillingsLoading, 
+    isLoading, 
+    error, 
+    refetch, 
+    refetchBillings, 
+    facilityListings 
+  } = useFacilityFinance(propertyId);
 
   const handleTabChange = (tab: TabType) => {
     if (tab === activeTab) return;
@@ -108,8 +121,10 @@ const LandlordPropertyFinance: FunctionComponent = () => {
                 <TenantBillingsTab
                   facilityId={propertyId!}
                   billings={billings}
+                  unitRentalMap={unitRentalMap}
                   isLoading={isBillingsLoading}
                   onRefresh={refetchBillings}
+                  facilityListings={facilityListings}
                 />
               )}
             </div>

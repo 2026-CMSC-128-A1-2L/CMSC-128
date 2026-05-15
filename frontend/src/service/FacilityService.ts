@@ -9,6 +9,8 @@ import type {
   SearchFacilitiesResponse,
 } from '../interface/facility';
 
+import { UserService } from './UserService';
+
 export const FacilityService = {
   async getFacilities() {
     try {
@@ -133,6 +135,18 @@ export const FacilityService = {
       console.error('Failed to reject facility:', error);
       throw error;
     }
+  },
+
+  async getLandlordFacilities() {
+    const self = await UserService.getSelf();
+    const landlordId = self.data._id;
+    const allFacilities = await this.getFacilities();
+
+    const landlordFacilities = allFacilities.data.filter(
+      (facility: any) => facility.landlordId?._id === landlordId
+    );
+
+    return { data: landlordFacilities };
   },
 
   async getFacilityBookings(facilityId: string) {

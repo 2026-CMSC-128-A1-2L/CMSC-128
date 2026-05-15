@@ -4,7 +4,7 @@ import type { Billing } from '../types/billing';
 
 interface BillingRowProps {
   billing: Billing;
-  roomNumber?: number;
+  roomNumber?: number | string;
   tenantName?: string;
   onStatusChange?: (id: string, status: Billing['paymentStatus']) => void;
   onEditClick?: (billing: Billing) => void;
@@ -54,7 +54,6 @@ const BillingRow: FunctionComponent<BillingRowProps> = ({
   const miscAmount = billing.breakdown.find((b) => b.name === 'Misc. Fees')?.amount || 0;
   const paidAmount = billing.paidAmount || 0;
 
-  // Calculate dropdown position when it opens
   useEffect(() => {
     if (isOpen && buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect();
@@ -65,13 +64,16 @@ const BillingRow: FunctionComponent<BillingRowProps> = ({
     }
   }, [isOpen]);
 
-  // Close dropdown on any scroll so the fixed position doesn't drift
   useEffect(() => {
     if (!isOpen) return;
     const handleScroll = () => { onToggle?.(billing._id); };
     window.addEventListener('scroll', handleScroll, true); // capture phase catches all scroll events
     return () => window.removeEventListener('scroll', handleScroll, true);
   }, [isOpen, onToggle, billing._id]);
+
+  useEffect(() => {
+    setSelectedStatus(billing.paymentStatus);
+  }, [billing.paymentStatus]);
 
   const handleStatusChange = (status: PaymentStatus) => {
     setIsChanging(true);

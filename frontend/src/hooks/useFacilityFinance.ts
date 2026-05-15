@@ -33,6 +33,7 @@ export type IncomeBreakdownData = {
 export type TenantBilling = {
   _id: string;
   unitId: string;
+  rentalId?: string;
   roomNumber: string;
   tenantName: string;
   profilePicture: string | null;
@@ -55,14 +56,117 @@ type UseFacilityFinanceReturn = {
   monthlyIncome: MonthlyIncomeData[];
   incomeBreakdown: IncomeBreakdownData | null;
   billings: TenantBilling[];
+  unitRentalMap: Map<string, string>;
   isBillingsLoading: boolean;
   isLoading: boolean;
   error: string | null;
   refetch: () => void;
   refetchBillings: () => void;
+  facilityListings: { id: string }[];
 };
 
 const MONTH_LABELS = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+
+const mapBilling = (b: any, facilityId: string): TenantBilling => {
+  const unitObj = b.unitId && typeof b.unitId === 'object' ? b.unitId : null;
+  const unitId = unitObj?._id ?? b.unitId ?? '';
+
+  let tenantName = b.tenantName || b._stampedTenantName || '';
+  if (!tenantName && b.userId && typeof b.userId === 'object') {
+    tenantName = `${b.userId.firstName || ''} ${b.userId.lastName || ''}`.trim();
+  }
+
+  const breakdown: { name: string; amount: number }[] =
+    Array.isArray(b.breakdown) && b.breakdown.length > 0
+      ? b.breakdown
+      : [{ name: 'Rent', amount: b.totalAmount ?? b.amount ?? 0 }];
+
+  return {
+    _id: b._id ?? b.id,
+    unitId,
+    rentalId: b.rentalId?._id ?? b.rentalId ?? b._stampedRentalId ?? null,
+    roomNumber: b.roomNumber || unitObj?.roomNumber || '',
+    tenantName: tenantName || 'Unknown Tenant',
+    profilePicture: b.profilePicture ?? null,
+    dueDate: b.dueDate ?? null,
+    paymentStatus: b.paymentStatus ?? b.status ?? 'unpaid',
+    totalAmount: breakdown.reduce((sum, item) => sum + (item.amount || 0), 0) || b.totalAmount || b.amount || 0,
+    paidAmount: b.paidAmount ?? null,
+    breakdown,
+    facilityId: b.facilityId?._id ?? b.facilityId ?? facilityId,
+    userId: b.userId?._id ?? b.userId ?? '',
+    documents: b.documents ?? [],
+    paymentDate: b.paymentDate ?? null,
+    createdAt: b.createdAt ?? '',
+    updatedAt: b.updatedAt ?? '',
+  };
+};
+
+// Derive computed state from mapped billings
+const deriveFromBillings = (
+  mappedBillings: TenantBilling[],
+  nowYear: number,
+  nowMonth: number,
+) => {
+  // Rental map
+  const rentalMap = new Map<string, string>();
+  for (const b of mappedBillings) {
+    if (b.rentalId) rentalMap.set(b.unitId, b.rentalId);
+  }
+
+  // Monthly income chart
+  const byMonth = new Map<string, number>();
+  for (const b of mappedBillings) {
+    if (!b.dueDate) continue;
+    const d = new Date(b.dueDate);
+    const dYear = d.getFullYear();
+    const dMonth = d.getMonth();
+    if (dYear > nowYear || (dYear === nowYear && dMonth > nowMonth)) continue;
+    const key = `${dYear}-${dMonth}`;
+    byMonth.set(key, (byMonth.get(key) ?? 0) + b.totalAmount);
+  }
+
+  const monthlyIncome: MonthlyIncomeData[] = Array.from(byMonth.entries())
+    .map(([key, totalIncome]) => {
+      const [year, monthIndex] = key.split('-').map(Number);
+      return { month: MONTH_LABELS[monthIndex], monthIndex, year, totalIncome };
+    })
+    .sort((a, b) => a.year !== b.year ? a.year - b.year : a.monthIndex - b.monthIndex);
+
+  // Income breakdown (paid only)
+  const paidBillings = mappedBillings.filter((b) => b.paymentStatus === 'paid');
+  const breakdownMap = new Map<string, number>();
+  for (const b of paidBillings) {
+    for (const item of b.breakdown) {
+      breakdownMap.set(item.name, (breakdownMap.get(item.name) || 0) + (item.amount || 0));
+    }
+  }
+
+  const rent = breakdownMap.get('Rent') || 0;
+  const utilities = breakdownMap.get('Utilities') || 0;
+  const misc = breakdownMap.get('Misc. Fees') || 0;
+  const breakdownTotal = rent + utilities + misc;
+  const divisor = breakdownTotal || 1;
+
+  const incomeBreakdown: IncomeBreakdownData = {
+    rent: { amount: rent, percentage: (rent / divisor) * 100 },
+    utilities: { amount: utilities, percentage: (utilities / divisor) * 100 },
+    misc: { amount: misc, percentage: (misc / divisor) * 100 },
+    total: breakdownTotal,
+  };
+
+  // Collection rate
+  const totalPaidIncome = paidBillings.reduce((sum, b) => sum + b.totalAmount, 0);
+  const totalOutstanding = mappedBillings
+    .filter((b) => b.paymentStatus !== 'paid')
+    .reduce((sum, b) => sum + b.totalAmount, 0);
+  const collectionRate =
+    totalPaidIncome + totalOutstanding === 0
+      ? 0
+      : Math.round((totalPaidIncome / (totalPaidIncome + totalOutstanding)) * 100);
+
+  return { rentalMap, monthlyIncome, incomeBreakdown, totalPaidIncome, collectionRate };
+};
 
 export function useFacilityFinance(facilityId: string | undefined): UseFacilityFinanceReturn {
   const [facilityInfo, setFacilityInfo] = useState<FacilityInfo | null>(null);
@@ -70,44 +174,78 @@ export function useFacilityFinance(facilityId: string | undefined): UseFacilityF
   const [monthlyIncome, setMonthlyIncome] = useState<MonthlyIncomeData[]>([]);
   const [incomeBreakdown, setIncomeBreakdown] = useState<IncomeBreakdownData | null>(null);
   const [billings, setBillings] = useState<TenantBilling[]>([]);
+  const [unitRentalMap, setUnitRentalMap] = useState<Map<string, string>>(new Map());
   const [isLoading, setIsLoading] = useState(true);
   const [isBillingsLoading, setIsBillingsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [fetchCount, setFetchCount] = useState(0);
   const [billingsFetchCount, setBillingsFetchCount] = useState(0);
+  const [facilityListings, setFacilityListings] = useState<{ id: string }[]>([]);
 
   const refetch = useCallback(() => setFetchCount((n) => n + 1), []);
   const refetchBillings = useCallback(() => setBillingsFetchCount((n) => n + 1), []);
 
-  // Load facility info + summary (using new frontend-computed summary)
   useEffect(() => {
     if (!facilityId) return;
     let cancelled = false;
 
     const load = async () => {
       setIsLoading(true);
+      setIsBillingsLoading(true);
       setError(null);
+
       try {
-        const summaryRes = await BillingService.getFacilitySummary(facilityId);
-        if (!cancelled) {
-          setFacilityInfo(summaryRes.data.facilityInfo);
-          setOverview({
-            occupancyRate: summaryRes.data.overview.occupancyRate,
-            collectionRate: summaryRes.data.overview.collectionRate,
-            totalIncome: summaryRes.data.breakdown.monthlyIncome,
-            totalUnits: 0,
-            occupiedUnits: 0,
-          });
-        }
+        const [facilityRes, allBillings] = await Promise.all([
+          FacilityService.getFacility(facilityId),
+          BillingService.getAllBillingsForFacility(facilityId),
+        ]);
+
+        if (cancelled) return;
+
+        const facility = facilityRes.data ?? facilityRes;
+        const listings: any[] = facility.listings ?? [];
+
+        setFacilityInfo({
+          id: facility._id,
+          name: facility.name,
+          address: facility.location?.text ?? 'Unknown Address',
+        });
+        setFacilityListings(listings.map((l: any) => ({ id: l.id })));
+
+        const totalUnits = listings.reduce((sum: number, l: any) => sum + (l.unitCount || 0), 0);
+        const occupiedUnits = listings.reduce(
+          (sum: number, l: any) => sum + ((l.unitCount || 0) - (l.availableUnitCount || 0)), 0
+        );
+
+        const mappedBillings = allBillings.map((b: any) => mapBilling(b, facilityId));
+        setBillings(mappedBillings);
+
+        const now = new Date();
+        const { rentalMap, monthlyIncome, incomeBreakdown, totalPaidIncome, collectionRate } =
+          deriveFromBillings(mappedBillings, now.getFullYear(), now.getMonth());
+
+        setUnitRentalMap(rentalMap);
+        setMonthlyIncome(monthlyIncome);
+        setIncomeBreakdown(incomeBreakdown);
+        setOverview({
+          occupancyRate: totalUnits === 0 ? 0 : Math.round((occupiedUnits / totalUnits) * 100),
+          collectionRate,
+          totalIncome: totalPaidIncome,
+          totalUnits,
+          occupiedUnits,
+        });
       } catch (err) {
         if (!cancelled) {
-          const msg =
+          setError(
             (err as any)?.response?.data?.message ??
-            (err instanceof Error ? err.message : 'Failed to load facility data.');
-          setError(msg);
+            (err instanceof Error ? err.message : 'Failed to load facility data.')
+          );
         }
       } finally {
-        if (!cancelled) setIsLoading(false);
+        if (!cancelled) {
+          setIsLoading(false);
+          setIsBillingsLoading(false);
+        }
       }
     };
 
@@ -116,76 +254,32 @@ export function useFacilityFinance(facilityId: string | undefined): UseFacilityF
   }, [facilityId, fetchCount]);
 
   useEffect(() => {
-    if (!facilityId) return;
+    if (!facilityId || billingsFetchCount === 0) return;
     let cancelled = false;
 
     const load = async () => {
       setIsBillingsLoading(true);
       try {
-        const res = await BillingService.getFacilityBillings(facilityId);
-        if (!cancelled) {
-          const rawBillings: any[] = res.data ?? [];
-          const mapped: TenantBilling[] = rawBillings.map((b) => ({
-            _id: b._id ?? b.id,
-            unitId: b.unitId?._id ?? b.unitId ?? '',
-            roomNumber: b.unitId?.roomNumber ?? b.unitName ?? b.unitId ?? '',
-            tenantName: b.tenantName ?? `${b.userId?.firstName ?? ''} ${b.userId?.lastName ?? ''}`.trim(),
-            profilePicture: b.profilePicture ?? null,
-            dueDate: b.dueDate ?? null,
-            paymentStatus: b.paymentStatus ?? b.status ?? 'unpaid',
-            totalAmount: b.totalAmount ?? b.amount ?? 0,
-            paidAmount: b.paidAmount ?? null,
-            breakdown: b.breakdown ?? [],
-            facilityId: b.facilityId?._id ?? b.facilityId ?? facilityId,
-            userId: b.userId?._id ?? b.userId ?? '',
-            documents: b.documents ?? [],
-            paymentDate: b.paymentDate ?? null,
-            createdAt: b.createdAt ?? '',
-            updatedAt: b.updatedAt ?? '',
-          }));
-          setBillings(mapped);
+        const allBillings = await BillingService.getAllBillingsForFacility(facilityId);
+        if (cancelled) return;
 
-          // Compute monthly income from all billings
-          const byMonth = new Map<string, number>();
-          mapped.forEach((b) => {
-            if (!b.dueDate) return;
-            const d = new Date(b.dueDate);
-            const key = `${d.getFullYear()}-${d.getMonth()}`;
-            byMonth.set(key, (byMonth.get(key) ?? 0) + b.totalAmount);
-          });
-          const monthlyData: MonthlyIncomeData[] = Array.from(byMonth.entries())
-            .map(([key, income]) => {
-              const [year, monthIndex] = key.split('-').map(Number);
-              return { month: MONTH_LABELS[monthIndex], monthIndex, year, totalIncome: income };
-            })
-            .sort((a, b) => a.year !== b.year ? a.year - b.year : a.monthIndex - b.monthIndex);
-          setMonthlyIncome(monthlyData);
+        const mappedBillings = allBillings.map((b: any) => mapBilling(b, facilityId));
+        setBillings(mappedBillings);
 
-          // Compute income breakdown from paid billings
-          const breakdownMap = new Map<string, number>();
-          mapped
-            .filter((b) => b.paymentStatus === 'paid')
-            .forEach((b) => {
-              b.breakdown.forEach((item) => {
-                breakdownMap.set(item.name, (breakdownMap.get(item.name) || 0) + item.amount);
-              });
-            });
-          const rent = breakdownMap.get('Rent') || 0;
-          const utilities = breakdownMap.get('Utilities') || 0;
-          const misc = breakdownMap.get('Misc. Fees') || 0;
-          const total = rent + utilities + misc || 1;
-          setIncomeBreakdown({
-            rent: { amount: rent, percentage: (rent / total) * 100 },
-            utilities: { amount: utilities, percentage: (utilities / total) * 100 },
-            misc: { amount: misc, percentage: (misc / total) * 100 },
-            total: rent + utilities + misc,
-          });
+        const now = new Date();
+        const { rentalMap, incomeBreakdown, totalPaidIncome, collectionRate } =
+          deriveFromBillings(mappedBillings, now.getFullYear(), now.getMonth());
 
-          if (overview) {
-          }
-        }
+        setUnitRentalMap(rentalMap);
+        setIncomeBreakdown(incomeBreakdown);
+        setOverview((prev) =>
+          prev ? { ...prev, totalIncome: totalPaidIncome, collectionRate } : null
+        );
       } catch (err) {
-        console.error('Failed to load facility billings:', err);
+        if (!cancelled) {
+          console.error('Failed to refresh billings:', err);
+          setBillings([]);
+        }
       } finally {
         if (!cancelled) setIsBillingsLoading(false);
       }
@@ -193,7 +287,7 @@ export function useFacilityFinance(facilityId: string | undefined): UseFacilityF
 
     load();
     return () => { cancelled = true; };
-  }, [facilityId, billingsFetchCount, overview]);
+  }, [facilityId, billingsFetchCount]);
 
   return {
     facilityInfo,
@@ -201,10 +295,12 @@ export function useFacilityFinance(facilityId: string | undefined): UseFacilityF
     monthlyIncome,
     incomeBreakdown,
     billings,
+    unitRentalMap,
     isBillingsLoading,
     isLoading,
     error,
     refetch,
     refetchBillings,
+    facilityListings,
   };
 }

@@ -1,4 +1,4 @@
-import { type FunctionComponent, useState, useCallback, useEffect } from 'react';
+import { type FunctionComponent, useState, useEffect } from 'react';
 import { Icon } from '@iconify/react';
 import BillingRow from './BillingRow';
 import AddBillingPopup from './AddBillingPopup';
@@ -6,9 +6,7 @@ import EditBillingPopup from './EditBillingPopup';
 import type { Billing } from '../types/billing';
 import type { TenantBilling } from '../../../../hooks/useFacilityFinance';
 import { BillingService } from '../../../../service/BillingService';
-import { RentalService } from '../../../../service/RentalService';
 import { UnitService } from '../../../../service/UnitService';
-import { ListingService } from '../../../../service/ListingService';
 
 const TABLE_COLUMNS = [
   { label: 'Room', className: 'w-[8%]' },
@@ -58,53 +56,76 @@ const toRowBilling = (b: TenantBilling): Billing => ({
 interface TenantBillingsTabProps {
   facilityId: string;
   billings: TenantBilling[];
+  unitRentalMap: Map<string, string>;
   isLoading: boolean;
   onRefresh: () => void;
+  facilityListings?: { id: string }[];
 }
 
 const TenantBillingsTab: FunctionComponent<TenantBillingsTabProps> = ({
   facilityId,
   billings,
+  unitRentalMap,
   isLoading,
   onRefresh,
+  facilityListings = [],
 }) => {
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
   const [isAddPopupOpen, setIsAddPopupOpen] = useState(false);
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
   const [selectedBilling, setSelectedBilling] = useState<Billing | null>(null);
+  const [selectedBillingMeta, setSelectedBillingMeta] = useState<{ roomNumber: string; tenantName: string } | null>(null);
   const [isMonthDropdownOpen, setIsMonthDropdownOpen] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState(getAvailableMonths()[0]);
   const [isSaving, setIsSaving] = useState(false);
-
-  // All units for this facility
   const [allUnitOptions, setAllUnitOptions] = useState<{ value: string; label: string }[]>([]);
+  const [localRentalMap, setLocalRentalMap] = useState<Map<string, string>>(new Map());
 
   const availableMonths = getAvailableMonths();
 
-  // Fetch facility units once on mount
+  const mergedRentalMap = new Map([...unitRentalMap, ...localRentalMap]);
+
   useEffect(() => {
     const loadUnits = async () => {
       try {
-        const listingsRes = await ListingService.getListingsByFacility(facilityId);
-        const listings: any[] = Array.isArray(listingsRes.data) ? listingsRes.data : [];
-        const unitPromises = listings.map((l: any) =>
-          UnitService.getUnitsByListing(l._id ?? l.id).catch(() => ({ data: [] })),
+        const unitPromises = facilityListings.map((l) =>
+          UnitService.getUnitsByListing(l.id).catch(() => ({ data: [] }))
         );
         const unitResults = await Promise.all(unitPromises);
-        const units: { value: string; label: string }[] = unitResults.flatMap((res) => {
-          const arr: any[] = Array.isArray(res.data) ? res.data : [];
-          return arr.map((u: any) => ({
-            value: u._id ?? u.id,
-            label: `Room ${u.roomNumber ?? u.name ?? u._id}`,
-          }));
+
+        const units: { value: string; label: string }[] = [];
+        const rentalMapFromUnits = new Map<string, string>();
+
+        unitResults.forEach((res: any) => {
+          let arr: any[] = [];
+          if (res.data && Array.isArray(res.data)) arr = res.data;
+          else if (Array.isArray(res)) arr = res;
+          else if (res.data?.data && Array.isArray(res.data.data)) arr = res.data.data;
+
+          arr.forEach((u: any) => {
+            const unitId = u._id ?? u.id;
+            // Find first active rental on this unit
+            const activeRental = (u.currentRentals ?? []).find(
+              (r: any) => r.status === 'active'
+            );
+            if (activeRental) {
+              rentalMapFromUnits.set(unitId, activeRental._id);
+            }
+            units.push({
+              value: unitId,
+              label: u.roomNumber ?? u.name ?? unitId,
+            });
+          });
         });
+
         setAllUnitOptions(units);
+        setLocalRentalMap((prev) => new Map([...prev, ...rentalMapFromUnits]));
       } catch (err) {
         console.error('Failed to load facility units:', err);
       }
     };
-    loadUnits();
-  }, [facilityId]);
+    if (facilityListings.length > 0) loadUnits();
+  }, [facilityListings]);
 
   const filteredBillings = billings.filter((b) => {
     if (!b.dueDate) return false;
@@ -114,8 +135,9 @@ const TenantBillingsTab: FunctionComponent<TenantBillingsTabProps> = ({
 
   const occupiedUnitIds = new Set(filteredBillings.map((b) => b.unitId));
 
-  // Only show units that don't already have a billing for the selected month
-  const availableUnitOptions = allUnitOptions.filter((u) => !occupiedUnitIds.has(u.value));
+  const availableUnitOptions = allUnitOptions.filter(
+    (u) => !occupiedUnitIds.has(u.value) && mergedRentalMap.has(u.value)
+  );
 
   const handleStatusChange = async (billingId: string, status: Billing['paymentStatus']) => {
     try {
@@ -126,8 +148,9 @@ const TenantBillingsTab: FunctionComponent<TenantBillingsTabProps> = ({
     }
   };
 
-  const handleEditClick = (billing: Billing) => {
+  const handleEditClick = (billing: Billing, roomNumber: string, tenantName: string) => {
     setSelectedBilling(billing);
+    setSelectedBillingMeta({ roomNumber, tenantName });
     setIsEditPopupOpen(true);
   };
 
@@ -138,10 +161,12 @@ const TenantBillingsTab: FunctionComponent<TenantBillingsTabProps> = ({
         breakdown: updatedBilling.breakdown,
         dueDate: updatedBilling.dueDate ?? undefined,
         paymentStatus: updatedBilling.paymentStatus,
+        paidAmount: updatedBilling.paidAmount,
       } as any);
-      onRefresh();
+      await onRefresh();
       setIsEditPopupOpen(false);
       setSelectedBilling(null);
+      setSelectedBillingMeta(null);
     } catch (err) {
       console.error('Failed to save billing edit:', err);
     } finally {
@@ -159,10 +184,10 @@ const TenantBillingsTab: FunctionComponent<TenantBillingsTabProps> = ({
   }) => {
     setIsSaving(true);
     try {
-      const rentalsRes = await RentalService.getRentalByUnit(data.unitId);
-      const rentals: any[] = Array.isArray(rentalsRes.data) ? rentalsRes.data : rentalsRes.data ? [rentalsRes.data] : [];
-      const activeRental = rentals.find((r: any) => r.status === 'active');
-      if (!activeRental) throw new Error('No active rental found for this unit.');
+      const rentalId = mergedRentalMap.get(data.unitId);
+      if (!rentalId) {
+        throw new Error('No active rental found for this unit. Please ensure the tenant has an active rental agreement before adding a billing.');
+      }
 
       const breakdown = [
         { name: 'Rent', amount: data.rent },
@@ -171,7 +196,7 @@ const TenantBillingsTab: FunctionComponent<TenantBillingsTabProps> = ({
       ];
 
       await BillingService.createBilling({
-        rentalId: activeRental._id,
+        rentalId: rentalId,
         dueDate: data.dueDate,
         breakdown,
         paymentMethod: data.paymentMethod,
@@ -181,7 +206,9 @@ const TenantBillingsTab: FunctionComponent<TenantBillingsTabProps> = ({
       setIsAddPopupOpen(false);
     } catch (err) {
       console.error('Failed to add billing:', err);
-      throw err;
+      const errorMessage = err instanceof Error ? err.message : 'Failed to add billing';
+      alert(errorMessage);
+      throw new Error(errorMessage);
     } finally {
       setIsSaving(false);
     }
@@ -196,7 +223,6 @@ const TenantBillingsTab: FunctionComponent<TenantBillingsTabProps> = ({
             Tenant Billing Status
           </b>
           <div className="flex items-center gap-3 text-[10px] text-teal flex-wrap">
-            {/* Add Billing */}
             <div
               onClick={() => setIsAddPopupOpen(true)}
               className="rounded-[10px] bg-lightcyan flex items-center py-2 px-4 sm:px-6 gap-2 sm:gap-3 shrink-0 cursor-pointer hover:opacity-90 transition-opacity"
@@ -205,7 +231,6 @@ const TenantBillingsTab: FunctionComponent<TenantBillingsTabProps> = ({
               <b className="h-[17px] flex items-center shrink-0 text-[12px]">Add Billing</b>
             </div>
 
-            {/* Month Dropdown */}
             <div className="relative">
               <div
                 onClick={() => setIsMonthDropdownOpen(!isMonthDropdownOpen)}
@@ -280,10 +305,10 @@ const TenantBillingsTab: FunctionComponent<TenantBillingsTabProps> = ({
                   <BillingRow
                     key={billing._id}
                     billing={toRowBilling(billing)}
-                    roomNumber={billing.roomNumber ? parseInt(billing.roomNumber) || 0 : 0}
+                    roomNumber={billing.roomNumber ? parseInt(billing.roomNumber) || billing.roomNumber : 0}
                     tenantName={billing.tenantName}
                     onStatusChange={handleStatusChange}
-                    onEditClick={handleEditClick}
+                    onEditClick={(b) => handleEditClick(b, billing.roomNumber, billing.tenantName)}
                     isOpen={openDropdownId === billing._id}
                     onToggle={(id) => setOpenDropdownId(openDropdownId === id ? null : id)}
                   />
@@ -307,8 +332,14 @@ const TenantBillingsTab: FunctionComponent<TenantBillingsTabProps> = ({
 
       <EditBillingPopup
         isOpen={isEditPopupOpen}
-        onClose={() => { setIsEditPopupOpen(false); setSelectedBilling(null); }}
+        onClose={() => {
+          setIsEditPopupOpen(false);
+          setSelectedBilling(null);
+          setSelectedBillingMeta(null);
+        }}
         billing={selectedBilling}
+        roomNumber={selectedBillingMeta?.roomNumber}
+        tenantName={selectedBillingMeta?.tenantName}
         onSave={handleSaveEdit}
       />
     </>
