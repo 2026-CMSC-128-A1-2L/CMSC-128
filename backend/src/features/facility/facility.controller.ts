@@ -154,6 +154,7 @@ export const routeGetFacilities: RequestHandler = async (_req, res) => {
             max: prices.length > 0 ? Math.max(...prices) : 0,
           },
           listings: listingSummaries.map((listing) => ({
+            id: listing.id,
             name: listing.name,
             price: {
               min: listing.rent,

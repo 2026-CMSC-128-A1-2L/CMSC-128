@@ -5,7 +5,7 @@ import {
   useState,
   type MouseEventHandler,
 } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Icon } from "@iconify/react";
 import AtlasLogo from "../../../assets/logo_atlas_text.svg?react";
 import AtlasLogoMin from "../../../assets/atlas logo (for white bg).png";
@@ -49,7 +49,7 @@ const navItems: Array<{
   {
     key: "dashboard",
     label: "Dashboard",
-    icon: "solar:home-2-outline",
+    icon: "solar:home-outline",
     route: "/landlord/dashboard",
   },
   {
@@ -220,7 +220,9 @@ const SideBarLandlord = ({
       <aside
         className={[
           "flex shrink-0 flex-col items-center gap-[32px] border-r border-solid border-[#f0f0f0] pt-[24px] pb-[30px] transition-[width] duration-200 dark:border-[#303331] dark:text-[#d7e0ef]",
-          isMobile && !collapsed ? "bg-white dark:bg-[#101111]" : "bg-transparent",
+          isMobile && !collapsed
+            ? "bg-white dark:bg-[#101111]"
+            : "bg-transparent",
           positionClass,
           w,
           className,
@@ -245,15 +247,20 @@ const SideBarLandlord = ({
 
         {/* Logo */}
         <div className="flex h-[40px] items-center justify-center overflow-hidden">
-          {collapsed ? (
-            <img
-              className="h-[28px] w-[28px]"
-              src={AtlasLogoMin}
-              aria-label="Atlas"
-            />
-          ) : (
-            <AtlasLogo className="h-full w-[128px] fill-[#2d3748] dark:fill-[#d7e0ef]" aria-label="Atlas" />
-          )}
+          <Link
+            to="/landlord/dashboard"
+            className="flex h-[40px] items-center justify-center overflow-hidden cursor-pointer hover:opacity-80 transition-opacity"
+          >
+            {collapsed ? (
+              <img
+                className="h-[28px] w-[28px]"
+                src={AtlasLogoMin}
+                alt="Atlas Home"
+              />
+            ) : (
+              <AtlasLogo className="h-full w-[128px]" aria-label="Atlas Home" />
+            )}
+          </Link>
         </div>
 
         <div className="flex w-full flex-col gap-[32px]">
@@ -336,7 +343,9 @@ const SideBarLandlord = ({
                       aria-label={item.label}
                       className={[
                         "flex h-[44px] w-full items-center justify-center",
-                        state === "clicked" ? "text-[#096c5b] dark:text-[#72cbb8]" : "text-[#666] dark:text-[#d7e0ef]",
+                        state === "clicked"
+                          ? "text-[#096c5b] dark:text-[#72cbb8]"
+                          : "text-[#666] dark:text-[#d7e0ef]",
                       ].join(" ")}
                     >
                       <Icon icon={item.icon} className="h-[20px] w-[20px]" />
@@ -392,14 +401,14 @@ const SideBarLandlord = ({
                 icon="gg:dark-mode"
                 onAnimationEnd={() => setDarkModeIconSpinning(false)}
                 className={[
-                  'h-[24px] w-[24px] shrink-0 text-[#001d18] dark:text-white',
-                  darkModeIconSpinning ? 'dark-mode-icon-turn' : '',
-                ].join(' ')}
+                  "h-[24px] w-[24px] shrink-0 text-[#001d18] dark:text-white",
+                  darkModeIconSpinning ? "dark-mode-icon-turn" : "",
+                ].join(" ")}
                 aria-hidden="true"
               />
               {!collapsed && (
                 <span className="font-['Inter',sans-serif] text-[14px] font-semibold leading-normal text-[#001d18] dark:text-[#d7e0ef]">
-                  {isDark ? 'Light Mode' : 'Dark Mode'}
+                  {isDark ? "Light Mode" : "Dark Mode"}
                 </span>
               )}
             </span>

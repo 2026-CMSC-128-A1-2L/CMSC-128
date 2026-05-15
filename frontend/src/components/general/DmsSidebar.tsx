@@ -1,25 +1,70 @@
-import { useState, type FunctionComponent } from 'react';
-import Message from '../general/InboxMessage';
-import { Icon } from '@iconify/react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useState, type FunctionComponent } from "react";
+import Message from "../general/InboxMessage";
+import { Icon } from "@iconify/react";
+import { useNavigate, useLocation } from "react-router-dom";
 
-const DmsSidebar: FunctionComponent = () => {
+interface NotificationItem {
+  id: number;
+  title: string;
+  unread: boolean;
+  // ... other properties are handled in the parent, but we need these for rendering
+}
+
+interface DMItem {
+  id: number;
+  title: string;
+  body: string;
+  time: string;
+  icon: string;
+  unread: boolean;
+  unreadCount?: number;
+  archived: boolean;
+}
+
+interface DmsSidebarProps {
+  notifications: any[];
+  directMessages: DMItem[];
+  selectedItem: { type: "notification" | "dm"; id: number } | null;
+  onItemSelect: (type: "notification" | "dm", id: number) => void;
+  setNotifications: Dispatch<SetStateAction<any[]>>;
+  setDirectMessages: Dispatch<SetStateAction<DMItem[]>>;
+}
+
+const DmsSidebar: FunctionComponent<DmsSidebarProps> = ({
+  notifications,
+  directMessages,
+  selectedItem,
+  onItemSelect,
+}) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
 
   return (
-    <div className="w-72 h-screen relative overflow-hidden flex flex-col items-start py-10 pl-4 pr-3 box-border gap-2 text-left font-inter bg-white shadow-[4px_0_24px_rgba(0,0,0,0.02)] dark:w-[26.5rem] dark:bg-[#101111] dark:text-[#d7e0ef] dark:shadow-none dark:py-12 dark:px-[1.875rem]">
-      <div className="w-full flex flex-col items-start gap-8 dark:gap-10">
+    <div className="w-72 h-screen relative flex flex-col items-start py-10 pl-4 pr-3 box-border gap-2 text-left font-inter bg-white shadow-[4px_0_24px_rgba(0,0,0,0.02)] dark:bg-[#101111] dark:text-[#d7e0ef] dark:shadow-[4px_0_24px_rgba(0,0,0,0.25)] overflow-y-auto overflow-x-hidden">
+      <div className="w-full flex flex-col items-start gap-8">
         {/* Header & Search */}
         <div className="w-full flex items-center gap-2 text-[0.875rem] dark:gap-5">
           <Icon
             icon="material-symbols-light:chevron-left"
             className="w-8 h-8 cursor-pointer shrink-0 hover:text-teal transition-colors dark:text-[#edf6f4]"
-            onClick={() => navigate(-1)}
+            onClick={() => {
+              if (location.pathname.includes('/direct-messages/')) {
+                if (window.history.length > 2) {
+                  navigate(-2);
+                } else {
+                  navigate('/landlord/messages');
+                }
+              } else {
+                navigate(-1);
+              }
+            }}
           />
           <div className="flex-1 px-3 py-2 rounded-num-8 bg-unavailable_action flex items-center gap-2 transition-all focus-within:ring-1 focus-within:ring-teal/30 focus-within:bg-white focus-within:shadow-sm dark:bg-[#202123] dark:focus-within:bg-[#2a2c2e] dark:focus-within:ring-[#72cbb8]/30 dark:shadow-none">
-            <Icon icon="material-symbols:search" className="w-4 h-4 text-unselected shrink-0" />
+            <Icon
+              icon="material-symbols:search"
+              className="w-4 h-4 text-unselected shrink-0"
+            />
             <input
               type="text"
               placeholder="Search messages"
@@ -32,7 +77,10 @@ const DmsSidebar: FunctionComponent = () => {
         </div>
 
         {/* Notifications Section */}
-        <div className="self-stretch flex flex-col items-start gap-2 font-lora">
+        <div
+          id="notif-section"
+          className="self-stretch flex flex-col items-start gap-2 font-lora"
+        >
           <div className="self-stretch flex items-center justify-between py-1 font-inter">
             <b className="relative flex items-start pl-2 text-num-18 text-[#2d3748] dark:text-[#d7e0ef] dark:text-[1.65rem]">
               Notifications
@@ -48,8 +96,8 @@ const DmsSidebar: FunctionComponent = () => {
               body="Quevin Custodio has invited you to join..."
               time="1:20 am"
               icon="iconamoon:notification"
-              onClick={() => navigate('/direct-messages/dorm-invitation')}
-              active={location.pathname === '/direct-messages/dorm-invitation'}
+              onClick={() => navigate("/direct-messages/dorm-invitation")}
+              active={location.pathname === "/direct-messages/dorm-invitation"}
             />
             <Message />
             <Message
@@ -59,19 +107,29 @@ const DmsSidebar: FunctionComponent = () => {
             />
           </div>
 
-          <button className="w-full mt-1 flex items-center justify-center gap-1 group">
-            <div className="relative font-semibold text-num-12 text-teal group-hover:underline dark:text-[#72cbb8]">
-              View All
+          <button
+            className="w-full mt-1 flex items-center justify-center gap-1 group"
+            onClick={() => setShowAllNotifications(!showAllNotifications)}
+          >
+            <div className="relative font-semibold text-num-12 text-teal group-hover:underline">
+              {showAllNotifications ? "Show Less" : "View All"}
             </div>
             <Icon
-              icon="material-symbols-light:chevron-right"
-              className="w-5 h-5 text-teal group-hover:translate-x-1 transition-transform dark:text-[#72cbb8]"
+              icon={
+                showAllNotifications
+                  ? "material-symbols-light:chevron-up"
+                  : "material-symbols-light:chevron-right"
+              }
+              className="w-5 h-5 text-teal group-hover:translate-x-0.5 transition-transform"
             />
           </button>
         </div>
 
         {/* Direct Messages Section */}
-        <div className="h-fit w-full flex flex-col items-start gap-4 font-lora">
+        <div
+          id="dm-section"
+          className="h-fit w-full flex flex-col items-start gap-4 font-lora"
+        >
           <div className="self-stretch flex items-end py-1 font-inter">
             <b className="w-full flex-1 relative flex items-start text-num-18 pl-2 text-[#2d3748] dark:text-[#d7e0ef] dark:text-[1.65rem]">
               Direct Messages
@@ -80,32 +138,56 @@ const DmsSidebar: FunctionComponent = () => {
 
           {/* Filter Pills */}
           <div className="w-full flex items-start gap-2 pl-2">
-            <button className="h-fit rounded-full bg-darkgreen flex items-center justify-center py-1.5 px-5 transition-transform active:scale-95 shadow-md shadow-darkgreen/20 dark:bg-[#0d3a32] dark:shadow-none">
-              <b className="relative text-num-12 font-inter text-white">All</b>
+            <button
+              className={`h-fit rounded-full flex items-center justify-center py-1.5 px-5 transition-all active:scale-95 ${
+                dmFilter === "all"
+                  ? "bg-teal text-white shadow-md shadow-teal/20 dark:bg-[#0d3a32] dark:text-[#d7e0ef] dark:shadow-none"
+                  : "bg-lightcyan text-teal hover:bg-teal/10 dark:bg-[#102c27] dark:text-[#72cbb8] dark:hover:bg-[#17352f]"
+              }`}
+              onClick={() => setDmFilter("all")}
+            >
+              <b className="relative text-num-12 font-inter">All</b>
             </button>
             <button className="h-fit rounded-full bg-lightcyan flex items-center justify-center py-1.5 px-5 transition-colors hover:bg-teal/10 active:scale-95 dark:bg-[#0d3a32] dark:hover:bg-[#164e43]">
-              <b className="relative text-num-12 font-inter text-teal dark:text-[#72cbb8]">Unread</b>
+              <b className="relative text-num-12 font-inter text-teal dark:text-[#72cbb8]">
+                Unread
+              </b>
             </button>
           </div>
 
+          {/* Active Messages List */}
           <div className="w-full flex flex-col items-start gap-2 text-right text-[0.5rem]">
-            <Message
-              title="Three Sapphire Place"
-              body="Hi Daphne! Your application is being reviewed by our do..."
-              time="1hr ago"
-              icon="iconamoon:email"
-            />
-            <Message
-              title="Narra Residences"
-              body="Hi Daphne! Your application is being reviewed by our do..."
-              time="2m ago"
-              icon="iconamoon:email"
-            />
+            {filteredActiveDMs.length > 0 ? (
+              filteredActiveDMs.map((dm) => (
+                <Message
+                  key={dm.id}
+                  title={dm.title}
+                  body={dm.body}
+                  time={dm.time}
+                  icon={dm.icon}
+                  unread={dm.unread}
+                  unreadCount={dm.unreadCount}
+                  onClick={() => onItemSelect("dm", dm.id)}
+                  active={
+                    selectedItem?.type === "dm" && selectedItem?.id === dm.id
+                  }
+                />
+              ))
+            ) : (
+              <p className="w-full text-center text-num-12 text-dimgray py-4 font-inter dark:text-[#a4acba]">
+                No messages found
+              </p>
+            )}
           </div>
 
           <div className="w-full flex items-center justify-center gap-1 text-center">
-            <div className="relative font-semibold text-num-12 text-teal dark:text-[#72cbb8]">View Archive</div>
-            <Icon icon="material-symbols-light:chevron-right" className="w-5 h-5 text-teal dark:text-[#72cbb8]" />
+            <div className="relative font-semibold text-num-12 text-teal dark:text-[#72cbb8]">
+              View Archive
+            </div>
+            <Icon
+              icon="material-symbols-light:chevron-right"
+              className="w-5 h-5 text-teal dark:text-[#72cbb8]"
+            />
           </div>
         </div>
       </div>

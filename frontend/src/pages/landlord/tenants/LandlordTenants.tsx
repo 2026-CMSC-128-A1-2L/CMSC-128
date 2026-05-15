@@ -167,6 +167,7 @@ const LandlordTenants = () => {
         manager={
           reportTarget ? { displayName: reportTarget.displayName, email: reportTarget.email } : null
         }
+        type="tenant"
       />
     </LandlordLayout>
   );

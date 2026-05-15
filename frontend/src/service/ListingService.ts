@@ -1,5 +1,3 @@
-import type z from 'zod';
-import type { GetListingsQuerySchema } from 'shared';
 import type {
   CreateListingBody,
   GetListingsQuery,
@@ -9,9 +7,12 @@ import type {
 import { api } from './axiosInstance';
 
 export const ListingService = {
+  //FOREIGN -> Facility Routes
   async createListing(facilityId: string, body: CreateListingBody) {
     try {
-      const response = await api.post(`/api/facilities/${facilityId}/listings`, body);
+      const response = await api.post(`/api/facilities/${facilityId}/listings`, {
+        ...body,
+      });
       return response.data;
     } catch (error) {
       console.error('Error creating listing:', error);
@@ -19,7 +20,7 @@ export const ListingService = {
     }
   },
 
-  async getListings(params: z.infer<typeof GetListingsQuerySchema>): Promise<GetListingsQuery> {
+  async getListings(params: GetListingsQuery): Promise<GetListingsQuery> {
     try {
       const response = await api.get<GetListingsQuery>('/api/listings', {
         params: { q: JSON.stringify(params) },
@@ -43,7 +44,9 @@ export const ListingService = {
 
   async updateListing(listingId: string, body: UpdateListingBody) {
     try {
-      const response = await api.patch(`/api/listings/${listingId}`, body);
+      const response = await api.patch(`/api/listings/${listingId}`, {
+        ...body,
+      });
       return response.data;
     } catch (error) {
       console.error('Error updating listing:', error);
@@ -62,7 +65,9 @@ export const ListingService = {
 
   async updateListingTags(listingId: string, body: UpdateListingTagsBody) {
     try {
-      const response = await api.patch(`/api/listings/${listingId}/tags`, body);
+      const response = await api.patch(`/api/listings/${listingId}/tags`, {
+        ...body,
+      });
       return response.data;
     } catch (error) {
       console.error('Error updating listing tags:', error);
@@ -72,9 +77,7 @@ export const ListingService = {
 
   async getListingsByFacility(facilityId: string) {
     try {
-      const response = await api.get('/api/listings', {
-        params: { q: JSON.stringify({ facilityId }) },
-      });
+      const response = await api.get(`/api/facilities/${facilityId}/listings`);
       return response.data;
     } catch (error) {
       console.error('Error fetching listings by facility:', error);
@@ -82,6 +85,13 @@ export const ListingService = {
     }
   },
 
+  //GET Units by Listing -> UnitService
+  //POST CREATE Units -> UnitService
+  //GET Applications by listing -> ApplicationService
+  // GET Rentals By Listing -> RentalService
+  // GET Listing Reviews -> ReviewService
+  // POST Create Review -> ReviewService
+  // POST Report Listing -> ReportService
   async getListingUnits(listingId: string) {
     try {
       const response = await api.get(`/api/listings/${listingId}/units`);

@@ -1,4 +1,4 @@
-import { type FunctionComponent, useState, useCallback } from 'react';
+import { type FunctionComponent, useState, useCallback, useEffect } from 'react';
 import Footer from '../../../components/general/Footer';
 import PageBackground from '../../../components/general/PageBackground';
 import SideBar from '../../../components/user/SideBar';
@@ -7,7 +7,9 @@ import EventPopout from '../../../components/user/EventPopout';
 import DayEventsPopout from '../../../components/user/user-calendar/DayEventsPopout';
 import PortalPopup from '../../../components/general/PortalPopup';
 import MainCalendarGrid from '../../../components/user/user-calendar/MainCalendarGrid';
-import type { CalendarEvent } from '../../../service/CalendarService';
+import { CalendarService, type CalendarEvent } from '../../../service/CalendarService';
+import { useAuthStore } from '../../../store/useAuthStore';
+import { Link } from 'react-router-dom';
 
 const MyCalendar: FunctionComponent = () => {
   const [isEventPopoutOpen, setEventPopoutOpen] = useState(false);
@@ -16,6 +18,44 @@ const MyCalendar: FunctionComponent = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedDayEvents, setSelectedDayEvents] = useState<CalendarEvent[]>([]);
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [events, setEvents] = useState<CalendarEvent[]>([]);
+  const [upcomingEvents, setUpcomingEvents] = useState<CalendarEvent[]>([]);
+  const [loading, setLoading] = useState(false);
+  const user = useAuthStore((state) => state.user);
+
+  useEffect(() => {
+    if (!user) return;
+    const fetchMonthEvents = async () => {
+      setLoading(true);
+      try {
+        const response = await CalendarService.getCalendarEvents(
+          currentDate.getFullYear(),
+          currentDate.getMonth() + 1,
+        );
+        setEvents(response.data);
+      } catch (error) {
+        console.error('Failed to load month events:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMonthEvents();
+  }, [currentDate, user]);
+
+  useEffect(() => {
+    if (!user) return;
+    const fetchUpcoming = async () => {
+      try {
+        const response = await CalendarService.getUpcomingEvents();
+        setUpcomingEvents(response.data);
+      } catch (error) {
+        console.error('Failed to load upcoming events:', error);
+      }
+    };
+
+    fetchUpcoming();
+  }, [user]);
 
   const openEventPopout = useCallback((event: CalendarEvent) => {
     const eventDate = new Date(event.date);
@@ -61,6 +101,35 @@ const MyCalendar: FunctionComponent = () => {
     setCurrentDate(date);
   }, []);
 
+  if (!user) {
+    return (
+      <div className="user-calendar-shell relative flex min-h-screen font-inter text-black dark:bg-[#0f1010] dark:text-[#edf6f4]">
+        <PageBackground />
+        <div className="sticky top-0 h-screen shrink-0 z-10">
+          <SideBar />
+        </div>
+        <div className="relative z-10 flex flex-1 flex-col min-w-0 overflow-y-auto">
+          <div className="flex-1 flex flex-col px-4 sm:px-8 pt-16 pr-4 sm:pr-20">
+            <div className="flex flex-col gap-4 sm:gap-8 flex-1">
+              {/* Header Section */}
+              <div className="flex flex-col gap-3">
+                <b className="text-xl sm:text-2xl leading-8 text-black dark:text-[#edf6f4]">
+                  My Calendar
+                </b>
+                <div className="h-0.5 bg-whitesmoke-200 dark:bg-[#303331]" />
+              </div>
+
+              <div className="flex-1 flex items-center justify-center py-16 text-center text-sm font-semibold text-red-500">
+                Please sign in to view your calendar.
+              </div>
+            </div>
+          </div>
+          <Footer />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="user-calendar-shell relative flex min-h-screen font-inter text-black dark:bg-[#0f1010] dark:text-[#edf6f4]">
@@ -73,7 +142,9 @@ const MyCalendar: FunctionComponent = () => {
             <div className="flex flex-col gap-4 sm:gap-8 flex-1">
               {/* Header Section */}
               <div className="flex flex-col gap-3">
-                <b className="text-xl sm:text-2xl leading-8 text-black dark:text-[#edf6f4]">My Calendar</b>
+                <b className="text-xl sm:text-2xl leading-8 text-black dark:text-[#edf6f4]">
+                  My Calendar
+                </b>
                 <div className="h-0.5 bg-whitesmoke-200 dark:bg-[#303331]" />
               </div>
 
@@ -85,6 +156,9 @@ const MyCalendar: FunctionComponent = () => {
                   <div className="bg-white rounded-num-8 p-3 sm:p-4 border border-whitesmoke-200 w-full overflow-hidden dark:bg-[#101111] dark:border-[#303331]">
                     <MiniCalendar
                       currentDate={currentDate}
+                      events={events}
+                      upcomingEvents={upcomingEvents}
+                      loading={loading}
                       onPrevMonth={handlePrevMonth}
                       onNextMonth={handleNextMonth}
                       onDateChange={handleDateChange}
@@ -99,6 +173,7 @@ const MyCalendar: FunctionComponent = () => {
                   <div className="rounded-2xl bg-white border border-whitesmoke-200 flex flex-col p-6 dark:bg-[#101111] dark:border-[#303331]">
                     <MainCalendarGrid
                       currentDate={currentDate}
+                      events={events}
                       onPrevMonth={handlePrevMonth}
                       onNextMonth={handleNextMonth}
                       onEventClick={openEventPopout}
