@@ -1,21 +1,23 @@
-import { useState, type FunctionComponent } from 'react';
-import LogoLike from '../../../../assets/logo_like.svg?react';
-import SideBar from '../../../components/user/SideBar';
-import { Icon } from '@iconify/react';
-import Footer from '../../../components/general/Footer';
-import Banner from '../../../components/general/Banner';
+import { useState, type FunctionComponent } from "react";
+import LogoLike from "../../../../assets/logo_like.svg?react";
+import SideBar from "../../../components/user/SideBar";
+import { Icon } from "@iconify/react";
+import Footer from "../../../components/general/Footer";
+import Banner from "../../../components/general/Banner";
 
 const ContactUs: FunctionComponent = () => {
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    message: '',
+    firstName: "",
+    lastName: "",
+    email: "",
+    message: "",
   });
 
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -27,17 +29,17 @@ const ContactUs: FunctionComponent = () => {
   };
 
   const handleResetForm = () => {
-    setFormData({ firstName: '', lastName: '', email: '', message: '' });
+    setFormData({ firstName: "", lastName: "", email: "", message: "" });
     setIsSubmitted(false);
   };
 
   const inputStyle =
-    'w-full bg-transparent border-none outline-none text-num-14 font-medium text-darkslategray-200 placeholder:text-dimgray/60';
+    "w-full bg-transparent border-none outline-none text-num-14 font-medium text-darkslategray-200 placeholder:text-dimgray/60";
   const containerStyle =
-    'flex-1 min-h-[34px] rounded-num-12 bg-aliceblue border-whitesmoke-200 border-solid border overflow-hidden flex items-start py-2 px-3 transition-all duration-300 focus-within:bg-white focus-within:shadow-[0_4px_12px_rgba(0,0,0,0.05)] focus-within:border-teal-100/30';
+    "flex-1 min-h-[34px] rounded-num-12 bg-aliceblue border-whitesmoke-200 border-solid border overflow-hidden flex items-start py-2 px-3 transition-all duration-300 focus-within:bg-white focus-within:shadow-[0_4px_12px_rgba(0,0,0,0.05)] focus-within:border-teal-100/30";
 
   return (
-    <div className="w-full h-screen flex flex-col font-lora text-darkslategray-100 overflow-hidden">
+    <div className="w-full h-screen flex flex-col font-inter text-darkslategray-100 overflow-hidden">
       <div className="flex flex-1 overflow-hidden">
         <div className="fixed top-0 left-0 h-full w-[200px] hidden md:block z-10">
           <SideBar />
@@ -53,13 +55,17 @@ const ContactUs: FunctionComponent = () => {
                   <div className="self-stretch h-16 overflow-hidden shrink-0 flex items-end p-num-10 box-border gap-2.5">
                     <div className="h-6 flex items-center gap-1.5">
                       <div className="relative font-semibold">Home</div>
-                      <Icon icon="iconamoon:arrow-right-2" className="w-6 h-6 rounded-[100px]" />
+                      <Icon
+                        icon="iconamoon:arrow-right-2"
+                        className="w-6 h-6 rounded-[100px]"
+                      />
                       <div className="relative font-semibold">Contact Us</div>
                     </div>
                     <div className="w-[704px] rounded-num-12 bg-aliceblue overflow-hidden shrink-0 hidden items-center py-num-10 px-6 box-border gap-2.5 text-dimgray font-inter">
                       <img className="h-6 w-6 relative" alt="" />
                       <b className="relative">
-                        Search for Dorms, Apartments, or Locations (e.g. UPLB, Umali Subdivision)
+                        Search for Dorms, Apartments, or Locations (e.g. UPLB,
+                        Umali Subdivision)
                       </b>
                     </div>
                   </div>
@@ -79,7 +85,10 @@ const ContactUs: FunctionComponent = () => {
                     <div className="w-full max-w-[1050px] overflow-hidden flex flex-col lg:flex-row items-stretch p-num-10 gap-8 text-teal-200">
                       <div className="lg:w-[240px] rounded-num-12 bg-lightcyan overflow-hidden flex flex-col items-start py-num-16 px-6 gap-2.5">
                         <div className="flex items-center gap-2.5">
-                          <Icon icon="simple-line-icons:call-out" className="w-4 h-4 relative" />
+                          <Icon
+                            icon="simple-line-icons:call-out"
+                            className="w-4 h-4 relative"
+                          />
                           <div className="relative font-extrabold">Call Us</div>
                         </div>
                         <b className="relative text-num-18 tracking-[-0.01em] text-teal-100">
@@ -92,7 +101,9 @@ const ContactUs: FunctionComponent = () => {
                             icon="material-symbols-light:mail-outline"
                             className="w-4 h-4 relative"
                           />
-                          <div className="relative font-extrabold">Email Us</div>
+                          <div className="relative font-extrabold">
+                            Email Us
+                          </div>
                         </div>
                         <b className="relative text-num-18 tracking-[-0.01em] text-teal-100">
                           atlasteam@gmail.com
@@ -100,8 +111,13 @@ const ContactUs: FunctionComponent = () => {
                       </div>
                       <div className="flex-1 rounded-num-12 bg-lightcyan overflow-hidden flex flex-col items-start pt-num-16 px-6 pb-5 gap-2.5">
                         <div className="flex items-center gap-2.5">
-                          <Icon icon="boxicons:location" className="w-4 h-4 relative" />
-                          <div className="relative font-extrabold">Where we're located</div>
+                          <Icon
+                            icon="boxicons:location"
+                            className="w-4 h-4 relative"
+                          />
+                          <div className="relative font-extrabold">
+                            Where we're located
+                          </div>
                         </div>
                         <b className="self-stretch relative text-num-18 tracking-[-0.01em] text-teal-100 text-left">
                           University of the Philippines Los Baños
@@ -128,17 +144,21 @@ const ContactUs: FunctionComponent = () => {
 
                           {/* feedback */}
                           <div className="self-stretch flex items-center py-num-0 px-3 text-num-14 text-teal-200 font-inter mt-4">
-                            <b className="relative">Your feedback helps the whole community.</b>
+                            <b className="relative">
+                              Your feedback helps the whole community.
+                            </b>
                           </div>
                         </div>
 
                         {/* "stuff */}
                         <div className="self-stretch flex items-center justify-center py-num-0 px-3 text-left text-num-14 text-gray font-inter">
                           <div className="flex-1 relative leading-[25px] font-medium">
-                            At ATLAS, we're building more than just an app—we're building a
-                            community for UPLB students. Have a suggestion to make our portal
-                            better? Or maybe a question about securing your own spot? Speak up!
-                            Every message helps us make housing better for everyone in the woods.
+                            At ATLAS, we're building more than just an app—we're
+                            building a community for UPLB students. Have a
+                            suggestion to make our portal better? Or maybe a
+                            question about securing your own spot? Speak up!
+                            Every message helps us make housing better for
+                            everyone in the woods.
                           </div>
                         </div>
                       </div>
@@ -204,7 +224,10 @@ const ContactUs: FunctionComponent = () => {
                             className="self-center min-w-[154px] rounded-[45px] bg-darkslategray-200 hover:bg-teal-100 transition-colors flex items-center justify-center py-2.5 px-num-32 gap-2.5 text-white border-none cursor-pointer"
                           >
                             <b className="relative">Give us a hoot</b>
-                            <Icon icon="material-symbols-light:owl-rounded" className="w-5 h-5" />
+                            <Icon
+                              icon="material-symbols-light:owl-rounded"
+                              className="w-5 h-5"
+                            />
                           </button>
                         </form>
                       ) : (
@@ -216,7 +239,9 @@ const ContactUs: FunctionComponent = () => {
                                 icon="material-symbols-light:owl-rounded"
                                 className="w-[136px] h-[52px] text-darkslategray"
                               />
-                              <b className="relative leading-8">Hoot received!</b>
+                              <b className="relative leading-8">
+                                Hoot received!
+                              </b>
                               <div className="relative text-sm font-medium text-gray">
                                 We’re flying to your inbox with a response soon.
                               </div>
@@ -229,7 +254,10 @@ const ContactUs: FunctionComponent = () => {
                               onClick={handleResetForm}
                             >
                               <b className="relative">Submit Another Message</b>
-                              <Icon icon="material-symbols:add" className="h-6 w-6" />
+                              <Icon
+                                icon="material-symbols:add"
+                                className="h-6 w-6"
+                              />
                             </button>
                           </div>
                         </div>
