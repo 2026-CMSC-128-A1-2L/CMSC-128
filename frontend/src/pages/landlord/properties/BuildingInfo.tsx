@@ -3,7 +3,7 @@ import { Icon } from '@iconify/react';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import LandlordLayout from '../../../components/landlord/LandlordLayout';
 import { BUILDINGS } from '../../../data/buildings';
-import type { Building } from '../../../data/buildings';
+import type { Building, Room, RoomType, Tenant } from '../../../data/buildings';
 
 import RoomtypeModal from '../../../components/landlord/LandlordProperties/RoomtypeModal'
 import React from 'react';
@@ -27,15 +27,34 @@ const Button = (props: {
   );
 };
 
-const ListingCard = (props: { facilityName: string; listingName: string; image?: string; onClick?: React.MouseEventHandler; setModal?:any}) => {
-  const { facilityName, listingName, image,setModal } = props;
-  const [isExpanded, setIsExpanded] = useState(false);
+const ListingCard = (props: { 
+  facilityName: string; 
+  listingName: string; 
+  image?: string; 
+  onClick?: React.MouseEventHandler;
+  listing: RoomType;
+  rooms: Room[];
+  tenants: Tenant[];
 
+}) => {
+  const { facilityName, listingName, image,listing,rooms,tenants } = props;
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [modal, setModal] = useState(false);
   return (
     <div
       className={`relative bg-aliceblue border-whitesmoke border-solid border box-border overflow-hidden flex flex-col items-start text-left text-black font-inter transition-all duration-300
         ${isExpanded ? 'w-66 h-fit rounded-num-16 shadow-sm' : 'w-66 h-56 rounded-[15.31px]'}`}
+    
     >
+      <RoomtypeModal
+        key={listing.id}
+        openModal={modal}
+        closeModal={() => setModal(false)}
+        name={facilityName}
+        rooms={rooms}
+        tenants={tenants}
+        listing={listing}
+      />
       <img className="w-66 h-30 object-cover cursor-pointer" src={image} alt={facilityName} onClick={()=>{
                         console.log("printame")
                         setModal(true)
@@ -155,7 +174,6 @@ const BuildingInfo = () => {
   const location = useLocation();
   const { id } = useParams<{ id: string }>();
 
-  const [modal, setModal] = useState(false);
   /**
    * Prefer data passed via navigation state (from PropertiesCard click).
    * Fall back to looking up by URL param so direct /landlord/properties/:id
@@ -298,59 +316,12 @@ const BuildingInfo = () => {
                         facilityName={name}
                         listingName={listing.name}
                         image={listing.image}
-                        setModal={setModal}
+                        listing={listing}
+                        rooms={rooms}
+                        tenants={tenants}
                       />
 
-                    <RoomtypeModal
-                    key={listing.id}
-                    openModal={modal}
-                    closeModal={() => setModal(false)}
-                    >
-                      <div className='flex flex-col w-full'>
-                        <div className='flex mx-auto flex-col w-fit'>
-                          <p>{name}</p>
-                          <p>{listing.name}</p>
-                          
-                        </div>
-                        {/* list out all rooms of the current room type */}
-                        <div className='grid grid-cols-3 mx-auto text-center'>
-                        <p>Room Number</p> <p>Current Occupants</p>  <p>Status</p>
-                        {rooms.filter((room)=>room.roomType===listing.name).map((room)=>(
-                          
-                          <React.Fragment key={room.id}>
-                            <p>{room.roomNumber}</p>
-                            {/* get count of all occupants per room */}
-                            <p>{tenants.filter((tenant)=>tenant.roomNumber===room.roomNumber).length}</p>
-                            {/* get first item that appears when filtering for roomType object associated with the room */}
-                            <p>{listing.status}</p>
-
-                          </React.Fragment>
-                        ))}
-                        </div>
-                        {/* get all occupants in that room type */}
-                        {
-                          <div>
-                            <p>Tenants</p>
-                          <div>{
-                            rooms.filter((room)=>room.roomType===listing.name).map((room)=>(
-                              <React.Fragment key={room.id}>
-                                {tenants.filter((tenant)=>tenant.roomNumber===room.roomNumber).map((tenant)=>(
-                                  <React.Fragment key={tenant.name}>
-                                  {tenant.name}
-                                  </React.Fragment>
-                                ))}
-                              </React.Fragment>
-                            ))
-                          }</div>
-
-                          </div>
-                        
-                        }
-                      </div>
-                      
-                    </RoomtypeModal>
                     </>
-                      
                   ))}
                   <AddListingCard />
                 </div>
@@ -361,12 +332,18 @@ const BuildingInfo = () => {
                   <b>Pending</b>
                   <div className="flex items-center gap-4 text-black">
                     {pendingRooms.map((listing) => (
+                      <>
                       <ListingCard
                         key={listing.id}
                         facilityName={name}
                         listingName={listing.name}
                         image={listing.image}
+                        listing={listing}
+                        rooms={rooms}
+                        tenants={tenants}
                       />
+                      </>
+                      
                     ))}
                   </div>
                 </div>
@@ -383,3 +360,4 @@ const BuildingInfo = () => {
 };
 
 export default BuildingInfo;
+
