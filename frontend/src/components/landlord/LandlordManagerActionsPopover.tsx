@@ -74,7 +74,9 @@ const LandlordManagerActionsPopover: FunctionComponent<Props> = ({
           }}
           className={[
             'flex items-center gap-[10px] rounded-[8px] px-[10px] py-[8px] text-left transition-colors',
-            item.danger ? 'text-[#dc2626] dark:text-red-400 hover:bg-[#fef2f2] dark:hover:bg-red-900/20' : 'text-[#2f3136] dark:text-[#a4acba] hover:bg-[#f0faf6] dark:hover:bg-[#1f2022]',
+            item.danger
+              ? 'text-[#dc2626] dark:text-red-400 hover:bg-[#fef2f2] dark:hover:bg-red-900/20'
+              : 'text-[#2f3136] dark:text-[#a4acba] hover:bg-[#f0faf6] dark:hover:bg-[#1f2022]',
           ].join(' ')}
         >
           <Icon icon={item.icon} className="h-[18px] w-[18px] shrink-0" aria-hidden="true" />

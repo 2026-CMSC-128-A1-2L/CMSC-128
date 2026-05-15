@@ -29,8 +29,8 @@ const LandlordManagerReportSuccess: FunctionComponent<Props> = ({ onClose }) => 
               <span className="italic">mga iskolar ng bayan</span> and landlords.
             </p>
             <p className="w-full font-['Inter',sans-serif] text-[14px] leading-[20px] font-medium text-black dark:text-[#d7e0ef]">
-              Your report has been successfully submitted. Our team will review the details and
-              take appropriate action.
+              Your report has been successfully submitted. Our team will review the details and take
+              appropriate action.
             </p>
           </div>
         </div>

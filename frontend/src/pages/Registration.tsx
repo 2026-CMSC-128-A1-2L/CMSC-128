@@ -190,7 +190,10 @@ const Registration: FunctionComponent = () => {
           className="flex items-center gap-1.5 py-4 cursor-pointer w-fit text-gray-700 dark:text-[#a4acba]"
           onClick={onCancelClick}
         >
-          <Icon icon="material-symbols:chevron-left" className="w-4 h-4 text-gray-700 dark:text-[#a4acba]" />
+          <Icon
+            icon="material-symbols:chevron-left"
+            className="w-4 h-4 text-gray-700 dark:text-[#a4acba]"
+          />
           <span className="text-sm font-semibold text-gray-700 dark:text-[#a4acba]">Cancel</span>
         </button>
 

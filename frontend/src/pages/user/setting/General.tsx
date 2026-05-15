@@ -38,7 +38,7 @@ const General: FunctionComponent = () => {
     fetchUser();
   }, []);
 
-  // todo: download personal data API 
+  // todo: download personal data API
   // todo: account deletion API
 
   const fullName = user
@@ -104,7 +104,9 @@ const General: FunctionComponent = () => {
                 </div>
                 <div className="flex flex-col items-start gap-1">
                   <b className="relative">University Domain</b>
-                  <b className="relative text-darkslategray">University of the Philippines Los Baños</b>
+                  <b className="relative text-darkslategray">
+                    University of the Philippines Los Baños
+                  </b>
                 </div>
               </div>
 
@@ -114,7 +116,9 @@ const General: FunctionComponent = () => {
                   <div className="flex flex-col items-start gap-1">
                     <b className="relative">Verification Status</b>
                     <div className="self-stretch flex items-center gap-8 text-teal-100">
-                      <b className="relative" style={verificationStyle}>{verificationLabel}</b>
+                      <b className="relative" style={verificationStyle}>
+                        {verificationLabel}
+                      </b>
                       {!user ? (
                         <>
                           <button
@@ -122,18 +126,26 @@ const General: FunctionComponent = () => {
                             className="flex items-center gap-1 text-[12px] text-teal-100 cursor-pointer bg-transparent border-none p-0 transition-all duration-150 hover:text-teal-200 hover:gap-1.5 group"
                           >
                             <span className="relative font-medium">Sign In</span>
-                            <Icon icon="solar:arrow-right-up-linear" className="w-4 relative max-h-full" />
+                            <Icon
+                              icon="solar:arrow-right-up-linear"
+                              className="w-4 relative max-h-full"
+                            />
                           </button>
                           {showSignIn && <SignInPopUp onClose={() => setShowSignIn(false)} />}
                         </>
-                      ) : !isVerified && (
-                        <button
-                          onClick={() => navigate('/profile-switcher')} // todo: change route to actual verification page when route finalized
-                          className="flex items-center gap-1 text-[12px] cursor-pointer bg-transparent border-none p-0 transition-all duration-150 hover:gap-1.5 group"
-                        >
-                          <span className="relative font-medium text-teal-100">Get Verified</span>
-                          <Icon icon="solar:arrow-right-up-linear" className="w-4 relative max-h-full text-teal-100" />
-                        </button>
+                      ) : (
+                        !isVerified && (
+                          <button
+                            onClick={() => navigate('/profile-switcher')} // todo: change route to actual verification page when route finalized
+                            className="flex items-center gap-1 text-[12px] cursor-pointer bg-transparent border-none p-0 transition-all duration-150 hover:gap-1.5 group"
+                          >
+                            <span className="relative font-medium text-teal-100">Get Verified</span>
+                            <Icon
+                              icon="solar:arrow-right-up-linear"
+                              className="w-4 relative max-h-full text-teal-100"
+                            />
+                          </button>
+                        )
                       )}
                     </div>
                   </div>
@@ -187,9 +199,7 @@ const General: FunctionComponent = () => {
                   <div className="self-stretch flex flex-col items-start gap-3">
                     <b className="relative">Personal Data</b>
                     <div className="self-stretch flex flex-col items-start py-num-0 px-2 text-teal-200">
-                      <button
-                        className="h-8 rounded-num-16 bg-aliceblue border-solid border border-whitesmoke-200 flex items-center justify-center py-num-0 px-4 box-border cursor-pointer transition-all duration-200 hover:bg-azure hover:border-teal-100 hover:shadow-sm"
-                      >
+                      <button className="h-8 rounded-num-16 bg-aliceblue border-solid border border-whitesmoke-200 flex items-center justify-center py-num-0 px-4 box-border cursor-pointer transition-all duration-200 hover:bg-azure hover:border-teal-100 hover:shadow-sm">
                         <b className="relative">Download Personal Data</b>
                       </button>
                     </div>
@@ -199,7 +209,9 @@ const General: FunctionComponent = () => {
                       <img className="w-[13.3px] h-[13.3px] relative" alt="" src={info_icon} />
                     </div>
                     <div className="h-[68px] flex-1 relative font-medium inline-block">
-                      Maintain your own records by downloading a full copy of your digital footprint. This includes all information given by the user, verified documents and communication logs within the ATLAS ecosystem.
+                      Maintain your own records by downloading a full copy of your digital
+                      footprint. This includes all information given by the user, verified documents
+                      and communication logs within the ATLAS ecosystem.
                     </div>
                   </div>
                 </div>
@@ -211,15 +223,16 @@ const General: FunctionComponent = () => {
                   <div className="self-stretch flex flex-col items-start gap-3">
                     <b className="relative">Account Deletion</b>
                     <div className="self-stretch flex flex-col items-start py-num-0 px-2">
-                      <button
-                        className="h-8 rounded-num-16 bg-aliceblue flex items-center justify-center py-num-0 px-3 box-border cursor-pointer border-none transition-all duration-200 hover:bg-red-50 hover:shadow-sm"
-                      >
-                        <b className="relative" style={{
+                      <button className="h-8 rounded-num-16 bg-aliceblue flex items-center justify-center py-num-0 px-3 box-border cursor-pointer border-none transition-all duration-200 hover:bg-red-50 hover:shadow-sm">
+                        <b
+                          className="relative"
+                          style={{
                             background: 'linear-gradient(180deg, #c00f0f, #e44f4f)',
                             WebkitBackgroundClip: 'text',
                             WebkitTextFillColor: 'transparent',
                             backgroundClip: 'text',
-                          }}>
+                          }}
+                        >
                           Delete Account
                         </b>
                       </button>
@@ -230,7 +243,9 @@ const General: FunctionComponent = () => {
                       <img className="w-[13.3px] h-[13.3px] relative" alt="" src={info_icon} />
                     </div>
                     <div className="h-[68px] flex-1 relative leading-6 font-medium inline-block">
-                      Deletion will result in the complete removal of all your personal data and documentation from our active servers. Once processed, this data cannot be recovered.
+                      Deletion will result in the complete removal of all your personal data and
+                      documentation from our active servers. Once processed, this data cannot be
+                      recovered.
                     </div>
                   </div>
                 </div>

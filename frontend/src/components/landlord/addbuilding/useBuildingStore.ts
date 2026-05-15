@@ -27,10 +27,10 @@ export interface TagDefinition {
 
 // A tag that has been selected and assigned a value for a specific room type
 export interface TagValue {
-  tagId: string;           // references TagDefinition._id
-  name: string;            // snapshot of TagDefinition.name
-  displayName: string;     // snapshot of TagDefinition.displayName
-  dataType: TagDataType;   // snapshot for rendering the right input
+  tagId: string; // references TagDefinition._id
+  name: string; // snapshot of TagDefinition.name
+  displayName: string; // snapshot of TagDefinition.displayName
+  dataType: TagDataType; // snapshot for rendering the right input
   value: string | boolean | number | null; // the assigned value
 }
 
@@ -39,7 +39,7 @@ export interface RoomTypeData {
   name: string;
   roomType: string;
   capacity: string;
-  tags: TagValue[];        // was string[]
+  tags: TagValue[]; // was string[]
   about: string;
   images: string[];
   rooms: RoomData[];
@@ -193,7 +193,7 @@ export const useBuildingStore = create<BuildingStore>((set) => ({
       buildingInfo: {
         ...state.buildingInfo,
         requirements: state.buildingInfo.requirements.map((req) =>
-          req.id === id ? { ...req, file, date } : req
+          req.id === id ? { ...req, file, date } : req,
         ),
       },
     })),
@@ -215,7 +215,7 @@ export const useBuildingStore = create<BuildingStore>((set) => ({
       buildingInfo: {
         ...state.buildingInfo,
         roomTypes: state.buildingInfo.roomTypes.map((rt) =>
-          rt.id === id ? { ...rt, ...data } : rt
+          rt.id === id ? { ...rt, ...data } : rt,
         ),
       },
     })),
@@ -235,9 +235,7 @@ export const useBuildingStore = create<BuildingStore>((set) => ({
       buildingInfo: {
         ...state.buildingInfo,
         roomTypes: state.buildingInfo.roomTypes.map((rt) =>
-          rt.id === roomTypeId
-            ? { ...rt, rooms: [...rt.rooms, defaultRoom()] }
-            : rt
+          rt.id === roomTypeId ? { ...rt, rooms: [...rt.rooms, defaultRoom()] } : rt,
         ),
       },
     })),
@@ -249,12 +247,10 @@ export const useBuildingStore = create<BuildingStore>((set) => ({
         roomTypes: state.buildingInfo.roomTypes.map((rt) =>
           rt.id === roomTypeId
             ? {
-              ...rt,
-              rooms: rt.rooms.map((room) =>
-                room.id === roomId ? { ...room, ...data } : room
-              ),
-            }
-            : rt
+                ...rt,
+                rooms: rt.rooms.map((room) => (room.id === roomId ? { ...room, ...data } : room)),
+              }
+            : rt,
         ),
       },
     })),
@@ -266,7 +262,7 @@ export const useBuildingStore = create<BuildingStore>((set) => ({
         roomTypes: state.buildingInfo.roomTypes.map((rt) =>
           rt.id === roomTypeId
             ? { ...rt, rooms: rt.rooms.filter((room) => room.id !== roomId) }
-            : rt
+            : rt,
         ),
       },
     })),
@@ -279,11 +275,11 @@ export const useBuildingStore = create<BuildingStore>((set) => ({
         ...state.buildingInfo,
         roomTypes: state.buildingInfo.roomTypes.map((rt) =>
           rt.id === roomTypeId
-            // Prevent duplicate tag IDs
-            ? rt.tags.some((t) => t.tagId === tag.tagId)
+            ? // Prevent duplicate tag IDs
+              rt.tags.some((t) => t.tagId === tag.tagId)
               ? rt
               : { ...rt, tags: [...rt.tags, tag] }
-            : rt
+            : rt,
         ),
       },
     })),
@@ -295,12 +291,10 @@ export const useBuildingStore = create<BuildingStore>((set) => ({
         roomTypes: state.buildingInfo.roomTypes.map((rt) =>
           rt.id === roomTypeId
             ? {
-              ...rt,
-              tags: rt.tags.map((t) =>
-                t.tagId === tagId ? { ...t, value } : t
-              ),
-            }
-            : rt
+                ...rt,
+                tags: rt.tags.map((t) => (t.tagId === tagId ? { ...t, value } : t)),
+              }
+            : rt,
         ),
       },
     })),
@@ -310,9 +304,7 @@ export const useBuildingStore = create<BuildingStore>((set) => ({
       buildingInfo: {
         ...state.buildingInfo,
         roomTypes: state.buildingInfo.roomTypes.map((rt) =>
-          rt.id === roomTypeId
-            ? { ...rt, tags: rt.tags.filter((t) => t.tagId !== tagId) }
-            : rt
+          rt.id === roomTypeId ? { ...rt, tags: rt.tags.filter((t) => t.tagId !== tagId) } : rt,
         ),
       },
     })),

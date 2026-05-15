@@ -103,7 +103,7 @@ export const BillingService = {
           console.warn(`Failed to fetch units for listing ${listingId}:`, err);
           return [];
         }
-      })
+      }),
     );
 
     const allUnits: any[] = unitsByListing.flat();
@@ -120,16 +120,14 @@ export const BillingService = {
           else if (Array.isArray(res)) billings = res;
 
           const activeRentals: any[] = (unit.currentRentals ?? []).filter(
-            (r: any) => r.status === 'active'
+            (r: any) => r.status === 'active',
           );
 
           const stampedRentalId = activeRentals[0]?._id ?? null;
           const stampedTenantName = activeRentals
             .map((r: any) => {
               const u = r.userId;
-              return typeof u === 'object'
-                ? `${u.firstName ?? ''} ${u.lastName ?? ''}`.trim()
-                : '';
+              return typeof u === 'object' ? `${u.firstName ?? ''} ${u.lastName ?? ''}`.trim() : '';
             })
             .filter(Boolean)
             .join(', ');
@@ -144,7 +142,7 @@ export const BillingService = {
           console.warn(`Failed to fetch billings for unit ${unitId}:`, err);
           return [];
         }
-      })
+      }),
     );
 
     return billingsByUnit.flat();
@@ -157,11 +155,46 @@ export const BillingService = {
       const listings: any[] = facility.listings || [];
       const listingIds = listings.map((l: any) => l.id).filter(Boolean);
       const billings = await this.getAllBillingsForListings(listingIds);
-      billings.forEach((b: any) => { b.facilityId = b.facilityId ?? facilityId; });
+      billings.forEach((b: any) => {
+        b.facilityId = b.facilityId ?? facilityId;
+      });
       return billings;
     } catch (err) {
       console.error('Failed to fetch all billings for facility:', err);
       return [];
+    }
+  },
+
+  async downloadBilling(userId: string) {
+    try {
+      const response = await api.get(`/api/billings/download/${userId}`, {
+        responseType: 'blob',
+      });
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+
+      const link = document.createElement('a');
+      link.href = url;
+
+      const contentDisposition = response.headers['content-disposition'];
+      let fileName = `billing_${userId}.pdf`;
+      if (contentDisposition) {
+        const fileNameMatch = contentDisposition.match(/filename="(.+)"/);
+        if (fileNameMatch?.[1]) fileName = fileNameMatch[1];
+      }
+
+      link.setAttribute('download', fileName);
+      document.body.appendChild(link);
+      link.click();
+
+      // Clean up
+      link.remove();
+      window.URL.revokeObjectURL(url);
+
+      return response.data;
+    } catch (error) {
+      console.error('Error downloading billing PDF:', error);
+      throw error;
     }
   },
 };

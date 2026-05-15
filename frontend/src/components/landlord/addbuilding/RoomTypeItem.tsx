@@ -19,40 +19,172 @@ const TAG_CATALOGUE: TagCategoryDef[] = [
     category: 'Amenities',
     icon: 'material-symbols:star-outline-rounded',
     tags: [
-      { _id: 'a1', name: 'air_conditioning', displayName: 'Air Conditioning', isRequired: false, dataType: { name: 'boolean' } },
-      { _id: 'a2', name: 'wifi', displayName: 'WiFi', isRequired: false, dataType: { name: 'boolean' } },
-      { _id: 'a3', name: 'hot_water', displayName: 'Hot Water', isRequired: false, dataType: { name: 'boolean' } },
-      { _id: 'a4', name: 'ref', displayName: 'Refrigerator', isRequired: false, dataType: { name: 'boolean' } },
-      { _id: 'a5', name: 'washing_machine', displayName: 'Washing Machine', isRequired: false, dataType: { name: 'boolean' } },
-      { _id: 'a6', name: 'tv', displayName: 'TV', isRequired: false, dataType: { name: 'boolean' } },
-      { _id: 'a7', name: 'kitchen', displayName: 'Kitchen Access', isRequired: false, dataType: { name: 'boolean' } },
-      { _id: 'a8', name: 'parking', displayName: 'Parking', isRequired: false, dataType: { name: 'boolean' } },
+      {
+        _id: 'a1',
+        name: 'air_conditioning',
+        displayName: 'Air Conditioning',
+        isRequired: false,
+        dataType: { name: 'boolean' },
+      },
+      {
+        _id: 'a2',
+        name: 'wifi',
+        displayName: 'WiFi',
+        isRequired: false,
+        dataType: { name: 'boolean' },
+      },
+      {
+        _id: 'a3',
+        name: 'hot_water',
+        displayName: 'Hot Water',
+        isRequired: false,
+        dataType: { name: 'boolean' },
+      },
+      {
+        _id: 'a4',
+        name: 'ref',
+        displayName: 'Refrigerator',
+        isRequired: false,
+        dataType: { name: 'boolean' },
+      },
+      {
+        _id: 'a5',
+        name: 'washing_machine',
+        displayName: 'Washing Machine',
+        isRequired: false,
+        dataType: { name: 'boolean' },
+      },
+      {
+        _id: 'a6',
+        name: 'tv',
+        displayName: 'TV',
+        isRequired: false,
+        dataType: { name: 'boolean' },
+      },
+      {
+        _id: 'a7',
+        name: 'kitchen',
+        displayName: 'Kitchen Access',
+        isRequired: false,
+        dataType: { name: 'boolean' },
+      },
+      {
+        _id: 'a8',
+        name: 'parking',
+        displayName: 'Parking',
+        isRequired: false,
+        dataType: { name: 'boolean' },
+      },
     ],
   },
   {
     category: 'Building Details',
     icon: 'material-symbols:apartment-outline-rounded',
     tags: [
-      { _id: 'b1', name: 'floor_level', displayName: 'Floor Level', isRequired: false, dataType: { name: 'numeric', min: 1, max: 50 } },
-      { _id: 'b2', name: 'room_size', displayName: 'Room Size (sqm)', isRequired: false, dataType: { name: 'numeric', min: 5, max: 500 } },
-      { _id: 'b3', name: 'bathroom_type', displayName: 'Private Bathroom', isRequired: false, dataType: { name: 'boolean' } },
-      { _id: 'b4', name: 'fully_furnished', displayName: 'Fully Furnished', isRequired: false, dataType: { name: 'boolean' } },
-      { _id: 'b5', name: 'semi_furnished', displayName: 'Semi Furnished', isRequired: false, dataType: { name: 'boolean' } },
-      { _id: 'b6', name: 'balcony', displayName: 'Balcony', isRequired: false, dataType: { name: 'boolean' } },
-      { _id: 'b7', name: 'cctv', displayName: 'CCTV', isRequired: false, dataType: { name: 'boolean' } },
+      {
+        _id: 'b1',
+        name: 'floor_level',
+        displayName: 'Floor Level',
+        isRequired: false,
+        dataType: { name: 'numeric', min: 1, max: 50 },
+      },
+      {
+        _id: 'b2',
+        name: 'room_size',
+        displayName: 'Room Size (sqm)',
+        isRequired: false,
+        dataType: { name: 'numeric', min: 5, max: 500 },
+      },
+      {
+        _id: 'b3',
+        name: 'bathroom_type',
+        displayName: 'Private Bathroom',
+        isRequired: false,
+        dataType: { name: 'boolean' },
+      },
+      {
+        _id: 'b4',
+        name: 'fully_furnished',
+        displayName: 'Fully Furnished',
+        isRequired: false,
+        dataType: { name: 'boolean' },
+      },
+      {
+        _id: 'b5',
+        name: 'semi_furnished',
+        displayName: 'Semi Furnished',
+        isRequired: false,
+        dataType: { name: 'boolean' },
+      },
+      {
+        _id: 'b6',
+        name: 'balcony',
+        displayName: 'Balcony',
+        isRequired: false,
+        dataType: { name: 'boolean' },
+      },
+      {
+        _id: 'b7',
+        name: 'cctv',
+        displayName: 'CCTV',
+        isRequired: false,
+        dataType: { name: 'boolean' },
+      },
     ],
   },
   {
     category: 'Rules',
     icon: 'material-symbols:policy-outline-rounded',
     tags: [
-      { _id: 'r1', name: 'no_smoking', displayName: 'No Smoking', isRequired: false, dataType: { name: 'boolean' } },
-      { _id: 'r2', name: 'no_pets', displayName: 'No Pets', isRequired: false, dataType: { name: 'boolean' } },
-      { _id: 'r3', name: 'no_visitors', displayName: 'No Visitors', isRequired: false, dataType: { name: 'boolean' } },
-      { _id: 'r4', name: 'no_cooking', displayName: 'No Cooking', isRequired: false, dataType: { name: 'boolean' } },
-      { _id: 'r5', name: 'curfew', displayName: 'Curfew', isRequired: false, dataType: { name: 'boolean' } },
-      { _id: 'r6', name: 'gender_female', displayName: 'Female Only', isRequired: false, dataType: { name: 'boolean' } },
-      { _id: 'r7', name: 'gender_male', displayName: 'Male Only', isRequired: false, dataType: { name: 'boolean' } },
+      {
+        _id: 'r1',
+        name: 'no_smoking',
+        displayName: 'No Smoking',
+        isRequired: false,
+        dataType: { name: 'boolean' },
+      },
+      {
+        _id: 'r2',
+        name: 'no_pets',
+        displayName: 'No Pets',
+        isRequired: false,
+        dataType: { name: 'boolean' },
+      },
+      {
+        _id: 'r3',
+        name: 'no_visitors',
+        displayName: 'No Visitors',
+        isRequired: false,
+        dataType: { name: 'boolean' },
+      },
+      {
+        _id: 'r4',
+        name: 'no_cooking',
+        displayName: 'No Cooking',
+        isRequired: false,
+        dataType: { name: 'boolean' },
+      },
+      {
+        _id: 'r5',
+        name: 'curfew',
+        displayName: 'Curfew',
+        isRequired: false,
+        dataType: { name: 'boolean' },
+      },
+      {
+        _id: 'r6',
+        name: 'gender_female',
+        displayName: 'Female Only',
+        isRequired: false,
+        dataType: { name: 'boolean' },
+      },
+      {
+        _id: 'r7',
+        name: 'gender_male',
+        displayName: 'Male Only',
+        isRequired: false,
+        dataType: { name: 'boolean' },
+      },
     ],
   },
 ];
@@ -103,22 +235,24 @@ const TagChip: FunctionComponent<{
   return (
     <div
       onClick={onToggle}
-      className={`flex items-center gap-1.5 rounded-full border text-xs font-semibold cursor-pointer select-none transition-all ${selected
-        ? 'border-teal-500 bg-teal-50 text-teal-800 pl-2.5 pr-1.5 py-1'
-        : 'border-whitesmoke bg-white text-slategray hover:border-gray-300 hover:text-gray-600 px-3 py-1'
-        }`}
+      className={`flex items-center gap-1.5 rounded-full border text-xs font-semibold cursor-pointer select-none transition-all ${
+        selected
+          ? 'border-teal-500 bg-teal-50 text-teal-800 pl-2.5 pr-1.5 py-1'
+          : 'border-whitesmoke bg-white text-slategray hover:border-gray-300 hover:text-gray-600 px-3 py-1'
+      }`}
     >
       {selected && (
         <Icon icon="material-symbols:check-rounded" className="w-3 h-3 text-teal-600 shrink-0" />
       )}
       <span>{def.displayName}</span>
       {/* Inline numeric input shown when selected */}
-      {selected && isNumeric && tagValue && (
-        <NumericInput tag={tagValue} roomTypeId={roomTypeId} />
-      )}
+      {selected && isNumeric && tagValue && <NumericInput tag={tagValue} roomTypeId={roomTypeId} />}
       {selected && (
         <span
-          onClick={(e) => { e.stopPropagation(); onToggle(); }}
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggle();
+          }}
           className="ml-0.5 text-teal-500 hover:text-red-400 transition-colors"
         >
           <Icon icon="material-symbols:close-rounded" className="w-3 h-3" />
@@ -174,16 +308,20 @@ const TagsSection: FunctionComponent<{ roomType: RoomTypeData }> = ({ roomType }
               key={cat.category}
               type="button"
               onClick={() => setActiveCategory(cat.category)}
-              className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors ${isActive
-                ? 'bg-teal-50 text-teal-800 border border-teal-200'
-                : 'bg-white text-slategray border border-whitesmoke hover:border-gray-300'
-                }`}
+              className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors ${
+                isActive
+                  ? 'bg-teal-50 text-teal-800 border border-teal-200'
+                  : 'bg-white text-slategray border border-whitesmoke hover:border-gray-300'
+              }`}
             >
               <Icon icon={cat.icon} className="w-3.5 h-3.5" />
               {cat.category}
               {catSelectedCount > 0 && (
-                <span className={`rounded-full px-1.5 text-[10px] font-bold ${isActive ? 'bg-teal-200 text-teal-900' : 'bg-gray-100 text-gray-500'
-                  }`}>
+                <span
+                  className={`rounded-full px-1.5 text-[10px] font-bold ${
+                    isActive ? 'bg-teal-200 text-teal-900' : 'bg-gray-100 text-gray-500'
+                  }`}
+                >
                   {catSelectedCount}
                 </span>
               )}
@@ -209,7 +347,6 @@ const TagsSection: FunctionComponent<{ roomType: RoomTypeData }> = ({ roomType }
           );
         })}
       </div>
-
     </div>
   );
 };
@@ -264,7 +401,6 @@ const RoomEntry: FunctionComponent<{
 
   return (
     <div className="self-stretch flex items-center gap-6">
-
       {/* Room Number */}
       <div className="flex-1 flex flex-col items-center justify-center gap-2.5">
         <div className="relative leading-6 font-medium text-black text-sm">Room Number</div>
@@ -288,7 +424,10 @@ const RoomEntry: FunctionComponent<{
             <option value="open">Open</option>
             <option value="occupied">Occupied</option>
           </select>
-          <Icon icon="mynaui:chevron-down" className="w-4 h-4 shrink-0 pointer-events-none text-slategray" />
+          <Icon
+            icon="mynaui:chevron-down"
+            className="w-4 h-4 shrink-0 pointer-events-none text-slategray"
+          />
         </div>
       </div>
 
@@ -315,7 +454,6 @@ const RoomEntry: FunctionComponent<{
       >
         <Icon icon="material-symbols:remove-circle-outline" className="w-5 h-5" />
       </button>
-
     </div>
   );
 };
@@ -351,15 +489,9 @@ const RoomsSection: FunctionComponent<{ roomType: RoomTypeData }> = ({ roomType 
 
   return (
     <div className="w-full rounded-xl border border-whitesmoke overflow-hidden flex flex-col items-start justify-center py-3 px-8 gap-6 text-sm text-black font-inter">
-
       {/* Room entry rows */}
       {roomType.rooms.map((room, index) => (
-        <RoomEntry
-          key={room.id}
-          room={room}
-          roomTypeId={roomType.id}
-          index={index}
-        />
+        <RoomEntry key={room.id} room={room} roomTypeId={roomType.id} index={index} />
       ))}
 
       {/* Add More Rooms */}
@@ -370,7 +502,6 @@ const RoomsSection: FunctionComponent<{ roomType: RoomTypeData }> = ({ roomType 
         <b className="relative">Add More Rooms</b>
         <Icon icon="material-symbols:add-rounded" className="w-4 h-4" />
       </div>
-
     </div>
   );
 };
@@ -411,7 +542,6 @@ const RoomTypeItem: FunctionComponent<RoomTypeItemProps> = ({ roomType }) => {
 
   return (
     <div className="w-full rounded-xl border border-whitesmoke overflow-hidden flex flex-col">
-
       {/* Header */}
       <div className="flex items-center px-4 py-2">
         {!isExpanded && (
@@ -433,7 +563,6 @@ const RoomTypeItem: FunctionComponent<RoomTypeItemProps> = ({ roomType }) => {
       {/* Expanded form */}
       {isExpanded && (
         <div className="flex flex-col px-4 pb-8 gap-6 text-sm text-gray-500 font-inter">
-
           {/* Room Type + Capacity */}
           <div className="self-stretch flex items-start gap-10">
             <div className="flex-1 flex flex-col items-start gap-3">
@@ -494,7 +623,10 @@ const RoomTypeItem: FunctionComponent<RoomTypeItemProps> = ({ roomType }) => {
             <b className="text-black">Add Photos</b>
             <div className="flex items-start flex-wrap gap-2 py-2">
               <div className="h-[100px] w-[100px] rounded-xl border border-whitesmoke overflow-hidden flex items-center justify-center cursor-pointer hover:bg-gray-50 transition-colors">
-                <Icon icon="material-symbols:add-photo-alternate-outline" className="w-8 h-8 text-black" />
+                <Icon
+                  icon="material-symbols:add-photo-alternate-outline"
+                  className="w-8 h-8 text-black"
+                />
               </div>
             </div>
           </div>
@@ -513,7 +645,6 @@ const RoomTypeItem: FunctionComponent<RoomTypeItemProps> = ({ roomType }) => {
           >
             Remove this room type
           </button>
-
         </div>
       )}
     </div>

@@ -37,8 +37,12 @@ const ChatDetail: FunctionComponent<ChatDetailProps> = ({
           )}
         </div>
         <div className="flex flex-col">
-          <h1 className="text-num-24 font-bold text-darkslategray dark:text-[#edf6f4] m-0 leading-tight">{title}</h1>
-          <span className="text-num-14 text-slategray dark:text-[#a4acba] font-medium">{subtitle}</span>
+          <h1 className="text-num-24 font-bold text-darkslategray dark:text-[#edf6f4] m-0 leading-tight">
+            {title}
+          </h1>
+          <span className="text-num-14 text-slategray dark:text-[#a4acba] font-medium">
+            {subtitle}
+          </span>
         </div>
       </div>
 
@@ -50,10 +54,12 @@ const ChatDetail: FunctionComponent<ChatDetailProps> = ({
             className={`flex flex-col gap-1 max-w-[70%] ${msg.isMe ? 'self-end items-end' : 'self-start items-start'}`}
           >
             {/* Sender Label */}
-            <span className={`text-num-12 font-bold text-darkslategray px-2 dark:text-[#d7e0ef] ${msg.isMe ? 'text-right' : 'text-left'}`}>
+            <span
+              className={`text-num-12 font-bold text-darkslategray px-2 dark:text-[#d7e0ef] ${msg.isMe ? 'text-right' : 'text-left'}`}
+            >
               {msg.isMe ? 'You' : msg.sender}
             </span>
-            
+
             {/* Bubble */}
             <div
               className={`px-6 py-4 rounded-[20px] shadow-sm text-num-16 leading-relaxed font-medium transition-all hover:shadow-md ${

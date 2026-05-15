@@ -385,7 +385,7 @@ const UnitDetails: FunctionComponent = () => {
       {showSignIn && <SignInPopUp onClose={() => setShowSignIn(false)} />}
       {isVisitPopoutOpen && (
         <PortalPopup
-          overlayColor="rgba(0, 0, 0, 0.25)"
+          overlayColor="rgba(0, 0, 0, 0.75)"
           placement="Centered"
           onOutsideClick={() => setVisitPopoutOpen(false)}
         >

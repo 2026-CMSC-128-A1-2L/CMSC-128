@@ -266,9 +266,7 @@ const SubmitReceipt: FunctionComponent<SubmitReceiptType> = ({
           </div>
 
           {/* Error message */}
-          {submitError && (
-            <p className="text-crimson text-xs font-semibold pt-2">{submitError}</p>
-          )}
+          {submitError && <p className="text-crimson text-xs font-semibold pt-2">{submitError}</p>}
 
           {/* Submit Button */}
           <div className="w-full overflow-hidden flex flex-col items-center justify-center pt-2 text-center text-sm text-teal">
@@ -281,9 +279,7 @@ const SubmitReceipt: FunctionComponent<SubmitReceiptType> = ({
                   : 'hover:bg-teal hover:text-white hover:scale-[1.02] active:scale-95 cursor-pointer'
               }`}
             >
-              <div className="font-semibold">
-                {isSubmitting ? 'Submitting…' : 'Submit Payment'}
-              </div>
+              <div className="font-semibold">{isSubmitting ? 'Submitting…' : 'Submit Payment'}</div>
             </button>
           </div>
         </div>

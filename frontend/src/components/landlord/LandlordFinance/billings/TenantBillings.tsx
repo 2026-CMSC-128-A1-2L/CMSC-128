@@ -26,16 +26,23 @@ const MONTH_NAMES = [
 
 const getAvailableMonths = () => {
   const now = new Date();
+
   return Array.from({ length: 3 }, (_, i) => {
     const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const month = d.getMonth();
+    const year = d.getFullYear();
+
     return {
-      name: MONTH_NAMES[d.getMonth()],
-      month: d.getMonth(),
-      year: d.getFullYear(),
-      displayName: `${MONTH_NAMES[d.getMonth()]} ${d.getFullYear()}`,
+      name: MONTH_NAMES[month],
+      month,
+      year,
+      displayName: `${MONTH_NAMES[month]} ${year}`,
+      startDate: new Date(year, month, 1),
+      endDate: new Date(year, month + 1, 0),
     };
   });
 };
+
 
 const toRowBilling = (b: TenantBilling): Billing => ({
   _id: b._id,
@@ -126,6 +133,7 @@ const TenantBillingsTab: FunctionComponent<TenantBillingsTabProps> = ({
     };
     if (facilityListings.length > 0) loadUnits();
   }, [facilityListings]);
+     
 
   const filteredBillings = billings.filter((b) => {
     if (!b.dueDate) return false;
@@ -245,12 +253,18 @@ const TenantBillingsTab: FunctionComponent<TenantBillingsTabProps> = ({
 
               {isMonthDropdownOpen && (
                 <>
-                  <div className="fixed inset-0 z-10" onClick={() => setIsMonthDropdownOpen(false)} />
+                  <div
+                    className="fixed inset-0 z-10"
+                    onClick={() => setIsMonthDropdownOpen(false)}
+                  />
                   <div className="absolute top-full right-0 mt-1 w-[150px] z-20 bg-white border border-whitesmoke-200 rounded-lg shadow-lg overflow-hidden">
                     {availableMonths.map((month, index) => (
                       <div
                         key={`${month.month}-${month.year}`}
-                        onClick={() => { setSelectedMonth(month); setIsMonthDropdownOpen(false); }}
+                        onClick={() => {
+                          setSelectedMonth(month);
+                          setIsMonthDropdownOpen(false);
+                        }}
                         className={`w-full px-3 py-2 text-[12px] font-semibold text-center cursor-pointer transition-colors font-inter ${
                           selectedMonth.displayName === month.displayName
                             ? 'bg-darkslategray-200 text-white'
@@ -287,7 +301,10 @@ const TenantBillingsTab: FunctionComponent<TenantBillingsTabProps> = ({
               <tbody>
                 {isLoading && (
                   <tr>
-                    <td colSpan={TABLE_COLUMNS.length} className="py-12 text-center text-darkslategray-100 text-[13px]">
+                    <td
+                      colSpan={TABLE_COLUMNS.length}
+                      className="py-12 text-center text-darkslategray-100 text-[13px]"
+                    >
                       Loading billings...
                     </td>
                   </tr>
@@ -295,7 +312,10 @@ const TenantBillingsTab: FunctionComponent<TenantBillingsTabProps> = ({
 
                 {!isLoading && filteredBillings.length === 0 && (
                   <tr>
-                    <td colSpan={TABLE_COLUMNS.length} className="py-12 text-center text-darkslategray-100 text-[13px]">
+                    <td
+                      colSpan={TABLE_COLUMNS.length}
+                      className="py-12 text-center text-darkslategray-100 text-[13px]"
+                    >
                       No billings found for {selectedMonth.displayName}
                     </td>
                   </tr>

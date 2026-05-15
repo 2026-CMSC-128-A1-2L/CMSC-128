@@ -14,7 +14,6 @@ const NotifyTenantsPopup: FunctionComponent<Props> = ({ isOpen, onClose }) => {
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
       <div className="relative flex w-[480px] flex-col items-center overflow-hidden rounded-[26px] bg-white max-h-[90vh]">
-
         {/* Header */}
         <div className="w-full bg-linear-to-b from-[#096c5b] to-[#16917c] px-[46px] py-[10px] shrink-0">
           <div className="flex flex-col items-start pt-[26px] pb-[6px] gap-[4px]">
@@ -27,7 +26,6 @@ const NotifyTenantsPopup: FunctionComponent<Props> = ({ isOpen, onClose }) => {
 
         {/* Scrollable Body */}
         <div className="flex w-full flex-col items-center overflow-y-auto flex-1 px-[46px] pt-[32px]">
-
           {/* Success icon */}
           <span className="flex h-[84px] w-[84px] items-center justify-center rounded-full bg-[#cbf6ed] text-[#096c5b]">
             <Icon icon="mdi:check-circle-outline" className="h-[52px] w-[52px]" />
@@ -39,7 +37,8 @@ const NotifyTenantsPopup: FunctionComponent<Props> = ({ isOpen, onClose }) => {
               Tenants Notified
             </h2>
             <p className="font-['Inter',sans-serif] text-[14px] font-medium leading-[22px] text-[#666]">
-              All your tenants have been successfully informed of their pending payments. They will receive a notification shortly.
+              All your tenants have been successfully informed of their pending payments. They will
+              receive a notification shortly.
             </p>
           </div>
 
@@ -53,7 +52,6 @@ const NotifyTenantsPopup: FunctionComponent<Props> = ({ isOpen, onClose }) => {
               Got it
             </button>
           </div>
-
         </div>
       </div>
     </div>

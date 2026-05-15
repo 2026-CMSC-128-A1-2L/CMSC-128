@@ -53,6 +53,7 @@ const EMPTY_DASHBOARD: UserBillingDashboard = {
 
 type UseFinanceReturn = {
     dashboard: UserBillingDashboard | null;
+    userId?: string;
     isLoading: boolean;
     error: string | null;
     hasAccommodation: boolean;
@@ -153,5 +154,5 @@ export function useFinance(): UseFinanceReturn {
         return () => { cancelled = true; };
     }, [isInitialized, userId, fetchCount]);
 
-    return { dashboard, isLoading, error, hasAccommodation, refetch };
+    return { dashboard, userId, isLoading, error, hasAccommodation, refetch };
 }

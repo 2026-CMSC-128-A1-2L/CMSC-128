@@ -47,11 +47,7 @@ const ProfileSwitcherLandlord = ({ initialTab = 'user profile' }: ProfileSwitche
         <Switch activeTab={activeTab} setActiveTab={handleTabChange} />
 
         <div className="transition-all duration-300">
-          {activeTab === 'user profile' ? (
-            <LandlordProfileView />
-          ) : (
-            <LandlordVerificationView />
-          )}
+          {activeTab === 'user profile' ? <LandlordProfileView /> : <LandlordVerificationView />}
         </div>
       </div>
 
@@ -61,7 +57,6 @@ const ProfileSwitcherLandlord = ({ initialTab = 'user profile' }: ProfileSwitche
       ) : (
         <TutorialVerifBubble show={showHelp} onClose={() => setShowHelp(false)} />
       )}
-      
     </LandlordLayout>
   );
 };

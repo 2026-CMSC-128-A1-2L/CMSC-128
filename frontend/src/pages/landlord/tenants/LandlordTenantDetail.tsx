@@ -56,13 +56,14 @@ const LandlordTenantDetail = () => {
     return (
       <LandlordLayout
         activeSidebarItem="tenants"
-        breadcrumbs={[
-          { label: 'My Tenants', to: '/landlord/tenants' },
-          { label: 'Loading...' },
-        ]}
+        breadcrumbs={[{ label: 'My Tenants', to: '/landlord/tenants' }, { label: 'Loading...' }]}
       >
         <div className="flex min-h-[320px] w-full flex-col items-center justify-center gap-[16px] rounded-[16px] border border-dashed border-[#f0f0f0] bg-white p-[32px] text-center dark:border-[#303331] dark:bg-[#141515]">
-          <Icon icon="eos-icons:loading" className="h-[48px] w-[48px] text-[#096c5b]" aria-hidden="true" />
+          <Icon
+            icon="eos-icons:loading"
+            className="h-[48px] w-[48px] text-[#096c5b]"
+            aria-hidden="true"
+          />
           <p className="font-['Inter',sans-serif] text-[16px] font-bold text-[#2f3136] dark:text-[#d7e0ef]">
             Loading tenant details...
           </p>
@@ -135,11 +136,7 @@ const LandlordTenantDetail = () => {
           ) : (
             <div className="flex flex-col gap-[12px] px-[32px]">
               {tenant.documents.map((document) => (
-                <SubmittedDocumentCard
-                  key={document.id}
-                  document={document}
-                  showMoreMenu={false}
-                />
+                <SubmittedDocumentCard key={document.id} document={document} showMoreMenu={false} />
               ))}
             </div>
           )}

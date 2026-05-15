@@ -3,17 +3,19 @@ import express from 'express';
 import { apiRouter } from './router.js';
 import session from 'express-session';
 import passport from 'passport';
-import conn from 'connect-mongodb-session';  // ← remove http-proxy-middleware import
+import conn from 'connect-mongodb-session'; // ← remove http-proxy-middleware import
 const MongoDBStore = conn(session);
 
 export const getApp = (envOverride: Record<string, string>) => {
   process.env = { ...process.env, ...envOverride };
   const app = express();
 
-  app.use(cors({
-    origin: 'http://localhost:5173',
-    credentials: true,
-  }));
+  app.use(
+    cors({
+      origin: 'http://localhost:5173',
+      credentials: true,
+    }),
+  );
   app.use(express.json());
 
   if (!process.env.SESSION_SECRET) {
@@ -31,12 +33,14 @@ export const getApp = (envOverride: Record<string, string>) => {
     console.error(error);
   });
 
-  app.use(session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    store: store,
-  }));
+  app.use(
+    session({
+      secret: process.env.SESSION_SECRET,
+      resave: false,
+      saveUninitialized: false,
+      store: store,
+    }),
+  );
 
   app.use(passport.initialize());
   app.use(passport.session());

@@ -7,7 +7,7 @@ import type { QueryFilter } from 'mongoose';
 import { getUserByEmail } from '../user/user.service.js';
 import { Unit } from '../unit/unit.model.js';
 import { Rental } from '../rental/rental.model.js';
-import { combineFilters } from '../../middleware.js';
+import { createRental } from '../rental/rental.service.js';
 
 export const getInvites = async (filters: QueryFilter<InviteType>) => {
   return await Invite.find(filters).lean();
@@ -251,21 +251,17 @@ export const acceptStudentInvite = async (token: string, emails: string[]) => {
       unitId: unit._id,
       status: 'active',
     }).session(session);
-    if (existingRental)
-      throw new AppError(409, 'You already have an active rental for this unit.');
+    if (existingRental) throw new AppError(409, 'You already have an active rental for this unit.');
 
-    // Create active rental for the legacy tenant
-    const rental = new Rental({
-      userId: user._id,
-      facilityId: invite.facilityId,
-      unitId: unit._id,
-      status: 'active',
-    });
-    const savedRental = await rental.save({ session });
-
-    // Update the unit's currentRentals array
-    unit.currentRentals.push(savedRental._id);
-    await unit.save({ session });
+    // Create active rental and its initial billing for the legacy tenant
+    await createRental(
+      {
+        userId: user._id,
+        facilityId: invite.facilityId,
+        unitId: unit._id,
+      },
+      { session },
+    );
 
     // Mark invite as accepted
     invite.status = 'accepted';

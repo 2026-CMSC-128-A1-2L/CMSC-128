@@ -76,7 +76,9 @@ const SetAvailableTime: FunctionComponent<SetAvailableTimeProps> = ({ onClose })
                   key={day}
                   className="flex-1 h-8 rounded-tl-num-4_65 rounded-tr-num-0 rounded-b-num-0 flex flex-col items-center justify-center box-border text-center"
                 >
-                  <b className="relative text-num-12 font-semibold text-dimgray dark:text-[#a4acba]">{day}</b>
+                  <b className="relative text-num-12 font-semibold text-dimgray dark:text-[#a4acba]">
+                    {day}
+                  </b>
                 </div>
               ))}
             </div>

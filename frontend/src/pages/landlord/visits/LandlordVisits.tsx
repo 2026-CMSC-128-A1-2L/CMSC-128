@@ -442,7 +442,9 @@ const Visits: FunctionComponent = () => {
                     >
                       {day && (
                         <>
-                          <div className={`text-xs sm:text-num-14 font-semibold font-inter mb-1 ${day === new Date().getDate() && month === new Date().getMonth() && year === new Date().getFullYear() ? 'text-teal dark:text-[#72cbb8]' : 'text-dimgray dark:text-[#d7e0ef]'}`}>
+                          <div
+                            className={`text-xs sm:text-num-14 font-semibold font-inter mb-1 ${day === new Date().getDate() && month === new Date().getMonth() && year === new Date().getFullYear() ? 'text-teal dark:text-[#72cbb8]' : 'text-dimgray dark:text-[#d7e0ef]'}`}
+                          >
                             {day}
                           </div>
                           <div className="flex flex-col gap-0.5 sm:gap-1 text-xs">

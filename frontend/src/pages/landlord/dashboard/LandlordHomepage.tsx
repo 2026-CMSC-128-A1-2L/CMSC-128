@@ -155,7 +155,8 @@ const LandlordHomepage: FunctionComponent = () => {
             </div>
             <div className="grid grid-cols-1 gap-[12px] sm:grid-cols-2 xl:grid-cols-4">
               {STATS.map((s) => (
-                <Link to="/landlord/finance"
+                <Link
+                  to="/landlord/finance"
                   key={s.label}
                   className="flex flex-col items-center justify-center gap-[8px] rounded-[16px] border border-[#f0f0f0] bg-white p-[12px] text-center"
                 >
@@ -192,7 +193,11 @@ const LandlordHomepage: FunctionComponent = () => {
                 <b className="font-['Inter',sans-serif] text-[18px] tracking-[-0.01em] text-[#f0f0f0]">
                   Pay Reminder
                 </b>
-                <button type="button" onClick={() => setShowNotify(true)} className="flex items-center gap-[8px] rounded-full bg-[#f0f0f0] px-[12px] py-[4px] transition-opacity hover:opacity-80">
+                <button
+                  type="button"
+                  onClick={() => setShowNotify(true)}
+                  className="flex items-center gap-[8px] rounded-full bg-[#f0f0f0] px-[12px] py-[4px] transition-opacity hover:opacity-80"
+                >
                   <span className="font-['Inter',sans-serif] text-[12px] font-medium text-[#096c5b]">
                     Notify your tenants
                   </span>

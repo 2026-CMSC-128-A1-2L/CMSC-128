@@ -1,18 +1,18 @@
-import { type FunctionComponent, useState } from "react";
-import DmsSidebar from "../../../components/general/DmsSidebar";
-import PageBackground from "../../../components/general/PageBackground";
-import oswald from "../../../../assets/owl_inbox.png";
-import TutorialIcon from "../../../../assets/help-chat.svg";
-import TutorialBubble from "../messages/DMsTutorial";
-import NotificationDetail from "../../../components/general/NotificationDetail";
-import ChatDetail from "../../../components/general/ChatDetail";
-import BgUpper from "../../../../assets/bg-upper.svg?react";
-import BgLower from "../../../../assets/bg-lower.svg?react";
+import { type FunctionComponent, useState } from 'react';
+import DmsSidebar from '../../../components/general/DmsSidebar';
+import PageBackground from '../../../components/general/PageBackground';
+import oswald from '../../../../assets/owl_inbox.png';
+import TutorialIcon from '../../../../assets/help-chat.svg';
+import TutorialBubble from '../messages/DMsTutorial';
+import NotificationDetail from '../../../components/general/NotificationDetail';
+import ChatDetail from '../../../components/general/ChatDetail';
+import BgUpper from '../../../../assets/bg-upper.svg?react';
+import BgLower from '../../../../assets/bg-lower.svg?react';
 
 const DmsLanding: FunctionComponent = () => {
   const [showHelp, setShowHelp] = useState(false);
   const [selectedItem, setSelectedItem] = useState<{
-    type: "notification" | "dm";
+    type: 'notification' | 'dm';
     id: number;
   } | null>(null);
 
@@ -140,19 +140,15 @@ const DmsLanding: FunctionComponent = () => {
   ]);
   */
 
-  const handleItemSelect = (type: "notification" | "dm", id: number) => {
+  const handleItemSelect = (type: 'notification' | 'dm', id: number) => {
     setSelectedItem({ type, id });
 
     // Mark as read
-    if (type === "notification") {
-      setNotifications((prev) =>
-        prev.map((n) => (n.id === id ? { ...n, unread: false } : n)),
-      );
+    if (type === 'notification') {
+      setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, unread: false } : n)));
     } else {
       setDirectMessages((prev) =>
-        prev.map((dm) =>
-          dm.id === id ? { ...dm, unread: false, unreadCount: 0 } : dm,
-        ),
+        prev.map((dm) => (dm.id === id ? { ...dm, unread: false, unreadCount: 0 } : dm)),
       );
     }
   };
@@ -178,7 +174,7 @@ const DmsLanding: FunctionComponent = () => {
       );
     }
 
-    if (selectedItem.type === "notification") {
+    if (selectedItem.type === 'notification') {
       const notif = notifications.find((n) => n.id === selectedItem.id);
       if (notif) {
         return (
@@ -199,7 +195,7 @@ const DmsLanding: FunctionComponent = () => {
       }
     }
 
-    if (selectedItem.type === "dm") {
+    if (selectedItem.type === 'dm') {
       const dm = directMessages.find((d) => d.id === selectedItem.id);
       if (dm) {
         return (
@@ -251,11 +247,7 @@ const DmsLanding: FunctionComponent = () => {
         className="help-button-animated bottom-32 right-10 z-[1000] cursor-pointer transition-all hover:scale-110 active:scale-95"
         onClick={() => setShowHelp(!showHelp)}
       >
-        <img
-          src={TutorialIcon}
-          alt="Help"
-          className="w-16 h-16 drop-shadow-lg"
-        />
+        <img src={TutorialIcon} alt="Help" className="w-16 h-16 drop-shadow-lg" />
       </div>
     </div>
   );
