@@ -7,8 +7,19 @@
 @layer theme, base, components, utilities;
 @config "../tailwind.config.js";
 
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
 body {
   @apply leading-[normal] m-0;
+  background-color: #ffffff;
+}
+
+.dark body {
+  background-color: #0f1010;
 }
 @layer base {
   *,
@@ -61,6 +72,28 @@ body {
   .dark .landlord-shell .border-whitesmoke-200,
   .dark .landlord-shell .border-gainsboro {
     border-color: #303331;
+  }
+
+  .dark .landlord-shell .hover\:bg-white:hover,
+  .dark .landlord-shell .hover\:bg-gray-50:hover,
+  .dark .landlord-shell .hover\:bg-gray-100:hover,
+  .dark .landlord-shell .hover\:bg-whitesmoke:hover,
+  .dark .landlord-shell .hover\:bg-whitesmoke-100:hover,
+  .dark .landlord-shell .hover\:bg-whitesmoke-200:hover,
+  .dark .landlord-shell .hover\:bg-\[\#fafafa\]:hover,
+  .dark .landlord-shell .hover\:bg-\[\#f9f9f9\]:hover,
+  .dark .landlord-shell .hover\:bg-\[\#f9fafb\]:hover,
+  .dark .landlord-shell .hover\:bg-\[\#f8fafc\]:hover,
+  .dark .landlord-shell .hover\:bg-\[\#f8fffe\]:hover,
+  .dark .landlord-shell .hover\:bg-\[\#F0FAF6\]:hover,
+  .dark .landlord-shell .hover\:bg-gray-50\/50:hover {
+    background-color: #202123;
+  }
+
+  .dark .landlord-shell .focus\:bg-white:focus,
+  .dark .landlord-shell .focus-within\:bg-white:focus-within,
+  .dark .landlord-shell .dark\:focus-within\:bg-\[\#101111\]:focus-within {
+    background-color: #202123;
   }
 }
 @layer utilities {
@@ -122,10 +155,20 @@ body {
 
   .dark .user-calendar-shell .hover\:bg-whitesmoke-100:hover,
   .dark .user-calendar-shell .hover\:bg-whitesmoke-200:hover,
+  .dark .user-calendar-shell .hover\:bg-white:hover,
   .dark .user-calendar-shell .hover\:bg-gray-50:hover,
   .dark .user-calendar-shell .hover\:bg-gray-100:hover,
+  .dark .user-calendar-shell .hover\:bg-\[\#fafafa\]:hover,
+  .dark .user-calendar-shell .hover\:bg-\[\#f9f9f9\]:hover,
+  .dark .user-calendar-shell .hover\:bg-\[\#f9fafb\]:hover,
+  .dark .user-calendar-shell .hover\:bg-\[\#f8fafc\]:hover,
   .dark .user-calendar-shell .hover\:bg-blue-50:hover {
-    background-color: #1f2022;
+    background-color: #202123;
+  }
+
+  .dark .user-calendar-shell .focus\:bg-white:focus,
+  .dark .user-calendar-shell .focus-within\:bg-white:focus-within {
+    background-color: #202123;
   }
 
   .dark .user-calendar-shell .bg-lightcyan,
@@ -151,6 +194,21 @@ body {
   .dark .user-finance-shell .hover\:shadow-sm:hover {
     box-shadow: none;
   }
+
+  .dark .user-finance-shell .hover\:bg-white:hover,
+  .dark .user-finance-shell .hover\:bg-gray-50:hover,
+  .dark .user-finance-shell .hover\:bg-gray-100:hover,
+  .dark .user-finance-shell .hover\:bg-whitesmoke:hover,
+  .dark .user-finance-shell .hover\:bg-whitesmoke-100:hover,
+  .dark .user-finance-shell .hover\:bg-whitesmoke-200:hover,
+  .dark .user-finance-shell .hover\:bg-\[\#fafafa\]:hover,
+  .dark .user-finance-shell .hover\:bg-\[\#f9f9f9\]:hover,
+  .dark .user-finance-shell .hover\:bg-\[\#f9fafb\]:hover,
+  .dark .user-finance-shell .hover\:bg-\[\#f8fafc\]:hover,
+  .dark .user-finance-shell .focus\:bg-white:focus,
+  .dark .user-finance-shell .focus-within\:bg-white:focus-within {
+    background-color: #202123;
+  }
 }
 @layer utilities {
   .dark .user-messages-shell .bg-white {
@@ -160,6 +218,20 @@ body {
   .dark .user-messages-shell .border-whitesmoke,
   .dark .user-messages-shell .border-whitesmoke-200 {
     border-color: #303331;
+  }
+
+  .dark .user-messages-shell .hover\:bg-white:hover,
+  .dark .user-messages-shell .hover\:bg-gray-50:hover,
+  .dark .user-messages-shell .hover\:bg-gray-100:hover,
+  .dark .user-messages-shell .hover\:bg-whitesmoke:hover,
+  .dark .user-messages-shell .hover\:bg-whitesmoke-100:hover,
+  .dark .user-messages-shell .hover\:bg-whitesmoke-200:hover,
+  .dark .user-messages-shell .hover\:bg-\[\#fafafa\]:hover,
+  .dark .user-messages-shell .hover\:bg-\[\#f9f9f9\]:hover,
+  .dark .user-messages-shell .hover\:bg-\[\#f9fafb\]:hover,
+  .dark .user-messages-shell .hover\:bg-\[\#f8fafc\]:hover,
+  .dark .user-messages-shell .focus-within\:bg-white:focus-within {
+    background-color: #202123;
   }
 }
 @layer utilities {
@@ -220,9 +292,24 @@ body {
   }
 
   .dark .user-settings-shell .hover\:bg-azure:hover,
+  .dark .user-settings-shell .hover\:bg-white:hover,
+  .dark .user-settings-shell .hover\:bg-gray-50:hover,
+  .dark .user-settings-shell .hover\:bg-gray-100:hover,
+  .dark .user-settings-shell .hover\:bg-whitesmoke:hover,
+  .dark .user-settings-shell .hover\:bg-whitesmoke-100:hover,
+  .dark .user-settings-shell .hover\:bg-whitesmoke-200:hover,
+  .dark .user-settings-shell .hover\:bg-\[\#fafafa\]:hover,
+  .dark .user-settings-shell .hover\:bg-\[\#f9f9f9\]:hover,
+  .dark .user-settings-shell .hover\:bg-\[\#f9fafb\]:hover,
+  .dark .user-settings-shell .hover\:bg-\[\#f8fafc\]:hover,
   .dark .user-settings-shell .hover\:bg-\[\#F0FAF6\]:hover,
   .dark .user-settings-shell .group:hover .dark\:group-hover\:bg-\[\#17201d\] {
-    background-color: #17201d;
+    background-color: #202123;
+  }
+
+  .dark .user-settings-shell .focus\:bg-white:focus,
+  .dark .user-settings-shell .focus-within\:bg-white:focus-within {
+    background-color: #202123;
   }
 
   .dark .user-settings-shell .hover\:border-teal-100:hover {
@@ -253,11 +340,6 @@ body {
 
   .user-home-shell > .pointer-events-none,
   .user-unit-details-shell > .pointer-events-none {
-    opacity: 0;
-  }
-
-  .dark .user-home-shell > .pointer-events-none,
-  .dark .user-unit-details-shell > .pointer-events-none {
     opacity: 1;
   }
 
@@ -354,10 +436,29 @@ body {
   .dark .user-home-shell .hover\:bg-lightcyan\/45:hover,
   .dark .user-home-shell .hover\:bg-lightcyan:hover,
   .dark .user-home-shell .hover\:bg-\[\#237866\]:hover,
+  .dark .user-home-shell .hover\:bg-white:hover,
+  .dark .user-home-shell .hover\:bg-gray-50:hover,
+  .dark .user-home-shell .hover\:bg-gray-100:hover,
+  .dark .user-home-shell .hover\:bg-whitesmoke:hover,
+  .dark .user-home-shell .hover\:bg-whitesmoke-100:hover,
+  .dark .user-home-shell .hover\:bg-whitesmoke-200:hover,
+  .dark .user-home-shell .hover\:bg-\[\#fafafa\]:hover,
+  .dark .user-home-shell .hover\:bg-\[\#f9f9f9\]:hover,
+  .dark .user-home-shell .hover\:bg-\[\#f9fafb\]:hover,
+  .dark .user-home-shell .hover\:bg-\[\#f8fafc\]:hover,
   .dark .user-unit-details-shell .hover\:bg-lightcyan:hover,
   .dark .user-unit-details-shell .hover\:bg-lightcyan\/20:hover,
-  .dark .user-unit-details-shell .hover\:bg-whitesmoke-100:hover {
-    background-color: #173a34;
+  .dark .user-unit-details-shell .hover\:bg-white:hover,
+  .dark .user-unit-details-shell .hover\:bg-gray-50:hover,
+  .dark .user-unit-details-shell .hover\:bg-gray-100:hover,
+  .dark .user-unit-details-shell .hover\:bg-whitesmoke:hover,
+  .dark .user-unit-details-shell .hover\:bg-whitesmoke-100:hover,
+  .dark .user-unit-details-shell .hover\:bg-whitesmoke-200:hover,
+  .dark .user-unit-details-shell .hover\:bg-\[\#fafafa\]:hover,
+  .dark .user-unit-details-shell .hover\:bg-\[\#f9f9f9\]:hover,
+  .dark .user-unit-details-shell .hover\:bg-\[\#f9fafb\]:hover,
+  .dark .user-unit-details-shell .hover\:bg-\[\#f8fafc\]:hover {
+    background-color: #202123;
   }
 
   .dark .user-home-shell .focus-within\:bg-white:focus-within,
@@ -486,10 +587,22 @@ body {
   }
 
   .dark #portals .hover\:bg-white:hover,
+  .dark #portals .hover\:bg-gray-50:hover,
   .dark #portals .hover\:bg-gray-100:hover,
+  .dark #portals .hover\:bg-whitesmoke:hover,
   .dark #portals .hover\:bg-whitesmoke-100:hover,
+  .dark #portals .hover\:bg-whitesmoke-200:hover,
+  .dark #portals .hover\:bg-\[\#fafafa\]:hover,
+  .dark #portals .hover\:bg-\[\#f9f9f9\]:hover,
+  .dark #portals .hover\:bg-\[\#f9fafb\]:hover,
+  .dark #portals .hover\:bg-\[\#f8fafc\]:hover,
   .dark #portals .hover\:bg-lightcyan:hover,
   .dark #portals .hover\:bg-lightcyan\/20:hover {
+    background-color: #202123;
+  }
+
+  .dark #portals .focus\:bg-white:focus,
+  .dark #portals .focus-within\:bg-white:focus-within {
     background-color: #202123;
   }
 
@@ -646,6 +759,21 @@ body {
   .dark .user-profile-shell .bg-\[\#f1f5f9\] {
     background-color: #0d3a32;
   }
+
+  .dark .user-profile-shell .hover\:bg-white:hover,
+  .dark .user-profile-shell .hover\:bg-gray-50:hover,
+  .dark .user-profile-shell .hover\:bg-gray-100:hover,
+  .dark .user-profile-shell .hover\:bg-whitesmoke:hover,
+  .dark .user-profile-shell .hover\:bg-whitesmoke-100:hover,
+  .dark .user-profile-shell .hover\:bg-whitesmoke-200:hover,
+  .dark .user-profile-shell .hover\:bg-\[\#fafafa\]:hover,
+  .dark .user-profile-shell .hover\:bg-\[\#f9f9f9\]:hover,
+  .dark .user-profile-shell .hover\:bg-\[\#f9fafb\]:hover,
+  .dark .user-profile-shell .hover\:bg-\[\#f8fafc\]:hover,
+  .dark .user-profile-shell .focus\:bg-white:focus,
+  .dark .user-profile-shell .focus-within\:bg-white:focus-within {
+    background-color: #202123;
+  }
 }
 @layer utilities {
   .dark .landlord-profile-shell {
@@ -694,7 +822,19 @@ body {
     color: #72cbb8;
   }
 
-  .dark .landlord-profile-shell .hover\:bg-\[\#eaf6f2\]\/60:hover {
-    background-color: #17201d;
+  .dark .landlord-profile-shell .hover\:bg-white:hover,
+  .dark .landlord-profile-shell .hover\:bg-gray-50:hover,
+  .dark .landlord-profile-shell .hover\:bg-gray-100:hover,
+  .dark .landlord-profile-shell .hover\:bg-whitesmoke:hover,
+  .dark .landlord-profile-shell .hover\:bg-whitesmoke-100:hover,
+  .dark .landlord-profile-shell .hover\:bg-whitesmoke-200:hover,
+  .dark .landlord-profile-shell .hover\:bg-\[\#fafafa\]:hover,
+  .dark .landlord-profile-shell .hover\:bg-\[\#f9f9f9\]:hover,
+  .dark .landlord-profile-shell .hover\:bg-\[\#f9fafb\]:hover,
+  .dark .landlord-profile-shell .hover\:bg-\[\#f8fafc\]:hover,
+  .dark .landlord-profile-shell .hover\:bg-\[\#eaf6f2\]\/60:hover,
+  .dark .landlord-profile-shell .focus\:bg-white:focus,
+  .dark .landlord-profile-shell .focus-within\:bg-white:focus-within {
+    background-color: #202123;
   }
 }

@@ -339,7 +339,7 @@ const HomePage: FunctionComponent = () => {
   if (isLoading) return <LoadingPage />;
 
   return (
-    <div className="user-home-shell relative w-full flex items-start text-left text-[0.875rem] text-dimgray font-inter gap-8 bg-white dark:bg-[#0f1010]">
+    <div className="user-home-shell relative w-full flex items-start text-left text-[0.875rem] text-dimgray font-inter gap-8 bg-transparent">
       <PageBackground />
       <div className="sticky top-0 h-screen w-fit shrink-0 z-20">
         <SideBar />

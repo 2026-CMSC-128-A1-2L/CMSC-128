@@ -1,4 +1,5 @@
 import { type FunctionComponent, useEffect, useRef, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 
 interface TabProps {
   text: string;
@@ -49,7 +50,19 @@ const PropertyTabs: FunctionComponent<{ children: React.ReactElement<TabProps>[]
           </div>
         </div>
       </div>
-      <div className="w-full">{props.children[activeIndex].props.element}</div>
+      <div className="w-full">
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={activeTab}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.16, ease: 'easeOut' }}
+          >
+            {props.children[activeIndex].props.element}
+          </motion.div>
+        </AnimatePresence>
+      </div>
     </div>
   );
 };

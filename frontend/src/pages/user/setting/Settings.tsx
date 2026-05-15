@@ -11,7 +11,7 @@ import Preferences from './Preferences';
 
 const Settings: FunctionComponent = () => {
   return (
-    <div className="user-settings-shell relative flex min-h-screen overflow-hidden bg-white font-inter text-darkslategray dark:bg-[#0f1010] dark:text-[#edf6f4]">
+    <div className="user-settings-shell relative flex min-h-screen overflow-hidden bg-transparent font-inter text-darkslategray dark:text-[#edf6f4]">
       <PageBackground />
       <div className="sticky top-0 z-20 h-screen shrink-0">
         <SideBar />

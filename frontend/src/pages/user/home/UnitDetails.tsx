@@ -382,7 +382,7 @@ const UnitDetails: FunctionComponent = () => {
   };
 
   return (
-    <div className="user-unit-details-shell relative flex min-h-screen bg-white font-inter text-darkslategray-100 dark:bg-[#0f1010] dark:text-[#edf6f4]">
+    <div className="user-unit-details-shell relative flex min-h-screen bg-transparent font-inter text-darkslategray-100 dark:text-[#edf6f4]">
       <PageBackground />
       {showSignIn && <SignInPopUp onClose={() => setShowSignIn(false)} />}
       {isVisitPopoutOpen && (
