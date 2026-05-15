@@ -227,7 +227,7 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
 
   return (
     <div
-      className={`w-[760px] max-w-full max-h-full overflow-auto rounded-[16px] bg-white px-6 py-6 text-left text-num-14 text-dimgray font-inter shadow-xl sm:px-10 ${className}`}
+      className={`w-[820px] max-w-full max-h-full overflow-auto rounded-[16px] bg-white px-6 py-6 text-left text-num-14 text-dimgray font-inter shadow-xl sm:px-10 ${className}`}
     >
       <div className="relative text-center">
         <button
@@ -249,7 +249,7 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
 
       <div className="my-5 h-0.5 rounded-full bg-whitesmoke-300" />
 
-      <div className="grid gap-8 lg:grid-cols-[1fr_300px]">
+      <div className="grid gap-15 lg:grid-cols-[1fr_300px] pl-4">
         <div className="flex flex-col gap-3">
           <b className="text-[22px] tracking-num--0_01 text-black">Your booking details</b>
           <div className="grid gap-3">
@@ -259,7 +259,7 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
                 value={isLoadingUser ? 'Loading...' : firstName}
                 readOnly
                 placeholder="First name"
-                className="h-[44px] rounded-[20px] bg-white px-4 text-base font-medium text-black shadow-[0_1px_8px_rgba(0,0,0,0.2)] outline-none placeholder:text-[#9b9b9b]"
+                className="h-[44px] rounded-xl bg-white border border-[#e5e5e5] px-5 text-base font-medium text-black outline-none placeholder:text-[#9b9b9b]"
               />
             </label>
             <label className="grid gap-1.5">
@@ -268,7 +268,7 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
                 value={isLoadingUser ? 'Loading...' : lastName}
                 readOnly
                 placeholder="Last name"
-                className="h-[44px] rounded-[20px] bg-white px-4 text-base font-medium text-black shadow-[0_1px_8px_rgba(0,0,0,0.2)] outline-none placeholder:text-[#9b9b9b]"
+                className="h-[44px] rounded-xl bg-white border border-[#e5e5e5] px-5 text-base font-medium text-black outline-none placeholder:text-[#9b9b9b]"
               />
             </label>
             <label className="grid gap-1.5">
@@ -277,7 +277,7 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
                 value={isLoadingUser ? 'Loading...' : email}
                 readOnly
                 placeholder="Email addr."
-                className="h-[44px] rounded-[20px] bg-white px-4 text-base font-medium text-black shadow-[0_1px_8px_rgba(0,0,0,0.2)] outline-none placeholder:text-[#9b9b9b]"
+                className="h-[44px] rounded-xl bg-white border border-[#e5e5e5] px-5 text-base font-medium text-black outline-none placeholder:text-[#9b9b9b]"
               />
             </label>
             <label className="grid gap-1.5">
@@ -286,10 +286,10 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
                 value={isLoadingUser ? 'Loading...' : (user?.address ?? '')}
                 readOnly
                 placeholder="Home address"
-                className="h-[44px] rounded-[20px] bg-white px-4 text-sm font-medium text-black shadow-[0_1px_8px_rgba(0,0,0,0.2)] outline-none placeholder:text-[#9b9b9b]"
+                className="h-[44px] rounded-xl bg-white border border-[#e5e5e5] px-5 text-base font-medium text-black outline-none placeholder:text-[#9b9b9b]"
               />
             </label>
-            <label className="grid gap-1.5">
+            <label className="grid gap-">
               <span className="text-base font-bold text-[#666]">
                 Message <span className="text-sm font-semibold text-slategray">(optional)</span>
               </span>
@@ -297,13 +297,13 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
                 value={message}
                 onChange={(event) => setMessage(event.target.value)}
                 placeholder="Add a note for the landlord or manager"
-                className="min-h-[70px] resize-none rounded-[18px] border border-transparent bg-white px-4 py-2.5 text-sm font-medium text-black shadow-[0_1px_8px_rgba(0,0,0,0.16)] outline-none placeholder:text-[#9b9b9b] focus:border-teal-200"
+                className="min-h-[70px] resize-none rounded-[18px] border border-[#e5e5e5] bg-white px-5 py-2.5 text-sm font-medium text-black outline-none placeholder:text-[#9b9b9b] focus:border-teal-200"
               />
             </label>
           </div>
         </div>
 
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 pr-4">
           <b className="text-[22px] tracking-num--0_01 text-black">Date and Time</b>
           <div className="rounded-[16px] border border-[#dedede] bg-white p-4">
             <div className="mb-4 flex items-center gap-2 text-black">
@@ -388,7 +388,7 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
                 type="button"
                 onClick={() => setTimeMenuOpen((isOpen) => !isOpen)}
                 disabled={isLoadingSlots || availableSlots.length === 0}
-                className="flex h-[48px] w-full items-center justify-between rounded-xl border border-whitesmoke-300 bg-white px-3 text-left text-base font-semibold text-[#5d5d5d] shadow-sm disabled:cursor-not-allowed disabled:opacity-60 font-lora"
+                className="flex h-[48px] w-full items-center justify-between rounded-xl border border-[#e5e5e5] bg-white px-5 text-left text-base font-semibold text-[#5d5d5d] disabled:cursor-not-allowed disabled:opacity-60 font-lora"
               >
                 <span className="truncate">
                   {isLoadingSlots
