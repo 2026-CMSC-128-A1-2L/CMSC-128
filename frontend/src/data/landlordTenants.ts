@@ -1,4 +1,4 @@
-export type PaymentStatus = 'paid' | 'pending' | 'overdue';
+export type PaymentStatus = 'paid' | 'pending' | 'overdue' | 'unpaid' | 'partially_paid';
 
 export type SubmittedDocumentKind = 'image' | 'pdf' | 'other';
 
