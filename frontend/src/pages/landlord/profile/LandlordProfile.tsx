@@ -1,8 +1,10 @@
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import { Icon } from '@iconify/react';
 import dorm1 from '../../../../assets/landing_contact.webp';
 import dorm2 from '../../../../assets/landing_listing.webp';
 import dorm3 from '../../../../assets/landing_contact.webp';
+import { useNavigate } from 'react-router-dom';
+import LandlordProfileSwitch from './component/LandlordProfileSwitch';
 import { Link } from 'react-router-dom';
 
 type Property = {
@@ -149,6 +151,18 @@ const SectionHeader = ({ title, onEdit }: SectionHeaderProps) => (
 );
 
 const LandlordProfile = () => {
+  const navigate = useNavigate();
+
+
+
+  // contact number editing state
+  const [isEditing, setIsEditing] = useState(false);
+  const [contactNumber, setContactNumber] = useState('09*********');
+
+  // home address editing state
+  const [isEditingAddress, setIsEditingAddress] = useState(false);
+  const [homeAddress, setHomeAddressz] = useState('Brgy. Batong Malake, Los Banos, Laguna');
+
   return (
     <div className="flex w-full flex-col gap-[32px] px-[32px] pb-[32px]">
       <section className="flex flex-col gap-[16px]">

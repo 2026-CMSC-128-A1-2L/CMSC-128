@@ -7,13 +7,14 @@ import Banner from '../../../components/general/Banner';
 import FilterTab from '../../../components/user/Filter/FilterTab';
 import LoadingPage from '../../general/LoadingPage';
 import { useFacilities, type DormCardData } from '../../../hooks/useFacilities';
+import TutorialIcon from '../../../../assets/help-chat.svg';
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
 const CARD_WIDTH = 280;
 const CARD_GAP = 24;
 
-// ─── Carousel hook ───────────────────────────────────────────────────────────
+// ─── Carousel hook ────────────────────────────────────────────────────────────
 
 const useCarousel = (total: number) => {
   const trackRef = useRef<HTMLDivElement>(null);
@@ -42,7 +43,7 @@ const CATEGORY_LABELS: Record<NonNullable<ViewAllCategory>, string> = {
   mayLike: 'Listings You May Like',
 };
 
-// ─── Sub-components (lifted out of HomePage to avoid re-creation on render) ──
+// ─── Sub-components ───────────────────────────────────────────────────────────
 
 const NavArrows = ({
   current,
@@ -129,15 +130,7 @@ const CarouselSection = ({
       >
         {items.map((dorm) => (
           <div key={dorm.id} className="shrink-0">
-            <DormCard
-              id={dorm.id}
-              name={dorm.name}
-              rating={dorm.rating}
-              price={dorm.price}
-              location={dorm.location}
-              image={dorm.image}
-              room_types={dorm.room_types}
-            />
+            <DormCard key={dorm.id} {...dorm} />
           </div>
         ))}
       </div>
@@ -176,23 +169,137 @@ const ErrorState = ({ message, onRetry }: { message: string; onRetry: () => void
   </div>
 );
 
+const ApplicationGuideModal = ({ onClose }: { onClose: () => void }) => {
+  const steps = [
+    {
+      title: 'Pick a dorm',
+      description: (
+        <>
+          Select your preferred residence from the Listings dashboard. You can filter by{' '}
+          <b>Budget-Friendly Picks</b> or browse <b>Popular Listings</b> to find the unit that best
+          fit your needs.
+        </>
+      ),
+    },
+    {
+      title: 'Fill up your details',
+      description:
+        'Once you select a dorm, a detailed summary of your choice will be displayed. Fill out the necessary information before submitting your application to the landlord.',
+    },
+    {
+      title: 'Wait for confirmation',
+      description:
+        'Once confirmed, the landlord will reach out to you via system notifications. Be sure to check your DMs regularly for updates.',
+    },
+  ];
+
+  return (
+    <div className="fixed inset-0 z-[1100] flex items-center justify-center bg-black/35 px-5 py-8">
+      <button
+        type="button"
+        className="absolute inset-0 cursor-default"
+        onClick={onClose}
+        aria-label="Close application guide"
+      />
+      <section
+        className="relative z-10 flex h-[531px] w-[554px] max-h-[calc(100vh-32px)] max-w-[calc(100vw-32px)] flex-col overflow-y-auto rounded-[18px] bg-white px-[40px] pb-[40px] pt-[34px] text-[#1f6f60] shadow-[0_2px_14px_rgba(0,0,0,0.24)]"
+        aria-modal="true"
+        role="dialog"
+        aria-labelledby="application-guide-title"
+      >
+        <div className="text-center">
+          <h2
+            id="application-guide-title"
+            className="font-inter text-[24px] font-bold leading-tight text-[#164f43]"
+          >
+            Application Guide
+          </h2>
+          <p className="mt-[6px] font-lora text-[13px] font-semibold leading-snug text-[#164f43]">
+            Everything you need to know about applying for your stay at UPLB!
+          </p>
+        </div>
+
+        <div className="mt-[30px] grid grid-cols-[50px_1fr] gap-x-[24px] gap-y-[41px]">
+          {steps.map((step, index) => {
+            const isLast = index === steps.length - 1;
+            return (
+              <div key={step.title} className="contents">
+                <div className="relative flex justify-center">
+                  {!isLast && (
+                    <span className="absolute top-[34px] h-[calc(100%+41px)] w-[2px] rounded-full bg-[#237866]" />
+                  )}
+                  <span className="relative z-10 flex h-[34px] w-[34px] items-center justify-center rounded-full bg-[#237866] font-lora text-[17px] font-semibold text-white">
+                    {index + 1}
+                  </span>
+                </div>
+                <div className="max-w-[402px] pb-0">
+                  <h3 className="font-inter text-[16px] font-bold leading-tight text-[#237866]">
+                    {step.title}
+                  </h3>
+                  <p className="mt-[7px] font-lora text-[13px] font-semibold leading-[1.18] text-[#1f6f60]">
+                    {step.description}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <button
+          type="button"
+          onClick={onClose}
+          className="mx-auto mt-auto h-[36px] w-full max-w-[318px] rounded-[5px] bg-[#4c8c7e] font-lora text-[15px] font-bold text-white shadow-[0_3px_8px_rgba(0,0,0,0.2)] transition-all hover:-translate-y-0.5 hover:bg-[#237866] active:translate-y-0"
+        >
+          Got it, thanks!
+        </button>
+      </section>
+    </div>
+  );
+};
+
 // ─── HomePage ─────────────────────────────────────────────────────────────────
 
 const HomePage: FunctionComponent = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
   const [searchTerm, setSearchTerm] = useState(searchParams.get('search') ?? '');
   const [viewAllCategory, setViewAllCategory] = useState<ViewAllCategory>(null);
+  const [filterCriteria, setFilterCriteria] = useState({
+    minPrice: 0,
+    maxPrice: 10000,
+    pax: 'Any' as number | 'Any',
+    propertyType: 'Dormitory',
+    selectedEssentials: [] as string[],
+    distance: 1,
+  });
 
   // Real data from the backend
   const { facilities, isLoading, error, refetch } = useFacilities();
 
-  // Category slices — swap these for real filtered endpoints later.
-  // For now we slice the same list to populate the carousels.
-  const pasaloDorms = facilities.slice(0, 10);
-  const popularDorms = facilities.slice(0, 10);
-  const nearDorms = facilities.slice(0, 10);
-  const mayLikeDorms = facilities.slice(0, 10);
+  // Apply filter criteria to backend data
+  // TODO: extend with rating, distance, and tags once available in DormCardData
+  const filterApplied = facilities.filter(
+    (dorm) =>
+      dorm.price.min >= filterCriteria.minPrice &&
+      dorm.price.max <= filterCriteria.maxPrice,
+  );
+
+  // Apply search on top of the filtered results
+  const isSearching = searchTerm.trim().length > 0;
+  const filteredDorms = isSearching
+    ? filterApplied.filter(
+        (dorm) =>
+          dorm.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          dorm.location.toLowerCase().includes(searchTerm.toLowerCase()),
+      )
+    : filterApplied;
+
+  // Category slices — swap for real filtered endpoints later
+  const pasaloDorms = filterApplied.slice(0, 10);
+  const popularDorms = filterApplied.slice(0, 10);
+  const nearDorms = filterApplied.slice(0, 10);
+  const mayLikeDorms = filterApplied.slice(0, 10);
 
   const CATEGORY_DATA: Record<NonNullable<ViewAllCategory>, DormCardData[]> = {
     pasalo: pasaloDorms,
@@ -200,16 +307,6 @@ const HomePage: FunctionComponent = () => {
     near: nearDorms,
     mayLike: mayLikeDorms,
   };
-
-  const isSearching = searchTerm.trim().length > 0;
-
-  const filteredDorms = isSearching
-    ? facilities.filter(
-      (dorm) =>
-        dorm.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        dorm.location.toLowerCase().includes(searchTerm.toLowerCase()),
-    )
-    : facilities;
 
   const handleViewAll = (category: ViewAllCategory) => {
     setViewAllCategory(category);
@@ -246,6 +343,7 @@ const HomePage: FunctionComponent = () => {
       <div className="w-full min-w-0 h-fit flex items-start pt-15 pr-20 pb-20">
         <div className="h-fit w-full min-w-0 flex flex-col items-start gap-80">
           <div className="w-full min-w-0 flex flex-col items-start">
+
             {/* search bar */}
             <div className="w-full h-full overflow-hidden flex items-center pb-6 box-border">
               <div className="w-full flex items-center transition-all duration-300 bg-[#f8f9fa] rounded-num-12 py-3 pl-3 pr-4 border border-transparent focus-within:bg-white focus-within:shadow-[0_8px_10px_rgb(0,0,0,0.06)] focus-within:transform focus-within:-translate-y-[1px]">
@@ -271,6 +369,7 @@ const HomePage: FunctionComponent = () => {
             </div>
 
             <div className="w-full flex flex-col items-start gap-6 text-[1.5rem] text-gray">
+
               {/* greeting / filter button */}
               <div className="w-full flex items-center justify-between box-border">
                 <div className="w-full h-8 flex-1 flex flex-col items-start justify-center">
@@ -294,17 +393,11 @@ const HomePage: FunctionComponent = () => {
                         aria-label="Close filters"
                       />
                       <div className="relative z-10 w-full max-w-[500px] h-full bg-white animate-in slide-in-from-right duration-500 overflow-y-auto">
-                        <div className="p-4 flex justify-between items-center border-b">
-                          <h2 className="text-xl font-bold">Filters</h2>
-                          <button
-                            type="button"
-                            onClick={() => setIsFilterOpen(false)}
-                            className="p-2 hover:bg-gray-100 rounded-full"
-                          >
-                            <Icon icon="material-symbols:close" className="w-6 h-6" />
-                          </button>
-                        </div>
-                        <FilterTab onClose={() => setIsFilterOpen(false)} />
+                        <FilterTab
+                          filterCriteria={filterCriteria}
+                          setFilterCriteria={setFilterCriteria}
+                          onClose={() => setIsFilterOpen(false)}
+                        />
                       </div>
                     </div>
                   )}
@@ -312,7 +405,6 @@ const HomePage: FunctionComponent = () => {
               </div>
 
               <div className="w-full min-w-0 flex flex-col items-start gap-10">
-                {/* Error state */}
                 {error ? (
                   <ErrorState message={error} onRetry={refetch} />
                 ) : isSearching ? (
@@ -324,8 +416,7 @@ const HomePage: FunctionComponent = () => {
                           Results for <span className="text-teal">"{searchTerm}"</span>
                         </b>
                         <span className="text-[0.75rem] text-unselected font-normal">
-                          — {filteredDorms.length} listing{filteredDorms.length !== 1 ? 's' : ''}{' '}
-                          found
+                          — {filteredDorms.length} listing{filteredDorms.length !== 1 ? 's' : ''} found
                         </span>
                       </div>
                       <button
@@ -429,7 +520,7 @@ const HomePage: FunctionComponent = () => {
                         <b className="w-fit flex items-center">All Listings</b>
                       </div>
                       <div className="w-full flex flex-wrap gap-6">
-                        {facilities.map((dorm) => (
+                        {filterApplied.map((dorm) => (
                           <DormCard key={dorm.id} {...dorm} />
                         ))}
                       </div>
@@ -441,6 +532,17 @@ const HomePage: FunctionComponent = () => {
           </div>
         </div>
       </div>
+
+      <button
+        type="button"
+        className="help-button-animated bottom-10 right-10 z-[1000] cursor-pointer transition-all hover:scale-110 active:scale-95"
+        onClick={() => setShowHelp(true)}
+        aria-label="Open application guide"
+      >
+        <img src={TutorialIcon} alt="Help" className="w-16 h-16 drop-shadow-lg" />
+      </button>
+
+      {showHelp && <ApplicationGuideModal onClose={() => setShowHelp(false)} />}
     </div>
   );
 };

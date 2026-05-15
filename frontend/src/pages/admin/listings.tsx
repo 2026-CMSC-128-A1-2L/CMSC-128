@@ -4,6 +4,7 @@ import SideBarAdmin from '../../components/admin/SideBarAdmin';
 import AdminPageTransition from '../../components/admin/AdminPageTransition';
 import AdminPagination from '../../components/admin/AdminPagination';
 import FacilityReviewModal from '../../components/admin/FacilityReviewModal';
+import PageBackground from '../../components/general/PageBackground';
 import { FacilityService } from '../../service/FacilityService';
 
 type FacilityDocument = { docId: string; name: string; status: 'accepted' | 'rejected' | 'pending'; message?: string; files: string[] };
@@ -105,44 +106,45 @@ function Listings() {
 
   return (
     <AdminPageTransition>
-      <div className="relative -mx-[calc((100vw-100%)/2)] flex w-screen flex-col min-h-screen">
-        <div className="flex flex-1">
+      <div className="relative -mx-[calc((100vw-100%)/2)] flex w-screen h-screen flex-col overflow-hidden bg-transparent">
+        <PageBackground />
+        <div className="flex flex-1 relative z-10 overflow-hidden">
           <SideBarAdmin activeItem="listings" />
-          <div className="flex-1 bg-white px-10 py-8">
-            <h1 className="font-['Outfit'] text-[48px] font-bold text-black">Dashboard</h1>
-            <div className="mt-6 rounded-xl bg-white p-6">
+          <div className="flex-1 overflow-y-auto bg-transparent px-10 py-8">
+            <h1 className="font-['Outfit'] text-[48px] font-bold text-black dark:text-[#d7e0ef]">Dashboard</h1>
+            <div className="mt-6 rounded-xl bg-white dark:bg-[#141515] p-6 shadow-sm border border-transparent dark:border-[#303331]">
               <div className="mb-4 flex items-center justify-between">
-                <h2 className="font-['Poppins'] text-[36px] font-bold text-[#001d18] drop-shadow-[0px_4px_4px_rgba(0,0,0,0.1)]">Listings for Review</h2>
-                <div className="flex h-9 w-75.75 items-center gap-2 rounded-full border border-[#d0d0d0] bg-white px-4">
-                  <Icon icon="solar:magnifer-outline" className="h-4 w-4 text-[#7c8db5]" />
-                  <input type="text" value={searchQuery} onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }} placeholder="Search" className="flex-1 bg-transparent font-['Poppins'] text-sm text-black outline-none placeholder:text-[#7c8db5]" />
+                <h2 className="font-['Poppins'] text-[36px] font-bold text-[#001d18] dark:text-[#d7e0ef] drop-shadow-[0px_4px_4px_rgba(0,0,0,0.1)]">Listings for Review</h2>
+                <div className="flex h-9 w-75.75 items-center gap-2 rounded-full border border-[#d0d0d0] dark:border-[#303331] bg-white dark:bg-[#1f2022] px-4">
+                  <Icon icon="solar:magnifer-outline" className="h-4 w-4 text-[#7c8db5] dark:text-[#a4acba]" />
+                  <input type="text" value={searchQuery} onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }} placeholder="Search" className="flex-1 bg-transparent font-['Poppins'] text-sm text-black dark:text-[#d7e0ef] outline-none placeholder:text-[#7c8db5] dark:placeholder:text-[#a4acba]" />
                 </div>
               </div>
 
-              {error && <div className="mb-4 rounded-xl border border-red-100 bg-red-50 px-4 py-3 font-['Poppins'] text-sm font-semibold text-red-700">{error}</div>}
-              {actionMessage && <div className="mb-4 rounded-xl border border-emerald-100 bg-emerald-50 px-4 py-3 font-['Poppins'] text-sm font-semibold text-emerald-700">{actionMessage}</div>}
+              {error && <div className="mb-4 rounded-xl border border-red-100 dark:border-red-900/50 bg-red-50 dark:bg-red-900/20 px-4 py-3 font-['Poppins'] text-sm font-semibold text-red-700 dark:text-red-400">{error}</div>}
+              {actionMessage && <div className="mb-4 rounded-xl border border-emerald-100 dark:border-emerald-900/50 bg-emerald-50 dark:bg-emerald-900/20 px-4 py-3 font-['Poppins'] text-sm font-semibold text-emerald-700 dark:text-emerald-400">{actionMessage}</div>}
 
-              <div className="overflow-hidden rounded-2xl shadow-[0px_0px_20px_0px_rgba(0,0,0,0.35)]">
+              <div className="overflow-hidden rounded-2xl shadow-[0px_0px_20px_0px_rgba(0,0,0,0.35)] dark:border dark:border-[#303331]">
                 <table className="w-full">
                   <thead>
-                    <tr className="bg-[#024338]">
+                    <tr className="bg-[#024338] dark:bg-[#12342e]">
                       {tableHeaders.map((h) => (
-                        <th key={h} className="px-6 py-4 text-left font-['Poppins'] text-[18px] font-bold text-white">{h}</th>
+                        <th key={h} className="px-6 py-4 text-left font-['Poppins'] text-[18px] font-bold text-white dark:text-[#72cbb8]">{h}</th>
                       ))}
                     </tr>
                   </thead>
                   <tbody>
                     {isLoading ? (
-                      <tr><td colSpan={tableHeaders.length} className="px-6 py-8 text-center font-['Poppins'] text-[#7c8db5]">Loading facilities...</td></tr>
+                      <tr><td colSpan={tableHeaders.length} className="px-6 py-8 text-center font-['Poppins'] text-[#7c8db5] dark:text-[#a4acba]">Loading facilities...</td></tr>
                     ) : paginatedFacilities.length === 0 ? (
-                      <tr><td colSpan={tableHeaders.length} className="px-6 py-8 text-center font-['Poppins'] text-[#7c8db5]">No facilities pending review.</td></tr>
+                      <tr><td colSpan={tableHeaders.length} className="px-6 py-8 text-center font-['Poppins'] text-[#7c8db5] dark:text-[#a4acba]">No facilities pending review.</td></tr>
                     ) : (
                       paginatedFacilities.map((facility) => (
-                        <tr key={facility._id ?? facility.id} className="border-b border-[#f0f0f0] transition-colors duration-200 hover:bg-[#f8fffe]">
-                          <td className="px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black">{facility.name}</td>
-                          <td className="px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black">{formatFacilityType(facility.type)}</td>
-                          <td className="max-w-xs truncate px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black">{facility.location.text}</td>
-                          <td className="px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black">{facility.capacity}</td>
+                        <tr key={facility._id ?? facility.id} className="border-b border-[#f0f0f0] dark:border-[#303331] bg-white dark:bg-[#141515] transition-colors duration-200 hover:bg-[#f8fffe] dark:hover:bg-[#17201d]">
+                          <td className="px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black dark:text-[#d7e0ef]">{facility.name}</td>
+                          <td className="px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black dark:text-[#d7e0ef]">{formatFacilityType(facility.type)}</td>
+                          <td className="max-w-xs truncate px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black dark:text-[#d7e0ef]">{facility.location.text}</td>
+                          <td className="px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black dark:text-[#d7e0ef]">{facility.capacity}</td>
                           <td className="px-6 py-3">{getStatusBadge(facility.status)}</td>
                           <td className="px-6 py-3">
                             <button type="button" onClick={() => { setSelectedFacilityId(facility._id ?? facility.id ?? null); setActionMessage(null); setIsModalOpen(true); }} className="cursor-pointer rounded-lg bg-[#024338] px-5 py-2 font-['Poppins'] text-[16px] font-bold text-white transition-colors duration-200 hover:bg-[#096c5b]">View</button>

@@ -36,6 +36,7 @@ const landlordRoutes = [
   <Route key="landlord-dashboard" path="/landlord/dashboard" element={<LandlordDashboard />} />,
   <Route key="landlord-messages" path="/landlord/messages" element={<LandlordMessages />} />,
   <Route key="landlord-properties" path="/landlord/properties" element={<LandlordProperties />} />,
+
   <Route
     key="landlord-properties-new"
     path="/landlord/properties/new"

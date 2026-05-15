@@ -4,9 +4,13 @@ import type { CreateUnitBody, GetUnitsRequestQuery, UpdateUnitBody } from '../in
 import { api } from './axiosInstance';
 
 export const UnitService = {
+  //FOREIGN -> Listing Route
+
   async createUnit(listingId: string, body: CreateUnitBody) {
     try {
-      const response = await api.post(`/api/listings/${listingId}/units`, body);
+      const response = await api.post(`/api/listings/${listingId}/units`, {
+        ...body,
+      });
       return response.data;
     } catch (error) {
       console.error('Error creating unit:', error);
@@ -18,9 +22,10 @@ export const UnitService = {
     params: z.infer<typeof GetUnitsRequestQuerySchema>,
   ): Promise<GetUnitsRequestQuery> {
     try {
-      const response = await api.get<GetUnitsRequestQuery>('/api/units', {
+      const response = await api.get('/api/units', {
         params: { q: JSON.stringify(params) },
       });
+
       return response.data;
     } catch (error) {
       console.error('Failed to fetch units: ', error);
@@ -31,9 +36,10 @@ export const UnitService = {
   async getUnit(unitId: string) {
     try {
       const response = await api.get(`/api/units/${unitId}`);
+
       return response.data;
     } catch (error) {
-      console.error('Failed to fetch unit: ', error);
+      console.error('Failed to fectch unit: ', error);
       throw error;
     }
   },
@@ -41,6 +47,7 @@ export const UnitService = {
   async updateUnit(unitId: string, body: UpdateUnitBody) {
     try {
       const response = await api.patch(`/api/units/${unitId}`, body);
+
       return response.data;
     } catch (error) {
       console.error('Failed to update unit: ', error);
@@ -51,13 +58,17 @@ export const UnitService = {
   async deleteUnit(unitId: string) {
     try {
       const response = await api.delete(`/api/units/${unitId}`);
+
       return response.data;
     } catch (error) {
-      console.error('Failed to delete unit: ', error);
+      console.error('Failed to update unit: ', error);
       throw error;
     }
   },
 
+  //GET rentals by unit -> RentalService
+  //GET unit billings -> BillingService
+  //
   async getUnitsByListing(listingId: string) {
     try {
       const response = await api.get(`/api/listings/${listingId}/units`);

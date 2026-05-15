@@ -4,22 +4,28 @@ import InfoIcon from '../../../../assets/infoicon_icon.svg';
 
 interface ReasonContentProps {
   leaseTransferStages: number;
-  setLeaseTransferStages: any;
+  setLeaseTransferStages: React.Dispatch<React.SetStateAction<number>>;
   reasonForm: {
     category: string;
     intendedDate: string;
     explanation: string;
   };
-  setReasonForm: React.Dispatch<React.SetStateAction<{
-    category: string;
-    intendedDate: string;
-    explanation: string;
-  }>>;
+  setReasonForm: React.Dispatch<
+    React.SetStateAction<{
+      category: string;
+      intendedDate: string;
+      explanation: string;
+    }>
+  >;
 }
 
 export default function ReasonContent(props: ReasonContentProps) {
   const { leaseTransferStages, setLeaseTransferStages, reasonForm, setReasonForm } = props;
   const navigate = useNavigate();
+  const fieldTextClass = 'font-normal placeholder:text-[#b9bec4]';
+  const filledFieldTextClass = 'text-[#024338]';
+  const emptyFieldTextClass = 'text-gray-400';
+  const readOnlyFieldTextClass = 'font-normal text-[#647483]';
 
   // Track validation error states explicitly
   const [errors, setErrors] = useState({
@@ -35,7 +41,7 @@ export default function ReasonContent(props: ReasonContentProps) {
   });
 
   const handleInputChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
     setReasonForm((prev) => ({
@@ -84,14 +90,16 @@ export default function ReasonContent(props: ReasonContentProps) {
               <div className="flex flex-col gap-2">
                 <p>Category</p>
                 <select
-                  className={`border-2 rounded-num-10 py-3 px-2 outline-none transition-colors ${
-                    errors.category ? 'border-red-400 bg-red-50/20' : 'border-[#f0f0f0]'
-                  }`}
+                  className={`border-2 rounded-num-10 py-3 px-2 outline-none transition-colors ${fieldTextClass} ${
+                    reasonForm.category ? filledFieldTextClass : emptyFieldTextClass
+                  } ${errors.category ? 'border-red-400 bg-red-50/20' : 'border-[#f0f0f0]'}`}
                   name="category"
                   value={reasonForm.category}
                   onChange={handleInputChange}
                 >
-                  <option value="" disabled>Select a reason...</option>
+                  <option value="" disabled>
+                    Select a reason...
+                  </option>
                   <option value="Academics">Graduating</option>
                   <option value="Financial">Financial Reasons</option>
                   <option value="Relocation">Changing Dorms</option>
@@ -103,13 +111,13 @@ export default function ReasonContent(props: ReasonContentProps) {
                   </span>
                 )}
               </div>
-              
+
               <div className="flex flex-col gap-2">
                 <p>Intended Transfer Date</p>
                 <input
-                  className={`border-2 rounded-num-10 py-3 px-2 outline-none transition-colors ${
-                    errors.intendedDate ? 'border-red-400 bg-red-50/20' : 'border-[#f0f0f0]'
-                  }`}
+                  className={`border-2 rounded-num-10 py-3 px-2 outline-none transition-colors ${fieldTextClass} ${
+                    reasonForm.intendedDate ? filledFieldTextClass : emptyFieldTextClass
+                  } ${errors.intendedDate ? 'border-red-400 bg-red-50/20' : 'border-[#f0f0f0]'}`}
                   type="date"
                   name="intendedDate"
                   value={reasonForm.intendedDate}
@@ -127,7 +135,9 @@ export default function ReasonContent(props: ReasonContentProps) {
               <div className="flex flex-col gap-2">
                 <p>Explanation</p>
                 <textarea
-                  className="border-2 border-[#f0f0f0] rounded-num-10 py-5 px-2 outline-none resize-none"
+                  className={`border-2 border-[#f0f0f0] rounded-num-10 py-5 px-2 outline-none resize-none ${fieldTextClass} ${
+                    reasonForm.explanation ? filledFieldTextClass : emptyFieldTextClass
+                  }`}
                   placeholder="Provide further explanation for transfer..."
                   name="explanation"
                   value={reasonForm.explanation}
@@ -146,7 +156,7 @@ export default function ReasonContent(props: ReasonContentProps) {
               <div className="flex flex-col gap-1">
                 <p>Lease Start Date</p>
                 <input
-                  className="border-2 border-[#f0f0f0] bg-gray-50 text-gray-400 rounded-num-10 py-3 px-2"
+                  className={`border-2 border-[#f0f0f0] bg-gray-50 rounded-num-10 py-3 px-2 ${readOnlyFieldTextClass}`}
                   disabled={true}
                   type="date"
                   value={leaseInfo.startDate}
@@ -156,7 +166,7 @@ export default function ReasonContent(props: ReasonContentProps) {
               <div className="flex flex-col gap-1">
                 <p>Lease End Date</p>
                 <input
-                  className="border-2 border-[#f0f0f0] bg-gray-50 text-gray-400 rounded-num-10 py-3 px-2"
+                  className={`border-2 border-[#f0f0f0] bg-gray-50 rounded-num-10 py-3 px-2 ${readOnlyFieldTextClass}`}
                   disabled={true}
                   type="date"
                   value={leaseInfo.endDate}
@@ -166,7 +176,7 @@ export default function ReasonContent(props: ReasonContentProps) {
               <div className="flex flex-col gap-1">
                 <p>Months Remaining</p>
                 <input
-                  className="border-2 border-[#f0f0f0] bg-gray-50 text-gray-400 rounded-num-10 py-3 px-2"
+                  className={`border-2 border-[#f0f0f0] bg-gray-50 rounded-num-10 py-3 px-2 ${readOnlyFieldTextClass}`}
                   disabled={true}
                   type="text"
                   value={leaseInfo.monthsRemaining}
@@ -176,7 +186,7 @@ export default function ReasonContent(props: ReasonContentProps) {
               <div className="flex flex-col gap-1">
                 <p>Outstanding Balance</p>
                 <input
-                  className="border-2 border-[#f0f0f0] bg-gray-50 text-gray-400 rounded-num-10 py-3 px-2"
+                  className={`border-2 border-[#f0f0f0] bg-gray-50 rounded-num-10 py-3 px-2 ${readOnlyFieldTextClass}`}
                   disabled={true}
                   type="text"
                   value={leaseInfo.outstandingBalance}
@@ -187,6 +197,7 @@ export default function ReasonContent(props: ReasonContentProps) {
         </div>
         <div className="flex gap-10 font-inter font-bold py-20 justify-center">
           <button
+            type="button"
             className="px-4 py-1 cursor-pointer text-crimson rounded-full hover:bg-red-50 transition-colors"
             onClick={() => {
               navigate(-1);
@@ -195,6 +206,7 @@ export default function ReasonContent(props: ReasonContentProps) {
             Go Back
           </button>
           <button
+            type="button"
             className="px-4 py-1 cursor-pointer text-[#096c5b] bg-[#f1f5f9] hover:bg-[#e2e8f0] rounded-full transition-colors"
             onClick={handleProceedClick}
           >

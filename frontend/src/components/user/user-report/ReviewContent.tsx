@@ -1,15 +1,12 @@
 import InfoIcon from '../../../../assets/infoicon_icon.svg';
-import CommIcon from '../../../../assets/comments-regular-full.svg';
-import DiamondPlusIcon from '../../../../assets/DiamondPlus.png';
 import { Icon } from '@iconify/react';
-import CheckboxItem from './CheckboxItem';
-import { useState } from 'react';
+import { useRef, useState, type ChangeEvent, type Dispatch, type SetStateAction } from 'react';
 
 interface ReviewContentProps {
   reportStages: number;
-  setReportStages: any;
+  setReportStages: Dispatch<SetStateAction<number>>;
   reportJsonData: string;
-  setReportJsonData: any;
+  setReportJsonData: Dispatch<SetStateAction<string>>;
 }
 
 interface reportBoxField {
@@ -19,136 +16,166 @@ interface reportBoxField {
   category: string;
 }
 
+const REPORT_CATEGORIES = [
+  {
+    title: 'Misinformation',
+    icon: <img src={InfoIcon} alt="" className="w-7 h-7" />,
+    items: ['Wrong Address', 'False Amenities', 'Misleading Photos'],
+  },
+  {
+    title: 'Maintenance & Habitability',
+    icon: <Icon icon="ic:round-home-repair-service" className="w-7 h-7" />,
+    items: ['Structural Issues', 'Utility Failures', 'Pest Infestation', 'Sanitation Problems'],
+  },
+  {
+    title: 'Safety & Security Hazards',
+    icon: <Icon icon="uiw:safety" className="w-7 h-7" />,
+    items: ['Fire Safety', 'Insecure Access', 'Privacy Breach'],
+  },
+  {
+    title: 'Financial Misconduct',
+    icon: <Icon icon="tdesign:money-filled" className="w-7 h-7" />,
+    items: ['Unfair Deposit Retention', 'Illegal Fee Hikes', 'Utility Overcharging'],
+  },
+  {
+    title: 'Social & Behavioral Issues',
+    icon: <Icon icon="ic:round-groups" className="w-7 h-7" />,
+    items: ['Excessive Noise', 'Harassment'],
+  },
+];
+
+const initialReportFields: reportBoxField[] = REPORT_CATEGORIES.flatMap((category, categoryIndex) =>
+  category.items.map((label, itemIndex) => ({
+    label,
+    id: categoryIndex * 100 + itemIndex + 1,
+    is_checked: false,
+    category: category.title,
+  })),
+);
+
 export default function ReviewContent(props: ReviewContentProps) {
   const [textReport, setTextReport] = useState('');
-  const [reportField, setReportField] = useState<reportBoxField[]>([
-    { label: 'Wrong Address', id: 1, is_checked: false, category: 'Misinformation' },
-    { label: 'False Amenities', id: 2, is_checked: false, category: 'Misinformation' },
-    { label: 'Misleading Photos', id: 3, is_checked: false, category: 'Misinformation' },
-    { label: 'Undisclosed Fees', id: 4, is_checked: false, category: 'Financial' },
-    { label: 'Suspicious Payment Demands', id: 5, is_checked: false, category: 'Financial' },
-    { label: 'Lack of Transparency', id: 6, is_checked: false, category: 'Financial' },
-    { label: 'Missing Permits', id: 7, is_checked: false, category: 'Safety, Legimacy, and Policy Violations' },
-    { label: 'Fake Listing', id: 8, is_checked: false, category: 'Safety, Legimacy, and Policy Violations' },
-    { label: 'Safety Hazards', id: 9, is_checked: false, category: 'Safety, Legimacy, and Policy Violations' },
-  ]);
+  const [reportField, setReportField] = useState<reportBoxField[]>(initialReportFields);
+  const [activeCategory, setActiveCategory] = useState(REPORT_CATEGORIES[0].title);
+  const messageTextareaRef = useRef<HTMLTextAreaElement>(null);
 
   function toggleField(id: number) {
-    // let item=reportField.filter((field)=>{return field.id===id})
-    // item[0].is_checked=!item[0].is_checked
-    // const index=reportField.findIndex((field)=>{return field.id===id})
-    // const newReportField=[...reportField]
-    // newReportField[index]=item[0]
-    // setReportField(newReportField)
     setReportField(
       reportField.map((field) =>
         field.id === id ? { ...field, is_checked: !field.is_checked } : field,
       ),
     );
   }
-  const { reportStages, setReportStages, reportJsonData, setReportJsonData } = props;
+  function handleMessageChange(e: ChangeEvent<HTMLTextAreaElement>) {
+    setTextReport(e.target.value);
+    e.target.style.height = 'auto';
+    e.target.style.height = `${e.target.scrollHeight}px`;
+  }
+
+  const { reportStages, setReportStages, setReportJsonData } = props;
+  const activeCategoryFields = reportField.filter((field) => field.category === activeCategory);
+  const selectedCount = reportField.filter((field) => field.is_checked).length;
+
   return (
-    <div className="flex flex-col max-w-[714px]  text-black  font-inter py-10 gap-12">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-16 px-4">
-        <div className="flex flex-col items-center gap-4">
-          <img src={InfoIcon} alt="" className="w-7 h-7" />
-          <p className="text-[#224c25] text-[24px]">Misinformation</p>
-          {reportField
-            .filter((field, _fieldIndex) => {
-              return field.category === 'Misinformation';
-            })
-            .map((field, _fieldIndex) => {
-              return (
-                <CheckboxItem
-                  key={field.id}
-                  label={field.label}
-                  isChecked={field.is_checked}
-                  onToggle={() => {
-                    toggleField(field.id);
-                  }}
-                />
-              );
-            })}
+    <div className="flex w-full max-w-[1000px] flex-col text-black font-inter py-8 gap-10">
+      <div className="flex w-full flex-col gap-3 px-4">
+        <div className="flex items-center gap-2">
+          <h2 className="text-[18px] font-bold leading-none text-black">Tags</h2>
+          {selectedCount > 0 && (
+            <span className="rounded-full bg-[#2f8677] px-3 py-1 text-[13px] font-bold leading-none text-[#005b51]">
+              {selectedCount} selected
+            </span>
+          )}
         </div>
-        <div className="flex flex-col items-center gap-4">
-          <Icon icon="tdesign:money-filled" className="w-7 h-7" />
-          <p className="text-[#224c25] text-[24px]">Financial</p>
-          {reportField
-            .filter((field, _fieldIndex) => {
-              return field.category === 'Financial';
-            })
-            .map((field, _fieldIndex) => {
-              return (
-                <CheckboxItem
-                  key={field.id}
-                  label={field.label}
-                  isChecked={field.is_checked}
-                  onToggle={() => {
-                    toggleField(field.id);
-                  }}
-                />
-              );
-            })}
+
+        <div className="flex flex-wrap items-center gap-2">
+          {REPORT_CATEGORIES.map((category) => (
+            <button
+              key={category.title}
+              type="button"
+              onClick={() => setActiveCategory(category.title)}
+              className={`flex min-h-[34px] items-center gap-2 rounded-[9px] border px-4 text-[13px] font-bold transition-colors ${
+                activeCategory === category.title
+                  ? 'border-[#00796b] bg-[#eaf8f4] text-[#00695c]'
+                  : 'border-gainsboro bg-white text-[#62728b] hover:border-[#95cfc5]'
+              }`}
+            >
+              <span className="flex h-4 w-4 shrink-0 items-center justify-center [&_svg]:h-4 [&_svg]:w-4 [&_img]:h-4 [&_img]:w-4">
+                {category.icon}
+              </span>
+              <span className="whitespace-nowrap">{category.title}</span>
+              {reportField.some(
+                (field) => field.category === category.title && field.is_checked,
+              ) && (
+                <span className="rounded-full bg-[#707070] px-2 py-0.5 text-[11px] leading-none text-white">
+                  {
+                    reportField.filter(
+                      (field) => field.category === category.title && field.is_checked,
+                    ).length
+                  }
+                </span>
+              )}
+            </button>
+          ))}
         </div>
-        <div className="flex flex-col items-center gap-4">
-          <Icon icon = "uiw:safety" className="w-7 h-7" />
-          <p className="text-[#224c25] text-[24px]">Safety/Policy</p>
-          {reportField
-            .filter((field, _fieldIndex) => {
-              return field.category === 'Safety, Legimacy, and Policy Violations';
-            })
-            .map((field, _fieldIndex) => {
-              return (
-                <CheckboxItem
-                  key={field.id}
-                  label={field.label}
-                  isChecked={field.is_checked}
-                  onToggle={() => {
-                    toggleField(field.id);
-                  }}
-                />
-              );
-            })}
+
+        <div className="flex min-h-[78px] flex-wrap content-start gap-2">
+          {activeCategoryFields.map((field) => (
+            <button
+              key={field.id}
+              type="button"
+              onClick={() => toggleField(field.id)}
+              className={`min-h-[32px] rounded-[16px] border px-4 text-[13px] font-bold transition-colors ${
+                field.is_checked
+                  ? 'border-[#00a897] bg-[#eafffb] text-[#00695c]'
+                  : 'border-gainsboro bg-white text-[#62728b] hover:border-[#95cfc5]'
+              }`}
+            >
+              <span className="flex items-center gap-2">
+                {field.is_checked && (
+                  <Icon icon="ic:round-check" className="h-4 w-4 text-[#00a897]" />
+                )}
+                <span>{field.label}</span>
+                {field.is_checked && (
+                  <Icon icon="ic:round-close" className="h-4 w-4 text-[#00a897]" />
+                )}
+              </span>
+            </button>
+          ))}
         </div>
       </div>
-     <div className="flex items-center w-full max-w-[736px] px-4 mt-12 gap-4 h-[33px] font-inter">
-    <div className="relative flex-1 h-8 group">
-      <div className="absolute inset-0 shadow-[0px_0px_4px_rgba(0,0,0,0.25)] rounded-[25px] bg-white pointer-events-none" />
-      <input
-        type="text"
-        placeholder="Report..."
-        value={textReport}
-        className="relative w-full h-full px-4 bg-transparent border-none outline-none focus:ring-0 placeholder-dimgray text-[14px] font-medium text-black"
-        onChange={(e) => setTextReport(e.target.value)}
-      />
+      <div className="flex w-full max-w-[736px] items-end gap-4 px-4 mt-10 font-inter">
+        <div className="relative flex-1 group">
+          <div className="absolute inset-0 shadow-[0px_0px_4px_rgba(0,0,0,0.25)] rounded-[18px] bg-white pointer-events-none" />
+          <textarea
+            ref={messageTextareaRef}
+            placeholder="Additional message..."
+            value={textReport}
+            rows={1}
+            maxLength={500}
+            className="relative min-h-9 max-h-32 w-full resize-none overflow-auto bg-transparent px-4 py-2 border-none outline-none focus:ring-0 placeholder-dimgray text-[14px] font-medium leading-5 text-black"
+            onChange={handleMessageChange}
+          />
+          <span className="absolute -bottom-5 right-3 text-[11px] font-medium text-[#62728b]">
+            {textReport.length}/500
+          </span>
+        </div>
+        <button
+          type="button"
+          className="w-fit rounded-full bg-[#f1f5f9] px-4 py-1 text-center text-[14px] font-bold text-[#096c5b] transition-all hover:bg-[#e5edf3] active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
+          onClick={() => {
+            const payload = {
+              'text-report': textReport,
+              'report-fields-data': reportField,
+            };
+            setReportJsonData(JSON.stringify(payload));
+            setReportStages(reportStages + 1);
+          }}
+          disabled={!textReport && !reportField.some((f) => f.is_checked)}
+        >
+          Proceed
+        </button>
+      </div>
     </div>
-  {/* / button is down here*/}
-    <button
-      className="relative w-[108px] h-8 text-center text-white font-lora border-none bg-transparent cursor-pointer p-0 group transition-transform active:scale-95"
-      onClick={() => {
-        const payload = {
-          'text-report': textReport,
-          'report-fields-data': reportField,
-        };
-        setReportJsonData(JSON.stringify(payload));
-        setReportStages(reportStages + 1);
-      }}
-   
-      disabled={!textReport && !reportField.some(f => f.is_checked)}
-    >
-   
-      <div 
-      className={`absolute inset-0 shadow-[0px_0px_4px_rgba(0,0,0,0.25)] rounded-[6px] transition-all 
-      ${(!textReport && !reportField.some(f => f.is_checked)) 
-        ? 'bg-gray-400 opacity-50' 
-        : 'bg-darkslategray-200 group-hover:brightness-110'}`} 
-      />
-    
-      <div className="relative h-full w-full font-medium flex items-center justify-center text-[14px]">
-        Submit
-      </div>
-    </button>
-  </div>
-  </div>
   );
 }

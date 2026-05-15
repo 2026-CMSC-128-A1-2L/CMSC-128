@@ -5,6 +5,7 @@ import { api } from '../service/axiosInstance';
 import type { DormCardData } from './useFacilities';
 
 const placeholderImage = 'https://placehold.co/900x430?text=No+image';
+const objectIdPattern = /^[a-f\d]{24}$/i;
 
 type FacilityDetail = GetFacilityResponse;
 type FacilityMedia = { value: string };
@@ -109,7 +110,7 @@ const mapFromCard = (card: DormCardData): FacilityDetailsData => ({
   rating: card.rating,
   price: card.price,
   listings: card.room_types.map((room, index) => ({
-    id: `${card.id}-${index}`,
+    id: room.id && objectIdPattern.test(room.id) ? room.id : `${card.id}-${index}`,
     label: room.pax,
     roomType: room.pax,
     description: '',
