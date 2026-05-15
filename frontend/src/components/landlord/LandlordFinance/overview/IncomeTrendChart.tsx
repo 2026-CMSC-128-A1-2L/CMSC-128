@@ -1,51 +1,39 @@
-import { type FunctionComponent, useState, useEffect } from 'react';
+import { type FunctionComponent, useState } from 'react';
 
-interface MonthlyData {
-  month: string;
-  income: number;
-  isCurrent: boolean;
+const MONTH_LABELS = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+
+interface IncomeStatistic {
+  facilityId: string;
+  year: number;
+  month: number;
+  monthlyIncome: number;
+  outstanding: number;
 }
 
-const IncomeTrendChart: FunctionComponent = () => {
+interface IncomeTrendChartProps {
+  incomeStatistics: IncomeStatistic[];
+}
+
+const IncomeTrendChart: FunctionComponent<IncomeTrendChartProps> = ({ incomeStatistics }) => {
   const [selectedRange, setSelectedRange] = useState<'12' | '6'>('12');
-  const [monthlyData, setMonthlyData] = useState<MonthlyData[]>([]);
-  const [isAnimating, setIsAnimating] = useState(false);
 
-  useEffect(() => {
-    const mockData: MonthlyData[] = [
-      { month: 'APR', income: 60000, isCurrent: false },
-      { month: 'MAY', income: 72500, isCurrent: false },
-      { month: 'JUN', income: 66667, isCurrent: false },
-      { month: 'JUL', income: 80833, isCurrent: false },
-      { month: 'AUG', income: 74167, isCurrent: false },
-      { month: 'SEP', income: 64167, isCurrent: false },
-      { month: 'OCT', income: 80833, isCurrent: false },
-      { month: 'NOV', income: 72500, isCurrent: false },
-      { month: 'DEC', income: 84167, isCurrent: false },
-      { month: 'JAN', income: 74167, isCurrent: false },
-      { month: 'FEB', income: 90000, isCurrent: false },
-      { month: 'MAR', income: 82500, isCurrent: true },
-    ];
+  // Aggregate across all facilities by month
+  const byMonth = new Map<string, number>();
+  incomeStatistics.forEach(({ year, month, monthlyIncome }) => {
+    const key = `${year}-${month}`;
+    byMonth.set(key, (byMonth.get(key) ?? 0) + monthlyIncome);
+  });
 
-    setIsAnimating(true);
+  const allData = Array.from(byMonth.entries())
+    .map(([key, income]) => {
+      const [year, month] = key.split('-').map(Number);
+      return { month: MONTH_LABELS[month - 1], year, monthIndex: month, income };
+    })
+    .sort((a, b) => a.year !== b.year ? a.year - b.year : a.monthIndex - b.monthIndex);
 
-    setTimeout(() => {
-      const displayData = selectedRange === '6' ? mockData.slice(-6) : mockData;
-      setMonthlyData(displayData);
-
-      setTimeout(() => {
-        setIsAnimating(false);
-      }, 50);
-    }, 150);
-  }, [selectedRange]);
-
-  const maxIncome = Math.max(...monthlyData.map((d) => d.income), 1);
-
-  const getHeight = (income: number) => (income / maxIncome) * 108;
-
-  const toggleRange = () => {
-    setSelectedRange((prev) => (prev === '12' ? '6' : '12'));
-  };
+  const displayData = selectedRange === '6' ? allData.slice(-6) : allData.slice(-12);
+  const maxIncome = Math.max(...displayData.map((d) => d.income), 1);
+  const hasData = displayData.length > 0;
 
   return (
     <div className="w-full rounded-2xl bg-white border-whitesmoke-200 border-solid border flex flex-col">
@@ -54,7 +42,7 @@ const IncomeTrendChart: FunctionComponent = () => {
           Income Trend
         </b>
         <button
-          onClick={toggleRange}
+          onClick={() => setSelectedRange((r) => (r === '12' ? '6' : '12'))}
           className="w-[100px] rounded-lg bg-darkslategray-200 hover:bg-teal-200 transition-colors flex items-center justify-center py-2 cursor-pointer"
         >
           <span className="tracking-[0.04em] font-semibold text-[10px] text-white whitespace-nowrap">
@@ -65,54 +53,44 @@ const IncomeTrendChart: FunctionComponent = () => {
 
       <div className="flex flex-col items-center px-4 pb-4">
         <div className="w-full h-40 rounded-[10px] bg-white flex flex-col items-center pt-6 pb-3">
-          <div className="w-full h-[108px] flex items-end justify-between gap-1">
-            {monthlyData.map((data) => (
-              <div
-                key={data.month}
-                className={`flex-1 rounded-[5px] transition-all duration-500 ease-in-out ${
-                  isAnimating ? 'opacity-0 scale-y-0' : 'opacity-100 scale-y-100'
-                }`}
-                style={{
-                  height: isAnimating ? '0%' : `${getHeight(data.income)}%`,
-                  backgroundColor: data.isCurrent ? '#024338' : '#096c5b',
-                  minWidth: '20px',
-                  transformOrigin: 'bottom',
-                }}
-              />
-            ))}
-          </div>
-          <div className="w-full flex justify-between mt-2">
-            {monthlyData.map((data) => (
-              <div
-                key={data.month}
-                className={`flex-1 text-center text-[8px] font-semibold text-black transition-all duration-300 ${
-                  isAnimating ? 'opacity-0' : 'opacity-100'
-                }`}
-              >
-                {data.month}
+          {hasData ? (
+            <>
+              <div className="w-full h-[108px] flex items-end justify-between gap-1">
+                {displayData.map((data, i) => (
+                  <div
+                    key={`${data.month}-${data.year}`}
+                    className="flex-1 rounded-[5px] transition-all duration-500 ease-in-out"
+                    style={{
+                      height: `${(data.income / maxIncome) * 108}px`,
+                      backgroundColor: i === displayData.length - 1 ? '#024338' : '#096c5b',
+                      minWidth: '20px',
+                    }}
+                  />
+                ))}
               </div>
-            ))}
-          </div>
+              <div className="w-full flex justify-between mt-2">
+                {displayData.map((data) => (
+                  <div key={`${data.month}-${data.year}`} className="flex-1 text-center text-[8px] font-semibold text-black">
+                    {data.month}
+                  </div>
+                ))}
+              </div>
+            </>
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-dimgray text-sm">
+              No income data yet
+            </div>
+          )}
         </div>
 
         <div className="self-stretch flex items-center justify-between py-0 px-3 mt-2">
-          <div className="flex items-end gap-1 group cursor-pointer">
-            <div
-              className="h-[15px] w-[15px] rounded-[5px] transition-all duration-300 group-hover:scale-110"
-              style={{ backgroundColor: '#096c5b' }}
-            />
-            <div className="text-[10px] sm:text-[12px] font-semibold text-darkslategray-100 transition-all duration-200 group-hover:text-teal-200">
-              {selectedRange === '6' ? 'Previous Months' : 'Past Months'}
-            </div>
+          <div className="flex items-end gap-1">
+            <div className="h-[15px] w-[15px] rounded-[5px]" style={{ backgroundColor: '#096c5b' }} />
+            <div className="text-[12px] font-semibold text-darkslategray-100">Past Months</div>
           </div>
-          <div className="flex items-end gap-1 group cursor-pointer">
-            <div
-              className="h-[15px] w-[15px] rounded-[5px] transition-all duration-300 group-hover:scale-110"
-              style={{ backgroundColor: '#024338' }}
-            />
-            <div className="text-[10px] sm:text-[12px] font-semibold text-darkslategray-100 transition-all duration-200 group-hover:text-teal-200">
-              Current Month
-            </div>
+          <div className="flex items-end gap-1">
+            <div className="h-[15px] w-[15px] rounded-[5px]" style={{ backgroundColor: '#024338' }} />
+            <div className="text-[12px] font-semibold text-darkslategray-100">Current Month</div>
           </div>
         </div>
       </div>

@@ -27,6 +27,10 @@ export type CreateBillingArguments = {
 
 export type UpdateBillingArguments = {
   dueDate?: Date;
+  breakdown?: { name: string; amount: number }[];
+  totalAmount?: number;
+  paidAmount?: number | null;
+  paymentStatus?: string;
 };
 
 export type submitBillingPaymentArguments = {
@@ -62,6 +66,7 @@ export const createBilling = async (
     userId: rental.userId,
     unitId: rental.unitId,
     facilityId: rental.facilityId,
+    rentalId: rental._id, 
     dueDate: data.dueDate,
     totalAmount,
     breakdown: data.breakdown,
@@ -567,5 +572,9 @@ export const sumbitBillingPayment = async (
     message: `Payment method: ${data.paymentMethod}`,
   };
   billing.documents.push(receiptDocument);
-  return await billing.save();
+  return await Billing.findByIdAndUpdate(
+    billingId,
+    { $push: { documents: receiptDocument } },
+    { returnDocument: 'after', runValidators: false },
+  );
 };

@@ -1,293 +1,459 @@
-import { type FunctionComponent, useCallback } from 'react';
+import { Icon } from '@iconify/react';
+import axios from 'axios';
+import { type FunctionComponent, useEffect, useMemo, useState } from 'react';
+import { BookingService, type VisitSlotAvailability } from '../../../service/BookingService';
+import { UserService } from '../../../service/UserService';
+
+type BookingUser = {
+  firstName?: string;
+  middleName?: string;
+  lastName?: string;
+  emails?: string[];
+  address?: string;
+};
+
+type ApiErrorPayload = {
+  error?: string | { message?: string } | { message?: string }[];
+};
 
 export type CalendarPopoutType = {
   className?: string;
+  facilityId: string;
+  facilityName: string;
+  facilityAddress: string;
+  onClose: () => void;
+  onBooked?: () => void;
 };
 
-const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({ className = '' }) => {
-  const onStatusContainerClick = useCallback(() => {}, []);
+const formatDateInput = (date: Date) => {
+  const year = date.getFullYear();
+  const month = `${date.getMonth() + 1}`.padStart(2, '0');
+  const day = `${date.getDate()}`.padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
+const formatTime = (dateValue: string) =>
+  new Intl.DateTimeFormat('en-PH', {
+    hour: 'numeric',
+    minute: '2-digit',
+  }).format(new Date(dateValue));
+
+const formatTimeRange = (slot: VisitSlotAvailability) =>
+  `${formatTime(slot.startDate)} - ${formatTime(slot.endDate)}`;
+
+const getApiErrorMessage = (error: unknown, fallback: string) => {
+  if (!axios.isAxiosError(error)) return fallback;
+
+  const payload = error.response?.data as ApiErrorPayload | string | undefined;
+  if (typeof payload === 'string') return payload;
+  if (!payload?.error) return fallback;
+  if (typeof payload.error === 'string') return payload.error;
+  if (Array.isArray(payload.error)) return payload.error[0]?.message ?? fallback;
+
+  return payload.error.message ?? fallback;
+};
+
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+const DAYS = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+
+const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
+  className = '',
+  facilityId,
+  facilityName,
+  facilityAddress,
+  onClose,
+  onBooked,
+}) => {
+  const today = useMemo(() => formatDateInput(new Date()), []);
+  const [selectedDate, setSelectedDate] = useState(today);
+  const [viewDate, setViewDate] = useState(() => new Date());
+  const [selectedSlotStart, setSelectedSlotStart] = useState('');
+  const [slots, setSlots] = useState<VisitSlotAvailability[]>([]);
+  const [user, setUser] = useState<BookingUser | null>(null);
+  const [message, setMessage] = useState('');
+  const [isTimeMenuOpen, setTimeMenuOpen] = useState(false);
+  const [isLoadingUser, setIsLoadingUser] = useState(true);
+  const [isLoadingSlots, setIsLoadingSlots] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadUser = async () => {
+      setIsLoadingUser(true);
+      try {
+        const response = await UserService.getSelf();
+        if (!cancelled) setUser(response.data);
+      } catch (_err) {
+        if (!cancelled) setError('Could not load your booking details.');
+      } finally {
+        if (!cancelled) setIsLoadingUser(false);
+      }
+    };
+
+    loadUser();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadSlots = async () => {
+      setIsLoadingSlots(true);
+      setError(null);
+      setSelectedSlotStart('');
+
+      try {
+        const response = await BookingService.getAvailableVisitSlots(facilityId, selectedDate);
+        if (!cancelled) setSlots(response.data);
+      } catch (err) {
+        if (!cancelled) {
+          setSlots([]);
+          setError(getApiErrorMessage(err, 'Could not load available visit times.'));
+        }
+      } finally {
+        if (!cancelled) setIsLoadingSlots(false);
+      }
+    };
+
+    loadSlots();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [facilityId, selectedDate]);
+
+  const selectedSlot = slots.find((slot) => slot.startDate === selectedSlotStart);
+  const availableSlots = slots.filter((slot) => slot.available);
+  const firstAvailableSlotStart = availableSlots[0]?.startDate ?? '';
+  const years = useMemo(() => {
+    const currentYear = new Date().getFullYear();
+    return Array.from({ length: 8 }, (_, index) => currentYear + index);
+  }, []);
+  const firstName = user?.firstName ?? '';
+  const lastName = user?.lastName ?? '';
+  const email = user?.emails?.[0] ?? '';
+  const year = viewDate.getFullYear();
+  const month = viewDate.getMonth();
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const calendarCells: { key: string; day: number | null }[] = [
+    ...Array.from({ length: firstDay }, (_, index) => ({
+      key: `leading-${year}-${month}-${index}`,
+      day: null,
+    })),
+    ...Array.from({ length: daysInMonth }, (_, index) => {
+      const day = index + 1;
+      return { key: formatDateInput(new Date(year, month, day)), day };
+    }),
+  ];
+  const trailingCount = (7 - (calendarCells.length % 7)) % 7;
+  calendarCells.push(
+    ...Array.from({ length: trailingCount }, (_, index) => ({
+      key: `trailing-${year}-${month}-${index}`,
+      day: null,
+    })),
+  );
+
+  const syncSelectedDateToView = (nextYear: number, nextMonth: number) => {
+    const currentSelectedDate = new Date(`${selectedDate}T00:00:00`);
+    const lastDayOfNextMonth = new Date(nextYear, nextMonth + 1, 0).getDate();
+    const nextDay = Math.min(currentSelectedDate.getDate(), lastDayOfNextMonth);
+    const nextDate = new Date(nextYear, nextMonth, nextDay);
+    const nextDateValue = formatDateInput(nextDate);
+    setSelectedDate(nextDateValue < today ? today : nextDateValue);
+  };
+
+  const goToMonth = (offset: number) => {
+    const nextDate = new Date(year, month + offset, 1);
+    setViewDate(nextDate);
+    syncSelectedDateToView(nextDate.getFullYear(), nextDate.getMonth());
+  };
+
+  const selectCalendarDay = (day: number) => {
+    const nextDate = new Date(year, month, day);
+    const nextDateValue = formatDateInput(nextDate);
+    if (nextDateValue < today) return;
+    setSelectedDate(nextDateValue);
+  };
+
+  const handleMonthSelect = (monthIndex: number) => {
+    setViewDate((current) => new Date(current.getFullYear(), monthIndex, 1));
+    syncSelectedDateToView(year, monthIndex);
+  };
+
+  const handleYearSelect = (selectedYear: number) => {
+    setViewDate((current) => new Date(selectedYear, current.getMonth(), 1));
+    syncSelectedDateToView(selectedYear, month);
+  };
+
+  const handleBook = async () => {
+    if (!selectedSlot) {
+      setError('Please choose an available time slot.');
+      return;
+    }
+
+    setIsSubmitting(true);
+    setError(null);
+    setSuccess(null);
+
+    try {
+      await BookingService.createBooking({
+        facilityId,
+        startDate: selectedSlot.startDate as unknown as Date,
+        endDate: selectedSlot.endDate as unknown as Date,
+        message: message.trim() || undefined,
+      });
+      setSuccess('Visit booked. You can now see it in My Calendar.');
+      onBooked?.();
+      setTimeout(onClose, 900);
+    } catch (err) {
+      setError(getApiErrorMessage(err, 'Could not book this visit.'));
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  useEffect(() => {
+    setSelectedSlotStart(firstAvailableSlotStart);
+    setTimeMenuOpen(false);
+  }, [firstAvailableSlotStart]);
 
   return (
     <div
-      className={`w-[687px] relative rounded-num-10 bg-white flex flex-col items-center justify-center py-6 px-0 box-border gap-3 max-w-full max-h-full overflow-auto text-center text-num-14 text-dimgray font-inter ${className}`}
+      className={`w-[760px] max-w-full max-h-full overflow-auto rounded-[16px] bg-white px-6 py-6 text-left text-num-14 text-dimgray font-inter shadow-xl sm:px-10 ${className}`}
     >
-      <div className="self-stretch flex flex-col items-start gap-2">
-        <div className="self-stretch h-[103px] flex flex-col items-center justify-center gap-1">
-          <div className="self-stretch flex items-center justify-center">
-            <b className="relative">Booking a visit for</b>
-          </div>
-          <div className="self-stretch flex flex-col items-center justify-center gap-1 text-num-24 text-darkslategray-200">
-            <b className="relative leading-num-32">Two Sapphire Place</b>
-            <div className="w-[299px] relative text-num-12 tracking-num-0.02 font-semibold font-lora text-black flex items-center justify-center">
-              Sapphire Street, Umali Subdivision, Batong Malake, Los Banos, Laguna
-            </div>
-          </div>
-        </div>
-        <div className="self-stretch flex flex-col items-start py-0 px-12">
-          <div className="self-stretch h-0.5 rounded-[100px] bg-whitesmoke-300 overflow-hidden shrink-0 flex items-start pt-2.5 px-12 pb-0 box-border" />
-        </div>
-      </div>
-      <div className="self-stretch flex items-start justify-center py-0 px-[50px] text-num-18 text-black">
-        <div className="w-[324px] flex flex-col items-start gap-2.5">
-          <b className="relative tracking-num--0_01">Your booking details</b>
-          <div className="w-[298px] flex flex-col items-start text-num-14 text-dimgray">
-            <div className="flex flex-col items-start gap-3">
-              <div className="flex flex-col items-start gap-[5px]">
-                <b className="relative">First name</b>
-                <div className="w-[297px] h-[39px] relative text-left text-gray-400">
-                  <div className="absolute h-[761.54%] w-[13.13%] top-full right-[86.87%] bottom-[-761.54%] left-[0%] shadow-[0px_0px_4px_rgba(0,0,0,0.25)] rounded-num-16 bg-white transform-[rotate(-90deg)] origin-top-left" />
-                  <div className="absolute h-[88.72%] w-[95.89%] top-[6.34%] left-[2.43%] leading-6 font-medium flex items-center">
-                    First name
-                  </div>
-                </div>
-              </div>
-              <div className="flex flex-col items-start gap-[5px]">
-                <b className="relative">Last name</b>
-                <div className="w-[297px] h-[39px] relative text-left text-gray-400">
-                  <div className="absolute h-[761.54%] w-[13.13%] top-full right-[86.87%] bottom-[-761.54%] left-[0%] shadow-[0px_0px_4px_rgba(0,0,0,0.25)] rounded-num-16 bg-white transform-[rotate(-90deg)] origin-top-left" />
-                  <div className="absolute h-[88.72%] w-[95.89%] top-[6.34%] left-[2.43%] leading-6 font-medium flex items-center">
-                    Last name
-                  </div>
-                </div>
-              </div>
-              <div className="flex flex-col items-start gap-[5px]">
-                <b className="relative">Email address</b>
-                <div className="w-[297px] h-[39px] relative text-left text-gray-400">
-                  <div className="absolute h-[761.54%] w-[13.13%] top-full right-[86.87%] bottom-[-761.54%] left-[0%] shadow-[0px_0px_4px_rgba(0,0,0,0.25)] rounded-num-16 bg-white transform-[rotate(-90deg)] origin-top-left" />
-                  <div className="absolute h-[88.72%] w-[95.89%] top-[6.34%] left-[2.43%] leading-6 font-medium flex items-center">
-                    Email addr.
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="w-[221px] flex flex-col items-start justify-center gap-[15px] text-left">
-          <b className="self-stretch relative tracking-num--0_01">Date and Time</b>
-          <div className="flex flex-col items-center gap-[7px] text-center text-num-8.36 text-gray-100 font-geist">
-            <div className="w-[221.6px] h-[215px] relative rounded-[11.15px] bg-white border-gainsboro border-solid border-[0.7px] box-border">
-              <div className="absolute top-[36.24px] left-[11.15px] flex flex-col items-center pt-num-11_1 px-0 pb-0">
-                <div className="self-stretch flex items-center justify-center gap-[0.7px]">
-                  <div className="flex-1 flex items-center justify-center">
-                    <div className="relative leading-num-13.94">Su</div>
-                  </div>
-                  <div className="flex-1 flex items-center justify-center">
-                    <div className="relative leading-num-13.94">Mo</div>
-                  </div>
-                  <div className="flex-1 flex items-center justify-center">
-                    <div className="relative leading-num-13.94">Tu</div>
-                  </div>
-                  <div className="flex-1 flex items-center justify-center">
-                    <div className="relative leading-num-13.94">We</div>
-                  </div>
-                  <div className="flex-1 flex items-center justify-center">
-                    <div className="relative leading-num-13.94">Th</div>
-                  </div>
-                  <div className="flex-1 flex items-center justify-center">
-                    <div className="relative leading-num-13.94">Fr</div>
-                  </div>
-                  <div className="flex-1 flex items-center justify-center">
-                    <div className="relative leading-num-13.94">Sa</div>
-                  </div>
-                </div>
-                <div className="flex flex-col items-center isolate gap-[0.7px] text-num-11.15 text-black">
-                  <div className="flex items-center gap-[0.7px] z-4 text-gray-200">
-                    <div className="h-num-27.9 w-num-27.9 rounded-num-5.57 flex items-center justify-center p-num-11_1 box-border">
-                      <div className="relative leading-num-16.83 hidden shrink-0">1</div>
-                    </div>
-                    <div className="h-num-27.9 w-num-27.9 rounded-num-5.57 flex items-center justify-center p-num-11_1 box-border">
-                      <div className="relative leading-num-16.83 hidden shrink-0">1</div>
-                    </div>
-                    <div className="h-num-27.9 w-num-27.9 rounded-num-5.57 flex items-center justify-center p-num-11_1 box-border">
-                      <div className="relative leading-num-16.83 hidden shrink-0">1</div>
-                    </div>
-                    <div className="h-num-27.9 w-num-27.9 rounded-num-5.57 flex items-center justify-center p-num-11_1 box-border text-black">
-                      <div className="relative leading-num-16.83 shrink-0">1</div>
-                    </div>
-                    <div className="h-num-27.9 w-num-27.9 rounded-num-5.57 flex items-center justify-center p-num-11_1 box-border text-black">
-                      <div className="relative leading-num-16.83 shrink-0">2</div>
-                    </div>
-                    <div className="h-num-27.9 w-num-27.9 rounded-num-5.57 bg-lightcyan flex items-center justify-center p-num-11_1 box-border text-teal-200 font-inter">
-                      <b className="relative leading-[140%] shrink-0">3</b>
-                    </div>
-                    <div className="h-num-27.9 w-num-27.9 rounded-num-5.57 flex items-center justify-center p-num-11_1 box-border text-black">
-                      <div className="relative leading-num-16.83 shrink-0">4</div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-[0.7px] z-3">
-                    <div className="h-num-27.9 w-num-27.9 rounded-num-5.57 flex items-center justify-center p-num-11_1 box-border opacity-num-0_3">
-                      <div className="relative leading-[140%] shrink-0">5</div>
-                    </div>
-                    <div className="h-num-27.9 w-num-27.9 rounded-num-5.57 flex items-center justify-center p-num-11_1 box-border">
-                      <div className="relative leading-[140%] shrink-0">6</div>
-                    </div>
-                    <div className="h-num-27.9 w-num-27.9 rounded-num-5.57 flex items-center justify-center p-num-11_1 box-border">
-                      <div className="relative leading-[140%] shrink-0">7</div>
-                    </div>
-                    <div className="h-num-27.9 w-num-27.9 rounded-num-5.57 flex items-center justify-center p-num-11_1 box-border">
-                      <div className="relative leading-[140%] shrink-0">8</div>
-                    </div>
-                    <div className="h-num-27.9 w-num-27.9 rounded-num-5.57 flex items-center justify-center p-num-11_1 box-border">
-                      <div className="relative leading-[140%] shrink-0">9</div>
-                    </div>
-                    <div className="h-num-27.9 w-num-27.9 rounded-num-5.57 flex items-center justify-center p-num-11_1 box-border">
-                      <div className="relative leading-[140%] shrink-0">10</div>
-                    </div>
-                    <div className="h-num-27.9 w-num-27.9 rounded-num-5.57 flex items-center justify-center p-num-11_1 box-border">
-                      <div className="relative leading-[140%] shrink-0">11</div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-[0.7px] z-2">
-                    <div className="h-num-27.9 w-num-27.9 rounded-num-5.57 flex items-center justify-center p-num-11_1 box-border">
-                      <div className="relative leading-[140%] opacity-num-0_3 shrink-0">12</div>
-                    </div>
-                    <div className="h-num-27.9 w-num-27.9 rounded-num-5.57 flex items-center justify-center p-num-11_1 box-border">
-                      <div className="relative leading-[140%] shrink-0">13</div>
-                    </div>
-                    <div className="h-num-27.9 w-num-27.9 rounded-num-5.57 flex items-center justify-center p-num-11_1 box-border">
-                      <div className="relative leading-[140%] shrink-0">14</div>
-                    </div>
-                    <div className="h-num-27.9 w-num-27.9 rounded-num-5.57 flex items-center justify-center p-num-11_1 box-border">
-                      <div className="relative leading-[140%] shrink-0">15</div>
-                    </div>
-                    <div className="h-num-27.9 w-num-27.9 rounded-num-5.57 flex items-center justify-center p-num-11_1 box-border">
-                      <div className="relative leading-[140%] shrink-0">16</div>
-                    </div>
-                    <div className="h-num-27.9 w-num-27.9 rounded-num-5.57 flex items-center justify-center p-num-11_1 box-border">
-                      <div className="relative leading-[140%] shrink-0">17</div>
-                    </div>
-                    <div className="h-num-27.9 w-num-27.9 rounded-num-5.57 flex items-center justify-center p-num-11_1 box-border">
-                      <div className="relative leading-[140%] shrink-0">18</div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-[0.7px] z-1">
-                    <div className="h-num-27.9 w-num-27.9 rounded-num-5.57 flex items-center justify-center p-num-11_1 box-border">
-                      <div className="relative leading-[140%] opacity-num-0_3 shrink-0">19</div>
-                    </div>
-                    <div className="h-num-27.9 w-num-27.9 rounded-num-5.57 flex items-center justify-center p-num-11_1 box-border">
-                      <div className="relative leading-[140%] shrink-0">20</div>
-                    </div>
-                    <div className="h-num-27.9 w-num-27.9 rounded-num-5.57 flex items-center justify-center p-num-11_1 box-border">
-                      <div className="relative leading-[140%] shrink-0">21</div>
-                    </div>
-                    <div className="h-num-27.9 w-num-27.9 rounded-num-5.57 flex items-center justify-center p-num-11_1 box-border">
-                      <div className="relative leading-[140%] shrink-0">22</div>
-                    </div>
-                    <div className="h-num-27.9 w-num-27.9 rounded-num-5.57 flex items-center justify-center p-num-11_1 box-border">
-                      <div className="relative leading-[140%] shrink-0">23</div>
-                    </div>
-                    <div className="h-num-27.9 w-num-27.9 rounded-num-5.57 flex items-center justify-center p-num-11_1 box-border">
-                      <div className="relative leading-[140%] shrink-0">24</div>
-                    </div>
-                    <div className="h-num-27.9 w-num-27.9 rounded-num-5.57 flex items-center justify-center p-num-11_1 box-border">
-                      <div className="relative leading-[140%] shrink-0">25</div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-[0.7px] z-0">
-                    <div className="h-num-27.9 w-num-27.9 rounded-num-5.57 flex items-center justify-center p-num-11_1 box-border">
-                      <div className="relative leading-[140%] opacity-num-0_3 shrink-0">26</div>
-                    </div>
-                    <div className="h-num-27.9 w-num-27.9 rounded-num-5.57 flex items-center justify-center p-num-11_1 box-border">
-                      <div className="relative leading-[140%] shrink-0">27</div>
-                    </div>
-                    <div className="h-num-27.9 w-num-27.9 rounded-num-5.57 flex items-center justify-center p-num-11_1 box-border">
-                      <div className="relative leading-[140%] shrink-0">28</div>
-                    </div>
-                    <div className="h-num-27.9 w-num-27.9 rounded-num-5.57 flex items-center justify-center p-num-11_1 box-border">
-                      <div className="relative leading-[140%] shrink-0">29</div>
-                    </div>
-                    <div className="h-num-27.9 w-num-27.9 rounded-num-5.57 flex items-center justify-center p-num-11_1 box-border">
-                      <div className="relative leading-[140%] shrink-0">30</div>
-                    </div>
-                    <div className="h-num-27.9 w-num-27.9 rounded-num-5.57 flex items-center justify-center p-num-11_1 box-border text-gray-200">
-                      <div className="relative leading-[140%] hidden shrink-0">24</div>
-                    </div>
-                    <div className="h-num-27.9 w-num-27.9 rounded-num-5.57 flex items-center justify-center p-num-11_1 box-border text-gray-200">
-                      <div className="relative leading-[140%] hidden shrink-0">25</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="absolute w-[calc(100%-22.3px)] top-[11.15px] right-[11.15px] left-[11.15px] h-[25.1px] flex items-center gap-[11.1px] text-left text-num-11.15 text-black font-inter">
-                <img className="h-[25.1px] w-[25.1px] rounded-[22.3px]" alt="" />
-                <div className="flex-1 flex items-start isolate gap-[5.6px]">
-                  <div className="flex-1 flex flex-col items-start z-1">
-                    <div className="self-stretch rounded-num-5.57 bg-white border-gainsboro border-solid border-[0.7px] flex items-center p-[4.2px] relative isolate gap-[5.6px]">
-                      <div className="flex-1 relative leading-[100%] z-0 shrink-0">Apr</div>
-                      <img className="h-[11.1px] w-[11.1px] relative z-1 shrink-0" alt="" />
-                      <div className="!!m-[0 important] absolute top-[5.58px] left-[5.57px] shadow-[0px_1px_4px_rgba(12,12,13,0.1),0px_1px_4px_rgba(12,12,13,0.05)] rounded-num-5.57 bg-white border-gainsboro border-solid border-[0.7px] hidden flex-col items-center p-[5.6px] gap-[5.6px] z-2 shrink-0 text-gray-200">
-                        <div className="relative leading-[140%]">January</div>
-                        <div className="relative leading-[140%]">February</div>
-                        <div className="relative leading-[140%]">March</div>
-                        <div className="relative leading-[140%]">April</div>
-                        <div className="relative leading-[140%]">May</div>
-                        <div className="relative leading-[140%]">June</div>
-                        <div className="relative leading-[140%]">July</div>
-                        <div className="relative leading-[140%]">August</div>
-                        <div className="relative leading-[140%] font-semibold">September</div>
-                        <div className="relative leading-[140%]">October</div>
-                        <div className="relative leading-[140%]">November</div>
-                        <div className="relative leading-[140%]">December</div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex-1 flex flex-col items-start z-0">
-                    <div className="self-stretch rounded-num-5.57 bg-white border-gainsboro border-solid border-[0.7px] flex items-center p-[4.2px] relative isolate gap-[5.6px]">
-                      <div className="flex-1 relative leading-[100%] z-0 shrink-0">2026</div>
-                      <img className="h-[11.1px] w-[11.1px] relative z-1 shrink-0" alt="" />
-                      <div className="!!m-[0 important] absolute top-[5.58px] left-[5.58px] shadow-[0px_1px_4px_rgba(12,12,13,0.1),0px_1px_4px_rgba(12,12,13,0.05)] rounded-num-5.57 bg-white border-gainsboro border-solid border-[0.7px] hidden flex-col items-start p-[5.6px] gap-[5.6px] z-2 shrink-0 text-gray-200">
-                        <div className="relative leading-[140%]">2026</div>
-                        <div className="relative leading-[140%] font-semibold">2025</div>
-                        <div className="relative leading-[140%]">2024</div>
-                        <div className="relative leading-[140%]">2023</div>
-                        <div className="relative leading-[140%]">2022</div>
-                        <div className="relative leading-[140%]">2021</div>
-                        <div className="relative leading-[140%]">2020</div>
-                        <div className="relative leading-[140%]">2019</div>
-                        <div className="relative leading-[140%]">2018</div>
-                        <div className="relative leading-[140%]">2017</div>
-                        <div className="relative leading-[140%]">2016</div>
-                        <div className="relative leading-[140%]">2015</div>
-                        <div className="relative leading-[140%]">2014</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <img className="h-[25.1px] w-[25.1px] rounded-[22.3px]" alt="" />
-              </div>
-            </div>
-            <div className="flex items-center gap-2.5 text-left text-[12.25px] text-dimgray font-lora">
-              <img className="h-6 w-6" alt="" />
-              <div className="flex flex-col items-start">
-                <div className="w-[108px] h-num-37 relative">
-                  <div className="absolute top-0 left-0 rounded-[7.66px] bg-white border-whitesmoke-300 border-solid border-[0.8px] box-border w-[108px] h-[36.8px]" />
-                  <img
-                    className="absolute w-[9.44%] top-[calc(50%-2.16px)] right-[5.89%] left-[84.67%] max-w-full overflow-hidden h-[4.1px]"
-                    alt=""
-                  />
-                  <div className="absolute top-0 left-[5.29px] font-medium flex items-center w-[80.7px] h-num-37">
-                    9 am - 10 am
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="self-stretch flex items-center justify-center gap-[43px] text-teal-200">
-        <div className="h-8 w-[67px] rounded-num-16 flex items-center justify-center py-0 px-4 box-border">
-          <div className="h-8 w-[67px] rounded-num-16 flex items-center justify-center py-0 px-4 box-border shrink-0">
-            <div className="relative font-medium text-transparent bg-clip-text! [background:linear-gradient(180deg,#c00f0f,#e44f4f)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] shrink-0">
-              Cancel
-            </div>
-          </div>
-        </div>
-        <div
-          className="h-8 rounded-num-16 bg-aliceblue flex items-center justify-center py-0 px-4 box-border cursor-pointer"
-          onClick={onStatusContainerClick}
+      <div className="relative text-center">
+        <button
+          type="button"
+          onClick={onClose}
+          className="absolute right-0 top-0 grid h-8 w-8 place-items-center rounded-full text-dimgray hover:bg-whitesmoke-100"
+          aria-label="Close booking form"
         >
-          <b className="relative">Book</b>
+          <Icon icon="material-symbols:close-rounded" className="h-5 w-5" />
+        </button>
+        <div className="text-base font-bold text-[#666]">Booking a visit for</div>
+        <h2 className="mt-1.5 text-[26px] font-extrabold leading-tight text-[#004236] sm:text-[30px]">
+          {facilityName}
+        </h2>
+        <p className="mx-auto mt-1.5 max-w-[390px] text-center text-[14px] font-bold leading-5 text-black font-lora">
+          {facilityAddress}
+        </p>
+      </div>
+
+      <div className="my-5 h-0.5 rounded-full bg-whitesmoke-300" />
+
+      <div className="grid gap-8 lg:grid-cols-[1fr_300px]">
+        <div className="flex flex-col gap-3">
+          <b className="text-[22px] tracking-num--0_01 text-black">Your booking details</b>
+          <div className="grid gap-3">
+            <label className="grid gap-1.5">
+              <span className="text-base font-bold text-[#666]">First name</span>
+              <input
+                value={isLoadingUser ? 'Loading...' : firstName}
+                readOnly
+                placeholder="First name"
+                className="h-[44px] rounded-[20px] bg-white px-4 text-base font-medium text-black shadow-[0_1px_8px_rgba(0,0,0,0.2)] outline-none placeholder:text-[#9b9b9b]"
+              />
+            </label>
+            <label className="grid gap-1.5">
+              <span className="text-base font-bold text-[#666]">Last name</span>
+              <input
+                value={isLoadingUser ? 'Loading...' : lastName}
+                readOnly
+                placeholder="Last name"
+                className="h-[44px] rounded-[20px] bg-white px-4 text-base font-medium text-black shadow-[0_1px_8px_rgba(0,0,0,0.2)] outline-none placeholder:text-[#9b9b9b]"
+              />
+            </label>
+            <label className="grid gap-1.5">
+              <span className="text-base font-bold text-[#666]">Email address</span>
+              <input
+                value={isLoadingUser ? 'Loading...' : email}
+                readOnly
+                placeholder="Email addr."
+                className="h-[44px] rounded-[20px] bg-white px-4 text-base font-medium text-black shadow-[0_1px_8px_rgba(0,0,0,0.2)] outline-none placeholder:text-[#9b9b9b]"
+              />
+            </label>
+            <label className="grid gap-1.5">
+              <span className="text-base font-bold text-[#666]">Home address</span>
+              <input
+                value={isLoadingUser ? 'Loading...' : (user?.address ?? '')}
+                readOnly
+                placeholder="Home address"
+                className="h-[44px] rounded-[20px] bg-white px-4 text-sm font-medium text-black shadow-[0_1px_8px_rgba(0,0,0,0.2)] outline-none placeholder:text-[#9b9b9b]"
+              />
+            </label>
+            <label className="grid gap-1.5">
+              <span className="text-base font-bold text-[#666]">
+                Message <span className="text-sm font-semibold text-slategray">(optional)</span>
+              </span>
+              <textarea
+                value={message}
+                onChange={(event) => setMessage(event.target.value)}
+                placeholder="Add a note for the landlord or manager"
+                className="min-h-[70px] resize-none rounded-[18px] border border-transparent bg-white px-4 py-2.5 text-sm font-medium text-black shadow-[0_1px_8px_rgba(0,0,0,0.16)] outline-none placeholder:text-[#9b9b9b] focus:border-teal-200"
+              />
+            </label>
+          </div>
         </div>
+
+        <div className="flex flex-col gap-4">
+          <b className="text-[22px] tracking-num--0_01 text-black">Date and Time</b>
+          <div className="rounded-[16px] border border-[#dedede] bg-white p-4">
+            <div className="mb-4 flex items-center gap-2 text-black">
+              <button
+                type="button"
+                onClick={() => goToMonth(-1)}
+                className="grid h-8 w-8 place-items-center rounded-full hover:bg-whitesmoke-100"
+                aria-label="Previous month"
+              >
+                <Icon icon="material-symbols:chevron-left-rounded" className="h-6 w-6" />
+              </button>
+              <select
+                value={month}
+                onChange={(event) => handleMonthSelect(Number(event.target.value))}
+                className="h-8 flex-1 rounded-lg border border-[#dedede] bg-white px-2 text-sm font-medium outline-none"
+              >
+                {MONTHS.map((monthLabel, index) => (
+                  <option key={monthLabel} value={index}>
+                    {monthLabel}
+                  </option>
+                ))}
+              </select>
+              <select
+                value={year}
+                onChange={(event) => handleYearSelect(Number(event.target.value))}
+                className="h-8 flex-1 rounded-lg border border-[#dedede] bg-white px-2 text-sm font-medium outline-none"
+              >
+                {years.map((yearOption) => (
+                  <option key={yearOption} value={yearOption}>
+                    {yearOption}
+                  </option>
+                ))}
+              </select>
+              <button
+                type="button"
+                onClick={() => goToMonth(1)}
+                className="grid h-8 w-8 place-items-center rounded-full hover:bg-whitesmoke-100"
+                aria-label="Next month"
+              >
+                <Icon icon="material-symbols:chevron-right-rounded" className="h-6 w-6" />
+              </button>
+            </div>
+
+            <div className="grid grid-cols-7 gap-y-1.5 text-center">
+              {DAYS.map((day) => (
+                <div key={day} className="pb-1 text-xs font-medium text-[#777]">
+                  {day}
+                </div>
+              ))}
+              {calendarCells.map(({ key, day }) => {
+                if (day == null) return <div key={key} className="h-8" />;
+
+                const dateValue = formatDateInput(new Date(year, month, day));
+                const isPast = dateValue < today;
+                const isSelected = dateValue === selectedDate;
+
+                return (
+                  <button
+                    key={dateValue}
+                    type="button"
+                    disabled={isPast}
+                    onClick={() => selectCalendarDay(day)}
+                    className={`mx-auto grid h-8 w-8 place-items-center rounded-lg text-sm font-medium transition-colors disabled:cursor-not-allowed ${
+                      isSelected
+                        ? 'bg-[#bdf1e6] text-[#006f5e] font-bold'
+                        : isPast
+                          ? 'text-[#b4b4b4]'
+                          : 'text-black hover:bg-whitesmoke-100'
+                    }`}
+                  >
+                    {day}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="flex items-center justify-center gap-4 text-black">
+            <Icon icon="solar:clock-circle-outline" className="h-7 w-7" />
+            <div className="relative w-[165px]">
+              <button
+                type="button"
+                onClick={() => setTimeMenuOpen((isOpen) => !isOpen)}
+                disabled={isLoadingSlots || availableSlots.length === 0}
+                className="flex h-[48px] w-full items-center justify-between rounded-xl border border-whitesmoke-300 bg-white px-3 text-left text-base font-semibold text-[#5d5d5d] shadow-sm disabled:cursor-not-allowed disabled:opacity-60 font-lora"
+              >
+                <span className="truncate">
+                  {isLoadingSlots
+                    ? 'Loading...'
+                    : selectedSlot
+                      ? formatTimeRange(selectedSlot)
+                      : availableSlots.length > 0
+                        ? 'Select time'
+                        : 'No slots'}
+                </span>
+                <Icon
+                  icon="material-symbols:keyboard-arrow-down-rounded"
+                  className={`h-5 w-5 shrink-0 text-[#356c65] transition-transform ${
+                    isTimeMenuOpen ? 'rotate-180' : ''
+                  }`}
+                />
+              </button>
+              {isTimeMenuOpen && availableSlots.length > 0 && (
+                <div className="absolute left-0 right-0 z-20 mt-2 max-h-52 overflow-y-auto rounded-xl border border-whitesmoke-300 bg-white p-1 shadow-lg">
+                  {availableSlots.map((slot) => (
+                    <button
+                      key={slot.startDate}
+                      type="button"
+                      onClick={() => {
+                        setSelectedSlotStart(slot.startDate);
+                        setTimeMenuOpen(false);
+                      }}
+                      className="w-full rounded-lg px-3 py-2 text-left text-xs font-semibold text-black hover:bg-lightcyan"
+                    >
+                      {formatTimeRange(slot)}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {(error || success) && (
+        <p
+          className={`mt-4 text-center text-xs font-semibold ${
+            success ? 'text-teal-200' : 'text-red-500'
+          }`}
+        >
+          {success ?? error}
+        </p>
+      )}
+
+      <div className="mt-5 flex items-center justify-center gap-14">
+        <button
+          type="button"
+          onClick={onClose}
+          className="h-9 rounded-num-16 px-5 text-lg font-medium text-red-500 hover:bg-red-50"
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          onClick={handleBook}
+          disabled={isSubmitting || isLoadingUser || isLoadingSlots}
+          className="h-10 rounded-[20px] bg-aliceblue px-7 text-lg font-bold text-teal-200 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {isSubmitting ? 'Booking...' : 'Book'}
+        </button>
       </div>
     </div>
   );

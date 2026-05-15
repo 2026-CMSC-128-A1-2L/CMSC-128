@@ -8,10 +8,10 @@ import {
   routeApproveApplication,
   routeRejectApplication,
   routeFinalizeApplication,
+  routeAddApplicationDocument,
 } from './application.controller.js';
 import {
   includeSelf,
-  isSuperAdmin,
   isVerifiedStudent,
   manageApplicationsFilter,
   selfFilter,
@@ -24,7 +24,7 @@ const router = Router();
 //
 // Should be the only endpoint used by any role.
 // ============================================================================
-router.get('/', isSuperAdmin, routeGetApplications);
+router.get('/', manageApplicationsFilter, routeGetApplications);
 
 // ============================================================================
 // POST /api/applications
@@ -82,6 +82,13 @@ router.post('/:applicationId/assign-unit', manageApplicationsFilter, routeAssign
 //
 // Finalizes an application.
 // ============================================================================
-router.post('/:applicationId/finalize', manageApplicationsFilter, routeFinalizeApplication);
+router.post('/:applicationId/finalize', selfFilter, routeFinalizeApplication);
+
+// ============================================================================
+// POST /api/applications/:applicationId/documents/:docId
+//
+// Adds an uploaded file to one required application document.
+// ============================================================================
+router.post('/:applicationId/documents/:docId', selfFilter, routeAddApplicationDocument);
 
 export default router;

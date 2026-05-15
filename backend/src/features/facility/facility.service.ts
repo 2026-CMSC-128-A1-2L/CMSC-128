@@ -13,6 +13,7 @@ import type mongoose from 'mongoose';
 import { getAllRentals } from '../rental/rental.service.js';
 import { getUnits } from '../unit/unit.service.js';
 import { getBillings } from '../billing/billing.service.js';
+import { User } from '../user/user.model.js';
 
 type FacilityFilters = {
   name?: string;
@@ -525,4 +526,73 @@ export const getOverdueTenantsByLandlord = async (landlordId: mongoose.Types.Obj
     overdueCount: overdueTenants.length,
     byFacility,
   };
+};
+
+// Returns all tenants (rentals) across all facilities owned by the landlord.
+export const getTenantsByLandlord = async (landlordId: mongoose.Types.ObjectId) => {
+  const facilities = await getFacilitiesByLandlord(landlordId);
+  const facilityIds = facilities.map((f) => f._id);
+  const facilityMap = new Map(facilities.map((f) => [f._id.toString(), f.name]));
+
+  const activeRentals = await getAllRentals({ facilityId: { $in: facilityIds }, status: 'active' });
+
+  if (activeRentals.length === 0) {
+    return [];
+  }
+
+  const rentalIds = activeRentals.map((r) => r._id);
+  const userIds = activeRentals.map((r) => r.userId);
+  const unitIds = activeRentals.map((r) => r.unitId);
+
+  const users = await User.find({ _id: { $in: userIds } }).lean();
+  const userMap = new Map(users.map((u) => [u._id.toString(), u]));
+
+  const units = await getUnits({}, { _id: { $in: unitIds } });
+  const unitMap = new Map(units.map((u) => [u._id.toString(), u]));
+
+  const allBillings = await getBillings({}, { rentalId: { $in: rentalIds } });
+  const latestBillingByRentalId = new Map<string, (typeof allBillings)[number]>();
+  for (const billing of allBillings) {
+    const key = billing.rentalId.toString();
+    const existing = latestBillingByRentalId.get(key);
+    if (!existing || (billing.dueDate && (!existing.dueDate || billing.dueDate > existing.dueDate))) {
+      latestBillingByRentalId.set(key, billing);
+    }
+  }
+
+  const tenants = activeRentals.map((rental) => {
+    const user = userMap.get(rental.userId.toString()) as any;
+    const unit = unitMap.get(rental.unitId.toString());
+    const facilityName = facilityMap.get(rental.facilityId.toString()) ?? 'Unknown Facility';
+    const latestBilling = latestBillingByRentalId.get(rental._id.toString());
+
+    return {
+      id: rental._id,
+      userId: user?._id,
+      fullName: user ? `${user.lastName}, ${user.firstName}`.toUpperCase() : 'UNKNOWN',
+      displayName: user ? `${user.firstName} ${user.lastName}` : 'Unknown',
+      email: user?.emails?.[0] ?? '',
+      contactNumber: user?.contact ?? 'N/A',
+      homeAddress: user?.address ?? 'N/A',
+      photoUrl: user?.profilePicture,
+      unit: unit?.name ?? 'Unknown Unit',
+      dormName: facilityName,
+      baseRentFee: unit?.price?.toString() ?? '0',
+      contractDuration:
+        rental.expectedMoveInDate && rental.expectedMoveOutDate
+          ? `${rental.expectedMoveInDate.toLocaleDateString()} - ${rental.expectedMoveOutDate.toLocaleDateString()}`
+          : 'N/A',
+      monthlyDueDate: '5th of the Month', // placeholder since its not in db
+      modeOfPayment: 'Cash', // placeholder
+      billingStatus: latestBilling?.paymentStatus ?? 'pending',
+      latestBillingItem: latestBilling
+        ? `Billing for ${latestBilling.dueDate?.toLocaleDateString()}`
+        : 'No billing',
+      studentCategory: user?.userType ?? 'Student',
+      documents: [], // Not populated for now
+      rentalStatus: rental.status,
+    };
+  });
+
+  return tenants;
 };

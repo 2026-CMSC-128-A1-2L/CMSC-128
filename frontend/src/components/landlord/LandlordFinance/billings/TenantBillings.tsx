@@ -1,9 +1,12 @@
-import { type FunctionComponent, useState, useEffect, useCallback } from 'react';
+import { type FunctionComponent, useState, useEffect } from 'react';
 import { Icon } from '@iconify/react';
 import BillingRow from './BillingRow';
 import AddBillingPopup from './AddBillingPopup';
 import EditBillingPopup from './EditBillingPopup';
 import type { Billing } from '../types/billing';
+import type { TenantBilling } from '../../../../hooks/useFacilityFinance';
+import { BillingService } from '../../../../service/BillingService';
+import { UnitService } from '../../../../service/UnitService';
 
 const TABLE_COLUMNS = [
   { label: 'Room', className: 'w-[8%]' },
@@ -16,254 +19,200 @@ const TABLE_COLUMNS = [
   { label: 'Status', className: 'w-[18%]' },
 ];
 
-// Mock data by month - replace with API call
-const fetchBillingsByMonth = async (month: string, year: number): Promise<Billing[]> => {
-  const mockData: Record<string, Billing[]> = {
-    'March 2026': [
-      {
-        _id: '1',
-        userId: 'user1',
-        unitId: 'unit1',
-        facilityId: 'facility1',
-        dueDate: '2026-03-31',
-        paymentDate: '2026-03-15',
-        paidAmount: 4500,
-        totalAmount: 4500,
-        paymentStatus: 'paid',
-        documents: [],
-        breakdown: [
-          { name: 'Rent', amount: 3000 },
-          { name: 'Utilities', amount: 1500 },
-          { name: 'Misc. Fees', amount: 0 },
-        ],
-        createdAt: '2026-03-01',
-        updatedAt: '2026-03-15',
-      },
-      {
-        _id: '2',
-        userId: 'user2',
-        unitId: 'unit2',
-        facilityId: 'facility1',
-        dueDate: '2026-03-31',
-        paymentDate: null,
-        paidAmount: 1850,
-        totalAmount: 4850,
-        paymentStatus: 'partially_paid',
-        documents: [],
-        breakdown: [
-          { name: 'Rent', amount: 3000 },
-          { name: 'Utilities', amount: 1700 },
-          { name: 'Misc. Fees', amount: 150 },
-        ],
-        createdAt: '2026-03-01',
-        updatedAt: '2026-03-10',
-      },
-      {
-        _id: '3',
-        userId: 'user3',
-        unitId: 'unit3',
-        facilityId: 'facility1',
-        dueDate: '2026-03-31',
-        paymentDate: null,
-        paidAmount: null,
-        totalAmount: 4300,
-        paymentStatus: 'unpaid',
-        documents: [],
-        breakdown: [
-          { name: 'Rent', amount: 3000 },
-          { name: 'Utilities', amount: 1300 },
-          { name: 'Misc. Fees', amount: 0 },
-        ],
-        createdAt: '2026-03-01',
-        updatedAt: '2026-03-01',
-      },
-      {
-        _id: '4',
-        userId: 'user4',
-        unitId: 'unit4',
-        facilityId: 'facility1',
-        dueDate: '2026-03-31',
-        paymentDate: null,
-        paidAmount: null,
-        totalAmount: 4500,
-        paymentStatus: 'unpaid',
-        documents: [],
-        breakdown: [
-          { name: 'Rent', amount: 3000 },
-          { name: 'Utilities', amount: 1450 },
-          { name: 'Misc. Fees', amount: 50 },
-        ],
-        createdAt: '2026-03-01',
-        updatedAt: '2026-03-01',
-      },
-    ],
-    'February 2026': [
-      {
-        _id: '5',
-        userId: 'user1',
-        unitId: 'unit1',
-        facilityId: 'facility1',
-        dueDate: '2026-02-28',
-        paymentDate: '2026-02-20',
-        paidAmount: 4500,
-        totalAmount: 4500,
-        paymentStatus: 'paid',
-        documents: [],
-        breakdown: [
-          { name: 'Rent', amount: 3000 },
-          { name: 'Utilities', amount: 1500 },
-          { name: 'Misc. Fees', amount: 0 },
-        ],
-        createdAt: '2026-02-01',
-        updatedAt: '2026-02-20',
-      },
-      {
-        _id: '6',
-        userId: 'user2',
-        unitId: 'unit2',
-        facilityId: 'facility1',
-        dueDate: '2026-02-28',
-        paymentDate: '2026-02-25',
-        paidAmount: 4500,
-        totalAmount: 4500,
-        paymentStatus: 'paid',
-        documents: [],
-        breakdown: [
-          { name: 'Rent', amount: 3000 },
-          { name: 'Utilities', amount: 1500 },
-          { name: 'Misc. Fees', amount: 0 },
-        ],
-        createdAt: '2026-02-01',
-        updatedAt: '2026-02-25',
-      },
-    ],
-    'January 2026': [
-      {
-        _id: '7',
-        userId: 'user1',
-        unitId: 'unit1',
-        facilityId: 'facility1',
-        dueDate: '2026-01-31',
-        paymentDate: '2026-01-25',
-        paidAmount: 4500,
-        totalAmount: 4500,
-        paymentStatus: 'paid',
-        documents: [],
-        breakdown: [
-          { name: 'Rent', amount: 3000 },
-          { name: 'Utilities', amount: 1500 },
-          { name: 'Misc. Fees', amount: 0 },
-        ],
-        createdAt: '2026-01-01',
-        updatedAt: '2026-01-25',
-      },
-    ],
-  };
-
-  const key = `${month} ${year}`;
-  return mockData[key] || [];
-};
+const MONTH_NAMES = [
+  'January','February','March','April','May','June',
+  'July','August','September','October','November','December',
+];
 
 const getAvailableMonths = () => {
-  const months = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December',
-  ];
-
-  const currentDate = new Date();
-  const currentMonth = currentDate.getMonth();
-  const currentYear = currentDate.getFullYear();
-  const availableMonths = [];
-
-  for (let i = 0; i <= 2; i++) {
-    let monthIndex = currentMonth - i;
-    let year = currentYear;
-    if (monthIndex < 0) { monthIndex += 12; year -= 1; }
-    availableMonths.push({
-      name: months[monthIndex],
-      month: monthIndex,
-      year,
-      displayName: `${months[monthIndex]} ${year}`,
-      startDate: new Date(year, monthIndex, 1),
-      endDate: new Date(year, monthIndex + 1, 0),
-    });
-  }
-
-  return availableMonths;
+  const now = new Date();
+  return Array.from({ length: 3 }, (_, i) => {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    return {
+      name: MONTH_NAMES[d.getMonth()],
+      month: d.getMonth(),
+      year: d.getFullYear(),
+      displayName: `${MONTH_NAMES[d.getMonth()]} ${d.getFullYear()}`,
+    };
+  });
 };
 
-const getAvailableRooms = () => {
-  const existingRoomNumbers = [1, 2, 3, 4];
-  const ALL_ROOMS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-  return ALL_ROOMS.filter((room) => !existingRoomNumbers.includes(room));
-};
+const toRowBilling = (b: TenantBilling): Billing => ({
+  _id: b._id,
+  userId: b.userId,
+  unitId: b.unitId,
+  facilityId: b.facilityId,
+  dueDate: b.dueDate,
+  paymentDate: b.paymentDate,
+  paidAmount: b.paidAmount,
+  totalAmount: b.totalAmount,
+  paymentStatus: b.paymentStatus,
+  documents: b.documents,
+  breakdown: b.breakdown,
+  createdAt: b.createdAt,
+  updatedAt: b.updatedAt,
+});
 
-const getRoomNumber = (billing: Billing): number => {
-  const roomMap: Record<string, number> = { unit1: 1, unit2: 2, unit3: 3, unit4: 4 };
-  return roomMap[billing.unitId] || 0;
-};
+interface TenantBillingsTabProps {
+  facilityId: string;
+  billings: TenantBilling[];
+  unitRentalMap: Map<string, string>;
+  isLoading: boolean;
+  onRefresh: () => void;
+  facilityListings?: { id: string }[];
+}
 
-const getTenantName = (billing: Billing): string => {
-  const nameMap: Record<string, string> = {
-    unit1: 'Daphne Canape',
-    unit2: 'Quevin Custodio',
-    unit3: 'Nathaniel Cunanan',
-    unit4: 'Alan Vender',
-  };
-  return nameMap[billing.unitId] || '';
-};
-
-const TenantBillingsTab: FunctionComponent = () => {
+const TenantBillingsTab: FunctionComponent<TenantBillingsTabProps> = ({
+  facilityId,
+  billings,
+  unitRentalMap,
+  isLoading,
+  onRefresh,
+  facilityListings = [],
+}) => {
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
   const [isAddPopupOpen, setIsAddPopupOpen] = useState(false);
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
   const [selectedBilling, setSelectedBilling] = useState<Billing | null>(null);
-  const [billings, setBillings] = useState<Billing[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [selectedBillingMeta, setSelectedBillingMeta] = useState<{ roomNumber: string; tenantName: string } | null>(null);
   const [isMonthDropdownOpen, setIsMonthDropdownOpen] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState(getAvailableMonths()[0]);
+  const [isSaving, setIsSaving] = useState(false);
+  const [allUnitOptions, setAllUnitOptions] = useState<{ value: string; label: string }[]>([]);
+  const [localRentalMap, setLocalRentalMap] = useState<Map<string, string>>(new Map());
 
-  const loadBillings = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      const data = await fetchBillingsByMonth(selectedMonth.name, selectedMonth.year);
-      setBillings(data);
-    } catch (error) {
-      console.error('Failed to load billings:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [selectedMonth]);
+  const availableMonths = getAvailableMonths();
 
-  useEffect(() => { loadBillings(); }, [loadBillings]);
+  const mergedRentalMap = new Map([...unitRentalMap, ...localRentalMap]);
+
+  useEffect(() => {
+    const loadUnits = async () => {
+      try {
+        const unitPromises = facilityListings.map((l) =>
+          UnitService.getUnitsByListing(l.id).catch(() => ({ data: [] }))
+        );
+        const unitResults = await Promise.all(unitPromises);
+
+        const units: { value: string; label: string }[] = [];
+        const rentalMapFromUnits = new Map<string, string>();
+
+        unitResults.forEach((res: any) => {
+          let arr: any[] = [];
+          if (res.data && Array.isArray(res.data)) arr = res.data;
+          else if (Array.isArray(res)) arr = res;
+          else if (res.data?.data && Array.isArray(res.data.data)) arr = res.data.data;
+
+          arr.forEach((u: any) => {
+            const unitId = u._id ?? u.id;
+            // Find first active rental on this unit
+            const activeRental = (u.currentRentals ?? []).find(
+              (r: any) => r.status === 'active'
+            );
+            if (activeRental) {
+              rentalMapFromUnits.set(unitId, activeRental._id);
+            }
+            units.push({
+              value: unitId,
+              label: u.roomNumber ?? u.name ?? unitId,
+            });
+          });
+        });
+
+        setAllUnitOptions(units);
+        setLocalRentalMap((prev) => new Map([...prev, ...rentalMapFromUnits]));
+      } catch (err) {
+        console.error('Failed to load facility units:', err);
+      }
+    };
+    if (facilityListings.length > 0) loadUnits();
+  }, [facilityListings]);
+
+  const filteredBillings = billings.filter((b) => {
+    if (!b.dueDate) return false;
+    const d = new Date(b.dueDate);
+    return d.getMonth() === selectedMonth.month && d.getFullYear() === selectedMonth.year;
+  });
+
+  const occupiedUnitIds = new Set(filteredBillings.map((b) => b.unitId));
+
+  const availableUnitOptions = allUnitOptions.filter(
+    (u) => !occupiedUnitIds.has(u.value) && mergedRentalMap.has(u.value)
+  );
 
   const handleStatusChange = async (billingId: string, status: Billing['paymentStatus']) => {
-    setBillings((prev) =>
-      prev.map((b) => (b._id === billingId ? { ...b, paymentStatus: status } : b)),
-    );
+    try {
+      await BillingService.updateBilling(billingId, { paymentStatus: status } as any);
+      onRefresh();
+    } catch (err) {
+      console.error('Failed to update billing status:', err);
+    }
   };
 
-  const handleEditClick = (billing: Billing) => {
+  const handleEditClick = (billing: Billing, roomNumber: string, tenantName: string) => {
     setSelectedBilling(billing);
+    setSelectedBillingMeta({ roomNumber, tenantName });
     setIsEditPopupOpen(true);
   };
 
   const handleSaveEdit = async (updatedBilling: Billing) => {
-    setBillings((prev) => prev.map((b) => (b._id === updatedBilling._id ? updatedBilling : b)));
-    setIsEditPopupOpen(false);
-    setSelectedBilling(null);
+    setIsSaving(true);
+    try {
+      await BillingService.updateBilling(updatedBilling._id, {
+        breakdown: updatedBilling.breakdown,
+        dueDate: updatedBilling.dueDate ?? undefined,
+        paymentStatus: updatedBilling.paymentStatus,
+        paidAmount: updatedBilling.paidAmount,
+      } as any);
+      await onRefresh();
+      setIsEditPopupOpen(false);
+      setSelectedBilling(null);
+      setSelectedBillingMeta(null);
+    } catch (err) {
+      console.error('Failed to save billing edit:', err);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleAddSubmit = async (data: {
-    room: string; fullName: string; rent: number; utilities: number; miscFees: number;
+    unitId: string;
+    rent: number;
+    utilities: number;
+    miscFees: number;
+    dueDate: string;
+    paymentMethod: { method: 'gcash' | 'bank_transfer'; qr: [] }[];
   }) => {
-    console.log('Add billing:', data);
-    setIsAddPopupOpen(false);
-    await loadBillings();
-  };
+    setIsSaving(true);
+    try {
+      const rentalId = mergedRentalMap.get(data.unitId);
+      if (!rentalId) {
+        throw new Error('No active rental found for this unit. Please ensure the tenant has an active rental agreement before adding a billing.');
+      }
 
-  const availableMonths = getAvailableMonths();
-  const availableRooms = getAvailableRooms();
+      const breakdown = [
+        { name: 'Rent', amount: data.rent },
+        { name: 'Utilities', amount: data.utilities },
+        ...(data.miscFees > 0 ? [{ name: 'Misc. Fees', amount: data.miscFees }] : []),
+      ];
+
+      await BillingService.createBilling({
+        rentalId: rentalId,
+        dueDate: data.dueDate,
+        breakdown,
+        paymentMethod: data.paymentMethod,
+      });
+
+      onRefresh();
+      setIsAddPopupOpen(false);
+    } catch (err) {
+      console.error('Failed to add billing:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Failed to add billing';
+      alert(errorMessage);
+      throw new Error(errorMessage);
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   return (
     <>
@@ -274,7 +223,6 @@ const TenantBillingsTab: FunctionComponent = () => {
             Tenant Billing Status
           </b>
           <div className="flex items-center gap-3 text-[10px] text-teal flex-wrap">
-            {/* Add Billing */}
             <div
               onClick={() => setIsAddPopupOpen(true)}
               className="rounded-[10px] bg-lightcyan flex items-center py-2 px-4 sm:px-6 gap-2 sm:gap-3 shrink-0 cursor-pointer hover:opacity-90 transition-opacity"
@@ -283,7 +231,6 @@ const TenantBillingsTab: FunctionComponent = () => {
               <b className="h-[17px] flex items-center shrink-0 text-[12px]">Add Billing</b>
             </div>
 
-            {/* Month Dropdown */}
             <div className="relative">
               <div
                 onClick={() => setIsMonthDropdownOpen(!isMonthDropdownOpen)}
@@ -307,7 +254,7 @@ const TenantBillingsTab: FunctionComponent = () => {
                         className={`w-full px-3 py-2 text-[12px] font-semibold text-center cursor-pointer transition-colors font-inter ${
                           selectedMonth.displayName === month.displayName
                             ? 'bg-darkslategray-200 text-white'
-                            : 'text-darkslategray-100 hover:bg-whitesmoke-100 hover:text-darkslategray-200'
+                            : 'text-darkslategray-100 hover:bg-whitesmoke-100'
                         } ${index !== availableMonths.length - 1 ? 'border-b border-whitesmoke-200' : ''}`}
                       >
                         {month.displayName}
@@ -346,7 +293,7 @@ const TenantBillingsTab: FunctionComponent = () => {
                   </tr>
                 )}
 
-                {!isLoading && billings.length === 0 && (
+                {!isLoading && filteredBillings.length === 0 && (
                   <tr>
                     <td colSpan={TABLE_COLUMNS.length} className="py-12 text-center text-darkslategray-100 text-[13px]">
                       No billings found for {selectedMonth.displayName}
@@ -354,14 +301,14 @@ const TenantBillingsTab: FunctionComponent = () => {
                   </tr>
                 )}
 
-                {!isLoading && billings.map((billing) => (
+                {!isLoading && filteredBillings.map((billing) => (
                   <BillingRow
                     key={billing._id}
-                    billing={billing}
-                    roomNumber={getRoomNumber(billing)}
-                    tenantName={getTenantName(billing)}
+                    billing={toRowBilling(billing)}
+                    roomNumber={billing.roomNumber ? parseInt(billing.roomNumber) || billing.roomNumber : 0}
+                    tenantName={billing.tenantName}
                     onStatusChange={handleStatusChange}
-                    onEditClick={handleEditClick}
+                    onEditClick={(b) => handleEditClick(b, billing.roomNumber, billing.tenantName)}
                     isOpen={openDropdownId === billing._id}
                     onToggle={(id) => setOpenDropdownId(openDropdownId === id ? null : id)}
                   />
@@ -375,15 +322,24 @@ const TenantBillingsTab: FunctionComponent = () => {
       <AddBillingPopup
         isOpen={isAddPopupOpen}
         onClose={() => setIsAddPopupOpen(false)}
-        availableRooms={availableRooms}
-        selectedMonth={selectedMonth.displayName}
+        facilityId={facilityId}
+        occupiedUnitIds={occupiedUnitIds}
+        availableUnitOptions={availableUnitOptions}
+        selectedMonth={selectedMonth}
         onSubmit={handleAddSubmit}
+        isSaving={isSaving}
       />
 
       <EditBillingPopup
         isOpen={isEditPopupOpen}
-        onClose={() => { setIsEditPopupOpen(false); setSelectedBilling(null); }}
+        onClose={() => {
+          setIsEditPopupOpen(false);
+          setSelectedBilling(null);
+          setSelectedBillingMeta(null);
+        }}
         billing={selectedBilling}
+        roomNumber={selectedBillingMeta?.roomNumber}
+        tenantName={selectedBillingMeta?.tenantName}
         onSave={handleSaveEdit}
       />
     </>

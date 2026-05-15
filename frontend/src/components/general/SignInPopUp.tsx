@@ -1,15 +1,19 @@
-import { type FunctionComponent, useCallback } from 'react';
-import { useEffect } from 'react';
+import { type FunctionComponent, useEffect } from 'react';
 import logo from '../../../assets/footer_logo.svg';
-import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 interface SignInPopUpProps {
+  isOpen?: boolean;
   onClose: () => void;
 }
 
-const SignInPopUp: FunctionComponent<SignInPopUpProps> = ({ onClose }) => {
+const SignInPopUp: FunctionComponent<SignInPopUpProps> = ({
+  isOpen = true,
+  onClose,
+}) => {
   useEffect(() => {
+    if (!isOpen) return;
+
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         onClose();
@@ -21,15 +25,29 @@ const SignInPopUp: FunctionComponent<SignInPopUpProps> = ({ onClose }) => {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [onClose]);
+  }, [isOpen, onClose]);
+
+  if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
+    <div className="fixed inset-0 z-[2147483647] flex items-center justify-center p-4">
+      <div
+        className="absolute inset-0 z-[2147483646] bg-black/50 backdrop-blur-sm"
+        onClick={onClose}
+      />
 
-      <div className="w-full max-w-[500px] relative shadow-2xl rounded-num-16 bg-white overflow-hidden flex flex-col items-center justify-center py-12 px-6 md:px-12 gap-6 text-left text-num-18 text-dimgray font-inter animate-fade-in border-num-4">
+      <div className="relative z-[2147483647] w-full max-w-[500px] shadow-2xl rounded-num-16 bg-white overflow-hidden flex flex-col items-center justify-center py-12 px-6 md:px-12 gap-6 text-left text-num-18 text-dimgray font-inter animate-fade-in border-num-4">
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Close sign in popup"
+          className="absolute right-5 top-5 z-[2147483647] flex h-8 w-8 items-center justify-center rounded-full text-gray-500 hover:bg-gray-100 hover:text-gray-800 transition-colors"
+        >
+          ×
+        </button>
+
         <div className="flex flex-col items-center justify-center">
-          <img src={logo} className="w-20 h-20" />
+          <img src={logo} className="w-20 h-20" alt="ATLAS Logo" />
         </div>
 
         <div className="self-stretch flex flex-col items-center justify-center text-teal text-center">
@@ -41,13 +59,13 @@ const SignInPopUp: FunctionComponent<SignInPopUpProps> = ({ onClose }) => {
             </span>
             <span>,</span>
           </b>
+
           <b className="relative text-num-36 font-lora">
             <span className="text-gray">by</span>
             <span>{` `}</span>
             <span className="bg-linear-to-b from-[#5dc2a8] to-[#0c8873] bg-clip-text text-transparent">
               students
             </span>
-
             <span>.</span>
           </b>
         </div>
@@ -59,10 +77,13 @@ const SignInPopUp: FunctionComponent<SignInPopUpProps> = ({ onClose }) => {
           >
             <img
               className="h-6 w-6 relative"
-              alt="G"
+              alt="Google"
               src="https://www.svgrepo.com/show/475656/google-color.svg"
             />
-            <b className="relative tracking-num--0_01 text-gray">Sign in with Google</b>
+
+            <b className="relative tracking-num--0_01 text-gray">
+              Sign in with Google
+            </b>
           </a>
         </div>
 
@@ -70,13 +91,16 @@ const SignInPopUp: FunctionComponent<SignInPopUpProps> = ({ onClose }) => {
           <p className="m-0 leading-6 font-medium text-gray-100">
             Signing up for an ATLAS account means you agree to the
           </p>
+
           <div className="flex items-center justify-center gap-1 text-teal-200">
             <span className="font-semibold cursor-pointer underline">
-              <Link to="terms-of-use">Privacy Policy</Link>
+              <Link to="/terms-of-use">Privacy Policy</Link>
             </span>
+
             <span className="text-dimgray">and</span>
+
             <span className="font-semibold cursor-pointer underline">
-              <Link to="terms-of-use">Terms of Service.</Link>
+              <Link to="/terms-of-use">Terms of Service.</Link>
             </span>
           </div>
         </div>

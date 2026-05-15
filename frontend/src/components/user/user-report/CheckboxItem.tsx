@@ -6,28 +6,39 @@ interface CheckboxItemProps {
   isChecked: boolean;
   onToggle: () => void;
   noBorder?: boolean;
+  compact?: boolean;
 }
 
-const CheckboxItem: React.FC<CheckboxItemProps> = ({ label, isChecked, onToggle, noBorder }) => {
+const CheckboxItem: React.FC<CheckboxItemProps> = ({
+  label,
+  isChecked,
+  onToggle,
+  noBorder,
+  compact = false,
+}) => {
   return (
     <button
+      type="button"
       onClick={onToggle}
-      className={`flex cursor-pointer items-center w-full px-[16px] py-[12px] bg-white border rounded-num-8 transition-colors text-left group 
+      className={`flex cursor-pointer items-center w-full bg-white border rounded-num-8 transition-colors text-left group ${
+        compact ? 'px-2 py-1.5' : 'px-[16px] py-[12px]'
+      }
                 ${isChecked ? 'border-[#2f8677]' : 'border-gainsboro hover:border-[#2f8677]'}
                 ${noBorder ? 'border-0' : 'border-2'}
                 `}
     >
       {/* Custom Checkbox Square */}
       <div
-        className={`w-[24px] h-[24px] border-3  mr-[16px] flex justify-center items-center shrink-0 transition-colors ${
+        className={`${compact ? 'w-[14px] h-[14px] mr-2 border-2' : 'w-[24px] h-[24px] mr-[16px] border-3'} flex justify-center items-center shrink-0 transition-colors ${
           isChecked ? 'bg-darkslategray border-darkslategray' : 'border-darkslategray bg-white'
         }`}
       >
         {/* Checkmark SVG (Only renders when isChecked is true) */}
         {isChecked && (
           <svg
-            width="14"
-            height="10"
+            aria-hidden="true"
+            width={compact ? '9' : '14'}
+            height={compact ? '7' : '10'}
             viewBox="0 0 14 10"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -44,7 +55,11 @@ const CheckboxItem: React.FC<CheckboxItemProps> = ({ label, isChecked, onToggle,
       </div>
 
       {/* Text Label */}
-      <span className="font-bold text-darkslategray text-num-16 group-hover:opacity-80">
+      <span
+        className={`font-bold text-darkslategray group-hover:opacity-80 ${
+          compact ? 'truncate text-[9px] leading-3' : 'text-num-16'
+        }`}
+      >
         {label}
       </span>
     </button>
