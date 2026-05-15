@@ -6,6 +6,11 @@ import { ReviewService } from '../../../../service/ReviewService';
 import { UserService } from '../../../../service/UserService';
 import { useCurrentDormReviewDetails } from './useCurrentDormReviewDetails';
 
+interface Roommate {
+  name: string;
+  avatarSrc?: string;
+}
+
 interface CurrentDormCardProps {
   propertyImageSrc?: string;
   propertyName?: string;
@@ -13,6 +18,7 @@ interface CurrentDormCardProps {
   contractDuration?: string;
   leaseEndDate?: string;
   verified?: true;
+  roommates?: Roommate[];
 }
 
 export default function CurrentDormCard({
@@ -22,6 +28,13 @@ export default function CurrentDormCard({
   contractDuration = '1 Year',
   leaseEndDate = 'May 18, 2026',
   verified = true,
+  roommates = [
+    { name: 'Nathaniel Cunanan', avatarSrc: placeholder },
+    { name: 'Raven Caduyac', avatarSrc: placeholder },
+    { name: 'Jiro Tipan', avatarSrc: placeholder },
+    { name: 'Ted Villanueva', avatarSrc: placeholder },
+    { name: 'Val Alamillo', avatarSrc: placeholder },
+  ],
   // default values for props, can be overridden when using the component
 }: CurrentDormCardProps) {
   const [activeTab, setActiveTab] = useState('Contract Information');
@@ -65,6 +78,10 @@ export default function CurrentDormCard({
     };
   }, [details?.listingId]);
 
+  const handleViewDetails = () => {
+    navigate(details?.facilityId ? `/facilities/${details.facilityId}` : '/current-dorm');
+  };
+
   return (
     <div className="flex flex-col gap-5 max-w-4xl mx-auto dark:text-[#edf6f4]">
       <div className="max-w-4xl mx-auto rounded-xl border border-[#f0f0f0] bg-white overflow-hidden shadow-sm text-black dark:border-[#303331] dark:bg-[#101111] dark:text-[#edf6f4] dark:shadow-none">
@@ -99,6 +116,44 @@ export default function CurrentDormCard({
               <p className="text-xs">Lease End</p>
             </div>
           </div>
+
+          {/* Roommates Section */}
+          {roommates && roommates.length > 0 && (
+            <div className="mb-8">
+              <h3 className="text-xl font-bold mb-4 text-center">Your Roommates</h3>
+
+              <div className="flex flex-wrap justify-center gap-4">
+                {roommates.map((roommate, index) => (
+                  <div
+                    key={roommate.name}
+                    className="w-[180px] flex flex-col items-center border border-[#f0f0f0] rounded-lg p-4 dark:border-[#303331] dark:bg-[#101111]"
+                  >
+                    {roommate.avatarSrc && (
+                      <img
+                        src={roommate.avatarSrc}
+                        alt={roommate.name}
+                        className="w-16 h-16 rounded-full object-cover mb-2"
+                      />
+                    )}
+
+                    <p className="text-sm font-semibold text-center">{roommate.name}</p>
+
+                    <p className="text-xs">Roommate {index + 1}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Action Button */}
+          <button
+            type="button"
+            onClick={handleViewDetails}
+            className="w-full border border-[#f0f0f0] text-teal-700 text-sm font-semibold rounded-md py-3 flex items-center justify-center gap-2 hover:border-teal-500 cursor-pointer transition dark:border-[#303331] dark:text-[#72cbb8] dark:hover:border-[#72cbb8]"
+          >
+            View Details
+            <Icon icon="heroicons:arrow-top-right-on-square" className="w-4 h-4" />
+          </button>
         </div>
       </div>
       <div className="self-stretch flex items-start justify-center pt-num-24 px-num-32 pb-20 gap-6 text-num-14 text-black dark:text-[#edf6f4]">
