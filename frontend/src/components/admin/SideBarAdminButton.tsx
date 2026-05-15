@@ -12,14 +12,14 @@ type SideBarAdminButtonProps = {
 };
 
 const getHighlightClasses = (state: SideBarAdminButtonState): string => {
-  if (state === 'clicked') return 'bg-[#096c5b]';
-  if (state === 'hovered') return 'bg-[#BEEDE1]';
-  return 'bg-white';
+  if (state === 'clicked') return 'bg-[#096c5b] dark:bg-[#096c5b]';
+  if (state === 'hovered') return 'bg-[#BEEDE1] dark:bg-[#1f3a34]';
+  return 'bg-white dark:bg-transparent';
 };
 
 const getTextClasses = (state: SideBarAdminButtonState): string => {
-  if (state === 'clicked') return 'text-[#096c5b]';
-  return 'text-[#001d18]';
+  if (state === 'clicked') return 'text-[#096c5b] dark:text-[#72cbb8]';
+  return 'text-[#001d18] dark:text-[#d7e0ef]';
 };
 
 const SideBarAdminButton = ({
@@ -45,7 +45,7 @@ const SideBarAdminButton = ({
         className={[
           'h-[44px] w-[8px] shrink-0 rounded-[4px] transition-colors duration-200 ease-in-out',
           getHighlightClasses(state),
-          state === 'default' ? 'group-hover:bg-[#BEEDE1]' : '',
+          state === 'default' ? 'group-hover:bg-[#BEEDE1] dark:group-hover:bg-[#1f3a34]' : '',
         ].join(' ')}
       />
 
@@ -53,7 +53,7 @@ const SideBarAdminButton = ({
         className={[
           'flex h-[44px] flex-1 items-center gap-[16px] rounded-[12px] px-[4px]',
           'transition-colors duration-200 ease-in-out',
-          state === 'default' ? 'group-hover:bg-[#F0FAF6]' : '',
+          state === 'default' ? 'group-hover:bg-[#F0FAF6] dark:group-hover:bg-[#17201d]' : '',
         ].join(' ')}
       >
         <span

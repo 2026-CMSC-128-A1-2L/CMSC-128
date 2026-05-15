@@ -5,6 +5,7 @@ import { api } from '../service/axiosInstance';
 import type { DormCardData } from './useFacilities';
 
 const placeholderImage = 'https://placehold.co/900x430?text=No+image';
+const objectIdPattern = /^[a-f\d]{24}$/i;
 
 type FacilityDetail = GetFacilityResponse;
 type FacilityMedia = { value: string };
@@ -43,6 +44,7 @@ export type FacilityReview = {
   createdAt?: string;
   rating: number;
   description: string;
+  mediaUrls: string[];
 };
 
 export type FacilityDetailsData = {
@@ -109,7 +111,7 @@ const mapFromCard = (card: DormCardData): FacilityDetailsData => ({
   rating: card.rating,
   price: card.price,
   listings: card.room_types.map((room, index) => ({
-    id: `${card.id}-${index}`,
+    id: room.id && objectIdPattern.test(room.id) ? room.id : `${card.id}-${index}`,
     label: room.pax,
     roomType: room.pax,
     description: '',
@@ -224,6 +226,25 @@ type RawReview = {
     environment?: number;
   };
   description?: string;
+  media?: {
+    value?: string;
+  }[];
+};
+
+const toPublicReviewMediaUrl = (value?: string) => {
+  if (!value) return undefined;
+  const key = getReviewMediaKey(value);
+  return key ? `/api/files/public?key=${encodeURIComponent(key)}` : undefined;
+};
+
+const getReviewMediaKey = (value: string) => {
+  if (!value.startsWith('http')) return value.replace(/^\/+/, '');
+
+  try {
+    return new URL(value).pathname.replace(/^\/+/, '');
+  } catch {
+    return undefined;
+  }
 };
 
 const mapReview = (review: RawReview): FacilityReview => {
@@ -246,6 +267,10 @@ const mapReview = (review: RawReview): FacilityReview => {
     createdAt: review.createdAt,
     rating,
     description: review.description ?? '',
+    mediaUrls:
+      review.media
+        ?.map((item) => toPublicReviewMediaUrl(item.value))
+        .filter((url): url is string => Boolean(url)) ?? [],
   };
 };
 

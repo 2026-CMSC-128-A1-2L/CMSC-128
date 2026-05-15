@@ -1,13 +1,11 @@
-import type { ReactNode } from "react";
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Icon } from "@iconify/react";
-import PageBackground from "../general/PageBackground";
-import SideBarLandlord, {
-  type SideBarLandlordItemKey,
-} from "./SideBarLandlord";
-import LandlordFooter from "./LandlordFooter";
-import TutorialBubble from "./TutorialsForLandlord";
+import type { ReactNode } from 'react';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Icon } from '@iconify/react';
+import PageBackground from '../general/PageBackground';
+import SideBarLandlord, { type SideBarLandlordItemKey } from './SideBarLandlord';
+import LandlordFooter from './LandlordFooter';
+import TutorialBubble from '../../../../frontend/src/components/landlord/TutorialsForLandlord';
 
 export type BreadcrumbItem = {
   label: string;
@@ -17,6 +15,7 @@ export type BreadcrumbItem = {
 type LandlordLayoutProps = {
   activeSidebarItem?: SideBarLandlordItemKey;
   breadcrumbs?: BreadcrumbItem[];
+  activeTab?:string;
   children: ReactNode;
 };
 

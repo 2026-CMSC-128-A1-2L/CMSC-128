@@ -11,11 +11,13 @@ import RateAndReview from '../pages/user/profile/current_dorm/RateAndReview';
 import RateAndReviewForm from '../pages/user/profile/current_dorm/RateAndReviewWithForms';
 import RateAndReviewUpload from '../pages/user/profile/current_dorm/RateAndReviewWithUploads';
 import TermsOfUse from '../pages/user/info/TermsOfUse';
+import PrivacyPolicy from '../pages/user/info/PrivacyPolicy';
 import MyCalendar from '../pages/user/calendar/MyCalendar';
 import ProfileSwitcher from '../pages/user/profile/ProfileSwitcher';
 import Report from '../pages/user/profile/current_dorm/Report';
 import LeaseTransfer from '../pages/user/profile/current_dorm/LeaseTransfer';
 import FinalizedApplicationPage1a from '../pages/user/profile/current_dorm/FinalizedApplicationPage1a';
+import PendingApplication1a from '../pages/user/profile/current_dorm/PendingApplication1a';
 import { Route } from 'react-router-dom';
 
 import Settings from '../pages/user/setting/Settings';
@@ -49,9 +51,12 @@ const userRoutes = [
   <Route key="ratereviewform" path="/rate-review-form" element={<RateAndReviewForm />} />,
   <Route key="ratereviewupload" path="/rate-review-upload" element={<RateAndReviewUpload />} />,
   <Route key="terms" path="/terms-of-use" element={<TermsOfUse />} />,
+  <Route key="privacy-policy" path="/privacy-policy" element={<PrivacyPolicy />} />,
+  <Route key="privacy" path="/privacy" element={<PrivacyPolicy />} />,
   <Route key="finance" path="/finance" element={<Finance />} />,
   <Route key="mycalendar" path="/my-calendar" element={<MyCalendar />} />,
   <Route key="profile-switcher" path="/profile-switcher" element={<ProfileSwitcher />} />,
+  <Route key="applications" path="/applications" element={<PendingApplication1a />} />,
   <Route key="settings" path="/settings" element={<Settings />} />,
   <Route key="pendingapplication" path="/finappli" element={<FinalizedApplicationPage1a />} />,
 

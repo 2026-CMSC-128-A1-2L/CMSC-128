@@ -2,8 +2,11 @@ import { useCallback, useEffect, useRef, useState, type MouseEventHandler } from
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import AtlasLogo from '../../../assets/logo_atlas_text.svg?react';
+import AtlasLogoDark from '../../../assets/admin/atlas_worded_logo.svg?react';
 import SideBarAdminButton from './SideBarAdminButton';
 import SideBarAdminMessagesView, { type MessageItem } from './SideBarAdminMessagesView';
+import { useTheme } from '../../pages/utilities/DarkMode';
+import { useAuthStore } from '../../store/useAuthStore';
 
 export type SideBarAdminView = 'nav' | 'messages_tab';
 export type SideBarAdminItemKey =
@@ -146,6 +149,14 @@ const SideBarAdmin = ({
   onViewArchivedMessages,
 }: SideBarAdminProps) => {
   const navigate = useNavigate();
+  const { isDark, toggle } = useTheme();
+  const { user, logout } = useAuthStore();
+
+  const adminName = user ? `${user.firstName} ${user.lastName}`.trim() : admin.name;
+  const adminRole = user?.userType || admin.role;
+  const adminAvatar = user?.profilePicture || admin.avatarUrl;
+
+  const [darkModeIconSpinning, setDarkModeIconSpinning] = useState(false);
   const [view, setView] = useState<SideBarAdminView>(initialView);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [profileMenuPlacement, setProfileMenuPlacement] = useState<'top' | 'bottom'>('top');
@@ -203,14 +214,11 @@ const SideBarAdmin = ({
     setIsProfileMenuOpen((prev) => !prev);
   };
 
-  const handleViewProfileClick: MouseEventHandler<HTMLButtonElement> = (event) => {
-    setIsProfileMenuOpen(false);
-    onProfileClick?.(event);
-  };
-
-  const handleSignOutClick: MouseEventHandler<HTMLButtonElement> = (event) => {
+  const handleSignOutClick: MouseEventHandler<HTMLButtonElement> = async (event) => {
     setIsProfileMenuOpen(false);
     onSignOut?.(event);
+    await logout();
+    navigate('/', { replace: true });
   };
 
   useEffect(() => {
@@ -249,7 +257,7 @@ const SideBarAdmin = ({
   return (
     <aside
       className={[
-        'flex shrink-0 overflow-hidden border border-solid border-[#f0f0f0] bg-white',
+        'flex shrink-0 overflow-hidden border-r border-solid border-[#f0f0f0] bg-transparent dark:border-[#303331] dark:text-[#d7e0ef]',
         'transition-[width] duration-300 ease-in-out',
         isMessagesTab ? 'w-[336px]' : 'w-[200px]',
         className,
@@ -266,7 +274,11 @@ const SideBarAdmin = ({
       ) : (
         <div className="flex min-h-screen w-full flex-col items-center gap-[32px] pt-[24px] pb-[30px]">
           <div className="flex h-[60px] w-[128px] items-center justify-center overflow-hidden">
-            <AtlasLogo className="h-full w-full" aria-label="Atlas" />
+            {isDark ? (
+              <AtlasLogoDark className="h-full w-full" aria-label="Atlas" />
+            ) : (
+              <AtlasLogo className="h-full w-full" aria-label="Atlas" />
+            )}
           </div>
 
           <nav className="flex w-full flex-col gap-[12px]">
@@ -279,7 +291,7 @@ const SideBarAdmin = ({
                     : 'default';
 
               return (
-                <div key={item.key} className="duration-200 hover:bg-[#F0FAF6]">
+                <div key={item.key} className="duration-200 hover:bg-[#F0FAF6] dark:hover:bg-[#17201d]">
                   <SideBarAdminButton
                     icon={item.iconName}
                     label={item.label}
@@ -292,15 +304,42 @@ const SideBarAdmin = ({
           </nav>
 
           <div className="flex flex-1 w-full flex-col justify-end gap-[12px]">
+            {/* Dark mode */}
+            <button
+              type="button"
+              onClick={() => {
+                setDarkModeIconSpinning(true);
+                toggle();
+              }}
+              aria-label="Toggle dark mode"
+              className="flex w-[180px] cursor-pointer items-center gap-[24px] pr-[20px] transition-colors hover:bg-[#F0FAF6] dark:hover:bg-[#17201d]"
+            >
+              <span aria-hidden="true" className="h-[44px] w-[8px] shrink-0 rounded-[4px] bg-transparent opacity-0" />
+              <span className="flex h-[44px] flex-1 items-center gap-[16px] rounded-[12px] px-[4px]">
+                <Icon
+                  icon="gg:dark-mode"
+                  onAnimationEnd={() => setDarkModeIconSpinning(false)}
+                  className={[
+                    "h-[24px] w-[24px] shrink-0 text-[#001d18] dark:text-white",
+                    darkModeIconSpinning ? "dark-mode-icon-turn" : "",
+                  ].join(" ")}
+                  aria-hidden="true"
+                />
+                <span className="font-['Inter',sans-serif] text-[14px] font-semibold leading-normal text-[#001d18] dark:text-[#d7e0ef]">
+                  {isDark ? "Light Mode" : "Dark Mode"}
+                </span>
+              </span>
+            </button>
+
             <div className="flex w-full flex-col items-start px-[20px]">
-              <div className="h-[2px] w-full rounded-[100px] bg-[#f0f0f0]" />
+              <div className="h-[2px] w-full rounded-[100px] bg-[#f0f0f0] dark:bg-[#303331]" />
             </div>
 
             <div ref={profileMenuRef} className="relative w-full">
               {isProfileMenuOpen && (
                 <div
                   className={[
-                    'absolute left-[20px] z-30 flex h-[68px] w-[171px] flex-col gap-[7px] rounded-[9px] border border-solid border-[#f0f0f0] bg-[#f7f7f7] px-[11px] py-[9px] shadow-[0_4px_18px_rgba(0,0,0,0.1)]',
+                    'absolute left-[20px] z-30 flex h-[41px] w-[171px] flex-col gap-[7px] rounded-[9px] border border-solid border-[#f0f0f0] bg-[#f7f7f7] px-[11px] py-[9px] shadow-[0_4px_18px_rgba(0,0,0,0.1)] dark:border-[#303331] dark:bg-[#141515] dark:shadow-[0_8px_24px_rgba(0,0,0,0.35)]',
                     profileMenuPlacement === 'bottom'
                       ? 'top-full mt-[8px]'
                       : 'bottom-full mb-[8px]',
@@ -308,15 +347,8 @@ const SideBarAdmin = ({
                 >
                   <button
                     type="button"
-                    onClick={handleViewProfileClick}
-                    className="h-[21px] w-full cursor-pointer rounded-[9px] bg-[#cbf6ed] text-center font-['Inter',sans-serif] text-[11px] font-medium text-[#096c5b] transition-colors duration-150 hover:brightness-95"
-                  >
-                    View Profile
-                  </button>
-                  <button
-                    type="button"
                     onClick={handleSignOutClick}
-                    className="h-[21px] w-full cursor-pointer rounded-[9px] border border-solid border-[#f0f0f0] bg-white bg-gradient-to-b from-[#c00f0f] to-[#e44f4f] bg-clip-text text-center font-['Inter',sans-serif] text-[11px] font-medium text-transparent transition-colors duration-150 hover:bg-[#f9f9f9]"
+                    className="h-[21px] w-full cursor-pointer rounded-[9px] border border-solid border-[#f0f0f0] bg-white bg-gradient-to-b from-[#c00f0f] to-[#e44f4f] bg-clip-text text-center font-['Inter',sans-serif] text-[11px] font-medium text-transparent transition-colors duration-150 hover:bg-[#f9f9f9] dark:border-[#303331] dark:bg-[#101111] dark:hover:bg-[#202221]"
                   >
                     Log Out
                   </button>
@@ -328,28 +360,28 @@ const SideBarAdmin = ({
                 onClick={handleProfileButtonClick}
                 aria-haspopup="menu"
                 aria-expanded={isProfileMenuOpen}
-                aria-label={`${admin.name} profile`}
-                className="flex w-[200px] cursor-pointer items-center gap-[8px] overflow-hidden pl-[32px] pr-[20px] py-[10px] transition-colors duration-200 ease-in-out hover:bg-[#F0FAF6]"
+                aria-label={`${adminName} profile`}
+                className="flex w-[200px] cursor-pointer items-center gap-[8px] overflow-hidden pl-[32px] pr-[20px] py-[10px] transition-colors duration-200 ease-in-out hover:bg-[#F0FAF6] dark:hover:bg-[#17201d]"
               >
-                <span className="flex h-[48px] w-[44px] shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#e5e7eb] text-[#9ca3af]">
-                  {admin.avatarUrl ? (
-                    <img src={admin.avatarUrl} alt="" className="h-full w-full object-cover" />
+                <span className="flex h-[48px] w-[44px] shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#e5e7eb] text-[#9ca3af] dark:bg-[#242526] dark:text-[#a4acba]">
+                  {adminAvatar ? (
+                    <img src={adminAvatar} alt="" className="h-full w-full object-cover" />
                   ) : (
                     <Icon icon="solar:user-bold" className="h-[28px] w-[28px]" aria-hidden="true" />
                   )}
                 </span>
                 <span className="flex flex-col items-start justify-center gap-[4px] overflow-hidden">
-                  <span className="font-['Inter',sans-serif] text-[14px] font-bold leading-[normal] text-[#096c5b] whitespace-nowrap">
-                    {admin.name}
+                  <span className="font-['Inter',sans-serif] text-[14px] font-bold leading-[normal] text-[#096c5b] dark:text-[#72cbb8] whitespace-nowrap">
+                    {adminName}
                   </span>
-                  {admin.role && (
+                  {adminRole && (
                     <span className="flex items-center gap-[4px]">
                       <span className="bg-gradient-to-b from-[#5dc2a8] to-[#0c8873] bg-clip-text font-['Inter',sans-serif] text-[10px] font-bold leading-[normal] text-transparent whitespace-nowrap">
-                        {admin.role}
+                        {adminRole}
                       </span>
                       <span
                         aria-hidden="true"
-                        className="flex h-[13.6px] w-[12px] items-center justify-center text-[#0c8873]"
+                        className="flex h-[13.6px] w-[12px] items-center justify-center text-[#0c8873] dark:text-[#72cbb8]"
                       >
                         <Icon
                           icon="material-symbols:admin-panel-settings"

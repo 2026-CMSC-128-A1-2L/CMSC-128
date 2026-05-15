@@ -19,3 +19,14 @@ export const AdminRoute = UserTypeRoute(['Admin']);
 export const ManagerRoute = UserTypeRoute(['Manager', 'Landlord']);
 export const LandlordRoute = UserTypeRoute(['Landlord']);
 export const StudentRoute = UserTypeRoute(['Student']);
+
+export const AuthenticatedRoute = () => {
+  const location = useLocation();
+  const store = useAuthStore();
+
+  if (!store.user) {
+    return <Navigate to="/" state={{ from: location }} replace />;
+  }
+
+  return <Outlet />;
+};

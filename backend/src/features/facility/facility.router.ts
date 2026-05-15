@@ -12,6 +12,7 @@ import {
   routeRejectFacility,
   routeGetMonthlyIncomeByLandlord,
   routeGetOverdueTenantsByLandlord,
+  routeGetTenantsByLandlord,
 } from './facility.controller.js';
 import { routeCreateListing } from '../listing/listing.controller.js';
 import {
@@ -75,6 +76,10 @@ router.get('/landlord/monthly-income', isLandlord, routeGetMonthlyIncomeByLandlo
 // landlord only
 // ============================================================================
 router.get('/landlord/overdue-tenants', isLandlord, routeGetOverdueTenantsByLandlord);
+
+// GET /api/facilities/landlord/tenants
+// Returns all tenants across all facilities owned by the landlord.
+router.get('/landlord/tenants', isLandlord, routeGetTenantsByLandlord);
 
 // GET /api/facilities/:facilityId
 //
