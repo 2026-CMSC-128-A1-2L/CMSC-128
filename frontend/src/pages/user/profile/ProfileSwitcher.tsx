@@ -238,7 +238,7 @@ const ProfileSwitcher = () => {
 
         <div className="w-full flex flex-col items-start justify-between gap-20 px-6 md:px-8">
           <div className="self-stretch flex flex-col items-start py-num-0 pr-20">
-            
+
 
             <div className="bg-white/35  self-stretch min-h-[800px] rounded-2xl  flex flex-col items-start gap-3 text-center text-dimgray font-inter pb-10 dark:bg-transparent dark:text-[#a4acba]">
               <div

@@ -22,7 +22,6 @@ const Preferences: FunctionComponent = () => {
           </div>
         </div>
         <div className="w-full overflow-hidden flex flex-col lg:flex-row items-center justify-center py-num-10 px-0 box-border gap-9">
-
           {/* Light Mode card */}
           <button
             type="button"
@@ -148,7 +147,6 @@ const Preferences: FunctionComponent = () => {
               </div>
             </div>
           </button>
-
         </div>
       </div>
     </div>

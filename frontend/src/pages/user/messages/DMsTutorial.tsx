@@ -61,12 +61,12 @@ const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose 
     const updatePosition = () => {
       const currentContent = helpContent[step - 1];
       const target = document.getElementById(currentContent.targetId);
-      
+
       if (target) {
         const rect = target.getBoundingClientRect();
         // Point to the middle of the section
         setBubblePos({
-          top: rect.top + (rect.height / 2) - 40, // Center the bubble vertically relative to target
+          top: rect.top + rect.height / 2 - 40, // Center the bubble vertically relative to target
           left: rect.right - 10, // Slight overlap for the arrow
         });
       }

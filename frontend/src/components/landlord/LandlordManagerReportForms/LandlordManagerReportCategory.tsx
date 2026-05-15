@@ -45,11 +45,11 @@ const CheckSvg = ({ size = 14 }: { size?: number }) => (
   </svg>
 );
 
-const Checkbox: FunctionComponent<{ active: boolean; onToggle: () => void; ariaLabel?: string }> = ({
-  active,
-  onToggle,
-  ariaLabel,
-}) => (
+const Checkbox: FunctionComponent<{
+  active: boolean;
+  onToggle: () => void;
+  ariaLabel?: string;
+}> = ({ active, onToggle, ariaLabel }) => (
   <span
     role="checkbox"
     tabIndex={0}
@@ -166,7 +166,9 @@ const LandlordManagerReportCategory: FunctionComponent<Props> = ({
                   }}
                   className={[
                     'flex w-full cursor-pointer items-center gap-[16px] rounded-[12px] py-[12px] pl-[24px] pr-[22px] text-left transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[#096c5b]/40',
-                    active ? 'bg-[#f0fdf9] dark:bg-[#1f3a34]' : 'hover:bg-[#fafafa] dark:hover:bg-[#1f2022]',
+                    active
+                      ? 'bg-[#f0fdf9] dark:bg-[#1f3a34]'
+                      : 'hover:bg-[#fafafa] dark:hover:bg-[#1f2022]',
                   ].join(' ')}
                 >
                   <div className="flex flex-1 flex-col gap-[4px]">
@@ -179,7 +181,11 @@ const LandlordManagerReportCategory: FunctionComponent<Props> = ({
                       </span>
                     )}
                   </div>
-                  <Checkbox active={active} onToggle={() => onToggle(item.key)} ariaLabel={item.title} />
+                  <Checkbox
+                    active={active}
+                    onToggle={() => onToggle(item.key)}
+                    ariaLabel={item.title}
+                  />
                 </div>
               );
             })}

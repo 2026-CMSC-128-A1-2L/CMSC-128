@@ -60,7 +60,10 @@ const Security: FunctionComponent = () => {
                       className="flex items-center gap-1 text-[12px] text-teal-100 cursor-pointer bg-transparent border-none p-0 transition-all duration-150 hover:text-teal-200 hover:gap-1.5"
                     >
                       <span className="font-medium">Sign In</span>
-                      <Icon icon="solar:arrow-right-up-linear" className="w-4 relative max-h-full" />
+                      <Icon
+                        icon="solar:arrow-right-up-linear"
+                        className="w-4 relative max-h-full"
+                      />
                     </button>
                     {showSignIn && <SignInPopUp onClose={() => setShowSignIn(false)} />}
                   </div>
@@ -114,7 +117,10 @@ const Security: FunctionComponent = () => {
                           </div>
                         </div>
                       </div>
-                      <Icon icon="qlementine-icons:menu-dots-24" className="h-6 w-6 relative cursor-pointer text-dimgray transition-all duration-150 hover:text-teal hover:scale-110" />
+                      <Icon
+                        icon="qlementine-icons:menu-dots-24"
+                        className="h-6 w-6 relative cursor-pointer text-dimgray transition-all duration-150 hover:text-teal hover:scale-110"
+                      />
                     </div>
                   </div>
                 </div>
@@ -152,7 +158,11 @@ const Security: FunctionComponent = () => {
               </div>
               <div className="self-stretch flex-1 rounded-num-16 border-whitesmoke-200 border-solid border overflow-hidden flex flex-col items-start justify-center py-4 px-6 gap-2.5 text-[24px] text-teal">
                 <div className="flex items-center gap-1">
-                  <img className="w-[52px] relative max-h-full object-cover" alt="" src={footer_logo} />
+                  <img
+                    className="w-[52px] relative max-h-full object-cover"
+                    alt=""
+                    src={footer_logo}
+                  />
                   <b className="relative leading-8">App Permissions</b>
                 </div>
                 <div className="self-stretch relative text-num-14 font-medium text-black text-left">

@@ -1,14 +1,14 @@
-import { Fragment } from "react";
-import { Icon } from "@iconify/react";
+import { Fragment } from 'react';
+import { Icon } from '@iconify/react';
 
-export type VerificationStep = "submit" | "reviewing" | "finish";
+export type VerificationStep = 'submit' | 'reviewing' | 'finish';
 
 type ProgressStep<Key extends string = string> = {
   key: Key;
   label: string;
 };
 
-type ProgressOrientation = "horizontal" | "vertical";
+type ProgressOrientation = 'horizontal' | 'vertical';
 
 type ProgressBarProps<Key extends string = VerificationStep> = {
   currentStep?: Key;
@@ -20,30 +20,31 @@ type ProgressBarProps<Key extends string = VerificationStep> = {
 };
 
 const defaultSteps: Array<ProgressStep<VerificationStep>> = [
-  { key: "submit", label: "Submit" },
-  { key: "reviewing", label: "Reviewing" },
-  { key: "finish", label: "Finish" },
+  { key: 'submit', label: 'Submit' },
+  { key: 'reviewing', label: 'Reviewing' },
+  { key: 'finish', label: 'Finish' },
 ];
 
-type StepState = "completed" | "active" | "upcoming";
+type StepState = 'completed' | 'active' | 'upcoming';
 
 const getCircleClasses = (state: StepState): string => {
-  if (state === "completed") return "bg-teal text-white dark:bg-teal-600";
-  if (state === "active") return "bg-darkslategray text-white dark:bg-[#72cbb8] dark:text-[#101111]";
-  return "bg-silver-100 text-transparent dark:bg-[#303331]";
+  if (state === 'completed') return 'bg-teal text-white dark:bg-teal-600';
+  if (state === 'active')
+    return 'bg-darkslategray text-white dark:bg-[#72cbb8] dark:text-[#101111]';
+  return 'bg-silver-100 text-transparent dark:bg-[#303331]';
 };
 
 const ProgressBar = <Key extends string = VerificationStep>({
   currentStep,
   currentStepIndex,
   steps,
-  className = "",
-  orientation = "horizontal",
-  connectorClassName = "",
+  className = '',
+  orientation = 'horizontal',
+  connectorClassName = '',
 }: ProgressBarProps<Key>) => {
   const progressSteps = (steps?.length ? steps : defaultSteps) as Array<ProgressStep<Key>>;
   const currentIdx =
-    typeof currentStepIndex === "number"
+    typeof currentStepIndex === 'number'
       ? Math.max(0, Math.min(currentStepIndex, progressSteps.length - 1))
       : Math.max(
           0,
@@ -52,7 +53,7 @@ const ProgressBar = <Key extends string = VerificationStep>({
 
   const renderCircle = (state: StepState) => (
     <div className="relative flex h-[22px] w-[22px] items-center justify-center">
-      {state === "active" && (
+      {state === 'active' && (
         <>
           <div className="absolute inset-0 rounded-full bg-darkslategray/30 animate-ripple" />
           <div className="absolute inset-0 rounded-full bg-darkslategray/30 animate-ripple [animation-delay:1000ms]" />
@@ -60,11 +61,11 @@ const ProgressBar = <Key extends string = VerificationStep>({
       )}
       <span
         className={[
-          "relative z-10 flex h-[22px] w-[22px] items-center justify-center rounded-full transition-colors duration-200",
+          'relative z-10 flex h-[22px] w-[22px] items-center justify-center rounded-full transition-colors duration-200',
           getCircleClasses(state),
-        ].join(" ")}
+        ].join(' ')}
       >
-        {state === "completed" && (
+        {state === 'completed' && (
           <Icon icon="material-symbols:check-rounded" className="h-[14px] w-[14px]" />
         )}
       </span>
@@ -77,12 +78,12 @@ const ProgressBar = <Key extends string = VerificationStep>({
     </span>
   );
 
-  if (orientation === "vertical") {
+  if (orientation === 'vertical') {
     return (
-      <div className={["flex w-full max-w-[260px] flex-col", className].join(" ")}>
+      <div className={['flex w-full max-w-[260px] flex-col', className].join(' ')}>
         {progressSteps.map((step, idx) => {
           const state: StepState =
-            idx < currentIdx ? "completed" : idx === currentIdx ? "active" : "upcoming";
+            idx < currentIdx ? 'completed' : idx === currentIdx ? 'active' : 'upcoming';
           const isLast = idx === progressSteps.length - 1;
 
           return (
@@ -92,19 +93,19 @@ const ProgressBar = <Key extends string = VerificationStep>({
                 {!isLast && (
                   <div
                     className={[
-                      "my-[10px] w-[6px] min-h-[100px] flex-1 overflow-hidden rounded-full bg-[#b5c8c5] dark:bg-[#303331]",
+                      'my-[10px] w-[6px] min-h-[100px] flex-1 overflow-hidden rounded-full bg-[#b5c8c5] dark:bg-[#303331]',
                       connectorClassName,
-                    ].join(" ")}
+                    ].join(' ')}
                   >
                     <div
                       className={[
-                        "w-full rounded-full transition-all duration-300",
+                        'w-full rounded-full transition-all duration-300',
                         idx < currentIdx
-                          ? "h-full bg-[#096c5b] dark:bg-teal-600"
+                          ? 'h-full bg-[#096c5b] dark:bg-teal-600'
                           : idx === currentIdx
-                            ? "h-1/2 bg-linear-to-b from-[rgba(2,67,56,0.8)] to-[#b5c8c5] dark:from-[#72cbb8] dark:to-[#303331]"
-                            : "h-0",
-                      ].join(" ")}
+                            ? 'h-1/2 bg-linear-to-b from-[rgba(2,67,56,0.8)] to-[#b5c8c5] dark:from-[#72cbb8] dark:to-[#303331]'
+                            : 'h-0',
+                      ].join(' ')}
                     />
                   </div>
                 )}
@@ -118,10 +119,10 @@ const ProgressBar = <Key extends string = VerificationStep>({
   }
 
   return (
-    <div className={["flex w-full max-w-[723px] items-start", className].join(" ")}>
+    <div className={['flex w-full max-w-[723px] items-start', className].join(' ')}>
       {progressSteps.map((step, idx) => {
         const state: StepState =
-          idx < currentIdx ? "completed" : idx === currentIdx ? "active" : "upcoming";
+          idx < currentIdx ? 'completed' : idx === currentIdx ? 'active' : 'upcoming';
         const isLast = idx === progressSteps.length - 1;
 
         return (
@@ -134,19 +135,19 @@ const ProgressBar = <Key extends string = VerificationStep>({
             {!isLast && (
               <div
                 className={[
-                  "mx-[12px] mt-[8px] h-[6px] flex-1 overflow-hidden rounded-full bg-[#b5c8c5] dark:bg-[#303331]",
+                  'mx-[12px] mt-[8px] h-[6px] flex-1 overflow-hidden rounded-full bg-[#b5c8c5] dark:bg-[#303331]',
                   connectorClassName,
-                ].join(" ")}
+                ].join(' ')}
               >
                 <div
                   className={[
-                    "h-full rounded-full transition-all duration-300",
+                    'h-full rounded-full transition-all duration-300',
                     idx < currentIdx
-                      ? "w-full bg-[#096c5b] dark:bg-teal-600"
+                      ? 'w-full bg-[#096c5b] dark:bg-teal-600'
                       : idx === currentIdx
-                        ? "w-1/2 bg-linear-to-r from-[rgba(2,67,56,0.8)] to-[#b5c8c5] dark:from-[#72cbb8] dark:to-[#303331]"
-                        : "w-0",
-                  ].join(" ")}
+                        ? 'w-1/2 bg-linear-to-r from-[rgba(2,67,56,0.8)] to-[#b5c8c5] dark:from-[#72cbb8] dark:to-[#303331]'
+                        : 'w-0',
+                  ].join(' ')}
                 />
               </div>
             )}

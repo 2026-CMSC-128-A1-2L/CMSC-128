@@ -53,7 +53,7 @@ export type Building = {
   about: string;
   photos: string[];
   roomTypes: RoomType[];
-  rooms:Room[];
+  rooms: Room[];
   managers: Manager[];
   tenants: Tenant[];
 };

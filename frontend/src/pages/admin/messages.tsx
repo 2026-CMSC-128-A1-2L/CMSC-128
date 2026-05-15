@@ -195,14 +195,18 @@ function ChatThread({ name, messages }: ChatThreadProps) {
     <>
       {fromThem.length > 0 && (
         <div className="flex flex-col items-start gap-[4px]">
-          <p className="font-['Inter'] text-[14px] font-bold text-[#001D18] dark:text-[#a4acba]">{name}</p>
+          <p className="font-['Inter'] text-[14px] font-bold text-[#001D18] dark:text-[#a4acba]">
+            {name}
+          </p>
           <div className="flex flex-col items-start gap-[4px]">
             {fromThem.map((m) => (
               <div
                 key={m.id}
                 className="max-w-[520px] rounded-[12px] rounded-tl-[2px] bg-[#F5F5F5] dark:bg-[#1f2022] px-[16px] py-[12px]"
               >
-                <p className="font-['Lora'] text-[14px] font-medium text-[#001D18] dark:text-[#d7e0ef]">{m.text}</p>
+                <p className="font-['Lora'] text-[14px] font-medium text-[#001D18] dark:text-[#d7e0ef]">
+                  {m.text}
+                </p>
               </div>
             ))}
           </div>
@@ -211,7 +215,9 @@ function ChatThread({ name, messages }: ChatThreadProps) {
 
       {fromYou.length > 0 && (
         <div className="flex flex-col items-end gap-[4px]">
-          <p className="font-['Inter'] text-[14px] font-bold text-[#001D18] dark:text-[#a4acba]">You</p>
+          <p className="font-['Inter'] text-[14px] font-bold text-[#001D18] dark:text-[#a4acba]">
+            You
+          </p>
           <div className="flex flex-col items-end gap-[4px]">
             {fromYou.map((m) => (
               <div
@@ -233,7 +239,10 @@ function ChatThread({ name, messages }: ChatThreadProps) {
 function EmptyChatState() {
   return (
     <div className="flex flex-1 flex-col items-center justify-center gap-3 bg-white dark:bg-[#141515]">
-      <Icon icon="solar:chat-round-dots-outline" className="h-16 w-16 text-[#7c8db5] dark:text-[#a4acba]" />
+      <Icon
+        icon="solar:chat-round-dots-outline"
+        className="h-16 w-16 text-[#7c8db5] dark:text-[#a4acba]"
+      />
       <h1 className="font-['Outfit'] text-[28px] font-semibold text-black dark:text-[#d7e0ef]">
         Select a conversation
       </h1>

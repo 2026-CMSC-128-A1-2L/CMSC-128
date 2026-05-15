@@ -1,11 +1,11 @@
-import { Icon } from "@iconify/react";
+import { Icon } from '@iconify/react';
 
 interface UserDocumentCardProps {
   title: string;
   subtitle?: string; // Made optional to match the clean look
   acceptedHint: string;
   accept: string;
-  status: "missing" | "uploaded" | "accepted" | "rejected"; // Expanded types
+  status: 'missing' | 'uploaded' | 'accepted' | 'rejected'; // Expanded types
   fileName?: string;
   onFileSelected: (file: File) => void;
   onEdit?: () => void;
@@ -26,18 +26,18 @@ const UserDocumentCard = ({
   // 1. Logic to match the colors of the second component
   const getStatusConfig = (status: string) => {
     switch (status) {
-      case "uploaded":
-      case "accepted":
+      case 'uploaded':
+      case 'accepted':
         return {
           label: status.charAt(0).toUpperCase() + status.slice(1),
-          gradient: "from-[#5dc2a8] to-[#0c8873]", // Green gradient
+          gradient: 'from-[#5dc2a8] to-[#0c8873]', // Green gradient
         };
-      case "missing":
-      case "rejected":
+      case 'missing':
+      case 'rejected':
       default:
         return {
           label: status.charAt(0).toUpperCase() + status.slice(1),
-          gradient: "from-[#c00f0f] to-[#e44f4f]", // Red gradient
+          gradient: 'from-[#c00f0f] to-[#e44f4f]', // Red gradient
         };
     }
   };
@@ -98,7 +98,7 @@ const UserDocumentCard = ({
               <Icon icon="icons8:upload-2" className="w-16 h-16 text-[#666]" />
               <div className="flex flex-col items-start justify-center gap-2">
                 <b className="font-['Inter'] text-[14px]">
-                  {fileName ? fileName : "Upload the document"}
+                  {fileName ? fileName : 'Upload the document'}
                 </b>
                 <div className="text-[12px] tracking-wide font-semibold font-lora text-[#64748b]">
                   {acceptedHint}
@@ -106,12 +106,7 @@ const UserDocumentCard = ({
               </div>
             </div>
           </div>
-          <input
-            type="file"
-            accept={accept}
-            onChange={handleFileChange}
-            className="hidden"
-          />
+          <input type="file" accept={accept} onChange={handleFileChange} className="hidden" />
         </label>
       </div>
     </div>

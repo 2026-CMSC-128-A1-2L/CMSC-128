@@ -19,22 +19,42 @@ const connect = async () => {
 // 1. Seed ~30 users with verificationStatus: 'submitted' (for Applications page)
 // ---------------------------------------------------------------------------
 const seedVerificationApplicants = async () => {
-  await User.deleteMany({ 'address': { $regex: SEED_TAG } });
+  await User.deleteMany({ address: { $regex: SEED_TAG } });
 
   const applicants: any[] = [];
-  
+
   for (let i = 1; i <= 30; i++) {
     const isStudent = i % 3 !== 0; // 2/3 students, 1/3 landlords
     const userType = isStudent ? 'Student' : 'Landlord';
-    
-    const docs = isStudent 
+
+    const docs = isStudent
       ? [
-          { docId: 'valid-id', name: 'Student ID', status: 'pending', files: [`file-seed-std-id-${i}`] },
-          { docId: 'enrollment-cert', name: 'Certificate of Enrollment', status: 'pending', files: [`file-seed-std-cert-${i}`] },
+          {
+            docId: 'valid-id',
+            name: 'Student ID',
+            status: 'pending',
+            files: [`file-seed-std-id-${i}`],
+          },
+          {
+            docId: 'enrollment-cert',
+            name: 'Certificate of Enrollment',
+            status: 'pending',
+            files: [`file-seed-std-cert-${i}`],
+          },
         ]
       : [
-          { docId: 'valid-id', name: 'Valid Government ID', status: 'pending', files: [`file-seed-lld-id-${i}`] },
-          { docId: 'business-permit', name: 'Business Permit', status: 'pending', files: [`file-seed-lld-permit-${i}`] },
+          {
+            docId: 'valid-id',
+            name: 'Valid Government ID',
+            status: 'pending',
+            files: [`file-seed-lld-id-${i}`],
+          },
+          {
+            docId: 'business-permit',
+            name: 'Business Permit',
+            status: 'pending',
+            files: [`file-seed-lld-permit-${i}`],
+          },
         ];
 
     applicants.push({
@@ -73,7 +93,7 @@ const seedReports = async (seededUsers: any[]) => {
 
   for (let i = 1; i <= 30; i++) {
     const isListingReport = i % 2 === 0 && existingListings.length > 0;
-    
+
     if (isListingReport) {
       const listing = existingListings[i % existingListings.length];
       reports.push({
@@ -127,16 +147,44 @@ const seedSubmittedFacilities = async () => {
     facilities.push({
       name: `Test Facility ${i}`,
       landlordId: landlord._id,
-      managers: [{ userId: landlord._id, permissions: { manageListings: true, manageApplications: true, manageBillings: true, manageBookings: true, deleteListings: false, reportUsers: false } }],
+      managers: [
+        {
+          userId: landlord._id,
+          permissions: {
+            manageListings: true,
+            manageApplications: true,
+            manageBillings: true,
+            manageBookings: true,
+            deleteListings: false,
+            reportUsers: false,
+          },
+        },
+      ],
       location: { text: `Street ${i}, Los Baños, Laguna` },
       type: i % 2 === 0 ? 'off-campus' : 'partner housing',
       status: 'submitted',
       capacity: 10 + i,
       description: `[${SEED_TAG}] Facility description for test property ${i}. Great amenities and location.`,
-      media: [{ sourceType: 'external', value: 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=1200&q=80' }],
+      media: [
+        {
+          sourceType: 'external',
+          value:
+            'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=1200&q=80',
+        },
+      ],
       documents: [
-        { docId: 'business-permit', name: 'Business Permit', status: 'pending', files: [`file-fac-permit-${i}`] },
-        { docId: 'fire-safety', name: 'Fire Safety Certificate', status: 'pending', files: [`file-fac-fire-${i}`] },
+        {
+          docId: 'business-permit',
+          name: 'Business Permit',
+          status: 'pending',
+          files: [`file-fac-permit-${i}`],
+        },
+        {
+          docId: 'fire-safety',
+          name: 'Fire Safety Certificate',
+          status: 'pending',
+          files: [`file-fac-fire-${i}`],
+        },
       ],
     });
   }

@@ -44,7 +44,9 @@ const countByMonth = (
 ): number[] => {
   return months.map((monthStart, i) => {
     const nextMonth =
-      i < months.length - 1 ? months[i + 1] : new Date(monthStart.getFullYear(), monthStart.getMonth() + 1, 1);
+      i < months.length - 1
+        ? months[i + 1]
+        : new Date(monthStart.getFullYear(), monthStart.getMonth() + 1, 1);
     return users.filter((u) => {
       if (!u.createdAt) return false;
       if (filterFn && !filterFn(u)) return false;
@@ -172,7 +174,9 @@ function Analytics() {
         <div className="flex flex-1 relative z-10 overflow-hidden">
           <SideBarAdmin activeItem="analytics" />
           <div className="flex-1 overflow-y-auto bg-transparent px-10 py-8">
-            <h1 className="font-['Outfit'] text-[48px] font-bold text-black dark:text-[#d7e0ef]">Analytics</h1>
+            <h1 className="font-['Outfit'] text-[48px] font-bold text-black dark:text-[#d7e0ef]">
+              Analytics
+            </h1>
 
             {/* Stats Cards */}
             <div className="mt-6 flex gap-6 rounded-xl bg-white dark:bg-[#141515] dark:border dark:border-[#303331] p-5 shadow-[0px_0px_20px_0px_rgba(0,0,0,0.25)]">
@@ -183,10 +187,15 @@ function Analytics() {
                       {card.value}
                     </span>
                     <div className="flex h-15 w-15 items-center justify-center rounded-xl border border-[#d0d0d0] dark:border-[#303331] bg-white dark:bg-[#1f2022] shadow-[0px_2px_10px_0px_rgba(124,141,181,0.12)]">
-                      <Icon icon={card.iconName} className="h-10 w-10 text-black dark:text-[#d7e0ef]" />
+                      <Icon
+                        icon={card.iconName}
+                        className="h-10 w-10 text-black dark:text-[#d7e0ef]"
+                      />
                     </div>
                   </div>
-                  <span className="font-['Outfit'] text-[24px] text-black dark:text-[#a4acba]">{card.label}</span>
+                  <span className="font-['Outfit'] text-[24px] text-black dark:text-[#a4acba]">
+                    {card.label}
+                  </span>
                 </div>
               ))}
             </div>
@@ -200,22 +209,34 @@ function Analytics() {
                 <div className="flex items-center gap-8">
                   <div className="flex items-center gap-3">
                     <span className="h-3 w-3 rounded-full bg-[#4a90d9]" />
-                    <span className="font-['Outfit'] text-[18px] text-black dark:text-[#d7e0ef]">Landlords</span>
+                    <span className="font-['Outfit'] text-[18px] text-black dark:text-[#d7e0ef]">
+                      Landlords
+                    </span>
                   </div>
                   <div className="flex items-center gap-3">
                     <span className="h-3 w-3 rounded-full bg-[#60d394]" />
-                    <span className="font-['Outfit'] text-[18px] text-black dark:text-[#d7e0ef]">Students</span>
+                    <span className="font-['Outfit'] text-[18px] text-black dark:text-[#d7e0ef]">
+                      Students
+                    </span>
                   </div>
                   <div className="flex items-center gap-1.5 rounded-lg bg-white dark:bg-[#1f2022] dark:border dark:border-[#303331] px-4 py-1.5 shadow-[0px_3px_15px_0px_rgba(124,141,181,0.12)]">
-                    <span className="font-['Outfit'] text-[18px] text-black dark:text-[#d7e0ef]">Monthly</span>
-                    <Icon icon="solar:alt-arrow-down-outline" className="h-6 w-6 text-black dark:text-[#a4acba]" />
+                    <span className="font-['Outfit'] text-[18px] text-black dark:text-[#d7e0ef]">
+                      Monthly
+                    </span>
+                    <Icon
+                      icon="solar:alt-arrow-down-outline"
+                      className="h-6 w-6 text-black dark:text-[#a4acba]"
+                    />
                   </div>
                 </div>
               </div>
 
               <div className="mt-9 flex">
                 {/* Y-axis labels */}
-                <div className="flex flex-col justify-between pr-4" style={{ height: CHART_HEIGHT }}>
+                <div
+                  className="flex flex-col justify-between pr-4"
+                  style={{ height: CHART_HEIGHT }}
+                >
                   {yLabels.map((label) => (
                     <span
                       key={label}
@@ -228,7 +249,10 @@ function Analytics() {
 
                 {/* Chart area */}
                 <div className="flex flex-1 flex-col">
-                  <div className="relative w-full rounded-lg border border-dashed border-[#e0e0e0] dark:border-[#404341] bg-[#fafafa] dark:bg-[#1a1b1b]" style={{ height: CHART_HEIGHT }}>
+                  <div
+                    className="relative w-full rounded-lg border border-dashed border-[#e0e0e0] dark:border-[#404341] bg-[#fafafa] dark:bg-[#1a1b1b]"
+                    style={{ height: CHART_HEIGHT }}
+                  >
                     {isLoading ? (
                       <p className="absolute inset-0 flex items-center justify-center font-['Outfit'] text-[16px] text-[#7c8db5] dark:text-[#a4acba]">
                         Loading chart data...

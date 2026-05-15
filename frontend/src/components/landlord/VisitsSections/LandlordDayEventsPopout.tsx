@@ -45,7 +45,9 @@ const LandlordDayEventsPopout: FunctionComponent<LandlordDayEventsPopoutType> = 
 
         <div className="border-t border-whitesmoke-200 dark:border-[#303331] pt-4">
           {events.length === 0 ? (
-            <div className="text-center py-4 text-dimgray dark:text-[#a4acba]">No visits scheduled for this day</div>
+            <div className="text-center py-4 text-dimgray dark:text-[#a4acba]">
+              No visits scheduled for this day
+            </div>
           ) : (
             <div className="flex flex-col gap-3">
               {events.map((event) => (
@@ -53,9 +55,14 @@ const LandlordDayEventsPopout: FunctionComponent<LandlordDayEventsPopoutType> = 
                   key={event.id}
                   className="flex items-start gap-3 pb-3 border-b border-whitesmoke-200 dark:border-[#303331] last:border-b-0"
                 >
-                  <Icon icon="ic:round-person" className="h-5 w-5 shrink-0 mt-1 text-teal dark:text-[#72cbb8]" />
+                  <Icon
+                    icon="ic:round-person"
+                    className="h-5 w-5 shrink-0 mt-1 text-teal dark:text-[#72cbb8]"
+                  />
                   <div className="flex-1 min-w-0">
-                    <div className="font-semibold text-dimgray dark:text-[#d7e0ef]">{event.visitorName}</div>
+                    <div className="font-semibold text-dimgray dark:text-[#d7e0ef]">
+                      {event.visitorName}
+                    </div>
                     <div className="text-xs text-gray mt-1 dark:text-[#a4acba]">{event.time}</div>
                   </div>
                 </div>

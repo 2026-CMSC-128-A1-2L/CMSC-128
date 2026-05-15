@@ -1,6 +1,6 @@
 import type { FunctionComponent } from 'react';
 import { Icon } from '@iconify/react';
-import successIcon from '../../../../assets/reportSuccess.svg'; 
+import successIcon from '../../../../assets/reportSuccess.svg';
 
 type Props = {
   onClose: () => void;
@@ -9,7 +9,6 @@ type Props = {
 const ConfirmTransfer2: FunctionComponent<Props> = ({ onClose }) => {
   return (
     <div className="w-full max-w-md mx-auto relative rounded-2xl bg-white shadow-xl overflow-hidden flex flex-col items-center p-8 box-border text-center font-inter">
-      
       <div className="self-stretch flex flex-col items-center py-8 gap-6">
         {/* Success Icon Section */}
         <div className="flex flex-col items-center gap-4">
@@ -21,12 +20,10 @@ const ConfirmTransfer2: FunctionComponent<Props> = ({ onClose }) => {
           <div className="flex flex-col items-center gap-2">
             <b className="text-2xl leading-8 text-black">Application Successful</b>
             <div className="text-sm leading-6 font-medium text-dimgray px-4">
-              <p>
-                You have successfully finalized your application.
-              </p>
+              <p>You have successfully finalized your application.</p>
               <p className="mt-2">
                 Your application will be reviewed within{' '}
-                <span className="font-bold text-[#c29722]">48 - 72 hours</span> by the landlord. 
+                <span className="font-bold text-[#c29722]">48 - 72 hours</span> by the landlord.
                 Notifications will be sent to keep you posted.
               </p>
             </div>

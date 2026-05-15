@@ -153,8 +153,6 @@ const SectionHeader = ({ title, onEdit }: SectionHeaderProps) => (
 const LandlordProfile = () => {
   const navigate = useNavigate();
 
-
-
   // contact number editing state
   const [isEditing, setIsEditing] = useState(false);
   const [contactNumber, setContactNumber] = useState('09*********');
