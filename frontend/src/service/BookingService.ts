@@ -1,6 +1,12 @@
 import type { GetBookingsQuery, CreateBookingBody } from '../interface/booking';
 import { api } from './axiosInstance';
 
+export type VisitSlotAvailability = {
+  startDate: string;
+  endDate: string;
+  available: boolean;
+};
+
 export const BookingService = {
   async createBooking(body: CreateBookingBody) {
     try {
@@ -23,6 +29,19 @@ export const BookingService = {
       return response.data;
     } catch (error) {
       console.error('Failed to fetch bookings:', error);
+      throw error;
+    }
+  },
+
+  async getAvailableVisitSlots(facilityId: string, date: string) {
+    try {
+      const response = await api.get<{ data: VisitSlotAvailability[] }>(
+        `/api/bookings/facilities/${facilityId}/available-slots`,
+        { params: { date } },
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch available visit slots:', error);
       throw error;
     }
   },

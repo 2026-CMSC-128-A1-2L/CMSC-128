@@ -21,6 +21,8 @@ import { useFacilityDetails } from '../../../hooks/useFacilityDetails';
 import { useBookmarks } from '../../../hooks/useBookmarks';
 import { BookmarkService } from '../../../service/BookmarkService';
 import { ApplicationService } from '../../../service/ApplicationService';
+import CalendarPopout from '../../../components/user/user-calendar/CalendarPopout';
+import PortalPopup from '../../../components/general/PortalPopup';
 
 const currencyFormatter = new Intl.NumberFormat('en-PH', {
   style: 'currency',
@@ -100,6 +102,7 @@ const UnitDetails: FunctionComponent = () => {
   const [applicationError, setApplicationError] = useState<string | null>(null);
   const [isSubmittingApplication, setIsSubmittingApplication] = useState(false);
   const [showSignIn, setShowSignIn] = useState(false);
+  const [isVisitPopoutOpen, setVisitPopoutOpen] = useState(false);
   const availableListings = useMemo(() => facility?.listings ?? [], [facility]);
 
   useEffect(() => {
@@ -316,9 +319,28 @@ const UnitDetails: FunctionComponent = () => {
     }
   };
 
+  const handleOpenVisitPopout = () => {
+    if (!facility.allowVisit) return;
+    setVisitPopoutOpen(true);
+  };
+
   return (
     <div className="flex min-h-screen font-lora text-darkslategray-100">
       {showSignIn && <SignInPopUp onClose={() => setShowSignIn(false)} />}
+      {isVisitPopoutOpen && (
+        <PortalPopup
+          overlayColor="rgba(0, 0, 0, 0.25)"
+          placement="Centered"
+          onOutsideClick={() => setVisitPopoutOpen(false)}
+        >
+          <CalendarPopout
+            facilityId={facility.id}
+            facilityName={facility.name}
+            facilityAddress={facility.location}
+            onClose={() => setVisitPopoutOpen(false)}
+          />
+        </PortalPopup>
+      )}
       {/* Sidebar */}
       <div className="sticky top-0 h-screen shrink-0 z-10">
         <SideBar />
@@ -386,9 +408,14 @@ const UnitDetails: FunctionComponent = () => {
                   </b>
                 </div>
                 <div className="flex items-center gap-3 text-xs text-teal-200 font-poppins">
-                  <div className="rounded border border-teal-200 py-2 px-6">
+                  <button
+                    type="button"
+                    onClick={handleOpenVisitPopout}
+                    disabled={!facility.allowVisit}
+                    className="rounded border border-teal-200 py-2 px-6 transition-colors disabled:cursor-not-allowed disabled:opacity-60 hover:bg-lightcyan"
+                  >
                     {facility.allowVisit ? 'VISIT' : 'NO VISIT'}
-                  </div>
+                  </button>
                   <button
                     type="button"
                     onClick={handleBookmarkToggle}
