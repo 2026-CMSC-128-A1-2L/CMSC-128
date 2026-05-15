@@ -430,7 +430,7 @@ const LandlordHomepage: FunctionComponent = () => {
       </div>
       {/* ======= FLOATING ICON ========== */}
       <div
-        className="fixed bottom-10 right-10 z-1000 cursor-pointer transition-all hover:scale-110 active:scale-95"
+        className="help-button-animated bottom-10 right-10 z-1000 cursor-pointer transition-all hover:scale-110 active:scale-95"
         onClick={() => setShowHelp(!showHelp)}
       >
         <img src={TutorialIcon} alt="Help" className="w-16 h-16 drop-shadow-lg" />

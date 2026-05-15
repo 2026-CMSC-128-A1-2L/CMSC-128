@@ -6,15 +6,34 @@ import CheckboxItem from '../user-report/CheckboxItem';
 import ConfirmTransfer1 from '../../../components/user/Profile/ConfirmTransfer1';
 import ConfirmTransfer2 from '../Profile/ConfirmTransfer2';
 
+// 1. Updated the interface to accept the state payloads from previous steps
 interface FinalizeContentProps {
   leaseTransferStages: number;
   setLeaseTransferStages: any;
   DormitoryName: string;
   RoomNumber: string;
+  formData: {
+    category: string;
+    intendedDate: string;
+    explanation: string;
+  };
+  financialsDocsData: {
+    transferFee: string;
+    depositHandling: string;
+    advanceRentStatus: string;
+  };
 }
 
 export default function FinalizeContent(props: FinalizeContentProps) {
-  const { leaseTransferStages, setLeaseTransferStages, DormitoryName, RoomNumber } = props;
+  const { 
+    leaseTransferStages, 
+    setLeaseTransferStages, 
+    DormitoryName, 
+    RoomNumber,
+    formData,
+    financialsDocsData 
+  } = props;
+  
   const Property = `${DormitoryName} - ${RoomNumber}`;
   const navigate = useNavigate();
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
@@ -34,11 +53,12 @@ export default function FinalizeContent(props: FinalizeContentProps) {
   }, []);
 
   const closePopup2 = () => {
-    setShowSuccessPopup2(false);
-    navigate('/profile-switcher');
+    setShowSuccessPopup2(false); 
+    navigate('/profile-switcher'); 
   };
-
+  
   const [isAgreed, setIsAgreed] = useState(false);
+
   return (
     <>
       <div className="flex text-lora font-bold items-end px-15 gap-2 mb-2">
@@ -55,21 +75,28 @@ export default function FinalizeContent(props: FinalizeContentProps) {
         <img src={InfoIcon} alt="" className="w-5 h-5 " />
         <p className=" text-[18px]">Finalize</p>
       </div>
-      <div className="flex flex-col gap-3 w-full px-15 py-2  border-[#f0f0f0] border-2 rounded-num-10">
-        <div className="flex flex-col gap-10  font-bold text-inter text-[14px] text-gray-100 pt-4">
+      <div className="flex flex-col gap-3 w-full px-15 py-2 border-[#f0f0f0] border-2 rounded-num-10">
+        <div className="flex flex-col gap-10 font-bold text-inter text-[14px] text-gray-100 pt-4">
           <div className="flex flex-col w-full gap-2">
-            {/* Header */}
+            
+            {/* Unit Info Section */}
             <p className="text-slate-900 font-bold text-[14px] tracking-wide my-4 uppercase">
               Unit Being Transferred
             </p>
             <FinalizeDisplayLines category="PROPERTY" item={Property} />
-            <FinalizeDisplayLines category="REASON" />
-            <FinalizeDisplayLines category="TRANSFER DATE" />
+            <FinalizeDisplayLines category="REASON" item={formData.category || 'Not specified'} />
+            <FinalizeDisplayLines category="TRANSFER DATE" item={formData.intendedDate || 'Not specified'} />
+            
+            {/* Financial Terms Section */}
             <p className="text-slate-900 font-bold text-[14px] tracking-wide my-4 uppercase">
               Financial Terms
             </p>
-            <FinalizeDisplayLines category="TRANSFER FEE" />
-            <FinalizeDisplayLines category="DEPOSIT" />
+            <FinalizeDisplayLines 
+              category="TRANSFER FEE" 
+              item={financialsDocsData.transferFee ? `₱${financialsDocsData.transferFee}` : '₱0.00'} 
+            />
+            <FinalizeDisplayLines category="DEPOSIT" item={financialsDocsData.depositHandling || 'Not specified'} />
+            <FinalizeDisplayLines category="ADVANCE RENT" item={financialsDocsData.advanceRentStatus || 'Not specified'} />
           </div>
 
           <div className="w-full py-0.5 bg-[#f0f0f0] rounded-full"></div>
@@ -127,7 +154,7 @@ export default function FinalizeContent(props: FinalizeContentProps) {
               </div>
             </div>
 
-            <div className="">
+            <div>
               <CheckboxItem
                 label="I have read and agree to the Terms and Conditions above"
                 isChecked={isAgreed}
@@ -139,9 +166,9 @@ export default function FinalizeContent(props: FinalizeContentProps) {
             </div>
           </div>
         </div>
-        <div className="flex gap-10  font-inter font-bold py-20 justify-center">
+        <div className="flex gap-10 font-inter font-bold py-20 justify-center">
           <button
-            className="px-4 py-1 cursor-pointer text-crimson rounded-full"
+            className="px-4 py-1 cursor-pointer text-crimson rounded-full hover:bg-red-50 transition-colors"
             onClick={() => {
               setLeaseTransferStages(leaseTransferStages - 1);
             }}
@@ -149,9 +176,9 @@ export default function FinalizeContent(props: FinalizeContentProps) {
             Go Back
           </button>
           <button
-            className={`px-4 py-1  rounded-full bg-[#f1f5f9]
-                            ${isAgreed ? 'text-[#096c5b] cursor-pointer' : 'text-[#cfcfcf]'}
-                            `}
+            className={`px-4 py-1 rounded-full bg-[#f1f5f9] transition-all
+              ${isAgreed ? 'text-[#096c5b] hover:bg-[#e2e8f0] cursor-pointer' : 'text-[#cfcfcf] cursor-not-allowed'}
+            `}
             onClick={onUserProfileTextClick}
             disabled={!isAgreed}
           >

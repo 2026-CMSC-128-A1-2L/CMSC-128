@@ -1,41 +1,53 @@
 import { type FunctionComponent, useState, useEffect } from 'react';
 import PortalPopup from '../../../general/PortalPopout';
 import RoomDropdown from './RoomDropdown';
-import TextInput from './TextInput';
 import NumberInput from './NumberInput';
 import PopupButtons from './PopupButtons';
+
+interface SelectedMonth {
+  name: string;
+  month: number;
+  year: number;
+  displayName: string;
+}
 
 interface AddBillingPopupProps {
   isOpen: boolean;
   onClose: () => void;
-  availableRooms: number[];
-  selectedMonth?: string;
+  facilityId: string;
+  occupiedUnitIds: Set<string>;
+  selectedMonth: SelectedMonth;
+  isSaving?: boolean;
   onSubmit?: (data: {
-    room: string;
-    fullName: string;
+    unitId: string;
     rent: number;
     utilities: number;
     miscFees: number;
-  }) => void;
+    dueDate: string;
+    paymentMethod: { method: 'gcash' | 'bank_transfer'; qr: [] }[];
+  }) => Promise<void>;
 }
 
 interface ValidationErrors {
-  room?: string;
-  fullName?: string;
+  unitId?: string;
   rent?: string;
   utilities?: string;
   miscFees?: string;
 }
 
-const AddBillingPopup: FunctionComponent<AddBillingPopupProps> = ({
+interface AddBillingPopupPropsExtended extends AddBillingPopupProps {
+  availableUnitOptions?: { value: string; label: string }[];
+}
+
+const AddBillingPopup: FunctionComponent<AddBillingPopupPropsExtended> = ({
   isOpen,
   onClose,
-  availableRooms = [],
-  selectedMonth = '',
+  selectedMonth,
   onSubmit,
+  isSaving = false,
+  availableUnitOptions = [],
 }) => {
-  const [selectedRoom, setSelectedRoom] = useState<string>('');
-  const [fullName, setFullName] = useState<string>('');
+  const [selectedUnitId, setSelectedUnitId] = useState<string>('');
   const [rent, setRent] = useState<string>('');
   const [utilities, setUtilities] = useState<string>('');
   const [miscFees, setMiscFees] = useState<string>('');
@@ -44,8 +56,7 @@ const AddBillingPopup: FunctionComponent<AddBillingPopupProps> = ({
 
   useEffect(() => {
     if (isOpen) {
-      setSelectedRoom('');
-      setFullName('');
+      setSelectedUnitId('');
       setRent('');
       setUtilities('');
       setMiscFees('');
@@ -56,32 +67,28 @@ const AddBillingPopup: FunctionComponent<AddBillingPopupProps> = ({
 
   const validateField = (field: string, value: string): string => {
     switch (field) {
-      case 'room':
+      case 'unitId':
         if (!value) return 'Please select a room';
-        return '';
-      case 'fullName':
-        if (!value.trim()) return 'Please enter tenant name';
-        if (value.trim().length < 2) return 'Name must be at least 2 characters';
         return '';
       case 'rent': {
         if (!value) return 'Please enter rent amount';
-        const rentNum = parseFloat(value);
-        if (isNaN(rentNum)) return 'Please enter a valid number';
-        if (rentNum < 0) return 'Amount cannot be negative';
+        const num = parseFloat(value);
+        if (isNaN(num)) return 'Please enter a valid number';
+        if (num < 0) return 'Amount cannot be negative';
         return '';
       }
       case 'utilities': {
         if (!value) return 'Please enter utilities amount';
-        const utilitiesNum = parseFloat(value);
-        if (isNaN(utilitiesNum)) return 'Please enter a valid number';
-        if (utilitiesNum < 0) return 'Amount cannot be negative';
+        const num = parseFloat(value);
+        if (isNaN(num)) return 'Please enter a valid number';
+        if (num < 0) return 'Amount cannot be negative';
         return '';
       }
       case 'miscFees':
         if (value) {
-          const miscNum = parseFloat(value);
-          if (isNaN(miscNum)) return 'Please enter a valid number';
-          if (miscNum < 0) return 'Amount cannot be negative';
+          const num = parseFloat(value);
+          if (isNaN(num)) return 'Please enter a valid number';
+          if (num < 0) return 'Amount cannot be negative';
         }
         return '';
       default:
@@ -96,44 +103,39 @@ const AddBillingPopup: FunctionComponent<AddBillingPopupProps> = ({
 
   const validateAll = (): boolean => {
     const newErrors: ValidationErrors = {
-      room: validateField('room', selectedRoom),
-      fullName: validateField('fullName', fullName),
+      unitId: validateField('unitId', selectedUnitId),
       rent: validateField('rent', rent),
       utilities: validateField('utilities', utilities),
       miscFees: validateField('miscFees', miscFees),
     };
     setErrors(newErrors);
-    setTouched({ room: true, fullName: true, rent: true, utilities: true, miscFees: true });
-    return !Object.values(newErrors).some((error) => error && error.length > 0);
+    setTouched({ unitId: true, rent: true, utilities: true, miscFees: true });
+    return !Object.values(newErrors).some((e) => e && e.length > 0);
   };
 
-  const handleSubmit = () => {
-    if (validateAll()) {
-      onSubmit?.({
-        room: selectedRoom,
-        fullName: fullName.trim(),
-        rent: parseFloat(rent) || 0,
-        utilities: parseFloat(utilities) || 0,
-        miscFees: parseFloat(miscFees) || 0,
-      });
-      onClose();
-    }
+  const handleSubmit = async () => {
+    if (!validateAll()) return;
+
+    // Build dueDate as the last day of the selected month
+    const dueDate = new Date(selectedMonth.year, selectedMonth.month + 1, 0).toISOString();
+
+    await onSubmit?.({
+      unitId: selectedUnitId,
+      rent: parseFloat(rent) || 0,
+      utilities: parseFloat(utilities) || 0,
+      miscFees: parseFloat(miscFees) || 0,
+      dueDate,
+      paymentMethod: [{ method: 'gcash', qr: [] }],
+    });
   };
 
   const isFormValid =
-    selectedRoom &&
-    fullName.trim() &&
-    rent &&
-    utilities &&
-    !errors.room &&
-    !errors.fullName &&
+    !!selectedUnitId &&
+    !!rent &&
+    !!utilities &&
+    !errors.unitId &&
     !errors.rent &&
     !errors.utilities;
-
-  const roomOptions = availableRooms.map((room) => ({
-    value: room.toString(),
-    label: `Room ${room}`,
-  }));
 
   if (!isOpen) return null;
 
@@ -148,31 +150,20 @@ const AddBillingPopup: FunctionComponent<AddBillingPopupProps> = ({
         <div className="bg-gradient-to-b from-[#096c5b] to-[#16917c] px-[40px] sm:px-[57px] pt-[30px] pb-[40px]">
           <b className="block text-[24px] sm:text-[32px] text-white mb-2">Add Billing</b>
           <b className="block text-[14px] sm:text-[18px] tracking-[-0.01em] font-inter text-white">
-            Add a new billing for your tenant for {selectedMonth}!
+            Add a new billing for your tenant for {selectedMonth.displayName}!
           </b>
         </div>
 
         <div className="px-[30px] sm:px-[60px] py-[30px]">
           <RoomDropdown
-            value={selectedRoom}
-            onChange={setSelectedRoom}
-            options={roomOptions}
+            value={selectedUnitId}
+            onChange={setSelectedUnitId}
+            options={availableUnitOptions}
             placeholder="Select Room"
             label="Room"
             required
-            error={errors.room}
-            touched={touched.room}
-          />
-
-          <TextInput
-            value={fullName}
-            onChange={setFullName}
-            onBlur={() => handleFieldBlur('fullName', fullName)}
-            label="FULL NAME"
-            placeholder="Enter tenant's full name"
-            required
-            error={errors.fullName}
-            touched={touched.fullName}
+            error={errors.unitId}
+            touched={touched.unitId}
           />
 
           <div className="flex flex-col sm:flex-row gap-4 mb-5">
@@ -213,8 +204,8 @@ const AddBillingPopup: FunctionComponent<AddBillingPopupProps> = ({
           <PopupButtons
             onCancel={onClose}
             onSubmit={handleSubmit}
-            isFormValid={!!isFormValid}
-            submitText="ADD BILLING"
+            isFormValid={!!isFormValid && !isSaving}
+            submitText={isSaving ? 'SAVING...' : 'ADD BILLING'}
           />
         </div>
       </div>

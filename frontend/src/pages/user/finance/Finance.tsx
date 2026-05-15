@@ -43,8 +43,7 @@ const getPaymentStatusDisplay = (status: string): { text: string; gradient: stri
 };
 
 const TenantFinancePage: FunctionComponent = () => {
-  // Extract userId
-  const { dashboard, userId, isLoading, error, refetch } = useFinance();
+  const { dashboard, userId, isLoading, error, hasAccommodation, refetch } = useFinance();
   const navigate = useNavigate();
 
   const [isSubmitReceiptOpen, setIsSubmitReceiptOpen] = useState(false);
@@ -114,6 +113,37 @@ const TenantFinancePage: FunctionComponent = () => {
         <div>Loading finance data…</div>
       </div>,
     );
+
+  if (!isLoading && !hasAccommodation && !error) {
+    return layout(
+      <div className="flex-1 flex flex-col items-center justify-center gap-6 py-20 px-6 text-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="rounded-full bg-lightcyan-100 p-6 dark:bg-[#0d241f]">
+            <Icon
+              icon="mdi-light:home-off"
+              className="w-16 h-16 text-teal dark:text-[#72cbb8]"
+            />
+          </div>
+          <div className="flex flex-col gap-2 max-w-sm">
+            <b className="text-xl text-black dark:text-[#edf6f4]">
+              No accommodation yet
+            </b>
+            <p className="text-sm text-dimgray leading-relaxed">
+              You don't have an active dorm or accommodation. Browse available
+              listings and find a place that fits you.
+            </p>
+          </div>
+        </div>
+        <button
+          onClick={() => navigate('/home')}
+          className="flex items-center gap-2 px-6 py-3 rounded-xl bg-lightcyan-100 text-teal font-semibold hover:opacity-90 transition-opacity dark:bg-[#0d3a32] dark:text-[#72cbb8]"
+        >
+          <Icon icon="mdi-light:home" className="w-5 h-5" />
+          Browse Listings
+        </button>
+      </div>,
+    );
+  }
 
   if (error) {
     const hasNoAccommodation = error.toLowerCase().includes('no active rental');
@@ -217,7 +247,6 @@ const TenantFinancePage: FunctionComponent = () => {
                         ))}
                       </div>
                     ) : (
-                      /* Fallback individual rows when breakdown isn't in stats */
                       <div className="flex flex-col gap-2 font-lora text-left text-[10px] md:text-xs">
                         {(
                           [

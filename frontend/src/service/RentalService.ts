@@ -1,3 +1,4 @@
+// frontend/src/service/RentalService.ts
 import type z from 'zod';
 import type { GetRentalsQuerySchema } from 'shared';
 import type {

@@ -75,7 +75,7 @@ export const routeGetUnitBillings: RequestHandler = async (req, res, _next) => {
 // GET /billings/summary
 export const routeGetBillingsSummary: RequestHandler = async (req, res, _next) => {
   assert.ok(req.user);
-  const userId = ObjectIdSchema.parse(req.user._id);
+  const userId = ObjectIdSchema.parse(req.user._id.toString());
   const billingsSummary = await getBillingsSummary(userId, res.locals.filters);
   res.status(200).json({ data: billingsSummary });
 };

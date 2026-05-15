@@ -85,7 +85,7 @@ const AddBuilding: FunctionComponent = () => {
       {/* ======= FLOATING HELP ICON ========== */}
       <button
         type="button"
-        className="fixed bottom-10 right-10 z-50 cursor-pointer transition-all hover:scale-110 active:scale-95 outline-none"
+        className="help-button-animated bottom-10 right-10 z-50 cursor-pointer transition-all hover:scale-110 active:scale-95 outline-none"
         onClick={() => setShowHelp(!showHelp)}
         aria-label="Toggle Help"
       >

@@ -1,15 +1,15 @@
 // pages/user/ProfileSwitcher.tsx
-import { useState, useCallback, useEffect } from 'react';
-import CurrentDormCard from './current_dorm/CurrentDormCard';
-import UserVerif from './verification/UserVerif';
-import Sidebar from '../../../components/user/SideBar';
-import Footer from '../../../components/general/Footer';
-import PageBackground from '../../../components/general/PageBackground';
-import Switch from '../../../components/user/CurrentDormToVerificationSwitch';
-import ProfileInfo from '../../../components/user/ProfileInfo';
-import { Icon } from '@iconify/react';
-import { Link } from 'react-router-dom';
-import { UserService } from '../../../service/UserService';
+import { useState, useCallback, useEffect } from "react";
+import CurrentDormCard from "./current_dorm/CurrentDormCard";
+import UserVerif from "./verification/UserVerif";
+import Sidebar from "../../../components/user/SideBar";
+import Footer from "../../../components/general/Footer";
+import PageBackground from "../../../components/general/PageBackground";
+import Switch from "../../../components/user/CurrentDormToVerificationSwitch";
+import ProfileInfo from "../../../components/user/ProfileInfo";
+import { Icon } from "@iconify/react";
+import { Link } from "react-router-dom";
+import { UserService } from "../../../service/UserService";
 
 type RentalSummary = {
   status?: string;
@@ -27,7 +27,7 @@ type ApplicationSummary = {
   facilityId?: string | { name?: string; media?: { value?: string }[] };
   listingId?: string | { roomType?: string };
   unitId?: string | { roomNumber?: string };
-  leaseDuration?: '6-months' | '12-months';
+  leaseDuration?: "6-months" | "12-months";
   moveInDate?: string;
 };
 type CurrentDormDetails = {
@@ -40,14 +40,18 @@ type CurrentDormDetails = {
 
 const getDataArray = <T,>(response: unknown): T[] => {
   if (Array.isArray(response)) return response as T[];
-  if (response && typeof response === 'object' && 'data' in response) {
+  if (response && typeof response === "object" && "data" in response) {
     const data = (response as { data?: unknown }).data;
     return Array.isArray(data) ? (data as T[]) : [];
   }
   return [];
 };
 
-const CurrentApplicationsList = ({ applications }: { applications: ApplicationSummary[] }) => (
+const CurrentApplicationsList = ({
+  applications,
+}: {
+  applications: ApplicationSummary[];
+}) => (
   <div className="w-full px-8 text-left text-darkslategray-100">
     <div className="mb-4 flex items-center justify-between">
       <div className="flex items-center gap-6">
@@ -69,13 +73,13 @@ const CurrentApplicationsList = ({ applications }: { applications: ApplicationSu
       ) : (
         applications.slice(0, 5).map((application) => {
           const facilityName =
-            typeof application.facilityId === 'object'
+            typeof application.facilityId === "object"
               ? application.facilityId.name
-              : 'Dorm application';
+              : "Dorm application";
           const roomType =
-            typeof application.listingId === 'object'
+            typeof application.listingId === "object"
               ? application.listingId.roomType
-              : 'Selected room';
+              : "Selected room";
 
           return (
             <div
@@ -86,7 +90,9 @@ const CurrentApplicationsList = ({ applications }: { applications: ApplicationSu
                 <b>{facilityName}</b>
                 <div className="text-sm text-dimgray">{roomType}</div>
               </div>
-              <b className="text-sm text-teal">{application.status ?? 'pending'}</b>
+              <b className="text-sm text-teal">
+                {application.status ?? "pending"}
+              </b>
             </div>
           );
         })
@@ -99,63 +105,83 @@ const formatDate = (date?: string | Date | null) => {
   if (!date) return undefined;
   const parsedDate = new Date(date);
   if (Number.isNaN(parsedDate.getTime())) return undefined;
-  return parsedDate.toLocaleDateString('en-US', {
-    month: 'long',
-    day: 'numeric',
-    year: 'numeric',
+  return parsedDate.toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
   });
 };
 
-const getLeaseEndDate = (moveInDate?: string, leaseDuration?: '6-months' | '12-months') => {
+const getLeaseEndDate = (
+  moveInDate?: string,
+  leaseDuration?: "6-months" | "12-months",
+) => {
   if (!moveInDate || !leaseDuration) return undefined;
   const parsedDate = new Date(moveInDate);
   if (Number.isNaN(parsedDate.getTime())) return undefined;
-  parsedDate.setMonth(parsedDate.getMonth() + (leaseDuration === '6-months' ? 6 : 12));
+  parsedDate.setMonth(
+    parsedDate.getMonth() + (leaseDuration === "6-months" ? 6 : 12),
+  );
   return formatDate(parsedDate);
 };
 
 const getContractDurationLabel = (leaseDuration?: string) => {
-  if (leaseDuration === '6-months') return '6 Months';
-  if (leaseDuration === '12-months') return '1 Year';
+  if (leaseDuration === "6-months") return "6 Months";
+  if (leaseDuration === "12-months") return "1 Year";
   return undefined;
 };
 
-const getApprovedDormDetails = (application: ApplicationSummary): CurrentDormDetails => ({
+const getApprovedDormDetails = (
+  application: ApplicationSummary,
+): CurrentDormDetails => ({
   propertyImageSrc:
-    typeof application.facilityId === 'object'
+    typeof application.facilityId === "object"
       ? application.facilityId.media?.[0]?.value
       : undefined,
   propertyName:
-    typeof application.facilityId === 'object' ? application.facilityId.name : 'Approved Dorm',
+    typeof application.facilityId === "object"
+      ? application.facilityId.name
+      : "Approved Dorm",
   unitNumber:
-    typeof application.unitId === 'object'
+    typeof application.unitId === "object"
       ? application.unitId.roomNumber
-      : typeof application.listingId === 'object'
+      : typeof application.listingId === "object"
         ? application.listingId.roomType
-        : 'Assigned Unit',
+        : "Assigned Unit",
   contractDuration: getContractDurationLabel(application.leaseDuration),
-  leaseEndDate: getLeaseEndDate(application.moveInDate, application.leaseDuration),
+  leaseEndDate: getLeaseEndDate(
+    application.moveInDate,
+    application.leaseDuration,
+  ),
 });
 
 const getRentalDormDetails = (rental: RentalSummary): CurrentDormDetails => ({
-  propertyName: typeof rental.facilityId === 'object' ? rental.facilityId.name : 'Current Dorm',
-  unitNumber: typeof rental.unitId === 'object' ? rental.unitId.roomNumber : 'Assigned Unit',
-  contractDuration: 'Current Lease',
-  leaseEndDate: formatDate(rental.actualMoveOutDate ?? rental.expectedMoveOutDate),
+  propertyName:
+    typeof rental.facilityId === "object"
+      ? rental.facilityId.name
+      : "Current Dorm",
+  unitNumber:
+    typeof rental.unitId === "object"
+      ? rental.unitId.roomNumber
+      : "Assigned Unit",
+  contractDuration: "Current Lease",
+  leaseEndDate: formatDate(
+    rental.actualMoveOutDate ?? rental.expectedMoveOutDate,
+  ),
 });
 
 const ProfileSwitcher = () => {
-  const [activeTab, setActiveTab] = useState<'dorm' | 'verification'>('dorm');
-  const [currentDorm, setCurrentDorm] = useState<CurrentDormDetails | null>(null);
+  const [activeTab, setActiveTab] = useState<"dorm" | "verification">("dorm");
+  const [currentDorm, setCurrentDorm] = useState<CurrentDormDetails | null>(
+    null,
+  );
   const [applications, setApplications] = useState<ApplicationSummary[]>([]);
 
-  const onArrowUpClick = useCallback(() => {
-    const anchor = document.querySelector("[data-scroll-to='searchBarContainer']");
-    if (anchor) {
-      anchor.scrollIntoView({ block: 'start', behavior: 'smooth' });
-    }
-  }, []);
-
+  const propertyImageSrc = undefined;
+  const propertyName = undefined;
+  const unitNumber = undefined;
+  const contractDuration = undefined;
+  const leaseEndDate = undefined;
   const verified = true;
 
   useEffect(() => {
@@ -169,24 +195,29 @@ const ProfileSwitcher = () => {
 
       if (cancelled) return;
 
-      if (rentalsResponse.status === 'fulfilled') {
+      if (rentalsResponse.status === "fulfilled") {
         const rentals = getDataArray<RentalSummary>(rentalsResponse.value);
         const currentRental =
-          rentals.find((rental) => rental.status === 'active') ??
-          rentals.find((rental) => rental.status === 'inactive');
+          rentals.find((rental) => rental.status === "active") ??
+          rentals.find((rental) => rental.status === "inactive");
         if (currentRental) setCurrentDorm(getRentalDormDetails(currentRental));
       }
 
-      if (applicationsResponse.status === 'fulfilled') {
-        const fetchedApplications = getDataArray<ApplicationSummary>(applicationsResponse.value);
+      if (applicationsResponse.status === "fulfilled") {
+        const fetchedApplications = getDataArray<ApplicationSummary>(
+          applicationsResponse.value,
+        );
         const approvedApplication = fetchedApplications.find(
-          (application) => application.status === 'approved',
+          (application) => application.status === "approved",
         );
 
         setApplications(
-          fetchedApplications.filter((application) => application.status !== 'approved'),
+          fetchedApplications.filter(
+            (application) => application.status !== "approved",
+          ),
         );
-        if (approvedApplication) setCurrentDorm(getApprovedDormDetails(approvedApplication));
+        if (approvedApplication)
+          setCurrentDorm(getApprovedDormDetails(approvedApplication));
       }
     };
 
@@ -212,9 +243,14 @@ const ProfileSwitcher = () => {
             >
               <div className="h-6 flex items-center gap-1.5">
                 <div className="relative font-semibold">User Profile</div>
-                <Icon icon="iconamoon:arrow-right-2" className="h-6 w-6 relative" />
+                <Icon
+                  icon="iconamoon:arrow-right-2"
+                  className="h-6 w-6 relative"
+                />
                 <div className="relative font-semibold">
-                  {activeTab === 'dorm' ? 'Current Dorm' : 'Verification Status'}
+                  {activeTab === "dorm"
+                    ? "Current Dorm"
+                    : "Verification Status"}
                 </div>
               </div>
             </div>
@@ -226,7 +262,7 @@ const ProfileSwitcher = () => {
                 <Switch activeTab={activeTab} setActiveTab={setActiveTab} />
 
                 <div className="self-stretch w-full">
-                  {activeTab === 'dorm' ? (
+                  {activeTab === "dorm" ? (
                     currentDorm ? (
                       <CurrentDormCard
                         propertyImageSrc={currentDorm.propertyImageSrc}
@@ -245,15 +281,6 @@ const ProfileSwitcher = () => {
                 </div>
               </div>
             </div>
-            {/* ======= SCROLL UP ICON ======= */}
-            <button
-              type="button"
-              className="fixed bottom-32 right-10 w-[60px] h-[60px] rounded-[30px] [background:linear-gradient(183.48deg,#096c5b,#16917c)] flex items-center justify-center cursor-pointer z-1000 shadow-lg transition-all hover:scale-110 active:scale-95"
-              onClick={onArrowUpClick}
-            >
-              <Icon icon="mdi:arrow-up" className="w-[27.7px] h-[27.7px] text-white" />
-            </button>
-            {/* ======= SCROLL UP ICON ======= */}
           </div>
           <Footer />
         </div>
