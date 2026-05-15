@@ -124,9 +124,10 @@ const RateAndReview: FunctionComponent = () => {
                   <div className="h-6 flex items-center gap-1.5">
                     <BreadcrumbHeader
                       routes={[
+                        { name: 'Home', url: '/home' },
                         { name: 'User Profile', url: '/profile-switcher' },
                         { name: 'Current Dorm', url: '/profile-switcher' },
-                        { name: 'Rate & Review', url: '/rate-review' },
+                        { name: 'Rate & Review' },
                       ]}
                     />
                   </div>

@@ -12,6 +12,7 @@ import { Icon } from "@iconify/react";
 import axios from "axios";
 import PropertyTabs from "../../../components/user/unitdetails/PropertyTabs";
 import ImageCarousel from "../../../components/user/unitdetails/ImageCarousel";
+import BreadcrumbHeader from "../../../components/general/Breadcrumb";
 
 import AboutDetails from "../../../components/user/unitdetails/AboutDetails";
 import AmenetiesDetails from "../../../components/user/unitdetails/AmenetiesDetails";
@@ -88,6 +89,8 @@ const formatTagValue = (value: string | number | boolean) => {
 type UnitDetailsLocationState = {
   dorm?: DormCardData;
   selectedRoomType?: string;
+  sourceLabel?: string;
+  sourceUrl?: string;
 };
 
 const UnitDetails: FunctionComponent = () => {
@@ -97,6 +100,8 @@ const UnitDetails: FunctionComponent = () => {
   const routeState = location.state as UnitDetailsLocationState | null;
   const selectedDorm = routeState?.dorm;
   const selectedRoomType = routeState?.selectedRoomType;
+  const breadcrumbSourceLabel = routeState?.sourceLabel ?? "Facilities";
+  const breadcrumbSourceUrl = routeState?.sourceUrl ?? "/home";
   const { facility, isLoading, error, refetch } = useFacilityDetails(
     facilityId,
     selectedDorm,
@@ -393,7 +398,7 @@ const UnitDetails: FunctionComponent = () => {
         </PortalPopup>
       )}
       {/* Sidebar */}
-      <div className="sticky top-0 h-screen shrink-0 z-10">
+      <div className="sticky top-0 h-screen shrink-0 z-10 font-inter">
         <SideBar />
       </div>
 
@@ -405,13 +410,14 @@ const UnitDetails: FunctionComponent = () => {
             className="flex items-center gap-1.5 text-sm font-semibold flex-wrap"
             data-scroll-to="searchBarContainer"
           >
-            <span>Home</span>
-            <Icon icon="iconamoon:arrow-right-2" className="w-5 h-5" />
-            <span>Facilities</span>
-            <Icon icon="iconamoon:arrow-right-2" className="w-5 h-5" />
-            <span>{facility.name}</span>
+            <BreadcrumbHeader
+              routes={[
+                { name: "Home", url: "/home" },
+                { name: breadcrumbSourceLabel, url: breadcrumbSourceUrl },
+                { name: facility.name },
+              ]}
+            />
           </div>
-
           {/* Search */}
           <form
             onSubmit={submitSearch}

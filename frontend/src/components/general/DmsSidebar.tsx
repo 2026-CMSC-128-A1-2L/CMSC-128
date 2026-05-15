@@ -74,7 +74,7 @@ const DmsSidebar: FunctionComponent<DmsSidebarProps> = ({
           <Icon
             icon="material-symbols-light:chevron-left"
             className="w-8 h-8 cursor-pointer shrink-0 hover:text-teal transition-colors"
-            onClick={() => navigate("/home")}
+            onClick={() => navigate(-1)}
           />
           <div className="flex-1 px-3 py-2 rounded-num-8 bg-unavailable_action flex items-center gap-2 transition-all focus-within:ring-1 focus-within:ring-teal/30 focus-within:bg-white focus-within:shadow-sm dark:bg-[#202123] dark:focus-within:bg-[#2a2c2e] dark:focus-within:ring-[#72cbb8]/30 dark:shadow-none">
             <Icon

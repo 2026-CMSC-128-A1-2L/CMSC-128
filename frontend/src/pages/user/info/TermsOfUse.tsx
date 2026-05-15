@@ -105,7 +105,7 @@ const TermsOfUse: FunctionComponent = () => {
                 <div className="self-stretch flex-1 flex flex-col items-start gap-6">
                   <div className="w-full h-16 flex items-end text-num-10 box-border">
                     <BreadcrumbHeader
-                      routes={[{ name: 'Home', url: '/' }, { name: 'Terms of Use' }]}
+                      routes={[{ name: 'Home', url: '/home' }, { name: 'Terms of Use' }]}
                     ></BreadcrumbHeader>
                   </div>
                   <div className="self-stretch flex-1 flex flex-col items-center gap-8 text-[24px] text-black font-inter">
