@@ -1,16 +1,12 @@
-import type z from 'zod';
-import type { GetBookingsQuerySchema } from 'shared';
-import type {
-  CreateBookingBody,
-  GetBookingsQuery,
-  UpdateBookingStatusBody,
-} from '../interface/booking';
+import type { GetBookingsQuery, CreateBookingBody } from '../interface/booking';
 import { api } from './axiosInstance';
 
 export const BookingService = {
   async createBooking(body: CreateBookingBody) {
     try {
-      const response = await api.post('/api/bookings', body);
+      const response = await api.post('/api/bookings/', {
+        ...body,
+      });
       return response.data;
     } catch (error) {
       console.error('Error creating booking', error);
@@ -18,11 +14,12 @@ export const BookingService = {
     }
   },
 
-  async getBookings(params: z.infer<typeof GetBookingsQuerySchema>): Promise<GetBookingsQuery> {
+  async getBookings(params: GetBookingsQuery): Promise<GetBookingsQuery> {
     try {
       const response = await api.get<GetBookingsQuery>('/api/bookings', {
         params: { q: JSON.stringify(params) },
       });
+
       return response.data;
     } catch (error) {
       console.error('Failed to fetch bookings:', error);
@@ -30,13 +27,10 @@ export const BookingService = {
     }
   },
 
-  async getBooking(params: z.infer<typeof GetBookingsQuerySchema>): Promise<GetBookingsQuery> {
-    return this.getBookings(params);
-  },
-
-  async updateBookingStatus(bookingId: string, body: UpdateBookingStatusBody) {
+  async updateBookingStatus(bookingId: string) {
     try {
-      const response = await api.patch(`/api/bookings/${bookingId}`, body);
+      const response = await api.patch(`/api/bookings/${bookingId}`, {});
+
       return response.data;
     } catch (error) {
       console.error('Failed to update booking:', error);
@@ -47,6 +41,7 @@ export const BookingService = {
   async cancelBooking(bookingId: string) {
     try {
       const response = await api.delete(`/api/bookings/${bookingId}`);
+
       return response.data;
     } catch (error) {
       console.error('Failed to delete booking:', error);

@@ -33,6 +33,18 @@ export const ApplicationService = {
     }
   },
 
+  async getMyApplications(params: Partial<GetApplicationsQuery> = { limit: 50 }) {
+    try {
+      const response = await api.get('/api/users/me/applications', {
+        params: { q: JSON.stringify(params) },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching my applications:', error);
+      throw error;
+    }
+  },
+
   async getApplication(applicationId: string) {
     try {
       const response = await api.get(`/api/applications/${applicationId}`);
@@ -88,6 +100,18 @@ export const ApplicationService = {
       return response.data;
     } catch (error) {
       console.error('Error finalizing application:', error);
+      throw error;
+    }
+  },
+
+  async addApplicationDocument(applicationId: string, docId: string, fileId: string) {
+    try {
+      const response = await api.post(`/api/applications/${applicationId}/documents/${docId}`, {
+        fileId,
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error adding application document:', error);
       throw error;
     }
   },

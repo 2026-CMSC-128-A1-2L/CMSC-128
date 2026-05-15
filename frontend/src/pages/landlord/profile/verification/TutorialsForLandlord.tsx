@@ -1,4 +1,4 @@
-import { type FunctionComponent, useState, useEffect } from 'react';
+import { type FunctionComponent, useState } from 'react';
 import { Icon } from '@iconify/react';
 
 interface TutorialBubbleProps {
@@ -8,74 +8,65 @@ interface TutorialBubbleProps {
 
 const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose }) => {
   const [step, setStep] = useState(1);
-  const [bubblePos, setBubblePos] = useState({ top: 0, left: 0 });
 
   const helpContent = [
     {
-      title: 'Notifications',
-      text: 'This is where ATLAS sends you active notifications to keep you up-to-date!',
-      targetId: 'notif-section',
+      title: 'Submit Documents',
+      text: 'Upload any official government ID. Your name, photo, and address must be clear.',
+      position: 'top-[610px] left-[580px]',
+      total: 3,
+      currentStep: 1,
+    },
+    {
+      title: 'Submit Documents',
+      text: 'Upload a clear copy of your business permit. This document is typically issued by the Business...',
+      position: 'top-[610px] left-[580px]',
+      total: 3,
+      currentStep: 2,
+    },
+    {
+      title: 'Submit Documents',
+      text: 'Permits and Licensing Office (BPLO) at the City or Municipal Hall where your property is registered.',
+      position: 'top-[610px] left-[580px]',
+      total: 3,
+      currentStep: 3,
+    },
+    {
+      title: 'Reviewing Documents',
+      text: 'Once submitted, the admin will validate your submissions.',
+      position: 'top-[610px] left-[920px]',
       total: 2,
       currentStep: 1,
     },
     {
-      title: 'Notifications',
-      text: 'Look out for updates on your submissions and important system announcements.',
-      targetId: 'notif-section',
+      title: 'Reviewing Documents',
+      text: 'Reviewing your documents may take up to 48 to 72 hours.',
+      position: 'top-[610px] left-[920px]',
       total: 2,
       currentStep: 2,
     },
     {
-      title: 'Direct Messages',
-      text: 'Connect directly with tenants, dorm managers, or landlords through messages!',
-      targetId: 'dm-section',
-      total: 2,
+      title: 'Finalized Documents',
+      text: 'Once the admin has reviewed and approved of your documents, your account is now secured!',
+      position: 'top-[610px] left-[1260px]',
+      total: 3,
       currentStep: 1,
     },
     {
-      title: 'Direct Messages',
-      text: 'Quickly catch up by fltering for unread messages to stay on top of your conversations.',
-      targetId: 'dm-section',
-      total: 2,
+      title: 'Finalized Documents',
+      text: 'As a verified user, you can now list, manage, and settle your properties for the students who will be...',
+      position: 'top-[610px] left-[1260px]',
+      total: 3,
       currentStep: 2,
     },
     {
-      title: 'Archived Messages',
-      text: 'Read messages are moved to the archive after 7 days.',
-      targetId: 'archive-section',
-      total: 2,
-      currentStep: 1,
-    },
-    {
-      title: 'Archived Messages',
-      text: 'This is to help you focus on your most recent and active conversations.',
-      targetId: 'archive-section',
-      total: 2,
-      currentStep: 2,
+      title: 'Finalized Documents',
+      text: 'staying here at UPLB. If you have more questions you may visit <here> or contact our admins.',
+      position: 'top-[610px] left-[1260px]',
+      total: 3,
+      currentStep: 3,
     },
   ];
-
-  useEffect(() => {
-    if (!show) return;
-
-    const updatePosition = () => {
-      const currentContent = helpContent[step - 1];
-      const target = document.getElementById(currentContent.targetId);
-      
-      if (target) {
-        const rect = target.getBoundingClientRect();
-        // Point to the middle of the section
-        setBubblePos({
-          top: rect.top + (rect.height / 2) - 40, // Center the bubble vertically relative to target
-          left: rect.right - 10, // Slight overlap for the arrow
-        });
-      }
-    };
-
-    updatePosition();
-    window.addEventListener('resize', updatePosition);
-    return () => window.removeEventListener('resize', updatePosition);
-  }, [show, step]);
 
   if (!show) return null;
 
@@ -87,8 +78,7 @@ const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose 
     if (step < totalSteps) {
       setStep(step + 1);
     } else {
-      onClose();
-      setStep(1);
+      handleClose();
     }
   };
 
@@ -96,37 +86,38 @@ const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose 
     if (step > 1) setStep(step - 1);
   };
 
+  const handleClose = () => {
+    onClose();
+    setStep(1);
+  };
+
   return (
     <div
-      style={{ top: `${bubblePos.top}px`, left: `${bubblePos.left}px` }}
-      className="fixed z-999 flex flex-row items-center animate-in fade-in zoom-in duration-200 transition-all pointer-events-auto"
+      className={`absolute ${current.position} z-[999] flex flex-col items-start animate-in fade-in zoom-in duration-200 transition-all`}
     >
-      <div className="w-[232px] flex flex-row items-center">
-        <Icon icon="ph:caret-left-fill" className="text-aliceblue w-14 h-15 mr-[-23px] z-10" />
+      <div className="w-[232px] flex flex-col items-center">
+        <Icon icon="ph:caret-up-fill" className="text-aliceblue w-14 h-15 mb-[-23px] z-10" />
 
         <div className="w-[232px] rounded-2xl bg-aliceblue shadow-xl border border-whitesmoke-200 flex flex-col items-start overflow-hidden">
           <div className="self-stretch flex flex-col items-start py-4 px-4 gap-3">
-            {/* header*/}
+            {/* Header */}
             <div className="self-stretch flex items-center justify-between">
               <b className="text-[14px] font-inter text-black">{current.title}</b>
               <div
                 className="h-5 w-5 rounded-full flex items-center justify-center cursor-pointer hover:bg-silver transition-colors"
-                onClick={() => {
-                  onClose();
-                  setStep(1);
-                }}
+                onClick={handleClose}
               >
                 <Icon icon="mdi:close" className="w-3.5 h-3.5 text-slategray" />
               </div>
             </div>
 
-            {/* description */}
+            {/* Description */}
             <div className="self-stretch text-[12px] font-medium leading-[1.4] font-lora text-black tracking-wide text-left">
               {current.text}
             </div>
 
             <div className="self-stretch flex items-center justify-between mt-1">
-              {/* step counter */}
+              {/* Step counter */}
               <div className="text-[12px] font-semibold font-lora text-darkslategray tracking-wide">
                 {current.currentStep}/{current.total}
               </div>
@@ -140,7 +131,6 @@ const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose 
                     Back
                   </button>
                 )}
-
                 <button
                   onClick={handleNext}
                   className="w-[54px] rounded-lg bg-[#d0dbe3] py-1 text-[12px] text-[#2f3136] font-semibold font-lora text-center cursor-pointer hover:brightness-95 transition-all"

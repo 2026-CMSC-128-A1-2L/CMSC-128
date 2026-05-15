@@ -6,9 +6,11 @@ import {
   routeDeclineInvite,
   routeGetInviteById,
   routeDeleteInvite,
+  routeAcceptStudentInvite,
+  routeDeclineStudentInvite,
 } from './invite.controller.js';
 import { isLandlord, isLoggedIn } from '../../middleware.js';
-import { inviteFilter, isManagerOnly } from './invite.middleware.js';
+import { inviteFilter, isManagerOnly, isStudentOnly } from './invite.middleware.js';
 
 const router = Router();
 
@@ -45,6 +47,21 @@ router.post('/:inviteId/accept', isLoggedIn, isManagerOnly, routeAcceptInvite);
 // Declines the invitation to manage a facility.
 // ============================================================================
 router.post('/:inviteId/decline', isLoggedIn, isManagerOnly, routeDeclineInvite);
+
+// ============================================================================
+// POST /api/invites/:inviteId/accept-student
+//
+// Accepts a student (legacy tenant) invitation to join a unit.
+// Creates an active Rental record linking the student to the unit.
+// ============================================================================
+router.post('/:inviteId/accept-student', isLoggedIn, isStudentOnly, routeAcceptStudentInvite);
+
+// ============================================================================
+// POST /api/invites/:inviteId/decline-student
+//
+// Declines a student (legacy tenant) invitation.
+// ============================================================================
+router.post('/:inviteId/decline-student', isLoggedIn, isStudentOnly, routeDeclineStudentInvite);
 
 // ============================================================================
 // GET /api/invites/:inviteId
