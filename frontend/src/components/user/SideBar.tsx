@@ -490,12 +490,14 @@ const SideBar = ({
         </div>
       </div>
 
-      {signInPopupOpen && (
-        <SignInPopUp
-          isOpen={signInPopupOpen}
-          onClose={() => setSignInPopupOpen(false)}
-        />
-      )}
+      {signInPopupOpen &&
+        createPortal(
+          <SignInPopUp
+            isOpen={signInPopupOpen}
+            onClose={() => setSignInPopupOpen(false)}
+          />,
+          document.body,
+        )}
     </>
   );
 };
