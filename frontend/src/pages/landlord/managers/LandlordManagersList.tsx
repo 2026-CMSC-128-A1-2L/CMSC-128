@@ -88,10 +88,22 @@ const Managers = () => {
 
         <div className="flex flex-col gap-[48px]">
           {properties.map((property) => {
-            const propertyManagers = property.managers as Manager[];
+            const propId = property.id || property._id;
+            const propertyManagers = Array.from(
+              new Map(
+                (property.managers || [])
+                  .filter((m: any) => m.userId)
+                  .map((m: any) => {
+                    const u = m.userId;
+                    const id = (u._id || u.id).toString();
+                    return [id, { ...u, id }];
+                  }),
+              ).values(),
+            ) as Manager[];
+
             return (
               <section
-                key={property.id}
+                key={propId}
                 className="flex flex-col gap-[10px] px-[10px]"
               >
                 <div className="flex items-center gap-[10px]">
