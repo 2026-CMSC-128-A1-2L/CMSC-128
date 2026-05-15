@@ -1,10 +1,12 @@
-import { type FunctionComponent, type ReactNode, useCallback, useRef } from 'react';
+import { type FunctionComponent, type ReactNode, useCallback, useEffect, useState } from 'react';
 import { Icon } from '@iconify/react';
 import SideBar from '../../../components/user/SideBar';
+import SideBarLandlord from '../../../components/landlord/SideBarLandlord';
 import Footer from '../../../components/general/Footer';
 import BreadcrumbHeader from '../../../components/general/Breadcrumb';
 import PageBackground from '../../../components/general/PageBackground';
 import { useAuthStore } from '../../../store/useAuthStore';
+import { useNavigate } from 'react-router-dom';
 
 type ArticleSection = {
   id: string;
@@ -40,11 +42,15 @@ const Paragraph = ({ children }: { children: ReactNode }) => (
 );
 
 const PrivacyPolicy: FunctionComponent = () => {
+  const navigate = useNavigate();
   const user = useAuthStore((state) => state.user);
   const isSignedIn = Boolean(user);
-  const articleScrollRef = useRef<HTMLElement>(null);
+  const usesLandlordShell = user?.userType === 'Landlord' || user?.userType === 'Manager';
+  const signedInHomeUrl = usesLandlordShell ? '/landlord-homepage' : '/home';
+  const [activeSectionId, setActiveSectionId] = useState(articleSections[0].id);
 
   const scrollToSection = useCallback((id: string) => {
+    setActiveSectionId(id);
     document.getElementById(id)?.scrollIntoView({
       block: 'start',
       inline: 'nearest',
@@ -53,45 +59,87 @@ const PrivacyPolicy: FunctionComponent = () => {
   }, []);
 
   const scrollToTop = useCallback(() => {
-    articleScrollRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
+  useEffect(() => {
+    let animationFrame = 0;
+
+    const updateActiveSection = () => {
+      const activationOffset = 160;
+      let nextActiveSectionId = articleSections[0].id;
+
+      for (const section of articleSections) {
+        const element = document.getElementById(section.id);
+        if (!element) continue;
+
+        if (element.getBoundingClientRect().top <= activationOffset) {
+          nextActiveSectionId = section.id;
+        } else {
+          break;
+        }
+      }
+
+      setActiveSectionId(nextActiveSectionId);
+    };
+
+    const handleArticleScroll = () => {
+      cancelAnimationFrame(animationFrame);
+      animationFrame = requestAnimationFrame(updateActiveSection);
+    };
+
+    updateActiveSection();
+    window.addEventListener('scroll', handleArticleScroll, { passive: true });
+    window.addEventListener('resize', handleArticleScroll);
+
+    return () => {
+      cancelAnimationFrame(animationFrame);
+      window.removeEventListener('scroll', handleArticleScroll);
+      window.removeEventListener('resize', handleArticleScroll);
+    };
   }, []);
 
   return (
     <div className="privacy-policy-shell relative min-h-screen overflow-x-hidden bg-white font-inter text-black dark:bg-[#0f1010] dark:text-[#edf6f4]">
       <PageBackground />
 
-      <div className="relative z-10 flex h-screen min-h-0 overflow-hidden">
+      <div className="relative z-10 flex min-h-screen">
         {isSignedIn && (
-          <aside className="sticky top-0 hidden h-screen shrink-0 md:block">
-            <SideBar />
+          <aside className="fixed left-0 top-0 z-30 hidden h-screen shrink-0 md:block">
+            {usesLandlordShell ? <SideBarLandlord /> : <SideBar />}
           </aside>
         )}
 
         <main
-          className={`flex h-screen min-w-0 flex-1 flex-col overflow-hidden px-5 pb-8 pt-8 sm:px-8 lg:px-12 xl:px-16 ${isSignedIn ? '' : 'items-center'}`}
+          className={`flex min-w-0 flex-1 flex-col px-5 pb-16 pt-8 sm:px-8 lg:px-12 xl:px-16 ${isSignedIn ? 'md:ml-[200px]' : 'items-center'}`}
         >
-          <div
-            className={`flex h-full min-h-0 w-full flex-col ${isSignedIn ? 'max-w-[1180px]' : 'max-w-[1280px]'}`}
-          >
+          <div className={`w-full ${isSignedIn ? 'max-w-[1180px]' : 'max-w-[1280px]'}`}>
             {/* <div className="mb-3 text-[20px] font-semibold text-[#d7d7d7] dark:text-[#4f555d]">
               Privacy Policy
             </div> */}
 
-            <div className="shrink-0 border-b border-whitesmoke-200 pb-3 dark:border-[#303331]">
-              <BreadcrumbHeader
-                routes={[{ name: 'About ATLAS', url: '/' }, { name: 'Privacy Policy' }]}
-              />
+            <div className=" flex flex-col mb-8 border-b border-whitesmoke-200 pb-3 dark:border-[#303331] gap-4">
+              {isSignedIn ? (
+                <BreadcrumbHeader
+                  routes={[{ name: 'Home', url: signedInHomeUrl }, { name: 'Privacy Policy' }]}
+                />
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => navigate(-1)}
+                  className="flex items-center gap-2 text-num-14 font-extrabold text-darkslategray-200 transition-colors hover:text-teal-200 dark:text-[#edf6f4] dark:hover:text-[#72cbb8]"
+                >
+                  <Icon icon="material-symbols:arrow-back-rounded" className="h-5 w-5" />
+                  Back
+                </button>
+              )}
               <h1 className="mt-2 text-[24px] font-extrabold leading-8 text-black dark:text-[#edf6f4]">
                 ATLAS General Privacy Statement
               </h1>
             </div>
 
-            <div className="grid min-h-0 flex-1 gap-12 pt-8 lg:grid-cols-[minmax(0,740px)_280px] xl:grid-cols-[minmax(0,800px)_320px]">
-              <article
-                ref={articleScrollRef}
-                className="flex min-h-0 min-w-0 flex-col gap-12 overflow-x-hidden overflow-y-auto overscroll-contain pb-12 pr-2 font-inter lg:pr-6"
-              >
+            <div className="grid gap-12 lg:grid-cols-[minmax(0,740px)_280px] xl:grid-cols-[minmax(0,800px)_320px]">
+              <article className="flex min-w-0 flex-col gap-12 pb-12 font-inter">
                 <section className="flex flex-col gap-3">
                   <SectionHeading id="privacy-statement">ATLAS Privacy Statement</SectionHeading>
                   <Paragraph>
@@ -450,8 +498,8 @@ const PrivacyPolicy: FunctionComponent = () => {
                 </section>
               </article>
 
-              <aside className="hidden h-full min-h-0 lg:block">
-                <div className="flex max-h-full flex-col gap-4 overflow-y-auto pt-5 text-num-14">
+              <aside className="relative hidden lg:block">
+                <div className="fixed top-40 flex max-h-[calc(100vh-12rem)] w-[280px] flex-col gap-4 overflow-y-auto pt-5 text-num-14 xl:w-[320px]">
                   <b className="text-black dark:text-[#edf6f4]">In this article</b>
                   <div className="flex flex-col gap-4 text-dimgray dark:text-[#a4acba]">
                     {articleSections.map((section) => (
@@ -459,7 +507,11 @@ const PrivacyPolicy: FunctionComponent = () => {
                         key={section.id}
                         type="button"
                         onClick={() => scrollToSection(section.id)}
-                        className="text-left font-extrabold leading-5 transition-colors hover:text-teal-200 dark:hover:text-[#72cbb8]"
+                        className={`border-l-4 py-1 pl-3 text-left font-extrabold leading-5 transition-colors ${
+                          activeSectionId === section.id
+                            ? 'border-teal-200 text-teal-200 dark:border-[#72cbb8] dark:text-[#72cbb8]'
+                            : 'border-transparent hover:text-teal-200 dark:hover:text-[#72cbb8]'
+                        }`}
                       >
                         {section.title}
                       </button>
@@ -472,7 +524,9 @@ const PrivacyPolicy: FunctionComponent = () => {
         </main>
       </div>
 
-      <footer className="relative z-10 min-w-0 overflow-x-hidden bg-white dark:bg-[#0f1010]">
+      <footer
+        className={`relative z-10 min-w-0 overflow-x-hidden bg-white dark:bg-[#0f1010] ${isSignedIn ? 'md:ml-[200px]' : ''}`}
+      >
         <div className={isSignedIn ? '' : 'mx-auto max-w-[1280px]'}>
           <Footer />
         </div>
