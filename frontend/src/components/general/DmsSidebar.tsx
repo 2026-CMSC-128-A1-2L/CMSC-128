@@ -60,7 +60,7 @@ const DmsSidebar: FunctionComponent<DmsSidebarProps> = ({
     <div className="w-72 h-screen relative flex flex-col items-start py-10 pl-4 pr-3 box-border gap-2 text-left font-inter bg-white shadow-[4px_0_24px_rgba(0,0,0,0.02)] dark:bg-[#101111] dark:text-[#d7e0ef] dark:shadow-[4px_0_24px_rgba(0,0,0,0.25)] overflow-y-auto overflow-x-hidden">
       <div className="w-full flex flex-col items-start gap-8">
         {/* Header & Search */}
-        <div className="w-full flex items-center gap-2 text-[0.875rem] dark:gap-5">
+        <div className="w-full flex items-center gap-2 text-[0.875rem]">
           <Icon
             icon="material-symbols-light:chevron-left"
             className="w-8 h-8 cursor-pointer shrink-0 hover:text-teal transition-colors"
@@ -85,7 +85,7 @@ const DmsSidebar: FunctionComponent<DmsSidebarProps> = ({
         {/* Notifications Section */}
         <div id="notif-section" className="self-stretch flex flex-col items-start gap-2 font-lora">
           <div className="self-stretch flex items-center justify-between py-1 font-inter">
-            <b className="relative flex items-start pl-2 text-num-18 text-[#2d3748] dark:text-[#d7e0ef] dark:text-[1.65rem]">
+            <b className="relative flex items-start pl-2 text-num-18 text-[#2d3748] dark:text-[#d7e0ef]">
               Notifications
             </b>
             <span className="bg-teal/10 text-teal text-[10px] font-bold px-2 py-0.5 rounded-full dark:bg-[#102c27] dark:text-[#72cbb8]">
@@ -129,7 +129,7 @@ const DmsSidebar: FunctionComponent<DmsSidebarProps> = ({
         {/* Direct Messages Section */}
         <div id="dm-section" className="h-fit w-full flex flex-col items-start gap-4 font-lora">
           <div className="self-stretch flex items-end py-1 font-inter">
-            <b className="w-full flex-1 relative flex items-start text-num-18 pl-2 text-[#2d3748] dark:text-[#d7e0ef] dark:text-[1.65rem]">
+            <b className="w-full flex-1 relative flex items-start text-num-18 pl-2 text-[#2d3748] dark:text-[#d7e0ef]">
               Direct Messages
             </b>
           </div>

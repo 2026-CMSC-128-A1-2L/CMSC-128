@@ -244,6 +244,274 @@ body {
     color: inherit;
   }
 }
+@layer utilities {
+  .dark .user-home-shell,
+  .dark .user-unit-details-shell {
+    background-color: #0f1010;
+    color: #edf6f4;
+  }
+
+  .user-home-shell > .pointer-events-none,
+  .user-unit-details-shell > .pointer-events-none {
+    opacity: 0;
+  }
+
+  .dark .user-home-shell > .pointer-events-none,
+  .dark .user-unit-details-shell > .pointer-events-none {
+    opacity: 1;
+  }
+
+  .dark .user-home-shell .bg-white,
+  .dark .user-unit-details-shell .bg-white {
+    background-color: #101111;
+  }
+
+  .dark .user-home-shell .bg-\[\#f8f9fa\],
+  .dark .user-home-shell .bg-whitesmoke-100,
+  .dark .user-home-shell .bg-aliceblue,
+  .dark .user-unit-details-shell .bg-aliceblue,
+  .dark .user-unit-details-shell .bg-whitesmoke-100,
+  .dark .user-unit-details-shell .bg-whitesmoke-200 {
+    background-color: #202123;
+  }
+
+  .dark .user-home-shell .bg-\[\#e0f7f4\],
+  .dark .user-home-shell .bg-lightcyan,
+  .dark .user-home-shell .bg-lightcyan\/45,
+  .dark .user-unit-details-shell .bg-lightcyan,
+  .dark .user-unit-details-shell .bg-lightcyan\/20,
+  .dark .user-unit-details-shell .bg-lightcyan\/40 {
+    background-color: #12342e;
+  }
+
+  .dark .user-home-shell .bg-darkslategray-200,
+  .dark .user-home-shell .bg-\[\#237866\],
+  .dark .user-home-shell .bg-\[\#4c8c7e\],
+  .dark .user-unit-details-shell .bg-darkslategray-200 {
+    background-color: #124f43;
+  }
+
+  .dark .user-home-shell .text-black,
+  .dark .user-home-shell .text-gray,
+  .dark .user-home-shell .text-darkgreen,
+  .dark .user-home-shell .text-darkslategray,
+  .dark .user-home-shell .text-darkslategray-100,
+  .dark .user-home-shell .text-darkslategray-200,
+  .dark .user-home-shell .text-\[\#2f3136\],
+  .dark .user-home-shell .text-\[\#164f43\],
+  .dark .user-home-shell .text-\[\#1f6f60\],
+  .dark .user-home-shell .text-\[\#237866\],
+  .dark .user-unit-details-shell .text-black,
+  .dark .user-unit-details-shell .text-gray,
+  .dark .user-unit-details-shell .text-darkgreen,
+  .dark .user-unit-details-shell .text-darkslategray,
+  .dark .user-unit-details-shell .text-darkslategray-100,
+  .dark .user-unit-details-shell .text-darkslategray-200 {
+    color: #edf6f4;
+  }
+
+  .dark .user-home-shell .text-dimgray,
+  .dark .user-home-shell .text-unselected,
+  .dark .user-home-shell .text-silver,
+  .dark .user-home-shell .placeholder\:text-unselected::placeholder,
+  .dark .user-unit-details-shell .text-dimgray,
+  .dark .user-unit-details-shell .text-unselected,
+  .dark .user-unit-details-shell .text-silver,
+  .dark .user-unit-details-shell .placeholder\:text-dimgray::placeholder,
+  .dark .user-unit-details-shell .placeholder\:text-silver::placeholder {
+    color: #a4acba;
+  }
+
+  .dark .user-home-shell .text-teal,
+  .dark .user-home-shell .text-teal-100,
+  .dark .user-home-shell .text-teal-200,
+  .dark .user-home-shell .text-\[\#096c5b\],
+  .dark .user-home-shell .text-\[\#4c8c7e\],
+  .dark .user-unit-details-shell .text-teal,
+  .dark .user-unit-details-shell .text-teal-100,
+  .dark .user-unit-details-shell .text-teal-200 {
+    color: #72cbb8;
+  }
+
+  .dark .user-home-shell .border-\[\#f0f0f0\],
+  .dark .user-home-shell .border-whitesmoke,
+  .dark .user-home-shell .border-whitesmoke-200,
+  .dark .user-unit-details-shell .border-\[\#f0f0f0\],
+  .dark .user-unit-details-shell .border-whitesmoke,
+  .dark .user-unit-details-shell .border-whitesmoke-200,
+  .dark .user-unit-details-shell .border-whitesmoke-300,
+  .dark .user-unit-details-shell .border-silver {
+    border-color: #303331;
+  }
+
+  .dark .user-home-shell .border-teal-200,
+  .dark .user-unit-details-shell .border-teal-100,
+  .dark .user-unit-details-shell .border-teal-200,
+  .dark .user-unit-details-shell .border-lightcyan {
+    border-color: #45665e;
+  }
+
+  .dark .user-home-shell .hover\:bg-lightcyan\/45:hover,
+  .dark .user-home-shell .hover\:bg-lightcyan:hover,
+  .dark .user-home-shell .hover\:bg-\[\#237866\]:hover,
+  .dark .user-unit-details-shell .hover\:bg-lightcyan:hover,
+  .dark .user-unit-details-shell .hover\:bg-lightcyan\/20:hover,
+  .dark .user-unit-details-shell .hover\:bg-whitesmoke-100:hover {
+    background-color: #173a34;
+  }
+
+  .dark .user-home-shell .focus-within\:bg-white:focus-within,
+  .dark .user-unit-details-shell .focus-within\:bg-white:focus-within {
+    background-color: #202123;
+  }
+
+  .dark .user-home-shell .shadow-sm,
+  .dark .user-home-shell .shadow-md,
+  .dark .user-home-shell .hover\:shadow-lg:hover,
+  .dark .user-unit-details-shell .shadow,
+  .dark .user-unit-details-shell .shadow-sm,
+  .dark .user-unit-details-shell .shadow-md,
+  .dark .user-unit-details-shell .shadow-lg,
+  .dark .user-unit-details-shell .shadow-2xl {
+    box-shadow: none;
+  }
+
+  .dark .user-home-shell input,
+  .dark .user-home-shell button,
+  .dark .user-unit-details-shell input,
+  .dark .user-unit-details-shell textarea,
+  .dark .user-unit-details-shell button {
+    color: inherit;
+  }
+
+  .dark .user-unit-details-shell input[type='date']::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    opacity: 0.75;
+  }
+
+  .dark .user-unit-details-shell footer {
+    background-color: #0f1010;
+    border-color: #303331;
+    color: #a4acba;
+  }
+
+  .dark .user-unit-details-shell footer svg {
+    fill: #72cbb8;
+  }
+}
+@layer utilities {
+  .dark #portals .portalPopupOverlay {
+    background-color: rgba(0, 0, 0, 0.72) !important;
+    backdrop-filter: blur(8px);
+  }
+
+  .dark #portals .bg-white,
+  .dark #portals .bg-aliceblue,
+  .dark #portals .bg-whitesmoke-100,
+  .dark #portals .bg-whitesmoke-200,
+  .dark #portals .bg-\[\#f8f9fa\],
+  .dark #portals .bg-\[\#fafafa\] {
+    background-color: #141515;
+  }
+
+  .dark #portals .bg-lightcyan,
+  .dark #portals .bg-lightcyan\/20,
+  .dark #portals .bg-lightcyan\/40,
+  .dark #portals .bg-\[\#bdf1e6\],
+  .dark #portals .bg-\[\#e0f7f4\] {
+    background-color: #12342e;
+  }
+
+  .dark #portals .bg-darkslategray-200,
+  .dark #portals .bg-\[\#096c5b\],
+  .dark #portals .bg-\[\#237866\],
+  .dark #portals .bg-\[\#4c8c7e\] {
+    background-color: #124f43;
+  }
+
+  .dark #portals .border-whitesmoke,
+  .dark #portals .border-whitesmoke-200,
+  .dark #portals .border-whitesmoke-300,
+  .dark #portals .border-\[\#e5e5e5\],
+  .dark #portals .border-\[\#dedede\],
+  .dark #portals .border-\[\#f0f0f0\],
+  .dark #portals .border-gray-100,
+  .dark #portals .border-silver {
+    border-color: #303331;
+  }
+
+  .dark #portals .border-teal-100,
+  .dark #portals .border-teal-200,
+  .dark #portals .border-lightcyan {
+    border-color: #45665e;
+  }
+
+  .dark #portals .text-black,
+  .dark #portals .text-gray,
+  .dark #portals .text-gray-200,
+  .dark #portals .text-darkgreen,
+  .dark #portals .text-darkslategray,
+  .dark #portals .text-darkslategray-100,
+  .dark #portals .text-darkslategray-200,
+  .dark #portals .text-\[\#001d18\],
+  .dark #portals .text-\[\#004236\],
+  .dark #portals .text-\[\#164f43\],
+  .dark #portals .text-\[\#1f6f60\],
+  .dark #portals .text-\[\#237866\] {
+    color: #edf6f4;
+  }
+
+  .dark #portals .text-dimgray,
+  .dark #portals .text-slategray,
+  .dark #portals .text-silver,
+  .dark #portals .text-unselected,
+  .dark #portals .text-gray-100,
+  .dark #portals .text-\[\#5d5d5d\],
+  .dark #portals .text-\[\#666\],
+  .dark #portals .text-\[\#777\],
+  .dark #portals .text-\[\#9b9b9b\],
+  .dark #portals .placeholder\:text-\[\#9b9b9b\]::placeholder,
+  .dark #portals .placeholder\:text-silver::placeholder {
+    color: #a4acba;
+  }
+
+  .dark #portals .text-teal,
+  .dark #portals .text-teal-100,
+  .dark #portals .text-teal-200,
+  .dark #portals .text-teal-600,
+  .dark #portals .text-\[\#006f5e\],
+  .dark #portals .text-\[\#096c5b\],
+  .dark #portals .text-\[\#356c65\] {
+    color: #72cbb8;
+  }
+
+  .dark #portals .hover\:bg-white:hover,
+  .dark #portals .hover\:bg-gray-100:hover,
+  .dark #portals .hover\:bg-whitesmoke-100:hover,
+  .dark #portals .hover\:bg-lightcyan:hover,
+  .dark #portals .hover\:bg-lightcyan\/20:hover {
+    background-color: #202123;
+  }
+
+  .dark #portals .shadow,
+  .dark #portals .shadow-sm,
+  .dark #portals .shadow-md,
+  .dark #portals .shadow-lg,
+  .dark #portals .shadow-xl,
+  .dark #portals .shadow-2xl,
+  .dark #portals .shadow-\[0_2px_14px_rgba\(0\,0\,0\,0\.24\)\],
+  .dark #portals .shadow-\[0_3px_8px_rgba\(0\,0\,0\,0\.2\)\],
+  .dark #portals .shadow-\[0_12px_24px_rgba\(0\,0\,0\,0\.14\)\] {
+    box-shadow: none;
+  }
+
+  .dark #portals input,
+  .dark #portals textarea,
+  .dark #portals select,
+  .dark #portals button {
+    color: inherit;
+  }
+}
 @keyframes dark-mode-icon-turn {
   from {
     transform: rotate(0deg) scale(1);

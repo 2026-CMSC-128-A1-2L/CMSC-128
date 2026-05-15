@@ -4,6 +4,7 @@ import { useSearchParams } from 'react-router-dom';
 import SideBar from '../../../components/user/SideBar';
 import DormCard from '../../../components/user/DormCard';
 import Banner from '../../../components/general/Banner';
+import PageBackground from '../../../components/general/PageBackground';
 import FilterTab from '../../../components/user/Filter/FilterTab';
 import LoadingPage from '../../general/LoadingPage';
 import { useFacilities, type DormCardData } from '../../../hooks/useFacilities';
@@ -338,13 +339,14 @@ const HomePage: FunctionComponent = () => {
   if (isLoading) return <LoadingPage />;
 
   return (
-    <div className="w-full flex items-start text-left text-[0.875rem] text-dimgray font-inter gap-8">
-      <div className="sticky top-0 h-screen w-fit shrink-0">
+    <div className="user-home-shell relative w-full flex items-start text-left text-[0.875rem] text-dimgray font-inter gap-8 bg-white dark:bg-[#0f1010]">
+      <PageBackground />
+      <div className="sticky top-0 h-screen w-fit shrink-0 z-20">
         <SideBar />
       </div>
 
       {/* right frame */}
-      <div className="w-full min-w-0 h-fit flex items-start pt-15 pr-20 pb-20">
+      <div className="relative z-10 w-full min-w-0 h-fit flex items-start pt-15 pr-20 pb-20">
         <div className="h-fit w-full min-w-0 flex flex-col items-start gap-80">
           <div className="w-full min-w-0 flex flex-col items-start">
             {/* search bar */}

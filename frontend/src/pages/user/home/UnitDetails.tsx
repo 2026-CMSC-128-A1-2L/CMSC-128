@@ -7,6 +7,7 @@ import {
 } from "react";
 import SideBar from "../../../components/user/SideBar";
 import Footer from "../../../components/general/Footer";
+import PageBackground from "../../../components/general/PageBackground";
 import SignInPopUp from "../../../components/general/SignInPopUp";
 import { Icon } from "@iconify/react";
 import axios from "axios";
@@ -381,7 +382,8 @@ const UnitDetails: FunctionComponent = () => {
   };
 
   return (
-    <div className="flex min-h-screen font-inter text-darkslategray-100">
+    <div className="user-unit-details-shell relative flex min-h-screen bg-white font-inter text-darkslategray-100 dark:bg-[#0f1010] dark:text-[#edf6f4]">
+      <PageBackground />
       {showSignIn && <SignInPopUp onClose={() => setShowSignIn(false)} />}
       {isVisitPopoutOpen && (
         <PortalPopup
@@ -398,12 +400,12 @@ const UnitDetails: FunctionComponent = () => {
         </PortalPopup>
       )}
       {/* Sidebar */}
-      <div className="sticky top-0 h-screen shrink-0 z-10 font-inter">
+      <div className="sticky top-0 h-screen shrink-0 z-20 font-inter">
         <SideBar />
       </div>
 
       {/* Main */}
-      <div className="flex flex-1 flex-col min-w-0 overflow-y-auto">
+      <div className="relative z-10 flex flex-1 flex-col min-w-0 overflow-y-auto">
         <div className="flex-1 flex flex-col px-4 sm:px-8 lg:px-20 pt-8 lg:pt-16 pb-0 gap-6">
           {/* Breadcrumb */}
           <div
