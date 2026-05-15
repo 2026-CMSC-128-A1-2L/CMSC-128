@@ -7,4 +7,5 @@ build
 **/tsconfig.tsbuildinfo
 *.tsbuildinfo
 .vercel
+.agent/
 .agent

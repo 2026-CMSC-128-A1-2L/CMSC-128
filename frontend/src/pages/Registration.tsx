@@ -48,7 +48,7 @@ const Registration: FunctionComponent = () => {
           if (user.userType === 'Landlord' || user.userType === 'Manager') {
             navigate('/landlord-homepage', { replace: true });
           } else if (user.userType === 'Admin') {
-            navigate('/admin/analytics', { replace: true });
+            navigate('/admin/applications', { replace: true });
           } else {
             navigate('/home', { replace: true });
           }
@@ -182,27 +182,27 @@ const Registration: FunctionComponent = () => {
   const steps = ['User Profile', 'Verification', 'Finalize'];
 
   return (
-    <div className="w-screen font-sans">
+    <div className="w-screen min-h-screen font-sans bg-white dark:bg-[#101111]">
       <div className="px-20 pt-4 pb-12">
         {/* Cancel */}
         <button
           type="button"
-          className="flex items-center gap-1.5 py-4 cursor-pointer w-fit"
+          className="flex items-center gap-1.5 py-4 cursor-pointer w-fit text-gray-700 dark:text-[#a4acba]"
           onClick={onCancelClick}
         >
-          <Icon icon="material-symbols:chevron-left" className="w-4 h-4 text-gray-700" />
-          <span className="text-sm font-semibold text-gray-700">Cancel</span>
+          <Icon icon="material-symbols:chevron-left" className="w-4 h-4 text-gray-700 dark:text-[#a4acba]" />
+          <span className="text-sm font-semibold text-gray-700 dark:text-[#a4acba]">Cancel</span>
         </button>
 
-        <div className="rounded-3xl border border-whitesmoke px-10 pt-8 pb-10">
-          <h1 className="text-2xl font-bold" style={{ color: '#1a5c50' }}>
+        <div className="rounded-3xl border border-whitesmoke dark:border-[#303331] bg-white dark:bg-[#141515] px-10 pt-8 pb-10">
+          <h1 className="text-2xl font-bold text-[#1a5c50] dark:text-[#d7e0ef]">
             Welcome to Atlas
           </h1>
-          <p className="text-sm font-semibold text-slategray mt-1">
+          <p className="text-sm font-semibold text-slategray dark:text-[#a4acba] mt-1">
             Follow 3 simple steps and you're ready to go!
           </p>
 
-          <div className="w-full h-px my-6" />
+          <div className="w-full h-px my-6 bg-whitesmoke dark:bg-[#303331]" />
 
           <div className="flex gap-20 px-10 items-start relative">
             {/* Sticky stepper */}
@@ -218,7 +218,7 @@ const Registration: FunctionComponent = () => {
             <div className="flex-1 min-w-0">{renderStepContent()}</div>
           </div>
           {submitError && (
-            <div className="mt-6 rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
+            <div className="mt-6 rounded-xl border border-red-100 bg-red-50 dark:border-red-900/50 dark:bg-red-900/20 px-4 py-3 text-sm font-semibold text-red-700 dark:text-red-400">
               {submitError}
             </div>
           )}
