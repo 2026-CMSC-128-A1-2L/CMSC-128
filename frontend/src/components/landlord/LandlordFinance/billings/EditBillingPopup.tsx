@@ -8,6 +8,8 @@ interface EditBillingPopupProps {
   isOpen: boolean;
   onClose: () => void;
   billing: Billing | null;
+  roomNumber?: string | number;
+  tenantName?: string;
   onSave?: (updatedBilling: Billing) => void;
 }
 
@@ -22,6 +24,8 @@ const EditBillingPopup: FunctionComponent<EditBillingPopupProps> = ({
   isOpen,
   onClose,
   billing,
+  roomNumber,
+  tenantName,
   onSave,
 }) => {
   const [rent, setRent] = useState<string>('');
@@ -91,13 +95,11 @@ const EditBillingPopup: FunctionComponent<EditBillingPopupProps> = ({
   };
 
   const handleFieldChange = (field: string, value: string) => {
-    // Update the field value
     if (field === 'rent') setRent(value);
     if (field === 'utilities') setUtilities(value);
     if (field === 'miscFees') setMiscFees(value);
     if (field === 'amountPaid') setAmountPaid(value);
 
-    // Clear error for this field if it was previously invalid
     if (errors[field as keyof ValidationErrors]) {
       setErrors((prev) => ({ ...prev, [field]: '' }));
     }
@@ -106,20 +108,14 @@ const EditBillingPopup: FunctionComponent<EditBillingPopupProps> = ({
   const handleFieldBlur = (field: string, value: string) => {
     setTouched((prev) => ({ ...prev, [field]: true }));
     let error = '';
-    if (field === 'rent') {
-      error = validateField('rent', value);
-    } else if (field === 'utilities') {
-      error = validateField('utilities', value);
-    } else if (field === 'miscFees') {
-      error = validateField('miscFees', value);
-    } else if (field === 'amountPaid') {
-      error = validateField('amountPaid', value);
-    }
+    if (field === 'rent') error = validateField('rent', value);
+    else if (field === 'utilities') error = validateField('utilities', value);
+    else if (field === 'miscFees') error = validateField('miscFees', value);
+    else if (field === 'amountPaid') error = validateField('amountPaid', value);
     setErrors((prev) => ({ ...prev, [field]: error }));
   };
 
   const validateAll = (): boolean => {
-    // Use current state values for validation
     const rentError = validateField('rent', rent);
     const utilitiesError = validateField('utilities', utilities);
     const miscFeesError = validateField('miscFees', miscFees);
@@ -133,16 +129,9 @@ const EditBillingPopup: FunctionComponent<EditBillingPopupProps> = ({
     };
 
     setErrors(newErrors);
-    setTouched({
-      rent: true,
-      utilities: true,
-      miscFees: true,
-      amountPaid: true,
-    });
+    setTouched({ rent: true, utilities: true, miscFees: true, amountPaid: true });
 
-    // Check if any errors exist
-    const hasErrors = Object.values(newErrors).some((error) => error && error.length > 0);
-    return !hasErrors;
+    return !Object.values(newErrors).some((error) => error && error.length > 0);
   };
 
   const handleSave = () => {
@@ -171,15 +160,16 @@ const EditBillingPopup: FunctionComponent<EditBillingPopupProps> = ({
     }
   };
 
-  const getRoomNumber = (unitId: string): string => {
-    const roomMap: Record<string, string> = { unit1: '01', unit2: '02', unit3: '03', unit4: '04' };
-    return roomMap[unitId] || unitId;
-  };
+  const roomLabel = (() => {
+    if (roomNumber !== undefined && roomNumber !== 0 && roomNumber !== '0' && roomNumber !== '') {
+      return `Room ${roomNumber}`;
+    }
+    return 'Room —';
+  })();
 
   const totalAmount =
     (parseFloat(rent) || 0) + (parseFloat(utilities) || 0) + (parseFloat(miscFees) || 0);
 
-  // Check if form is valid for enabling the save button
   const isFormValid =
     rent &&
     utilities &&
@@ -207,15 +197,31 @@ const EditBillingPopup: FunctionComponent<EditBillingPopupProps> = ({
         </div>
 
         <div className="px-[30px] sm:px-[60px] py-[30px]">
-          <div className="mb-5">
-            <b className="block text-[12px] sm:text-[14px] font-inter text-darkslategray-100 mb-2">
-              Room
-            </b>
-            <div className="shadow-[0px_0px_5px_rgba(0,0,0,0.25)] rounded-md bg-whitesmoke-100 h-10 w-full">
-              <div className="w-full h-full px-4 flex items-center text-[12px] sm:text-[14px] font-medium font-inter text-darkslategray-100">
-                {billing ? `Room ${getRoomNumber(billing.unitId)}` : 'Select a room'}
+          {/* Room + Tenant row */}
+          <div className="flex flex-col sm:flex-row gap-4 mb-5">
+            <div className="flex-1">
+              <b className="block text-[12px] sm:text-[14px] font-inter text-darkslategray-100 mb-2">
+                Room
+              </b>
+              <div className="shadow-[0px_0px_5px_rgba(0,0,0,0.25)] rounded-md bg-whitesmoke-100 h-10 w-full">
+                <div className="w-full h-full px-4 flex items-center text-[12px] sm:text-[14px] font-medium font-inter text-darkslategray-100">
+                  {roomLabel}
+                </div>
               </div>
             </div>
+
+            {tenantName && (
+              <div className="flex-1">
+                <b className="block text-[12px] sm:text-[14px] font-inter text-darkslategray-100 mb-2">
+                  Tenant
+                </b>
+                <div className="shadow-[0px_0px_5px_rgba(0,0,0,0.25)] rounded-md bg-whitesmoke-100 h-10 w-full">
+                  <div className="w-full h-full px-4 flex items-center text-[12px] sm:text-[14px] font-medium font-inter text-darkslategray-100 truncate">
+                    {tenantName}
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 mb-5">

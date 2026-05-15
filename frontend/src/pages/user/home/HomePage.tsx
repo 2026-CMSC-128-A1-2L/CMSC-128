@@ -130,7 +130,12 @@ const CarouselSection = ({
       >
         {items.map((dorm) => (
           <div key={dorm.id} className="shrink-0">
-            <DormCard key={dorm.id} {...dorm} />
+            <DormCard
+              key={dorm.id}
+              {...dorm}
+              sourceLabel={category ? CATEGORY_LABELS[category] : undefined}
+              sourceUrl="/home"
+            />
           </div>
         ))}
       </div>
@@ -473,7 +478,12 @@ const HomePage: FunctionComponent = () => {
                     {CATEGORY_DATA[viewAllCategory].length > 0 ? (
                       <div className="w-full flex flex-wrap gap-6 py-1">
                         {CATEGORY_DATA[viewAllCategory].map((dorm) => (
-                          <DormCard key={dorm.id} {...dorm} />
+                          <DormCard
+                            key={dorm.id}
+                            {...dorm}
+                            sourceLabel={CATEGORY_LABELS[viewAllCategory]}
+                            sourceUrl="/home"
+                          />
                         ))}
                       </div>
                     ) : (
@@ -521,7 +531,12 @@ const HomePage: FunctionComponent = () => {
                       </div>
                       <div className="w-full flex flex-wrap gap-6">
                         {filterApplied.map((dorm) => (
-                          <DormCard key={dorm.id} {...dorm} />
+                          <DormCard
+                            key={dorm.id}
+                            {...dorm}
+                            sourceLabel="All Listings"
+                            sourceUrl="/home"
+                          />
                         ))}
                       </div>
                     </div>

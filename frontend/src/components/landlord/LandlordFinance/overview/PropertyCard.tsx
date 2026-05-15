@@ -14,6 +14,8 @@ interface PropertyCardProps {
   onClick?: () => void;
 }
 
+const MONTH_ABBR = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+
 const PropertyCard: FunctionComponent<PropertyCardProps> = ({
   name,
   imageUrl,
@@ -88,7 +90,7 @@ const PropertyCard: FunctionComponent<PropertyCardProps> = ({
                   ₱{income.toLocaleString()}
                 </b>
                 <div className="text-[12px] tracking-[0.02em] font-semibold font-lora text-silver">
-                  INCOME (MAR)
+                  INCOME ({MONTH_ABBR[new Date().getMonth()]})
                 </div>
               </div>
               <div className="w-[100px]">

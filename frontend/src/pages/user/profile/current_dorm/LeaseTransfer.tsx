@@ -50,6 +50,7 @@ export default function LeaseTransfer() {
       <div className="flex flex-col max-w-[1128px] md:ml-10 py-10">
         <BreadcrumbHeader
           routes={[
+            { name: 'Home', url: '/home' },
             { name: 'User Profile', url: '/profile-switcher' },
             { name: 'Current Dorm', url: '/profile-switcher' },
             { name: 'Pasalo Unit' },

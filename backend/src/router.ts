@@ -1,6 +1,7 @@
 import { Router } from 'express';
 
 import activityRouter from './features/activity/activity.router.js';
+import availabilityRouter from './features/availability/availability.router.js';
 import applicationRouter from './features/application/application.router.js';
 import authRouter from './features/auth/auth.router.js';
 import billingRouter from './features/billing/billing.router.js';
@@ -27,6 +28,7 @@ import { errorHandler } from './error.js';
 const router = Router();
 
 router.use('/activities', activityRouter);
+router.use('/availability', availabilityRouter);
 router.use('/applications', applicationRouter);
 router.use('/billings', billingRouter);
 router.use('/bookings', bookingRouter);

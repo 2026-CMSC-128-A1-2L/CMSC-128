@@ -1,109 +1,18 @@
-import { type FunctionComponent, useState, useEffect } from 'react';
+import type { FunctionComponent } from 'react';
 import ProgressRow from './ProgressBar';
-import type { Billing } from '../types/billing';
+import type { IncomeBreakdownData } from '../../../../hooks/useFacilityFinance';
 
-interface BreakdownData {
-  rent: { amount: number; percentage: number };
-  utilities: { amount: number; percentage: number };
-  misc: { amount: number; percentage: number };
-  total: number;
-  collectionRate: number;
-  occupancyRate: number;
+interface IncomeBreakdownProps {
+  incomeBreakdown: IncomeBreakdownData | null;
 }
 
-const IncomeBreakdown: FunctionComponent = () => {
-  const [breakdown, setBreakdown] = useState<BreakdownData>({
+const IncomeBreakdown: FunctionComponent<IncomeBreakdownProps> = ({ incomeBreakdown }) => {
+  const breakdown = incomeBreakdown ?? {
     rent: { amount: 0, percentage: 0 },
     utilities: { amount: 0, percentage: 0 },
     misc: { amount: 0, percentage: 0 },
     total: 0,
-    collectionRate: 0,
-    occupancyRate: 0,
-  });
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchBreakdownData = async () => {
-      setIsLoading(true);
-      try {
-        const mockBillings: Billing[] = [
-          {
-            breakdown: [
-              { name: 'Rent', amount: 3000 },
-              { name: 'Utilities', amount: 1500 },
-              { name: 'Misc. Fees', amount: 0 },
-            ],
-            paidAmount: 4500,
-            totalAmount: 4500,
-          } as Billing,
-          {
-            breakdown: [
-              { name: 'Rent', amount: 3000 },
-              { name: 'Utilities', amount: 1700 },
-              { name: 'Misc. Fees', amount: 150 },
-            ],
-            paidAmount: 1850,
-            totalAmount: 4850,
-          } as Billing,
-          {
-            breakdown: [
-              { name: 'Rent', amount: 3000 },
-              { name: 'Utilities', amount: 1300 },
-              { name: 'Misc. Fees', amount: 0 },
-            ],
-            paidAmount: 0,
-            totalAmount: 4300,
-          } as Billing,
-          {
-            breakdown: [
-              { name: 'Rent', amount: 3000 },
-              { name: 'Utilities', amount: 1450 },
-              { name: 'Misc. Fees', amount: 50 },
-            ],
-            paidAmount: 0,
-            totalAmount: 4500,
-          } as Billing,
-        ];
-
-        let totalRent = 0;
-        let totalUtilities = 0;
-        let totalMisc = 0;
-        let totalPaid = 0;
-        let totalAmount = 0;
-
-        mockBillings.forEach((billing) => {
-          const rent = billing.breakdown.find((b) => b.name === 'Rent')?.amount || 0;
-          const utilities = billing.breakdown.find((b) => b.name === 'Utilities')?.amount || 0;
-          const misc = billing.breakdown.find((b) => b.name === 'Misc. Fees')?.amount || 0;
-
-          totalRent += rent;
-          totalUtilities += utilities;
-          totalMisc += misc;
-          totalPaid += billing.paidAmount || 0;
-          totalAmount += billing.totalAmount;
-        });
-
-        const total = totalRent + totalUtilities + totalMisc;
-        const collectionRate = totalAmount > 0 ? (totalPaid / totalAmount) * 100 : 0;
-        const occupancyRate = 93.33;
-
-        setBreakdown({
-          rent: { amount: totalRent, percentage: (totalRent / total) * 100 },
-          utilities: { amount: totalUtilities, percentage: (totalUtilities / total) * 100 },
-          misc: { amount: totalMisc, percentage: (totalMisc / total) * 100 },
-          total,
-          collectionRate,
-          occupancyRate,
-        });
-      } catch (error) {
-        console.error('Failed to fetch breakdown data:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchBreakdownData();
-  }, []);
+  };
 
   const breakdownCards = [
     { amount: `₱ ${breakdown.rent.amount.toFixed(2)}`, label: 'Rent' },
@@ -112,21 +21,9 @@ const IncomeBreakdown: FunctionComponent = () => {
   ];
 
   const legendItems = [
-    {
-      color: 'bg-darkslategray-200',
-      textColor: 'text-darkslategray-200',
-      label: `Rent - ${breakdown.rent.percentage.toFixed(0)}%`,
-    },
-    {
-      color: 'bg-teal-200',
-      textColor: 'text-teal-200',
-      label: `Utilities - ${breakdown.utilities.percentage.toFixed(0)}%`,
-    },
-    {
-      color: 'bg-teal-100',
-      textColor: 'text-teal-100',
-      label: `Misc. - ${breakdown.misc.percentage.toFixed(0)}%`,
-    },
+    { color: 'bg-darkslategray-200', textColor: 'text-darkslategray-200', label: `Rent - ${breakdown.rent.percentage.toFixed(0)}%` },
+    { color: 'bg-teal-200', textColor: 'text-teal-200', label: `Utilities - ${breakdown.utilities.percentage.toFixed(0)}%` },
+    { color: 'bg-teal-100', textColor: 'text-teal-100', label: `Misc. - ${breakdown.misc.percentage.toFixed(0)}%` },
   ];
 
   const donutGradient = `conic-gradient(
@@ -135,14 +32,6 @@ const IncomeBreakdown: FunctionComponent = () => {
     #096c5b ${breakdown.rent.percentage * 3.6}deg ${(breakdown.rent.percentage + breakdown.utilities.percentage) * 3.6}deg,
     #2f8677 ${(breakdown.rent.percentage + breakdown.utilities.percentage) * 3.6}deg 360deg
   )`;
-
-  if (isLoading) {
-    return (
-      <div className="w-full rounded-2xl bg-white border-whitesmoke-200 border-solid border flex flex-col items-start py-6 px-9 gap-[19px]">
-        <div className="w-full h-full bg-gray-100 animate-pulse rounded-lg" />
-      </div>
-    );
-  }
 
   return (
     <div className="w-full rounded-2xl bg-white border-whitesmoke-200 border-solid border flex flex-col items-start py-6 px-4 sm:px-6 md:px-9 gap-[19px]">
@@ -163,17 +52,14 @@ const IncomeBreakdown: FunctionComponent = () => {
             {legendItems.map(({ color, textColor, label }) => (
               <div key={label} className="flex items-center gap-2 whitespace-nowrap">
                 <div className={`h-[15px] w-[15px] rounded-[5px] ${color}`} />
-                <span className={`font-medium ${textColor} text-[12px] sm:text-[14px]`}>
-                  {label}
-                </span>
+                <span className={`font-medium ${textColor} text-[12px] sm:text-[14px]`}>{label}</span>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Breakdown cards + rate bars - takes remaining space */}
+        {/* Breakdown cards + rate bars */}
         <div className="flex-1 min-w-0 flex flex-col items-start gap-[23px] text-[18px] text-darkslategray-200">
-          {/* Breakdown cards */}
           <div className="flex flex-row items-center justify-between gap-4 w-full">
             {breakdownCards.map(({ amount, label }) => (
               <div
@@ -190,18 +76,20 @@ const IncomeBreakdown: FunctionComponent = () => {
             ))}
           </div>
 
-          <div className="self-stretch flex flex-col items-start gap-5 text-[12px] text-teal-200 font-lora">
-            <ProgressRow
-              label="Collection Rate"
-              value={`${breakdown.collectionRate.toFixed(2)}%`}
-              percent={breakdown.collectionRate}
-            />
-            <ProgressRow
-              label="Occupancy Rate"
-              value={`${breakdown.occupancyRate.toFixed(2)}%`}
-              percent={breakdown.occupancyRate}
-            />
-          </div>
+          {incomeBreakdown && (
+            <div className="self-stretch flex flex-col items-start gap-5 text-[12px] text-teal-200 font-lora">
+              <ProgressRow
+                label="Rent Share"
+                value={`${breakdown.rent.percentage.toFixed(0)}%`}
+                percent={breakdown.rent.percentage}
+              />
+              <ProgressRow
+                label="Utilities Share"
+                value={`${breakdown.utilities.percentage.toFixed(0)}%`}
+                percent={breakdown.utilities.percentage}
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>
