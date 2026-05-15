@@ -13,6 +13,7 @@ import AtlasLogoMin from "../../../assets/atlas logo (for white bg).png";
 import SideBarButton, { type SideBarButtonState } from "./SideBarButton";
 import { useAuthStore } from "../../store/useAuthStore";
 import UserMenuPopup from "./UserMenuPopup";
+import SignInPopUp from "../general/SignInPopUp";
 import { useTheme } from "../../pages/utilities/DarkMode";
 
 export type SideBarItemKey =
@@ -92,11 +93,13 @@ const SideBar = ({
   const [internalHover, setInternalHover] = useState<SideBarItemKey>();
   const [searchQuery, setSearchQuery] = useState("");
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const [signInPopupOpen, setSignInPopupOpen] = useState(false);
   const [darkModeIconSpinning, setDarkModeIconSpinning] = useState(false);
   const [profileMenuPosition, setProfileMenuPosition] = useState({
     left: 0,
     bottom: 0,
   });
+
   const location = useLocation();
   const navigate = useNavigate();
   const profileButtonRef = useRef<HTMLButtonElement>(null);
@@ -115,6 +118,7 @@ const SideBar = ({
     if (!profileButton) return;
 
     const rect = profileButton.getBoundingClientRect();
+
     setProfileMenuPosition({
       left: rect.right + 8,
       bottom: window.innerHeight - rect.bottom,
@@ -133,7 +137,9 @@ const SideBar = ({
   }, []);
 
   useEffect(() => {
-    if (collapsed) setProfileMenuOpen(false);
+    if (collapsed) {
+      setProfileMenuOpen(false);
+    }
   }, [collapsed]);
 
   useEffect(() => {
@@ -142,17 +148,24 @@ const SideBar = ({
     updateProfileMenuPosition();
 
     const handleWindowChange = () => updateProfileMenuPosition();
+
     const handlePointerDown = (event: MouseEvent) => {
       const target = event.target as Node;
+
       if (
         profileButtonRef.current?.contains(target) ||
         profileMenuRef.current?.contains(target)
-      )
+      ) {
         return;
+      }
+
       setProfileMenuOpen(false);
     };
+
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setProfileMenuOpen(false);
+      if (event.key === "Escape") {
+        setProfileMenuOpen(false);
+      }
     };
 
     window.addEventListener("resize", handleWindowChange);
@@ -170,6 +183,14 @@ const SideBar = ({
 
   const handleProfileClick: MouseEventHandler<HTMLButtonElement> = (event) => {
     onProfileClick?.(event);
+
+    if (!user) {
+      setProfileMenuOpen(false);
+      setSignInPopupOpen(true);
+      return;
+    }
+
+    setSignInPopupOpen(false);
     updateProfileMenuPosition();
     setProfileMenuOpen((open) => !open);
   };
@@ -182,24 +203,31 @@ const SideBar = ({
 
   const handleDarkModeClick: MouseEventHandler<HTMLButtonElement> = (event) => {
     setDarkModeIconSpinning(true);
+
     if (onToggleDarkMode) {
       onToggleDarkMode(event);
       return;
     }
+
     toggle();
   };
 
   const handleBackdropClick = () => {
-    if (isMobile && !collapsed) setCollapsed(true);
+    if (isMobile && !collapsed) {
+      setCollapsed(true);
+    }
   };
 
   const handleNavClick = () => {
-    if (isMobile) setCollapsed(true);
+    if (isMobile) {
+      setCollapsed(true);
+    }
   };
 
   const positionClass = isMobile
     ? "fixed top-0 left-0 z-40 h-screen"
     : "relative h-full min-h-screen";
+
   const widthClass = collapsed ? "w-[68px]" : "w-[200px]";
 
   return (
@@ -252,6 +280,7 @@ const SideBar = ({
           )}
         </div>
 
+        {/* Search section is currently disabled */}
         {/* <div className="w-full px-4">
           {collapsed ? (
             <div className="flex justify-center">
@@ -332,6 +361,7 @@ const SideBar = ({
                       : "h-0 opacity-0",
                   ].join(" ")}
                 />
+
                 {collapsed ? (
                   <div
                     title={item.label}
@@ -372,6 +402,7 @@ const SideBar = ({
             {!collapsed && (
               <span className="h-11 w-2 shrink-0 rounded-sm bg-transparent" />
             )}
+
             <span className="flex items-center gap-4 rounded-xl px-1">
               <Icon
                 icon="gg:dark-mode"
@@ -381,6 +412,7 @@ const SideBar = ({
                   darkModeIconSpinning ? "dark-mode-icon-turn" : "",
                 ].join(" ")}
               />
+
               {!collapsed && (
                 <span className="font-semibold text-[14px] text-[#2d3748] dark:text-[#d7e0ef]">
                   {isDark ? "Light Mode" : "Dark Mode"}
@@ -416,11 +448,13 @@ const SideBar = ({
                   className="w-7 h-7 shrink-0 text-[#2d3748] dark:text-[#d7e0ef]"
                 />
               )}
+
               {!collapsed && (
                 <div className="flex flex-col items-start gap-1 overflow-hidden">
                   <b className="text-[14px] text-[#2d3748] dark:text-[#d7e0ef]">
                     {username ?? "Sign In"}
                   </b>
+
                   {!user && (
                     <span className="text-[10px] text-[#9ca3af] font-bold dark:text-[#a4acba]">
                       to continue
@@ -429,7 +463,9 @@ const SideBar = ({
                 </div>
               )}
             </button>
+
             {profileMenuOpen &&
+              user &&
               createPortal(
                 <div
                   ref={profileMenuRef}
@@ -453,6 +489,13 @@ const SideBar = ({
           </div>
         </div>
       </div>
+
+      {signInPopupOpen && (
+        <SignInPopUp
+          isOpen={signInPopupOpen}
+          onClose={() => setSignInPopupOpen(false)}
+        />
+      )}
     </>
   );
 };

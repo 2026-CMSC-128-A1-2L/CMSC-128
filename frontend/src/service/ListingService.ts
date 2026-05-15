@@ -1,7 +1,11 @@
 import axios from 'axios';
-import z from 'zod';
-import { GetListingsQuerySchema } from 'shared';
-import type { GetListingsQuery, CreateListingBody, UpdateListingBody } from '../interface/listing';
+import type {
+  CreateListingBody,
+  GetListingsQuery,
+  UpdateListingBody,
+  UpdateListingTagsBody,
+} from '../interface/listing';
+import { api } from './axiosInstance';
 import { API_URL } from './constant';
 
 export const ListingService = {
@@ -24,7 +28,7 @@ export const ListingService = {
     }
   },
 
-  async getListings(params: z.infer<typeof GetListingsQuerySchema>): Promise<GetListingsQuery> {
+  async getListings(params: GetListingsQuery): Promise<GetListingsQuery> {
     try {
       const kv = new URLSearchParams({
         q: encodeURIComponent(JSON.stringify(params)),

@@ -1,11 +1,9 @@
 import axios from 'axios';
-import z from 'zod';
-import { GetBookingsQuerySchema } from 'shared';
 import type { GetBookmarksQuery } from '../interface/bookmark';
 import { API_URL } from './constant';
 
 export const BookmarkService = {
-  async getBookmarks(params: z.infer<typeof GetBookingsQuerySchema>): Promise<GetBookmarksQuery> {
+  async getBookmarks(params: GetBookmarksQuery): Promise<GetBookmarksQuery> {
     try {
       const kv = new URLSearchParams({
         q: encodeURIComponent(JSON.stringify(params)),

@@ -1,7 +1,5 @@
 import axios from 'axios';
-import z from 'zod';
 import type { GetBookingsQuery, CreateBookingBody } from '../interface/booking';
-import { GetBookingsQuerySchema } from 'shared';
 import { API_URL } from './constant';
 
 export const BookingService = {
@@ -23,7 +21,7 @@ export const BookingService = {
     }
   },
 
-  async getBookings(params: z.infer<typeof GetBookingsQuerySchema>): Promise<GetBookingsQuery> {
+  async getBookings(params: GetBookingsQuery): Promise<GetBookingsQuery> {
     try {
       const kv = new URLSearchParams({
         q: encodeURIComponent(JSON.stringify(params)),
