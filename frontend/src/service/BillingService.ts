@@ -35,7 +35,10 @@ export const BillingService = {
       const response = await api.get(`/api/billings/users/${userId}/dashboard`);
       return response.data;
     } catch (error) {
-      console.error('Error fetching user billing dashboard:', error);
+      const status = (error as { response?: { status?: number } })?.response?.status;
+      if (status !== 404) {
+        console.error('Error fetching user billing dashboard:', error);
+      }
       throw error;
     }
   },

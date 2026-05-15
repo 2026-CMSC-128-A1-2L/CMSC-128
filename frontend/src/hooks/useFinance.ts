@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { BillingService } from '../service/BillingService';
+import { UserService } from '../service/UserService';
 import { useAuthStore } from '../store/useAuthStore';
 
 export type BillingBreakdownItem = {
@@ -101,9 +102,25 @@ export function useFinance(): UseFinanceReturn {
                     const axiosMessage = (err as { response?: { data?: { message?: string } } })?.response?.data?.message;
 
                     if (status === 404) {
-                        setDashboard(EMPTY_DASHBOARD);
-                        setHasAccommodation(false);
-                        setError(null);
+                        try {
+                            const rentalsResponse = await UserService.getMyRentals();
+                            const rentals: { status: string }[] = rentalsResponse?.data ?? rentalsResponse ?? [];
+                            const hasActiveRental = Array.isArray(rentals)
+                                ? rentals.some((r) => r.status === 'active')
+                                : false;
+
+                            if (!cancelled) {
+                                setDashboard(EMPTY_DASHBOARD);
+                                setHasAccommodation(hasActiveRental);
+                                setError(null);
+                            }
+                        } catch {
+                            if (!cancelled) {
+                                setDashboard(EMPTY_DASHBOARD);
+                                setHasAccommodation(false);
+                                setError(null);
+                            }
+                        }
                     } else {
                         const message = axiosMessage ?? (err instanceof Error ? err.message : 'Failed to load finance data.');
                         setError(message);
