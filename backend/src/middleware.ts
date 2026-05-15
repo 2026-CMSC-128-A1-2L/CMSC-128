@@ -58,29 +58,29 @@ type ManagerEntry = {
 
 export const directManagerFilter =
   (permission: ManagerPermission | null): RequestHandler =>
-  async (req, res, next) => {
-    if (!req.user) throw new AppError(401, 'Unauthenticated');
+    async (req, res, next) => {
+      if (!req.user) throw new AppError(401, 'Unauthenticated');
 
-    const userId = req.user._id;
+      const userId = req.user._id;
 
-    let newFilter: QueryFilter<{ managers: ManagerEntry[] }>;
-    if (permission) {
-      const innerFilter: QueryFilter<ManagerEntry> = { userId };
-      innerFilter[`permissions.${permission}`] = true;
-      newFilter = {
-        managers: {
-          $elemMatch: innerFilter,
-        },
-      };
-    } else {
-      newFilter = {
-        'managers.userId': userId,
-      };
-    }
+      let newFilter: QueryFilter<{ managers: ManagerEntry[] }>;
+      if (permission) {
+        const innerFilter: QueryFilter<ManagerEntry> = { userId };
+        innerFilter[`permissions.${permission}`] = true;
+        newFilter = {
+          managers: {
+            $elemMatch: innerFilter,
+          },
+        };
+      } else {
+        newFilter = {
+          'managers.userId': userId,
+        };
+      }
 
-    res.locals.filters = combineFilters(res.locals.filters, newFilter);
-    next();
-  };
+      res.locals.filters = combineFilters(res.locals.filters, newFilter);
+      next();
+    };
 
 // Used when the object has a `facilityId`.
 //
@@ -90,37 +90,43 @@ export const directManagerFilter =
 // be able to pass.
 const facilityManagerFilter =
   (permission: ManagerPermission | null): RequestHandler =>
-  async (req, res, next) => {
-    assert.ok(req.user);
-    if (req.user.userType !== 'Manager' && req.user.userType !== 'Landlord')
-      throw new AppError(403, 'Forbidden.');
+    async (req, res, next) => {
+      assert.ok(req.user);
+      if (req.user.userType !== 'Manager' && req.user.userType !== 'Landlord')
+        throw new AppError(403, 'Forbidden.');
 
-    const managerCriteria: QueryFilter<{
-      userId: mongoose.Types.ObjectId;
-      permissions: ManagerPermissionType;
-    }> = { userId: req.user._id };
-    if (permission) {
-      managerCriteria[`permissions.${permission}`] = true;
-    }
+      const managerCriteria: QueryFilter<{
+        userId: mongoose.Types.ObjectId;
+        permissions: ManagerPermissionType;
+      }> = { userId: req.user._id };
+      if (permission) {
+        managerCriteria[`permissions.${permission}`] = true;
+      }
 
-    const facilityFilter: QueryFilter<HousingFacilityType> =
-      req.user.userType === 'Landlord'
-        ? {
+      const facilityFilter: QueryFilter<HousingFacilityType> =
+        req.user.userType === 'Landlord'
+          ? {
             $or: [
               { landlordId: req.user._id },
               { managers: { $elemMatch: managerCriteria } },
             ],
           }
-        : { managers: { $elemMatch: managerCriteria } };
+          : { managers: { $elemMatch: managerCriteria } };
 
-    const facilities = await HousingFacility.find(facilityFilter);
-    const facilityIds = facilities.map((f) => f._id);
+      const facilities = await HousingFacility.find(facilityFilter);
+      const facilityIds = facilities.map(f => f._id);
 
-    res.locals.filters = {
-      facilityId: { $in: facilityIds },
+      if (facilityIds.length === 0) {
+        console.warn(`SECURITY: User ${req.user._id} (${req.user.userType}) found 0 facilities for permission ${permission}`);
+      } else {
+        console.log(`SECURITY: User ${req.user._id} found ${facilityIds.length} facilities.`);
+      }
+
+      res.locals.filters = {
+        facilityId: { $in: facilityIds },
+      };
+      next();
     };
-    next();
-  };
 
 export const deleteListingsFilter = facilityManagerFilter('deleteListings');
 export const manageListingsFilter = facilityManagerFilter('manageListings');
