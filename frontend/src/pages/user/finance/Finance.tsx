@@ -205,7 +205,7 @@ const TenantFinancePage: FunctionComponent = () => {
             <div className="flex flex-col gap-1 px-2 mb-6 text-darkslategray dark:text-[#72cbb8]">
               <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
                 <b className="text-xl md:text-2xl font-inter">{facility?.name ?? '—'}</b>
-                <DownloadBillings userId={userId!} />
+                <DownloadBillings userId={userId} />
               </div>
               {facility?.address && (
                 <div className="flex items-start gap-2 px-2">
