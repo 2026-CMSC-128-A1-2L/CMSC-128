@@ -1,5 +1,6 @@
-import { Icon } from "@iconify/react";
-import AtlasLogo from "../../../assets/logo_atlas_text.svg?react";
+import { Icon } from '@iconify/react';
+import { Link } from 'react-router-dom';
+import AtlasLogo from '../../../assets/logo_atlas_text.svg?react';
 
 const LandlordFooter = () => {
   return (
@@ -31,28 +32,28 @@ const LandlordFooter = () => {
 
           <div className="flex items-center gap-x-3 sm:gap-x-6 lg:gap-x-[48px] flex-nowrap shrink-0">
             <nav className="flex flex-col items-center gap-[6px] lg:gap-[10px] whitespace-nowrap font-['Inter',sans-serif] text-[9px] sm:text-[10px] lg:text-[14px] font-bold text-[#666] dark:text-[#a4acba] shrink-0">
-              <a href="#" className="hover:underline">
+              <Link to="/home" className="hover:underline">
                 Browse Dorms
-              </a>
-              <a href="#" className="hover:underline">
+              </Link>
+              <Link to="/landlord/properties/new" className="hover:underline">
                 List your property
-              </a>
+              </Link>
             </nav>
             <nav className="flex flex-col items-center gap-[6px] lg:gap-[10px] whitespace-nowrap font-['Inter',sans-serif] text-[9px] sm:text-[10px] lg:text-[14px] font-bold text-[#666] dark:text-[#a4acba] shrink-0">
-              <a href="#" className="hover:underline">
+              <Link to="/" className="hover:underline">
                 About
-              </a>
-              <a href="#" className="hover:underline">
+              </Link>
+              <Link to="/contact-us" className="hover:underline">
                 Contact Us
-              </a>
+              </Link>
             </nav>
             <nav className="flex flex-col items-center gap-[6px] lg:gap-[10px] whitespace-nowrap font-['Inter',sans-serif] text-[9px] sm:text-[10px] lg:text-[14px] font-bold text-[#666] dark:text-[#a4acba] shrink-0">
-              <a href="#" className="hover:underline">
+              <Link to="/privacy-policy" className="hover:underline">
                 Privacy Policy
-              </a>
-              <a href="#" className="hover:underline">
+              </Link>
+              <Link to="/terms-of-use" className="hover:underline">
                 Terms of Use
-              </a>
+              </Link>
             </nav>
           </div>
         </div>
