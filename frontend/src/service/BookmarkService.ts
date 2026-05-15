@@ -1,15 +1,12 @@
-import axios from 'axios';
 import type { GetBookmarksQuery } from '../interface/bookmark';
-import { API_URL } from './constant';
+import { api } from './axiosInstance';
 
 export const BookmarkService = {
   async getBookmarks(params: GetBookmarksQuery): Promise<GetBookmarksQuery> {
     try {
-      const kv = new URLSearchParams({
-        q: encodeURIComponent(JSON.stringify(params)),
-      }).toString();
-
-      const response = await axios.get<GetBookmarksQuery>(`${API_URL}/api/bookmarks?q=${kv}`);
+      const response = await api.get<GetBookmarksQuery>('/api/bookmarks', {
+        params: { q: JSON.stringify(params) },
+      });
       return response.data;
     } catch (error) {
       console.error('Failed to fetch notifications:', error);
@@ -19,15 +16,7 @@ export const BookmarkService = {
 
   async addBookmark(listingId: string) {
     try {
-      const response = await axios.post(
-        `${API_URL}/api/bookmarks/${listingId}`,
-        {
-          //empty kasi na hahandle na ata ito sa backend? not sure tbd
-        },
-        {
-          //headrs
-        },
-      );
+      const response = await api.post(`/api/bookmarks/${listingId}`, {});
 
       return response.data;
     } catch (error) {
@@ -38,9 +27,7 @@ export const BookmarkService = {
 
   async deleteBookmark(listingId: string) {
     try {
-      const response = await axios.delete(`${API_URL}/api/bookmarks/${listingId}`, {
-        //headers
-      });
+      const response = await api.delete(`/api/bookmarks/${listingId}`);
       return response.data;
     } catch (error) {
       console.error('Failed to delete bookmark:', error);

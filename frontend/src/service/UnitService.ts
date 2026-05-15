@@ -8,15 +8,9 @@ export const UnitService = {
 
   async createUnit(listingId: string, body: CreateUnitBody) {
     try {
-      const response = await axios.post(
-        `${API_URL}/api/listings/${listingId}/units`,
-        {
-          ...body,
-        },
-        {
-          // headers
-        },
-      );
+      const response = await api.post(`/api/listings/${listingId}/units`, {
+        ...body,
+      });
       return response.data;
     } catch (error) {
       console.error('Error creating unit:', error);
@@ -28,13 +22,11 @@ export const UnitService = {
     params: z.infer<typeof GetUnitsRequestQuerySchema>,
   ): Promise<GetUnitsRequestQuery> {
     try {
-      const kv = new URLSearchParams({
-        q: encodeURIComponent(JSON.stringify(params)),
-      }).toString();
+      const response = await api.get('/api/units', {
+        params: { q: JSON.stringify(params) },
+      });
 
-      const response = await axios.get(`${API_URL}/api/units?q=${kv}`);
-
-      return response.data();
+      return response.data;
     } catch (error) {
       console.error('Failed to fetch units: ', error);
       throw error;
@@ -43,9 +35,9 @@ export const UnitService = {
 
   async getUnit(unitId: string) {
     try {
-      const response = await axios.get(`${API_URL}/api/units/${unitId}`);
+      const response = await api.get(`/api/units/${unitId}`);
 
-      return response.data();
+      return response.data;
     } catch (error) {
       console.error('Failed to fectch unit: ', error);
       throw error;
@@ -54,9 +46,9 @@ export const UnitService = {
 
   async updateUnit(unitId: string, body: UpdateUnitBody) {
     try {
-      const response = await axios.patch(`${API_URL}/api/units/${unitId}`);
+      const response = await api.patch(`/api/units/${unitId}`, body);
 
-      return response.data();
+      return response.data;
     } catch (error) {
       console.error('Failed to update unit: ', error);
       throw error;
@@ -65,9 +57,9 @@ export const UnitService = {
 
   async deleteUnit(unitId: string) {
     try {
-      const response = await axios.delete(`${API_URL}/api/units/${unitId}`);
+      const response = await api.delete(`/api/units/${unitId}`);
 
-      return response.data();
+      return response.data;
     } catch (error) {
       console.error('Failed to update unit: ', error);
       throw error;

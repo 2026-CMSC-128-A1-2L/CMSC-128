@@ -12,12 +12,9 @@ import type {
 export const FacilityService = {
   async getFacilities() {
     try {
-      const response = await api.get<{ data: GetFacilitiesResponse }>(
-        `/api/facilities`,
-        {
-          // headers
-        },
-      );
+      const response = await api.get<{ data: GetFacilitiesResponse }>(`/api/facilities`, {
+        // headers
+      });
       return response.data;
     } catch (error) {
       console.error('Failed to fetch facilities:', error);
@@ -107,12 +104,9 @@ export const FacilityService = {
 
   async getMonthlyIncome() {
     try {
-      const response = await api.get<{ data: number }>(
-        `/api/facilities/landlord/monthly-income`,
-        {
-          // headers
-        },
-      );
+      const response = await api.get<{ data: number }>(`/api/facilities/landlord/monthly-income`, {
+        // headers
+      });
       return response.data;
     } catch (error) {
       console.error('Failed to fetch monthly income:', error);

@@ -1,20 +1,13 @@
-import axios from 'axios';
 import type { GetBookingsQuery, CreateBookingBody } from '../interface/booking';
-import { API_URL } from './constant';
+import { api } from './axiosInstance';
 
 export const BookingService = {
   async createBooking(body: CreateBookingBody) {
     try {
-      const response = await axios.post(
-        `${API_URL}/api/bookings/`,
-        {
-          ...body,
-        },
-        {
-          //headers
-        },
-      );
-      return response.data();
+      const response = await api.post('/api/bookings/', {
+        ...body,
+      });
+      return response.data;
     } catch (error) {
       console.error('Error creating booking', error);
       throw error;
@@ -23,11 +16,9 @@ export const BookingService = {
 
   async getBookings(params: GetBookingsQuery): Promise<GetBookingsQuery> {
     try {
-      const kv = new URLSearchParams({
-        q: encodeURIComponent(JSON.stringify(params)),
-      }).toString();
-
-      const response = await axios.get<GetBookingsQuery>(`${API_URL}/api/bookings?q=${kv}`, {});
+      const response = await api.get<GetBookingsQuery>('/api/bookings', {
+        params: { q: JSON.stringify(params) },
+      });
 
       return response.data;
     } catch (error) {
@@ -38,15 +29,9 @@ export const BookingService = {
 
   async updateBookingStatus(bookingId: string) {
     try {
-      const response = await axios.patch(
-        `${API_URL}/bookings/${bookingId}`,
-        {},
-        {
-          //headers
-        },
-      );
+      const response = await api.patch(`/api/bookings/${bookingId}`, {});
 
-      return response.data();
+      return response.data;
     } catch (error) {
       console.error('Failed to update booking:', error);
       throw error;
@@ -55,15 +40,9 @@ export const BookingService = {
 
   async cancelBooking(bookingId: string) {
     try {
-      const response = await axios.delete(
-        `${API_URL}/bookings/${bookingId}`,
+      const response = await api.delete(`/api/bookings/${bookingId}`);
 
-        {
-          //headers
-        },
-      );
-
-      return response.data();
+      return response.data;
     } catch (error) {
       console.error('Failed to delete booking:', error);
       throw error;
