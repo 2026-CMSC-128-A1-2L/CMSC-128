@@ -1,80 +1,96 @@
-import { useEffect, useMemo, useState, type FormEvent, type FunctionComponent } from 'react';
-import SideBar from '../../../components/user/SideBar';
-import Footer from '../../../components/general/Footer';
-import SignInPopUp from '../../../components/general/SignInPopUp';
-import { Icon } from '@iconify/react';
-import axios from 'axios';
-import PropertyTabs from '../../../components/user/unitdetails/PropertyTabs';
-import ImageCarousel from '../../../components/user/unitdetails/ImageCarousel';
+import {
+  useEffect,
+  useMemo,
+  useState,
+  type FormEvent,
+  type FunctionComponent,
+} from "react";
+import SideBar from "../../../components/user/SideBar";
+import Footer from "../../../components/general/Footer";
+import SignInPopUp from "../../../components/general/SignInPopUp";
+import { Icon } from "@iconify/react";
+import axios from "axios";
+import PropertyTabs from "../../../components/user/unitdetails/PropertyTabs";
+import ImageCarousel from "../../../components/user/unitdetails/ImageCarousel";
+import BreadcrumbHeader from "../../../components/general/Breadcrumb";
 
-import AboutDetails from '../../../components/user/unitdetails/AboutDetails';
-import AmenetiesDetails from '../../../components/user/unitdetails/AmenetiesDetails';
-import RulesDetails from '../../../components/user/unitdetails/RulesDetails';
-import LocationDetails from '../../../components/user/unitdetails/LocationDetails';
-import ReviewDetails from '../../../components/user/unitdetails/ReviewDetails';
-import PropertyTab from '../../../components/user/unitdetails/PropertyTab';
-import DormCard from '../../../components/user/DormCard';
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
-import LoadingPage from '../../general/LoadingPage';
-import { useFacilities, type DormCardData } from '../../../hooks/useFacilities';
-import { useFacilityDetails } from '../../../hooks/useFacilityDetails';
-import { useBookmarks } from '../../../hooks/useBookmarks';
-import { BookmarkService } from '../../../service/BookmarkService';
-import { ApplicationService } from '../../../service/ApplicationService';
-import CalendarPopout from '../../../components/user/user-calendar/CalendarPopout';
-import PortalPopup from '../../../components/general/PortalPopup';
+import AboutDetails from "../../../components/user/unitdetails/AboutDetails";
+import AmenetiesDetails from "../../../components/user/unitdetails/AmenetiesDetails";
+import RulesDetails from "../../../components/user/unitdetails/RulesDetails";
+import LocationDetails from "../../../components/user/unitdetails/LocationDetails";
+import ReviewDetails from "../../../components/user/unitdetails/ReviewDetails";
+import PropertyTab from "../../../components/user/unitdetails/PropertyTab";
+import DormCard from "../../../components/user/DormCard";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import LoadingPage from "../../general/LoadingPage";
+import { useFacilities, type DormCardData } from "../../../hooks/useFacilities";
+import { useFacilityDetails } from "../../../hooks/useFacilityDetails";
+import { useBookmarks } from "../../../hooks/useBookmarks";
+import { BookmarkService } from "../../../service/BookmarkService";
+import { ApplicationService } from "../../../service/ApplicationService";
+import CalendarPopout from "../../../components/user/user-calendar/CalendarPopout";
+import PortalPopup from "../../../components/general/PortalPopup";
 
-const currencyFormatter = new Intl.NumberFormat('en-PH', {
-  style: 'currency',
-  currency: 'PHP',
+const currencyFormatter = new Intl.NumberFormat("en-PH", {
+  style: "currency",
+  currency: "PHP",
   minimumFractionDigits: 0,
 });
 
-const roomButtonLabel = (label: string) => label.replace(/\s*\([^)]*\)\s*$/, '');
+const roomButtonLabel = (label: string) =>
+  label.replace(/\s*\([^)]*\)\s*$/, "");
 const objectIdPattern = /^[a-f\d]{24}$/i;
 
-const leaseDurations = ['1 sem', '2 sem', '1 year'];
-const leaseDurationValues: Record<string, '6-months' | '12-months'> = {
-  '1 sem': '6-months',
-  '2 sem': '12-months',
-  '1 year': '12-months',
+const leaseDurations = ["1 sem", "2 sem", "1 year"];
+const leaseDurationValues: Record<string, "6-months" | "12-months"> = {
+  "1 sem": "6-months",
+  "2 sem": "12-months",
+  "1 year": "12-months",
 };
 const amenityTagIcons: Record<string, string> = {
-  hasWifi: 'material-symbols:wifi',
-  hasAircon: 'material-symbols:snowflake',
-  hasCctv: 'boxicons:cctv',
-  hasLaundry: 'streamline:hotel-laundry',
-  securityGuard: 'carbon:police',
-  hasStudyDesk: 'boxicons:desk',
-  hasRefrigerator: 'mdi:refrigerator-outline',
-  hasKitchen: 'emojione-monotone:kitchen-knife',
+  hasWifi: "material-symbols:wifi",
+  hasAircon: "material-symbols:snowflake",
+  hasCctv: "boxicons:cctv",
+  hasLaundry: "streamline:hotel-laundry",
+  securityGuard: "carbon:police",
+  hasStudyDesk: "boxicons:desk",
+  hasRefrigerator: "mdi:refrigerator-outline",
+  hasKitchen: "emojione-monotone:kitchen-knife",
 };
 const amenityTagNames = Object.keys(amenityTagIcons);
-const ruleTagNames = ['visitorPolicy', 'smokingPolicy', 'petsPolicy', 'curfew', 'paymentPolicy'];
+const ruleTagNames = [
+  "visitorPolicy",
+  "smokingPolicy",
+  "petsPolicy",
+  "curfew",
+  "paymentPolicy",
+];
 const aboutTagNames = [
-  'layout',
-  'floorAreaSqm',
-  'floorLevel',
-  'bathroom',
-  'furnishing',
-  'genderPolicy',
-  'leaseTerm',
-  'moveInPolicy',
+  "layout",
+  "floorAreaSqm",
+  "floorLevel",
+  "bathroom",
+  "furnishing",
+  "genderPolicy",
+  "leaseTerm",
+  "moveInPolicy",
 ];
 
 const formatTagValue = (value: string | number | boolean) => {
-  if (typeof value === 'boolean') return value ? 'Yes' : 'No';
-  if (typeof value === 'number') return value.toLocaleString();
+  if (typeof value === "boolean") return value ? "Yes" : "No";
+  if (typeof value === "number") return value.toLocaleString();
   return value
     .split(/[-_]/)
     .filter(Boolean)
     .map((word) => `${word[0].toUpperCase()}${word.slice(1)}`)
-    .join(' ');
+    .join(" ");
 };
 
 type UnitDetailsLocationState = {
   dorm?: DormCardData;
   selectedRoomType?: string;
+  sourceLabel?: string;
+  sourceUrl?: string;
 };
 
 const UnitDetails: FunctionComponent = () => {
@@ -84,19 +100,24 @@ const UnitDetails: FunctionComponent = () => {
   const routeState = location.state as UnitDetailsLocationState | null;
   const selectedDorm = routeState?.dorm;
   const selectedRoomType = routeState?.selectedRoomType;
-  const { facility, isLoading, error, refetch } = useFacilityDetails(facilityId, selectedDorm);
+  const breadcrumbSourceLabel = routeState?.sourceLabel ?? "Facilities";
+  const breadcrumbSourceUrl = routeState?.sourceUrl ?? "/home";
+  const { facility, isLoading, error, refetch } = useFacilityDetails(
+    facilityId,
+    selectedDorm,
+  );
   const { facilities: recommendedDorms } = useFacilities();
   const {
     bookmarks,
     refetch: refetchBookmarks,
     removeBookmark,
-  } = useBookmarks({ sortBy: 'date', order: 'desc' });
-  const [selectedListingId, setSelectedListingId] = useState('');
-  const [leaseDuration, setLeaseDuration] = useState('');
+  } = useBookmarks({ sortBy: "date", order: "desc" });
+  const [selectedListingId, setSelectedListingId] = useState("");
+  const [leaseDuration, setLeaseDuration] = useState("");
   const [isLeaseMenuOpen, setIsLeaseMenuOpen] = useState(false);
-  const [moveInDate, setMoveInDate] = useState('');
-  const [messageToLandlord, setMessageToLandlord] = useState('');
-  const [searchTerm, setSearchTerm] = useState('');
+  const [moveInDate, setMoveInDate] = useState("");
+  const [messageToLandlord, setMessageToLandlord] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
   const [isBookmarkSaving, setIsBookmarkSaving] = useState(false);
   const [bookmarkError, setBookmarkError] = useState<string | null>(null);
   const [applicationError, setApplicationError] = useState<string | null>(null);
@@ -106,7 +127,9 @@ const UnitDetails: FunctionComponent = () => {
   const availableListings = useMemo(() => facility?.listings ?? [], [facility]);
 
   useEffect(() => {
-    if (!availableListings.some((listing) => listing.id === selectedListingId)) {
+    if (
+      !availableListings.some((listing) => listing.id === selectedListingId)
+    ) {
       const matchingListing = availableListings.find(
         (listing) =>
           selectedRoomType != null &&
@@ -114,7 +137,7 @@ const UnitDetails: FunctionComponent = () => {
             roomButtonLabel(selectedRoomType).toLowerCase(),
       );
 
-      setSelectedListingId((matchingListing ?? availableListings[0])?.id ?? '');
+      setSelectedListingId((matchingListing ?? availableListings[0])?.id ?? "");
     }
   }, [selectedListingId, availableListings, selectedRoomType]);
 
@@ -127,7 +150,10 @@ const UnitDetails: FunctionComponent = () => {
           <SideBar />
         </div>
         <div className="flex flex-1 flex-col items-center justify-center gap-4 px-8 text-center">
-          <Icon icon="mdi:alert-circle-outline" className="h-16 w-16 text-red-400" />
+          <Icon
+            icon="mdi:alert-circle-outline"
+            className="h-16 w-16 text-red-400"
+          />
           <b className="text-xl text-darkgreen">Could not load this facility</b>
           <p className="max-w-md text-sm text-dimgray">{error}</p>
           <button
@@ -147,55 +173,72 @@ const UnitDetails: FunctionComponent = () => {
   const submitSearch = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const query = searchTerm.trim();
-    navigate(query ? `/home?search=${encodeURIComponent(query)}` : '/home');
+    navigate(query ? `/home?search=${encodeURIComponent(query)}` : "/home");
   };
 
   const selectedListing =
-    availableListings.find((listing) => listing.id === selectedListingId) ?? availableListings[0];
+    availableListings.find((listing) => listing.id === selectedListingId) ??
+    availableListings[0];
   const isSelectedListingBookmarked = bookmarks.some(
     (bookmark) => bookmark.listingId === selectedListing?.id,
   );
   const primaryRent = selectedListing?.price ?? 0;
-  const selectedPriceLabel = primaryRent > 0 ? currencyFormatter.format(primaryRent) : 'Price TBA';
-  const tagDefinitionsByName = new Map(facility.tagDefinitions.map((tag) => [tag.name, tag]));
+  const selectedPriceLabel =
+    primaryRent > 0 ? currencyFormatter.format(primaryRent) : "Price TBA";
+  const tagDefinitionsByName = new Map(
+    facility.tagDefinitions.map((tag) => [tag.name, tag]),
+  );
   const selectedListingTags = Object.entries(selectedListing?.tags ?? {})
-    .filter(([key]) => key !== 'seedSource' && key !== 'roomLabel')
+    .filter(([key]) => key !== "seedSource" && key !== "roomLabel")
     .map(([name, value]) => ({
       name,
       value,
       label: tagDefinitionsByName.get(name)?.displayName ?? name,
     }));
-  const selectedListingTagMap = new Map(selectedListingTags.map((tag) => [tag.name, tag]));
-  const estimatedUtilities = primaryRent > 0 ? Math.round(primaryRent * 0.15) : 0;
+  const selectedListingTagMap = new Map(
+    selectedListingTags.map((tag) => [tag.name, tag]),
+  );
+  const estimatedUtilities =
+    primaryRent > 0 ? Math.round(primaryRent * 0.15) : 0;
   const securityDeposit = primaryRent > 0 ? primaryRent * 2 : 0;
   const moveInCost = primaryRent + estimatedUtilities + securityDeposit;
   const landlordSince =
     facility.landlord?.createdAt != null
       ? new Date(facility.landlord.createdAt).getFullYear().toString()
-      : 'N/A';
+      : "N/A";
   const detailTags = [
-    facility.allowVisit ? 'Visits Allowed' : 'Visits Unavailable',
-    facility.allowTransfer ? 'Transfers Allowed' : 'Transfers Unavailable',
-    `${availableListings.length} Room Type${availableListings.length === 1 ? '' : 's'}`,
-    facility.price.min > 0 ? `From ${currencyFormatter.format(facility.price.min)}` : 'Price TBA',
+    facility.allowVisit ? "Visits Allowed" : "Visits Unavailable",
+    facility.allowTransfer ? "Transfers Allowed" : "Transfers Unavailable",
+    `${availableListings.length} Room Type${availableListings.length === 1 ? "" : "s"}`,
+    facility.price.min > 0
+      ? `From ${currencyFormatter.format(facility.price.min)}`
+      : "Price TBA",
   ];
   const aboutDetails = [
-    { label: 'ROOM TYPE', value: selectedListing ? roomButtonLabel(selectedListing.label) : 'TBA' },
     {
-      label: 'UNITS AVAILABLE',
+      label: "ROOM TYPE",
+      value: selectedListing ? roomButtonLabel(selectedListing.label) : "TBA",
+    },
+    {
+      label: "UNITS AVAILABLE",
       value: selectedListing
         ? `${selectedListing.availableUnitCount} of ${selectedListing.unitCount}`
-        : 'TBA',
+        : "TBA",
     },
     ...aboutTagNames
       .map((name) => selectedListingTagMap.get(name))
       .filter((tag): tag is NonNullable<typeof tag> => Boolean(tag))
-      .map((tag) => ({ label: tag.label.toUpperCase(), value: formatTagValue(tag.value) })),
+      .map((tag) => ({
+        label: tag.label.toUpperCase(),
+        value: formatTagValue(tag.value),
+      })),
   ];
-  const included = ['hasWifi', 'hasKitchen', 'hasLaundry', 'hasAircon'].map((name) => ({
-    label: tagDefinitionsByName.get(name)?.displayName ?? name,
-    active: selectedListingTagMap.get(name)?.value === true,
-  }));
+  const included = ["hasWifi", "hasKitchen", "hasLaundry", "hasAircon"].map(
+    (name) => ({
+      label: tagDefinitionsByName.get(name)?.displayName ?? name,
+      active: selectedListingTagMap.get(name)?.value === true,
+    }),
+  );
   const amenities = amenityTagNames.map((name) => ({
     icon: amenityTagIcons[name],
     label: tagDefinitionsByName.get(name)?.displayName ?? name,
@@ -206,7 +249,7 @@ const UnitDetails: FunctionComponent = () => {
     .filter((tag): tag is NonNullable<typeof tag> => Boolean(tag))
     .map((tag) => ({
       text: `${tag.label}: ${formatTagValue(tag.value)}`,
-      ok: !['smokingPolicy', 'petsPolicy'].includes(tag.name),
+      ok: !["smokingPolicy", "petsPolicy"].includes(tag.name),
     }));
   const reviewRatings = facility.reviews
     .map((review) => review.rating)
@@ -214,24 +257,31 @@ const UnitDetails: FunctionComponent = () => {
   const overallScore =
     reviewRatings.length > 0
       ? Number(
-          (reviewRatings.reduce((sum, rating) => sum + rating, 0) / reviewRatings.length).toFixed(
-            1,
-          ),
+          (
+            reviewRatings.reduce((sum, rating) => sum + rating, 0) /
+            reviewRatings.length
+          ).toFixed(1),
         )
       : 0;
   const ratingRows = [5, 4, 3, 2, 1].map((star) => {
-    const count = reviewRatings.filter((rating) => Math.round(rating) === star).length;
-    const width = reviewRatings.length > 0 ? `${(count / reviewRatings.length) * 100}%` : '0%';
+    const count = reviewRatings.filter(
+      (rating) => Math.round(rating) === star,
+    ).length;
+    const width =
+      reviewRatings.length > 0
+        ? `${(count / reviewRatings.length) * 100}%`
+        : "0%";
     return { star, width, count };
   });
   const reviews = facility.reviews.map((review) => {
-    const [firstName = '', lastName = ''] = review.reviewerName.split(' ');
-    const initials = `${firstName[0] ?? 'S'}${lastName[0] ?? ''}`.toUpperCase();
+    const [firstName = "", lastName = ""] = review.reviewerName.split(" ");
+    const initials = `${firstName[0] ?? "S"}${lastName[0] ?? ""}`.toUpperCase();
     const date = review.createdAt
-      ? new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric' }).format(
-          new Date(review.createdAt),
-        )
-      : 'Recently';
+      ? new Intl.DateTimeFormat("en-US", {
+          month: "long",
+          year: "numeric",
+        }).format(new Date(review.createdAt))
+      : "Recently";
 
     return {
       id: review.id,
@@ -239,7 +289,7 @@ const UnitDetails: FunctionComponent = () => {
       name: review.reviewerName,
       date,
       rating: `${review.rating.toFixed(1)} / 5.0`,
-      text: review.description || 'No written review was provided.',
+      text: review.description || "No written review was provided.",
       mediaUrls: review.mediaUrls,
     };
   });
@@ -266,10 +316,10 @@ const UnitDetails: FunctionComponent = () => {
 
       setBookmarkError(
         status === 403
-          ? 'Bookmarks are only available for verified student accounts.'
+          ? "Bookmarks are only available for verified student accounts."
           : err instanceof Error
             ? err.message
-            : 'Failed to update bookmark.',
+            : "Failed to update bookmark.",
       );
     } finally {
       setIsBookmarkSaving(false);
@@ -278,17 +328,21 @@ const UnitDetails: FunctionComponent = () => {
 
   const handleSubmitApplication = async () => {
     if (!selectedListing) {
-      setApplicationError('Please choose an available room before submitting.');
+      setApplicationError("Please choose an available room before submitting.");
       return;
     }
 
     if (!objectIdPattern.test(selectedListing.id)) {
-      setApplicationError('Room details are still loading. Please try again in a moment.');
+      setApplicationError(
+        "Room details are still loading. Please try again in a moment.",
+      );
       return;
     }
 
     if (!leaseDuration || !moveInDate) {
-      setApplicationError('Please choose your lease duration and preferred move-in date.');
+      setApplicationError(
+        "Please choose your lease duration and preferred move-in date.",
+      );
       return;
     }
 
@@ -303,7 +357,7 @@ const UnitDetails: FunctionComponent = () => {
         moveInDate: moveIn,
         message: messageToLandlord.trim() || null,
       });
-      navigate('/applications');
+      navigate("/applications");
     } catch (err) {
       const status = axios.isAxiosError(err) ? err.response?.status : undefined;
       if (status === 401) {
@@ -312,9 +366,10 @@ const UnitDetails: FunctionComponent = () => {
       }
 
       const apiMessage = axios.isAxiosError(err)
-        ? (err.response?.data as { error?: { message?: string } })?.error?.message
+        ? (err.response?.data as { error?: { message?: string } })?.error
+            ?.message
         : undefined;
-      setApplicationError(apiMessage ?? 'Failed to submit your application.');
+      setApplicationError(apiMessage ?? "Failed to submit your application.");
     } finally {
       setIsSubmittingApplication(false);
     }
@@ -326,7 +381,7 @@ const UnitDetails: FunctionComponent = () => {
   };
 
   return (
-    <div className="flex min-h-screen font-lora text-darkslategray-100">
+    <div className="flex min-h-screen font-inter text-darkslategray-100">
       {showSignIn && <SignInPopUp onClose={() => setShowSignIn(false)} />}
       {isVisitPopoutOpen && (
         <PortalPopup
@@ -343,7 +398,7 @@ const UnitDetails: FunctionComponent = () => {
         </PortalPopup>
       )}
       {/* Sidebar */}
-      <div className="sticky top-0 h-screen shrink-0 z-10">
+      <div className="sticky top-0 h-screen shrink-0 z-10 font-inter">
         <SideBar />
       </div>
 
@@ -355,19 +410,23 @@ const UnitDetails: FunctionComponent = () => {
             className="flex items-center gap-1.5 text-sm font-semibold flex-wrap"
             data-scroll-to="searchBarContainer"
           >
-            <span>Home</span>
-            <Icon icon="iconamoon:arrow-right-2" className="w-5 h-5" />
-            <span>Facilities</span>
-            <Icon icon="iconamoon:arrow-right-2" className="w-5 h-5" />
-            <span>{facility.name}</span>
+            <BreadcrumbHeader
+              routes={[
+                { name: "Home", url: "/home" },
+                { name: breadcrumbSourceLabel, url: breadcrumbSourceUrl },
+                { name: facility.name },
+              ]}
+            />
           </div>
-
           {/* Search */}
           <form
             onSubmit={submitSearch}
             className="w-full max-w-2xl rounded-xl bg-aliceblue flex items-center py-2.5 px-4 gap-2.5 text-dimgray font-inter border border-transparent focus-within:bg-white focus-within:border-lightcyan focus-within:shadow-[0_8px_14px_rgba(0,0,0,0.06)] transition-all"
           >
-            <Icon icon="material-symbols:search" className="w-6 h-6 shrink-0 text-teal-200" />
+            <Icon
+              icon="material-symbols:search"
+              className="w-6 h-6 shrink-0 text-teal-200"
+            />
             <input
               type="text"
               value={searchTerm}
@@ -379,11 +438,14 @@ const UnitDetails: FunctionComponent = () => {
             {searchTerm && (
               <button
                 type="button"
-                onClick={() => setSearchTerm('')}
+                onClick={() => setSearchTerm("")}
                 className="grid h-7 w-7 place-items-center rounded-full text-unselected hover:bg-whitesmoke-100 hover:text-darkgreen"
                 aria-label="Clear search"
               >
-                <Icon icon="material-symbols:close-rounded" className="h-4 w-4" />
+                <Icon
+                  icon="material-symbols:close-rounded"
+                  className="h-4 w-4"
+                />
               </button>
             )}
             <button
@@ -405,7 +467,7 @@ const UnitDetails: FunctionComponent = () => {
                   <b className="text-2xl leading-8">{facility.name}</b>
                   <b className="text-xl leading-8 opacity-30">
                     - {availableListings.length} room type
-                    {availableListings.length === 1 ? '' : 's'}
+                    {availableListings.length === 1 ? "" : "s"}
                   </b>
                 </div>
                 <div className="flex items-center gap-3 text-xs text-teal-200 font-poppins">
@@ -415,7 +477,7 @@ const UnitDetails: FunctionComponent = () => {
                     disabled={!facility.allowVisit}
                     className="rounded border border-teal-200 py-2 px-6 transition-colors disabled:cursor-not-allowed disabled:opacity-60 hover:bg-lightcyan"
                   >
-                    {facility.allowVisit ? 'VISIT' : 'NO VISIT'}
+                    {facility.allowVisit ? "VISIT" : "NO VISIT"}
                   </button>
                   <button
                     type="button"
@@ -423,19 +485,27 @@ const UnitDetails: FunctionComponent = () => {
                     disabled={!selectedListing || isBookmarkSaving}
                     className={`rounded border border-teal-200 py-2 px-6 transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${
                       isSelectedListingBookmarked
-                        ? 'bg-lightcyan text-darkslategray-200'
-                        : 'hover:bg-lightcyan'
+                        ? "bg-lightcyan text-darkslategray-200"
+                        : "hover:bg-lightcyan"
                     }`}
                   >
-                    {isBookmarkSaving ? 'SAVING' : isSelectedListingBookmarked ? 'SAVED' : 'SAVE'}
+                    {isBookmarkSaving
+                      ? "SAVING"
+                      : isSelectedListingBookmarked
+                        ? "SAVED"
+                        : "SAVE"}
                   </button>
                 </div>
               </div>
               {bookmarkError && (
-                <div className="px-2 text-xs font-semibold text-red-500">{bookmarkError}</div>
+                <div className="px-2 text-xs font-semibold text-red-500">
+                  {bookmarkError}
+                </div>
               )}
 
-              <div className="text-xs tracking-wide font-semibold px-2">{facility.location}</div>
+              <div className="text-xs tracking-wide font-semibold px-2">
+                {facility.location}
+              </div>
 
               {/* Price */}
               <div className="relative rounded-lg bg-darkslategray-200 shadow-md px-4 py-3 text-white max-w-max">
@@ -454,11 +524,11 @@ const UnitDetails: FunctionComponent = () => {
                 <button
                   type="button"
                   onClick={() => {
-                    setSelectedListingId(availableListings[0]?.id ?? '');
-                    setLeaseDuration('');
+                    setSelectedListingId(availableListings[0]?.id ?? "");
+                    setLeaseDuration("");
                     setIsLeaseMenuOpen(false);
-                    setMoveInDate('');
-                    setMessageToLandlord('');
+                    setMoveInDate("");
+                    setMessageToLandlord("");
                   }}
                   className="shadow rounded-md bg-whitesmoke-100 py-1 px-3 text-xs text-gray font-lora"
                 >
@@ -481,8 +551,8 @@ const UnitDetails: FunctionComponent = () => {
                             onClick={() => setSelectedListingId(listing.id)}
                             className={`rounded-lg border py-2 px-3 text-center font-semibold text-xs shadow transition-colors ${
                               isSelected
-                                ? 'border-darkslategray-200 bg-darkslategray-200 text-white'
-                                : 'border-transparent bg-white text-black hover:bg-lightcyan'
+                                ? "border-darkslategray-200 bg-darkslategray-200 text-white"
+                                : "border-transparent bg-white text-black hover:bg-lightcyan"
                             }`}
                           >
                             {roomButtonLabel(listing.label)}
@@ -501,7 +571,10 @@ const UnitDetails: FunctionComponent = () => {
                   </div>
                 </div>
                 <div className="flex flex-col gap-1.5">
-                  <label className="font-medium" htmlFor="lease-duration-select">
+                  <label
+                    className="font-medium"
+                    htmlFor="lease-duration-select"
+                  >
                     Lease Duration
                   </label>
                   <div className="relative" id="lease-duration-select">
@@ -510,22 +583,22 @@ const UnitDetails: FunctionComponent = () => {
                       onClick={() => setIsLeaseMenuOpen((isOpen) => !isOpen)}
                       className={`shadow rounded-lg border w-full flex items-center justify-between py-2.5 px-3 gap-2 text-left transition-all ${
                         isLeaseMenuOpen
-                          ? 'border-teal-200 bg-lightcyan/40 ring-2 ring-lightcyan'
-                          : 'border-transparent bg-white hover:bg-lightcyan/20'
+                          ? "border-teal-200 bg-lightcyan/40 ring-2 ring-lightcyan"
+                          : "border-transparent bg-white hover:bg-lightcyan/20"
                       }`}
                     >
                       <span
                         className={`font-semibold text-xs ${
-                          leaseDuration ? 'text-black' : 'text-silver'
+                          leaseDuration ? "text-black" : "text-silver"
                         }`}
                       >
-                        {leaseDuration || 'Choose lease duration'}
+                        {leaseDuration || "Choose lease duration"}
                       </span>
                       <span className="grid h-7 w-7 place-items-center rounded-full bg-whitesmoke-100 text-teal-200">
                         <Icon
                           icon="mdi:chevron-down"
                           className={`h-4 w-4 transition-transform ${
-                            isLeaseMenuOpen ? 'rotate-180' : ''
+                            isLeaseMenuOpen ? "rotate-180" : ""
                           }`}
                         />
                       </span>
@@ -546,13 +619,16 @@ const UnitDetails: FunctionComponent = () => {
                               }}
                               className={`flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-xs font-semibold transition-colors ${
                                 isSelected
-                                  ? 'bg-darkslategray-200 text-white'
-                                  : 'text-gray hover:bg-lightcyan'
+                                  ? "bg-darkslategray-200 text-white"
+                                  : "text-gray hover:bg-lightcyan"
                               }`}
                             >
                               <span>{duration}</span>
                               {isSelected && (
-                                <Icon icon="material-symbols:check-rounded" className="h-4 w-4" />
+                                <Icon
+                                  icon="material-symbols:check-rounded"
+                                  className="h-4 w-4"
+                                />
                               )}
                             </button>
                           );
@@ -572,7 +648,7 @@ const UnitDetails: FunctionComponent = () => {
                       value={moveInDate}
                       onChange={(event) => setMoveInDate(event.target.value)}
                       className={`flex-1 bg-transparent outline-none font-semibold text-xs ${
-                        moveInDate ? 'text-black' : 'text-silver'
+                        moveInDate ? "text-black" : "text-silver"
                       }`}
                     />
                     <Icon icon="mdi:calendar" className="h-4 w-4" />
@@ -580,12 +656,15 @@ const UnitDetails: FunctionComponent = () => {
                 </div>
                 <div className="flex flex-col gap-1.5">
                   <label className="font-medium" htmlFor="landlord-message">
-                    Message to Landlord <span className="text-silver">(optional)</span>
+                    Message to Landlord{" "}
+                    <span className="text-silver">(optional)</span>
                   </label>
                   <textarea
                     id="landlord-message"
                     value={messageToLandlord}
-                    onChange={(event) => setMessageToLandlord(event.target.value)}
+                    onChange={(event) =>
+                      setMessageToLandlord(event.target.value)
+                    }
                     placeholder="Introduce yourself or ask a question.."
                     className="shadow rounded-lg bg-white py-2 px-3 h-20 resize-none text-black placeholder:text-silver font-semibold text-xs outline-none"
                   />
@@ -595,16 +674,22 @@ const UnitDetails: FunctionComponent = () => {
                 <div className="shadow rounded-lg bg-whitesmoke-200 flex flex-col p-3 gap-1 text-dimgray font-poppins text-xs">
                   {[
                     [
-                      'Monthly Rent',
-                      primaryRent > 0 ? currencyFormatter.format(primaryRent) : 'TBA',
+                      "Monthly Rent",
+                      primaryRent > 0
+                        ? currencyFormatter.format(primaryRent)
+                        : "TBA",
                     ],
                     [
-                      'Est. Utilities',
-                      estimatedUtilities > 0 ? currencyFormatter.format(estimatedUtilities) : 'TBA',
+                      "Est. Utilities",
+                      estimatedUtilities > 0
+                        ? currencyFormatter.format(estimatedUtilities)
+                        : "TBA",
                     ],
                     [
-                      'Security Deposit',
-                      securityDeposit > 0 ? currencyFormatter.format(securityDeposit) : 'TBA',
+                      "Security Deposit",
+                      securityDeposit > 0
+                        ? currencyFormatter.format(securityDeposit)
+                        : "TBA",
                     ],
                   ].map(([l, v]) => (
                     <div key={l} className="flex justify-between">
@@ -615,7 +700,11 @@ const UnitDetails: FunctionComponent = () => {
                   <div className="h-px bg-gray-200 my-1" />
                   <div className="flex justify-between font-bold text-gray">
                     <span>Est. Move-in Cost</span>
-                    <span>{moveInCost > 0 ? currencyFormatter.format(moveInCost) : 'TBA'}</span>
+                    <span>
+                      {moveInCost > 0
+                        ? currencyFormatter.format(moveInCost)
+                        : "TBA"}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -633,7 +722,9 @@ const UnitDetails: FunctionComponent = () => {
                   className="w-full rounded-lg bg-darkslategray-200 flex items-center justify-center gap-2 py-3 px-4 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   <span className="font-medium text-sm">
-                    {isSubmittingApplication ? 'Submitting...' : 'Submit Application'}
+                    {isSubmittingApplication
+                      ? "Submitting..."
+                      : "Submit Application"}
                   </span>
                   <Icon icon="formkit:arrowright" className="h-5 w-5" />
                 </button>
@@ -655,7 +746,7 @@ const UnitDetails: FunctionComponent = () => {
                 {detailTags.map((label, index) => (
                   <div
                     key={label}
-                    className={`rounded-lg border border-teal-200 py-2 px-4 font-medium ${index === 0 ? 'bg-lightcyan' : ''}`}
+                    className={`rounded-lg border border-teal-200 py-2 px-4 font-medium ${index === 0 ? "bg-lightcyan" : ""}`}
                   >
                     {label}
                   </div>
@@ -676,9 +767,12 @@ const UnitDetails: FunctionComponent = () => {
                   text="ABOUT"
                   element={
                     <AboutDetails
-                      description={[facility.description, selectedListing?.description]
+                      description={[
+                        facility.description,
+                        selectedListing?.description,
+                      ]
                         .filter(Boolean)
-                        .join('\n\n')}
+                        .join("\n\n")}
                       details={aboutDetails}
                       included={included}
                     />
@@ -688,7 +782,10 @@ const UnitDetails: FunctionComponent = () => {
                   text="AMENITIES"
                   element={<AmenetiesDetails amenities={amenities} />}
                 />
-                <PropertyTab text="RULES" element={<RulesDetails rules={rules} />} />
+                <PropertyTab
+                  text="RULES"
+                  element={<RulesDetails rules={rules} />}
+                />
                 <PropertyTab
                   text="LOCATION"
                   element={
@@ -719,7 +816,10 @@ const UnitDetails: FunctionComponent = () => {
               {/* Landlord card */}
               <div className="rounded-lg shadow bg-white flex flex-col p-4 gap-4">
                 <div className="flex items-center gap-2 text-xl">
-                  <Icon icon="material-symbols:wifi-home-outline-rounded" className="h-6 w-6" />
+                  <Icon
+                    icon="material-symbols:wifi-home-outline-rounded"
+                    className="h-6 w-6"
+                  />
                   <b className="text-sm">LANDLORD</b>
                 </div>
                 <div className="flex items-center gap-3">
@@ -731,11 +831,13 @@ const UnitDetails: FunctionComponent = () => {
                     />
                   ) : (
                     <div className="h-12 w-12 rounded-full bg-lightcyan shadow flex items-center justify-center text-sm font-bold text-teal-200">
-                      {facility.landlord?.name?.slice(0, 1) ?? 'L'}
+                      {facility.landlord?.name?.slice(0, 1) ?? "L"}
                     </div>
                   )}
                   <div className="flex flex-col gap-0.5 font-lora text-xs">
-                    <div className="font-medium">{facility.landlord?.name ?? 'Landlord'}</div>
+                    <div className="font-medium">
+                      {facility.landlord?.name ?? "Landlord"}
+                    </div>
                     <div className="text-[10px] font-semibold text-darkslategray-100">
                       member since {landlordSince}
                     </div>
@@ -744,10 +846,12 @@ const UnitDetails: FunctionComponent = () => {
                 <div className="flex gap-2 text-teal-100 text-sm">
                   {[
                     [
-                      String(facility.landlord?.numUnits ?? availableListings.length),
-                      'Active Units',
+                      String(
+                        facility.landlord?.numUnits ?? availableListings.length,
+                      ),
+                      "Active Units",
                     ],
-                    [landlordSince, 'Since'],
+                    [landlordSince, "Since"],
                   ].map(([val, lbl]) => (
                     <div
                       key={lbl}
@@ -765,7 +869,10 @@ const UnitDetails: FunctionComponent = () => {
                     to="/direct-messages"
                     className="rounded-lg bg-darkslategray-200 flex items-center justify-center gap-2 py-2 shadow"
                   >
-                    <Icon icon="material-symbols:mail-outline" className="h-5 w-5" />
+                    <Icon
+                      icon="material-symbols:mail-outline"
+                      className="h-5 w-5"
+                    />
                     <span className="font-medium">Send Message</span>
                   </Link>
                   <button
@@ -800,7 +907,7 @@ const UnitDetails: FunctionComponent = () => {
                       />
                     ))}
                 </div>
-              </div>{' '}
+              </div>{" "}
             </div>
           </div>
         </div>

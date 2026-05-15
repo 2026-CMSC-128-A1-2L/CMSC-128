@@ -7,6 +7,7 @@ import Footer from "../../../components/general/Footer";
 import PageBackground from "../../../components/general/PageBackground";
 import Switch from "../../../components/user/CurrentDormToVerificationSwitch";
 import ProfileInfo from "../../../components/user/ProfileInfo";
+import BreadcrumbHeader from "../../../components/general/Breadcrumb";
 import { Icon } from "@iconify/react";
 import { Link } from "react-router-dom";
 import { UserService } from "../../../service/UserService";
@@ -235,28 +236,25 @@ const ProfileSwitcher = () => {
           <Sidebar />
         </div>
 
-        <div className="w-full flex flex-col items-start justify-between gap-20 pl-5">
+        <div className="w-full flex flex-col items-start justify-between gap-20 px-6 md:px-8">
           <div className="self-stretch flex flex-col items-start py-num-0 pr-20">
-            <div
-              className="self-stretch h-16 overflow-hidden shrink-0 flex items-end p-num-10 box-border gap-2.5"
-              data-scroll-to="searchBarContainer"
-            >
-              <div className="h-6 flex items-center gap-1.5">
-                <div className="relative font-semibold">User Profile</div>
-                <Icon
-                  icon="iconamoon:arrow-right-2"
-                  className="h-6 w-6 relative"
-                />
-                <div className="relative font-semibold">
-                  {activeTab === "dorm"
-                    ? "Current Dorm"
-                    : "Verification Status"}
-                </div>
-              </div>
-            </div>
+
 
             <div className="bg-white/35  self-stretch min-h-[800px] rounded-2xl  flex flex-col items-start gap-3 text-center text-dimgray font-inter pb-10 dark:bg-transparent dark:text-[#a4acba]">
-              <ProfileInfo />
+              <div
+    className="self-stretch pt-15 px-8 shrink-0 flex items-end box-border gap-2.5"
+    data-scroll-to="searchBarContainer"
+  >
+    <BreadcrumbHeader
+      routes={[
+        { name: 'Home', url: '/home' },
+        { name: 'User Profile', url: '/profile-switcher' },
+        { name: activeTab === "dorm" ? 'Current Dorm' : "Verification Status" },
+      ]}
+    />
+  </div>
+
+  <ProfileInfo />
 
               <div className="self-stretch flex flex-col items-start gap-12">
                 <Switch activeTab={activeTab} setActiveTab={setActiveTab} />

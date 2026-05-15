@@ -9,8 +9,6 @@ import type {
   UpdateBillingRequestBody,
 } from '../interface/billing';
 import { api } from './axiosInstance';
-import DownloadBillings from '../components/user/finance/DownloadBillings';
-import { ur } from 'zod/v4/locales';
 import { FacilityService } from './FacilityService';
 import { UnitService } from './UnitService';
 
@@ -105,7 +103,7 @@ export const BillingService = {
           console.warn(`Failed to fetch units for listing ${listingId}:`, err);
           return [];
         }
-      })
+      }),
     );
 
     const allUnits: any[] = unitsByListing.flat();
@@ -122,16 +120,14 @@ export const BillingService = {
           else if (Array.isArray(res)) billings = res;
 
           const activeRentals: any[] = (unit.currentRentals ?? []).filter(
-            (r: any) => r.status === 'active'
+            (r: any) => r.status === 'active',
           );
 
           const stampedRentalId = activeRentals[0]?._id ?? null;
           const stampedTenantName = activeRentals
             .map((r: any) => {
               const u = r.userId;
-              return typeof u === 'object'
-                ? `${u.firstName ?? ''} ${u.lastName ?? ''}`.trim()
-                : '';
+              return typeof u === 'object' ? `${u.firstName ?? ''} ${u.lastName ?? ''}`.trim() : '';
             })
             .filter(Boolean)
             .join(', ');
@@ -146,7 +142,7 @@ export const BillingService = {
           console.warn(`Failed to fetch billings for unit ${unitId}:`, err);
           return [];
         }
-      })
+      }),
     );
 
     return billingsByUnit.flat();
@@ -159,7 +155,9 @@ export const BillingService = {
       const listings: any[] = facility.listings || [];
       const listingIds = listings.map((l: any) => l.id).filter(Boolean);
       const billings = await this.getAllBillingsForListings(listingIds);
-      billings.forEach((b: any) => { b.facilityId = b.facilityId ?? facilityId; });
+      billings.forEach((b: any) => {
+        b.facilityId = b.facilityId ?? facilityId;
+      });
       return billings;
     } catch (err) {
       console.error('Failed to fetch all billings for facility:', err);

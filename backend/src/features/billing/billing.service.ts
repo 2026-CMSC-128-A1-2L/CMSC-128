@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import type { mongo, QueryFilter } from 'mongoose';
+import type { QueryFilter } from 'mongoose';
 import { Billing, type BillingType } from './billing.model.js';
 import { AppError } from '../../error.js';
 import { Rental, type RentalType } from '../rental/rental.model.js';
@@ -66,7 +66,7 @@ export const createBilling = async (
     userId: rental.userId,
     unitId: rental.unitId,
     facilityId: rental.facilityId,
-    rentalId: rental._id, 
+    rentalId: rental._id,
     dueDate: data.dueDate,
     totalAmount,
     breakdown: data.breakdown,
@@ -577,7 +577,7 @@ export const sumbitBillingPayment = async (
 
 export const getBillingsPdf = async (
   userId: mongoose.Types.ObjectId,
-  query: Partial<GetBillingArguments>,
+  _query: Partial<GetBillingArguments>,
   filters: QueryFilter<BillingType>,
 ) => {
   const currentMonth = new Date().getMonth() + 1;
