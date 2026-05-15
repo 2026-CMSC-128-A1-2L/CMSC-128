@@ -7,6 +7,7 @@ import Banner from '../../../components/general/Banner';
 import FilterTab from '../../../components/user/Filter/FilterTab';
 import LoadingPage from '../../general/LoadingPage';
 import { useFacilities, type DormCardData } from '../../../hooks/useFacilities';
+import TutorialIcon from '../../../../assets/help-chat.svg';
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
@@ -168,11 +169,100 @@ const ErrorState = ({ message, onRetry }: { message: string; onRetry: () => void
   </div>
 );
 
+const ApplicationGuideModal = ({ onClose }: { onClose: () => void }) => {
+  const steps = [
+    {
+      title: 'Pick a dorm',
+      description: (
+        <>
+          Select your preferred residence from the Listings dashboard. You can filter by{' '}
+          <b>Budget-Friendly Picks</b> or browse <b>Popular Listings</b> to find the unit that best
+          fit your needs.
+        </>
+      ),
+    },
+    {
+      title: 'Fill up your details',
+      description:
+        'Once you select a dorm, a detailed summary of your choice will be displayed. Fill out the necessary information before submitting your application to the landlord.',
+    },
+    {
+      title: 'Wait for confirmation',
+      description:
+        'Once confirmed, the landlord will reach out to you via system notifications. Be sure to check your DMs regularly for updates.',
+    },
+  ];
+
+  return (
+    <div className="fixed inset-0 z-[1100] flex items-center justify-center bg-black/35 px-5 py-8">
+      <button
+        type="button"
+        className="absolute inset-0 cursor-default"
+        onClick={onClose}
+        aria-label="Close application guide"
+      />
+      <section
+        className="relative z-10 flex h-[531px] w-[554px] max-h-[calc(100vh-32px)] max-w-[calc(100vw-32px)] flex-col overflow-y-auto rounded-[18px] bg-white px-[40px] pb-[40px] pt-[34px] text-[#1f6f60] shadow-[0_2px_14px_rgba(0,0,0,0.24)]"
+        aria-modal="true"
+        role="dialog"
+        aria-labelledby="application-guide-title"
+      >
+        <div className="text-center">
+          <h2
+            id="application-guide-title"
+            className="font-inter text-[24px] font-bold leading-tight text-[#164f43]"
+          >
+            Application Guide
+          </h2>
+          <p className="mt-[6px] font-lora text-[13px] font-semibold leading-snug text-[#164f43]">
+            Everything you need to know about applying for your stay at UPLB!
+          </p>
+        </div>
+
+        <div className="mt-[30px] grid grid-cols-[50px_1fr] gap-x-[24px] gap-y-[41px]">
+          {steps.map((step, index) => {
+            const isLast = index === steps.length - 1;
+            return (
+              <div key={step.title} className="contents">
+                <div className="relative flex justify-center">
+                  {!isLast && (
+                    <span className="absolute top-[34px] h-[calc(100%+41px)] w-[2px] rounded-full bg-[#237866]" />
+                  )}
+                  <span className="relative z-10 flex h-[34px] w-[34px] items-center justify-center rounded-full bg-[#237866] font-lora text-[17px] font-semibold text-white">
+                    {index + 1}
+                  </span>
+                </div>
+                <div className="max-w-[402px] pb-0">
+                  <h3 className="font-inter text-[16px] font-bold leading-tight text-[#237866]">
+                    {step.title}
+                  </h3>
+                  <p className="mt-[7px] font-lora text-[13px] font-semibold leading-[1.18] text-[#1f6f60]">
+                    {step.description}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <button
+          type="button"
+          onClick={onClose}
+          className="mx-auto mt-auto h-[36px] w-full max-w-[318px] rounded-[5px] bg-[#4c8c7e] font-lora text-[15px] font-bold text-white shadow-[0_3px_8px_rgba(0,0,0,0.2)] transition-all hover:-translate-y-0.5 hover:bg-[#237866] active:translate-y-0"
+        >
+          Got it, thanks!
+        </button>
+      </section>
+    </div>
+  );
+};
+
 // ─── HomePage ─────────────────────────────────────────────────────────────────
 
 const HomePage: FunctionComponent = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
   const [searchTerm, setSearchTerm] = useState(searchParams.get('search') ?? '');
   const [viewAllCategory, setViewAllCategory] = useState<ViewAllCategory>(null);
   const [filterCriteria, setFilterCriteria] = useState({
@@ -442,6 +532,17 @@ const HomePage: FunctionComponent = () => {
           </div>
         </div>
       </div>
+
+      <button
+        type="button"
+        className="help-button-animated bottom-10 right-10 z-[1000] cursor-pointer transition-all hover:scale-110 active:scale-95"
+        onClick={() => setShowHelp(true)}
+        aria-label="Open application guide"
+      >
+        <img src={TutorialIcon} alt="Help" className="w-16 h-16 drop-shadow-lg" />
+      </button>
+
+      {showHelp && <ApplicationGuideModal onClose={() => setShowHelp(false)} />}
     </div>
   );
 };
