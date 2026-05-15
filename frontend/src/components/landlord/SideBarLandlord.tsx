@@ -11,6 +11,7 @@ import AtlasLogo from "../../../assets/logo_atlas_text.svg?react";
 import AtlasLogoMin from "../../../assets/atlas logo (for white bg).png";
 import SideBarLandlordButton from "./SideBarLandlordButton";
 import { useTheme } from "../../pages/utilities/DarkMode";
+import { useAuthStore } from "../../store/useAuthStore";
 
 export type SideBarLandlordItemKey =
   | "dashboard"
@@ -35,8 +36,6 @@ type SideBarLandlordProps = {
   onAddListing?: MouseEventHandler<HTMLButtonElement>;
   onToggleDarkMode?: MouseEventHandler<HTMLButtonElement>;
   onProfileClick?: MouseEventHandler<HTMLButtonElement>;
-  onSignOut?: MouseEventHandler<HTMLButtonElement>;
-  user?: UserInfo;
   className?: string;
 };
 
@@ -96,10 +95,7 @@ const navItems: Array<{
   },
 ];
 
-const defaultUser: UserInfo = {
-  name: "Quevin",
-  verified: true,
-};
+
 
 const isSmallScreen = () =>
   typeof window !== "undefined" && window.innerWidth < 768;
@@ -111,8 +107,6 @@ const SideBarLandlord = ({
   onAddListing,
   onToggleDarkMode,
   onProfileClick,
-  onSignOut,
-  user = defaultUser,
   className = "",
 }: SideBarLandlordProps) => {
   const navigate = useNavigate();
@@ -126,6 +120,15 @@ const SideBarLandlord = ({
     "top" | "bottom"
   >("top");
   const profileMenuRef = useRef<HTMLDivElement | null>(null);
+
+  const authUser = useAuthStore((state) => state.user);
+  const logout = useAuthStore((state) => state.logout);
+
+  const user = {
+    name: authUser ? `${authUser.firstName} ${authUser.lastName}` : "User",
+    verified: authUser?.status === "verified",
+    avatarUrl: authUser?.profilePicture || undefined,
+  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -169,9 +172,10 @@ const SideBarLandlord = ({
     onProfileClick?.(event);
   };
 
-  const handleSignOutClick: MouseEventHandler<HTMLButtonElement> = (event) => {
+  const handleSignOutClick: MouseEventHandler<HTMLButtonElement> = async (event) => {
     setIsProfileMenuOpen(false);
-    onSignOut?.(event);
+    await logout();
+    navigate("/");
   };
 
   useEffect(() => {
@@ -479,7 +483,7 @@ const SideBarLandlord = ({
                   <span className="font-['Inter',sans-serif] text-[14px] font-bold leading-normal whitespace-nowrap text-[#096c5b] dark:text-[#72cbb8]">
                     {user.name}
                   </span>
-                  {user.verified && (
+                  {user.verified ? (
                     <span className="flex items-center gap-[4px]">
                       <span className="bg-gradient-to-b from-[#5dc2a8] to-[#0c8873] bg-clip-text font-['Inter',sans-serif] text-[10px] font-bold leading-normal whitespace-nowrap text-transparent">
                         Verified
@@ -487,6 +491,17 @@ const SideBarLandlord = ({
                       <Icon
                         icon="material-symbols:verified"
                         className="h-[10px] w-[10px] text-[#0c8873] dark:text-[#72cbb8]"
+                        aria-hidden="true"
+                      />
+                    </span>
+                  ) : (
+                    <span className="flex items-center gap-[4px]">
+                      <span className="bg-gradient-to-b from-[#e0a825] to-[#c48a1a] bg-clip-text font-['Inter',sans-serif] text-[10px] font-bold leading-normal whitespace-nowrap text-transparent">
+                        Unverified
+                      </span>
+                      <Icon
+                        icon="material-symbols:warning-rounded"
+                        className="h-[10px] w-[10px] text-[#c48a1a] dark:text-[#e0a825]"
                         aria-hidden="true"
                       />
                     </span>

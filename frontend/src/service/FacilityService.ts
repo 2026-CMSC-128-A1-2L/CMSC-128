@@ -196,4 +196,14 @@ export const FacilityService = {
       throw error;
     }
   },
+
+  async getTenants() {
+    try {
+      const response = await api.get('/api/facilities/landlord/tenants');
+      return response.data.data;
+    } catch (error) {
+      console.error('Error fetching landlord tenants:', error);
+      throw error;
+    }
+  },
 };

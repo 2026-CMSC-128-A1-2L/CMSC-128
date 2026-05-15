@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import LandlordLayout from '../../../components/landlord/LandlordLayout';
@@ -15,7 +15,8 @@ import {
   filterTenantsByName,
   tenantFiltersActive,
 } from '../../../utils/tenantListFilters';
-import { pendingApplications, tenants, type Tenant } from '../../../data/landlordTenants';
+import { pendingApplications, type Tenant } from '../../../data/landlordTenants';
+import { FacilityService } from '../../../service/FacilityService';
 
 const LandlordTenants = () => {
   const navigate = useNavigate();
@@ -25,6 +26,23 @@ const LandlordTenants = () => {
   const [removeTarget, setRemoveTarget] = useState<Tenant | null>(null);
   const [filters, setFilters] = useState(defaultTenantListFilters);
   const [nameSearchQuery, setNameSearchQuery] = useState('');
+  const [tenants, setTenants] = useState<Tenant[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchTenants = async () => {
+      try {
+        setIsLoading(true);
+        const data = await FacilityService.getTenants();
+        setTenants(data);
+      } catch (error) {
+        console.error('Failed to fetch tenants:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchTenants();
+  }, []);
 
   const handleTenantAction = (tenant: Tenant, action: ManagerAction) => {
     setOpenMenuId(null);
@@ -44,7 +62,7 @@ const LandlordTenants = () => {
   const filteredTenants = useMemo(() => {
     const sorted = filterAndSortTenants(tenants, filters);
     return filterTenantsByName(sorted, nameSearchQuery);
-  }, [filters, nameSearchQuery]);
+  }, [tenants, filters, nameSearchQuery]);
 
   const patchFilters = (patch: Partial<typeof filters>) => {
     setFilters((prev) => ({ ...prev, ...patch }));
@@ -94,7 +112,14 @@ const LandlordTenants = () => {
           )}
         </section>
 
-        {tenants.length === 0 ? (
+        {isLoading ? (
+          <div className="flex min-h-[320px] w-full flex-col items-center justify-center gap-[16px] rounded-[16px] border border-dashed border-[#f0f0f0] bg-white p-[32px] text-center">
+            <Icon icon="eos-icons:loading" className="h-[48px] w-[48px] text-[#096c5b]" aria-hidden="true" />
+            <p className="font-['Inter',sans-serif] text-[16px] font-bold text-[#2f3136]">
+              Loading tenants...
+            </p>
+          </div>
+        ) : tenants.length === 0 ? (
           <div className="flex min-h-[320px] w-full flex-col items-center justify-center gap-[16px] rounded-[16px] border border-dashed border-[#f0f0f0] bg-white p-[32px] text-center">
             <Icon
               icon="solar:users-group-two-rounded-bold-duotone"
