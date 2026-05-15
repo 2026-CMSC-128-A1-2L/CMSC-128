@@ -58,10 +58,10 @@ const getDefaultVisitStarts = (date: Date) => {
   return dayOfWeek === 0 || dayOfWeek === 6
     ? []
     : Array.from({ length: DEFAULT_VISIT_END_HOUR - DEFAULT_VISIT_START_HOUR }, (_, index) => {
-        const start = new Date(dayStart);
-        start.setHours(DEFAULT_VISIT_START_HOUR + index, 0, 0, 0);
-        return start;
-      });
+      const start = new Date(dayStart);
+      start.setHours(DEFAULT_VISIT_START_HOUR + index, 0, 0, 0);
+      return start;
+    });
 };
 
 export const getAvailableVisitSlots = async (

@@ -1,4 +1,5 @@
-import { type FunctionComponent, useState, useCallback } from 'react';
+import { type FunctionComponent, useState, useCallback, useEffect } from 'react';
+import { api } from '../../../service/axiosInstance';
 
 const HOURS = Array.from({ length: 10 }, (_, i) => `${i + 8}:00`);
 const DAYS = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
@@ -9,15 +10,25 @@ interface SetAvailableTimeProps {
 
 const SetAvailableTime: FunctionComponent<SetAvailableTimeProps> = ({ onClose }) => {
   const [availability, setAvailability] = useState<boolean[][]>(
-    Array(10)
-      .fill(null)
-      .map(() => Array(7).fill(true)),
+    Array.from({ length: 10 }, () => Array(7).fill(false)),
   );
-  const [initialAvailability] = useState<boolean[][]>(
-    Array(10)
-      .fill(null)
-      .map(() => Array(7).fill(true)),
-  );
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAvailability = async () => {
+      try {
+        const response = await api.get('/api/availability/me');
+        if (response.data?.data?.grid) {
+          setAvailability(response.data.data.grid);
+        }
+      } catch (error) {
+        console.error('Failed to fetch availability:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchAvailability();
+  }, []);
 
   const handleTileClick = useCallback((row: number, col: number) => {
     setAvailability((prev) => {
@@ -28,14 +39,17 @@ const SetAvailableTime: FunctionComponent<SetAvailableTimeProps> = ({ onClose })
   }, []);
 
   const handleCancel = useCallback(() => {
-    setAvailability(initialAvailability.map((row) => [...row]));
     onClose?.();
-  }, [initialAvailability, onClose]);
+  }, [onClose]);
 
-  const handleSave = useCallback(() => {
-    console.log('Saved availability:', availability);
-    // TODO: Call API to save availability
-    onClose?.();
+  const handleSave = useCallback(async () => {
+    try {
+      await api.patch('/api/availability/me', { grid: availability });
+      onClose?.();
+    } catch (error) {
+      console.error('Failed to save availability:', error);
+      alert('Failed to save availability. Please try again.');
+    }
   }, [availability, onClose]);
   return (
     <div className="relative rounded-2xl bg-white dark:bg-[#141515] w-[900px] overflow-hidden flex flex-col items-start py-8 px-12 box-border gap-2.5 text-center text-[24px] text-teal dark:text-[#72cbb8] font-inter">
