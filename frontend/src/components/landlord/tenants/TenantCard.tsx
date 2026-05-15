@@ -24,12 +24,31 @@ const STATUS_MAP: Record<PaymentStatus, StatusDescriptor> = {
     icon: 'material-symbols:pending-outline',
     iconClass: 'text-[#c29722]',
   },
+  unpaid: {
+    label: 'Unpaid',
+    textClass: 'bg-linear-to-b from-[#c29722] to-[#f6b709] bg-clip-text text-transparent',
+    icon: 'material-symbols:pending-outline',
+    iconClass: 'text-[#c29722]',
+  },
+  partially_paid: {
+    label: 'Partially Paid',
+    textClass: 'bg-linear-to-b from-[#c29722] to-[#f6b709] bg-clip-text text-transparent',
+    icon: 'material-symbols:pending-outline',
+    iconClass: 'text-[#c29722]',
+  },
   overdue: {
     label: 'Overdue',
     textClass: 'bg-linear-to-b from-[#c00f0f] to-[#e44f4f] bg-clip-text text-transparent',
     icon: 'material-symbols:cancel-outline',
     iconClass: 'text-[#c00f0f]',
   },
+};
+
+const FALLBACK_STATUS: StatusDescriptor = {
+  label: 'Pending',
+  textClass: 'bg-linear-to-b from-[#c29722] to-[#f6b709] bg-clip-text text-transparent',
+  icon: 'material-symbols:pending-outline',
+  iconClass: 'text-[#c29722]',
 };
 
 type TenantCardProps = {
@@ -49,7 +68,7 @@ const TenantCard = ({
   onKebabClick,
   actionMenu,
 }: TenantCardProps) => {
-  const status = STATUS_MAP[tenant.billingStatus];
+  const status = STATUS_MAP[tenant.billingStatus] ?? FALLBACK_STATUS;
 
   const handleMore = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
