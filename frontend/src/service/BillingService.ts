@@ -13,6 +13,39 @@ import { FacilityService } from './FacilityService';
 import { UnitService } from './UnitService';
 
 export const BillingService = {
+  async getLandlordSummary() {
+    try {
+      const response = await api.get('/api/billings/landlord/summary');
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching landlord billing summary:', error);
+      throw error;
+    }
+  },
+
+  async getFacilitySummary(facilityId: string) {
+    try {
+      const response = await api.get(`/api/billings/facility/${facilityId}/summary`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching facility billing summary:', error);
+      throw error;
+    }
+  },
+
+  async getUserBillingDashboard(userId: string) {
+    try {
+      const response = await api.get(`/api/billings/users/${userId}/dashboard`);
+      return response.data;
+    } catch (error) {
+      const status = (error as { response?: { status?: number } })?.response?.status;
+      if (status !== 404) {
+        console.error('Error fetching user billing dashboard:', error);
+      }
+      throw error;
+    }
+  },
+
   async getBillings(params: z.infer<typeof GetBillingsQuerySchema>): Promise<GetBillingsQuery> {
     const response = await api.get<GetBillingsQuery>('/api/billings', {
       params: { q: JSON.stringify(params) },
