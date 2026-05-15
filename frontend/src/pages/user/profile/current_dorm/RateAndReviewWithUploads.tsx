@@ -9,7 +9,7 @@ import SideBar from '../../../../components/user/SideBar';
 import BreadcrumbHeader from '../../../../components/general/Breadcrumb';
 import ProgressBar from '../../../../components/user/ProgressBar';
 import placeholder from '../../../../../assets/one_sapphire_place.png';
-import ConfirmReview from '../../../../components/user/Profile/ConfirmReview'; 
+import ConfirmReview from '../../../../components/user/Profile/ConfirmReview';
 
 const RateAndReview: FunctionComponent = () => {
   const navigate = useNavigate();
@@ -83,7 +83,8 @@ const RateAndReview: FunctionComponent = () => {
                       <div className="h-[195px] w-[928px] rounded-xl border-whitesmoke-200 border-solid border box-border flex items-center gap-2.5">
                         <img
                           className="h-[195px] w-[305px] rounded-tl-xl rounded-tr-none rounded-br-none rounded-bl-xl object-cover"
-                          src={placeholder} alt=""
+                          src={placeholder}
+                          alt=""
                         />
                         <div className="h-[195px] flex-1 rounded-num-16 flex flex-col items-center py-num-0 px-num-12 box-border">
                           <div className="w-full h-[195px] flex flex-col items-center justify-center gap-0.5 max-w-full">

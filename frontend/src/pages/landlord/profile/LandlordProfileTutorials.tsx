@@ -38,7 +38,6 @@ const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose 
       total: 1,
       currentStep: 1,
     },
-
   ];
 
   if (!show) return null;

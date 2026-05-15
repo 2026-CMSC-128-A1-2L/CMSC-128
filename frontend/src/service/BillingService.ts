@@ -8,6 +8,8 @@ import type {
   UpdateBillingRequestBody,
 } from '../interface/billing';
 import { api } from './axiosInstance';
+import DownloadBillings from '../components/user/finance/DownloadBillings';
+import { ur } from 'zod/v4/locales';
 
 export const BillingService = {
   async getLandlordSummary() {
@@ -108,6 +110,39 @@ export const BillingService = {
       return response.data;
     } catch (error) {
       console.error('Error fetching unit billings:', error);
+      throw error;
+    }
+  },
+
+  async downloadBilling(userId: string) {
+    try {
+      const response = await api.get(`/api/billings/download/${userId}`, {
+        responseType: 'blob',
+      });
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+
+      const link = document.createElement('a');
+      link.href = url;
+
+      const contentDisposition = response.headers['content-disposition'];
+      let fileName = `billing_${userId}.pdf`;
+      if (contentDisposition) {
+        const fileNameMatch = contentDisposition.match(/filename="(.+)"/);
+        if (fileNameMatch?.[1]) fileName = fileNameMatch[1];
+      }
+
+      link.setAttribute('download', fileName);
+      document.body.appendChild(link);
+      link.click();
+
+      // Clean up
+      link.remove();
+      window.URL.revokeObjectURL(url);
+
+      return response.data;
+    } catch (error) {
+      console.error('Error downloading billing PDF:', error);
       throw error;
     }
   },

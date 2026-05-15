@@ -166,8 +166,18 @@ const fetchBillingsByMonth = async (month: string, year: number): Promise<Billin
 
 const getAvailableMonths = () => {
   const months = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December',
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
   ];
 
   const currentDate = new Date();
@@ -178,7 +188,10 @@ const getAvailableMonths = () => {
   for (let i = 0; i <= 2; i++) {
     let monthIndex = currentMonth - i;
     let year = currentYear;
-    if (monthIndex < 0) { monthIndex += 12; year -= 1; }
+    if (monthIndex < 0) {
+      monthIndex += 12;
+      year -= 1;
+    }
     availableMonths.push({
       name: months[monthIndex],
       month: monthIndex,
@@ -235,7 +248,9 @@ const TenantBillingsTab: FunctionComponent = () => {
     }
   }, [selectedMonth]);
 
-  useEffect(() => { loadBillings(); }, [loadBillings]);
+  useEffect(() => {
+    loadBillings();
+  }, [loadBillings]);
 
   const handleStatusChange = async (billingId: string, status: Billing['paymentStatus']) => {
     setBillings((prev) =>
@@ -255,7 +270,11 @@ const TenantBillingsTab: FunctionComponent = () => {
   };
 
   const handleAddSubmit = async (data: {
-    room: string; fullName: string; rent: number; utilities: number; miscFees: number;
+    room: string;
+    fullName: string;
+    rent: number;
+    utilities: number;
+    miscFees: number;
   }) => {
     console.log('Add billing:', data);
     setIsAddPopupOpen(false);
@@ -298,12 +317,18 @@ const TenantBillingsTab: FunctionComponent = () => {
 
               {isMonthDropdownOpen && (
                 <>
-                  <div className="fixed inset-0 z-10" onClick={() => setIsMonthDropdownOpen(false)} />
+                  <div
+                    className="fixed inset-0 z-10"
+                    onClick={() => setIsMonthDropdownOpen(false)}
+                  />
                   <div className="absolute top-full right-0 mt-1 w-[150px] z-20 bg-white border border-whitesmoke-200 rounded-lg shadow-lg overflow-hidden">
                     {availableMonths.map((month, index) => (
                       <div
                         key={`${month.month}-${month.year}`}
-                        onClick={() => { setSelectedMonth(month); setIsMonthDropdownOpen(false); }}
+                        onClick={() => {
+                          setSelectedMonth(month);
+                          setIsMonthDropdownOpen(false);
+                        }}
                         className={`w-full px-3 py-2 text-[12px] font-semibold text-center cursor-pointer transition-colors font-inter ${
                           selectedMonth.displayName === month.displayName
                             ? 'bg-darkslategray-200 text-white'
@@ -340,7 +365,10 @@ const TenantBillingsTab: FunctionComponent = () => {
               <tbody>
                 {isLoading && (
                   <tr>
-                    <td colSpan={TABLE_COLUMNS.length} className="py-12 text-center text-darkslategray-100 text-[13px]">
+                    <td
+                      colSpan={TABLE_COLUMNS.length}
+                      className="py-12 text-center text-darkslategray-100 text-[13px]"
+                    >
                       Loading billings...
                     </td>
                   </tr>
@@ -348,24 +376,28 @@ const TenantBillingsTab: FunctionComponent = () => {
 
                 {!isLoading && billings.length === 0 && (
                   <tr>
-                    <td colSpan={TABLE_COLUMNS.length} className="py-12 text-center text-darkslategray-100 text-[13px]">
+                    <td
+                      colSpan={TABLE_COLUMNS.length}
+                      className="py-12 text-center text-darkslategray-100 text-[13px]"
+                    >
                       No billings found for {selectedMonth.displayName}
                     </td>
                   </tr>
                 )}
 
-                {!isLoading && billings.map((billing) => (
-                  <BillingRow
-                    key={billing._id}
-                    billing={billing}
-                    roomNumber={getRoomNumber(billing)}
-                    tenantName={getTenantName(billing)}
-                    onStatusChange={handleStatusChange}
-                    onEditClick={handleEditClick}
-                    isOpen={openDropdownId === billing._id}
-                    onToggle={(id) => setOpenDropdownId(openDropdownId === id ? null : id)}
-                  />
-                ))}
+                {!isLoading &&
+                  billings.map((billing) => (
+                    <BillingRow
+                      key={billing._id}
+                      billing={billing}
+                      roomNumber={getRoomNumber(billing)}
+                      tenantName={getTenantName(billing)}
+                      onStatusChange={handleStatusChange}
+                      onEditClick={handleEditClick}
+                      isOpen={openDropdownId === billing._id}
+                      onToggle={(id) => setOpenDropdownId(openDropdownId === id ? null : id)}
+                    />
+                  ))}
               </tbody>
             </table>
           </div>
@@ -382,7 +414,10 @@ const TenantBillingsTab: FunctionComponent = () => {
 
       <EditBillingPopup
         isOpen={isEditPopupOpen}
-        onClose={() => { setIsEditPopupOpen(false); setSelectedBilling(null); }}
+        onClose={() => {
+          setIsEditPopupOpen(false);
+          setSelectedBilling(null);
+        }}
         billing={selectedBilling}
         onSave={handleSaveEdit}
       />

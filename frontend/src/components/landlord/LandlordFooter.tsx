@@ -1,5 +1,5 @@
-import { Icon } from "@iconify/react";
-import AtlasLogo from "../../../assets/logo_atlas_text.svg?react";
+import { Icon } from '@iconify/react';
+import AtlasLogo from '../../../assets/logo_atlas_text.svg?react';
 
 const LandlordFooter = () => {
   return (

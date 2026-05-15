@@ -33,7 +33,10 @@ const RegistrationVerification: FunctionComponent<RegistrationVerificationProps>
 
           {/* Info banner */}
           <div className="self-stretch rounded-xl bg-lightcyan dark:bg-[#12342e] border-teal-100 dark:border-[#72cbb8] border-solid border box-border flex items-center py-0 px-6 gap-6 text-[12px] text-darkslategray dark:text-[#a4acba] font-lora">
-            <Icon icon="material-symbols:info-outline-rounded" className="h-6 w-6 shrink-0 my-4 text-teal-600 dark:text-[#72cbb8]" />
+            <Icon
+              icon="material-symbols:info-outline-rounded"
+              className="h-6 w-6 shrink-0 my-4 text-teal-600 dark:text-[#72cbb8]"
+            />
             <div className="flex-1 flex items-center justify-center py-4">
               <div className="flex-1 relative tracking-[0.02em] font-semibold">
                 <span>No uploads required right now. </span>

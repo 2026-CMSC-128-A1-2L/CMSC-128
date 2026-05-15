@@ -19,7 +19,9 @@ const CurrentDormToVerificationSwitch = ({ activeTab, setActiveTab }: SwitchProp
         <div
           onClick={() => setActiveTab('dorm')}
           className={`relative z-10 w-[240px] h-[48px] flex items-center justify-center cursor-pointer transition-colors duration-300 ${
-            activeTab === 'dorm' ? 'text-white' : 'text-slategray hover:text-teal-800 dark:text-[#a4acba] dark:hover:text-[#72cbb8]'
+            activeTab === 'dorm'
+              ? 'text-white'
+              : 'text-slategray hover:text-teal-800 dark:text-[#a4acba] dark:hover:text-[#72cbb8]'
           }`}
         >
           <div className="text-[14px] font-bold tracking-wider uppercase">Current Dorm</div>
@@ -29,7 +31,9 @@ const CurrentDormToVerificationSwitch = ({ activeTab, setActiveTab }: SwitchProp
         <div
           onClick={() => setActiveTab('verification')}
           className={`relative z-10 w-[240px] h-[48px] flex items-center justify-center cursor-pointer transition-colors duration-300 ${
-            activeTab === 'verification' ? 'text-white' : 'text-slategray hover:text-teal-800 dark:text-[#a4acba] dark:hover:text-[#72cbb8]'
+            activeTab === 'verification'
+              ? 'text-white'
+              : 'text-slategray hover:text-teal-800 dark:text-[#a4acba] dark:hover:text-[#72cbb8]'
           }`}
         >
           <div className="text-[14px] font-bold tracking-wider uppercase">Verification Status</div>

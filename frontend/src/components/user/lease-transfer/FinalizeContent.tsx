@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import InfoIcon from '../../../../assets/infoicon_icon.svg';
 import FinalizeDisplayLines from './FinalizeDisplayLines';
 import CheckboxItem from '../user-report/CheckboxItem';
-import ConfirmTransfer1 from '../../../components/user/Profile/ConfirmTransfer1'; 
+import ConfirmTransfer1 from '../../../components/user/Profile/ConfirmTransfer1';
 import ConfirmTransfer2 from '../Profile/ConfirmTransfer2';
 
 interface FinalizeContentProps {
@@ -29,15 +29,15 @@ export default function FinalizeContent(props: FinalizeContentProps) {
   };
 
   const onNext = useCallback(() => {
-    setShowSuccessPopup(false); 
-    setShowSuccessPopup2(true); 
-  }, []); 
+    setShowSuccessPopup(false);
+    setShowSuccessPopup2(true);
+  }, []);
 
   const closePopup2 = () => {
-    setShowSuccessPopup2(false); 
-    navigate('/profile-switcher'); 
-  }
-  
+    setShowSuccessPopup2(false);
+    navigate('/profile-switcher');
+  };
+
   const [isAgreed, setIsAgreed] = useState(false);
   return (
     <>

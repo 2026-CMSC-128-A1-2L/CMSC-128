@@ -5,7 +5,7 @@ import LandlordLayout from '../../../components/landlord/LandlordLayout';
 import { BUILDINGS } from '../../../data/buildings';
 import type { Building } from '../../../data/buildings';
 
-import RoomtypeModal from '../../../components/landlord/LandlordProperties/RoomtypeModal'
+import RoomtypeModal from '../../../components/landlord/LandlordProperties/RoomtypeModal';
 import React from 'react';
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
@@ -27,8 +27,14 @@ const Button = (props: {
   );
 };
 
-const ListingCard = (props: { facilityName: string; listingName: string; image?: string; onClick?: React.MouseEventHandler; setModal?:any}) => {
-  const { facilityName, listingName, image,setModal } = props;
+const ListingCard = (props: {
+  facilityName: string;
+  listingName: string;
+  image?: string;
+  onClick?: React.MouseEventHandler;
+  setModal?: any;
+}) => {
+  const { facilityName, listingName, image, setModal } = props;
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
@@ -36,10 +42,15 @@ const ListingCard = (props: { facilityName: string; listingName: string; image?:
       className={`relative bg-aliceblue border-whitesmoke border-solid border box-border overflow-hidden flex flex-col items-start text-left text-black font-inter transition-all duration-300
         ${isExpanded ? 'w-66 h-fit rounded-num-16 shadow-sm' : 'w-66 h-56 rounded-[15.31px]'}`}
     >
-      <img className="w-66 h-30 object-cover cursor-pointer" src={image} alt={facilityName} onClick={()=>{
-                        console.log("printame")
-                        setModal(true)
-                      }} />
+      <img
+        className="w-66 h-30 object-cover cursor-pointer"
+        src={image}
+        alt={facilityName}
+        onClick={() => {
+          console.log('printame');
+          setModal(true);
+        }}
+      />
       <div className="w-full flex flex-col py-2 px-3 gap-2">
         <div className="w-full flex flex-col items-start gap-0">
           <div className="w-full h-fit flex items-start gap-1">
@@ -149,8 +160,6 @@ const AddListingCard = () => (
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 const BuildingInfo = () => {
-
-
   const navigate = useNavigate();
   const location = useLocation();
   const { id } = useParams<{ id: string }>();
@@ -195,7 +204,6 @@ const BuildingInfo = () => {
   const approvedRooms = roomTypes.filter((r) => r.status === 'approved');
 
   return (
-    
     <LandlordLayout
       activeSidebarItem="properties"
       breadcrumbs={[{ label: 'Properties', to: '/landlord/properties' }, { label: name }]}
@@ -289,10 +297,9 @@ const BuildingInfo = () => {
             <div className="self-stretch flex flex-col items-start justify-center gap-8">
               <div className="flex flex-col items-start gap-4">
                 <b className="relative tracking-num--0_01">Room Types</b>
-                <div className="w-full flex items-center justify-between gap-4 text-left text-black" 
-                      >
+                <div className="w-full flex items-center justify-between gap-4 text-left text-black">
                   {approvedRooms.map((listing) => (
-                      <>
+                    <>
                       <ListingCard
                         key={listing.id}
                         facilityName={name}
@@ -301,56 +308,61 @@ const BuildingInfo = () => {
                         setModal={setModal}
                       />
 
-                    <RoomtypeModal
-                    key={listing.id}
-                    openModal={modal}
-                    closeModal={() => setModal(false)}
-                    >
-                      <div className='flex flex-col w-full'>
-                        <div className='flex mx-auto flex-col w-fit'>
-                          <p>{name}</p>
-                          <p>{listing.name}</p>
-                          
-                        </div>
-                        {/* list out all rooms of the current room type */}
-                        <div className='grid grid-cols-3 mx-auto text-center'>
-                        <p>Room Number</p> <p>Current Occupants</p>  <p>Status</p>
-                        {rooms.filter((room)=>room.roomType===listing.name).map((room)=>(
-                          
-                          <React.Fragment key={room.id}>
-                            <p>{room.roomNumber}</p>
-                            {/* get count of all occupants per room */}
-                            <p>{tenants.filter((tenant)=>tenant.roomNumber===room.roomNumber).length}</p>
-                            {/* get first item that appears when filtering for roomType object associated with the room */}
-                            <p>{listing.status}</p>
-
-                          </React.Fragment>
-                        ))}
-                        </div>
-                        {/* get all occupants in that room type */}
-                        {
-                          <div>
-                            <p>Tenants</p>
-                          <div>{
-                            rooms.filter((room)=>room.roomType===listing.name).map((room)=>(
-                              <React.Fragment key={room.id}>
-                                {tenants.filter((tenant)=>tenant.roomNumber===room.roomNumber).map((tenant)=>(
-                                  <React.Fragment key={tenant.name}>
-                                  {tenant.name}
-                                  </React.Fragment>
-                                ))}
-                              </React.Fragment>
-                            ))
-                          }</div>
-
+                      <RoomtypeModal
+                        key={listing.id}
+                        openModal={modal}
+                        closeModal={() => setModal(false)}
+                      >
+                        <div className="flex flex-col w-full">
+                          <div className="flex mx-auto flex-col w-fit">
+                            <p>{name}</p>
+                            <p>{listing.name}</p>
                           </div>
-                        
-                        }
-                      </div>
-                      
-                    </RoomtypeModal>
+                          {/* list out all rooms of the current room type */}
+                          <div className="grid grid-cols-3 mx-auto text-center">
+                            <p>Room Number</p> <p>Current Occupants</p> <p>Status</p>
+                            {rooms
+                              .filter((room) => room.roomType === listing.name)
+                              .map((room) => (
+                                <React.Fragment key={room.id}>
+                                  <p>{room.roomNumber}</p>
+                                  {/* get count of all occupants per room */}
+                                  <p>
+                                    {
+                                      tenants.filter(
+                                        (tenant) => tenant.roomNumber === room.roomNumber,
+                                      ).length
+                                    }
+                                  </p>
+                                  {/* get first item that appears when filtering for roomType object associated with the room */}
+                                  <p>{listing.status}</p>
+                                </React.Fragment>
+                              ))}
+                          </div>
+                          {/* get all occupants in that room type */}
+                          {
+                            <div>
+                              <p>Tenants</p>
+                              <div>
+                                {rooms
+                                  .filter((room) => room.roomType === listing.name)
+                                  .map((room) => (
+                                    <React.Fragment key={room.id}>
+                                      {tenants
+                                        .filter((tenant) => tenant.roomNumber === room.roomNumber)
+                                        .map((tenant) => (
+                                          <React.Fragment key={tenant.name}>
+                                            {tenant.name}
+                                          </React.Fragment>
+                                        ))}
+                                    </React.Fragment>
+                                  ))}
+                              </div>
+                            </div>
+                          }
+                        </div>
+                      </RoomtypeModal>
                     </>
-                      
                   ))}
                   <AddListingCard />
                 </div>

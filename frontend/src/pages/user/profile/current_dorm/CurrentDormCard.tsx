@@ -29,7 +29,11 @@ export default function CurrentDormCard({
     <div className="flex flex-col gap-5 max-w-4xl mx-auto dark:text-[#edf6f4]">
       <div className="max-w-4xl mx-auto rounded-xl border border-[#f0f0f0] bg-white overflow-hidden shadow-sm text-black dark:border-[#303331] dark:bg-[#101111] dark:text-[#edf6f4] dark:shadow-none">
         {/* Property Image */}
-        <img src={propertyImageSrc} alt={propertyName} className="w-[1200px] h-[400px] object-cover" />
+        <img
+          src={propertyImageSrc}
+          alt={propertyName}
+          className="w-[1200px] h-[400px] object-cover"
+        />
 
         <div className="p-6">
           {/* Property Title */}
@@ -55,7 +59,6 @@ export default function CurrentDormCard({
               <p className="text-xs">Lease End</p>
             </div>
           </div>
-
         </div>
       </div>
       <div className="self-stretch flex items-start justify-center pt-num-24 px-num-32 pb-20 gap-6 text-num-14 text-black dark:text-[#edf6f4]">
@@ -188,7 +191,7 @@ export default function CurrentDormCard({
 
               <button
                 className="px-4 py-1 text-gray-100 bg-[#f1f5f9] rounded-full dark:bg-[#202123] dark:text-[#a4acba]"
-                onClick={() => { }}
+                onClick={() => {}}
               >
                 Proceed
               </button>
@@ -224,7 +227,7 @@ export default function CurrentDormCard({
 
               <button
                 className="px-4 py-1 text-gray-100 bg-[#f1f5f9] rounded-full dark:bg-[#202123] dark:text-[#a4acba]"
-                onClick={() => { }}
+                onClick={() => {}}
               >
                 Proceed
               </button>
@@ -263,7 +266,7 @@ export default function CurrentDormCard({
 
               <button
                 className="px-4 py-1  text-gray-100  bg-[#f1f5f9] rounded-full"
-                onClick={() => { }}
+                onClick={() => {}}
               >
                 Proceed
               </button>

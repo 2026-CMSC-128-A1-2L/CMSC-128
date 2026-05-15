@@ -1,5 +1,5 @@
-import { Icon } from "@iconify/react";
-import type { FunctionComponent } from "react";
+import { Icon } from '@iconify/react';
+import type { FunctionComponent } from 'react';
 
 interface InboxMessageProps {
   title?: string;
@@ -13,10 +13,10 @@ interface InboxMessageProps {
 }
 
 const InboxMessage: FunctionComponent<InboxMessageProps> = ({
-  title = "Verification Status",
-  body = "Hi Daphne! Your verification has been approved!",
-  time = "2m ago",
-  icon = "iconamoon:notification",
+  title = 'Verification Status',
+  body = 'Hi Daphne! Your verification has been approved!',
+  time = '2m ago',
+  icon = 'iconamoon:notification',
   onClick,
   active = false,
   unread = false,
@@ -26,8 +26,8 @@ const InboxMessage: FunctionComponent<InboxMessageProps> = ({
     <div
       className={`w-full relative rounded-xl border-solid border box-border flex flex-col pt-3 px-3 pb-4 gap-1 text-right text-[0.5rem] font-lora cursor-pointer transition-colors ${
         active
-          ? "bg-lightcyan border-teal-200 text-teal-800 shadow-sm shadow-teal/5 dark:bg-[#102c27] dark:border-[#72cbb8]/50 dark:text-[#b9eadf] dark:shadow-none"
-          : "bg-white border-whitesmoke text-slategray hover:bg-whitesmoke dark:bg-[#101111] dark:border-[#303331] dark:text-[#a4acba] dark:hover:bg-[#171918]"
+          ? 'bg-lightcyan border-teal-200 text-teal-800 shadow-sm shadow-teal/5 dark:bg-[#102c27] dark:border-[#72cbb8]/50 dark:text-[#b9eadf] dark:shadow-none'
+          : 'bg-white border-whitesmoke text-slategray hover:bg-whitesmoke dark:bg-[#101111] dark:border-[#303331] dark:text-[#a4acba] dark:hover:bg-[#171918]'
       }`}
       onClick={onClick}
     >
@@ -52,7 +52,7 @@ const InboxMessage: FunctionComponent<InboxMessageProps> = ({
           <div className="flex items-center justify-center py-0.5 shrink-0">
             <Icon
               icon={icon}
-              className={`w-5 h-5 ${active || unread ? "text-teal dark:text-[#72cbb8]" : "text-unselected dark:text-[#a4acba]"}`}
+              className={`w-5 h-5 ${active || unread ? 'text-teal dark:text-[#72cbb8]' : 'text-unselected dark:text-[#a4acba]'}`}
             />
           </div>
 
@@ -60,7 +60,7 @@ const InboxMessage: FunctionComponent<InboxMessageProps> = ({
             {/* Title & Badge Row */}
             <div className="flex items-center justify-between gap-2 h-5">
               <b
-                className={`flex-1 truncate leading-none ${unread ? "font-bold" : "font-semibold"}`}
+                className={`flex-1 truncate leading-none ${unread ? 'font-bold' : 'font-semibold'}`}
               >
                 {title.length > 25 ? `${title.substring(0, 25)}...` : title}
               </b>

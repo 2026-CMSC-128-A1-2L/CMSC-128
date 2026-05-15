@@ -9,20 +9,18 @@ import ConfirmReport from '../../../components/user/Profile/ConfirmReport';
 import { useNavigate } from 'react-router-dom';
 import { useCallback, useState } from 'react';
 
-
 export default function FinalizeContent(props: FinalizeContentProps) {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
   const onUserProfileTextClick = useCallback(() => {
-      setShowSuccessPopup(true);
-    }, []);
-  
+    setShowSuccessPopup(true);
+  }, []);
+
   const closePopup = () => {
     setShowSuccessPopup(false);
     navigate('/profile-switcher');
   };
-
 
   const { reportStages, setReportStages, reportJsonData } = props;
   return (
@@ -32,7 +30,7 @@ export default function FinalizeContent(props: FinalizeContentProps) {
           <ConfirmReport onClose={closePopup} />
         </div>
       )}
-      
+
       <FileUploadCard title="Review Photo 1" />
       <FileUploadCard title="Review Photo 2" />
 

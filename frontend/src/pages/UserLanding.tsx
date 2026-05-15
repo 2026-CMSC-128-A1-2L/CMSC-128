@@ -49,7 +49,7 @@ const UserLanding: FunctionComponent = () => {
   const [showScrollTop, setShowScrollTop] = useState(false);
 
   const [openProvides, setOpenProvides] = useState<number | null>(null);
-  const toggleProvides = (i: number) => setOpenProvides(prev => (prev === i ? null : i));
+  const toggleProvides = (i: number) => setOpenProvides((prev) => (prev === i ? null : i));
 
   const providesItems = [
     {
@@ -72,7 +72,8 @@ const UserLanding: FunctionComponent = () => {
     },
     {
       num: '04',
-      title: 'Greater transparency, accessibility, and accountability in dormitory-related processes',
+      title:
+        'Greater transparency, accessibility, and accountability in dormitory-related processes',
       detail:
         'Every action in ATLAS is logged and traceable. Tenants can see exactly where their application stands, and landlords are held accountable to the information they publish — fostering a fairer, more transparent housing ecosystem.',
     },
@@ -83,7 +84,6 @@ const UserLanding: FunctionComponent = () => {
         'Each listing includes emergency contacts, hazard disclosures, and safety certifications so tenants can make informed decisions before committing to a place to live.',
     },
   ];
-
 
   // Scroll reveal animations -- watchers for the specific section, and ilalabas yung section once it's vieweed or like scrolled na
   const whatIsReveal = useScrollReveal();
@@ -459,7 +459,13 @@ const UserLanding: FunctionComponent = () => {
               </div>
               <div className="w-[1173px] flex flex-col items-end text-center text-num-36 font-poppins">
                 {providesItems.map((item, i) => {
-                  const delays = ['delay-100','delay-200','delay-300','delay-[400ms]','delay-[500ms]'];
+                  const delays = [
+                    'delay-100',
+                    'delay-200',
+                    'delay-300',
+                    'delay-[400ms]',
+                    'delay-[500ms]',
+                  ];
                   const isOpen = openProvides === i;
                   return (
                     <div

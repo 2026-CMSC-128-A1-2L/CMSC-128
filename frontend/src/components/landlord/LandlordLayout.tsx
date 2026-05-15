@@ -15,15 +15,11 @@ export type BreadcrumbItem = {
 type LandlordLayoutProps = {
   activeSidebarItem?: SideBarLandlordItemKey;
   breadcrumbs?: BreadcrumbItem[];
-  activeTab?:string;
+  activeTab?: string;
   children: ReactNode;
 };
 
-const LandlordLayout = ({
-  activeSidebarItem,
-  breadcrumbs = [],
-  children,
-}: LandlordLayoutProps) => {
+const LandlordLayout = ({ activeSidebarItem, breadcrumbs = [], children }: LandlordLayoutProps) => {
   const navigate = useNavigate();
   const [showHelp, setShowHelp] = useState(false);
 
@@ -33,8 +29,8 @@ const LandlordLayout = ({
       <div className="relative z-10 flex flex-1 overflow-hidden">
         <SideBarLandlord
           activeItem={activeSidebarItem}
-          onProfileClick={() => navigate("/landlord/profile/switcher")}
-          onAddListing={() => navigate("/landlord/properties/new")}
+          onProfileClick={() => navigate('/landlord/profile/switcher')}
+          onAddListing={() => navigate('/landlord/properties/new')}
         />
 
         <div className="flex min-w-0 flex-1 flex-col overflow-hidden pl-[68px] md:pl-0">
@@ -64,7 +60,7 @@ const LandlordLayout = ({
                         ) : (
                           <span
                             className={`${labelClass} text-[#2f3136] dark:text-[#d7e0ef]`}
-                            aria-current={isLast ? "page" : undefined}
+                            aria-current={isLast ? 'page' : undefined}
                           >
                             {item.label}
                           </span>

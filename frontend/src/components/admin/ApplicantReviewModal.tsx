@@ -98,7 +98,10 @@ const ApplicantReviewModal = ({
             </p>
             {applicant.contact && (
               <p className="mt-1 font-['Inter',sans-serif] text-[14px] font-medium text-[#666] dark:text-[#a4acba]">
-                Contact: <span className="font-bold text-[#2f3136] dark:text-[#d7e0ef]">{applicant.contact}</span>
+                Contact:{' '}
+                <span className="font-bold text-[#2f3136] dark:text-[#d7e0ef]">
+                  {applicant.contact}
+                </span>
               </p>
             )}
           </div>
@@ -107,7 +110,9 @@ const ApplicantReviewModal = ({
           {applicant.userType === 'Student' && (
             <div className="mb-6 grid grid-cols-2 gap-4 rounded-[16px] border border-[#e5e7eb] dark:border-[#303331] bg-[#f8fffe] dark:bg-[#17201d] p-5">
               <label className="flex flex-col gap-1.5">
-                <span className="font-['Inter',sans-serif] text-[14px] font-bold text-[#666] dark:text-[#a4acba]">Student Number</span>
+                <span className="font-['Inter',sans-serif] text-[14px] font-bold text-[#666] dark:text-[#a4acba]">
+                  Student Number
+                </span>
                 <input
                   value={studentNumber}
                   onChange={(e) => onStudentNumberChange(e.target.value)}
@@ -116,7 +121,9 @@ const ApplicantReviewModal = ({
                 />
               </label>
               <label className="flex flex-col gap-1.5">
-                <span className="font-['Inter',sans-serif] text-[14px] font-bold text-[#666] dark:text-[#a4acba]">Degree Program</span>
+                <span className="font-['Inter',sans-serif] text-[14px] font-bold text-[#666] dark:text-[#a4acba]">
+                  Degree Program
+                </span>
                 <input
                   value={degreeProgram}
                   onChange={(e) => onDegreeProgramChange(e.target.value)}
@@ -142,7 +149,10 @@ const ApplicantReviewModal = ({
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="flex h-10 w-10 items-center justify-center rounded-[12px] bg-[#edf7f5] dark:bg-[#12342e]">
-                      <Icon icon="solar:document-text-bold" className="h-5 w-5 text-[#096c5b] dark:text-[#72cbb8]" />
+                      <Icon
+                        icon="solar:document-text-bold"
+                        className="h-5 w-5 text-[#096c5b] dark:text-[#72cbb8]"
+                      />
                     </div>
                     <div>
                       <p className="font-['Inter',sans-serif] text-[16px] font-bold text-[#001d18] dark:text-[#d7e0ef]">
@@ -153,7 +163,9 @@ const ApplicantReviewModal = ({
                       </p>
                     </div>
                   </div>
-                  <span className={`inline-flex items-center rounded-full border px-3 py-1 font-['Inter',sans-serif] text-[12px] font-semibold ${DOC_STATUS_STYLES[doc.status] ?? DOC_STATUS_STYLES.pending}`}>
+                  <span
+                    className={`inline-flex items-center rounded-full border px-3 py-1 font-['Inter',sans-serif] text-[12px] font-semibold ${DOC_STATUS_STYLES[doc.status] ?? DOC_STATUS_STYLES.pending}`}
+                  >
                     {doc.status.charAt(0).toUpperCase() + doc.status.slice(1)}
                   </span>
                 </div>

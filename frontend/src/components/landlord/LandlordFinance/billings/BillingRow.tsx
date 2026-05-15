@@ -16,11 +16,16 @@ type PaymentStatus = 'unpaid' | 'paid' | 'overdue' | 'partially_paid';
 
 const getStatusDisplay = (status: PaymentStatus): string => {
   switch (status) {
-    case 'paid': return 'Paid';
-    case 'partially_paid': return 'Partial';
-    case 'overdue': return 'Overdue';
-    case 'unpaid': return 'Pending';
-    default: return 'Select';
+    case 'paid':
+      return 'Paid';
+    case 'partially_paid':
+      return 'Partial';
+    case 'overdue':
+      return 'Overdue';
+    case 'unpaid':
+      return 'Pending';
+    default:
+      return 'Select';
   }
 };
 
@@ -68,7 +73,9 @@ const BillingRow: FunctionComponent<BillingRowProps> = ({
   // Close dropdown on any scroll so the fixed position doesn't drift
   useEffect(() => {
     if (!isOpen) return;
-    const handleScroll = () => { onToggle?.(billing._id); };
+    const handleScroll = () => {
+      onToggle?.(billing._id);
+    };
     window.addEventListener('scroll', handleScroll, true); // capture phase catches all scroll events
     return () => window.removeEventListener('scroll', handleScroll, true);
   }, [isOpen, onToggle, billing._id]);
@@ -133,60 +140,65 @@ const BillingRow: FunctionComponent<BillingRowProps> = ({
           </button>
         </div>
 
-        {isOpen && dropdownPos && createPortal(
-          <>
-            <div
-              className="fixed inset-0 z-40"
-              onClick={(e) => { e.stopPropagation(); onToggle?.(billing._id); }}
-            />
-            <div
-              className="fixed z-50 w-[100px] bg-white border border-whitesmoke-200 rounded-lg shadow-lg overflow-hidden"
-              style={{
-                top: dropdownPos.top,
-                left: dropdownPos.left,
-                transform: 'translateX(-50%)',
-              }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              {statusOptions.map((status) => {
-                const isSelected = selectedStatus === status;
-                return (
-                  <button
-                    key={status}
-                    onClick={() => handleStatusChange(status)}
-                    className={`w-full px-2 sm:px-3 py-2 text-[8px] sm:text-[10px] font-bold text-center hover:bg-gray-50 transition-colors font-inter ${
-                      isSelected ? statusGradients[status] : ''
-                    }`}
-                  >
-                    {isSelected ? (
-                      <span className="text-white">{getStatusDisplay(status)}</span>
-                    ) : (
-                      <span
-                        style={{
-                          backgroundImage: `linear-gradient(to bottom, ${
-                            status === 'paid'
-                              ? '#5dc2a8, #0c8873'
-                              : status === 'partially_paid'
-                                ? '#ffc273, #fa7900'
-                                : status === 'unpaid'
-                                  ? '#c29722, #f6b709'
-                                  : '#c00f0f, #e44f4f'
-                          })`,
-                          WebkitBackgroundClip: 'text',
-                          WebkitTextFillColor: 'transparent',
-                          backgroundClip: 'text',
-                        }}
-                      >
-                        {getStatusDisplay(status)}
-                      </span>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-          </>,
-          document.body,
-        )}
+        {isOpen &&
+          dropdownPos &&
+          createPortal(
+            <>
+              <div
+                className="fixed inset-0 z-40"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onToggle?.(billing._id);
+                }}
+              />
+              <div
+                className="fixed z-50 w-[100px] bg-white border border-whitesmoke-200 rounded-lg shadow-lg overflow-hidden"
+                style={{
+                  top: dropdownPos.top,
+                  left: dropdownPos.left,
+                  transform: 'translateX(-50%)',
+                }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                {statusOptions.map((status) => {
+                  const isSelected = selectedStatus === status;
+                  return (
+                    <button
+                      key={status}
+                      onClick={() => handleStatusChange(status)}
+                      className={`w-full px-2 sm:px-3 py-2 text-[8px] sm:text-[10px] font-bold text-center hover:bg-gray-50 transition-colors font-inter ${
+                        isSelected ? statusGradients[status] : ''
+                      }`}
+                    >
+                      {isSelected ? (
+                        <span className="text-white">{getStatusDisplay(status)}</span>
+                      ) : (
+                        <span
+                          style={{
+                            backgroundImage: `linear-gradient(to bottom, ${
+                              status === 'paid'
+                                ? '#5dc2a8, #0c8873'
+                                : status === 'partially_paid'
+                                  ? '#ffc273, #fa7900'
+                                  : status === 'unpaid'
+                                    ? '#c29722, #f6b709'
+                                    : '#c00f0f, #e44f4f'
+                            })`,
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                            backgroundClip: 'text',
+                          }}
+                        >
+                          {getStatusDisplay(status)}
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </>,
+            document.body,
+          )}
       </td>
     </tr>
   );

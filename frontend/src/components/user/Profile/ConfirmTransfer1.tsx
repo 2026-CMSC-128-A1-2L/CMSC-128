@@ -9,15 +9,11 @@ type Props = {
 const ConfirmTransfer1: FunctionComponent<Props> = ({ onConfirm, onClose }) => {
   return (
     <div className="w-full max-w-md mx-auto relative rounded-2xl bg-white shadow-xl overflow-hidden flex flex-col items-center p-8 box-border text-center font-inter">
-      
       <div className="self-stretch flex flex-col items-center py-8 gap-6">
         {/* Warning Icon Section */}
         <div className="flex flex-col items-center gap-4">
           <div className="bg-orange-50 rounded-full flex items-center justify-center p-4">
-            <Icon 
-              icon="solar:danger-triangle-bold-duotone" 
-              className="h-20 w-20 text-orange-500" 
-            />
+            <Icon icon="solar:danger-triangle-bold-duotone" className="h-20 w-20 text-orange-500" />
           </div>
 
           {/* Text Section */}

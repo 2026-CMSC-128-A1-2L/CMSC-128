@@ -36,17 +36,19 @@ const seedTenants = async () => {
   const facility = await HousingFacility.create({
     name: 'Kopiko Heights',
     landlordId: landlord._id,
-    managers: [{
-      userId: landlord._id,
-      permissions: {
-        manageListings: true,
-        manageApplications: true,
-        manageBillings: true,
-        manageBookings: true,
-        deleteListings: false,
-        reportUsers: false,
+    managers: [
+      {
+        userId: landlord._id,
+        permissions: {
+          manageListings: true,
+          manageApplications: true,
+          manageBillings: true,
+          manageBookings: true,
+          deleteListings: false,
+          reportUsers: false,
+        },
       },
-    }],
+    ],
     location: { text: 'Batong Malake, Los Baños, Laguna' },
     type: 'off-campus',
     status: 'approved',
@@ -79,11 +81,46 @@ const seedTenants = async () => {
 
   // Tenant data
   const tenantData = [
-    { firstName: 'Daphne', lastName: 'Canape', email: 'dcanape@up.edu.ph', studentNumber: '202312345', address: 'Los Baños, Laguna', contact: '09121231212' },
-    { firstName: 'Liam', lastName: 'Larkin', email: 'llarkin@up.edu.ph', studentNumber: '202312346', address: 'Calamba, Laguna', contact: '08123456789' },
-    { firstName: 'Olivia', lastName: 'Oconnor', email: 'ooconnor@up.edu.ph', studentNumber: '202312347', address: 'Sta. Rosa, Laguna', contact: '07129990011' },
-    { firstName: 'Marco', lastName: 'Reyes', email: 'mreyes@up.edu.ph', studentNumber: '202312348', address: 'Bay, Laguna', contact: '09175551234' },
-    { firstName: 'Sofia', lastName: 'Cruz', email: 'scruz@up.edu.ph', studentNumber: '202312349', address: 'San Pablo, Laguna', contact: '09281234567' },
+    {
+      firstName: 'Daphne',
+      lastName: 'Canape',
+      email: 'dcanape@up.edu.ph',
+      studentNumber: '202312345',
+      address: 'Los Baños, Laguna',
+      contact: '09121231212',
+    },
+    {
+      firstName: 'Liam',
+      lastName: 'Larkin',
+      email: 'llarkin@up.edu.ph',
+      studentNumber: '202312346',
+      address: 'Calamba, Laguna',
+      contact: '08123456789',
+    },
+    {
+      firstName: 'Olivia',
+      lastName: 'Oconnor',
+      email: 'ooconnor@up.edu.ph',
+      studentNumber: '202312347',
+      address: 'Sta. Rosa, Laguna',
+      contact: '07129990011',
+    },
+    {
+      firstName: 'Marco',
+      lastName: 'Reyes',
+      email: 'mreyes@up.edu.ph',
+      studentNumber: '202312348',
+      address: 'Bay, Laguna',
+      contact: '09175551234',
+    },
+    {
+      firstName: 'Sofia',
+      lastName: 'Cruz',
+      email: 'scruz@up.edu.ph',
+      studentNumber: '202312349',
+      address: 'San Pablo, Laguna',
+      contact: '09281234567',
+    },
   ];
 
   for (let i = 0; i < tenantData.length; i++) {
@@ -131,10 +168,14 @@ const seedTenants = async () => {
     unit.currentRentals.push(rental._id);
     await unit.save();
 
-    console.log(`  ✓ Tenant: ${t.firstName} ${t.lastName} → ${unit.name} (${isShared ? 'shared' : 'single'})`);
+    console.log(
+      `  ✓ Tenant: ${t.firstName} ${t.lastName} → ${unit.name} (${isShared ? 'shared' : 'single'})`,
+    );
   }
 
-  console.log(`\nSeeded ${tenantData.length} tenants for landlord: ${landlord.firstName} ${landlord.lastName}`);
+  console.log(
+    `\nSeeded ${tenantData.length} tenants for landlord: ${landlord.firstName} ${landlord.lastName}`,
+  );
   console.log(`Facility: ${facility.name} (ID: ${facility._id})`);
 };
 

@@ -7,10 +7,14 @@ import { HousingFacility } from '../features/facility/facility.model.js';
 async function main() {
   await mongoose.connect(process.env.MONGO_URL!);
 
-  const applicants = await User.find({ verificationStatus: 'submitted' }).select('firstName lastName userType verificationStatus documents');
+  const applicants = await User.find({ verificationStatus: 'submitted' }).select(
+    'firstName lastName userType verificationStatus documents',
+  );
   console.log('=== VERIFICATION APPLICANTS (Applications page) ===');
   for (const a of applicants) {
-    console.log(`  ${a.firstName} ${a.lastName} (${a.userType}) - ${a.verificationStatus} - ${a.documents.length} doc(s)`);
+    console.log(
+      `  ${a.firstName} ${a.lastName} (${a.userType}) - ${a.verificationStatus} - ${a.documents.length} doc(s)`,
+    );
   }
 
   const reports = await Report.find().select('description status userId');

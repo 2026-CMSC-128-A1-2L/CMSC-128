@@ -1,24 +1,24 @@
-import LandlordHomepage from "../pages/landlord/dashboard/LandlordHomepage";
-import LandlordDashboard from "../pages/landlord/dashboard/LandlordHomepage";
-import LandlordMessages from "../pages/landlord/messages/LandlordMessages";
-import LandlordProperties from "../pages/landlord/properties/LandlordProperties";
-import LandlordManagers from "../pages/landlord/managers/LandlordManagersList";
-import LandlordTenants from "../pages/landlord/tenants/LandlordTenants";
-import LandlordVisits from "../pages/landlord/visits/LandlordVisits";
-import LandlordFinance from "../pages/landlord/finance/LandlordFinance";
-import LandlordSettings from "../pages/landlord/settings/LandlordSettings";
-import LandlordNewListing from "../pages/landlord/properties/LandlordNewListing";
-import AddBuilding from "../pages/landlord/properties/AddBuilding";
-import BuildingInfo from "../pages/landlord/properties/BuildingInfo";
-import LandlordTenantDetail from "../pages/landlord/tenants/LandlordTenantDetail";
-import LandlordUnvalidatedApplications from "../pages/landlord/tenants/LandlordUnvalidatedApplications";
-import LandlordUnvalidatedTenantDetail from "../pages/landlord/tenants/LandlordUnvalidatedTenantDetail";
-import LandlordManagersSpecific from "../pages/landlord/managers/LandlordManagerSpecific";
-import LandlordProfileSwitcher from "../pages/landlord/profile/ProfileSwitcherLandlord";
+import LandlordHomepage from '../pages/landlord/dashboard/LandlordHomepage';
+import LandlordDashboard from '../pages/landlord/dashboard/LandlordHomepage';
+import LandlordMessages from '../pages/landlord/messages/LandlordMessages';
+import LandlordProperties from '../pages/landlord/properties/LandlordProperties';
+import LandlordManagers from '../pages/landlord/managers/LandlordManagersList';
+import LandlordTenants from '../pages/landlord/tenants/LandlordTenants';
+import LandlordVisits from '../pages/landlord/visits/LandlordVisits';
+import LandlordFinance from '../pages/landlord/finance/LandlordFinance';
+import LandlordSettings from '../pages/landlord/settings/LandlordSettings';
+import LandlordNewListing from '../pages/landlord/properties/LandlordNewListing';
+import AddBuilding from '../pages/landlord/properties/AddBuilding';
+import BuildingInfo from '../pages/landlord/properties/BuildingInfo';
+import LandlordTenantDetail from '../pages/landlord/tenants/LandlordTenantDetail';
+import LandlordUnvalidatedApplications from '../pages/landlord/tenants/LandlordUnvalidatedApplications';
+import LandlordUnvalidatedTenantDetail from '../pages/landlord/tenants/LandlordUnvalidatedTenantDetail';
+import LandlordManagersSpecific from '../pages/landlord/managers/LandlordManagerSpecific';
+import LandlordProfileSwitcher from '../pages/landlord/profile/ProfileSwitcherLandlord';
 
-import { Route } from "react-router-dom";
-import LandlordPropertyFinance from "../pages/landlord/finance/LandlordPropertyFinance";
-import EditBuilding from "../pages/landlord/properties/EditBuilding";
+import { Route } from 'react-router-dom';
+import LandlordPropertyFinance from '../pages/landlord/finance/LandlordPropertyFinance';
+import EditBuilding from '../pages/landlord/properties/EditBuilding';
 
 const landlordRoutes = [
   <Route key="landlord-home" path="/landlord-homepage" element={<LandlordHomepage />} />,

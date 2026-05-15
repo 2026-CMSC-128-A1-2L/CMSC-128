@@ -251,8 +251,7 @@ export const acceptStudentInvite = async (token: string, emails: string[]) => {
       unitId: unit._id,
       status: 'active',
     }).session(session);
-    if (existingRental)
-      throw new AppError(409, 'You already have an active rental for this unit.');
+    if (existingRental) throw new AppError(409, 'You already have an active rental for this unit.');
 
     // Create active rental for the legacy tenant
     const rental = new Rental({

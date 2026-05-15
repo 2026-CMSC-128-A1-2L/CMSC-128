@@ -64,7 +64,8 @@ const RateAndReview: FunctionComponent = () => {
                     <div className="h-[195px] w-[928px] rounded-xl border-whitesmoke-200 border-solid border box-border flex items-center gap-2.5">
                       <img
                         className="h-[195px] w-[305px] rounded-tl-xl rounded-tr-none rounded-br-none rounded-bl-xl object-cover"
-                        src= {placeholder} alt=""
+                        src={placeholder}
+                        alt=""
                       />
                       <div className="h-[195px] flex-1 rounded-2xl flex flex-col items-center py-num-0 px-num-12 box-border">
                         <div className="w-full h-[195px] flex flex-col items-center justify-center gap-0.5 max-w-full">
@@ -127,16 +128,16 @@ const RateAndReview: FunctionComponent = () => {
                       </div>
                     </div>
                   </div>
-                    <div className="self-stretch flex flex-col items-center py-6 px-num-32 text-center font-poppins">
-                      <ProgressBar
-                        currentStepIndex={1}
-                        steps={[
-                          { key: 'information', label: 'Information' },
-                          { key: 'reviewing', label: 'Reviewing' },
-                          { key: 'finalize', label: 'Finalize' },
-                        ]}
-                      />
-                    </div>
+                  <div className="self-stretch flex flex-col items-center py-6 px-num-32 text-center font-poppins">
+                    <ProgressBar
+                      currentStepIndex={1}
+                      steps={[
+                        { key: 'information', label: 'Information' },
+                        { key: 'reviewing', label: 'Reviewing' },
+                        { key: 'finalize', label: 'Finalize' },
+                      ]}
+                    />
+                  </div>
                 </div>
                 <div className="self-stretch h-[405px] flex flex-col items-center gap-[117px] shrink-0 text-[18px] text-darkolivegreen">
                   <div className="self-stretch flex flex-col items-center justify-center py-num-12 px-num-32 gap-[37px]">
@@ -233,9 +234,9 @@ const RateAndReview: FunctionComponent = () => {
                       onClick={onUserProfileTextClick}
                       disabled={isFormInvalid}
                     >
-                      <div 
+                      <div
                         className={`absolute h-[337.5%] w-[29.63%] top-full right-[70.37%] bottom-[-337.5%] left-[0%] shadow-[0px_0px_4px_rgba(0,0,0,0.25)] rounded-[6.17px] transform-[rotate(-90deg)] origin-top-left transition-all 
-                        ${isFormInvalid ? 'bg-gray-400 opacity-50' : 'bg-darkslategray-200 group-hover:brightness-125'}`} 
+                        ${isFormInvalid ? 'bg-gray-400 opacity-50' : 'bg-darkslategray-200 group-hover:brightness-125'}`}
                       />
                       <div className="absolute h-[101.25%] w-[100.28%] top-[0%] left-[0%] font-medium flex items-center justify-center text-[14px]">
                         Submit

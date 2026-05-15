@@ -220,7 +220,9 @@ const Visits: FunctionComponent = () => {
                             key={m}
                             onClick={() => handleMonthSelect(idx)}
                             className={`w-full text-left px-3 py-2 text-xs hover:bg-blue-50 dark:hover:bg-[#1f3a34] ${
-                              idx === month ? 'bg-lightcyan-100 dark:bg-[#12342e] font-bold text-teal dark:text-[#72cbb8]' : ''
+                              idx === month
+                                ? 'bg-lightcyan-100 dark:bg-[#12342e] font-bold text-teal dark:text-[#72cbb8]'
+                                : ''
                             }`}
                           >
                             {m}
@@ -251,7 +253,9 @@ const Visits: FunctionComponent = () => {
                             key={y}
                             onClick={() => handleYearSelect(y)}
                             className={`w-full text-left px-3 py-2 text-xs hover:bg-blue-50 dark:hover:bg-[#1f3a34] ${
-                              y === year ? 'bg-lightcyan-100 dark:bg-[#12342e] font-bold text-teal dark:text-[#72cbb8]' : ''
+                              y === year
+                                ? 'bg-lightcyan-100 dark:bg-[#12342e] font-bold text-teal dark:text-[#72cbb8]'
+                                : ''
                             }`}
                           >
                             {y}
@@ -390,7 +394,9 @@ const Visits: FunctionComponent = () => {
                     >
                       {day && (
                         <>
-                          <div className={`text-xs sm:text-num-14 font-semibold font-inter mb-1 ${day === new Date().getDate() && month === new Date().getMonth() && year === new Date().getFullYear() ? 'text-teal dark:text-[#72cbb8]' : 'text-dimgray dark:text-[#d7e0ef]'}`}>
+                          <div
+                            className={`text-xs sm:text-num-14 font-semibold font-inter mb-1 ${day === new Date().getDate() && month === new Date().getMonth() && year === new Date().getFullYear() ? 'text-teal dark:text-[#72cbb8]' : 'text-dimgray dark:text-[#d7e0ef]'}`}
+                          >
                             {day}
                           </div>
                           <div className="flex flex-col gap-0.5 sm:gap-1 text-xs">
