@@ -1,10 +1,10 @@
 import type mongoose from 'mongoose';
+import type { QueryFilter } from 'mongoose';
 import { AppError } from '../../error.js';
 import { combineFilters } from '../../middleware.js';
 import { ApplicationForm } from '../application/application.model.js';
-import { Rental } from './rental.model.js';
+import { Rental, type RentalType } from './rental.model.js';
 import { Unit } from '../unit/unit.model.js';
-import { UnitFilterSchema } from 'shared';
 
 // TODO: verify if actual move-in/out dates are needed
 // No activities field yet
@@ -63,14 +63,14 @@ export const createRental = async (data: CreateRentalArguments) => {
   return newRental;
 };
 
-export const getAllRentals = async (filters: any) => {
+export const getAllRentals = async (filters: QueryFilter<RentalType>) => {
   return await Rental.find(filters);
 };
 
 export const updateRental = async (
   rentalId: mongoose.Types.ObjectId,
   data: UpdateRentalArguments,
-  filters: any,
+  filters: QueryFilter<RentalType>,
 ) => {
   const rental = await Rental.findOne(combineFilters(filters, { _id: rentalId }));
 
@@ -105,7 +105,10 @@ export const updateRental = async (
   return await rental.save();
 };
 
-export const deleteRental = async (rentalId: mongoose.Types.ObjectId, filters: any) => {
+export const deleteRental = async (
+  rentalId: mongoose.Types.ObjectId,
+  filters: QueryFilter<RentalType>,
+) => {
   const rental = await Rental.findOne(combineFilters(filters, { _id: rentalId }));
 
   if (!rental) {
@@ -121,7 +124,10 @@ export const deleteRental = async (rentalId: mongoose.Types.ObjectId, filters: a
   return await rental.deleteOne();
 };
 
-export const getRentalsByUnitId = async (unitId: mongoose.Types.ObjectId, filters: any) => {
+export const getRentalsByUnitId = async (
+  unitId: mongoose.Types.ObjectId,
+  filters: QueryFilter<RentalType>,
+) => {
   const rentals = await Rental.find(combineFilters(filters, { unitId }));
 
   if (!rentals.length) {
@@ -137,7 +143,10 @@ export const getRentalsByUnitId = async (unitId: mongoose.Types.ObjectId, filter
   return rentals;
 };
 
-export const getRental = async (rentalId: mongoose.Types.ObjectId, filters: any) => {
+export const getRental = async (
+  rentalId: mongoose.Types.ObjectId,
+  filters: QueryFilter<RentalType>,
+) => {
   const rental = await Rental.findOne(combineFilters(filters, { rentalId }));
 
   if (!rental) {
@@ -153,7 +162,10 @@ export const getRental = async (rentalId: mongoose.Types.ObjectId, filters: any)
   return rental;
 };
 
-export const getRentalsByUser = async (userId: mongoose.Types.ObjectId, filters: any) => {
+export const getRentalsByUser = async (
+  userId: mongoose.Types.ObjectId,
+  filters: QueryFilter<RentalType>,
+) => {
   const rentals = await Rental.find(combineFilters(filters, { userId }));
 
   if (!rentals.length) {
@@ -169,7 +181,10 @@ export const getRentalsByUser = async (userId: mongoose.Types.ObjectId, filters:
   return rentals;
 };
 
-export const getRentalsByListing = async (listingId: mongoose.Types.ObjectId, filters: any) => {
+export const getRentalsByListing = async (
+  listingId: mongoose.Types.ObjectId,
+  filters: QueryFilter<RentalType>,
+) => {
   const applications = await ApplicationForm.find({ listingId }).select('_id');
 
   if (!applications.length) {
@@ -199,7 +214,7 @@ export const getRentalsByListing = async (listingId: mongoose.Types.ObjectId, fi
 // actualMoveInDate param is optional (set to curr date if null)
 export const moveIn = async (
   rentalId: mongoose.Types.ObjectId,
-  filters: any,
+  filters: QueryFilter<RentalType>,
   actualMoveInDate?: Date,
 ) => {
   const rental = await Rental.findOne(combineFilters(filters, { _id: rentalId }));
@@ -238,7 +253,7 @@ export const moveIn = async (
 // actualMoveOutDate param is optional (set to curr date if null)
 export const moveOut = async (
   rentalId: mongoose.Types.ObjectId,
-  filters: any,
+  filters: QueryFilter<RentalType>,
   actualMoveOutDate?: Date,
 ) => {
   const rental = await Rental.findOne(combineFilters(filters, { _id: rentalId }));

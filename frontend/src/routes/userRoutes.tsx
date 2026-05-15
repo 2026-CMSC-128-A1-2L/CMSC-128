@@ -16,6 +16,7 @@ import ProfileSwitcher from '../pages/user/profile/ProfileSwitcher';
 import Report from '../pages/user/profile/current_dorm/Report';
 import LeaseTransfer from '../pages/user/profile/current_dorm/LeaseTransfer';
 import FinalizedApplicationPage1a from '../pages/user/profile/current_dorm/FinalizedApplicationPage1a';
+import PendingApplication1a from '../pages/user/profile/current_dorm/PendingApplication1a';
 import { Route } from 'react-router-dom';
 
 import Settings from '../pages/user/setting/Settings';
@@ -52,6 +53,7 @@ const userRoutes = [
   <Route key="finance" path="/finance" element={<Finance />} />,
   <Route key="mycalendar" path="/my-calendar" element={<MyCalendar />} />,
   <Route key="profile-switcher" path="/profile-switcher" element={<ProfileSwitcher />} />,
+  <Route key="applications" path="/applications" element={<PendingApplication1a />} />,
   <Route key="settings" path="/settings" element={<Settings />} />,
   <Route key="pendingapplication" path="/finappli" element={<FinalizedApplicationPage1a />} />,
 
