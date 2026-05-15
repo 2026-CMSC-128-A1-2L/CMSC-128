@@ -24,10 +24,13 @@ export default function Reportv2() {
 
   return (
     <div className="flex">
-      <SideBar />
+       <div className="sticky top-0 left-0 h-screen w-[200px] hidden md:block shrink-0 z-10">
+          <SideBar />
+        </div>
       <div className="flex flex-col max-w-[1128px] ml-5 md:ml-10 py-10">
         <BreadcrumbHeader
           routes={[
+            { name: 'Home', url: '/home' },
             { name: 'User Profile', url: '/profile-switcher' },
             { name: 'Current Dorm', url: '/profile-switcher' },
             { name: 'Report' },

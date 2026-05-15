@@ -19,7 +19,7 @@ export type Room={
   id:string;
   roomType:string;
   image?:string;
-  status?:'closed'|'open';
+  status:'closed'|'open';
   roomNumber:string;
 };
 
@@ -31,6 +31,7 @@ export type Manager = {
 export type Tenant = {
   name: string;
   roomNumber: string;
+  pending: boolean;
 };
 
 export type Building = {
@@ -80,22 +81,23 @@ export const BUILDINGS: Building[] = [
       { id: '11', name: '1 Pax', image: s3, status: 'pending' },
     ],
     rooms:[
-      { id: '10', roomNumber: '1A', image: s1,  roomType:'2 Pax - Aircon'},
-      { id: '11', roomNumber: '1B', image: s1,  roomType:'1 Pax - No Aircon'},
-      { id: '12', roomNumber: '1C', image: s1,  roomType:'2 Pax - No Aircon'},
-      { id: '13', roomNumber: '1D', image: s1, roomType:'2 Pax - Aircon'},
-      { id: '14', roomNumber: '1E', image: s1,  roomType:'1 Pax - No Aircon'},
-      { id: '15', roomNumber: '1F', image: s1,  roomType:'2 Pax - Aircon'},
-      { id: '16', roomNumber: '1G', image: s1,  roomType:'1 Pax - No Aircon'},
+      { id: '10', roomNumber: '1A', image: s1,  roomType:'2 Pax - Aircon',status:'closed'},
+      { id: '11', roomNumber: '1B', image: s1,  roomType:'1 Pax - No Aircon',status:'open'},
+      { id: '12', roomNumber: '1C', image: s1,  roomType:'2 Pax - No Aircon',status:'open'},
+      { id: '13', roomNumber: '1D', image: s1, roomType:'2 Pax - Aircon',status:'open'},
+      { id: '14', roomNumber: '1E', image: s1,  roomType:'1 Pax - No Aircon',status:'open'},
+      { id: '15', roomNumber: '1F', image: s1,  roomType:'2 Pax - Aircon',status:'open'},
+      { id: '16', roomNumber: '1G', image: s1,  roomType:'1 Pax - No Aircon',status:'open'},
     ],
     managers: [
       { name: 'Maria Santos', availability: 'Mon–Fri' },
       { name: 'Jose Reyes', availability: 'Sat–Sun' },
     ],
     tenants: [
-      { name: 'Ana Cruz', roomNumber: '1A' },
-      { name: 'Ben Torres', roomNumber: '1B' },
-      { name: 'Carla Vega', roomNumber: '2A' },
+      { name: 'Ana Cruz', roomNumber: '1A',pending:true },
+      { name: 'Betbet Mangaka', roomNumber: '1A',pending:false },
+      { name: 'Ben Torres', roomNumber: '1B',pending:false },
+      { name: 'Carla Vega', roomNumber: '2A',pending:false },
     ],
   },
   {
@@ -120,18 +122,18 @@ export const BUILDINGS: Building[] = [
       { id: '21', name: '1BR Unit', image: s3, status: 'pending' },
     ],
     rooms:[
-      { id: '20', roomNumber: '101', image: s1,  roomType:'Studio Unit'},
-      { id: '21', roomNumber: '102', image: s1, roomType:'Studio Unit'},
-      { id: '22', roomNumber: '103', image: s1, roomType:'Studio Unit'},
-      { id: '23', roomNumber: '104', image: s1,  roomType:'Studio Unit'},
-      { id: '24', roomNumber: '105', image: s1, roomType:'Studio Unit'},
-      { id: '25', roomNumber: '106', image: s1,  roomType:'Studio Unit'},
-      { id: '26', roomNumber: '107', image: s1,  roomType:'Studio Unit'},
+      { id: '20', roomNumber: '101', image: s1,  roomType:'Studio Unit',status:'open'},
+      { id: '21', roomNumber: '102', image: s1, roomType:'Studio Unit',status:'open'},
+      { id: '22', roomNumber: '103', image: s1, roomType:'Studio Unit',status:'open'},
+      { id: '23', roomNumber: '104', image: s1,  roomType:'Studio Unit',status:'open'},
+      { id: '24', roomNumber: '105', image: s1, roomType:'Studio Unit',status:'open'},
+      { id: '25', roomNumber: '106', image: s1,  roomType:'Studio Unit',status:'open'},
+      { id: '26', roomNumber: '107', image: s1,  roomType:'Studio Unit',status:'open'},
     ],
     managers: [{ name: 'Lorna Diaz', availability: 'Mon–Sun' }],
     tenants: [
-      { name: 'Diego Lim', roomNumber: '101' },
-      { name: 'Eva Ong', roomNumber: '102' },
+      { name: 'Diego Lim', roomNumber: '101',pending:true },
+      { name: 'Eva Ong', roomNumber: '102',pending:true },
     ],
   },
 ];

@@ -210,7 +210,6 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
         endDate: selectedSlot.endDate as unknown as Date,
         message: message.trim() || undefined,
       });
-      setSuccess('Visit booked. You can now see it in My Calendar.');
       onBooked?.();
       setTimeout(onClose, 900);
     } catch (err) {

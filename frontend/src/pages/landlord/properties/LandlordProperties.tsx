@@ -5,8 +5,6 @@ import LandlordLayout from '../../../components/landlord/LandlordLayout';
 import PropertiesCard from '../../../components/landlord/LandlordProperties/PropertiesCard';
 import { BUILDINGS } from '../../../data/buildings';
 
-// Assets
-
 import search from '../../../../assets/search_green.svg';
 import plus from '../../../../assets/green_plus.svg';
 
@@ -17,7 +15,7 @@ const LandlordProperties: FunctionComponent = () => {
     navigate('/landlord/add-building');
   }, [navigate]);
 
-  // Mock data
+ // Mock data
   // const PROPERTIES_LIST = [
   //   {
   //     id: 1,
@@ -50,31 +48,36 @@ const LandlordProperties: FunctionComponent = () => {
   return (
     <LandlordLayout activeSidebarItem="properties" breadcrumbs={[]}>
       <div className="flex w-full flex-col gap-[32px] pt-[16px]">
-        {/* Header Section */}
+
         <section className="flex flex-col gap-[12px]">
           <div className="flex flex-col gap-[4px]">
             <span className="font-['Inter',sans-serif] text-[14px] font-bold text-[#666]">
               Properties
             </span>
-            <div className="flex items-center justify-between">
+
+            <div className="flex flex-col gap-[8px] sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-center gap-[12px]">
-                <h2 className="font-['Inter',sans-serif] text-[24px] font-bold text-black">
+                <h2 className="font-['Inter',sans-serif] text-[20px] sm:text-[24px] font-bold text-black">
                   My Accommodations
                 </h2>
-                <span className="text-[24px] font-bold text-[#5dc2a8]">{BUILDINGS.length}</span>
+                <span className="text-[20px] sm:text-[24px] font-bold text-[#5dc2a8]">
+                  {BUILDINGS.length}
+                </span>
               </div>
 
-              <div className="flex items-center gap-[16px]">
+              <div className="flex items-center gap-[12px]">
                 <div className="flex items-center gap-[8px]">
-                  <span className="font-['Inter',sans-serif] text-[14px] font-bold text-black">
+                  <span className="hidden sm:inline font-['Inter',sans-serif] text-[14px] font-bold text-black">
                     Filter By:
                   </span>
                   <button className="flex items-center gap-[10px] rounded-[16px] bg-[#f5f5f5] px-[12px] py-[8px] text-[#666]">
-                    <span className="text-[14px] font-medium">Recently Added</span>
-                    <Icon icon="mdi-light:chevron-down" className="h-5 w-5" />
+                    <span className="text-[12px] sm:text-[14px] font-medium whitespace-nowrap">
+                      Recently Added
+                    </span>
+                    <Icon icon="mdi-light:chevron-down" className="h-4 w-4 sm:h-5 sm:w-5" />
                   </button>
                 </div>
-                <button className="h-8 w-8 transition-opacity hover:opacity-70">
+                <button className="h-7 w-7 sm:h-8 sm:w-8 transition-opacity hover:opacity-70 shrink-0">
                   <img src={search} alt="Search" className="h-full w-full" />
                 </button>
               </div>
@@ -83,7 +86,6 @@ const LandlordProperties: FunctionComponent = () => {
           <div className="h-[2px] w-full rounded-full bg-[#f0f0f0]" />
         </section>
 
-        {/* Properties List Section */}
         <section className="flex flex-col gap-[24px]">
           {BUILDINGS.map((property) => (
             <PropertiesCard
@@ -102,17 +104,16 @@ const LandlordProperties: FunctionComponent = () => {
             />
           ))}
 
-          {/* Add New Listing Button */}
           <button
             onClick={onAddBuildingContainerClick}
-            className="flex w-full flex-col items-center justify-center gap-[16px] rounded-[10px] border border-dashed border-black bg-white py-[32px] transition-colors hover:shadow-md hover:bg-gray-50"
+            className="flex w-full flex-col items-center justify-center gap-[16px] rounded-[10px] border border-dashed border-black bg-white py-[24px] sm:py-[32px] transition-colors hover:shadow-md hover:bg-gray-50"
           >
-            <img src={plus} alt="plus" className="w-8" />
+            <img src={plus} alt="plus" className="w-7 sm:w-8" />
             <div className="flex flex-col items-center">
-              <b className="font-['Inter',sans-serif] text-[16px] text-[#5dc2a8]">
+              <b className="font-['Inter',sans-serif] text-[14px] sm:text-[16px] text-[#5dc2a8]">
                 Add New Building
               </b>
-              <span className="text-[14px] font-medium text-[#666]">
+              <span className="text-[12px] sm:text-[14px] font-medium text-[#666]">
                 Register a building, room, etc.
               </span>
             </div>

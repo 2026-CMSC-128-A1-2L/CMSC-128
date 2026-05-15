@@ -1,5 +1,6 @@
 import type { FunctionComponent } from 'react';
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
+import { api } from '../../../service/axiosInstance';
 import { Icon } from '@iconify/react';
 import LandlordLayout, { type BreadcrumbItem } from '../../../components/landlord/LandlordLayout';
 import SetAvailableTime from '../../../components/landlord/VisitsSections/SetAvailableTime';
@@ -10,6 +11,7 @@ import LandlordDayEventsPopout, {
   type VisitSlot,
 } from '../../../components/landlord/VisitsSections/LandlordDayEventsPopout';
 import LandlordEventPopout from '../../../components/landlord/VisitsSections/LandlordEventPopout';
+import { BookingService } from '../../../service/BookingService';
 
 const Visits: FunctionComponent = () => {
   const [isSetAvailableTimeOpen, setSetAvailableTimeOpen] = useState(false);
@@ -51,8 +53,35 @@ const Visits: FunctionComponent = () => {
     'Dec',
   ];
 
-  // Fetch visit data from API (currently empty, waiting for backend integration)
-  const allVisits: VisitSlot[] = [];
+  const [allVisits, setAllVisits] = useState<VisitSlot[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchVisits = useCallback(async () => {
+    try {
+      const response = await api.get('/api/bookings');
+      if (response.data?.data) {
+        // Map backend bookings to VisitSlot interface
+        const mapped: VisitSlot[] = response.data.data.map((b: any) => ({
+          id: b._id,
+          visitorName: b.userId?.firstName ? `${b.userId.firstName} ${b.userId.lastName}` : 'Student',
+          time: new Date(b.startDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          status: b.status,
+          dayOfWeek: new Date(b.startDate).getDay(),
+          startDate: new Date(b.startDate),
+          backgroundColor: b.status === 'accepted' ? 'bg-blue-100 dark:bg-[#12342e]' : 'bg-orange-100 dark:bg-[#342e12]',
+        }));
+        setAllVisits(mapped);
+      }
+    } catch (error) {
+      console.error('Failed to fetch visits:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchVisits();
+  }, [fetchVisits]);
 
   const month = currentDate.getMonth();
   const year = currentDate.getFullYear();
@@ -119,16 +148,34 @@ const Visits: FunctionComponent = () => {
   const getFirstDayOfMonth = (m: number, y: number) => new Date(y, m, 1).getDay();
 
   const getVisitsForDay = (day: number) => {
-    const dayOfWeek = new Date(year, month, day).getDay();
-    return allVisits.filter((visit) => visit.dayOfWeek === dayOfWeek);
+    const targetDate = new Date(year, month, day);
+    return allVisits.filter((visit) => {
+      const vDate = new Date(visit.startDate);
+      return visit.status === 'accepted' &&
+        vDate.getDate() === targetDate.getDate() &&
+        vDate.getMonth() === targetDate.getMonth() &&
+        vDate.getFullYear() === targetDate.getFullYear();
+    });
   };
 
   // Transform visits to show all upcoming visits
-  const upcomingVisits = allVisits.map((visit, index) => ({
-    id: visit.id,
-    propertyName: visit.visitorName,
-    visitCount: 1,
-  }));
+  const upcomingVisits = allVisits
+    .filter((v) => v.status === 'accepted')
+    .map((visit) => ({
+      id: visit.id,
+      propertyName: visit.visitorName,
+      visitCount: 1,
+    }));
+
+  const pendingRequests = allVisits
+    .filter((v) => v.status === 'pending')
+    .map((v) => ({
+      id: v.id,
+      visitorName: v.visitorName,
+      dateTime: `${v.startDate.toLocaleDateString()} - ${v.time}`,
+      propertyName: v.propertyName,
+      buildingName: 'Building',
+    }));
 
   const getDaysForCalendar = () => {
     const daysInMonth = getDaysInMonth(month, year);
@@ -156,12 +203,22 @@ const Visits: FunctionComponent = () => {
 
   const breadcrumbs = useMemo<BreadcrumbItem[]>(() => [{ label: 'Visits' }], []);
 
-  const handleAcceptRequest = (requestId: string) => {
-    console.log('Accept request:', requestId);
+  const handleAcceptRequest = async (requestId: string) => {
+    try {
+      await BookingService.updateBookingStatus(requestId as any, 'accepted');
+      fetchVisits();
+    } catch (error) {
+      console.error('Failed to accept request:', error);
+    }
   };
 
-  const handleRejectRequest = (requestId: string) => {
-    console.log('Reject request:', requestId);
+  const handleRejectRequest = async (requestId: string) => {
+    try {
+      await BookingService.updateBookingStatus(requestId as any, 'cancelled');
+      fetchVisits();
+    } catch (error) {
+      console.error('Failed to reject request:', error);
+    }
   };
 
   return (
@@ -208,9 +265,8 @@ const Visits: FunctionComponent = () => {
                       <span className="flex-1">{MONTHS[month].substring(0, 3)}</span>
                       <Icon
                         icon="ic:round-keyboard-arrow-down"
-                        className={`h-4 w-4 transition-transform ${
-                          showMonthDropdown ? 'rotate-180' : ''
-                        }`}
+                        className={`h-4 w-4 transition-transform ${showMonthDropdown ? 'rotate-180' : ''
+                          }`}
                       />
                     </button>
                     {showMonthDropdown && (
@@ -219,9 +275,8 @@ const Visits: FunctionComponent = () => {
                           <button
                             key={m}
                             onClick={() => handleMonthSelect(idx)}
-                            className={`w-full text-left px-3 py-2 text-xs hover:bg-blue-50 dark:hover:bg-[#1f3a34] ${
-                              idx === month ? 'bg-lightcyan-100 dark:bg-[#12342e] font-bold text-teal dark:text-[#72cbb8]' : ''
-                            }`}
+                            className={`w-full text-left px-3 py-2 text-xs hover:bg-blue-50 dark:hover:bg-[#1f3a34] ${idx === month ? 'bg-lightcyan-100 dark:bg-[#12342e] font-bold text-teal dark:text-[#72cbb8]' : ''
+                              }`}
                           >
                             {m}
                           </button>
@@ -239,9 +294,8 @@ const Visits: FunctionComponent = () => {
                       <span className="flex-1">{year}</span>
                       <Icon
                         icon="ic:round-keyboard-arrow-down"
-                        className={`h-4 w-4 transition-transform ${
-                          showYearDropdown ? 'rotate-180' : ''
-                        }`}
+                        className={`h-4 w-4 transition-transform ${showYearDropdown ? 'rotate-180' : ''
+                          }`}
                       />
                     </button>
                     {showYearDropdown && (
@@ -250,9 +304,8 @@ const Visits: FunctionComponent = () => {
                           <button
                             key={y}
                             onClick={() => handleYearSelect(y)}
-                            className={`w-full text-left px-3 py-2 text-xs hover:bg-blue-50 dark:hover:bg-[#1f3a34] ${
-                              y === year ? 'bg-lightcyan-100 dark:bg-[#12342e] font-bold text-teal dark:text-[#72cbb8]' : ''
-                            }`}
+                            className={`w-full text-left px-3 py-2 text-xs hover:bg-blue-50 dark:hover:bg-[#1f3a34] ${y === year ? 'bg-lightcyan-100 dark:bg-[#12342e] font-bold text-teal dark:text-[#72cbb8]' : ''
+                              }`}
                           >
                             {y}
                           </button>
@@ -378,15 +431,14 @@ const Visits: FunctionComponent = () => {
                   return (
                     <div
                       key={idx}
-                      className={`min-h-20 sm:min-h-28 p-1 sm:p-3 rounded border transition-colors text-xs sm:text-base ${
-                        day === null
+                      className={`min-h-20 sm:min-h-28 p-1 sm:p-3 rounded border transition-colors text-xs sm:text-base ${day === null
                           ? 'bg-whitesmoke-100 border-whitesmoke-200 dark:bg-[#1f2022] dark:border-[#303331] cursor-default'
                           : day === new Date().getDate() &&
-                              month === new Date().getMonth() &&
-                              year === new Date().getFullYear()
+                            month === new Date().getMonth() &&
+                            year === new Date().getFullYear()
                             ? 'bg-teal-50 border-teal dark:bg-[#12342e] dark:border-[#72cbb8]'
                             : 'bg-white border-whitesmoke-200 cursor-default dark:bg-[#141515] dark:border-[#303331]'
-                      }`}
+                        }`}
                     >
                       {day && (
                         <>
@@ -427,7 +479,7 @@ const Visits: FunctionComponent = () => {
         {/* Visit Requests Section - Full Width Below */}
         {/* TODO: put actual requests */}
         <VisitRequestsSection
-          requests={[]}
+          requests={pendingRequests}
           onAccept={handleAcceptRequest}
           onReject={handleRejectRequest}
         />

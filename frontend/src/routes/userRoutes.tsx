@@ -11,6 +11,7 @@ import RateAndReview from '../pages/user/profile/current_dorm/RateAndReview';
 import RateAndReviewForm from '../pages/user/profile/current_dorm/RateAndReviewWithForms';
 import RateAndReviewUpload from '../pages/user/profile/current_dorm/RateAndReviewWithUploads';
 import TermsOfUse from '../pages/user/info/TermsOfUse';
+import PrivacyPolicy from '../pages/user/info/PrivacyPolicy';
 import MyCalendar from '../pages/user/calendar/MyCalendar';
 import ProfileSwitcher from '../pages/user/profile/ProfileSwitcher';
 import Report from '../pages/user/profile/current_dorm/Report';
@@ -50,6 +51,8 @@ const userRoutes = [
   <Route key="ratereviewform" path="/rate-review-form" element={<RateAndReviewForm />} />,
   <Route key="ratereviewupload" path="/rate-review-upload" element={<RateAndReviewUpload />} />,
   <Route key="terms" path="/terms-of-use" element={<TermsOfUse />} />,
+  <Route key="privacy-policy" path="/privacy-policy" element={<PrivacyPolicy />} />,
+  <Route key="privacy" path="/privacy" element={<PrivacyPolicy />} />,
   <Route key="finance" path="/finance" element={<Finance />} />,
   <Route key="mycalendar" path="/my-calendar" element={<MyCalendar />} />,
   <Route key="profile-switcher" path="/profile-switcher" element={<ProfileSwitcher />} />,
