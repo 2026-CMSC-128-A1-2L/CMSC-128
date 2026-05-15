@@ -1,184 +1,181 @@
-import { type FunctionComponent, useCallback } from 'react';
+import { type FunctionComponent, useEffect, useState } from 'react';
 import { Icon } from '@iconify/react';
-import Photo from '../../../../../assets/photo.svg';
+import { Link, useNavigate } from 'react-router-dom';
 import Sidebar from '../../../../components/user/SideBar';
 import Footer from '../../../../components/general/Footer';
+import ProfileInfo from '../../../../components/user/ProfileInfo';
+import { ApplicationService } from '../../../../service/ApplicationService';
+
+type ApplicationSummary = {
+  _id?: string;
+  id?: string;
+  status?: 'pending' | 'rejected' | 'waitlisted' | 'approved' | 'finalized';
+  leaseDuration?: string;
+  moveInDate?: string;
+  createdAt?: string;
+  facilityId?: string | { name?: string; location?: { text?: string } };
+  listingId?: string | { roomType?: string; tags?: Record<string, string | number | boolean> };
+};
+
+const getDataArray = <T,>(response: unknown): T[] => {
+  if (Array.isArray(response)) return response as T[];
+  if (response && typeof response === 'object' && 'data' in response) {
+    const data = (response as { data?: unknown }).data;
+    return Array.isArray(data) ? (data as T[]) : [];
+  }
+  return [];
+};
+
+const getApplicationId = (application: ApplicationSummary) =>
+  application.id ?? application._id ?? '';
+
+const getFacilityName = (application: ApplicationSummary) => {
+  if (typeof application.facilityId === 'object') return application.facilityId.name ?? 'Dorm';
+  return 'Dorm application';
+};
+
+const getAddress = (application: ApplicationSummary) => {
+  if (typeof application.facilityId === 'object') {
+    return application.facilityId.location?.text ?? 'Address unavailable';
+  }
+  return 'Address unavailable';
+};
+
+const getRoomType = (application: ApplicationSummary) => {
+  if (typeof application.listingId === 'object') {
+    return application.listingId.roomType ?? 'Selected room';
+  }
+  return 'Selected room';
+};
+
+const statusLabel: Record<string, string> = {
+  pending: 'Initial screening',
+  waitlisted: 'Initial accepted',
+  finalized: 'Submitted for final approval',
+  approved: 'Approved',
+  rejected: 'Rejected',
+};
 
 const PendingApplication1a: FunctionComponent = () => {
-  const onVERIFICATIONSTATUSContainerClick = useCallback(() => {
-    // Add your code here
+  const navigate = useNavigate();
+  const [applications, setApplications] = useState<ApplicationSummary[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadApplications = async () => {
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        const response = await ApplicationService.getMyApplications();
+        if (!cancelled) setApplications(getDataArray<ApplicationSummary>(response));
+      } catch {
+        if (!cancelled) setError('Could not load your applications.');
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
+    };
+
+    loadApplications();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   return (
-    <div className="w-full h-screen relative overflow-y-auto flex flex-col items-start isolate gap-2.5 text-left text-num-14 text-darkslategray-100 font-lora">
-      <img
-        className="w-[1440px] h-[1024px] absolute !!m-[0 important] top-0 left-0 shrink-0 z-0"
-        alt=""
-      />
-      <div className="w-[1440px] h-[1312px] overflow-hidden shrink-0 flex flex-col items-start z-1">
-        <div className="self-stretch flex-1 overflow-hidden flex flex-col items-start py-num-0 pl-num-0 pr-20">
-          <div className="w-[1440px] flex-1 flex items-center shrink-0 pr-20 gap-8">
-            <div className="self-stretch w-[200px] flex items-start">
-              <Sidebar></Sidebar>
-            </div>
-
-            <div className="self-stretch flex-1 overflow-hidden flex flex-col items-start justify-between gap-0">
-              <div className="w-full h-fit flex flex-col items-start">
-                <div className="self-stretch h-16 overflow-hidden shrink-0 flex items-end p-num-10 box-border gap-2.5">
-                  <div className="h-6 flex items-center gap-1.5">
-                    <div className="relative font-semibold">User Profile</div>
-                    <Icon icon="iconamoon:arrow-right-2" className="h-6 w-6 relative" />
-                    <div className="relative font-semibold">Current Dorm</div>
-                  </div>
-                </div>
-                <div className="w-full h-fit rounded-num-16 bg-white/45 flex flex-col items-start gap-[12.3px] shrink-0 text-center text-dimgray font-inter">
-                  <div className="w-full h-fit rounded-2xl flex flex-col items-start gap-3">
-                    <div className="w-full rounded-2xl flex items-start p-num-32">
-                      <div className="w-full flex flex-col items-start gap-2.5">
-                        <b className="relative">Student Profile</b>
-                        <b className="relative text-[24px] leading-8 text-darkslategray-200">
-                          Daphne Dayne
-                        </b>
-                        <b className="relative text-teal">dcanape@up.edu.ph</b>
-                      </div>
-                    </div>
-                    <div className="self-stretch overflow-hidden flex items-start justify-between py-1 px-num-32 gap-5">
-                      <img
-                        className="w-[200px] relative max-h-full object-cover"
-                        alt=""
-                        src={Photo}
-                      />
-                      <div className="overflow-hidden flex flex-col items-start p-num-10 gap-4">
-                        <div className="flex flex-col items-start gap-1">
-                          <b className="relative">Name</b>
-                          <b className="relative text-black">CANAPE, DAPHNE</b>
-                        </div>
-                        <div className="flex flex-col items-start gap-1">
-                          <div className="flex items-start gap-2">
-                            <b className="relative">Contact number</b>
-                            <Icon icon="iconamoon:edit" className="w-5 relative max-h-full" />
-                          </div>
-                          <b className="relative text-black">- - - - -</b>
-                        </div>
-                        <div className="flex flex-col items-start gap-1">
-                          <div className="flex items-start gap-2">
-                            <b className="relative">Home Address</b>
-                            <Icon icon="iconamoon:edit" className="w-5 relative max-h-full" />
-                          </div>
-                          <b className="relative text-black">{`- - - - - `}</b>
-                        </div>
-                      </div>
-                      <div className="overflow-hidden flex flex-col items-start p-num-10 gap-4">
-                        <div className="flex flex-col items-start gap-1">
-                          <b className="relative">{`User Role `}</b>
-                          <b className="relative text-black">Tenant</b>
-                        </div>
-                        <div className="flex flex-col items-start gap-1">
-                          <b className="relative">Student Number</b>
-                          <b className="relative text-black">2023*****</b>
-                        </div>
-                        <div className="flex flex-col items-start gap-1">
-                          <b className="relative">Verification Status</b>
-                          <b className="relative text-transparent bg-clip-text! [background:linear-gradient(180deg,#5dc2a8_27.88%,#0c8873_84.13%)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">
-                            Verified
-                          </b>
-                        </div>
-                      </div>
-                      <div className="overflow-hidden flex flex-col items-start p-num-10 gap-4">
-                        <div className="flex flex-col items-start gap-1">
-                          <b className="relative">Current Dorm</b>
-                          <b className="relative text-black">- - - - -</b>
-                        </div>
-                        <div className="flex flex-col items-start gap-1">
-                          <b className="relative">Rent Fee</b>
-                          <div className="self-stretch flex items-center text-black">
-                            <b className="relative">- - - - -</b>
-                          </div>
-                        </div>
-                        <div className="flex flex-col items-start gap-1">
-                          <b className="relative">Contract Duration</b>
-                          <b className="relative text-black">- - - - -</b>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="self-stretch flex flex-col items-start gap-[49.1px] text-num-14_34 text-white">
-                    <div className="self-stretch flex flex-col items-start">
-                      <div className="self-stretch flex flex-col items-center justify-center">
-                        <div className="w-[532.4px] h-[49.1px] relative">
-                          <div className="absolute h-[99.59%] w-[99.87%] top-[0%] right-[-0.25%] bottom-[0.41%] left-[0.38%] rounded-[102.11px] bg-white flex items-center justify-center p-[4.1px] box-border gap-[4.1px] shrink-0">
-                            <div className="h-[40.8px] w-[241px] rounded-[102.11px] bg-darkslategray-200 flex items-center justify-center p-[4.1px] box-border">
-                              <div className="relative font-semibold">CURRENT DORM</div>
-                            </div>
-                            <div
-                              className="h-[40.8px] w-[241px] rounded-[102.11px] flex items-center justify-center py-[11.2px] px-[76.6px] box-border cursor-pointer text-slategray"
-                              onClick={onVERIFICATIONSTATUSContainerClick}
-                            >
-                              <div className="relative font-semibold shrink-0">
-                                VERIFICATION STATUS
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="self-stretch flex flex-col items-start text-[24.57px] text-darkslategray-100">
-                      <div className="self-stretch flex items-center py-num-0 px-[32.8px]">
-                        <div className="flex-1 flex items-center gap-[24.6px]">
-                          <b className="relative text-num-18">Your Pending Applications</b>
-                          <b className="relative text-num-18 text-dimgray">
-                            0 out of 5 Dorm Applications
-                          </b>
-                        </div>
-                      </div>
-                      <div className="self-stretch rounded-num-16_38 overflow-hidden flex flex-col items-start py-[24.6px] px-[32.8px] text-num-14_34 text-white">
-                        <div className="rounded-num-16 border-whitesmoke border-solid overflow-hidden w-full rounded-num-16_38 border-solid border flex flex-col items-start">
-                          <div className="w-full h-12 bg-darkslategray-200 border-black border-solid border box-border overflow-hidden shrink-0 flex flex-col items-start justify-center py-num-0 px-[24.6px]">
-                            <div className="w-full flex justify-between py-[4.1px] px-num-0 box-border ">
-                              <div className="text-num-16 w-20 relative font-medium flex items-center justify-center shrink-0">
-                                <b>No.</b>
-                              </div>
-                              <div className="text-num-16 w-55 relative font-medium flex items-center justify-center shrink-0">
-                                <b>Listing</b>
-                              </div>
-                              <div className="text-num-16 w-60 relative font-medium flex items-center justify-center shrink-0">
-                                <b>Address</b>
-                              </div>
-                              <div className="text-num-16 w-30 relative font-medium flex items-center justify-center shrink-0">
-                                <b>Status</b>
-                              </div>
-                              <div className="text-num-16 w-51 relative font-medium flex items-center justify-center shrink-0">
-                                <b>Actions</b>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="self-stretch h-20 rounded-num-16_38 overflow-hidden shrink-0 flex flex-col items-center justify-center py-num-0 px-[24.6px] box-border text-[18.55px] text-teal">
-                            <div className="w-full overflow-hidden flex items-center justify-center py-1 box-border text-num-18">
-                              <b
-                                className="relative cursor-pointer"
-                                onClick={onVERIFICATIONSTATUSContainerClick}
-                              >
-                                Browse Listings
-                              </b>
-                              <Icon
-                                icon="mdi:arrow-top-right"
-                                className="w-[31.8px] relative max-h-full"
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="self-stretch h-20 bg-white overflow-hidden shrink-0 flex flex-col items-center justify-center">
-                <Footer />
-              </div>
-            </div>
-          </div>
+    <div className="w-full min-h-screen flex flex-col text-left text-num-14 text-darkslategray-100 font-lora">
+      <div className="flex w-full max-w-[1440px] items-start">
+        <div className="sticky top-0 hidden h-screen w-[200px] shrink-0 md:block">
+          <Sidebar />
         </div>
+
+        <main className="flex min-h-screen flex-1 flex-col justify-between gap-12 px-5 pr-20">
+          <div className="flex flex-col gap-3">
+            <div className="h-16 flex items-end p-num-10">
+              <div className="flex h-6 items-center gap-1.5">
+                <div className="font-semibold">User Profile</div>
+                <Icon icon="iconamoon:arrow-right-2" className="h-6 w-6" />
+                <div className="font-semibold">Applications</div>
+              </div>
+            </div>
+
+            <section className="rounded-2xl bg-white/45 pb-10 text-center text-dimgray font-inter">
+              <ProfileInfo />
+
+              <div className="flex flex-col items-start gap-6 px-8 text-darkslategray-100">
+                <div className="flex w-full items-center justify-between gap-4">
+                  <div className="flex items-center gap-6">
+                    <b className="text-num-18">Your Applications</b>
+                    <b className="text-num-18 text-dimgray">
+                      {applications.length} out of 5 Dorm Applications
+                    </b>
+                  </div>
+                  <Link
+                    to="/home"
+                    className="rounded-2xl bg-lightcyan px-4 py-2 text-sm font-bold text-teal"
+                  >
+                    Browse Listings
+                  </Link>
+                </div>
+
+                <div className="w-full overflow-hidden rounded-2xl border border-whitesmoke bg-white text-sm">
+                  <div className="grid grid-cols-[64px_1.2fr_1.4fr_160px_180px] bg-darkslategray-200 px-6 py-4 text-white">
+                    <b>No.</b>
+                    <b>Listing</b>
+                    <b>Address</b>
+                    <b>Status</b>
+                    <b>Actions</b>
+                  </div>
+
+                  {isLoading ? (
+                    <div className="px-6 py-8 text-center font-bold text-dimgray">Loading...</div>
+                  ) : error ? (
+                    <div className="px-6 py-8 text-center font-bold text-red-500">{error}</div>
+                  ) : applications.length === 0 ? (
+                    <div className="px-6 py-8 text-center font-bold text-teal">
+                      You have no current dorm applications.
+                    </div>
+                  ) : (
+                    applications.map((application, index) => {
+                      const applicationId = getApplicationId(application);
+                      const canFinalize = application.status === 'waitlisted';
+
+                      return (
+                        <div
+                          key={applicationId || index}
+                          className="grid grid-cols-[64px_1.2fr_1.4fr_160px_180px] items-center gap-2 border-t border-whitesmoke px-6 py-4 text-left text-black"
+                        >
+                          <span>{index + 1}</span>
+                          <div className="flex flex-col">
+                            <b>{getFacilityName(application)}</b>
+                            <span className="text-xs text-dimgray">{getRoomType(application)}</span>
+                          </div>
+                          <span className="text-dimgray">{getAddress(application)}</span>
+                          <b className="text-teal">
+                            {statusLabel[application.status ?? 'pending'] ?? application.status}
+                          </b>
+                          <button
+                            type="button"
+                            disabled={!canFinalize}
+                            onClick={() => navigate(`/finappli?applicationId=${applicationId}`)}
+                            className="rounded-2xl bg-lightcyan px-4 py-2 text-sm font-bold text-teal disabled:cursor-not-allowed disabled:bg-aliceblue disabled:text-slategray"
+                          >
+                            {canFinalize ? 'Finalize' : 'View Status'}
+                          </button>
+                        </div>
+                      );
+                    })
+                  )}
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <Footer />
+        </main>
       </div>
     </div>
   );

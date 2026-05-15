@@ -1,4 +1,4 @@
-import { type FunctionComponent, useEffect, useRef, useState } from 'react';
+﻿import { type FunctionComponent, useEffect, useRef, useState } from 'react';
 import { Icon } from '@iconify/react';
 import { useSearchParams } from 'react-router-dom';
 import SideBar from '../../../components/user/SideBar';
@@ -7,13 +7,14 @@ import Banner from '../../../components/general/Banner';
 import FilterTab from '../../../components/user/Filter/FilterTab';
 import LoadingPage from '../../general/LoadingPage';
 import { useFacilities, type DormCardData } from '../../../hooks/useFacilities';
+import TutorialIcon from '../../../../assets/help-chat.svg';
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
 const CARD_WIDTH = 280;
 const CARD_GAP = 24;
 
-// ─── Carousel hook ───────────────────────────────────────────────────────────
+// ─── Carousel hook ────────────────────────────────────────────────────────────
 
 const useCarousel = (total: number) => {
   const trackRef = useRef<HTMLDivElement>(null);
@@ -42,7 +43,7 @@ const CATEGORY_LABELS: Record<NonNullable<ViewAllCategory>, string> = {
   mayLike: 'Listings You May Like',
 };
 
-// ─── Sub-components (lifted out of HomePage to avoid re-creation on render) ──
+// ─── Sub-components ───────────────────────────────────────────────────────────
 
 const NavArrows = ({
   current,
@@ -58,19 +59,19 @@ const NavArrows = ({
       type="button"
       onClick={() => scrollTo(current - 1)}
       disabled={current === 0}
-      className="flex h-[32px] w-[32px] items-center justify-center rounded-full border border-[#f0f0f0] bg-white transition-opacity hover:opacity-70 disabled:opacity-30 dark:border-[#303331] dark:bg-[#101111] dark:text-[#a4acba]"
+      className="flex h-[32px] w-[32px] items-center justify-center rounded-full border border-[#f0f0f0] bg-white transition-opacity hover:opacity-70 disabled:opacity-30"
       aria-label="Previous property"
     >
-      <Icon icon="solar:arrow-left-bold" className="h-[16px] w-[16px] text-[#2f3136] dark:text-[#a4acba]" />
+      <Icon icon="solar:arrow-left-bold" className="h-[16px] w-[16px] text-[#2f3136]" />
     </button>
     <button
       type="button"
       onClick={() => scrollTo(current + 1)}
       disabled={current === total - 1}
-      className="flex h-[32px] w-[32px] items-center justify-center rounded-full bg-[#e0f7f4] transition-opacity hover:opacity-70 disabled:opacity-30 dark:bg-[#12342e]"
+      className="flex h-[32px] w-[32px] items-center justify-center rounded-full bg-[#e0f7f4] transition-opacity hover:opacity-70 disabled:opacity-30"
       aria-label="Next property"
     >
-      <Icon icon="solar:arrow-right-bold" className="h-[16px] w-[16px] text-[#096c5b] dark:text-[#72cbb8]" />
+      <Icon icon="solar:arrow-right-bold" className="h-[16px] w-[16px] text-[#096c5b]" />
     </button>
   </div>
 );
@@ -84,7 +85,7 @@ const ViewAllLink = ({
 }) => (
   <button
     type="button"
-    className="w-fit h-fit flex items-end justify-center gap-1 pt-4 cursor-pointer text-center text-[0.75rem] text-teal-100 font-lora dark:text-[#72cbb8]"
+    className="w-fit h-fit flex items-end justify-center gap-1 pt-4 cursor-pointer text-center text-[0.75rem] text-teal-100 font-lora"
     onClick={() => onViewAll(category)}
   >
     <div className="relative [text-decoration:underline] tracking-num-0.02 font-semibold">
@@ -129,15 +130,7 @@ const CarouselSection = ({
       >
         {items.map((dorm) => (
           <div key={dorm.id} className="shrink-0">
-            <DormCard
-              id={dorm.id}
-              name={dorm.name}
-              rating={dorm.rating}
-              price={dorm.price}
-              location={dorm.location}
-              image={dorm.image}
-              room_types={dorm.room_types}
-            />
+            <DormCard key={dorm.id} {...dorm} />
           </div>
         ))}
       </div>
@@ -150,7 +143,7 @@ const CarouselSection = ({
 const EmptyState = ({ onBack, label }: { onBack: () => void; label: string }) => (
   <div className="w-full flex flex-col items-center justify-center py-20 gap-3 text-center">
     <Icon icon="mdi:home-search-outline" className="w-16 h-16 text-unselected" />
-    <p className="text-[1rem] font-semibold text-dimgray dark:text-[#d7e0ef]">{label}</p>
+    <p className="text-[1rem] font-semibold text-dimgray">{label}</p>
     <button
       type="button"
       onClick={onBack}
@@ -164,8 +157,8 @@ const EmptyState = ({ onBack, label }: { onBack: () => void; label: string }) =>
 const ErrorState = ({ message, onRetry }: { message: string; onRetry: () => void }) => (
   <div className="w-full flex flex-col items-center justify-center py-20 gap-3 text-center">
     <Icon icon="mdi:alert-circle-outline" className="w-16 h-16 text-red-400" />
-    <p className="text-[1rem] font-semibold text-dimgray dark:text-[#d7e0ef]">Could not load listings</p>
-    <p className="text-[0.875rem] text-unselected max-w-xs dark:text-[#a4acba]">{message}</p>
+    <p className="text-[1rem] font-semibold text-dimgray">Could not load listings</p>
+    <p className="text-[0.875rem] text-unselected max-w-xs">{message}</p>
     <button
       type="button"
       onClick={onRetry}
@@ -176,23 +169,137 @@ const ErrorState = ({ message, onRetry }: { message: string; onRetry: () => void
   </div>
 );
 
+const ApplicationGuideModal = ({ onClose }: { onClose: () => void }) => {
+  const steps = [
+    {
+      title: 'Pick a dorm',
+      description: (
+        <>
+          Select your preferred residence from the Listings dashboard. You can filter by{' '}
+          <b>Budget-Friendly Picks</b> or browse <b>Popular Listings</b> to find the unit that best
+          fit your needs.
+        </>
+      ),
+    },
+    {
+      title: 'Fill up your details',
+      description:
+        'Once you select a dorm, a detailed summary of your choice will be displayed. Fill out the necessary information before submitting your application to the landlord.',
+    },
+    {
+      title: 'Wait for confirmation',
+      description:
+        'Once confirmed, the landlord will reach out to you via system notifications. Be sure to check your DMs regularly for updates.',
+    },
+  ];
+
+  return (
+    <div className="fixed inset-0 z-[1100] flex items-center justify-center bg-black/35 px-5 py-8">
+      <button
+        type="button"
+        className="absolute inset-0 cursor-default"
+        onClick={onClose}
+        aria-label="Close application guide"
+      />
+      <section
+        className="relative z-10 flex h-[531px] w-[554px] max-h-[calc(100vh-32px)] max-w-[calc(100vw-32px)] flex-col overflow-y-auto rounded-[18px] bg-white px-[40px] pb-[40px] pt-[34px] text-[#1f6f60] shadow-[0_2px_14px_rgba(0,0,0,0.24)]"
+        aria-modal="true"
+        role="dialog"
+        aria-labelledby="application-guide-title"
+      >
+        <div className="text-center">
+          <h2
+            id="application-guide-title"
+            className="font-inter text-[24px] font-bold leading-tight text-[#164f43]"
+          >
+            Application Guide
+          </h2>
+          <p className="mt-[6px] font-lora text-[13px] font-semibold leading-snug text-[#164f43]">
+            Everything you need to know about applying for your stay at UPLB!
+          </p>
+        </div>
+
+        <div className="mt-[30px] grid grid-cols-[50px_1fr] gap-x-[24px] gap-y-[41px]">
+          {steps.map((step, index) => {
+            const isLast = index === steps.length - 1;
+            return (
+              <div key={step.title} className="contents">
+                <div className="relative flex justify-center">
+                  {!isLast && (
+                    <span className="absolute top-[34px] h-[calc(100%+41px)] w-[2px] rounded-full bg-[#237866]" />
+                  )}
+                  <span className="relative z-10 flex h-[34px] w-[34px] items-center justify-center rounded-full bg-[#237866] font-lora text-[17px] font-semibold text-white">
+                    {index + 1}
+                  </span>
+                </div>
+                <div className="max-w-[402px] pb-0">
+                  <h3 className="font-inter text-[16px] font-bold leading-tight text-[#237866]">
+                    {step.title}
+                  </h3>
+                  <p className="mt-[7px] font-lora text-[13px] font-semibold leading-[1.18] text-[#1f6f60]">
+                    {step.description}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <button
+          type="button"
+          onClick={onClose}
+          className="mx-auto mt-auto h-[36px] w-full max-w-[318px] rounded-[5px] bg-[#4c8c7e] font-lora text-[15px] font-bold text-white shadow-[0_3px_8px_rgba(0,0,0,0.2)] transition-all hover:-translate-y-0.5 hover:bg-[#237866] active:translate-y-0"
+        >
+          Got it, thanks!
+        </button>
+      </section>
+    </div>
+  );
+};
+
 // ─── HomePage ─────────────────────────────────────────────────────────────────
 
 const HomePage: FunctionComponent = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
   const [searchTerm, setSearchTerm] = useState(searchParams.get('search') ?? '');
   const [viewAllCategory, setViewAllCategory] = useState<ViewAllCategory>(null);
+  const [filterCriteria, setFilterCriteria] = useState({
+    minPrice: 0,
+    maxPrice: 10000,
+    pax: 'Any' as number | 'Any',
+    propertyType: 'Dormitory',
+    selectedEssentials: [] as string[],
+    distance: 1,
+  });
 
   // Real data from the backend
   const { facilities, isLoading, error, refetch } = useFacilities();
 
-  // Category slices — swap these for real filtered endpoints later.
-  // For now we slice the same list to populate the carousels.
-  const pasaloDorms = facilities.slice(0, 10);
-  const popularDorms = facilities.slice(0, 10);
-  const nearDorms = facilities.slice(0, 10);
-  const mayLikeDorms = facilities.slice(0, 10);
+  // Apply filter criteria to backend data
+  // TODO: extend with rating, distance, and tags once available in DormCardData
+  const filterApplied = facilities.filter(
+    (dorm) =>
+      dorm.price.min >= filterCriteria.minPrice &&
+      dorm.price.max <= filterCriteria.maxPrice,
+  );
+
+  // Apply search on top of the filtered results
+  const isSearching = searchTerm.trim().length > 0;
+  const filteredDorms = isSearching
+    ? filterApplied.filter(
+        (dorm) =>
+          dorm.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          dorm.location.toLowerCase().includes(searchTerm.toLowerCase()),
+      )
+    : filterApplied;
+
+  // Category slices — swap for real filtered endpoints later
+  const pasaloDorms = filterApplied.slice(0, 10);
+  const popularDorms = filterApplied.slice(0, 10);
+  const nearDorms = filterApplied.slice(0, 10);
+  const mayLikeDorms = filterApplied.slice(0, 10);
 
   const CATEGORY_DATA: Record<NonNullable<ViewAllCategory>, DormCardData[]> = {
     pasalo: pasaloDorms,
@@ -200,16 +307,6 @@ const HomePage: FunctionComponent = () => {
     near: nearDorms,
     mayLike: mayLikeDorms,
   };
-
-  const isSearching = searchTerm.trim().length > 0;
-
-  const filteredDorms = isSearching
-    ? facilities.filter(
-        (dorm) =>
-          dorm.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          dorm.location.toLowerCase().includes(searchTerm.toLowerCase()),
-      )
-    : facilities;
 
   const handleViewAll = (category: ViewAllCategory) => {
     setViewAllCategory(category);
@@ -237,32 +334,33 @@ const HomePage: FunctionComponent = () => {
   if (isLoading) return <LoadingPage />;
 
   return (
-    <div className="w-full min-h-screen flex items-start text-left text-[0.875rem] text-dimgray font-inter gap-8 dark:text-[#d7e0ef]">
+    <div className="w-full flex items-start text-left text-[0.875rem] text-dimgray font-inter gap-8">
       <div className="sticky top-0 h-screen w-fit shrink-0">
         <SideBar />
       </div>
 
       {/* right frame */}
-      <div className="w-full min-w-0 min-h-screen flex items-start pt-15 pr-20 pb-20">
+      <div className="w-full min-w-0 h-fit flex items-start pt-15 pr-20 pb-20">
         <div className="h-fit w-full min-w-0 flex flex-col items-start gap-80">
           <div className="w-full min-w-0 flex flex-col items-start">
+
             {/* search bar */}
             <div className="w-full h-full overflow-hidden flex items-center pb-6 box-border">
-              <div className="w-full flex items-center transition-all duration-300 bg-[#f8f9fa] rounded-num-12 py-3 pl-3 pr-4 border border-transparent focus-within:bg-white focus-within:shadow-[0_8px_10px_rgb(0,0,0,0.06)] focus-within:transform focus-within:-translate-y-[1px] dark:bg-[#1f2022] dark:focus-within:bg-[#232526] dark:focus-within:shadow-none">
-                <Icon icon="ic:outline-search" className="w-5 h-5 text-unselected shrink-0 dark:text-[#91a0b0]" />
+              <div className="w-full flex items-center transition-all duration-300 bg-[#f8f9fa] rounded-num-12 py-3 pl-3 pr-4 border border-transparent focus-within:bg-white focus-within:shadow-[0_8px_10px_rgb(0,0,0,0.06)] focus-within:transform focus-within:-translate-y-[1px]">
+                <Icon icon="ic:outline-search" className="w-5 h-5 text-unselected shrink-0" />
                 <input
                   type="text"
                   placeholder="Search for Dorms, Apartments, or Locations (e.g. UPLB, Umali Subdivision)"
                   value={searchTerm}
                   maxLength={50}
                   onChange={(e) => handleSearch(e.target.value)}
-                  className="w-full bg-transparent border-none outline-none text-num-14 font-semibold text-darkgreen placeholder:text-unselected placeholder:font-normal dark:text-[#d7e0ef] dark:placeholder:text-[#91a0b0]"
+                  className="w-full bg-transparent border-none outline-none text-num-14 font-semibold text-darkgreen placeholder:text-unselected placeholder:font-normal"
                 />
                 {searchTerm && (
                   <button
                     type="button"
                     onClick={() => handleSearch('')}
-                    className="text-unselected hover:text-darkgreen dark:text-[#91a0b0] dark:hover:text-white"
+                    className="text-unselected hover:text-darkgreen"
                   >
                     <Icon icon="material-symbols:close-rounded" className="w-4 h-4" />
                   </button>
@@ -270,17 +368,18 @@ const HomePage: FunctionComponent = () => {
               </div>
             </div>
 
-            <div className="w-full flex flex-col items-start gap-6 text-[1.5rem] text-gray dark:text-[#edf6f4]">
+            <div className="w-full flex flex-col items-start gap-6 text-[1.5rem] text-gray">
+
               {/* greeting / filter button */}
               <div className="w-full flex items-center justify-between box-border">
                 <div className="w-full h-8 flex-1 flex flex-col items-start justify-center">
-                  <b className="relative leading-8 text-teal dark:text-[#72cbb8]">Mabuhay, iskolar!</b>
+                  <b className="relative leading-8 text-teal">Mabuhay, iskolar!</b>
                 </div>
                 <div className="w-fit h-fit flex items-center">
                   <button
                     type="button"
                     onClick={() => setIsFilterOpen(true)}
-                    className="h-10 w-10 rounded-full bg-whitesmoke-100 flex items-center justify-center cursor-pointer hover:bg-lightcyan/45 transition-colors dark:bg-[#242526] dark:text-[#d7e0ef] dark:hover:bg-[#2d302f]"
+                    className="h-10 w-10 rounded-full bg-whitesmoke-100 flex items-center justify-center cursor-pointer hover:bg-lightcyan/45 transition-colors"
                   >
                     <Icon icon="mage:filter" className="w-6 h-6" />
                   </button>
@@ -293,18 +392,12 @@ const HomePage: FunctionComponent = () => {
                         onClick={() => setIsFilterOpen(false)}
                         aria-label="Close filters"
                       />
-                      <div className="relative z-10 w-full max-w-[500px] h-full bg-white animate-in slide-in-from-right duration-500 overflow-y-auto dark:bg-[#101111]">
-                        <div className="p-4 flex justify-between items-center border-b dark:border-[#303331]">
-                          <h2 className="text-xl font-bold">Filters</h2>
-                          <button
-                            type="button"
-                            onClick={() => setIsFilterOpen(false)}
-                            className="p-2 hover:bg-gray-100 rounded-full dark:hover:bg-[#242526]"
-                          >
-                            <Icon icon="material-symbols:close" className="w-6 h-6" />
-                          </button>
-                        </div>
-                        <FilterTab onClose={() => setIsFilterOpen(false)} />
+                      <div className="relative z-10 w-full max-w-[500px] h-full bg-white animate-in slide-in-from-right duration-500 overflow-y-auto">
+                        <FilterTab
+                          filterCriteria={filterCriteria}
+                          setFilterCriteria={setFilterCriteria}
+                          onClose={() => setIsFilterOpen(false)}
+                        />
                       </div>
                     </div>
                   )}
@@ -312,7 +405,6 @@ const HomePage: FunctionComponent = () => {
               </div>
 
               <div className="w-full min-w-0 flex flex-col items-start gap-10">
-                {/* Error state */}
                 {error ? (
                   <ErrorState message={error} onRetry={refetch} />
                 ) : isSearching ? (
@@ -320,18 +412,17 @@ const HomePage: FunctionComponent = () => {
                   <div className="w-full flex flex-col items-start gap-6">
                     <div className="w-full flex items-center justify-between">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <b className="text-[1rem] text-darkgreen dark:text-[#edf6f4]">
-                          Results for <span className="text-teal dark:text-[#72cbb8]">"{searchTerm}"</span>
+                        <b className="text-[1rem] text-darkgreen">
+                          Results for <span className="text-teal">"{searchTerm}"</span>
                         </b>
-                        <span className="text-[0.75rem] text-unselected font-normal dark:text-[#91a0b0]">
-                          — {filteredDorms.length} listing{filteredDorms.length !== 1 ? 's' : ''}{' '}
-                          found
+                        <span className="text-[0.75rem] text-unselected font-normal">
+                          — {filteredDorms.length} listing{filteredDorms.length !== 1 ? 's' : ''} found
                         </span>
                       </div>
                       <button
                         type="button"
                         onClick={() => handleSearch('')}
-                        className="text-[0.75rem] text-teal-100 underline font-semibold hover:opacity-70 transition-opacity whitespace-nowrap dark:text-[#72cbb8]"
+                        className="text-[0.75rem] text-teal-100 underline font-semibold hover:opacity-70 transition-opacity whitespace-nowrap"
                       >
                         Clear search
                       </button>
@@ -358,14 +449,14 @@ const HomePage: FunctionComponent = () => {
                         <button
                           type="button"
                           onClick={() => setViewAllCategory(null)}
-                          className="flex items-center justify-center h-8 w-8 rounded-full bg-whitesmoke-100 hover:bg-lightcyan/45 transition-colors dark:bg-[#242526] dark:hover:bg-[#2d302f]"
+                          className="flex items-center justify-center h-8 w-8 rounded-full bg-whitesmoke-100 hover:bg-lightcyan/45 transition-colors"
                         >
-                          <Icon icon="solar:arrow-left-bold" className="w-4 h-4 text-darkgreen dark:text-[#d7e0ef]" />
+                          <Icon icon="solar:arrow-left-bold" className="w-4 h-4 text-darkgreen" />
                         </button>
-                        <b className="text-[1rem] text-darkgreen dark:text-[#edf6f4]">
+                        <b className="text-[1rem] text-darkgreen">
                           {CATEGORY_LABELS[viewAllCategory]}
                         </b>
-                        <span className="text-[0.75rem] text-unselected font-normal dark:text-[#91a0b0]">
+                        <span className="text-[0.75rem] text-unselected font-normal">
                           — {CATEGORY_DATA[viewAllCategory].length} listing
                           {CATEGORY_DATA[viewAllCategory].length !== 1 ? 's' : ''}
                         </span>
@@ -373,7 +464,7 @@ const HomePage: FunctionComponent = () => {
                       <button
                         type="button"
                         onClick={() => setViewAllCategory(null)}
-                        className="text-[0.75rem] text-teal-100 underline font-semibold hover:opacity-70 transition-opacity whitespace-nowrap dark:text-[#72cbb8]"
+                        className="text-[0.75rem] text-teal-100 underline font-semibold hover:opacity-70 transition-opacity whitespace-nowrap"
                       >
                         Back to home
                       </button>
@@ -429,7 +520,7 @@ const HomePage: FunctionComponent = () => {
                         <b className="w-fit flex items-center">All Listings</b>
                       </div>
                       <div className="w-full flex flex-wrap gap-6">
-                        {facilities.map((dorm) => (
+                        {filterApplied.map((dorm) => (
                           <DormCard key={dorm.id} {...dorm} />
                         ))}
                       </div>
@@ -441,6 +532,17 @@ const HomePage: FunctionComponent = () => {
           </div>
         </div>
       </div>
+
+      <button
+        type="button"
+        className="help-button-animated bottom-10 right-10 z-[1000] cursor-pointer transition-all hover:scale-110 active:scale-95"
+        onClick={() => setShowHelp(true)}
+        aria-label="Open application guide"
+      >
+        <img src={TutorialIcon} alt="Help" className="w-16 h-16 drop-shadow-lg" />
+      </button>
+
+      {showHelp && <ApplicationGuideModal onClose={() => setShowHelp(false)} />}
     </div>
   );
 };

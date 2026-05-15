@@ -26,8 +26,8 @@ export default function CurrentDormCard({
 
   const navigate = useNavigate();
   return (
-    <div className="flex flex-col gap-5 max-w-4xl mx-auto">
-      <div className="max-w-4xl mx-auto rounded-xl border border-[#f0f0f0] bg-white overflow-hidden shadow-sm text-black">
+    <div className="flex flex-col gap-5 max-w-4xl mx-auto dark:text-[#edf6f4]">
+      <div className="max-w-4xl mx-auto rounded-xl border border-[#f0f0f0] bg-white overflow-hidden shadow-sm text-black dark:border-[#303331] dark:bg-[#101111] dark:text-[#edf6f4] dark:shadow-none">
         {/* Property Image */}
         <img src={propertyImageSrc} alt={propertyName} className="w-[1200px] h-[400px] object-cover" />
 
@@ -38,36 +38,29 @@ export default function CurrentDormCard({
           {/* Information Grid */}
           <div className="grid grid-cols-3 gap-4 mb-8">
             {/* Unit Box */}
-            <div className="text-center border border-[#f0f0f0] rounded-lg p-4">
+            <div className="text-center border border-[#f0f0f0] rounded-lg p-4 dark:border-[#303331] dark:bg-[#101111]">
               <p className="text-xl font-bold text-teal-700">{unitNumber}</p>
               <p className="text-xs">Unit</p>
             </div>
 
             {/* Contract Box */}
-            <div className="text-center border border-[#f0f0f0] rounded-lg p-4">
+            <div className="text-center border border-[#f0f0f0] rounded-lg p-4 dark:border-[#303331] dark:bg-[#101111]">
               <p className="text-xl font-bold text-teal-700">{contractDuration}</p>
               <p className="text-xs">Contract</p>
             </div>
 
             {/* Lease End Box */}
-            <div className="text-center border border-[#f0f0f0] rounded-lg p-4">
+            <div className="text-center border border-[#f0f0f0] rounded-lg p-4 dark:border-[#303331] dark:bg-[#101111]">
               <p className="text-xl font-bold text-teal-700">{leaseEndDate}</p>
               <p className="text-xs">Lease End</p>
             </div>
           </div>
 
-          {/* Action Button */}
-          <button
-            onClick={() => navigate('/current-dorm')}
-            className="w-full border border-[#f0f0f0] text-teal-700 text-sm font-semibold rounded-md py-3 flex items-center justify-center gap-2 hover:border-teal-500 cursor-pointer transition">
-            View Details
-            <Icon icon="heroicons:arrow-top-right-on-square" className="w-4 h-4" />
-          </button>
         </div>
       </div>
-      <div className="self-stretch flex items-start justify-center pt-num-24 px-num-32 pb-20 gap-6 text-num-14 text-black">
+      <div className="self-stretch flex items-start justify-center pt-num-24 px-num-32 pb-20 gap-6 text-num-14 text-black dark:text-[#edf6f4]">
         {/* left sidebar */}
-        <div className="h-[168px] w-[280px] rounded-2xl border-whitesmoke-200 border-solid border box-border overflow-hidden shrink-0 flex flex-col items-start py-3 px-4">
+        <div className="h-[168px] w-[280px] rounded-2xl border-whitesmoke-200 border-solid border box-border overflow-hidden shrink-0 flex flex-col items-start py-3 px-4 dark:border-[#303331] dark:bg-[#101111]">
           <div className="self-stretch flex flex-col items-end py-1 px-0 gap-1">
             {/* contract info */}
             <div
@@ -144,13 +137,13 @@ export default function CurrentDormCard({
         </div>
 
         {/* right sidebar: contents */}
-        <div className="h-[168px] w-[612px] rounded-lg border-whitesmoke-200 border-solid border box-border overflow-hidden shrink-0 flex items-center px-8 text-center">
+        <div className="h-[168px] w-[612px] rounded-lg border-whitesmoke-200 border-solid border box-border overflow-hidden shrink-0 flex items-center px-8 text-center dark:border-[#303331] dark:bg-[#101111]">
           {activeTab === 'Contract Information' && (
             <div className="flex-1 flex items-center justify-between py-3">
               <div className="flex items-center gap-4">
-                <Icon icon="line-md:file" className="h-10 w-10 text-black" />
+                <Icon icon="line-md:file" className="h-10 w-10 text-black dark:text-[#edf6f4]" />
                 <div className="flex flex-col items-start justify-center">
-                  <b className="text-[16px] text-black">tenancy_contract.pdf</b>
+                  <b className="text-[16px] text-black dark:text-[#edf6f4]">tenancy_contract.pdf</b>
                   <div className="text-[12px] font-semibold text-slategray">
                     Submitted: 02 April 2026
                   </div>
@@ -174,7 +167,7 @@ export default function CurrentDormCard({
               </p>
 
               <button
-                className="px-4 py-1 cursor-pointer text-[#096c5b] bg-[#f1f5f9] rounded-full"
+                className="px-4 py-1 cursor-pointer text-[#096c5b] bg-[#f1f5f9] rounded-full dark:bg-[#0d3a32] dark:text-[#72cbb8]"
                 onClick={() => {
                   navigate('/rate-review');
                 }}
@@ -194,8 +187,8 @@ export default function CurrentDormCard({
               </p>
 
               <button
-                className="px-4 py-1 text-gray-100 bg-[#f1f5f9] rounded-full"
-                onClick={() => {}}
+                className="px-4 py-1 text-gray-100 bg-[#f1f5f9] rounded-full dark:bg-[#202123] dark:text-[#a4acba]"
+                onClick={() => { }}
               >
                 Proceed
               </button>
@@ -209,7 +202,7 @@ export default function CurrentDormCard({
               <p className="text-[14px] text-slategray"> You haven't submitted any reports yet.</p>
 
               <button
-                className="px-4 py-1 cursor-pointer text-[#096c5b] bg-[#f1f5f9] rounded-full"
+                className="px-4 py-1 cursor-pointer text-[#096c5b] bg-[#f1f5f9] rounded-full dark:bg-[#0d3a32] dark:text-[#72cbb8]"
                 onClick={() => {
                   navigate('/report-dorm');
                 }}
@@ -230,8 +223,8 @@ export default function CurrentDormCard({
               </p>
 
               <button
-                className="px-4 py-1 text-gray-100 bg-[#f1f5f9] rounded-full"
-                onClick={() => {}}
+                className="px-4 py-1 text-gray-100 bg-[#f1f5f9] rounded-full dark:bg-[#202123] dark:text-[#a4acba]"
+                onClick={() => { }}
               >
                 Proceed
               </button>
@@ -248,7 +241,7 @@ export default function CurrentDormCard({
               </p>
 
               <button
-                className="px-4 py-1 cursor-pointer text-[#096c5b] bg-[#f1f5f9] rounded-full"
+                className="px-4 py-1 cursor-pointer text-[#096c5b] bg-[#f1f5f9] rounded-full dark:bg-[#0d3a32] dark:text-[#72cbb8]"
                 onClick={() => {
                   navigate('/lease-transfer');
                 }}
@@ -270,7 +263,7 @@ export default function CurrentDormCard({
 
               <button
                 className="px-4 py-1  text-gray-100  bg-[#f1f5f9] rounded-full"
-                onClick={() => {}}
+                onClick={() => { }}
               >
                 Proceed
               </button>

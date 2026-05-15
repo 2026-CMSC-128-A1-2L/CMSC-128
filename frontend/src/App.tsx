@@ -17,7 +17,7 @@ const getSignedInDestination = (user: ReturnType<typeof useAuthStore.getState>['
   if (!user) return '/';
   if (user.status === 'setup') return '/registration';
   if (user.userType === 'Landlord' || user.userType === 'Manager') return '/landlord-homepage';
-  if (user.userType === 'Admin') return '/admin/analytics';
+  if (user.userType === 'Admin') return '/admin/applications';
   return '/home';
 };
 

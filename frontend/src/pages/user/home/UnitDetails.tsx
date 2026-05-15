@@ -20,6 +20,9 @@ import { useFacilities, type DormCardData } from '../../../hooks/useFacilities';
 import { useFacilityDetails } from '../../../hooks/useFacilityDetails';
 import { useBookmarks } from '../../../hooks/useBookmarks';
 import { BookmarkService } from '../../../service/BookmarkService';
+import { ApplicationService } from '../../../service/ApplicationService';
+import CalendarPopout from '../../../components/user/user-calendar/CalendarPopout';
+import PortalPopup from '../../../components/general/PortalPopup';
 
 const currencyFormatter = new Intl.NumberFormat('en-PH', {
   style: 'currency',
@@ -28,8 +31,14 @@ const currencyFormatter = new Intl.NumberFormat('en-PH', {
 });
 
 const roomButtonLabel = (label: string) => label.replace(/\s*\([^)]*\)\s*$/, '');
+const objectIdPattern = /^[a-f\d]{24}$/i;
 
 const leaseDurations = ['1 sem', '2 sem', '1 year'];
+const leaseDurationValues: Record<string, '6-months' | '12-months'> = {
+  '1 sem': '6-months',
+  '2 sem': '12-months',
+  '1 year': '12-months',
+};
 const amenityTagIcons: Record<string, string> = {
   hasWifi: 'material-symbols:wifi',
   hasAircon: 'material-symbols:snowflake',
@@ -90,7 +99,10 @@ const UnitDetails: FunctionComponent = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isBookmarkSaving, setIsBookmarkSaving] = useState(false);
   const [bookmarkError, setBookmarkError] = useState<string | null>(null);
+  const [applicationError, setApplicationError] = useState<string | null>(null);
+  const [isSubmittingApplication, setIsSubmittingApplication] = useState(false);
   const [showSignIn, setShowSignIn] = useState(false);
+  const [isVisitPopoutOpen, setVisitPopoutOpen] = useState(false);
   const availableListings = useMemo(() => facility?.listings ?? [], [facility]);
 
   useEffect(() => {
@@ -263,9 +275,72 @@ const UnitDetails: FunctionComponent = () => {
     }
   };
 
+  const handleSubmitApplication = async () => {
+    if (!selectedListing) {
+      setApplicationError('Please choose an available room before submitting.');
+      return;
+    }
+
+    if (!objectIdPattern.test(selectedListing.id)) {
+      setApplicationError('Room details are still loading. Please try again in a moment.');
+      return;
+    }
+
+    if (!leaseDuration || !moveInDate) {
+      setApplicationError('Please choose your lease duration and preferred move-in date.');
+      return;
+    }
+
+    setIsSubmittingApplication(true);
+    setApplicationError(null);
+
+    try {
+      const moveIn = new Date(`${moveInDate}T00:00:00.000Z`);
+      await ApplicationService.createApplication({
+        listingId: selectedListing.id,
+        leaseDuration: leaseDurationValues[leaseDuration],
+        moveInDate: moveIn,
+        message: messageToLandlord.trim() || null,
+      });
+      navigate('/applications');
+    } catch (err) {
+      const status = axios.isAxiosError(err) ? err.response?.status : undefined;
+      if (status === 401) {
+        setShowSignIn(true);
+        return;
+      }
+
+      const apiMessage = axios.isAxiosError(err)
+        ? (err.response?.data as { error?: { message?: string } })?.error?.message
+        : undefined;
+      setApplicationError(apiMessage ?? 'Failed to submit your application.');
+    } finally {
+      setIsSubmittingApplication(false);
+    }
+  };
+
+  const handleOpenVisitPopout = () => {
+    if (!facility.allowVisit) return;
+    setVisitPopoutOpen(true);
+  };
+
   return (
     <div className="flex min-h-screen font-lora text-darkslategray-100">
       {showSignIn && <SignInPopUp onClose={() => setShowSignIn(false)} />}
+      {isVisitPopoutOpen && (
+        <PortalPopup
+          overlayColor="rgba(0, 0, 0, 0.25)"
+          placement="Centered"
+          onOutsideClick={() => setVisitPopoutOpen(false)}
+        >
+          <CalendarPopout
+            facilityId={facility.id}
+            facilityName={facility.name}
+            facilityAddress={facility.location}
+            onClose={() => setVisitPopoutOpen(false)}
+          />
+        </PortalPopup>
+      )}
       {/* Sidebar */}
       <div className="sticky top-0 h-screen shrink-0 z-10">
         <SideBar />
@@ -333,9 +408,14 @@ const UnitDetails: FunctionComponent = () => {
                   </b>
                 </div>
                 <div className="flex items-center gap-3 text-xs text-teal-200 font-poppins">
-                  <div className="rounded border border-teal-200 py-2 px-6">
+                  <button
+                    type="button"
+                    onClick={handleOpenVisitPopout}
+                    disabled={!facility.allowVisit}
+                    className="rounded border border-teal-200 py-2 px-6 transition-colors disabled:cursor-not-allowed disabled:opacity-60 hover:bg-lightcyan"
+                  >
                     {facility.allowVisit ? 'VISIT' : 'NO VISIT'}
-                  </div>
+                  </button>
                   <button
                     type="button"
                     onClick={handleBookmarkToggle}
@@ -540,13 +620,22 @@ const UnitDetails: FunctionComponent = () => {
               </div>
 
               <div className="w-full flex flex-col gap-2 font-poppins text-white">
-                <Link
-                  to="/applications"
-                  className="w-full rounded-lg bg-darkslategray-200 flex items-center justify-center gap-2 py-3 px-4"
+                {applicationError && (
+                  <p className="text-xs font-semibold text-red-500 font-lora text-center">
+                    {applicationError}
+                  </p>
+                )}
+                <button
+                  type="button"
+                  onClick={handleSubmitApplication}
+                  disabled={isSubmittingApplication}
+                  className="w-full rounded-lg bg-darkslategray-200 flex items-center justify-center gap-2 py-3 px-4 disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  <span className="font-medium text-sm">Submit Application</span>
+                  <span className="font-medium text-sm">
+                    {isSubmittingApplication ? 'Submitting...' : 'Submit Application'}
+                  </span>
                   <Icon icon="formkit:arrowright" className="h-5 w-5" />
-                </Link>
+                </button>
                 <p className="text-xs text-dimgray font-lora text-center">
                   Landlord will respond within 24–48 hrs.
                   <br />

@@ -35,19 +35,97 @@ export type GetBookingArguments = {
   message: string;
 };
 
+const DEFAULT_VISIT_START_HOUR = 9;
+const DEFAULT_VISIT_END_HOUR = 17;
+const VISIT_SLOT_MINUTES = 60;
+
+const isSameSlot = (left: Date, right: Date) => left.getTime() === right.getTime();
+
+const getDayBounds = (date: Date) => {
+  const dayStart = new Date(date);
+  dayStart.setHours(0, 0, 0, 0);
+  const dayEnd = new Date(date);
+  dayEnd.setHours(23, 59, 59, 999);
+
+  return { dayStart, dayEnd };
+};
+
+const getDefaultVisitStarts = (date: Date) => {
+  const { dayStart } = getDayBounds(date);
+  const dayOfWeek = dayStart.getDay();
+
+  // TODO: Replace these default hours with persisted landlord/manager availability.
+  return dayOfWeek === 0 || dayOfWeek === 6
+    ? []
+    : Array.from({ length: DEFAULT_VISIT_END_HOUR - DEFAULT_VISIT_START_HOUR }, (_, index) => {
+        const start = new Date(dayStart);
+        start.setHours(DEFAULT_VISIT_START_HOUR + index, 0, 0, 0);
+        return start;
+      });
+};
+
+export const getAvailableVisitSlots = async (
+  facilityId: mongoose.Types.ObjectId,
+  date: Date,
+  filters: QueryFilter<HousingFacilityType> = {},
+) => {
+  const facility = await HousingFacility.where(filters).findById(facilityId);
+  if (!facility) throw new AppError(404, 'Facility not found.');
+  if (!facility.allowVisit) return [];
+
+  const { dayStart, dayEnd } = getDayBounds(date);
+  const availableStarts = getDefaultVisitStarts(date).filter((start) => start > new Date());
+
+  const bookedSlots = await VisitBooking.find({
+    facilityId,
+    status: { $ne: 'cancelled' },
+    startDate: { $gte: dayStart, $lte: dayEnd },
+  }).select('startDate');
+
+  return availableStarts.map((startDate) => {
+    const endDate = new Date(startDate);
+    endDate.setMinutes(endDate.getMinutes() + VISIT_SLOT_MINUTES);
+
+    return {
+      startDate,
+      endDate,
+      available: !bookedSlots.some((booking) => isSameSlot(booking.startDate, startDate)),
+    };
+  });
+};
+
 export const createBooking = async (
   data: CreateBookingArguments,
-  filters: QueryFilter<HousingFacilityType>,
+  filters: QueryFilter<HousingFacilityType> = {},
 ) => {
   if (data.startDate && data.endDate && data.endDate < data.startDate) {
     throw new AppError(422, 'Booking end date should not be before booking start date date.');
   }
+  if (data.startDate < new Date()) {
+    throw new AppError(422, 'Booking start date should not be in the past.');
+  }
 
   const facility = await HousingFacility.where(filters).findById(data.facilityId);
   if (!facility) throw new AppError(404, 'Facility not found.');
+  if (!facility.allowVisit) throw new AppError(422, 'This facility is not accepting visits.');
 
-  // TODO: Check availability of managers
+  const selectedSlotStart = getDefaultVisitStarts(data.startDate).find((slotStart) =>
+    isSameSlot(slotStart, data.startDate),
+  );
+  if (!selectedSlotStart) {
+    throw new AppError(422, 'Selected visit time is outside the available schedule.');
+  }
+  const existingBooking = await VisitBooking.exists({
+    facilityId: data.facilityId,
+    status: { $ne: 'cancelled' },
+    startDate: data.startDate,
+  });
+  if (existingBooking) {
+    throw new AppError(409, 'Selected visit slot is no longer available.');
+  }
 
+  // TODO: When landlord approval is implemented, keep new bookings pending until approve/reject.
+  // For now, pending bookings are considered accepted by the student calendar flow.
   const newBooking = new VisitBooking(data);
   return await newBooking.save();
 };

@@ -7,6 +7,7 @@ import RegistrationVerification from '../components/general/RegistrationVerifica
 import RegistrationFinalize from '../components/general/RegistrationFinalize';
 import { UserService } from '../service/UserService';
 import type { OnboardSelfRequestBody } from '../interface/user';
+import ProgressBar from '../components/user/ProgressBar';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -47,7 +48,7 @@ const Registration: FunctionComponent = () => {
           if (user.userType === 'Landlord' || user.userType === 'Manager') {
             navigate('/landlord-homepage', { replace: true });
           } else if (user.userType === 'Admin') {
-            navigate('/admin/analytics', { replace: true });
+            navigate('/admin/applications', { replace: true });
           } else {
             navigate('/home', { replace: true });
           }
@@ -178,93 +179,46 @@ const Registration: FunctionComponent = () => {
     }
   };
 
-  const steps = [
-    { label: 'User Profile', active: currentStep === 0 },
-    { label: 'Verification', active: currentStep === 1 },
-    { label: 'Finalize', active: currentStep === 2 },
-  ];
+  const steps = ['User Profile', 'Verification', 'Finalize'];
 
   return (
-    <div className="w-screen font-sans">
+    <div className="w-screen min-h-screen font-sans bg-white dark:bg-[#101111]">
       <div className="px-20 pt-4 pb-12">
         {/* Cancel */}
         <button
           type="button"
-          className="flex items-center gap-1.5 py-4 cursor-pointer w-fit"
+          className="flex items-center gap-1.5 py-4 cursor-pointer w-fit text-gray-700 dark:text-[#a4acba]"
           onClick={onCancelClick}
         >
-          <Icon icon="material-symbols:chevron-left" className="w-4 h-4 text-gray-700" />
-          <span className="text-sm font-semibold text-gray-700">Cancel</span>
+          <Icon icon="material-symbols:chevron-left" className="w-4 h-4 text-gray-700 dark:text-[#a4acba]" />
+          <span className="text-sm font-semibold text-gray-700 dark:text-[#a4acba]">Cancel</span>
         </button>
 
-        <div className="rounded-3xl border border-whitesmoke px-10 pt-8 pb-10">
-          <h1 className="text-2xl font-bold" style={{ color: '#1a5c50' }}>
+        <div className="rounded-3xl border border-whitesmoke dark:border-[#303331] bg-white dark:bg-[#141515] px-10 pt-8 pb-10">
+          <h1 className="text-2xl font-bold text-[#1a5c50] dark:text-[#d7e0ef]">
             Welcome to Atlas
           </h1>
-          <p className="text-sm font-semibold text-slategray mt-1">
+          <p className="text-sm font-semibold text-slategray dark:text-[#a4acba] mt-1">
             Follow 3 simple steps and you're ready to go!
           </p>
 
-          <div className="w-full h-px my-6" />
+          <div className="w-full h-px my-6 bg-whitesmoke dark:bg-[#303331]" />
 
           <div className="flex gap-20 px-10 items-start relative">
             {/* Sticky stepper */}
-            <div
-              className="flex flex-col sticky top-10 self-start shrink-0"
-              style={{ minWidth: '160px' }}
-            >
-              {steps.map((step, i) => (
-                <div key={step.label} className="flex">
-                  <div className="flex flex-col items-center mr-3">
-                    <div
-                      className="w-8 h-8 rounded-full shrink-0 flex items-center justify-center transition-colors duration-300"
-                      style={{ background: step.active ? '#1a5c50' : '#d1d5db' }}
-                    >
-                      {step.active && (
-                        <div className="w-2.5 h-2.5 rounded-full bg-white opacity-90" />
-                      )}
-                      {currentStep > i && (
-                        <Icon
-                          icon="material-symbols:check-rounded"
-                          className="w-4 h-4 text-white"
-                        />
-                      )}
-                    </div>
-                    {i < steps.length - 1 && (
-                      <div
-                        className="w-0.5 transition-all duration-300"
-                        style={{
-                          flex: 1,
-                          minHeight: '150px',
-                          background:
-                            currentStep > i
-                              ? '#1a5c50'
-                              : i === 0 && currentStep === 0
-                                ? 'linear-gradient(to bottom, rgba(26,92,80,0.7), #b5c8c5)'
-                                : '#d1d5db',
-                        }}
-                      />
-                    )}
-                  </div>
-                  <div className="flex items-start pt-1.5 pb-4">
-                    <span
-                      className="text-sm font-semibold transition-colors duration-300"
-                      style={{
-                        color: step.active ? '#1a5c50' : currentStep > i ? '#1a5c50' : '#9ca3af',
-                      }}
-                    >
-                      {step.label}
-                    </span>
-                  </div>
-                </div>
-              ))}
+            <div className="sticky top-10 self-start shrink-0" style={{ minWidth: '160px' }}>
+              <ProgressBar
+                currentStepIndex={currentStep}
+                orientation="vertical"
+                connectorClassName="min-h-[150px]"
+                steps={steps.map((label, index) => ({ key: `${index}-${label}`, label }))}
+              />
             </div>
-
             {/* Step content */}
             <div className="flex-1 min-w-0">{renderStepContent()}</div>
           </div>
           {submitError && (
-            <div className="mt-6 rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
+            <div className="mt-6 rounded-xl border border-red-100 bg-red-50 dark:border-red-900/50 dark:bg-red-900/20 px-4 py-3 text-sm font-semibold text-red-700 dark:text-red-400">
               {submitError}
             </div>
           )}

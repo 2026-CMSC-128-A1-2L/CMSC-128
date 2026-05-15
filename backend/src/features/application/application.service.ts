@@ -12,6 +12,9 @@ import z from 'zod';
 import { DateTimeSchema, ObjectIdSchema } from 'shared';
 import { combineFilters } from '../../middleware.js';
 import { isUnitFull } from '../unit/unit.service.js';
+import { Listing } from '../listing/listing.model.js';
+import { File } from '../file/file.model.js';
+import { createRental } from '../rental/rental.service.js';
 
 export type GetApplicationsArguments = NullablePartial<{
   userId: mongoose.Types.ObjectId;
@@ -32,8 +35,29 @@ export type GetApplicationsArguments = NullablePartial<{
 export const createApplication = async (
   userId: mongoose.Types.ObjectId,
   listingId: mongoose.Types.ObjectId,
+  data: {
+    leaseDuration: '6-months' | '12-months';
+    moveInDate: Date;
+    message?: string | null;
+  },
 ) => {
-  const newApplication = new ApplicationForm({ userId, listingId });
+  const listing = await Listing.findById(listingId).select('facilityId');
+  if (!listing) throw new AppError(404, 'Listing not found.');
+
+  const newApplication = new ApplicationForm({
+    userId,
+    listingId,
+    facilityId: listing.facilityId,
+    leaseDuration: data.leaseDuration,
+    moveInDate: data.moveInDate,
+    preferredMoveInDate: data.moveInDate,
+    message: data.message,
+    documents: [
+      { docId: 'official-id', name: 'Official University ID', status: 'pending', files: [] },
+      { docId: 'parental-consent', name: 'Parental Consent Form', status: 'pending', files: [] },
+      { docId: 'tenancy-contract', name: 'Tenancy Contract', status: 'pending', files: [] },
+    ],
+  });
   return await newApplication.save();
 };
 
@@ -47,11 +71,18 @@ const GetApplicationsCursorSchema = CursorSchema(
   }),
 );
 
+const getExpectedMoveOutDate = (moveInDate: Date, leaseDuration: '6-months' | '12-months') => {
+  const moveOutDate = new Date(moveInDate);
+  moveOutDate.setMonth(moveOutDate.getMonth() + (leaseDuration === '6-months' ? 6 : 12));
+  return moveOutDate;
+};
+
 export const getApplications = async (
   query: GetApplicationsArguments,
   filters: QueryFilter<ApplicationType>,
 ) => {
-  const queryFilter = buildQuery<ApplicationType>(query);
+  const { cursor: _cursor, limit, ...applicationFilters } = query;
+  const queryFilter = buildQuery<ApplicationType>(applicationFilters);
   const cursorQuery: QueryFilter<ApplicationType> = {};
   if (query.cursor) {
     const cursor = GetApplicationsCursorSchema.parse(query.cursor);
@@ -67,8 +98,15 @@ export const getApplications = async (
       cursorQuery,
     ),
   )
+    .populate(
+      'userId',
+      'firstName middleName lastName emails email contact address studentNumber profilePicture',
+    )
+    .populate('facilityId', 'name location media')
+    .populate('listingId', 'roomType capacity tags')
+    .populate('unitId', 'roomNumber price location')
     .sort({ createdAt: -1, _id: -1 })
-    .limit(query.limit)
+    .limit(limit)
     .lean();
 
   return await queryExec;
@@ -78,7 +116,15 @@ export const getApplicationById = async (
   applicationId: mongoose.Types.ObjectId,
   filters: QueryFilter<ApplicationType>,
 ) => {
-  return await ApplicationForm.where(filters).findById(applicationId);
+  return await ApplicationForm.where(filters)
+    .findById(applicationId)
+    .populate(
+      'userId',
+      'firstName middleName lastName emails email contact address studentNumber profilePicture',
+    )
+    .populate('facilityId', 'name location media')
+    .populate('listingId', 'roomType capacity tags')
+    .populate('unitId', 'roomNumber price location');
 };
 
 // no error because it can be empty, just return empty array
@@ -148,9 +194,22 @@ export const approveFinalApplication = async (
   // not met.
   //
   // throw new AppError(422, "Cannot accept an application rejected by a manager.");
-  if (application.status !== 'waitlisted') {
+  if (application.status !== 'finalized') {
     throw new AppError(422, `Applications that are '${application.status}' cannot be approved.`);
   }
+
+  if (!application.unitId) {
+    throw new AppError(422, 'Application must have an assigned unit before final approval.');
+  }
+
+  await createRental({
+    userId: application.userId,
+    facilityId: application.facilityId,
+    unitId: application.unitId,
+    applicationId: application._id,
+    expectedMoveInDate: application.moveInDate,
+    expectedMoveOutDate: getExpectedMoveOutDate(application.moveInDate, application.leaseDuration),
+  });
 
   application.status = 'approved';
   const { subject, content } = statusMessages[application.status];
@@ -190,7 +249,7 @@ export const rejectFinalApplication = async (
   // The only legal states for final rejection is from `manager-approved` and `manager-waitlisted`.
   //
   // throw new AppError(422, "Cannot accept an application rejected by a manager.");
-  if (application.status !== 'waitlisted' && application.status !== 'pending')
+  if (application.status !== 'finalized')
     throw new AppError(422, `Applications that are '${application.status}' cannot be rejected.`);
 
   application.status = 'rejected';
@@ -266,11 +325,31 @@ export const finalizeApplication = async (
   if (!application) return;
 
   // The only legal states for initial acceptance is from `approved`
-  if (application.status !== 'approved')
+  if (application.status !== 'waitlisted')
     throw new AppError(422, `Applications that are '${application.status}' cannot be finalized.`);
 
   application.status = 'finalized';
   const { subject, content } = statusMessages[application.status];
   await sendNotification(application.userId, subject, content);
+  return await application.save();
+};
+
+export const addApplicationDocument = async (
+  applicationId: mongoose.Types.ObjectId,
+  docId: string,
+  fileKey: string,
+  userId: mongoose.Types.ObjectId,
+) => {
+  const application = await ApplicationForm.findOne({ _id: applicationId, userId });
+  if (!application) throw new AppError(404, 'Application not found.');
+
+  const file = await File.findOne({ key: fileKey, userId });
+  if (!file) throw new AppError(404, 'File not found.');
+
+  const document = application.documents.find((doc) => doc.docId === docId);
+  if (!document) throw new AppError(404, 'Document requirement not found.');
+
+  if (!document.files.includes(fileKey)) document.files.push(fileKey);
+  document.status = 'pending';
   return await application.save();
 };

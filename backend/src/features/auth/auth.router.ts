@@ -34,7 +34,7 @@ router.get('/google/callback', (req, res, next) => {
       if (user.status === 'setup') {
         return res.redirect(getFrontendUrl('/registration'));
       } else {
-        return res.redirect(getFrontendUrl('/home'));
+        return res.redirect(getFrontendUrl('/'));
       }
     });
   })(req, res, next);

@@ -3,6 +3,7 @@ import { CalendarService, type CalendarEvent } from '../../../service/CalendarSe
 
 interface MainCalendarGridProps {
   currentDate: Date;
+  events: CalendarEvent[];
   onPrevMonth?: () => void;
   onNextMonth?: () => void;
   onEventClick?: (event: CalendarEvent) => void;
@@ -27,27 +28,11 @@ const getEventColor = (type: CalendarEvent['type']) => {
 
 const MainCalendarGrid: FunctionComponent<MainCalendarGridProps> = ({
   currentDate,
+  events,
   onPrevMonth,
   onNextMonth,
   onEventClick,
 }) => {
-  const [events, setEvents] = useState<CalendarEvent[]>([]);
-
-  useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const response = await CalendarService.getCalendarEvents(
-          currentDate.getFullYear(),
-          currentDate.getMonth() + 1,
-        );
-        setEvents(response.data);
-      } catch (error) {
-        console.error('Failed to load calendar events:', error);
-      }
-    };
-
-    fetchEvents();
-  }, [currentDate]);
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
