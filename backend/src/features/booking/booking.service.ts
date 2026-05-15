@@ -158,10 +158,7 @@ export const updateBookingStatus = async (
   filters: QueryFilter<BookingType>,
 ) => {
   const booking = await VisitBooking.findOne(combineFilters(filters, { _id: bookingId }));
-
-  if (!booking) {
-    throw new AppError(404, 'Booking not found.');
-  }
+  if (!booking) throw new AppError(404, 'Booking not found.');
 
   if (booking.status !== 'pending') {
     throw new AppError(400, 'Booking has already been processed.');
