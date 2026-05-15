@@ -169,10 +169,10 @@ const Visits: FunctionComponent = () => {
       <div className="flex flex-col w-full gap-4 sm:gap-6">
         {/* Header Section - Large Title with Divider */}
         <div className="flex flex-col gap-3 px-0">
-          <b className="relative text-xl sm:text-num-24 leading-8 text-gray font-inter shrink-0">
+          <b className="relative text-xl sm:text-num-24 leading-8 text-gray dark:text-[#d7e0ef] font-inter shrink-0">
             My Calendar
           </b>
-          <div className="h-0.5 bg-whitesmoke-200" />
+          <div className="h-0.5 bg-whitesmoke-200 dark:bg-[#303331]" />
         </div>
 
         {/* Main Content - Two Column Layout - Responsive */}
@@ -183,27 +183,27 @@ const Visits: FunctionComponent = () => {
             <button
               type="button"
               onClick={openSetAvailableTime}
-              className="w-full rounded-lg bg-lightcyan text-teal font-semibold py-2 sm:py-3 px-3 sm:px-4 hover:opacity-90 transition-opacity border-none cursor-pointer font-inter text-sm sm:text-base whitespace-normal"
+              className="w-full rounded-lg bg-lightcyan dark:bg-[#12342e] text-teal dark:text-[#72cbb8] font-semibold py-2 sm:py-3 px-3 sm:px-4 hover:opacity-90 transition-opacity border-none cursor-pointer font-inter text-sm sm:text-base whitespace-normal"
             >
               Set Available Time Slots
             </button>
 
             {/* Mini Calendar */}
-            <div className="rounded-xl bg-white border border-whitesmoke-200 flex flex-col items-center p-4 gap-4 w-full overflow-hidden">
+            <div className="rounded-xl bg-white dark:bg-[#141515] border border-whitesmoke-200 dark:border-[#303331] flex flex-col items-center p-4 gap-4 w-full overflow-hidden text-black dark:text-[#d7e0ef]">
               {/* Nav */}
               <div className="self-stretch flex items-center gap-3">
                 <button
                   onClick={handlePrevMonth}
-                  className="rounded-full p-2 hover:bg-whitesmoke-100 transition-colors"
+                  className="rounded-full p-2 hover:bg-whitesmoke-100 dark:hover:bg-[#1f2022] transition-colors"
                 >
-                  <Icon icon="ic:round-chevron-left" className="h-5 w-5" />
+                  <Icon icon="ic:round-chevron-left" className="h-5 w-5 dark:text-[#d7e0ef]" />
                 </button>
                 <div className="flex-1 flex gap-2 relative">
                   {/* Month Dropdown */}
                   <div className="flex-1 relative">
                     <button
                       onClick={() => setShowMonthDropdown(!showMonthDropdown)}
-                      className="w-full rounded-md border border-gainsboro flex items-center p-2 gap-1 text-xs hover:bg-gray-50"
+                      className="w-full rounded-md border border-gainsboro dark:border-[#303331] flex items-center p-2 gap-1 text-xs hover:bg-gray-50 dark:hover:bg-[#1f2022] dark:bg-[#1f2022]"
                     >
                       <span className="flex-1">{MONTHS[month].substring(0, 3)}</span>
                       <Icon
@@ -214,13 +214,13 @@ const Visits: FunctionComponent = () => {
                       />
                     </button>
                     {showMonthDropdown && (
-                      <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gainsboro rounded-md z-10 shadow-lg max-h-48 overflow-y-auto">
+                      <div className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-[#141515] border border-gainsboro dark:border-[#303331] rounded-md z-10 shadow-lg max-h-48 overflow-y-auto">
                         {MONTHS.map((m, idx) => (
                           <button
                             key={m}
                             onClick={() => handleMonthSelect(idx)}
-                            className={`w-full text-left px-3 py-2 text-xs hover:bg-blue-50 ${
-                              idx === month ? 'bg-lightcyan-100 font-bold' : ''
+                            className={`w-full text-left px-3 py-2 text-xs hover:bg-blue-50 dark:hover:bg-[#1f3a34] ${
+                              idx === month ? 'bg-lightcyan-100 dark:bg-[#12342e] font-bold text-teal dark:text-[#72cbb8]' : ''
                             }`}
                           >
                             {m}
@@ -234,7 +234,7 @@ const Visits: FunctionComponent = () => {
                   <div className="flex-1 relative">
                     <button
                       onClick={() => setShowYearDropdown(!showYearDropdown)}
-                      className="w-full rounded-md border border-gainsboro flex items-center p-2 gap-1 text-xs hover:bg-gray-50"
+                      className="w-full rounded-md border border-gainsboro dark:border-[#303331] flex items-center p-2 gap-1 text-xs hover:bg-gray-50 dark:hover:bg-[#1f2022] dark:bg-[#1f2022]"
                     >
                       <span className="flex-1">{year}</span>
                       <Icon
@@ -245,13 +245,13 @@ const Visits: FunctionComponent = () => {
                       />
                     </button>
                     {showYearDropdown && (
-                      <div className="absolute top-full right-0 left-0 mt-1 bg-white border border-gainsboro rounded-md z-10 shadow-lg max-h-48 overflow-y-auto">
+                      <div className="absolute top-full right-0 left-0 mt-1 bg-white dark:bg-[#141515] border border-gainsboro dark:border-[#303331] rounded-md z-10 shadow-lg max-h-48 overflow-y-auto">
                         {Array.from({ length: 21 }, (_, i) => year - 10 + i).map((y) => (
                           <button
                             key={y}
                             onClick={() => handleYearSelect(y)}
-                            className={`w-full text-left px-3 py-2 text-xs hover:bg-blue-50 ${
-                              y === year ? 'bg-lightcyan-100 font-bold' : ''
+                            className={`w-full text-left px-3 py-2 text-xs hover:bg-blue-50 dark:hover:bg-[#1f3a34] ${
+                              y === year ? 'bg-lightcyan-100 dark:bg-[#12342e] font-bold text-teal dark:text-[#72cbb8]' : ''
                             }`}
                           >
                             {y}
@@ -263,15 +263,15 @@ const Visits: FunctionComponent = () => {
                 </div>
                 <button
                   onClick={handleNextMonth}
-                  className="rounded-full p-2 hover:bg-whitesmoke-100 transition-colors"
+                  className="rounded-full p-2 hover:bg-whitesmoke-100 dark:hover:bg-[#1f2022] transition-colors"
                 >
-                  <Icon icon="ic:round-chevron-right" className="h-5 w-5" />
+                  <Icon icon="ic:round-chevron-right" className="h-5 w-5 dark:text-[#d7e0ef]" />
                 </button>
               </div>
 
               {/* Day labels */}
               <div className="self-stretch flex flex-col gap-0.5 text-center">
-                <div className="grid grid-cols-7 text-xs text-gray font-inter">
+                <div className="grid grid-cols-7 text-xs text-gray dark:text-[#a4acba] font-inter">
                   {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map((d) => (
                     <div key={d} className="flex items-center justify-center py-1">
                       {d}
@@ -280,7 +280,7 @@ const Visits: FunctionComponent = () => {
                 </div>
 
                 {/* Date grid */}
-                <div className="flex flex-col gap-0.5 text-xs text-black">
+                <div className="flex flex-col gap-0.5 text-xs text-black dark:text-[#d7e0ef]">
                   {(() => {
                     const daysInMonth = getDaysInMonth(month, year);
                     const firstDay = getFirstDayOfMonth(month, year);
@@ -321,10 +321,10 @@ const Visits: FunctionComponent = () => {
                               className={[
                                 'rounded-md flex items-center justify-center p-2 aspect-square transition-colors',
                                 day === null
-                                  ? 'cursor-default'
-                                  : 'cursor-pointer hover:bg-gray-100',
+                                  ? 'cursor-default opacity-0'
+                                  : 'cursor-pointer hover:bg-gray-100 dark:hover:bg-[#1f2022]',
                                 isTodayDay
-                                  ? 'bg-lightcyan-100 text-teal-200 font-bold hover:bg-lightcyan-200'
+                                  ? 'bg-teal text-white font-bold hover:bg-teal/80 dark:bg-[#72cbb8] dark:text-[#141515] dark:hover:bg-[#5db8a5]'
                                   : '',
                               ].join(' ')}
                             >
@@ -340,7 +340,7 @@ const Visits: FunctionComponent = () => {
             </div>
 
             {/* Upcoming Visits Section */}
-            <div className="bg-white rounded-num-8 p-3 sm:p-4 border border-whitesmoke-200 w-full">
+            <div className="bg-white dark:bg-[#141515] rounded-num-8 p-3 sm:p-4 border border-whitesmoke-200 dark:border-[#303331] w-full">
               <UpcomingVisitsSection
                 visits={upcomingVisits}
                 onVisitClick={handleUpcomingVisitClick}
@@ -352,15 +352,15 @@ const Visits: FunctionComponent = () => {
           <div className="flex-1 flex flex-col gap-4 sm:gap-6 min-w-0">
             {/* Calendar Header - Month and Year only */}
             <div className="flex items-center justify-center px-2">
-              <h2 className="text-xl sm:text-2xl font-bold text-black font-inter">
+              <h2 className="text-xl sm:text-2xl font-bold text-black dark:text-[#d7e0ef] font-inter">
                 {MONTHS[month]} {year}
               </h2>
             </div>
 
             {/* Calendar Grid */}
-            <div className="bg-white rounded-num-8 p-3 sm:p-6 border border-whitesmoke-200 flex-1 min-w-0 overflow-auto">
+            <div className="bg-white dark:bg-[#141515] rounded-num-8 p-3 sm:p-6 border border-whitesmoke-200 dark:border-[#303331] flex-1 min-w-0 overflow-auto">
               {/* Day Headers */}
-              <div className="grid grid-cols-7 gap-1 sm:gap-2 mb-2 sm:mb-4 text-center text-xs sm:text-num-14 font-semibold text-dimgray font-inter">
+              <div className="grid grid-cols-7 gap-1 sm:gap-2 mb-2 sm:mb-4 text-center text-xs sm:text-num-14 font-semibold text-dimgray dark:text-[#a4acba] font-inter">
                 <div>Sun</div>
                 <div>Mon</div>
                 <div>Tue</div>
@@ -380,17 +380,17 @@ const Visits: FunctionComponent = () => {
                       key={idx}
                       className={`min-h-20 sm:min-h-28 p-1 sm:p-3 rounded border transition-colors text-xs sm:text-base ${
                         day === null
-                          ? 'bg-whitesmoke-100 border-whitesmoke-200 cursor-default'
+                          ? 'bg-whitesmoke-100 border-whitesmoke-200 dark:bg-[#1f2022] dark:border-[#303331] cursor-default'
                           : day === new Date().getDate() &&
                               month === new Date().getMonth() &&
                               year === new Date().getFullYear()
-                            ? 'bg-lightcyan border-teal'
-                            : 'bg-white border-whitesmoke-200 cursor-default'
+                            ? 'bg-teal-50 border-teal dark:bg-[#12342e] dark:border-[#72cbb8]'
+                            : 'bg-white border-whitesmoke-200 cursor-default dark:bg-[#141515] dark:border-[#303331]'
                       }`}
                     >
                       {day && (
                         <>
-                          <div className="text-xs sm:text-num-14 font-semibold text-dimgray font-inter mb-1">
+                          <div className={`text-xs sm:text-num-14 font-semibold font-inter mb-1 ${day === new Date().getDate() && month === new Date().getMonth() && year === new Date().getFullYear() ? 'text-teal dark:text-[#72cbb8]' : 'text-dimgray dark:text-[#d7e0ef]'}`}>
                             {day}
                           </div>
                           <div className="flex flex-col gap-0.5 sm:gap-1 text-xs">

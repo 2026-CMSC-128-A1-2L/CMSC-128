@@ -31,7 +31,15 @@ type DormCardProps = {
   price: { min: number; max: number };
   location: string;
   image: string;
-  room_types: { pax: string; price: number; unitCount?: number; availableUnitCount?: number }[];
+  sourceLabel?: string;
+  sourceUrl?: string;
+  room_types: {
+    id?: string;
+    pax: string;
+    price: number;
+    unitCount?: number;
+    availableUnitCount?: number;
+  }[];
 };
 
 const DormCard: FunctionComponent<DormCardProps> = ({
@@ -41,6 +49,8 @@ const DormCard: FunctionComponent<DormCardProps> = ({
   price,
   location,
   image,
+  sourceLabel,
+  sourceUrl,
   room_types,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -72,6 +82,8 @@ const DormCard: FunctionComponent<DormCardProps> = ({
           room_types,
         },
         selectedRoomType,
+        sourceLabel,
+        sourceUrl,
       },
     });
   };
@@ -160,7 +172,13 @@ const DormCard: FunctionComponent<DormCardProps> = ({
                       }`}
                     >
                       <span className="font-bold">{room.pax}</span>
-                      <span className={isFull ? 'text-silver dark:text-[#69717b]' : 'text-dimgray dark:text-[#a4acba]'}>
+                      <span
+                        className={
+                          isFull
+                            ? 'text-silver dark:text-[#69717b]'
+                            : 'text-dimgray dark:text-[#a4acba]'
+                        }
+                      >
                         {isFull ? 'Full' : `${currencyFormatter.format(room.price)}/month`}
                       </span>
                     </button>
@@ -168,7 +186,9 @@ const DormCard: FunctionComponent<DormCardProps> = ({
                 })}
               </div>
             ) : (
-              <p className="text-num-12 text-unselected dark:text-[#a4acba]">No listings available yet.</p>
+              <p className="text-num-12 text-unselected dark:text-[#a4acba]">
+                No listings available yet.
+              </p>
             )}
           </div>,
           document.body,
@@ -196,11 +216,16 @@ const DormCard: FunctionComponent<DormCardProps> = ({
               <div className="w-full h-fit flex items-start gap-1">
                 <b className="w-full relative flex items-center text-num-16">{name}</b>
                 <div className="w-fit h-fit flex items-center gap-1 text-[0.718rem] font-lora text-darkslategray-200 dark:text-white">
-                  <Icon icon="material-symbols:star-rounded" className="w-5 h-5 text-[#f5b642] dark:text-white" />
+                  <Icon
+                    icon="material-symbols:star-rounded"
+                    className="w-5 h-5 text-[#f5b642] dark:text-white"
+                  />
                   <div className="relative font-semibold">{rating}</div>
                 </div>
               </div>
-              <b className="relative text-num-14 text-teal dark:text-[#72cbb8]">{priceRange(price.min, price.max)}</b>
+              <b className="relative text-num-14 text-teal dark:text-[#72cbb8]">
+                {priceRange(price.min, price.max)}
+              </b>
             </div>
 
             <div className="w-full h-fit flex flex-col gap-1">

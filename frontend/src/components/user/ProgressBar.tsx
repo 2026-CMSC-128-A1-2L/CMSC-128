@@ -28,9 +28,9 @@ const defaultSteps: Array<ProgressStep<VerificationStep>> = [
 type StepState = "completed" | "active" | "upcoming";
 
 const getCircleClasses = (state: StepState): string => {
-  if (state === "completed") return "bg-teal text-white";
-  if (state === "active") return "bg-darkslategray text-white";
-  return "bg-silver-100 text-transparent";
+  if (state === "completed") return "bg-teal text-white dark:bg-teal-600";
+  if (state === "active") return "bg-darkslategray text-white dark:bg-[#72cbb8] dark:text-[#101111]";
+  return "bg-silver-100 text-transparent dark:bg-[#303331]";
 };
 
 const ProgressBar = <Key extends string = VerificationStep>({
@@ -92,7 +92,7 @@ const ProgressBar = <Key extends string = VerificationStep>({
                 {!isLast && (
                   <div
                     className={[
-                      "my-[10px] w-[6px] min-h-[100px] flex-1 overflow-hidden rounded-full bg-[#b5c8c5]",
+                      "my-[10px] w-[6px] min-h-[100px] flex-1 overflow-hidden rounded-full bg-[#b5c8c5] dark:bg-[#303331]",
                       connectorClassName,
                     ].join(" ")}
                   >
@@ -100,9 +100,9 @@ const ProgressBar = <Key extends string = VerificationStep>({
                       className={[
                         "w-full rounded-full transition-all duration-300",
                         idx < currentIdx
-                          ? "h-full bg-[#096c5b]"
+                          ? "h-full bg-[#096c5b] dark:bg-teal-600"
                           : idx === currentIdx
-                            ? "h-1/2 bg-linear-to-b from-[rgba(2,67,56,0.8)] to-[#b5c8c5]"
+                            ? "h-1/2 bg-linear-to-b from-[rgba(2,67,56,0.8)] to-[#b5c8c5] dark:from-[#72cbb8] dark:to-[#303331]"
                             : "h-0",
                       ].join(" ")}
                     />
@@ -134,7 +134,7 @@ const ProgressBar = <Key extends string = VerificationStep>({
             {!isLast && (
               <div
                 className={[
-                  "mx-[12px] mt-[8px] h-[6px] flex-1 overflow-hidden rounded-full bg-[#b5c8c5]",
+                  "mx-[12px] mt-[8px] h-[6px] flex-1 overflow-hidden rounded-full bg-[#b5c8c5] dark:bg-[#303331]",
                   connectorClassName,
                 ].join(" ")}
               >
@@ -142,9 +142,9 @@ const ProgressBar = <Key extends string = VerificationStep>({
                   className={[
                     "h-full rounded-full transition-all duration-300",
                     idx < currentIdx
-                      ? "w-full bg-[#096c5b]"
+                      ? "w-full bg-[#096c5b] dark:bg-teal-600"
                       : idx === currentIdx
-                        ? "w-1/2 bg-linear-to-r from-[rgba(2,67,56,0.8)] to-[#b5c8c5]"
+                        ? "w-1/2 bg-linear-to-r from-[rgba(2,67,56,0.8)] to-[#b5c8c5] dark:from-[#72cbb8] dark:to-[#303331]"
                         : "w-0",
                   ].join(" ")}
                 />

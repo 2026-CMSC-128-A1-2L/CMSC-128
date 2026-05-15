@@ -75,30 +75,30 @@ const RegistrationProfile: FunctionComponent<RegistrationProfileProps> = ({
     <div className="flex-1 w-full relative overflow-hidden flex items-start justify-center text-center text-num-14 text-dimgray font-inter">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="w-[620px] rounded-num-12 border-whitesmoke border-solid border box-border overflow-hidden flex flex-col items-start pt-3 px-4 pb-5 gap-5"
+        className="w-[620px] rounded-num-12 border-whitesmoke dark:border-[#303331] bg-white dark:bg-[#141515] border-solid border box-border overflow-hidden flex flex-col items-start pt-3 px-4 pb-5 gap-5"
       >
         {/* ── Full Name ── */}
         <div className="self-stretch flex flex-col items-start justify-start px-num-10 pt-num-10 gap-1">
-          <div className="self-stretch h-11 rounded-num-12 bg-aliceblue border-whitesmoke border-solid border box-border overflow-hidden flex items-center justify-start py-0 px-3 gap-2.5">
-            <div className="overflow-hidden flex items-center p-1 shrink-0">
+          <div className="self-stretch h-11 rounded-num-12 bg-aliceblue dark:bg-[#1f2022] border-whitesmoke dark:border-[#303331] border-solid border box-border overflow-hidden flex items-center justify-start py-0 px-3 gap-2.5">
+            <div className="overflow-hidden flex items-center p-1 shrink-0 text-dimgray dark:text-[#a4acba]">
               <Icon icon="material-symbols:person-outline-rounded" className="h-6 w-6" />
             </div>
             <input
               {...register('firstName', { required: 'First name is required' })}
               placeholder="First Name"
-              className="min-w-0 flex-1 bg-transparent text-sm font-medium text-black placeholder-slategray outline-none leading-6"
+              className="min-w-0 flex-1 bg-transparent text-sm font-medium text-black dark:text-[#d7e0ef] placeholder-slategray dark:placeholder:text-[#a4acba] outline-none leading-6"
             />
-            <div className="self-stretch w-0.5 rounded-[100px] bg-whitesmoke shrink-0" />
+            <div className="self-stretch w-0.5 rounded-[100px] bg-whitesmoke dark:bg-[#303331] shrink-0" />
             <input
               {...register('middleName')}
               placeholder="Middle Name"
-              className="min-w-0 flex-1 bg-transparent text-sm font-medium text-black placeholder-slategray outline-none leading-6 text-left"
+              className="min-w-0 flex-1 bg-transparent text-sm font-medium text-black dark:text-[#d7e0ef] placeholder-slategray dark:placeholder:text-[#a4acba] outline-none leading-6 text-left"
             />
-            <div className="self-stretch w-0.5 rounded-[100px] bg-whitesmoke shrink-0" />
+            <div className="self-stretch w-0.5 rounded-[100px] bg-whitesmoke dark:bg-[#303331] shrink-0" />
             <input
               {...register('lastName', { required: 'Last name is required' })}
               placeholder="Last Name"
-              className="min-w-0 flex-1 bg-transparent text-sm font-medium text-black placeholder-slategray outline-none leading-6 text-left"
+              className="min-w-0 flex-1 bg-transparent text-sm font-medium text-black dark:text-[#d7e0ef] placeholder-slategray dark:placeholder:text-[#a4acba] outline-none leading-6 text-left"
             />
           </div>
           {(errors.firstName || errors.lastName) && (
@@ -111,7 +111,7 @@ const RegistrationProfile: FunctionComponent<RegistrationProfileProps> = ({
         {/* ── Contact + Email ── */}
         <div className="self-stretch flex items-start px-num-10 gap-4">
           <div className="flex-1 flex flex-col gap-1">
-            <div className="rounded-num-12 bg-aliceblue border-whitesmoke border-solid border overflow-hidden flex items-center py-num-10 px-3 gap-2">
+            <div className="rounded-num-12 bg-aliceblue dark:bg-[#1f2022] border-whitesmoke dark:border-[#303331] border-solid border overflow-hidden flex items-center py-num-10 px-3 gap-2 text-dimgray dark:text-[#a4acba]">
               <Icon icon="proicons:call" className="h-6 w-6 shrink-0" />
               <input
                 {...register('contactNumber', {
@@ -119,7 +119,7 @@ const RegistrationProfile: FunctionComponent<RegistrationProfileProps> = ({
                   pattern: { value: /^[0-9+\s-]{7,15}$/, message: 'Enter a valid number' },
                 })}
                 placeholder="Contact Number"
-                className="flex-1 bg-transparent text-sm font-medium text-black placeholder-slategray outline-none leading-6"
+                className="flex-1 bg-transparent text-sm font-medium text-black dark:text-[#d7e0ef] placeholder-slategray dark:placeholder:text-[#a4acba] outline-none leading-6"
               />
             </div>
             {errors.contactNumber && (
@@ -128,7 +128,7 @@ const RegistrationProfile: FunctionComponent<RegistrationProfileProps> = ({
           </div>
 
           <div className="flex-1 flex flex-col gap-1">
-            <div className="rounded-num-12 bg-aliceblue border-whitesmoke border-solid border overflow-hidden flex items-center py-num-10 px-3 gap-2.5">
+            <div className="rounded-num-12 bg-aliceblue dark:bg-[#1f2022] border-whitesmoke dark:border-[#303331] border-solid border overflow-hidden flex items-center py-num-10 px-3 gap-2.5 text-dimgray dark:text-[#a4acba]">
               <Icon icon="mdi-light:email" className="h-6 w-6 shrink-0" />
               <input
                 {...register('email', {
@@ -137,7 +137,7 @@ const RegistrationProfile: FunctionComponent<RegistrationProfileProps> = ({
                 })}
                 readOnly={Boolean(initialData?.email)}
                 placeholder="Email"
-                className="flex-1 bg-transparent text-sm font-medium text-black placeholder-slategray outline-none leading-6 read-only:text-dimgray"
+                className="flex-1 bg-transparent text-sm font-medium text-black dark:text-[#d7e0ef] placeholder-slategray dark:placeholder:text-[#a4acba] outline-none leading-6 read-only:text-dimgray dark:read-only:text-[#666]"
               />
             </div>
             {errors.email && (
@@ -148,12 +148,12 @@ const RegistrationProfile: FunctionComponent<RegistrationProfileProps> = ({
 
         {/* ── Home Address ── */}
         <div className="self-stretch flex flex-col items-start px-num-10 gap-1">
-          <div className="self-stretch rounded-num-12 bg-aliceblue border-whitesmoke border-solid border overflow-hidden flex items-center py-num-10 px-3 gap-2.5">
+          <div className="self-stretch rounded-num-12 bg-aliceblue dark:bg-[#1f2022] border-whitesmoke dark:border-[#303331] border-solid border overflow-hidden flex items-center py-num-10 px-3 gap-2.5 text-dimgray dark:text-[#a4acba]">
             <Icon icon="ep:location" className="h-6 w-6 shrink-0" />
             <input
               {...register('homeAddress', { required: 'Home address is required' })}
               placeholder="Home Address"
-              className="flex-1 bg-transparent text-sm font-medium text-black placeholder-slategray outline-none leading-6"
+              className="flex-1 bg-transparent text-sm font-medium text-black dark:text-[#d7e0ef] placeholder-slategray dark:placeholder:text-[#a4acba] outline-none leading-6"
             />
           </div>
           {errors.homeAddress && (
@@ -176,8 +176,8 @@ const RegistrationProfile: FunctionComponent<RegistrationProfileProps> = ({
                   }}
                   className={`flex-1 rounded-num-12 border overflow-hidden flex flex-col items-center p-num-10 gap-2 transition-colors ${
                     isSelected
-                      ? 'border-teal-600 bg-teal-50 text-teal-700'
-                      : 'border-whitesmoke hover:bg-gray-50 text-dimgray'
+                      ? 'border-teal-600 bg-teal-50 text-teal-700 dark:border-[#72cbb8] dark:bg-[#12342e] dark:text-[#72cbb8]'
+                      : 'border-whitesmoke hover:bg-gray-50 text-dimgray dark:border-[#303331] dark:hover:bg-[#1f2022] dark:text-[#a4acba]'
                   }`}
                 >
                   <Icon icon={role.icon} className="h-6 w-6" />

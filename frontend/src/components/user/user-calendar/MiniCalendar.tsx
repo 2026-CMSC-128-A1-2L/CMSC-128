@@ -4,6 +4,9 @@ import { CalendarService, type CalendarEvent } from '../../../service/CalendarSe
 
 interface MiniCalendarProps {
   currentDate: Date;
+  events: CalendarEvent[];
+  upcomingEvents: CalendarEvent[];
+  loading: boolean;
   onPrevMonth?: () => void;
   onNextMonth?: () => void;
   onDateChange?: (date: Date) => void;
@@ -58,51 +61,17 @@ const getEventIcon = (type: CalendarEvent['type']) => {
 
 const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
   currentDate,
+  events,
+  upcomingEvents,
+  loading,
   onPrevMonth,
   onNextMonth,
   onDateChange,
   onDateClick,
   onEventClick,
 }) => {
-  const [upcomingEvents, setUpcomingEvents] = useState<CalendarEvent[]>([]);
-  const [allEvents, setAllEvents] = useState<CalendarEvent[]>([]);
-  const [loading, setLoading] = useState(false);
   const [showMonthDropdown, setShowMonthDropdown] = useState(false);
   const [showYearDropdown, setShowYearDropdown] = useState(false);
-
-  useEffect(() => {
-    const fetchUpcomingEvents = async () => {
-      setLoading(true);
-      try {
-        const response = await CalendarService.getUpcomingEvents();
-        setUpcomingEvents(response.data.slice(0, 3));
-      } catch (error) {
-        console.error('Failed to load upcoming events:', error);
-        setUpcomingEvents([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUpcomingEvents();
-  }, []);
-
-  // Fetch all events for current month
-  useEffect(() => {
-    const fetchAllEvents = async () => {
-      try {
-        const response = await CalendarService.getCalendarEvents(
-          currentDate.getFullYear(),
-          currentDate.getMonth() + 1,
-        );
-        setAllEvents(response.data);
-      } catch (error) {
-        console.error('Failed to load all events, using sample data:', error);
-      }
-    };
-
-    fetchAllEvents();
-  }, [currentDate]);
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
@@ -159,7 +128,7 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
   };
 
   const getEventsForDay = (day: number) => {
-    return allEvents.filter((event) => {
+    return events.filter((event) => {
       const eventDate = new Date(event.date);
       return (
         eventDate.getDate() === day &&
