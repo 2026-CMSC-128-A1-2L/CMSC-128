@@ -13,6 +13,7 @@ type ReviewDetailsProps = {
     date: string;
     rating: string;
     text: string;
+    mediaUrls?: string[];
   }[];
 };
 

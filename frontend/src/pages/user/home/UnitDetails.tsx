@@ -240,6 +240,7 @@ const UnitDetails: FunctionComponent = () => {
       date,
       rating: `${review.rating.toFixed(1)} / 5.0`,
       text: review.description || 'No written review was provided.',
+      mediaUrls: review.mediaUrls,
     };
   });
 
