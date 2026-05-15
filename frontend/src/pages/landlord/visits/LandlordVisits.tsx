@@ -172,8 +172,9 @@ const Visits: FunctionComponent = () => {
     .map((v) => ({
       id: v.id,
       visitorName: v.visitorName,
-      visitDate: v.startDate.toLocaleDateString(),
-      visitTime: v.time,
+      dateTime: `${v.startDate.toLocaleDateString()} - ${v.time}`,
+      propertyName: v.propertyName,
+      buildingName: 'Building',
     }));
 
   const getDaysForCalendar = () => {
