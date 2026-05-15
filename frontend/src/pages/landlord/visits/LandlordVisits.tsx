@@ -11,6 +11,7 @@ import LandlordDayEventsPopout, {
   type VisitSlot,
 } from '../../../components/landlord/VisitsSections/LandlordDayEventsPopout';
 import LandlordEventPopout from '../../../components/landlord/VisitsSections/LandlordEventPopout';
+import { BookingService } from '../../../service/BookingService';
 
 const Visits: FunctionComponent = () => {
   const [isSetAvailableTimeOpen, setSetAvailableTimeOpen] = useState(false);
@@ -147,8 +148,14 @@ const Visits: FunctionComponent = () => {
   const getFirstDayOfMonth = (m: number, y: number) => new Date(y, m, 1).getDay();
 
   const getVisitsForDay = (day: number) => {
-    const dayOfWeek = new Date(year, month, day).getDay();
-    return allVisits.filter((visit) => visit.dayOfWeek === dayOfWeek);
+    const targetDate = new Date(year, month, day);
+    return allVisits.filter((visit) => {
+      const vDate = new Date(visit.startDate);
+      return visit.status === 'accepted' &&
+             vDate.getDate() === targetDate.getDate() &&
+             vDate.getMonth() === targetDate.getMonth() &&
+             vDate.getFullYear() === targetDate.getFullYear();
+    });
   };
 
   // Transform visits to show all upcoming visits
@@ -197,7 +204,7 @@ const Visits: FunctionComponent = () => {
 
   const handleAcceptRequest = async (requestId: string) => {
     try {
-      await api.patch(`/api/bookings/${requestId}`, { status: 'accepted' });
+      await BookingService.updateBookingStatus(requestId as any, 'accepted');
       fetchVisits();
     } catch (error) {
       console.error('Failed to accept request:', error);
@@ -206,7 +213,7 @@ const Visits: FunctionComponent = () => {
 
   const handleRejectRequest = async (requestId: string) => {
     try {
-      await api.patch(`/api/bookings/${requestId}`, { status: 'rejected' });
+      await BookingService.updateBookingStatus(requestId as any, 'cancelled');
       fetchVisits();
     } catch (error) {
       console.error('Failed to reject request:', error);

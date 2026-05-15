@@ -5,6 +5,7 @@ import { combineFilters } from '../../middleware.js';
 import { HousingFacility, type HousingFacilityType } from '../facility/facility.model.js';
 import { type BookingType, VisitBooking } from './booking.model.js';
 import { VisitAvailability } from '../availability/availability.model.js';
+import { User } from '../user/user.model.js';
 import { buildQuery } from '../../utils.js';
 import type { BookingStatusType } from 'shared';
 
@@ -145,7 +146,10 @@ export const getBookings = async (
   query: Partial<GetBookingArguments>,
   filters: QueryFilter<BookingType>,
 ) => {
-  return await VisitBooking.where(filters).find(buildQuery<BookingType>(query));
+  return await VisitBooking.where(filters)
+    .find(buildQuery<BookingType>(query))
+    .populate('userId', 'firstName lastName')
+    .populate('facilityId', 'name');
 };
 
 export const updateBookingStatus = async (
@@ -154,7 +158,10 @@ export const updateBookingStatus = async (
   filters: QueryFilter<BookingType>,
 ) => {
   const booking = await VisitBooking.findOne(combineFilters(filters, { _id: bookingId }));
-  if (!booking) throw new AppError(404, 'Booking not found.');
+
+  if (!booking) {
+    throw new AppError(404, 'Booking not found.');
+  }
 
   if (booking.status !== 'pending') {
     throw new AppError(400, 'Booking has already been processed.');

@@ -60,6 +60,7 @@ export default function VisitRequestsSection({
           requests.map((request) => (
             <VisitRequestCard
               key={request.id}
+              id={request.id}
               visitorName={request.visitorName}
               dateTime={request.dateTime}
               propertyName={request.propertyName}
