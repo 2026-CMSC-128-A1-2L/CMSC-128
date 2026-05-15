@@ -3,15 +3,14 @@ import { VisitAvailability } from './availability.model.js';
 
 export const getLandlordAvailability = async (landlordId: mongoose.Types.ObjectId) => {
   let availability = await VisitAvailability.findOne({ landlordId });
-  
+
   if (!availability) {
-    // Return default empty grid if none exists yet
     availability = new VisitAvailability({
       landlordId,
       grid: Array.from({ length: 10 }, () => Array(7).fill(false)),
     });
   }
-  
+
   return availability;
 };
 
