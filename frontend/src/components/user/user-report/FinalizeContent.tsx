@@ -1,12 +1,21 @@
-import { useCallback, useMemo, useState, type Dispatch, type SetStateAction } from 'react';
+import {
+  useCallback,
+  useMemo,
+  useState,
+  type ChangeEvent,
+  type Dispatch,
+  type SetStateAction,
+} from 'react';
 import { useNavigate } from 'react-router-dom';
 import ConfirmReport from '../../../components/user/Profile/ConfirmReport';
 import FileUploadCard from '../../general/FileUploadCard';
+import { ReportService } from '../../../service/ReportService';
 
 interface FinalizeContentProps {
   reportStages: number;
   setReportStages: Dispatch<SetStateAction<number>>;
   reportJsonData: string;
+  listingId?: string;
 }
 
 type ReportField = {
@@ -21,20 +30,29 @@ type ReportPayload = {
   'report-fields-data'?: ReportField[];
 };
 
+const getErrorMessage = (error: unknown) => {
+  if (error && typeof error === 'object' && 'response' in error) {
+    const response = (error as { response?: { data?: { message?: unknown; error?: unknown } } })
+      .response;
+    const message = response?.data?.message ?? response?.data?.error;
+    if (typeof message === 'string') return message;
+  }
+  return 'Could not submit your report. Please try again.';
+};
+
 export default function FinalizeContent(props: FinalizeContentProps) {
   const navigate = useNavigate();
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
-
-  const onUserProfileTextClick = useCallback(() => {
-    setShowSuccessPopup(true);
-  }, []);
+  const [evidenceFiles, setEvidenceFiles] = useState<(File | null)[]>([null, null]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const closePopup = () => {
     setShowSuccessPopup(false);
     navigate('/profile-switcher');
   };
 
-  const { reportStages, setReportStages, reportJsonData } = props;
+  const { reportStages, setReportStages, reportJsonData, listingId } = props;
   const reportPreview = useMemo<ReportPayload>(() => {
     try {
       return JSON.parse(reportJsonData) as ReportPayload;
@@ -52,6 +70,41 @@ export default function FinalizeContent(props: FinalizeContentProps) {
     {},
   );
   const additionalMessage = reportPreview['text-report']?.trim();
+  const flags = selectedReportFields.map((field) => field.label);
+  const reportFlags = flags.length > 0 ? flags : ['Other'];
+  const reportDescription =
+    additionalMessage || `Issue reported: ${reportFlags.join(', ')}`.slice(0, 200);
+
+  const handleEvidenceChange = (index: number) => (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0] ?? null;
+    setEvidenceFiles((current) =>
+      current.map((item, itemIndex) => (itemIndex === index ? file : item)),
+    );
+  };
+
+  const onUserProfileTextClick = useCallback(async () => {
+    if (!listingId) {
+      setSubmitError('Current dorm listing could not be found.');
+      return;
+    }
+
+    setIsSubmitting(true);
+    setSubmitError(null);
+    try {
+      await ReportService.reportListing(listingId, {
+        description: reportDescription,
+        flags: reportFlags,
+        evidence: evidenceFiles
+          .filter((file): file is File => Boolean(file))
+          .map((file) => file.name),
+      });
+      setShowSuccessPopup(true);
+    } catch (error) {
+      setSubmitError(getErrorMessage(error));
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [evidenceFiles, listingId, reportDescription, reportFlags]);
 
   return (
     <div className="flex flex-col max-w-[714px] md:w-[714px] text-black font-inter py-12 gap-5">
@@ -105,8 +158,22 @@ export default function FinalizeContent(props: FinalizeContentProps) {
       <div className="mt-2">
         <p className="mb-3 text-[18px] font-bold text-[#024338]">Photos</p>
       </div>
-      <FileUploadCard title="Review Photo 1" />
-      <FileUploadCard title="Review Photo 2" />
+      <FileUploadCard
+        title="Review Photo 1"
+        fileName={evidenceFiles[0]?.name}
+        onFileChange={handleEvidenceChange(0)}
+      />
+      <FileUploadCard
+        title="Review Photo 2"
+        fileName={evidenceFiles[1]?.name}
+        onFileChange={handleEvidenceChange(1)}
+      />
+
+      {submitError && (
+        <div className="rounded-[12px] border border-red-100 bg-red-50 px-4 py-3 text-[13px] font-bold text-red-700">
+          {submitError}
+        </div>
+      )}
 
       <div className="flex justify-center gap-10 font-inter font-bold py-8">
         <button
@@ -122,8 +189,9 @@ export default function FinalizeContent(props: FinalizeContentProps) {
           type="button"
           className="px-4 py-1 w-fit font-bold text-[14px] cursor-pointer text-[#096c5b] bg-[#f1f5f9] rounded-full"
           onClick={onUserProfileTextClick}
+          disabled={isSubmitting}
         >
-          Proceed
+          {isSubmitting ? 'Submitting...' : 'Proceed'}
         </button>
       </div>
     </div>

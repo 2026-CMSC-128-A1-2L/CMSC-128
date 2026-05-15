@@ -189,7 +189,9 @@ export const getRentalsByUser = async (
   userId: mongoose.Types.ObjectId,
   filters: QueryFilter<RentalType>,
 ) => {
-  const rentals = await Rental.find(combineFilters(filters, { userId }));
+  const rentals = await Rental.find(combineFilters(filters, { userId }))
+    .populate('facilityId', 'name location media')
+    .populate('unitId', 'roomNumber location listingId');
 
   if (!rentals.length) {
     const rentalsNoFilter = await Rental.find({ userId });
