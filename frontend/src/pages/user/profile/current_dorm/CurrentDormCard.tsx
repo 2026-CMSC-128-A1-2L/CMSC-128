@@ -4,6 +4,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import { act, useState } from 'react';
 import React from 'react';
 import { Navigate } from 'react-router-dom';
+
+interface Roommate {
+  name: string;
+  avatarSrc?: string;
+}
+
 interface CurrentDormCardProps {
   propertyImageSrc?: string;
   propertyName?: string;
@@ -11,6 +17,7 @@ interface CurrentDormCardProps {
   contractDuration?: string;
   leaseEndDate?: string;
   verified?: true;
+  roommates?: Roommate[];
 }
 
 export default function CurrentDormCard({
@@ -20,6 +27,13 @@ export default function CurrentDormCard({
   contractDuration = '1 Year',
   leaseEndDate = 'May 18, 2026',
   verified = true,
+  roommates = [
+    { name: 'Nathaniel Cunanan', avatarSrc: placeholder },
+    { name: 'Raven Caduyac', avatarSrc: placeholder },
+    { name: 'Jiro Tipan', avatarSrc: placeholder },
+    { name: 'Ted Villanueva', avatarSrc: placeholder },
+    { name: 'Val Alamillo', avatarSrc: placeholder }
+  ],
   // default values for props, can be overridden when using the component
 }: CurrentDormCardProps) {
   const [activeTab, setActiveTab] = useState('Contract Information');
@@ -55,6 +69,40 @@ export default function CurrentDormCard({
               <p className="text-xs">Lease End</p>
             </div>
           </div>
+
+          {/* Roommates Section */}
+          {roommates && roommates.length > 0 && (
+            <div className="mb-8">
+              <h3 className="text-xl font-bold mb-4 text-center">
+                Your Roommates
+              </h3>
+
+              <div className="flex flex-wrap justify-center gap-4">
+                {roommates.map((roommate, index) => (
+                  <div
+                    key={index}
+                    className="w-[180px] flex flex-col items-center border border-[#f0f0f0] rounded-lg p-4 dark:border-[#303331] dark:bg-[#101111]"
+                  >
+                    {roommate.avatarSrc && (
+                      <img
+                        src={roommate.avatarSrc}
+                        alt={roommate.name}
+                        className="w-16 h-16 rounded-full object-cover mb-2"
+                      />
+                    )}
+
+                    <p className="text-sm font-semibold text-center">
+                      {roommate.name}
+                    </p>
+
+                    <p className="text-xs">
+                      Roommate {index + 1}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Action Button */}
           <button
@@ -195,7 +243,7 @@ export default function CurrentDormCard({
 
               <button
                 className="px-4 py-1 text-gray-100 bg-[#f1f5f9] rounded-full dark:bg-[#202123] dark:text-[#a4acba]"
-                onClick={() => {}}
+                onClick={() => { }}
               >
                 Proceed
               </button>
@@ -231,7 +279,7 @@ export default function CurrentDormCard({
 
               <button
                 className="px-4 py-1 text-gray-100 bg-[#f1f5f9] rounded-full dark:bg-[#202123] dark:text-[#a4acba]"
-                onClick={() => {}}
+                onClick={() => { }}
               >
                 Proceed
               </button>
@@ -270,7 +318,7 @@ export default function CurrentDormCard({
 
               <button
                 className="px-4 py-1  text-gray-100  bg-[#f1f5f9] rounded-full"
-                onClick={() => {}}
+                onClick={() => { }}
               >
                 Proceed
               </button>
