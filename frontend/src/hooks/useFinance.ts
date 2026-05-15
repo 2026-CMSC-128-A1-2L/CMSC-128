@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { BillingService } from '../service/BillingService';
 import { UserService } from '../service/UserService';
 import { useAuthStore } from '../store/useAuthStore';
+import { FacilityService } from '../service/FacilityService';
 
 export type BillingBreakdownItem = {
     name: string;
@@ -104,14 +105,28 @@ export function useFinance(): UseFinanceReturn {
                     if (status === 404) {
                         try {
                             const rentalsResponse = await UserService.getMyRentals();
-                            const rentals: { status: string }[] = rentalsResponse?.data ?? rentalsResponse ?? [];
-                            const hasActiveRental = Array.isArray(rentals)
-                                ? rentals.some((r) => r.status === 'active')
-                                : false;
+                            const rentals = rentalsResponse?.data ?? rentalsResponse ?? [];
+                            const activeRental = Array.isArray(rentals)
+                                ? rentals.find((r: any) => r.status === 'active')
+                                : null;
+
+                            let facilityDetails = EMPTY_DASHBOARD.facilityDetails;
+                            if (activeRental?.facilityId) {
+                                try {
+                                    const facilityResponse = await FacilityService.getFacility(activeRental.facilityId);
+                                    const f = facilityResponse.data;
+                                    facilityDetails = {
+                                        name: f?.name ?? '',
+                                        address: f?.location?.text ?? '',
+                                    };
+                                } catch {
+                                    // facility fetch failed, leave as empty
+                                }
+                            }
 
                             if (!cancelled) {
-                                setDashboard(EMPTY_DASHBOARD);
-                                setHasAccommodation(hasActiveRental);
+                                setDashboard({ ...EMPTY_DASHBOARD, facilityDetails });
+                                setHasAccommodation(!!activeRental);
                                 setError(null);
                             }
                         } catch {
