@@ -1,4 +1,10 @@
-import { type FunctionComponent, useEffect, useRef, useState } from "react";
+import {
+  type FunctionComponent,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Icon } from "@iconify/react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import SideBar from "../../../components/user/SideBar";
@@ -313,7 +319,7 @@ const ApplicationGuideModal = ({ onClose }: { onClose: () => void }) => {
 // ─── HomePage ─────────────────────────────────────────────────────────────────
 
 const HomePage: FunctionComponent = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
@@ -359,9 +365,14 @@ const HomePage: FunctionComponent = () => {
 
   // Category slices — swap for real filtered endpoints later
   const pasaloDorms = filterApplied.slice(0, 10);
-  const popularDorms = filterApplied.slice(0, 10);
+  const popularDorms = [...filterApplied]
+    .sort((a, b) => parseFloat(b.rating) - parseFloat(a.rating))
+    .slice(0, 10);
   const nearDorms = filterApplied.slice(0, 10);
-  const mayLikeDorms = filterApplied.slice(0, 10);
+  const mayLikeDorms = useMemo(
+    () => [...filterApplied].sort(() => Math.random() - 0.5).slice(0, 10),
+    [filterApplied],
+  );
 
   const CATEGORY_DATA: Record<NonNullable<ViewAllCategory>, DormCardData[]> = {
     pasalo: pasaloDorms,
@@ -378,6 +389,14 @@ const HomePage: FunctionComponent = () => {
   const handleSearch = (value: string) => {
     setSearchTerm(value);
     setIsSearchDropdownOpen(value.trim().length > 0);
+    const nextParams = new URLSearchParams(searchParams);
+    if (value.trim()) {
+      nextParams.set("search", value);
+    } else {
+      nextParams.delete("search");
+    }
+    setSearchParams(nextParams, { replace: true });
+    if (value.trim().length > 0) setViewAllCategory(null);
   };
 
   const openSearchResult = (dorm: DormCardData) => {
