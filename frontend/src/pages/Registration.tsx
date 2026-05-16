@@ -156,7 +156,13 @@ const Registration: FunctionComponent = () => {
           />
         );
       case 1:
-        return <RegistrationVerification onNextClick={goNext} onBackClick={goBack} />;
+        return (
+          <RegistrationVerification
+            role={profileData?.role}
+            onNextClick={goNext}
+            onBackClick={goBack}
+          />
+        );
       case 2:
         if (!profileData) {
           return (
