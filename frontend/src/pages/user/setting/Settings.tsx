@@ -10,12 +10,13 @@ import Preferences from './Preferences';
 
 const Settings: FunctionComponent = () => {
   return (
-    <div className="flex min-h-screen font-inter text-darkslategray">
-      <div className="sticky top-0 h-screen shrink-0 z-10">
+    <div className="user-settings-shell relative flex min-h-screen overflow-hidden bg-transparent font-inter text-darkslategray dark:text-[#edf6f4]">
+      <PageBackground />
+      <div className="sticky top-0 z-20 h-screen shrink-0">
         <SideBar />
       </div>
-      <div className="flex flex-1 flex-col min-w-0 overflow-y-auto">
-        <div className="flex-1 px-4 sm:px-8 lg:px-20 pt-16 pb-20">
+      <div className="relative z-10 flex min-w-0 flex-1 flex-col overflow-y-auto">
+        <div className="flex-1 px-4 pb-20 pt-16 sm:px-8 lg:px-20">
           <PropertyTabs>
             <PropertyTab text="General" element={<General />} />
             <PropertyTab text="Security" element={<Security />} />

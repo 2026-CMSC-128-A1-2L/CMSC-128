@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import LandlordLayout from '../../../components/landlord/LandlordLayout';
 import NotifyTenantsPopup from '../../../components/landlord/NotifyTenantsPopup';
+import { useDebouncedValue } from '../../../hooks/useDebouncedValue';
 import sapphire1 from '../../../../assets/sapphire1.jpg';
 import sapphire2 from '../../../../assets/sapphire2.jpg';
 import sapphire3 from '../../../../assets/sapphire3.png';
@@ -83,8 +84,12 @@ const CARD_GAP = 16;
 const LandlordHomepage: FunctionComponent = () => {
   const trackRef = useRef<HTMLDivElement>(null);
   const [current, setCurrent] = useState(0);
-  const total = BUILDINGS.length;
   const [searchQuery, setSearchQuery] = useState('');
+  const debouncedSearchQuery = useDebouncedValue(searchQuery, 300);
+  const displayedBuildings = BUILDINGS.filter((building) =>
+    building.name.toLowerCase().includes(debouncedSearchQuery.trim().toLowerCase()),
+  );
+  const total = displayedBuildings.length;
   const [showNotify, setShowNotify] = useState(false);
 
   const scrollTo = (index: number) => {
@@ -262,7 +267,7 @@ const LandlordHomepage: FunctionComponent = () => {
               ref={trackRef}
               className="flex gap-[16px] overflow-x-auto scroll-smooth pb-[8px] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             >
-              {BUILDINGS.map((b) => (
+              {displayedBuildings.map((b) => (
                 <Link
                   key={b.name}
                   to={`/landlord/properties/${b.id}`} // Dynamic Route
