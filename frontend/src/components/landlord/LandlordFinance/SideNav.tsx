@@ -13,7 +13,7 @@ const tabs: { id: TabType; label: string; width: string }[] = [
 ];
 
 const SideNav: FunctionComponent<SideNavProps> = ({ activeTab, onTabChange }) => (
-  <div className="w-full lg:w-[200px] rounded-[10px] bg-white border-whitesmoke-200 border-solid border box-border flex flex-row lg:flex-col items-center text-center text-[16px] overflow-x-auto lg:overflow-x-visible self-start">
+  <div className="w-full lg:w-[200px] rounded-[10px] bg-white border-whitesmoke-200 border-solid border box-border flex flex-row lg:flex-col items-center text-center text-[16px] overflow-x-auto lg:overflow-x-visible self-start dark:bg-[#101111] dark:border-[#343737]">
     {tabs.map(({ id, label, width }, i) => (
       <div
         key={id}
@@ -21,8 +21,8 @@ const SideNav: FunctionComponent<SideNavProps> = ({ activeTab, onTabChange }) =>
           i === 0 ? 'rounded-t-[10px]' : ''
         } ${
           activeTab === id
-            ? 'border-l-8 lg:border-l-8 border-b-0 lg:border-b-0 border-darkslategray-200 border-solid text-darkslategray-200 bg-gray-50'
-            : 'text-darkslategray-100 hover:bg-gray-50'
+            ? 'border-l-8 lg:border-l-8 border-b-0 lg:border-b-0 border-darkslategray-200 border-solid text-darkslategray-200 bg-gray-50 dark:border-[#24463f] dark:bg-[#1b1d1d] dark:text-[#9ee0d2]'
+            : 'text-darkslategray-100 hover:bg-gray-50 dark:text-[#d7e0ef] dark:hover:bg-[#171918]'
         }`}
         onClick={() => onTabChange(id)}
       >

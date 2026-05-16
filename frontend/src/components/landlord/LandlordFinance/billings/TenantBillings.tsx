@@ -227,13 +227,13 @@ const TenantBillingsTab: FunctionComponent<TenantBillingsTabProps> = ({
       <div className="flex flex-col items-end gap-4 text-left text-[18px] font-inter w-full">
         {/* Header row */}
         <div className="self-stretch flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-5 shrink-0">
-          <b className="h-6 w-full sm:w-auto relative tracking-[-0.01em] flex items-center shrink-0 text-gray text-[20px] sm:text-[24px]">
+          <b className="h-6 w-full sm:w-auto relative tracking-[-0.01em] flex items-center shrink-0 text-gray text-[20px] sm:text-[24px] dark:text-[#edf6f4]">
             Tenant Billing Status
           </b>
           <div className="flex items-center gap-3 text-[10px] text-teal flex-wrap">
             <div
               onClick={() => setIsAddPopupOpen(true)}
-              className="rounded-[10px] bg-lightcyan flex items-center py-2 px-4 sm:px-6 gap-2 sm:gap-3 shrink-0 cursor-pointer hover:opacity-90 transition-opacity"
+              className="rounded-[10px] bg-lightcyan flex items-center py-2 px-4 sm:px-6 gap-2 sm:gap-3 shrink-0 cursor-pointer hover:opacity-90 transition-opacity dark:bg-[#12342e] dark:text-[#72cbb8]"
             >
               <Icon icon="mdi:plus" className="h-3 w-3" />
               <b className="h-[17px] flex items-center shrink-0 text-[12px]">Add Billing</b>
@@ -242,7 +242,7 @@ const TenantBillingsTab: FunctionComponent<TenantBillingsTabProps> = ({
             <div className="relative">
               <div
                 onClick={() => setIsMonthDropdownOpen(!isMonthDropdownOpen)}
-                className="h-8 w-[130px] shadow-[0px_4px_20px_rgba(0,0,0,0.15)] rounded-[10px] bg-darkslategray-200 flex items-center justify-between px-3 cursor-pointer hover:opacity-90 transition-opacity"
+                className="h-8 w-[130px] shadow-[0px_4px_20px_rgba(0,0,0,0.15)] rounded-[10px] bg-darkslategray-200 flex items-center justify-between px-3 cursor-pointer hover:opacity-90 transition-opacity dark:bg-[#114f43]"
               >
                 <b className="text-white text-[12px] truncate">{selectedMonth.displayName}</b>
                 <Icon
@@ -257,7 +257,7 @@ const TenantBillingsTab: FunctionComponent<TenantBillingsTabProps> = ({
                     className="fixed inset-0 z-10"
                     onClick={() => setIsMonthDropdownOpen(false)}
                   />
-                  <div className="absolute top-full right-0 mt-1 w-[150px] z-20 bg-white border border-whitesmoke-200 rounded-lg shadow-lg overflow-hidden">
+                  <div className="absolute top-full right-0 mt-1 w-[150px] z-20 bg-white border border-whitesmoke-200 rounded-lg shadow-lg overflow-hidden dark:bg-[#141515] dark:border-[#343737]">
                     {availableMonths.map((month, index) => (
                       <div
                         key={`${month.month}-${month.year}`}
@@ -267,9 +267,9 @@ const TenantBillingsTab: FunctionComponent<TenantBillingsTabProps> = ({
                         }}
                         className={`w-full px-3 py-2 text-[12px] font-semibold text-center cursor-pointer transition-colors font-inter ${
                           selectedMonth.displayName === month.displayName
-                            ? 'bg-darkslategray-200 text-white'
-                            : 'text-darkslategray-100 hover:bg-whitesmoke-100'
-                        } ${index !== availableMonths.length - 1 ? 'border-b border-whitesmoke-200' : ''}`}
+                            ? 'bg-darkslategray-200 text-white dark:bg-[#114f43]'
+                            : 'text-darkslategray-100 hover:bg-whitesmoke-100 dark:text-[#d7e0ef] dark:hover:bg-[#1b1d1d]'
+                        } ${index !== availableMonths.length - 1 ? 'border-b border-whitesmoke-200 dark:border-[#343737]' : ''}`}
                       >
                         {month.displayName}
                       </div>
@@ -282,11 +282,11 @@ const TenantBillingsTab: FunctionComponent<TenantBillingsTabProps> = ({
         </div>
 
         {/* Table */}
-        <div className="w-full rounded-[12.75px] bg-white border-whitesmoke-200 border-solid border-2 box-border overflow-hidden">
+        <div className="w-full rounded-[12.75px] bg-white border-whitesmoke-200 border-solid border-2 box-border overflow-hidden dark:bg-[#101111] dark:border-[#343737]">
           <div className="w-full overflow-x-auto overflow-y-auto max-h-[600px]">
             <table className="w-full border-collapse" style={{ minWidth: '700px' }}>
               <thead className="sticky top-0 z-10">
-                <tr className="bg-darkslategray-200 rounded-t-[12.75px]">
+                <tr className="bg-darkslategray-200 rounded-t-[12.75px] dark:bg-[#114f43]">
                   {TABLE_COLUMNS.map(({ label, className }) => (
                     <th
                       key={label}
@@ -303,7 +303,7 @@ const TenantBillingsTab: FunctionComponent<TenantBillingsTabProps> = ({
                   <tr>
                     <td
                       colSpan={TABLE_COLUMNS.length}
-                      className="py-12 text-center text-darkslategray-100 text-[13px]"
+                      className="py-12 text-center text-darkslategray-100 text-[13px] dark:text-[#a4acba]"
                     >
                       Loading billings...
                     </td>
@@ -314,7 +314,7 @@ const TenantBillingsTab: FunctionComponent<TenantBillingsTabProps> = ({
                   <tr>
                     <td
                       colSpan={TABLE_COLUMNS.length}
-                      className="py-12 text-center text-darkslategray-100 text-[13px]"
+                      className="py-12 text-center text-darkslategray-100 text-[13px] dark:text-[#a4acba]"
                     >
                       No billings found for {selectedMonth.displayName}
                     </td>
