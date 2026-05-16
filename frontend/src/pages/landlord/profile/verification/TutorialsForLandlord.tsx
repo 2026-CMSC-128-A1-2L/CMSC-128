@@ -13,56 +13,56 @@ const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose 
     {
       title: 'Submit Documents',
       text: 'Upload any official government ID. Your name, photo, and address must be clear.',
-      position: 'top-[610px] left-[580px]',
+      position: { top: 560, left: 520 },
       total: 3,
       currentStep: 1,
     },
     {
       title: 'Submit Documents',
       text: 'Upload a clear copy of your business permit. This document is typically issued by the Business...',
-      position: 'top-[610px] left-[580px]',
+      position: { top: 560, left: 520 },
       total: 3,
       currentStep: 2,
     },
     {
       title: 'Submit Documents',
       text: 'Permits and Licensing Office (BPLO) at the City or Municipal Hall where your property is registered.',
-      position: 'top-[610px] left-[580px]',
+      position: { top: 560, left: 520 },
       total: 3,
       currentStep: 3,
     },
     {
       title: 'Reviewing Documents',
       text: 'Once submitted, the admin will validate your submissions.',
-      position: 'top-[610px] left-[920px]',
+      position: { top: 560, left: 840 },
       total: 2,
       currentStep: 1,
     },
     {
       title: 'Reviewing Documents',
       text: 'Reviewing your documents may take up to 48 to 72 hours.',
-      position: 'top-[610px] left-[920px]',
+      position: { top: 560, left: 840 },
       total: 2,
       currentStep: 2,
     },
     {
       title: 'Finalized Documents',
       text: 'Once the admin has reviewed and approved of your documents, your account is now secured!',
-      position: 'top-[610px] left-[1260px]',
+      position: { top: 560, left: 1120 },
       total: 3,
       currentStep: 1,
     },
     {
       title: 'Finalized Documents',
       text: 'As a verified user, you can now list, manage, and settle your properties for the students who will be...',
-      position: 'top-[610px] left-[1260px]',
+      position: { top: 560, left: 1120 },
       total: 3,
       currentStep: 2,
     },
     {
       title: 'Finalized Documents',
       text: 'staying here at UPLB. If you have more questions you may visit <here> or contact our admins.',
-      position: 'top-[610px] left-[1260px]',
+      position: { top: 560, left: 1120 },
       total: 3,
       currentStep: 3,
     },
@@ -73,6 +73,10 @@ const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose 
   const current = helpContent[step - 1];
   const totalSteps = helpContent.length;
   const isLastStep = step === totalSteps;
+  const bubbleStyle = {
+    top: `clamp(76px, ${current.position.top}px, calc(100vh - 220px))`,
+    left: `clamp(88px, ${current.position.left}px, calc(100vw - 300px))`,
+  };
 
   const handleNext = () => {
     if (step < totalSteps) {
@@ -93,7 +97,8 @@ const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose 
 
   return (
     <div
-      className={`absolute ${current.position} z-[999] flex flex-col items-start animate-in fade-in zoom-in duration-200 transition-all`}
+      className="fixed z-[999] flex flex-col items-start animate-in fade-in zoom-in duration-200 transition-all"
+      style={bubbleStyle}
     >
       <div className="w-[232px] flex flex-col items-center">
         <Icon icon="ph:caret-up-fill" className="text-aliceblue w-14 h-15 mb-[-23px] z-10" />
