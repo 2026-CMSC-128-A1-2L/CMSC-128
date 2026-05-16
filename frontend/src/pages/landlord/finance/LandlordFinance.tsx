@@ -48,7 +48,7 @@ const LandlordFinance: FunctionComponent = () => {
         {/* Header skeleton */}
         <div className="self-stretch flex flex-col items-start justify-center gap-3 mb-6">
           <div className="h-8 w-32 bg-gray-100 animate-pulse rounded" />
-          <div className="self-stretch h-0.5 rounded-[100px] bg-whitesmoke-200" />
+          <div className="self-stretch h-0.5 rounded-[100px] bg-whitesmoke-200 dark:bg-[#242626]" />
         </div>
         <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-[15px] mb-6">
           {Array.from({ length: 5 }).map((_, i) => (
@@ -83,10 +83,10 @@ const LandlordFinance: FunctionComponent = () => {
       <div className="self-stretch flex flex-col items-start justify-center gap-3 mb-6">
         <div className="self-stretch flex items-center justify-between gap-5">
           <div className="h-8 flex flex-col items-center justify-end">
-            <b className="relative text-[24px] leading-8 text-gray font-inter shrink-0">Finance</b>
+            <b className="relative text-[24px] leading-8 text-gray font-inter shrink-0 dark:text-[#edf6f4]">Finance</b>
           </div>
         </div>
-        <div className="self-stretch h-0.5 rounded-[100px] bg-whitesmoke-200 overflow-hidden shrink-0" />
+        <div className="self-stretch h-0.5 rounded-[100px] bg-whitesmoke-200 overflow-hidden shrink-0 dark:bg-[#242626]" />
       </div>
 
       {/* Stats Cards Row */}
@@ -116,7 +116,7 @@ const LandlordFinance: FunctionComponent = () => {
       {/* Properties Section */}
       <div className="w-full mt-4">
         <div className="self-stretch flex items-center justify-start py-0 px-3 mb-4">
-          <b className="h-[42px] relative tracking-[-0.01em] flex items-center text-[18px] text-black font-inter">
+          <b className="h-[42px] relative tracking-[-0.01em] flex items-center text-[18px] text-black font-inter dark:text-[#edf6f4]">
             Your Properties
           </b>
         </div>
@@ -145,12 +145,12 @@ const LandlordFinance: FunctionComponent = () => {
           <div className="transition-all duration-300 hover:translate-y-[-4px]">
             <div
               onClick={handleAddProperty}
-              className="h-[360px] w-[348px] flex flex-col items-center justify-center rounded-[25px] bg-white border-silver border-dashed border-2 cursor-pointer hover:bg-gray-50 transition-colors"
+              className="h-[360px] w-[348px] flex flex-col items-center justify-center rounded-[25px] bg-white border-silver border-dashed border-2 cursor-pointer hover:bg-gray-50 transition-colors dark:bg-[#121313] dark:border-[#303331] dark:hover:bg-[#181a19]"
             >
               <div className="flex flex-col items-center gap-3">
-                <Icon icon="mdi:plus" className="w-12 h-12 text-gray-400" />
-                <b className="text-[18px] tracking-[-0.01em] text-gray">Add New Property</b>
-                <div className="text-[14px] font-medium text-silver text-center max-w-[220px]">
+                <Icon icon="mdi:plus" className="w-12 h-12 text-gray-400 dark:text-[#72cbb8]" />
+                <b className="text-[18px] tracking-[-0.01em] text-gray dark:text-[#d7e0ef]">Add New Property</b>
+                <div className="text-[14px] font-medium text-silver text-center max-w-[220px] dark:text-[#a4acba]">
                   Register a dorm, boarding house, etc.
                 </div>
               </div>

@@ -66,7 +66,7 @@ const DocumentCard: FunctionComponent<DocumentCardProps> = ({
   };
 
   return (
-    <div className="w-full rounded-2xl bg-white/75 dark:bg-[#1f2022] px-8 py-4 flex flex-col gap-5 shadow-sm">
+    <div className="w-full rounded-2xl bg-white/75 dark:bg-[#141515] dark:border dark:border-[#343737] px-8 py-4 flex flex-col gap-5 shadow-sm dark:shadow-none">
       {/* Header row */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -205,7 +205,7 @@ const BuildingRequirements: FunctionComponent<BuildingRequirementsProps> = ({ on
 
   return (
     <div className="flex-1 flex flex-col gap-3">
-      <h2 className="text-sm font-bold text-black dark:text-white mb-1">Building Requirements</h2>
+      <h2 className="text-sm font-bold text-black dark:text-[#72cbb8] mb-1">Building Requirements</h2>
 
       {documents.map((doc) => (
         <DocumentCard
