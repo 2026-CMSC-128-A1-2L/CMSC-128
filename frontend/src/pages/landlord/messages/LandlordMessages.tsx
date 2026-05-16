@@ -180,7 +180,7 @@ const LandlordMessages: FunctionComponent = () => {
   };
 
   return (
-    <div className="w-full h-screen flex items-start font-inter overflow-hidden relative bg-white dark:bg-darkmode">
+    <div className="w-full h-screen flex items-start font-inter overflow-hidden relative bg-transparent">
       {/* Background Accents (Restricted to non-navbar area) */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div className="opacity-20">

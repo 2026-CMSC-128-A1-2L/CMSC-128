@@ -188,7 +188,7 @@ const Registration: FunctionComponent = () => {
   const steps = ['User Profile', 'Verification', 'Finalize'];
 
   return (
-    <div className="w-screen min-h-screen font-sans bg-white dark:bg-[#101111]">
+    <div className="w-screen min-h-screen font-sans bg-transparent">
       <div className="px-20 pt-4 pb-12">
         {/* Cancel */}
         <button

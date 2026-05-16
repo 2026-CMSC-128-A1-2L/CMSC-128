@@ -97,29 +97,29 @@ const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose 
     >
       <div className="w-[232px] flex flex-col items-center">
         {/* Caret pointing up */}
-        <Icon icon="ph:caret-up-fill" className="text-aliceblue w-14 h-15 mb-[-23px] z-10" />
+        <Icon icon="ph:caret-up-fill" className="text-aliceblue w-14 h-15 mb-[-23px] z-10 dark:text-[#141515]" />
 
-        <div className="w-[232px] rounded-2xl bg-aliceblue shadow-xl border border-whitesmoke-200 flex flex-col items-start overflow-hidden">
+        <div className="w-[232px] rounded-2xl bg-aliceblue shadow-xl border border-whitesmoke-200 flex flex-col items-start overflow-hidden dark:bg-[#141515] dark:border-[#303331] dark:shadow-none">
           <div className="self-stretch flex flex-col items-start py-4 px-4 gap-3">
             {/* header*/}
             <div className="self-stretch flex items-center justify-between">
-              <b className="text-[14px] font-inter text-black">{current.title}</b>
+              <b className="text-[14px] font-inter text-black dark:text-[#edf6f4]">{current.title}</b>
               <div
-                className="h-5 w-5 rounded-full flex items-center justify-center cursor-pointer hover:bg-silver transition-colors"
+                className="h-5 w-5 rounded-full flex items-center justify-center cursor-pointer hover:bg-silver transition-colors dark:hover:bg-[#202123]"
                 onClick={handleClose}
               >
-                <Icon icon="mdi:close" className="w-3.5 h-3.5 text-slategray" />
+                <Icon icon="mdi:close" className="w-3.5 h-3.5 text-slategray dark:text-[#a4acba]" />
               </div>
             </div>
 
             {/* description */}
-            <div className="self-stretch text-[12px] font-medium leading-[1.4] font-lora text-black tracking-wide text-left">
+            <div className="self-stretch text-[12px] font-medium leading-[1.4] font-lora text-black tracking-wide text-left dark:text-[#d7e0ef]">
               {current.text}
             </div>
 
             <div className="self-stretch flex items-center justify-between mt-1">
               {/* step counter */}
-              <div className="text-[12px] font-semibold font-lora text-darkslategray tracking-wide">
+              <div className="text-[12px] font-semibold font-lora text-darkslategray tracking-wide dark:text-[#72cbb8]">
                 {current.currentStep}/{current.total}
               </div>
 
@@ -127,7 +127,7 @@ const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose 
                 {step > 1 && (
                   <button
                     onClick={handleBack}
-                    className="w-[50px] rounded-lg bg-[#d0dbe3] py-1 text-[12px] text-[#2f3136] font-semibold font-lora text-center cursor-pointer hover:brightness-95 transition-all"
+                    className="w-[50px] rounded-lg bg-[#d0dbe3] py-1 text-[12px] text-[#2f3136] font-semibold font-lora text-center cursor-pointer hover:brightness-95 transition-all dark:bg-[#202123] dark:text-[#d7e0ef] dark:border dark:border-[#303331]"
                   >
                     Back
                   </button>
@@ -135,7 +135,7 @@ const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose 
 
                 <button
                   onClick={handleNext}
-                  className="w-[54px] rounded-lg bg-[#d0dbe3] py-1 text-[12px] text-[#2f3136] font-semibold font-lora text-center cursor-pointer hover:brightness-95 transition-all"
+                  className="w-[54px] rounded-lg bg-[#d0dbe3] py-1 text-[12px] text-[#2f3136] font-semibold font-lora text-center cursor-pointer hover:brightness-95 transition-all dark:bg-[#124f43] dark:text-[#edf6f4]"
                 >
                   {isLastStep ? 'Finish' : 'Next'}
                 </button>
