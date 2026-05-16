@@ -180,7 +180,7 @@ const LandlordMessages: FunctionComponent = () => {
   };
 
   return (
-    <div className="w-full h-screen flex items-start font-inter overflow-hidden relative bg-white dark:bg-darkmode">
+    <div className="w-full h-screen flex items-start font-inter overflow-hidden relative bg-transparent">
       {/* Background Accents (Restricted to non-navbar area) */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div className="opacity-20">
@@ -209,7 +209,7 @@ const LandlordMessages: FunctionComponent = () => {
 
       {/* ======= FLOATING ICON ========== */}
       <div
-        className="help-button-animated bottom-32 right-10 z-[1000] cursor-pointer transition-all hover:scale-110 active:scale-95"
+        className="help-button-animated z-[1000] cursor-pointer transition-all hover:scale-110 active:scale-95"
         onClick={() => setShowHelp(!showHelp)}
       >
         <img src={TutorialIcon} alt="Help" className="w-16 h-16 drop-shadow-lg" />

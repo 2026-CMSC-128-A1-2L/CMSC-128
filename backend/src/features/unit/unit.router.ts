@@ -8,7 +8,7 @@ import {
 } from './unit.controller.js';
 import { routeGetRentalsByUnit } from '../rental/rental.controller.js';
 import { routeGetUnitBillings } from '../billing/billing.controller.js';
-import { currentTenantManagerFilter } from './unit.middleware.js';
+import { currentTenantManagerFilter, currentTenantManagerRentalFilter } from './unit.middleware.js';
 
 const router = Router();
 
@@ -45,7 +45,7 @@ router.patch('/:unitId', manageListingsFilter, routeUpdateUnit);
 router.delete('/:unitId', manageListingsFilter, routeDeleteUnit);
 
 // GET /api/units/:unitId/rentals
-router.get('/:unitId/rentals', manageListingsFilter, routeGetRentalsByUnit);
+router.get('/:unitId/rentals', currentTenantManagerRentalFilter, routeGetRentalsByUnit);
 
 // GET /api/units/:unitId/billings
 router.get('/:unitId/billings', manageBillingsFilter, routeGetUnitBillings);

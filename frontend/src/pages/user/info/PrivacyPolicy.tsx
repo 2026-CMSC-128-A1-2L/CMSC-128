@@ -148,7 +148,7 @@ const PrivacyPolicy: FunctionComponent = () => {
   }, []);
 
   return (
-    <div className="privacy-policy-shell relative min-h-screen overflow-x-hidden bg-white font-inter text-black dark:bg-[#0f1010] dark:text-[#edf6f4]">
+    <div className="privacy-policy-shell relative min-h-screen overflow-x-hidden bg-transparent font-inter text-black dark:text-[#edf6f4]">
       <PageBackground />
 
       <div className="relative z-10 flex min-h-screen">

@@ -1,5 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
-import { AnimatePresence } from 'framer-motion';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
 import PageLayout from './pages/utilities/PageLayout';
 import UserLanding from './pages/UserLanding';
@@ -32,23 +31,19 @@ function LandingRoute() {
 }
 
 function AnimatedRoutes() {
-  const location = useLocation();
-
   return (
-    <AnimatePresence mode="wait">
-      <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<LandingRoute />} />
+    <Routes>
+      <Route path="/" element={<LandingRoute />} />
 
-        <Route element={<PageLayout />}>
-          {userRoutes}
-          {adminRoutes}
-          {landlordRoutes}
-        </Route>
+      <Route element={<PageLayout />}>
+        {userRoutes}
+        {adminRoutes}
+        {landlordRoutes}
+      </Route>
 
-        {/* Catch-all 404 Route */}
-        <Route path="*" element={<ErrorPage />} />
-      </Routes>
-    </AnimatePresence>
+      {/* Catch-all 404 Route */}
+      <Route path="*" element={<ErrorPage />} />
+    </Routes>
   );
 }
 

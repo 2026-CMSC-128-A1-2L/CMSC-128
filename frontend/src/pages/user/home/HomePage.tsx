@@ -1,18 +1,32 @@
 import { type FunctionComponent, useEffect, useRef, useState } from "react";
 import { Icon } from "@iconify/react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import SideBar from "../../../components/user/SideBar";
 import DormCard from "../../../components/user/DormCard";
 import Banner from "../../../components/general/Banner";
+import PageBackground from "../../../components/general/PageBackground";
 import FilterTab from "../../../components/user/Filter/FilterTab";
 import LoadingPage from "../../general/LoadingPage";
 import { useFacilities, type DormCardData } from "../../../hooks/useFacilities";
+import { useDebouncedValue } from "../../../hooks/useDebouncedValue";
 import TutorialIcon from "../../../../assets/help-chat.svg";
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
 const CARD_WIDTH = 280;
 const CARD_GAP = 24;
+
+const currencyFormatter = new Intl.NumberFormat("en-PH", {
+  style: "currency",
+  currency: "PHP",
+  minimumFractionDigits: 0,
+});
+
+const priceRange = (min: number, max: number): string => {
+  if (min === 0 && max === 0) return "Price TBA";
+  if (min === max) return `${currencyFormatter.format(min)}/month`;
+  return `${currencyFormatter.format(min)} - ${currencyFormatter.format(max)}/month`;
+};
 
 // ─── Carousel hook ────────────────────────────────────────────────────────────
 
@@ -299,12 +313,15 @@ const ApplicationGuideModal = ({ onClose }: { onClose: () => void }) => {
 // ─── HomePage ─────────────────────────────────────────────────────────────────
 
 const HomePage: FunctionComponent = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
   const [searchTerm, setSearchTerm] = useState(
     searchParams.get("search") ?? "",
   );
+  const [isSearchDropdownOpen, setIsSearchDropdownOpen] = useState(false);
+  const debouncedSearchTerm = useDebouncedValue(searchTerm, 500);
   const [viewAllCategory, setViewAllCategory] = useState<ViewAllCategory>(null);
   const [filterCriteria, setFilterCriteria] = useState({
     minPrice: 0,
@@ -326,15 +343,19 @@ const HomePage: FunctionComponent = () => {
       dorm.price.max <= filterCriteria.maxPrice,
   );
 
-  // Apply search on top of the filtered results
-  const isSearching = searchTerm.trim().length > 0;
-  const filteredDorms = isSearching
-    ? filterApplied.filter(
-        (dorm) =>
-          dorm.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          dorm.location.toLowerCase().includes(searchTerm.toLowerCase()),
-      )
-    : filterApplied;
+  const trimmedSearchTerm = searchTerm.trim();
+  const trimmedDebouncedSearchTerm = debouncedSearchTerm.trim();
+  const isSearchDebouncing = trimmedSearchTerm !== trimmedDebouncedSearchTerm;
+  const matchingSearchResults = trimmedDebouncedSearchTerm
+    ? facilities
+        .filter((dorm) => {
+          const roomTypes = dorm.room_types.map((room) => room.pax).join(" ");
+          return `${dorm.name} ${dorm.location} ${roomTypes}`
+            .toLowerCase()
+            .includes(trimmedDebouncedSearchTerm.toLowerCase());
+        })
+        .slice(0, 6)
+    : [];
 
   // Category slices — swap for real filtered endpoints later
   const pasaloDorms = filterApplied.slice(0, 10);
@@ -356,14 +377,21 @@ const HomePage: FunctionComponent = () => {
 
   const handleSearch = (value: string) => {
     setSearchTerm(value);
-    const nextParams = new URLSearchParams(searchParams);
-    if (value.trim()) {
-      nextParams.set("search", value);
-    } else {
-      nextParams.delete("search");
-    }
-    setSearchParams(nextParams, { replace: true });
-    if (value.trim().length > 0) setViewAllCategory(null);
+    setIsSearchDropdownOpen(value.trim().length > 0);
+  };
+
+  const openSearchResult = (dorm: DormCardData) => {
+    const query = searchTerm.trim();
+    setIsSearchDropdownOpen(false);
+    navigate(`/facilities/${dorm.id}`, {
+      state: {
+        dorm,
+        sourceLabel: "Search Results",
+        sourceUrl: query
+          ? `/home?search=${encodeURIComponent(query)}`
+          : "/home",
+      },
+    });
   };
 
   useEffect(() => {
@@ -375,18 +403,19 @@ const HomePage: FunctionComponent = () => {
   if (isLoading) return <LoadingPage />;
 
   return (
-    <div className="w-full flex items-start text-left text-[0.875rem] text-dimgray font-inter gap-8">
-      <div className="sticky top-0 h-screen w-fit shrink-0">
+    <div className="user-home-shell relative w-full flex items-start text-left text-[0.875rem] text-dimgray font-inter gap-8 bg-transparent">
+      <PageBackground />
+      <div className="sticky top-0 h-screen w-fit shrink-0 z-20">
         <SideBar />
       </div>
 
       {/* right frame */}
-      <div className="w-full min-w-0 h-fit flex items-start pt-15 pr-20 pb-20">
+      <div className="relative z-10 w-full min-w-0 h-fit flex items-start pt-15 pr-20 pb-20">
         <div className="h-fit w-full min-w-0 flex flex-col items-start gap-80">
           <div className="w-full min-w-0 flex flex-col items-start">
             {/* search bar */}
-            <div className="w-full h-full overflow-hidden flex items-center pb-6 box-border">
-              <div className="w-full flex items-center transition-all duration-300 bg-[#f8f9fa] rounded-num-12 py-3 pl-3 pr-4 border border-transparent focus-within:bg-white focus-within:shadow-[0_8px_10px_rgb(0,0,0,0.06)] focus-within:transform focus-within:-translate-y-[1px] dark:bg-[#141515] dark:focus-within:bg-[#1a1b1b] dark:focus-within:border-[#303331]">
+            <div className="relative w-full h-full flex items-center pb-6 box-border">
+              <div className="w-full flex items-center transition-all duration-300 bg-[#f8f9fa] rounded-num-12 py-3 pl-3 pr-4 border border-transparent focus-within:bg-white focus-within:shadow-[0_8px_10px_rgb(0,0,0,0.06)] focus-within:transform focus-within:-translate-y-[1px] gap-2 dark:bg-[#141515] dark:focus-within:bg-[#1a1b1b] dark:focus-within:border-[#303331]">
                 <Icon
                   icon="ic:outline-search"
                   className="w-5 h-5 text-unselected shrink-0 dark:text-[#a4acba]"
@@ -396,13 +425,25 @@ const HomePage: FunctionComponent = () => {
                   placeholder="Search for Dorms, Apartments, or Locations (e.g. UPLB, Umali Subdivision)"
                   value={searchTerm}
                   maxLength={50}
+                  onFocus={() =>
+                    setIsSearchDropdownOpen(searchTerm.trim().length > 0)
+                  }
+                  onBlur={() => {
+                    window.setTimeout(
+                      () => setIsSearchDropdownOpen(false),
+                      120,
+                    );
+                  }}
                   onChange={(e) => handleSearch(e.target.value)}
                   className="w-full bg-transparent border-none outline-none text-num-14 font-semibold text-darkgreen placeholder:text-unselected placeholder:font-normal dark:text-[#d7e0ef] dark:placeholder:text-[#647483]"
                 />
                 {searchTerm && (
                   <button
                     type="button"
-                    onClick={() => handleSearch("")}
+                    onClick={() => {
+                      handleSearch("");
+                      setIsSearchDropdownOpen(false);
+                    }}
                     className="text-unselected hover:text-darkgreen dark:text-[#a4acba] dark:hover:text-[#d7e0ef]"
                   >
                     <Icon
@@ -412,6 +453,54 @@ const HomePage: FunctionComponent = () => {
                   </button>
                 )}
               </div>
+              {isSearchDropdownOpen && trimmedSearchTerm && (
+                <div className="absolute left-0 right-0 top-[calc(100%-1rem)] z-40 overflow-hidden rounded-num-12 border border-whitesmoke-200 bg-white shadow-[0_14px_30px_rgba(0,0,0,0.14)]">
+                  {isSearchDebouncing ? (
+                    <div className="flex items-center gap-3 px-4 py-4 text-sm font-semibold text-unselected">
+                      <Icon
+                        icon="eos-icons:loading"
+                        className="h-5 w-5 text-teal-100"
+                      />
+                      Searching listings...
+                    </div>
+                  ) : matchingSearchResults.length > 0 ? (
+                    matchingSearchResults.map((dorm) => (
+                      <button
+                        key={dorm.id}
+                        type="button"
+                        onMouseDown={(event) => event.preventDefault()}
+                        onClick={() => openSearchResult(dorm)}
+                        className="flex w-full items-center gap-3 px-3 py-2.5 text-left transition-colors hover:bg-whitesmoke-100"
+                      >
+                        <img
+                          src={dorm.image}
+                          alt=""
+                          className="h-12 w-16 shrink-0 rounded-md object-cover"
+                        />
+                        <span className="min-w-0 flex-1">
+                          <span className="block truncate text-num-14 font-bold text-darkgreen">
+                            {dorm.name}
+                          </span>
+                          <span className="block truncate text-[0.75rem] font-semibold text-teal-100">
+                            {priceRange(dorm.price.min, dorm.price.max)}
+                          </span>
+                          <span className="block truncate text-[0.72rem] font-semibold text-unselected">
+                            {dorm.location}
+                          </span>
+                        </span>
+                        <Icon
+                          icon="solar:arrow-right-bold"
+                          className="h-4 w-4 shrink-0 text-teal-100"
+                        />
+                      </button>
+                    ))
+                  ) : (
+                    <div className="px-4 py-4 text-sm font-semibold text-unselected">
+                      No matching listings found
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
 
             <div className="w-full flex flex-col items-start gap-6 text-[1.5rem] text-gray">
@@ -454,42 +543,6 @@ const HomePage: FunctionComponent = () => {
               <div className="w-full min-w-0 flex flex-col items-start gap-10">
                 {error ? (
                   <ErrorState message={error} onRetry={refetch} />
-                ) : isSearching ? (
-                  /* Search results */
-                  <div className="w-full flex flex-col items-start gap-6">
-                    <div className="w-full flex items-center justify-between">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <b className="text-[1rem] text-darkgreen">
-                          Results for{" "}
-                          <span className="text-teal">"{searchTerm}"</span>
-                        </b>
-                        <span className="text-[0.75rem] text-unselected font-normal">
-                          — {filteredDorms.length} listing
-                          {filteredDorms.length !== 1 ? "s" : ""} found
-                        </span>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => handleSearch("")}
-                        className="text-[0.75rem] text-teal-100 underline font-semibold hover:opacity-70 transition-opacity whitespace-nowrap"
-                      >
-                        Clear search
-                      </button>
-                    </div>
-
-                    {filteredDorms.length > 0 ? (
-                      <div className="w-full flex flex-wrap gap-6 py-1">
-                        {filteredDorms.map((dorm) => (
-                          <DormCard key={dorm.id} {...dorm} />
-                        ))}
-                      </div>
-                    ) : (
-                      <EmptyState
-                        onBack={() => handleSearch("")}
-                        label={`No listings found for "${searchTerm}"`}
-                      />
-                    )}
-                  </div>
                 ) : viewAllCategory ? (
                   /* View all category */
                   <div className="w-full flex flex-col items-start gap-6">
@@ -599,7 +652,7 @@ const HomePage: FunctionComponent = () => {
 
       <button
         type="button"
-        className="help-button-animated bottom-10 right-10 z-[1000] cursor-pointer transition-all hover:scale-110 active:scale-95"
+        className="help-button-animated z-[1000] cursor-pointer transition-all hover:scale-110 active:scale-95"
         onClick={() => setShowHelp(true)}
         aria-label="Open application guide"
       >

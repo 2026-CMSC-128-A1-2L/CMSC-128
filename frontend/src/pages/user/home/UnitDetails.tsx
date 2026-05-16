@@ -7,6 +7,7 @@ import {
 } from "react";
 import SideBar from "../../../components/user/SideBar";
 import Footer from "../../../components/general/Footer";
+import PageBackground from "../../../components/general/PageBackground";
 import SignInPopUp from "../../../components/general/SignInPopUp";
 import { Icon } from "@iconify/react";
 import axios from "axios";
@@ -24,6 +25,7 @@ import DormCard from "../../../components/user/DormCard";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import LoadingPage from "../../general/LoadingPage";
 import { useFacilities, type DormCardData } from "../../../hooks/useFacilities";
+import { useDebouncedValue } from "../../../hooks/useDebouncedValue";
 import { useFacilityDetails } from "../../../hooks/useFacilityDetails";
 import { useBookmarks } from "../../../hooks/useBookmarks";
 import { BookmarkService } from "../../../service/BookmarkService";
@@ -36,6 +38,12 @@ const currencyFormatter = new Intl.NumberFormat("en-PH", {
   currency: "PHP",
   minimumFractionDigits: 0,
 });
+
+const priceRange = (min: number, max: number): string => {
+  if (min === 0 && max === 0) return "Price TBA";
+  if (min === max) return `${currencyFormatter.format(min)}/month`;
+  return `${currencyFormatter.format(min)} - ${currencyFormatter.format(max)}/month`;
+};
 
 const roomButtonLabel = (label: string) =>
   label.replace(/\s*\([^)]*\)\s*$/, "");
@@ -118,6 +126,8 @@ const UnitDetails: FunctionComponent = () => {
   const [moveInDate, setMoveInDate] = useState("");
   const [messageToLandlord, setMessageToLandlord] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [isSearchDropdownOpen, setIsSearchDropdownOpen] = useState(false);
+  const debouncedSearchTerm = useDebouncedValue(searchTerm, 500);
   const [isBookmarkSaving, setIsBookmarkSaving] = useState(false);
   const [bookmarkError, setBookmarkError] = useState<string | null>(null);
   const [applicationError, setApplicationError] = useState<string | null>(null);
@@ -174,10 +184,38 @@ const UnitDetails: FunctionComponent = () => {
 
   if (!facility) return null;
 
+  const trimmedSearchTerm = searchTerm.trim();
+  const trimmedDebouncedSearchTerm = debouncedSearchTerm.trim();
+  const isSearchDebouncing = trimmedSearchTerm !== trimmedDebouncedSearchTerm;
+  const matchingSearchResults = trimmedDebouncedSearchTerm
+    ? recommendedDorms
+        .filter((dorm) => {
+          const roomTypes = dorm.room_types.map((room) => room.pax).join(" ");
+          return `${dorm.name} ${dorm.location} ${roomTypes}`
+            .toLowerCase()
+            .includes(trimmedDebouncedSearchTerm.toLowerCase());
+        })
+        .slice(0, 6)
+    : [];
+
   const submitSearch = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const query = searchTerm.trim();
     navigate(query ? `/home?search=${encodeURIComponent(query)}` : "/home");
+  };
+
+  const openSearchResult = (dorm: DormCardData) => {
+    const query = searchTerm.trim();
+    setIsSearchDropdownOpen(false);
+    navigate(`/facilities/${dorm.id}`, {
+      state: {
+        dorm,
+        sourceLabel: "Search Results",
+        sourceUrl: query
+          ? `/home?search=${encodeURIComponent(query)}`
+          : "/home",
+      },
+    });
   };
 
   const selectedListing =
@@ -385,7 +423,8 @@ const UnitDetails: FunctionComponent = () => {
   };
 
   return (
-    <div className="flex min-h-screen font-inter text-darkslategray-100 dark:bg-[#0f1010] dark:text-[#edf6f4]">
+    <div className="user-unit-details-shell relative flex min-h-screen bg-transparent font-inter text-darkslategray-100 dark:bg-[#0f1010] dark:text-[#edf6f4]">
+      <PageBackground />
       {showSignIn && <SignInPopUp onClose={() => setShowSignIn(false)} />}
       {isVisitPopoutOpen && (
         <PortalPopup
@@ -402,12 +441,12 @@ const UnitDetails: FunctionComponent = () => {
         </PortalPopup>
       )}
       {/* Sidebar */}
-      <div className="sticky top-0 h-screen shrink-0 z-10 font-inter">
+      <div className="sticky top-0 h-screen shrink-0 z-20 font-inter">
         <SideBar />
       </div>
 
       {/* Main */}
-      <div className="flex flex-1 flex-col min-w-0 overflow-y-auto">
+      <div className="relative z-10 flex flex-1 flex-col min-w-0 overflow-y-auto">
         <div className="flex-1 flex flex-col px-4 sm:px-8 lg:px-20 pt-8 lg:pt-16 pb-0 gap-6">
           {/* Breadcrumb */}
           <div
@@ -452,12 +491,6 @@ const UnitDetails: FunctionComponent = () => {
                 />
               </button>
             )}
-            <button
-              type="submit"
-              className="rounded-lg bg-darkslategray-200 px-4 py-1.5 text-xs font-semibold text-white shadow-sm transition-colors hover:bg-teal-200"
-            >
-              Search
-            </button>
           </form>
 
           {/* Top section: image + apply card */}

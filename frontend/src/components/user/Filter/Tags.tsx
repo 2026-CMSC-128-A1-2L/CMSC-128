@@ -2,6 +2,7 @@ import { Icon } from "@iconify/react";
 import { useState } from "react";
 import radio from "../../../../assets/radio.svg";
 import radio_check from "../../../../assets/radio_check.svg";
+import { useDebouncedValue } from "../../../hooks/useDebouncedValue";
 
 interface Props {
   selected: string[];
@@ -10,6 +11,7 @@ interface Props {
 
 const Tags = ({ selected, onChange }: Props) => {
   const [searchTerm, setSearchTerm] = useState("");
+  const debouncedSearchTerm = useDebouncedValue(searchTerm, 250);
   const [isExpanded, setIsExpanded] = useState(false);
 
   const allTags = [
@@ -30,11 +32,11 @@ const Tags = ({ selected, onChange }: Props) => {
   ];
 
   const filteredTags = allTags.filter((tag) =>
-    tag.toLowerCase().includes(searchTerm.toLowerCase()),
+    tag.toLowerCase().includes(debouncedSearchTerm.toLowerCase()),
   );
 
   const displayTags =
-    searchTerm || isExpanded ? filteredTags : filteredTags.slice(0, 6);
+    debouncedSearchTerm || isExpanded ? filteredTags : filteredTags.slice(0, 6);
 
   const toggleTag = (tag: string) => {
     if (selected.includes(tag)) {
@@ -87,7 +89,7 @@ const Tags = ({ selected, onChange }: Props) => {
       </div>
 
       {/* show more/less*/}
-      {!searchTerm && filteredTags.length > 6 && (
+      {!debouncedSearchTerm && filteredTags.length > 6 && (
         <button
           onClick={() => setIsExpanded(!isExpanded)}
           className="text-slategray font-bold text-left text-num-12 hover:text-teal transition-colors border-none bg-transparent cursor-pointer dark:text-[#a4acba] dark:hover:text-[#72cbb8]"
