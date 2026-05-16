@@ -2,6 +2,7 @@ import { useState, type FunctionComponent, type Dispatch, type SetStateAction } 
 import Message from '../general/InboxMessage';
 import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
+import { useDebouncedValue } from '../../hooks/useDebouncedValue';
 
 interface NotificationItem {
   id: number;
@@ -38,14 +39,21 @@ const DmsSidebar: FunctionComponent<DmsSidebarProps> = ({
 }) => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
+  const debouncedSearchQuery = useDebouncedValue(searchQuery, 250);
   const [showAllNotifications, setShowAllNotifications] = useState(false);
   const [dmFilter, setDmFilter] = useState<'all' | 'unread'>('all');
   const [showAllArchive, setShowAllArchive] = useState(false);
 
   const displayedNotifications = showAllNotifications ? notifications : notifications.slice(0, 2);
 
-  const activeDMs = directMessages.filter((dm) => !dm.archived);
-  const archivedDMs = directMessages.filter((dm) => dm.archived);
+  const matchesSearch = (item: { title: string; body?: string }) => {
+    const query = debouncedSearchQuery.trim().toLowerCase();
+    if (!query) return true;
+    return `${item.title} ${item.body ?? ''}`.toLowerCase().includes(query);
+  };
+
+  const activeDMs = directMessages.filter((dm) => !dm.archived && matchesSearch(dm));
+  const archivedDMs = directMessages.filter((dm) => dm.archived && matchesSearch(dm));
 
   const filteredActiveDMs = activeDMs.filter((dm) => {
     if (dmFilter === 'unread') return dm.unread;

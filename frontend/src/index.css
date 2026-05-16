@@ -351,6 +351,7 @@ body {
   .dark .user-home-shell .bg-\[\#f8f9fa\],
   .dark .user-home-shell .bg-whitesmoke-100,
   .dark .user-home-shell .bg-aliceblue,
+  .dark .user-unit-details-shell .bg-\[\#f8f9fa\],
   .dark .user-unit-details-shell .bg-aliceblue,
   .dark .user-unit-details-shell .bg-whitesmoke-100,
   .dark .user-unit-details-shell .bg-whitesmoke-200 {
@@ -469,11 +470,15 @@ body {
   .dark .user-home-shell .shadow-sm,
   .dark .user-home-shell .shadow-md,
   .dark .user-home-shell .hover\:shadow-lg:hover,
+  .dark .user-home-shell .focus-within\:shadow-\[0_8px_10px_rgb\(0\,0\,0\,0\.06\)\]:focus-within,
   .dark .user-unit-details-shell .shadow,
   .dark .user-unit-details-shell .shadow-sm,
   .dark .user-unit-details-shell .shadow-md,
   .dark .user-unit-details-shell .shadow-lg,
-  .dark .user-unit-details-shell .shadow-2xl {
+  .dark .user-unit-details-shell .shadow-2xl,
+  .dark
+    .user-unit-details-shell
+    .focus-within\:shadow-\[0_8px_10px_rgb\(0\,0\,0\,0\.06\)\]:focus-within {
     box-shadow: none;
   }
 

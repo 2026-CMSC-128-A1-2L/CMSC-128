@@ -25,6 +25,7 @@ import DormCard from "../../../components/user/DormCard";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import LoadingPage from "../../general/LoadingPage";
 import { useFacilities, type DormCardData } from "../../../hooks/useFacilities";
+import { useDebouncedValue } from "../../../hooks/useDebouncedValue";
 import { useFacilityDetails } from "../../../hooks/useFacilityDetails";
 import { useBookmarks } from "../../../hooks/useBookmarks";
 import { BookmarkService } from "../../../service/BookmarkService";
@@ -126,6 +127,7 @@ const UnitDetails: FunctionComponent = () => {
   const [messageToLandlord, setMessageToLandlord] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [isSearchDropdownOpen, setIsSearchDropdownOpen] = useState(false);
+  const debouncedSearchTerm = useDebouncedValue(searchTerm, 500);
   const [isBookmarkSaving, setIsBookmarkSaving] = useState(false);
   const [bookmarkError, setBookmarkError] = useState<string | null>(null);
   const [applicationError, setApplicationError] = useState<string | null>(null);
@@ -178,14 +180,16 @@ const UnitDetails: FunctionComponent = () => {
 
   if (!facility) return null;
 
-  const trimmedSearchTerm = searchTerm.trim().toLowerCase();
-  const matchingSearchResults = trimmedSearchTerm
+  const trimmedSearchTerm = searchTerm.trim();
+  const trimmedDebouncedSearchTerm = debouncedSearchTerm.trim();
+  const isSearchDebouncing = trimmedSearchTerm !== trimmedDebouncedSearchTerm;
+  const matchingSearchResults = trimmedDebouncedSearchTerm
     ? recommendedDorms
         .filter((dorm) => {
           const roomTypes = dorm.room_types.map((room) => room.pax).join(" ");
           return `${dorm.name} ${dorm.location} ${roomTypes}`
             .toLowerCase()
-            .includes(trimmedSearchTerm);
+            .includes(trimmedDebouncedSearchTerm.toLowerCase());
         })
         .slice(0, 6)
     : [];
@@ -203,7 +207,9 @@ const UnitDetails: FunctionComponent = () => {
       state: {
         dorm,
         sourceLabel: "Search Results",
-        sourceUrl: query ? `/home?search=${encodeURIComponent(query)}` : "/home",
+        sourceUrl: query
+          ? `/home?search=${encodeURIComponent(query)}`
+          : "/home",
       },
     });
   };
@@ -456,7 +462,7 @@ const UnitDetails: FunctionComponent = () => {
             onSubmit={submitSearch}
             className="relative w-full h-full flex items-center pb-6 box-border"
           >
-            <div className="w-full flex items-center transition-all duration-300 bg-[#f8f9fa] rounded-num-12 py-3 pl-3 pr-4 border border-transparent focus-within:bg-white focus-within:shadow-[0_8px_10px_rgb(0,0,0,0.06)] focus-within:transform focus-within:-translate-y-[1px]">
+            <div className="w-full flex items-center transition-all duration-300 bg-[#f8f9fa] rounded-num-12 py-3 pl-3 pr-4 border border-transparent focus-within:bg-white focus-within:shadow-[0_8px_10px_rgb(0,0,0,0.06)] focus-within:transform focus-within:-translate-y-[1px] gap-2">
               <Icon
                 icon="ic:outline-search"
                 className="w-5 h-5 text-unselected shrink-0"
@@ -493,9 +499,17 @@ const UnitDetails: FunctionComponent = () => {
                 </button>
               )}
             </div>
-            {isSearchDropdownOpen && searchTerm.trim() && (
+            {isSearchDropdownOpen && trimmedSearchTerm && (
               <div className="absolute left-0 right-0 top-[calc(100%-1rem)] z-40 overflow-hidden rounded-num-12 border border-whitesmoke-200 bg-white shadow-[0_14px_30px_rgba(0,0,0,0.14)]">
-                {matchingSearchResults.length > 0 ? (
+                {isSearchDebouncing ? (
+                  <div className="flex items-center gap-3 px-4 py-4 text-sm font-semibold text-unselected">
+                    <Icon
+                      icon="eos-icons:loading"
+                      className="h-5 w-5 text-teal-100"
+                    />
+                    Searching listings...
+                  </div>
+                ) : matchingSearchResults.length > 0 ? (
                   matchingSearchResults.map((dorm) => (
                     <button
                       key={dorm.id}

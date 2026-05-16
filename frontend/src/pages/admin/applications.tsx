@@ -12,6 +12,7 @@ import ApplicantReviewModal, {
 } from '../../components/admin/ApplicantReviewModal';
 import { DocumentService } from '../../service/DocumentService';
 import { UserService } from '../../service/UserService';
+import { useDebouncedValue } from '../../hooks/useDebouncedValue';
 
 const tableHeaders = ['Name', 'Email', 'Role', 'Submitted Docs', 'Status', 'Details'];
 
@@ -26,6 +27,7 @@ function Applications() {
   const [applicants, setApplicants] = useState<VerificationApplicant[]>([]);
   const [selectedApplicantId, setSelectedApplicantId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const debouncedSearchQuery = useDebouncedValue(searchQuery, 300);
   const [isLoading, setIsLoading] = useState(true);
   const [actionMessage, setActionMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -39,7 +41,7 @@ function Applications() {
   const selectedApplicant = applicants.find((u) => u._id === selectedApplicantId) ?? null;
 
   const filteredApplicants = useMemo(() => {
-    const q = searchQuery.trim().toLowerCase();
+    const q = debouncedSearchQuery.trim().toLowerCase();
     if (!q) return applicants;
     return applicants.filter((u) =>
       [getDisplayName(u), u.emails?.[0], u.userType, u.address, u.contact]
@@ -48,7 +50,11 @@ function Applications() {
         .toLowerCase()
         .includes(q),
     );
-  }, [applicants, searchQuery]);
+  }, [applicants, debouncedSearchQuery]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [debouncedSearchQuery]);
 
   const totalPages = Math.ceil(filteredApplicants.length / itemsPerPage);
   const paginatedApplicants = useMemo(() => {
@@ -200,10 +206,7 @@ function Applications() {
                   <input
                     type="text"
                     value={searchQuery}
-                    onChange={(e) => {
-                      setSearchQuery(e.target.value);
-                      setCurrentPage(1);
-                    }}
+                    onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search"
                     className="flex-1 bg-transparent font-['Poppins'] text-sm text-black dark:text-[#d7e0ef] outline-none placeholder:text-[#7c8db5] dark:placeholder:text-[#a4acba]"
                   />
