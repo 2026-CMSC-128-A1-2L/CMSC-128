@@ -79,14 +79,14 @@ const LandlordPropertyFinance: FunctionComponent = () => {
         {/* Page title */}
         <div className="self-stretch flex flex-col items-start justify-center gap-3 mb-6">
           <div className="self-stretch flex items-center justify-between gap-5">
-            <b className="relative text-[24px] leading-8 text-gray font-inter shrink-0">Finance</b>
+            <b className="relative text-[24px] leading-8 text-gray font-inter shrink-0 dark:text-[#edf6f4]">Finance</b>
           </div>
-          <div className="self-stretch h-0.5 rounded-[100px] bg-whitesmoke-200 overflow-hidden shrink-0" />
+          <div className="self-stretch h-0.5 rounded-[100px] bg-whitesmoke-200 overflow-hidden shrink-0 dark:bg-[#242626]" />
         </div>
 
         {/* Property Header */}
-        <div className="self-stretch flex flex-col items-start justify-center py-0 px-2 box-border gap-1 text-darkslategray-100 font-lora mb-6">
-          <b className="self-stretch relative text-[24px] leading-8 font-inter">{facilityInfo.name}</b>
+        <div className="self-stretch flex flex-col items-start justify-center py-0 px-2 box-border gap-1 text-darkslategray-100 font-lora mb-6 dark:text-[#d7e0ef]">
+          <b className="self-stretch relative text-[24px] leading-8 font-inter dark:text-[#d7e0ef]">{facilityInfo.name}</b>
           <div className="self-stretch flex items-center py-0 px-4 gap-2">
             <Icon icon="mdi:map-marker" className="text-lg" />
             <b className="flex-1 relative text-sm">{facilityInfo.address}</b>
@@ -96,7 +96,7 @@ const LandlordPropertyFinance: FunctionComponent = () => {
         {/* Back button */}
         <button
           onClick={() => navigate('/landlord/finance')}
-          className="self-start flex items-center gap-2 mb-4 px-2 py-1 text-teal-200 hover:text-teal-100 transition-colors duration-200"
+          className="self-start flex items-center gap-2 mb-4 px-2 py-1 text-teal-200 hover:text-teal-100 transition-colors duration-200 dark:text-[#72cbb8] dark:hover:text-[#9ee0d2]"
         >
           <Icon icon="mdi:chevron-left" className="w-5 h-5" />
           <span className="text-sm font-medium">Back to All Properties</span>

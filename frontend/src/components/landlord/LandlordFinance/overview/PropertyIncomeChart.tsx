@@ -11,9 +11,9 @@ const PropertyIncomeChart: FunctionComponent<PropertyIncomeChartProps> = ({ prop
   const getHeight = (income: number) => (income / maxIncome) * chartHeight;
 
   return (
-    <div className="h-[280px] w-full rounded-2xl bg-white border border-whitesmoke-200 flex flex-col overflow-hidden transition-shadow hover:shadow-lg">
+    <div className="h-[280px] w-full rounded-2xl bg-white border border-whitesmoke-200 flex flex-col overflow-hidden transition-shadow hover:shadow-lg dark:bg-[#101111] dark:border-[#343737] dark:hover:shadow-black/30">
       <div className="flex items-center justify-center py-4">
-        <b className="text-[18px] text-gray font-inter">Income by Property</b>
+        <b className="text-[18px] text-gray font-inter dark:text-[#edf6f4]">Income by Property</b>
       </div>
       <div className="flex-1 flex flex-col items-center justify-center px-4 pb-4">
         <div className="flex items-end gap-6 justify-center">
@@ -31,7 +31,7 @@ const PropertyIncomeChart: FunctionComponent<PropertyIncomeChartProps> = ({ prop
                     minHeight: '20px',
                   }}
                 />
-                <div className="text-center text-[10px] font-semibold text-black truncate w-full mt-2">
+                <div className="text-center text-[10px] font-semibold text-black truncate w-full mt-2 dark:text-[#d7e0ef]">
                   {property.name}
                 </div>
               </div>

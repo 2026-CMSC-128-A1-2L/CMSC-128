@@ -99,12 +99,12 @@ const BillingRow: FunctionComponent<BillingRowProps> = ({
   const hasStatus = selectedStatus !== null;
 
   const tdBase =
-    'px-3 h-12 text-center text-[12px] sm:text-[13px] font-inter text-darkslategray-100 whitespace-nowrap';
+    'px-3 h-12 text-center text-[12px] sm:text-[13px] font-inter text-darkslategray-100 whitespace-nowrap dark:text-[#d7e0ef]';
 
   return (
     <tr
       onClick={() => onEditClick?.(billing)}
-      className="hover:bg-gray-50 transition-colors cursor-pointer border-b border-whitesmoke-200 last:border-b-0"
+      className="hover:bg-gray-50 transition-colors cursor-pointer border-b border-whitesmoke-200 last:border-b-0 dark:border-[#343737] dark:hover:bg-[#171918]"
     >
       <td className={`${tdBase} font-medium`}>{roomNumber}</td>
 
@@ -127,14 +127,14 @@ const BillingRow: FunctionComponent<BillingRowProps> = ({
             className={`w-[100px] rounded-lg ${
               hasStatus && selectedStatus
                 ? `${statusGradients[selectedStatus]} flex items-center justify-center`
-                : 'bg-white border-whitesmoke-200 border-solid border'
+                : 'bg-white border-whitesmoke-200 border-solid border dark:bg-[#101111] dark:border-[#343737]'
             } py-[4.5px] px-2 font-inter cursor-pointer transition-all duration-300 hover:opacity-90 ${
               isChanging ? 'scale-95' : 'scale-100'
             }`}
           >
             <b
               className={`text-[10px] sm:text-[11px] font-medium transition-all duration-300 ${
-                hasStatus && selectedStatus ? 'text-white' : 'text-darkslategray-100'
+                hasStatus && selectedStatus ? 'text-white' : 'text-darkslategray-100 dark:text-[#d7e0ef]'
               } ${isChanging ? 'opacity-0' : 'opacity-100'}`}
             >
               {displayStatus}
@@ -154,7 +154,7 @@ const BillingRow: FunctionComponent<BillingRowProps> = ({
                 }}
               />
               <div
-                className="fixed z-50 w-[100px] bg-white border border-whitesmoke-200 rounded-lg shadow-lg overflow-hidden"
+                className="fixed z-50 w-[100px] bg-white border border-whitesmoke-200 rounded-lg shadow-lg overflow-hidden dark:bg-[#141515] dark:border-[#343737]"
                 style={{
                   top: dropdownPos.top,
                   left: dropdownPos.left,
@@ -168,7 +168,7 @@ const BillingRow: FunctionComponent<BillingRowProps> = ({
                     <button
                       key={status}
                       onClick={() => handleStatusChange(status)}
-                      className={`w-full px-2 sm:px-3 py-2 text-[8px] sm:text-[10px] font-bold text-center hover:bg-gray-50 transition-colors font-inter ${
+                      className={`w-full px-2 sm:px-3 py-2 text-[8px] sm:text-[10px] font-bold text-center hover:bg-gray-50 transition-colors font-inter dark:hover:bg-[#1b1d1d] ${
                         isSelected ? statusGradients[status] : ''
                       }`}
                     >
