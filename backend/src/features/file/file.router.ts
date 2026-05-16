@@ -1,14 +1,18 @@
-import { Router } from 'express';
+import { Router } from "express";
 
 const router = Router();
 
-import multer from 'multer';
-import multerS3 from 'multer-s3';
+import multer from "multer";
+import multerS3 from "multer-s3";
 
-import { S3Client } from '@aws-sdk/client-s3';
-import path from 'node:path';
-import { isLoggedIn } from '../../middleware.js';
-import { routeGetPublicFile, routeUploadFile } from './file.controller.js';
+import { S3Client } from "@aws-sdk/client-s3";
+import path from "node:path";
+import { isLoggedIn } from "../../middleware.js";
+import {
+  routeGetPublicFile,
+  routeDownloadFile,
+  routeUploadFile,
+} from "./file.controller.js";
 
 if (
   !process.env.R2_ENDPOINT ||
@@ -16,10 +20,10 @@ if (
   !process.env.R2_SECRET ||
   !process.env.R2_BUCKET_NAME
 )
-  throw new Error('R2 credentials not defined in environment.');
+  throw new Error("R2 credentials not defined in environment.");
 
 const s3 = new S3Client({
-  region: 'auto',
+  region: "auto",
   endpoint: process.env.R2_ENDPOINT,
   credentials: {
     accessKeyId: process.env.R2_ACCESS_KEY,
@@ -44,7 +48,8 @@ const upload = multer({
 });
 
 // Files
-router.get('/public', isLoggedIn, routeGetPublicFile);
-router.post('/', isLoggedIn, upload.single('file'), routeUploadFile);
+router.get("/public", isLoggedIn, routeGetPublicFile);
+router.get("/download", isLoggedIn, routeDownloadFile);
+router.post("/", isLoggedIn, upload.single("file"), routeUploadFile);
 
 export default router;
