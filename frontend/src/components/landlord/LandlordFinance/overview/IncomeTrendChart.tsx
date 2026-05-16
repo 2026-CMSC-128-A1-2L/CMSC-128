@@ -36,14 +36,14 @@ const IncomeTrendChart: FunctionComponent<IncomeTrendChartProps> = ({ incomeStat
   const hasData = displayData.length > 0;
 
   return (
-    <div className="w-full rounded-2xl bg-white border-whitesmoke-200 border-solid border flex flex-col">
+    <div className="w-full rounded-2xl bg-white border-whitesmoke-200 border-solid border flex flex-col dark:bg-[#101111] dark:border-[#343737]">
       <div className="self-stretch flex items-center justify-between py-4 px-6">
-        <b className="h-6 relative tracking-[-0.01em] flex items-center text-[18px] text-gray font-inter">
+        <b className="h-6 relative tracking-[-0.01em] flex items-center text-[18px] text-gray font-inter dark:text-[#edf6f4]">
           Income Trend
         </b>
         <button
           onClick={() => setSelectedRange((r) => (r === '12' ? '6' : '12'))}
-          className="w-[100px] rounded-lg bg-darkslategray-200 hover:bg-teal-200 transition-colors flex items-center justify-center py-2 cursor-pointer"
+          className="w-[100px] rounded-lg bg-darkslategray-200 hover:bg-teal-200 transition-colors flex items-center justify-center py-2 cursor-pointer dark:bg-[#114f43] dark:hover:bg-[#166d5d]"
         >
           <span className="tracking-[0.04em] font-semibold text-[10px] text-white whitespace-nowrap">
             {selectedRange === '12' ? '12 Months' : '6 Months'}
@@ -52,7 +52,7 @@ const IncomeTrendChart: FunctionComponent<IncomeTrendChartProps> = ({ incomeStat
       </div>
 
       <div className="flex flex-col items-center px-4 pb-4">
-        <div className="w-full h-40 rounded-[10px] bg-white flex flex-col items-center pt-6 pb-3">
+        <div className="w-full h-40 rounded-[10px] bg-white flex flex-col items-center pt-6 pb-3 dark:bg-[#101111]">
           {hasData ? (
             <>
               <div className="w-full h-[108px] flex items-end justify-between gap-1">
@@ -70,14 +70,14 @@ const IncomeTrendChart: FunctionComponent<IncomeTrendChartProps> = ({ incomeStat
               </div>
               <div className="w-full flex justify-between mt-2">
                 {displayData.map((data) => (
-                  <div key={`${data.month}-${data.year}`} className="flex-1 text-center text-[8px] font-semibold text-black">
+                  <div key={`${data.month}-${data.year}`} className="flex-1 text-center text-[8px] font-semibold text-black dark:text-[#d7e0ef]">
                     {data.month}
                   </div>
                 ))}
               </div>
             </>
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-dimgray text-sm">
+            <div className="w-full h-full flex items-center justify-center text-dimgray text-sm dark:text-[#a4acba]">
               No income data yet
             </div>
           )}
@@ -86,11 +86,11 @@ const IncomeTrendChart: FunctionComponent<IncomeTrendChartProps> = ({ incomeStat
         <div className="self-stretch flex items-center justify-between py-0 px-3 mt-2">
           <div className="flex items-end gap-1">
             <div className="h-[15px] w-[15px] rounded-[5px]" style={{ backgroundColor: '#096c5b' }} />
-            <div className="text-[12px] font-semibold text-darkslategray-100">Past Months</div>
+            <div className="text-[12px] font-semibold text-darkslategray-100 dark:text-[#d7e0ef]">Past Months</div>
           </div>
           <div className="flex items-end gap-1">
             <div className="h-[15px] w-[15px] rounded-[5px]" style={{ backgroundColor: '#024338' }} />
-            <div className="text-[12px] font-semibold text-darkslategray-100">Current Month</div>
+            <div className="text-[12px] font-semibold text-darkslategray-100 dark:text-[#d7e0ef]">Current Month</div>
           </div>
         </div>
       </div>

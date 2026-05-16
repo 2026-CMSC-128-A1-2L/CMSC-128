@@ -1,68 +1,78 @@
-import { type FunctionComponent, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Icon } from '@iconify/react';
-import LandlordLayout from '../../../components/landlord/LandlordLayout';
-import NotifyTenantsPopup from '../../../components/landlord/NotifyTenantsPopup';
-import { useDebouncedValue } from '../../../hooks/useDebouncedValue';
-import sapphire1 from '../../../../assets/sapphire1.jpg';
-import sapphire2 from '../../../../assets/sapphire2.jpg';
-import sapphire3 from '../../../../assets/sapphire3.png';
+import { type FunctionComponent, useMemo, useRef, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Icon } from "@iconify/react";
+import LandlordLayout from "../../../components/landlord/LandlordLayout";
+import NotifyTenantsPopup from "../../../components/landlord/NotifyTenantsPopup";
+import { useDebouncedValue } from "../../../hooks/useDebouncedValue";
+import sapphire1 from "../../../../assets/sapphire1.jpg";
+import sapphire2 from "../../../../assets/sapphire2.jpg";
+import sapphire3 from "../../../../assets/sapphire3.png";
 
-import TutorialBubble from '../dashboard/LandlordHomepageTutorials';
-import TutorialIcon from '../../../../assets/help-chat.svg';
+import TutorialBubble from "../dashboard/LandlordHomepageTutorials";
+import TutorialIcon from "../../../../assets/help-chat.svg";
+import { managers } from "../../../data/landlordManagers";
+import { pendingApplications, tenants } from "../../../data/landlordTenants";
 const STATS = [
   {
-    label: 'Monthly Income',
-    value: 'Php 138,600',
-    sub: 'Feb 2026',
-    subColor: 'text-[#666]',
+    label: "Monthly Income",
+    value: "Php 138,600",
+    sub: "Feb 2026",
+    subColor: "text-[#666]",
   },
   {
-    label: 'Number of Tenants',
-    value: '28',
-    sub: '2 ongoing lease transfers',
+    label: "Number of Tenants",
+    value: "28",
+    sub: "2 ongoing lease transfers",
     subGradient: true,
   },
-  { label: 'Overdue Rent', value: '1', sub: 'Tenant', subColor: 'text-[#666]' },
+  { label: "Overdue Rent", value: "1", sub: "Tenant", subColor: "text-[#666]" },
 ];
 
-import { BUILDINGS } from '../../../data/buildings';
+import { BUILDINGS } from "../../../data/buildings";
 
 const PENDING = [
-  { name: 'Daphne Dayne', email: 'dcanape@up.edu.ph' },
-  { name: 'Nathaniel Cunanan', email: 'ncunanan@up.edu.ph' },
-  { name: 'Lance Chrysler De Jesus', email: 'lvdejesus1@up.edu.ph' },
+  { name: "Daphne Dayne", email: "dcanape@up.edu.ph" },
+  { name: "Nathaniel Cunanan", email: "ncunanan@up.edu.ph" },
+  { name: "Lance Chrysler De Jesus", email: "lvdejesus1@up.edu.ph" },
 ];
 
 const VISITS = [
-  { name: 'Daphne Dayne', email: 'dcanape@up.edu.ph' },
-  { name: 'Nathaniel Cunanan', email: 'ncunanan@up.edu.ph' },
+  { name: "Daphne Dayne", email: "dcanape@up.edu.ph" },
+  { name: "Nathaniel Cunanan", email: "ncunanan@up.edu.ph" },
 ];
 
 const ACTIVITY = [
   {
-    name: 'Haira Espinocilla',
-    action: 'paid rent for month of Feb',
-    time: '3d ago',
+    name: "Haira Espinocilla",
+    action: "paid rent for month of Feb",
+    time: "3d ago",
   },
-  { name: 'Riz Doroja', action: 'paid rent for month of Feb', time: '1d ago' },
+  { name: "Riz Doroja", action: "paid rent for month of Feb", time: "1d ago" },
   {
-    name: 'Dorm Manager #2',
-    action: 'collected payments in One Sapphire',
-    time: '2m ago',
+    name: "Dorm Manager #2",
+    action: "collected payments in One Sapphire",
+    time: "2m ago",
   },
   {
-    name: 'Dorm Manager #1',
-    action: 'accepted ocular visits for April 9',
-    time: '1m ago',
+    name: "Dorm Manager #1",
+    action: "accepted ocular visits for April 9",
+    time: "1m ago",
   },
 ];
 
-const Avatar = ({ className = 'h-[40px] w-[40px]' }: { className?: string }) => (
+const Avatar = ({
+  className = "h-[40px] w-[40px]",
+}: {
+  className?: string;
+}) => (
   <span
     className={`flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#e5e7eb] text-[#9ca3af] ${className}`}
   >
-    <Icon icon="solar:user-bold" className="h-[60%] w-[60%]" aria-hidden="true" />
+    <Icon
+      icon="solar:user-bold"
+      className="h-[60%] w-[60%]"
+      aria-hidden="true"
+    />
   </span>
 );
 
@@ -70,7 +80,9 @@ const PersonRow = ({ name, email }: { name: string; email: string }) => (
   <div className="flex w-full items-center gap-[10px] rounded-[8px] border border-[#f0f0f0] px-[12px] py-[4px]">
     <Avatar />
     <div className="flex flex-col gap-[2px] overflow-hidden">
-      <b className="truncate font-['Inter',sans-serif] text-[14px] text-black">{name}</b>
+      <b className="truncate font-['Inter',sans-serif] text-[14px] text-black">
+        {name}
+      </b>
       <span className="truncate font-['Lora',serif] text-[12px] font-semibold text-[#8a9099]">
         {email}
       </span>
@@ -81,14 +93,207 @@ const PersonRow = ({ name, email }: { name: string; email: string }) => (
 const CARD_WIDTH = 280;
 const CARD_GAP = 16;
 
+type LandlordSearchOption = {
+  title: string;
+  breadcrumb: string;
+  to: string;
+  keywords: string;
+  icon: string;
+};
+
+const normalizeSearchText = (value: string) =>
+  value
+    .toLowerCase()
+    .replace(/>/g, " ")
+    .replace(/[^a-z0-9\s]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+const optionMatchesQuery = (option: LandlordSearchOption, query: string) => {
+  const normalizedQuery = normalizeSearchText(query);
+  if (!normalizedQuery) return false;
+
+  const visibleText = normalizeSearchText(
+    `${option.title} ${option.breadcrumb}`,
+  );
+  const visibleWords = visibleText.split(" ").filter(Boolean);
+  const queryWords = normalizedQuery.split(" ").filter(Boolean);
+
+  if (normalizedQuery.length === 1) {
+    return visibleWords.some((word) => word.startsWith(normalizedQuery));
+  }
+
+  return (
+    visibleText.includes(normalizedQuery) ||
+    queryWords.every((queryWord) =>
+      visibleWords.some((word) => word.startsWith(queryWord)),
+    )
+  );
+};
+
 const LandlordHomepage: FunctionComponent = () => {
+  const navigate = useNavigate();
   const trackRef = useRef<HTMLDivElement>(null);
   const [current, setCurrent] = useState(0);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isSearchDropdownOpen, setIsSearchDropdownOpen] = useState(false);
   const debouncedSearchQuery = useDebouncedValue(searchQuery, 300);
-  const displayedBuildings = BUILDINGS.filter((building) =>
-    building.name.toLowerCase().includes(debouncedSearchQuery.trim().toLowerCase()),
-  );
+  const trimmedSearchQuery = searchQuery.trim();
+  const trimmedDebouncedSearchQuery = debouncedSearchQuery.trim();
+  const isSearchDebouncing = trimmedSearchQuery !== trimmedDebouncedSearchQuery;
+  const searchOptions = useMemo<LandlordSearchOption[]>(() => {
+    const staticOptions: LandlordSearchOption[] = [
+      {
+        title: "Dashboard",
+        breadcrumb: "Dashboard",
+        to: "/landlord-homepage",
+        keywords: "dashboard home statistics overview reminder activity",
+        icon: "solar:home-outline",
+      },
+      {
+        title: "Properties",
+        breadcrumb: "Properties",
+        to: "/landlord/properties",
+        keywords: "properties buildings listings rooms units dorm apartments",
+        icon: "fluent:pen-16-regular",
+      },
+      {
+        title: "Finance",
+        breadcrumb: "Finance",
+        to: "/landlord/finance",
+        keywords: "finance income collection occupancy billing payments rent",
+        icon: "solar:card-outline",
+      },
+      {
+        title: "My Tenants",
+        breadcrumb: "My Tenants",
+        to: "/landlord/tenants",
+        keywords: "tenants renters residents applications billing",
+        icon: "tabler:user-search",
+      },
+      {
+        title: "Managers",
+        breadcrumb: "Managers",
+        to: "/landlord/managers",
+        keywords: "managers staff assignments property manager",
+        icon: "hugeicons:id",
+      },
+      {
+        title: "Visits",
+        breadcrumb: "Visits",
+        to: "/landlord/visits",
+        keywords: "visits ocular appointments schedule viewing",
+        icon: "solar:calendar-outline",
+      },
+      {
+        title: "Messages",
+        breadcrumb: "Messages",
+        to: "/landlord/messages",
+        keywords: "messages chat inbox conversation",
+        icon: "ic:outline-mail",
+      },
+      {
+        title: "Settings",
+        breadcrumb: "Settings",
+        to: "/landlord/settings",
+        keywords: "settings preferences account",
+        icon: "solar:settings-outline",
+      },
+      {
+        title: "Profile",
+        breadcrumb: "Profile",
+        to: "/landlord/profile/switcher",
+        keywords: "profile account landlord personal information verification",
+        icon: "solar:user-circle-outline",
+      },
+      {
+        title: "Profile Verification",
+        breadcrumb: "Profile > Verification",
+        to: "/landlord/profile/verification",
+        keywords: "profile verification account landlord documents",
+        icon: "solar:user-circle-outline",
+      },
+      {
+        title: "Add New Listing",
+        breadcrumb: "Properties > Add New Listing",
+        to: "/landlord/properties/new",
+        keywords: "properties add new listing create listing",
+        icon: "fluent:pen-16-regular",
+      },
+      {
+        title: "Add a New Building",
+        breadcrumb: "Properties > Add a New Building",
+        to: "/landlord/add-building",
+        keywords: "properties add building create building listing",
+        icon: "fluent:pen-16-regular",
+      },
+      {
+        title: "Pending Applications",
+        breadcrumb: "My Tenants > Pending Applications",
+        to: "/landlord/tenants/unvalidated",
+        keywords: "tenants pending applications unvalidated applicants",
+        icon: "tabler:user-search",
+      },
+    ];
+
+    const buildingOptions = BUILDINGS.flatMap((building) => [
+      {
+        title: building.name,
+        breadcrumb: `Properties > ${building.name}`,
+        to: building.url,
+        keywords: `${building.name} ${building.address} ${building.buildingType} property building rooms units`,
+        icon: "fluent:pen-16-regular",
+      },
+      {
+        title: building.name,
+        breadcrumb: `Finance > ${building.name}`,
+        to: `/landlord/finance/property/${building.id}`,
+        keywords: `${building.name} ${building.address} ${building.buildingType} finance income rent billing collection occupancy`,
+        icon: "solar:card-outline",
+      },
+    ]);
+
+    const tenantOptions = tenants.map((tenant) => ({
+      title: tenant.displayName,
+      breadcrumb: `My Tenants > ${tenant.displayName}`,
+      to: `/landlord/tenants/${tenant.id}`,
+      keywords: `${tenant.displayName} ${tenant.fullName} ${tenant.email} ${tenant.contactNumber} ${tenant.dormName} ${tenant.unit} tenant billing`,
+      icon: "tabler:user-search",
+    }));
+
+    const pendingApplicationOptions = pendingApplications.map(
+      (application) => ({
+        title: application.displayName,
+        breadcrumb: `My Tenants > Pending Applications > ${application.displayName}`,
+        to: `/landlord/tenants/unvalidated/${application.id}`,
+        keywords: `${application.displayName} ${application.fullName} ${application.email} ${application.contactNumber} ${application.dormName} ${application.unit} pending application unvalidated`,
+        icon: "tabler:user-search",
+      }),
+    );
+
+    const managerOptions = managers.map((manager) => ({
+      title: manager.displayName,
+      breadcrumb: `Managers > ${manager.displayName}`,
+      to: `/landlord/managers/${manager.id}`,
+      keywords: `${manager.displayName} ${manager.fullName} ${manager.email} ${manager.contactNumber} ${manager.property} manager`,
+      icon: "hugeicons:id",
+    }));
+
+    return [
+      ...buildingOptions,
+      ...tenantOptions,
+      ...pendingApplicationOptions,
+      ...managerOptions,
+      ...staticOptions,
+    ];
+  }, []);
+  const matchingSearchOptions = useMemo(() => {
+    const query = trimmedDebouncedSearchQuery;
+    if (!query) return [];
+
+    return searchOptions.filter((option) => optionMatchesQuery(option, query));
+  }, [searchOptions, trimmedDebouncedSearchQuery]);
+  const displayedBuildings = BUILDINGS;
   const total = displayedBuildings.length;
   const [showNotify, setShowNotify] = useState(false);
 
@@ -97,46 +302,110 @@ const LandlordHomepage: FunctionComponent = () => {
     setCurrent(clamped);
     trackRef.current?.scrollTo({
       left: clamped * (CARD_WIDTH + CARD_GAP),
-      behavior: 'smooth',
+      behavior: "smooth",
     });
   };
 
   const [showHelp, setShowHelp] = useState(false);
 
+  const openSearchOption = (option: LandlordSearchOption) => {
+    setSearchQuery("");
+    setIsSearchDropdownOpen(false);
+    navigate(option.to);
+  };
+
   return (
     <LandlordLayout activeSidebarItem="dashboard" breadcrumbs={[]}>
-      <div className="flex w-full flex-col gap-[48px] pt-[60px] lg:flex-row lg:items-start">
+      <div className="flex w-full flex-col gap-[48px] lg:flex-row lg:items-start">
         {/* Main column */}
         <div className="flex flex-1 flex-col gap-[48px] min-w-0">
           {/* Search */}
-          <div className="flex w-full items-center gap-[10px] rounded-[12px] bg-[#f0f7ff] px-[24px] py-[10px] focus-within:ring-1 focus-within:ring-[#096c5b]/20 transition-all">
-            <Icon
-              icon="ic:outline-search"
-              className="h-[24px] w-[24px] text-[#666]"
-              aria-hidden="true"
-            />
+          <div className="relative w-full h-full flex items-center">
+            <div className="w-full flex items-center transition-all duration-300 bg-[#f8f9fa] rounded-num-12 py-3 pl-3 pr-4 border border-transparent focus-within:bg-white focus-within:shadow-[0_8px_10px_rgb(0,0,0,0.06)] focus-within:transform focus-within:-translate-y-[1px] gap-2 dark:bg-[#1f2022] dark:focus-within:bg-[#202123]">
+              <Icon
+                icon="ic:outline-search"
+                className="w-5 h-5 text-unselected shrink-0 dark:text-[#a4acba]"
+                aria-hidden="true"
+              />
 
-            <input
-              type="text"
-              placeholder="Search properties or people..."
-              value={searchQuery}
-              maxLength={50} // Restricts input to 50 characters
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-transparent font-['Inter',sans-serif] text-[14px] font-bold text-[#666] outline-none placeholder:text-[#666]/50"
-            />
+              <input
+                type="text"
+                placeholder="Search properties, finance, tenants, visits..."
+                value={searchQuery}
+                maxLength={50}
+                onFocus={() =>
+                  setIsSearchDropdownOpen(trimmedSearchQuery.length > 0)
+                }
+                onBlur={() => {
+                  window.setTimeout(() => setIsSearchDropdownOpen(false), 120);
+                }}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setIsSearchDropdownOpen(e.target.value.trim().length > 0);
+                }}
+                className="w-full bg-transparent border-none outline-none text-num-14 font-semibold text-darkgreen placeholder:text-unselected placeholder:font-normal dark:text-[#edf6f4] dark:placeholder:text-[#8f98a8]"
+              />
 
-            {searchQuery.length > 0 && (
-              <button
-                onClick={() => setSearchQuery('')}
-                className="flex items-center justify-center rounded-full p-1 hover:bg-[#e0f0ff] transition-colors cursor-pointer"
-                aria-label="Clear search"
-              >
-                <Icon
-                  icon="heroicons:magnifying-glass"
-                  className="h-[24px] w-[24px] text-[#666]"
-                  aria-hidden="true"
-                />
-              </button>
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSearchQuery("");
+                    setIsSearchDropdownOpen(false);
+                  }}
+                  className="text-unselected hover:text-darkgreen dark:text-[#a4acba] dark:hover:text-[#72cbb8]"
+                  aria-label="Clear search"
+                >
+                  <Icon
+                    icon="material-symbols:close-rounded"
+                    className="w-4 h-4"
+                  />
+                </button>
+              )}
+            </div>
+
+            {isSearchDropdownOpen && trimmedSearchQuery && (
+              <div className="absolute left-0 right-0 top-[calc(100%+0.5rem)] z-40 max-h-[560px] overflow-y-auto rounded-num-12 border border-whitesmoke-200 bg-white shadow-[0_14px_30px_rgba(0,0,0,0.14)] dark:border-[#303331] dark:bg-[#101111] dark:shadow-[0_18px_34px_rgba(0,0,0,0.42)]">
+                {isSearchDebouncing ? (
+                  <div className="flex items-center gap-3 px-4 py-4 text-sm font-semibold text-unselected dark:text-[#a4acba]">
+                    <Icon
+                      icon="eos-icons:loading"
+                      className="h-5 w-5 text-teal-100"
+                    />
+                    Searching screens...
+                  </div>
+                ) : matchingSearchOptions.length > 0 ? (
+                  matchingSearchOptions.map((option) => (
+                    <button
+                      key={`${option.breadcrumb}-${option.to}`}
+                      type="button"
+                      onMouseDown={(event) => event.preventDefault()}
+                      onClick={() => openSearchOption(option)}
+                      className="flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-whitesmoke-100 dark:hover:bg-[#202123]"
+                    >
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-lightcyan/45 text-teal dark:bg-[#17483f] dark:text-[#72cbb8]">
+                        <Icon
+                          icon={option.icon}
+                          className="h-6 w-6"
+                          aria-hidden="true"
+                        />
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate text-num-14 font-bold text-darkgreen dark:text-[#edf6f4]">
+                          {option.title}
+                        </span>
+                        <span className="block truncate text-[0.75rem] font-semibold text-teal-100 dark:text-[#72cbb8]">
+                          {option.breadcrumb}
+                        </span>
+                      </span>
+                    </button>
+                  ))
+                ) : (
+                  <div className="px-4 py-4 text-sm font-semibold text-unselected dark:text-[#a4acba]">
+                    No matching screens found
+                  </div>
+                )}
+              </div>
             )}
           </div>
 
@@ -165,7 +434,9 @@ const LandlordHomepage: FunctionComponent = () => {
                   key={s.label}
                   className="flex flex-col items-center justify-center gap-[8px] rounded-[16px] border border-[#f0f0f0] bg-white p-[12px] text-center"
                 >
-                  <b className="font-['Inter',sans-serif] text-[14px] text-[#666]">{s.label}</b>
+                  <b className="font-['Inter',sans-serif] text-[14px] text-[#666]">
+                    {s.label}
+                  </b>
                   <b className="font-['Inter',sans-serif] text-[24px] leading-[32px] text-[#096c5b]">
                     {s.value}
                   </b>
@@ -173,9 +444,9 @@ const LandlordHomepage: FunctionComponent = () => {
                     <span
                       className="font-['Inter',sans-serif] text-[14px] font-medium"
                       style={{
-                        background: 'linear-gradient(0deg,#ffc273,#fa7900)',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
+                        background: "linear-gradient(0deg,#ffc273,#fa7900)",
+                        WebkitBackgroundClip: "text",
+                        WebkitTextFillColor: "transparent",
                       }}
                     >
                       {s.sub}
@@ -215,7 +486,10 @@ const LandlordHomepage: FunctionComponent = () => {
                   </span>
                 </button>
               </div>
-              <TutorialBubble show={showHelp} onClose={() => setShowHelp(false)} />
+              <TutorialBubble
+                show={showHelp}
+                onClose={() => setShowHelp(false)}
+              />
             </div>
           </section>
 
@@ -246,7 +520,10 @@ const LandlordHomepage: FunctionComponent = () => {
                   className="flex h-[32px] w-[32px] items-center justify-center rounded-full border border-[#f0f0f0] bg-white transition-opacity hover:opacity-70 disabled:opacity-30 cursor-pointer"
                   aria-label="Previous property"
                 >
-                  <Icon icon="solar:arrow-left-bold" className="h-[16px] w-[16px] text-[#2f3136]" />
+                  <Icon
+                    icon="solar:arrow-left-bold"
+                    className="h-[16px] w-[16px] text-[#2f3136]"
+                  />
                 </button>
                 <button
                   onClick={() => scrollTo(current + 1)}
@@ -274,7 +551,11 @@ const LandlordHomepage: FunctionComponent = () => {
                   className="flex shrink-0 flex-col overflow-hidden rounded-[10px] bg-white shadow-[0px_4px_20px_rgba(0,0,0,0.15)] transition-transform hover:scale-[1.02]"
                   style={{ width: CARD_WIDTH }}
                 >
-                  <img src={b.img} alt={b.name} className="h-[120px] w-full object-cover" />
+                  <img
+                    src={b.img}
+                    alt={b.name}
+                    className="h-[120px] w-full object-cover"
+                  />
                   <div className="flex flex-col gap-[8px] p-[12px]">
                     <div className="flex items-center justify-between gap-[8px]">
                       <b className="truncate font-['Inter',sans-serif] text-[16px] tracking-[-0.01em] text-black">
@@ -307,9 +588,10 @@ const LandlordHomepage: FunctionComponent = () => {
                         <b
                           className="font-['Poppins',sans-serif] text-[13px] tracking-[-0.01em]"
                           style={{
-                            background: 'linear-gradient(180deg,#5dc2a8 27.88%,#0c8873 84.13%)',
-                            WebkitBackgroundClip: 'text',
-                            WebkitTextFillColor: 'transparent',
+                            background:
+                              "linear-gradient(180deg,#5dc2a8 27.88%,#0c8873 84.13%)",
+                            WebkitBackgroundClip: "text",
+                            WebkitTextFillColor: "transparent",
                           }}
                         >
                           {b.income}
@@ -324,9 +606,10 @@ const LandlordHomepage: FunctionComponent = () => {
                         <b
                           className="font-['Poppins',sans-serif] text-[13px] tracking-[-0.01em]"
                           style={{
-                            background: 'linear-gradient(180deg,#c29722,#f6b709)',
-                            WebkitBackgroundClip: 'text',
-                            WebkitTextFillColor: 'transparent',
+                            background:
+                              "linear-gradient(180deg,#c29722,#f6b709)",
+                            WebkitBackgroundClip: "text",
+                            WebkitTextFillColor: "transparent",
                           }}
                         >
                           {b.outstanding}
@@ -351,13 +634,13 @@ const LandlordHomepage: FunctionComponent = () => {
           <div className="grid grid-cols-1 gap-[16px] sm:grid-cols-2">
             {[
               {
-                title: 'Pending Applications',
-                to: '/landlord/tenants/unvalidated',
+                title: "Pending Applications",
+                to: "/landlord/tenants/unvalidated",
                 items: PENDING,
               },
               {
-                title: 'Scheduled Visits',
-                to: '/landlord/visits',
+                title: "Scheduled Visits",
+                to: "/landlord/visits",
                 items: VISITS,
               },
             ].map((panel) => (
@@ -406,7 +689,9 @@ const LandlordHomepage: FunctionComponent = () => {
             </span>
           </div>
           <section className="flex flex-col gap-[12px]">
-            <b className="font-['Inter',sans-serif] text-[14px] text-black">Activity</b>
+            <b className="font-['Inter',sans-serif] text-[14px] text-black">
+              Activity
+            </b>
             <div className="flex flex-col gap-[12px]">
               {ACTIVITY.map((a) => (
                 <div
@@ -435,12 +720,19 @@ const LandlordHomepage: FunctionComponent = () => {
       </div>
       {/* ======= FLOATING ICON ========== */}
       <div
-        className="help-button-animated z-1000 cursor-pointer transition-all hover:scale-110 active:scale-95"
+        className="help-button-animated z-[1000] cursor-pointer transition-all hover:scale-110 active:scale-95"
         onClick={() => setShowHelp(!showHelp)}
       >
-        <img src={TutorialIcon} alt="Help" className="w-16 h-16 drop-shadow-lg" />
+        <img
+          src={TutorialIcon}
+          alt="Help"
+          className="w-16 h-16 drop-shadow-lg"
+        />
       </div>
-      <NotifyTenantsPopup isOpen={showNotify} onClose={() => setShowNotify(false)} />
+      <NotifyTenantsPopup
+        isOpen={showNotify}
+        onClose={() => setShowNotify(false)}
+      />
     </LandlordLayout>
   );
 };

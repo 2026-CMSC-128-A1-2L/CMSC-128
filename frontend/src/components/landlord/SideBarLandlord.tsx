@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type MouseEventHandler } from 'react';
+import { createPortal } from 'react-dom';
 import { Link, useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import AtlasLogo from '../../../assets/logo_atlas_text.svg?react';
@@ -6,6 +7,7 @@ import AtlasLogoMin from '../../../assets/atlas logo (for white bg).png';
 import SideBarLandlordButton from './SideBarLandlordButton';
 import { useTheme } from '../../pages/utilities/DarkMode';
 import { useAuthStore } from '../../store/useAuthStore';
+import UserMenuPopup from '../user/UserMenuPopup';
 
 export type SideBarLandlordItemKey =
   | 'dashboard'
@@ -97,7 +99,6 @@ const SideBarLandlord = ({
   onItemClick,
   onAddListing,
   onToggleDarkMode,
-  onProfileClick,
   className = '',
 }: SideBarLandlordProps) => {
   const navigate = useNavigate();
@@ -107,7 +108,11 @@ const SideBarLandlord = ({
   const [isMobile, setIsMobile] = useState(() => isSmallScreen());
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [darkModeIconSpinning, setDarkModeIconSpinning] = useState(false);
-  const [profileMenuPlacement, setProfileMenuPlacement] = useState<'top' | 'bottom'>('top');
+  const [profileMenuPosition, setProfileMenuPosition] = useState({
+    left: 0,
+    bottom: 0,
+  });
+  const profileButtonRef = useRef<HTMLButtonElement | null>(null);
   const profileMenuRef = useRef<HTMLDivElement | null>(null);
 
   const authUser = useAuthStore((state) => state.user);
@@ -137,28 +142,28 @@ const SideBarLandlord = ({
     onItemClick ? onItemClick(item.key) : navigate(item.route);
   };
 
-  const resolveProfileMenuPlacement = useCallback(() => {
-    if (!profileMenuRef.current) return;
-    const menuHeight = 76;
-    const menuGap = 8;
-    const viewportPadding = 8;
-    const profileRect = profileMenuRef.current.getBoundingClientRect();
-    const canOpenBelow =
-      profileRect.bottom + menuGap + menuHeight <= window.innerHeight - viewportPadding;
-    setProfileMenuPlacement(canOpenBelow ? 'bottom' : 'top');
+  const updateProfileMenuPosition = useCallback(() => {
+    const profileButton = profileButtonRef.current;
+    if (!profileButton) return;
+
+    const rect = profileButton.getBoundingClientRect();
+    setProfileMenuPosition({
+      left: rect.right + 8,
+      bottom: window.innerHeight - rect.bottom,
+    });
   }, []);
 
   const handleProfileButtonClick: MouseEventHandler<HTMLButtonElement> = () => {
-    if (!isProfileMenuOpen) resolveProfileMenuPlacement();
+    if (!isProfileMenuOpen) updateProfileMenuPosition();
     setIsProfileMenuOpen((prev) => !prev);
   };
 
-  const handleViewProfileClick: MouseEventHandler<HTMLButtonElement> = (event) => {
+  const handleViewProfileClick = () => {
     setIsProfileMenuOpen(false);
-    onProfileClick?.(event);
+    navigate('/landlord/profile/switcher');
   };
 
-  const handleSignOutClick: MouseEventHandler<HTMLButtonElement> = async (event) => {
+  const handleSignOutClick = async () => {
     setIsProfileMenuOpen(false);
     await logout();
     navigate('/');
@@ -166,23 +171,30 @@ const SideBarLandlord = ({
 
   useEffect(() => {
     if (!isProfileMenuOpen) return;
+    updateProfileMenuPosition();
+    const handleWindowChange = () => updateProfileMenuPosition();
+
     const handleDocumentClick = (event: MouseEvent) => {
-      if (profileMenuRef.current?.contains(event.target as Node)) return;
+      const target = event.target as Node;
+      if (profileButtonRef.current?.contains(target) || profileMenuRef.current?.contains(target)) {
+        return;
+      }
       setIsProfileMenuOpen(false);
     };
     const handleEscapeKey = (event: KeyboardEvent) => {
       if (event.key === 'Escape') setIsProfileMenuOpen(false);
     };
-    const handleResize = () => resolveProfileMenuPlacement();
+    window.addEventListener('resize', handleWindowChange);
+    window.addEventListener('scroll', handleWindowChange, true);
     window.addEventListener('mousedown', handleDocumentClick);
     window.addEventListener('keydown', handleEscapeKey);
-    window.addEventListener('resize', handleResize);
     return () => {
+      window.removeEventListener('resize', handleWindowChange);
+      window.removeEventListener('scroll', handleWindowChange, true);
       window.removeEventListener('mousedown', handleDocumentClick);
       window.removeEventListener('keydown', handleEscapeKey);
-      window.removeEventListener('resize', handleResize);
     };
-  }, [isProfileMenuOpen, resolveProfileMenuPlacement]);
+  }, [isProfileMenuOpen, updateProfileMenuPosition]);
 
   useEffect(() => {
     if (collapsed) setIsProfileMenuOpen(false);
@@ -390,32 +402,9 @@ const SideBarLandlord = ({
           </div>
 
           {/* Profile with dropdown */}
-          <div ref={profileMenuRef} className="relative w-full">
-            {isProfileMenuOpen && !collapsed && (
-              <div
-                className={[
-                  'absolute left-[20px] z-30 flex h-[68px] w-[171px] flex-col gap-[7px] rounded-[9px] border border-solid border-[#f0f0f0] bg-[#f7f7f7] px-[11px] py-[9px] shadow-[0_4px_18px_rgba(0,0,0,0.1)] dark:border-[#303331] dark:bg-[#141515] dark:shadow-[0_8px_24px_rgba(0,0,0,0.35)]',
-                  profileMenuPlacement === 'bottom' ? 'top-full mt-[8px]' : 'bottom-full mb-[8px]',
-                ].join(' ')}
-              >
-                <button
-                  type="button"
-                  onClick={handleViewProfileClick}
-                  className="h-[21px] w-full cursor-pointer rounded-[9px] bg-[#cbf6ed] text-center font-['Inter',sans-serif] text-[11px] font-medium text-[#096c5b] transition-colors duration-150 hover:brightness-95 dark:bg-[#12342e] dark:text-[#72cbb8]"
-                >
-                  View Profile
-                </button>
-                <button
-                  type="button"
-                  onClick={handleSignOutClick}
-                  className="h-[21px] w-full cursor-pointer rounded-[9px] border border-solid border-[#f0f0f0] bg-white bg-gradient-to-b from-[#ff7b7b] to-[#e44f4f] bg-clip-text text-center font-['Inter',sans-serif] text-[11px] font-medium text-transparent transition-colors duration-150 hover:bg-[#f9f9f9] dark:border-[#303331] dark:bg-[#101111] dark:hover:bg-[#202221]"
-                >
-                  Log Out
-                </button>
-              </div>
-            )}
-
+          <div className="relative w-full">
             <button
+              ref={profileButtonRef}
               type="button"
               onClick={handleProfileButtonClick}
               aria-haspopup="menu"
@@ -464,6 +453,26 @@ const SideBarLandlord = ({
                 </span>
               )}
             </button>
+
+            {isProfileMenuOpen &&
+              !collapsed &&
+              createPortal(
+                <div
+                  ref={profileMenuRef}
+                  className="fixed z-[2147483647]"
+                  style={{
+                    left: profileMenuPosition.left,
+                    bottom: profileMenuPosition.bottom,
+                  }}
+                >
+                  <UserMenuPopup
+                    isOpen={isProfileMenuOpen}
+                    onViewProfile={handleViewProfileClick}
+                    onLogOut={handleSignOutClick}
+                  />
+                </div>,
+                document.body,
+              )}
           </div>
         </div>
       </aside>

@@ -6,6 +6,8 @@ import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
 import TutorialBubble from '../properties/AddBuildingTutorials';
 import ProgressBar from '../../../components/user/ProgressBar';
+import TutorialIcon from '../../../../assets/help-chat.svg';
+import PageBackground from '../../../components/general/PageBackground';
 
 const AddBuilding: FunctionComponent = () => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -40,25 +42,26 @@ const AddBuilding: FunctionComponent = () => {
   const steps = ['Requirements', 'Building Information', 'Finalize'];
 
   return (
-    <div className="w-screen font-inter min-h-screen bg-transparent dark:text-gray-100">
-      <div className="px-10 lg:px-20 pt-4 pb-12">
+    <div className="relative min-h-screen w-screen overflow-hidden bg-transparent font-inter dark:text-[#d7e0ef]">
+      <PageBackground />
+      <div className="relative z-10 max-h-screen overflow-y-auto px-10 pt-4 pb-12 lg:px-20">
         <button
           type="button"
-          className="group flex items-center gap-1.5 py-4 cursor-pointer w-fit"
+          className="group flex w-fit cursor-pointer items-center gap-1.5 py-4 text-darkgreen dark:text-[#d7e0ef]"
           onClick={onCancelClick}
         >
           <Icon icon="material-symbols-light:chevron-left" className="w-7 h-7" />
           <div className="relative">
-            <span className="text-sm font-semibold text-darkgreen">Cancel</span>
-            <span className="absolute left-0 -bottom-0.5 w-0 h-0.5 bg-darkgreen transition-all duration-300 rounded-full ease-out group-hover:w-full" />
+            <span className="text-sm font-semibold">Cancel</span>
+            <span className="absolute left-0 -bottom-0.5 h-0.5 w-0 rounded-full bg-darkgreen transition-all duration-300 ease-out group-hover:w-full dark:bg-[#72cbb8]" />
           </div>
         </button>
 
-        <div className="rounded-3xl border border-whitesmoke px-6 md:px-10 pt-8 pb-10 shadow-sm dark:border-gray-700 dark:bg-[#121212]">
-          <h1 className="text-2xl font-bold" style={{ color: '#1a5c50' }}>
+        <div className="rounded-3xl border border-whitesmoke px-6 pt-8 pb-10 shadow-sm dark:border-[#343737] dark:bg-[#101111]/80 md:px-10">
+          <h1 className="text-2xl font-bold text-[#1a5c50] dark:text-[#72cbb8]">
             Add a New Building
           </h1>
-          <p className="text-sm font-semibold text-black mt-1 dark:text-gray-100">
+          <p className="mt-1 text-sm font-semibold text-black dark:text-[#edf6f4]">
             Follow 3 simple steps and you're ready to go!
           </p>
 
@@ -85,19 +88,11 @@ const AddBuilding: FunctionComponent = () => {
       {/* ======= FLOATING HELP ICON ========== */}
       <button
         type="button"
-        className="help-button-animated z-50 cursor-pointer transition-all hover:scale-110 active:scale-95 outline-none"
+        className="help-button-animated z-[1000] cursor-pointer transition-all hover:scale-110 active:scale-95 outline-none"
         onClick={() => setShowHelp(!showHelp)}
         aria-label="Toggle Help"
       >
-        <div
-          className="w-16 h-16 drop-shadow-lg"
-          style={{
-            background: 'linear-gradient(135deg, #096C5B, #16917C)',
-            WebkitMask:
-              "url('https://api.iconify.design/iconoir/chat-bubble-question-solid.svg') no-repeat center / contain",
-            mask: "url('https://api.iconify.design/iconoir/chat-bubble-question-solid.svg') no-repeat center / contain",
-          }}
-        />
+        <img src={TutorialIcon} alt="Help" className="w-16 h-16 drop-shadow-lg" />
       </button>
     </div>
   );
