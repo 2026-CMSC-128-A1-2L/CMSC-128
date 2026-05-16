@@ -104,8 +104,17 @@ const Managers = () => {
                   .filter((m: any) => m.userId)
                   .map((m: any) => {
                     const u = m.userId;
-                    const id = (u._id || u.id).toString();
-                    return [id, { ...u, id }];
+                    const id = (u._id?.$oid || u._id || u.id).toString();
+                    return [
+                      id,
+                      {
+                        ...u,
+                        id,
+                        emails: u.emails || [],
+                        firstName: u.firstName,
+                        lastName: u.lastName,
+                      },
+                    ];
                   }),
               ).values(),
             ) as Manager[];
