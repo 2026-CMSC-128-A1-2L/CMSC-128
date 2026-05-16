@@ -13,6 +13,8 @@ import TutorialIcon from "../../../../assets/help-chat.svg";
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
+const TESTING = 123;
+
 const CARD_WIDTH = 280;
 const CARD_GAP = 24;
 
