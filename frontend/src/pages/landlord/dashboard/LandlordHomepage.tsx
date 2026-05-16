@@ -1,70 +1,78 @@
-import { type FunctionComponent, useMemo, useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Icon } from '@iconify/react';
-import LandlordLayout from '../../../components/landlord/LandlordLayout';
-import NotifyTenantsPopup from '../../../components/landlord/NotifyTenantsPopup';
-import { useDebouncedValue } from '../../../hooks/useDebouncedValue';
-import sapphire1 from '../../../../assets/sapphire1.jpg';
-import sapphire2 from '../../../../assets/sapphire2.jpg';
-import sapphire3 from '../../../../assets/sapphire3.png';
+import { type FunctionComponent, useMemo, useRef, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Icon } from "@iconify/react";
+import LandlordLayout from "../../../components/landlord/LandlordLayout";
+import NotifyTenantsPopup from "../../../components/landlord/NotifyTenantsPopup";
+import { useDebouncedValue } from "../../../hooks/useDebouncedValue";
+import sapphire1 from "../../../../assets/sapphire1.jpg";
+import sapphire2 from "../../../../assets/sapphire2.jpg";
+import sapphire3 from "../../../../assets/sapphire3.png";
 
-import TutorialBubble from '../dashboard/LandlordHomepageTutorials';
-import TutorialIcon from '../../../../assets/help-chat.svg';
-import { managers } from '../../../data/landlordManagers';
-import { pendingApplications, tenants } from '../../../data/landlordTenants';
+import TutorialBubble from "../dashboard/LandlordHomepageTutorials";
+import TutorialIcon from "../../../../assets/help-chat.svg";
+import { managers } from "../../../data/landlordManagers";
+import { pendingApplications, tenants } from "../../../data/landlordTenants";
 const STATS = [
   {
-    label: 'Monthly Income',
-    value: 'Php 138,600',
-    sub: 'Feb 2026',
-    subColor: 'text-[#666]',
+    label: "Monthly Income",
+    value: "Php 138,600",
+    sub: "Feb 2026",
+    subColor: "text-[#666]",
   },
   {
-    label: 'Number of Tenants',
-    value: '28',
-    sub: '2 ongoing lease transfers',
+    label: "Number of Tenants",
+    value: "28",
+    sub: "2 ongoing lease transfers",
     subGradient: true,
   },
-  { label: 'Overdue Rent', value: '1', sub: 'Tenant', subColor: 'text-[#666]' },
+  { label: "Overdue Rent", value: "1", sub: "Tenant", subColor: "text-[#666]" },
 ];
 
-import { BUILDINGS } from '../../../data/buildings';
+import { BUILDINGS } from "../../../data/buildings";
 
 const PENDING = [
-  { name: 'Daphne Dayne', email: 'dcanape@up.edu.ph' },
-  { name: 'Nathaniel Cunanan', email: 'ncunanan@up.edu.ph' },
-  { name: 'Lance Chrysler De Jesus', email: 'lvdejesus1@up.edu.ph' },
+  { name: "Daphne Dayne", email: "dcanape@up.edu.ph" },
+  { name: "Nathaniel Cunanan", email: "ncunanan@up.edu.ph" },
+  { name: "Lance Chrysler De Jesus", email: "lvdejesus1@up.edu.ph" },
 ];
 
 const VISITS = [
-  { name: 'Daphne Dayne', email: 'dcanape@up.edu.ph' },
-  { name: 'Nathaniel Cunanan', email: 'ncunanan@up.edu.ph' },
+  { name: "Daphne Dayne", email: "dcanape@up.edu.ph" },
+  { name: "Nathaniel Cunanan", email: "ncunanan@up.edu.ph" },
 ];
 
 const ACTIVITY = [
   {
-    name: 'Haira Espinocilla',
-    action: 'paid rent for month of Feb',
-    time: '3d ago',
+    name: "Haira Espinocilla",
+    action: "paid rent for month of Feb",
+    time: "3d ago",
   },
-  { name: 'Riz Doroja', action: 'paid rent for month of Feb', time: '1d ago' },
+  { name: "Riz Doroja", action: "paid rent for month of Feb", time: "1d ago" },
   {
-    name: 'Dorm Manager #2',
-    action: 'collected payments in One Sapphire',
-    time: '2m ago',
+    name: "Dorm Manager #2",
+    action: "collected payments in One Sapphire",
+    time: "2m ago",
   },
   {
-    name: 'Dorm Manager #1',
-    action: 'accepted ocular visits for April 9',
-    time: '1m ago',
+    name: "Dorm Manager #1",
+    action: "accepted ocular visits for April 9",
+    time: "1m ago",
   },
 ];
 
-const Avatar = ({ className = 'h-[40px] w-[40px]' }: { className?: string }) => (
+const Avatar = ({
+  className = "h-[40px] w-[40px]",
+}: {
+  className?: string;
+}) => (
   <span
     className={`flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#e5e7eb] text-[#9ca3af] ${className}`}
   >
-    <Icon icon="solar:user-bold" className="h-[60%] w-[60%]" aria-hidden="true" />
+    <Icon
+      icon="solar:user-bold"
+      className="h-[60%] w-[60%]"
+      aria-hidden="true"
+    />
   </span>
 );
 
@@ -72,7 +80,9 @@ const PersonRow = ({ name, email }: { name: string; email: string }) => (
   <div className="flex w-full items-center gap-[10px] rounded-[8px] border border-[#f0f0f0] px-[12px] py-[4px]">
     <Avatar />
     <div className="flex flex-col gap-[2px] overflow-hidden">
-      <b className="truncate font-['Inter',sans-serif] text-[14px] text-black">{name}</b>
+      <b className="truncate font-['Inter',sans-serif] text-[14px] text-black">
+        {name}
+      </b>
       <span className="truncate font-['Lora',serif] text-[12px] font-semibold text-[#8a9099]">
         {email}
       </span>
@@ -94,18 +104,20 @@ type LandlordSearchOption = {
 const normalizeSearchText = (value: string) =>
   value
     .toLowerCase()
-    .replace(/>/g, ' ')
-    .replace(/[^a-z0-9\s]/g, ' ')
-    .replace(/\s+/g, ' ')
+    .replace(/>/g, " ")
+    .replace(/[^a-z0-9\s]/g, " ")
+    .replace(/\s+/g, " ")
     .trim();
 
 const optionMatchesQuery = (option: LandlordSearchOption, query: string) => {
   const normalizedQuery = normalizeSearchText(query);
   if (!normalizedQuery) return false;
 
-  const visibleText = normalizeSearchText(`${option.title} ${option.breadcrumb}`);
-  const visibleWords = visibleText.split(' ').filter(Boolean);
-  const queryWords = normalizedQuery.split(' ').filter(Boolean);
+  const visibleText = normalizeSearchText(
+    `${option.title} ${option.breadcrumb}`,
+  );
+  const visibleWords = visibleText.split(" ").filter(Boolean);
+  const queryWords = normalizedQuery.split(" ").filter(Boolean);
 
   if (normalizedQuery.length === 1) {
     return visibleWords.some((word) => word.startsWith(normalizedQuery));
@@ -113,7 +125,9 @@ const optionMatchesQuery = (option: LandlordSearchOption, query: string) => {
 
   return (
     visibleText.includes(normalizedQuery) ||
-    queryWords.every((queryWord) => visibleWords.some((word) => word.startsWith(queryWord)))
+    queryWords.every((queryWord) =>
+      visibleWords.some((word) => word.startsWith(queryWord)),
+    )
   );
 };
 
@@ -121,7 +135,7 @@ const LandlordHomepage: FunctionComponent = () => {
   const navigate = useNavigate();
   const trackRef = useRef<HTMLDivElement>(null);
   const [current, setCurrent] = useState(0);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [isSearchDropdownOpen, setIsSearchDropdownOpen] = useState(false);
   const debouncedSearchQuery = useDebouncedValue(searchQuery, 300);
   const trimmedSearchQuery = searchQuery.trim();
@@ -130,95 +144,95 @@ const LandlordHomepage: FunctionComponent = () => {
   const searchOptions = useMemo<LandlordSearchOption[]>(() => {
     const staticOptions: LandlordSearchOption[] = [
       {
-        title: 'Dashboard',
-        breadcrumb: 'Dashboard',
-        to: '/landlord-homepage',
-        keywords: 'dashboard home statistics overview reminder activity',
-        icon: 'solar:home-outline',
+        title: "Dashboard",
+        breadcrumb: "Dashboard",
+        to: "/landlord-homepage",
+        keywords: "dashboard home statistics overview reminder activity",
+        icon: "solar:home-outline",
       },
       {
-        title: 'Properties',
-        breadcrumb: 'Properties',
-        to: '/landlord/properties',
-        keywords: 'properties buildings listings rooms units dorm apartments',
-        icon: 'fluent:pen-16-regular',
+        title: "Properties",
+        breadcrumb: "Properties",
+        to: "/landlord/properties",
+        keywords: "properties buildings listings rooms units dorm apartments",
+        icon: "fluent:pen-16-regular",
       },
       {
-        title: 'Finance',
-        breadcrumb: 'Finance',
-        to: '/landlord/finance',
-        keywords: 'finance income collection occupancy billing payments rent',
-        icon: 'solar:card-outline',
+        title: "Finance",
+        breadcrumb: "Finance",
+        to: "/landlord/finance",
+        keywords: "finance income collection occupancy billing payments rent",
+        icon: "solar:card-outline",
       },
       {
-        title: 'My Tenants',
-        breadcrumb: 'My Tenants',
-        to: '/landlord/tenants',
-        keywords: 'tenants renters residents applications billing',
-        icon: 'tabler:user-search',
+        title: "My Tenants",
+        breadcrumb: "My Tenants",
+        to: "/landlord/tenants",
+        keywords: "tenants renters residents applications billing",
+        icon: "tabler:user-search",
       },
       {
-        title: 'Managers',
-        breadcrumb: 'Managers',
-        to: '/landlord/managers',
-        keywords: 'managers staff assignments property manager',
-        icon: 'hugeicons:id',
+        title: "Managers",
+        breadcrumb: "Managers",
+        to: "/landlord/managers",
+        keywords: "managers staff assignments property manager",
+        icon: "hugeicons:id",
       },
       {
-        title: 'Visits',
-        breadcrumb: 'Visits',
-        to: '/landlord/visits',
-        keywords: 'visits ocular appointments schedule viewing',
-        icon: 'solar:calendar-outline',
+        title: "Visits",
+        breadcrumb: "Visits",
+        to: "/landlord/visits",
+        keywords: "visits ocular appointments schedule viewing",
+        icon: "solar:calendar-outline",
       },
       {
-        title: 'Messages',
-        breadcrumb: 'Messages',
-        to: '/landlord/messages',
-        keywords: 'messages chat inbox conversation',
-        icon: 'ic:outline-mail',
+        title: "Messages",
+        breadcrumb: "Messages",
+        to: "/landlord/messages",
+        keywords: "messages chat inbox conversation",
+        icon: "ic:outline-mail",
       },
       {
-        title: 'Settings',
-        breadcrumb: 'Settings',
-        to: '/landlord/settings',
-        keywords: 'settings preferences account',
-        icon: 'solar:settings-outline',
+        title: "Settings",
+        breadcrumb: "Settings",
+        to: "/landlord/settings",
+        keywords: "settings preferences account",
+        icon: "solar:settings-outline",
       },
       {
-        title: 'Profile',
-        breadcrumb: 'Profile',
-        to: '/landlord/profile/switcher',
-        keywords: 'profile account landlord personal information verification',
-        icon: 'solar:user-circle-outline',
+        title: "Profile",
+        breadcrumb: "Profile",
+        to: "/landlord/profile/switcher",
+        keywords: "profile account landlord personal information verification",
+        icon: "solar:user-circle-outline",
       },
       {
-        title: 'Profile Verification',
-        breadcrumb: 'Profile > Verification',
-        to: '/landlord/profile/verification',
-        keywords: 'profile verification account landlord documents',
-        icon: 'solar:user-circle-outline',
+        title: "Profile Verification",
+        breadcrumb: "Profile > Verification",
+        to: "/landlord/profile/verification",
+        keywords: "profile verification account landlord documents",
+        icon: "solar:user-circle-outline",
       },
       {
-        title: 'Add New Listing',
-        breadcrumb: 'Properties > Add New Listing',
-        to: '/landlord/properties/new',
-        keywords: 'properties add new listing create listing',
-        icon: 'fluent:pen-16-regular',
+        title: "Add New Listing",
+        breadcrumb: "Properties > Add New Listing",
+        to: "/landlord/properties/new",
+        keywords: "properties add new listing create listing",
+        icon: "fluent:pen-16-regular",
       },
       {
-        title: 'Add a New Building',
-        breadcrumb: 'Properties > Add a New Building',
-        to: '/landlord/add-building',
-        keywords: 'properties add building create building listing',
-        icon: 'fluent:pen-16-regular',
+        title: "Add a New Building",
+        breadcrumb: "Properties > Add a New Building",
+        to: "/landlord/add-building",
+        keywords: "properties add building create building listing",
+        icon: "fluent:pen-16-regular",
       },
       {
-        title: 'Pending Applications',
-        breadcrumb: 'My Tenants > Pending Applications',
-        to: '/landlord/tenants/unvalidated',
-        keywords: 'tenants pending applications unvalidated applicants',
-        icon: 'tabler:user-search',
+        title: "Pending Applications",
+        breadcrumb: "My Tenants > Pending Applications",
+        to: "/landlord/tenants/unvalidated",
+        keywords: "tenants pending applications unvalidated applicants",
+        icon: "tabler:user-search",
       },
     ];
 
@@ -228,14 +242,14 @@ const LandlordHomepage: FunctionComponent = () => {
         breadcrumb: `Properties > ${building.name}`,
         to: building.url,
         keywords: `${building.name} ${building.address} ${building.buildingType} property building rooms units`,
-        icon: 'fluent:pen-16-regular',
+        icon: "fluent:pen-16-regular",
       },
       {
         title: building.name,
         breadcrumb: `Finance > ${building.name}`,
         to: `/landlord/finance/property/${building.id}`,
         keywords: `${building.name} ${building.address} ${building.buildingType} finance income rent billing collection occupancy`,
-        icon: 'solar:card-outline',
+        icon: "solar:card-outline",
       },
     ]);
 
@@ -244,23 +258,25 @@ const LandlordHomepage: FunctionComponent = () => {
       breadcrumb: `My Tenants > ${tenant.displayName}`,
       to: `/landlord/tenants/${tenant.id}`,
       keywords: `${tenant.displayName} ${tenant.fullName} ${tenant.email} ${tenant.contactNumber} ${tenant.dormName} ${tenant.unit} tenant billing`,
-      icon: 'tabler:user-search',
+      icon: "tabler:user-search",
     }));
 
-    const pendingApplicationOptions = pendingApplications.map((application) => ({
-      title: application.displayName,
-      breadcrumb: `My Tenants > Pending Applications > ${application.displayName}`,
-      to: `/landlord/tenants/unvalidated/${application.id}`,
-      keywords: `${application.displayName} ${application.fullName} ${application.email} ${application.contactNumber} ${application.dormName} ${application.unit} pending application unvalidated`,
-      icon: 'tabler:user-search',
-    }));
+    const pendingApplicationOptions = pendingApplications.map(
+      (application) => ({
+        title: application.displayName,
+        breadcrumb: `My Tenants > Pending Applications > ${application.displayName}`,
+        to: `/landlord/tenants/unvalidated/${application.id}`,
+        keywords: `${application.displayName} ${application.fullName} ${application.email} ${application.contactNumber} ${application.dormName} ${application.unit} pending application unvalidated`,
+        icon: "tabler:user-search",
+      }),
+    );
 
     const managerOptions = managers.map((manager) => ({
       title: manager.displayName,
       breadcrumb: `Managers > ${manager.displayName}`,
       to: `/landlord/managers/${manager.id}`,
       keywords: `${manager.displayName} ${manager.fullName} ${manager.email} ${manager.contactNumber} ${manager.property} manager`,
-      icon: 'hugeicons:id',
+      icon: "hugeicons:id",
     }));
 
     return [
@@ -275,8 +291,7 @@ const LandlordHomepage: FunctionComponent = () => {
     const query = trimmedDebouncedSearchQuery;
     if (!query) return [];
 
-    return searchOptions
-      .filter((option) => optionMatchesQuery(option, query))
+    return searchOptions.filter((option) => optionMatchesQuery(option, query));
   }, [searchOptions, trimmedDebouncedSearchQuery]);
   const displayedBuildings = BUILDINGS;
   const total = displayedBuildings.length;
@@ -287,14 +302,14 @@ const LandlordHomepage: FunctionComponent = () => {
     setCurrent(clamped);
     trackRef.current?.scrollTo({
       left: clamped * (CARD_WIDTH + CARD_GAP),
-      behavior: 'smooth',
+      behavior: "smooth",
     });
   };
 
   const [showHelp, setShowHelp] = useState(false);
 
   const openSearchOption = (option: LandlordSearchOption) => {
-    setSearchQuery('');
+    setSearchQuery("");
     setIsSearchDropdownOpen(false);
     navigate(option.to);
   };
@@ -318,7 +333,9 @@ const LandlordHomepage: FunctionComponent = () => {
                 placeholder="Search properties, finance, tenants, visits..."
                 value={searchQuery}
                 maxLength={50}
-                onFocus={() => setIsSearchDropdownOpen(trimmedSearchQuery.length > 0)}
+                onFocus={() =>
+                  setIsSearchDropdownOpen(trimmedSearchQuery.length > 0)
+                }
                 onBlur={() => {
                   window.setTimeout(() => setIsSearchDropdownOpen(false), 120);
                 }}
@@ -333,13 +350,16 @@ const LandlordHomepage: FunctionComponent = () => {
                 <button
                   type="button"
                   onClick={() => {
-                    setSearchQuery('');
+                    setSearchQuery("");
                     setIsSearchDropdownOpen(false);
                   }}
                   className="text-unselected hover:text-darkgreen dark:text-[#a4acba] dark:hover:text-[#72cbb8]"
                   aria-label="Clear search"
                 >
-                  <Icon icon="material-symbols:close-rounded" className="w-4 h-4" />
+                  <Icon
+                    icon="material-symbols:close-rounded"
+                    className="w-4 h-4"
+                  />
                 </button>
               )}
             </div>
@@ -348,7 +368,10 @@ const LandlordHomepage: FunctionComponent = () => {
               <div className="absolute left-0 right-0 top-[calc(100%+0.5rem)] z-40 max-h-[560px] overflow-y-auto rounded-num-12 border border-whitesmoke-200 bg-white shadow-[0_14px_30px_rgba(0,0,0,0.14)] dark:border-[#303331] dark:bg-[#101111] dark:shadow-[0_18px_34px_rgba(0,0,0,0.42)]">
                 {isSearchDebouncing ? (
                   <div className="flex items-center gap-3 px-4 py-4 text-sm font-semibold text-unselected dark:text-[#a4acba]">
-                    <Icon icon="eos-icons:loading" className="h-5 w-5 text-teal-100" />
+                    <Icon
+                      icon="eos-icons:loading"
+                      className="h-5 w-5 text-teal-100"
+                    />
                     Searching screens...
                   </div>
                 ) : matchingSearchOptions.length > 0 ? (
@@ -361,7 +384,11 @@ const LandlordHomepage: FunctionComponent = () => {
                       className="flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-whitesmoke-100 dark:hover:bg-[#202123]"
                     >
                       <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-lightcyan/45 text-teal dark:bg-[#17483f] dark:text-[#72cbb8]">
-                        <Icon icon={option.icon} className="h-6 w-6" aria-hidden="true" />
+                        <Icon
+                          icon={option.icon}
+                          className="h-6 w-6"
+                          aria-hidden="true"
+                        />
                       </span>
                       <span className="min-w-0 flex-1">
                         <span className="block truncate text-num-14 font-bold text-darkgreen dark:text-[#edf6f4]">
@@ -407,7 +434,9 @@ const LandlordHomepage: FunctionComponent = () => {
                   key={s.label}
                   className="flex flex-col items-center justify-center gap-[8px] rounded-[16px] border border-[#f0f0f0] bg-white p-[12px] text-center"
                 >
-                  <b className="font-['Inter',sans-serif] text-[14px] text-[#666]">{s.label}</b>
+                  <b className="font-['Inter',sans-serif] text-[14px] text-[#666]">
+                    {s.label}
+                  </b>
                   <b className="font-['Inter',sans-serif] text-[24px] leading-[32px] text-[#096c5b]">
                     {s.value}
                   </b>
@@ -415,16 +444,16 @@ const LandlordHomepage: FunctionComponent = () => {
                     <span
                       className="font-['Inter',sans-serif] text-[14px] font-medium"
                       style={{
-                        background: 'linear-gradient(0deg,#ffc273,#fa7900)',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
+                        background: "linear-gradient(0deg,#ffc273,#fa7900)",
+                        WebkitBackgroundClip: "text",
+                        WebkitTextFillColor: "transparent",
                       }}
                     >
                       {s.sub}
                     </span>
                   ) : (
                     <span
-                      className={`font-['Inter',sans-serif] text-[14px] font-medium ${s.subColor}`}
+                      className={`font-['Inter',sans-serif] text-[14px] font-medium ${s.subColor} cursor-pointer`}
                     >
                       {s.sub}
                     </span>
@@ -443,7 +472,7 @@ const LandlordHomepage: FunctionComponent = () => {
                 <button
                   type="button"
                   onClick={() => setShowNotify(true)}
-                  className="flex items-center gap-[8px] rounded-full bg-[#f0f0f0] px-[12px] py-[4px] transition-opacity hover:opacity-80"
+                  className="flex items-center gap-[8px] rounded-full bg-[#f0f0f0] px-[12px] py-[4px] transition-opacity hover:opacity-80 cursor-pointer"
                 >
                   <span className="font-['Inter',sans-serif] text-[12px] font-medium text-[#096c5b]">
                     Notify your tenants
@@ -457,7 +486,10 @@ const LandlordHomepage: FunctionComponent = () => {
                   </span>
                 </button>
               </div>
-              <TutorialBubble show={showHelp} onClose={() => setShowHelp(false)} />
+              <TutorialBubble
+                show={showHelp}
+                onClose={() => setShowHelp(false)}
+              />
             </div>
           </section>
 
@@ -485,15 +517,18 @@ const LandlordHomepage: FunctionComponent = () => {
                 <button
                   onClick={() => scrollTo(current - 1)}
                   disabled={current === 0}
-                  className="flex h-[32px] w-[32px] items-center justify-center rounded-full border border-[#f0f0f0] bg-white transition-opacity hover:opacity-70 disabled:opacity-30"
+                  className="flex h-[32px] w-[32px] items-center justify-center rounded-full border border-[#f0f0f0] bg-white transition-opacity hover:opacity-70 disabled:opacity-30 cursor-pointer"
                   aria-label="Previous property"
                 >
-                  <Icon icon="solar:arrow-left-bold" className="h-[16px] w-[16px] text-[#2f3136]" />
+                  <Icon
+                    icon="solar:arrow-left-bold"
+                    className="h-[16px] w-[16px] text-[#2f3136]"
+                  />
                 </button>
                 <button
                   onClick={() => scrollTo(current + 1)}
                   disabled={current === total - 1}
-                  className="flex h-[32px] w-[32px] items-center justify-center rounded-full bg-[#e0f7f4] transition-opacity hover:opacity-70 disabled:opacity-30"
+                  className="flex h-[32px] w-[32px] items-center justify-center rounded-full bg-[#e0f7f4] transition-opacity hover:opacity-70 disabled:opacity-30 cursor-pointer"
                   aria-label="Next property"
                 >
                   <Icon
@@ -516,7 +551,11 @@ const LandlordHomepage: FunctionComponent = () => {
                   className="flex shrink-0 flex-col overflow-hidden rounded-[10px] bg-white shadow-[0px_4px_20px_rgba(0,0,0,0.15)] transition-transform hover:scale-[1.02]"
                   style={{ width: CARD_WIDTH }}
                 >
-                  <img src={b.img} alt={b.name} className="h-[120px] w-full object-cover" />
+                  <img
+                    src={b.img}
+                    alt={b.name}
+                    className="h-[120px] w-full object-cover"
+                  />
                   <div className="flex flex-col gap-[8px] p-[12px]">
                     <div className="flex items-center justify-between gap-[8px]">
                       <b className="truncate font-['Inter',sans-serif] text-[16px] tracking-[-0.01em] text-black">
@@ -549,9 +588,10 @@ const LandlordHomepage: FunctionComponent = () => {
                         <b
                           className="font-['Poppins',sans-serif] text-[13px] tracking-[-0.01em]"
                           style={{
-                            background: 'linear-gradient(180deg,#5dc2a8 27.88%,#0c8873 84.13%)',
-                            WebkitBackgroundClip: 'text',
-                            WebkitTextFillColor: 'transparent',
+                            background:
+                              "linear-gradient(180deg,#5dc2a8 27.88%,#0c8873 84.13%)",
+                            WebkitBackgroundClip: "text",
+                            WebkitTextFillColor: "transparent",
                           }}
                         >
                           {b.income}
@@ -566,9 +606,10 @@ const LandlordHomepage: FunctionComponent = () => {
                         <b
                           className="font-['Poppins',sans-serif] text-[13px] tracking-[-0.01em]"
                           style={{
-                            background: 'linear-gradient(180deg,#c29722,#f6b709)',
-                            WebkitBackgroundClip: 'text',
-                            WebkitTextFillColor: 'transparent',
+                            background:
+                              "linear-gradient(180deg,#c29722,#f6b709)",
+                            WebkitBackgroundClip: "text",
+                            WebkitTextFillColor: "transparent",
                           }}
                         >
                           {b.outstanding}
@@ -593,13 +634,13 @@ const LandlordHomepage: FunctionComponent = () => {
           <div className="grid grid-cols-1 gap-[16px] sm:grid-cols-2">
             {[
               {
-                title: 'Pending Applications',
-                to: '/landlord/tenants/unvalidated',
+                title: "Pending Applications",
+                to: "/landlord/tenants/unvalidated",
                 items: PENDING,
               },
               {
-                title: 'Scheduled Visits',
-                to: '/landlord/visits',
+                title: "Scheduled Visits",
+                to: "/landlord/visits",
                 items: VISITS,
               },
             ].map((panel) => (
@@ -648,7 +689,9 @@ const LandlordHomepage: FunctionComponent = () => {
             </span>
           </div>
           <section className="flex flex-col gap-[12px]">
-            <b className="font-['Inter',sans-serif] text-[14px] text-black">Activity</b>
+            <b className="font-['Inter',sans-serif] text-[14px] text-black">
+              Activity
+            </b>
             <div className="flex flex-col gap-[12px]">
               {ACTIVITY.map((a) => (
                 <div
@@ -680,9 +723,16 @@ const LandlordHomepage: FunctionComponent = () => {
         className="help-button-animated z-[1000] cursor-pointer transition-all hover:scale-110 active:scale-95"
         onClick={() => setShowHelp(!showHelp)}
       >
-        <img src={TutorialIcon} alt="Help" className="w-16 h-16 drop-shadow-lg" />
+        <img
+          src={TutorialIcon}
+          alt="Help"
+          className="w-16 h-16 drop-shadow-lg"
+        />
       </div>
-      <NotifyTenantsPopup isOpen={showNotify} onClose={() => setShowNotify(false)} />
+      <NotifyTenantsPopup
+        isOpen={showNotify}
+        onClose={() => setShowNotify(false)}
+      />
     </LandlordLayout>
   );
 };

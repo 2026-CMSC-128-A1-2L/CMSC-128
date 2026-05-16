@@ -57,7 +57,7 @@ const ReviewDetails: FunctionComponent<ReviewDetailsProps> = ({
             <button
               type="button"
               onClick={() => setShowAllReviews((isShowing) => !isShowing)}
-              className="relative h-max w-full rounded-[10px] bg-white py-2 font-semibold text-darkslategray shadow-[0px_0px_4px_rgba(0,0,0,0.25)] transition-colors hover:bg-lightcyan"
+              className="relative h-max w-full rounded-[10px] bg-white py-2 font-semibold text-darkslategray shadow-[0px_0px_4px_rgba(0,0,0,0.25)] transition-colors hover:bg-lightcyan cursor-pointer"
             >
               {hasMoreReviews
                 ? `${buttonLabel} (${reviews.length - visibleReviews.length} more)`

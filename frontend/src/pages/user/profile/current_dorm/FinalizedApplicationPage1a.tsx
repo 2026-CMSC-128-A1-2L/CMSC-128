@@ -450,7 +450,7 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
                         </div>
                       </div>
 
-                      <div className="self-stretch flex items-center py-num-0 px-num-32 gap-6 text-[24px]">
+                      <div className="self-stretch flex items-center py-num-0 px-num-32 gap-6 text-[24px] cursor-pointer">
                         <div className="flex-1 flex items-center gap-6">
                           <div className="flex items-center gap-3">
                             <Icon
@@ -473,7 +473,7 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
                           ) : (
                             <button
                               type="button"
-                              className="h-8 w-full relative rounded-2xl bg-lightcyan flex items-center justify-center py-0 px-3 box-border text-center text-sm text-teal font-inter"
+                              className="h-8 w-full relative rounded-2xl bg-lightcyan flex items-center justify-center py-0 px-3 box-border text-center text-sm text-teal font-inter cursor-pointer"
                               onClick={onSubmitTextClick}
                               disabled={isSubmitting}
                             >

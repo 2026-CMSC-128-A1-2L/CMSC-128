@@ -364,14 +364,14 @@ const ApplicantReviewModal = ({
                       <button
                         type="button"
                         onClick={() => onRejectDocument(doc.docId)}
-                        className="rounded-[12px] px-5 py-2 font-['Inter',sans-serif] text-[14px] font-semibold text-[#ef4444] transition-opacity hover:opacity-80"
+                        className="cursor-pointer rounded-[12px] px-5 py-2 font-['Inter',sans-serif] text-[14px] font-semibold text-[#ef4444] transition-opacity hover:opacity-80"
                       >
                         Reject
                       </button>
                       <button
                         type="button"
                         onClick={() => onAcceptDocument(doc.docId)}
-                        className="rounded-[12px] bg-[#cbf6ed] dark:bg-[#12342e] px-5 py-2 font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] dark:text-[#72cbb8] transition-opacity hover:opacity-80"
+                        className="cursor-pointer rounded-[12px] bg-[#cbf6ed] dark:bg-[#12342e] px-5 py-2 font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] dark:text-[#72cbb8] transition-opacity hover:opacity-80"
                       >
                         Accept
                       </button>
@@ -401,21 +401,21 @@ const ApplicantReviewModal = ({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-[12px] px-6 py-2 font-['Inter',sans-serif] text-[14px] font-semibold text-[#64748b] transition-opacity hover:opacity-80"
+            className="cursor-pointer rounded-[12px] px-6 py-2 font-['Inter',sans-serif] text-[14px] font-semibold text-[#64748b] transition-opacity hover:opacity-80"
           >
             Cancel
           </button>
           <button
             type="button"
             onClick={onRejectUser}
-            className="rounded-[12px] px-6 py-2 font-['Inter',sans-serif] text-[14px] font-semibold text-[#ef4444] transition-opacity hover:opacity-80"
+            className="cursor-pointer rounded-[12px] px-6 py-2 font-['Inter',sans-serif] text-[14px] font-semibold text-[#ef4444] transition-opacity hover:opacity-80"
           >
             Reject User
           </button>
           <button
             type="button"
             onClick={onApproveUser}
-            className="rounded-[12px] bg-[#cbf6ed] dark:bg-[#12342e] px-6 py-2 font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] dark:text-[#72cbb8] transition-opacity hover:opacity-80"
+            className="cursor-pointer rounded-[12px] bg-[#cbf6ed] dark:bg-[#12342e] px-6 py-2 font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] dark:text-[#72cbb8] transition-opacity hover:opacity-80"
           >
             Approve User
           </button>

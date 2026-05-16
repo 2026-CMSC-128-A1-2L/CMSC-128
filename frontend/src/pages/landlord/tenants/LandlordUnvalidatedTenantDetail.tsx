@@ -411,7 +411,7 @@ const LandlordUnvalidatedTenantDetail = () => {
                       </div>
 
                       {assignmentMode === 'manual' ? (
-                        <div className="flex flex-col gap-[8px]">
+                        <div className="flex flex-col gap-[8px] cursor-pointer">
                           <select
                             value={selectedUnitId}
                             onChange={(event) => setSelectedUnitId(event.target.value)}

@@ -134,7 +134,7 @@ const Managers = () => {
                       setAddManagerOpen(true);
                     }}
                     aria-label={`Add manager to ${property.name}`}
-                    className="flex items-center justify-center rounded-full transition-opacity hover:opacity-70"
+                    className="flex items-center justify-center rounded-full transition-opacity hover:opacity-70 cursor-pointer"
                   >
                     <Icon
                       icon="mdi-light:plus"
@@ -195,7 +195,7 @@ const Managers = () => {
                               aria-haspopup="menu"
                               aria-expanded={menuOpen}
                               aria-label={`More options for ${manager.firstName} ${manager.lastName}`}
-                              className="flex items-center justify-center rounded-full p-[4px] transition-opacity hover:opacity-70"
+                              className="flex items-center justify-center rounded-full p-[4px] transition-opacity hover:opacity-70 cursor-pointer"
                             >
                               <Icon
                                 icon="solar:menu-dots-bold"

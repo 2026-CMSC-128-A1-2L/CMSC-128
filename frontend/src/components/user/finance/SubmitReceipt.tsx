@@ -258,7 +258,7 @@ const SubmitReceipt: FunctionComponent<SubmitReceiptType> = ({
                   e.stopPropagation();
                   setReceiptFile(null);
                 }}
-                className="text-xs text-crimson hover:underline"
+                className="text-xs text-crimson hover:underline cursor-pointer"
               >
                 Remove
               </button>
@@ -279,7 +279,7 @@ const SubmitReceipt: FunctionComponent<SubmitReceiptType> = ({
                   : 'hover:bg-teal hover:text-white hover:scale-[1.02] active:scale-95 cursor-pointer'
               }`}
             >
-              <div className="font-semibold">{isSubmitting ? 'Submitting…' : 'Submit Payment'}</div>
+              <div className="font-semibold cursor-pointer">{isSubmitting ? 'Submitting…' : 'Submit Payment'}</div>
             </button>
           </div>
         </div>

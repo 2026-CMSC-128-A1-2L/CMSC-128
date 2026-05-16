@@ -124,7 +124,7 @@ const NavButton = memo(
     flex items-center justify-center hover:bg-white active:scale-90 transition-transform
     ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
     >
-      <Icon icon={icon} className="w-8 h-8 text-slate-800" />
+      <Icon icon={icon} className="w-8 h-8 text-slate-800 cursor-pointer" />
     </button>
   ),
 );

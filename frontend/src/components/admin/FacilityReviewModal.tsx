@@ -149,23 +149,23 @@ export default function FacilityReviewModal({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-[12px] px-6 py-2 font-['Inter',sans-serif] text-[14px] font-semibold text-[#64748b] transition-opacity hover:opacity-80"
-          >
-            Cancel
-          </button>
-          {facility.status === 'submitted' && (
-            <>
-              <button
-                type="button"
-                onClick={onReject}
-                className="rounded-[12px] px-6 py-2 font-['Inter',sans-serif] text-[14px] font-semibold text-[#ef4444] transition-opacity hover:opacity-80"
-              >
-                Reject
-              </button>
-              <button
-                type="button"
-                onClick={onApprove}
-                className="rounded-[12px] bg-[#cbf6ed] dark:bg-[#12342e] px-6 py-2 font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] dark:text-[#72cbb8] transition-opacity hover:opacity-80"
+            className="cursor-pointer rounded-[12px] px-6 py-2 font-['Inter',sans-serif] text-[14px] font-semibold text-[#64748b] transition-opacity hover:opacity-80"
+        >
+          Cancel
+        </button>
+        {facility.status === 'submitted' && (
+          <>
+            <button
+              type="button"
+              onClick={onReject}
+              className="cursor-pointer rounded-[12px] px-6 py-2 font-['Inter',sans-serif] text-[14px] font-semibold text-[#ef4444] transition-opacity hover:opacity-80"
+            >
+              Reject
+            </button>
+            <button
+              type="button"
+              onClick={onApprove}
+              className="cursor-pointer rounded-[12px] bg-[#cbf6ed] dark:bg-[#12342e] px-6 py-2 font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] dark:text-[#72cbb8] transition-opacity hover:opacity-80"
               >
                 Approve
               </button>

@@ -96,7 +96,7 @@ const ReportTenant4: FunctionComponent = () => {
                     <div
                       className={`absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] shadow-[0px_0px_2px_rgba(0,0,0,0.25)] rounded ${
                         isAllSelected ? 'bg-teal' : 'bg-whitesmoke-100'
-                      }`}
+                      } cursor-pointer`}
                     />
                     {isAllSelected && <CheckMark />}
                   </div>

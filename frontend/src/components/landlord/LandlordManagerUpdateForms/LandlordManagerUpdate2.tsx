@@ -33,7 +33,7 @@ const UpdateManager2: FunctionComponent<Props> = ({ onClose }) => {
         {/* Close */}
         <button
           onClick={onClose}
-          className="rounded-[12px] bg-[#e0f7f4] py-[12px] px-[32px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] transition-opacity hover:opacity-80"
+          className="rounded-[12px] bg-[#e0f7f4] py-[12px] px-[32px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] transition-opacity hover:opacity-80 cursor-pointer"
         >
           Close
         </button>

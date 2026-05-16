@@ -259,7 +259,7 @@ const Visits: FunctionComponent = () => {
               <div className="self-stretch flex items-center gap-3">
                 <button
                   onClick={handlePrevMonth}
-                  className="rounded-full p-2 hover:bg-whitesmoke-100 dark:hover:bg-[#1f2022] transition-colors"
+                  className="rounded-full p-2 hover:bg-whitesmoke-100 dark:hover:bg-[#1f2022] transition-colors cursor-pointer"
                 >
                   <Icon icon="ic:round-chevron-left" className="h-5 w-5 dark:text-[#d7e0ef]" />
                 </button>
@@ -268,13 +268,13 @@ const Visits: FunctionComponent = () => {
                   <div className="flex-1 relative">
                     <button
                       onClick={() => setShowMonthDropdown(!showMonthDropdown)}
-                      className="w-full rounded-md border border-gainsboro dark:border-[#303331] flex items-center p-2 gap-1 text-xs hover:bg-gray-50 dark:hover:bg-[#1f2022] dark:bg-[#1f2022]"
+                      className="w-full rounded-md border border-gainsboro dark:border-[#303331] flex items-center p-2 gap-1 text-xs hover:bg-gray-50 dark:hover:bg-[#1f2022] dark:bg-[#1f2022] cursor-pointer"
                     >
                       <span className="flex-1">{MONTHS[month].substring(0, 3)}</span>
                       <Icon
                         icon="ic:round-keyboard-arrow-down"
                         className={`h-4 w-4 transition-transform ${showMonthDropdown ? 'rotate-180' : ''
-                          }`}
+                          } cursor-pointer`}
                       />
                     </button>
                     {showMonthDropdown && (
@@ -284,7 +284,7 @@ const Visits: FunctionComponent = () => {
                             key={m}
                             onClick={() => handleMonthSelect(idx)}
                             className={`w-full text-left px-3 py-2 text-xs hover:bg-blue-50 dark:hover:bg-[#1f3a34] ${idx === month ? 'bg-lightcyan-100 dark:bg-[#12342e] font-bold text-teal dark:text-[#72cbb8]' : ''
-                              }`}
+                              } cursor-pointer`}
                           >
                             {m}
                           </button>
@@ -294,16 +294,16 @@ const Visits: FunctionComponent = () => {
                   </div>
 
                   {/* Year Dropdown */}
-                  <div className="flex-1 relative">
+                  <div className="flex-1 relative cursor-pointer">
                     <button
                       onClick={() => setShowYearDropdown(!showYearDropdown)}
-                      className="w-full rounded-md border border-gainsboro dark:border-[#303331] flex items-center p-2 gap-1 text-xs hover:bg-gray-50 dark:hover:bg-[#1f2022] dark:bg-[#1f2022]"
+                      className="w-full rounded-md border border-gainsboro dark:border-[#303331] flex items-center p-2 gap-1 text-xs hover:bg-gray-50 dark:hover:bg-[#1f2022] dark:bg-[#1f2022] cursor-pointer"
                     >
                       <span className="flex-1">{year}</span>
                       <Icon
                         icon="ic:round-keyboard-arrow-down"
                         className={`h-4 w-4 transition-transform ${showYearDropdown ? 'rotate-180' : ''
-                          }`}
+                          } cursor-pointer`}
                       />
                     </button>
                     {showYearDropdown && (
@@ -313,7 +313,7 @@ const Visits: FunctionComponent = () => {
                             key={y}
                             onClick={() => handleYearSelect(y)}
                             className={`w-full text-left px-3 py-2 text-xs hover:bg-blue-50 dark:hover:bg-[#1f3a34] ${y === year ? 'bg-lightcyan-100 dark:bg-[#12342e] font-bold text-teal dark:text-[#72cbb8]' : ''
-                              }`}
+                              } cursor-pointer`}
                           >
                             {y}
                           </button>
@@ -324,7 +324,7 @@ const Visits: FunctionComponent = () => {
                 </div>
                 <button
                   onClick={handleNextMonth}
-                  className="rounded-full p-2 hover:bg-whitesmoke-100 dark:hover:bg-[#1f2022] transition-colors"
+                  className="rounded-full p-2 hover:bg-whitesmoke-100 dark:hover:bg-[#1f2022] transition-colors cursor-pointer"
                 >
                   <Icon icon="ic:round-chevron-right" className="h-5 w-5 dark:text-[#d7e0ef]" />
                 </button>
@@ -401,7 +401,7 @@ const Visits: FunctionComponent = () => {
             </div>
 
             {/* Upcoming Visits Section */}
-            <div className="bg-white dark:bg-[#141515] rounded-num-8 p-3 sm:p-4 border border-whitesmoke-200 dark:border-[#303331] w-full">
+            <div className="bg-white dark:bg-[#141515] rounded-num-8 p-3 sm:p-4 border border-whitesmoke-200 dark:border-[#303331] w-full cursor-pointer">
               <UpcomingVisitsSection
                 visits={upcomingVisits}
                 onVisitClick={handleUpcomingVisitClick}
@@ -465,7 +465,7 @@ const Visits: FunctionComponent = () => {
                                 }}
                                 className={`w-full text-left p-0.5 sm:p-1 rounded ${visit.backgroundColor} cursor-pointer hover:opacity-80 transition-opacity overflow-hidden`}
                               >
-                                <div className="truncate font-semibold text-xs">
+                                <div className="truncate font-semibold text-xs cursor-pointer">
                                   {visit.visitorName}
                                 </div>
                               </button>

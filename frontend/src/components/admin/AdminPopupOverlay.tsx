@@ -11,7 +11,7 @@ const AdminPopupOverlay = ({ onClose, children }: AdminPopupOverlayProps) => {
       <button
         type="button"
         aria-label="Close popup"
-        className="absolute inset-0 bg-black/40"
+        className="absolute inset-0 bg-black/40 cursor-pointer"
         onClick={onClose}
       />
       <div className="relative z-1">{children}</div>
