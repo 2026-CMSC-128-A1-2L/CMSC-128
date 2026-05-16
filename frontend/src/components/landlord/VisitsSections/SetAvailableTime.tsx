@@ -13,6 +13,8 @@ const SetAvailableTime: FunctionComponent<SetAvailableTimeProps> = ({ onClose })
     Array.from({ length: 10 }, () => Array(7).fill(false)),
   );
   const [loading, setLoading] = useState(true);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragValue, setDragValue] = useState(false);
 
   useEffect(() => {
     const fetchAvailability = async () => {
@@ -30,13 +32,42 @@ const SetAvailableTime: FunctionComponent<SetAvailableTimeProps> = ({ onClose })
     fetchAvailability();
   }, []);
 
-  const handleTileClick = useCallback((row: number, col: number) => {
-    setAvailability((prev) => {
-      const newAvailability = prev.map((r) => [...r]);
-      newAvailability[row][col] = !newAvailability[row][col];
-      return newAvailability;
-    });
+  const handleMouseDown = useCallback(
+    (row: number, col: number) => {
+      const newValue = !availability[row][col];
+      setDragValue(newValue);
+      setIsDragging(true);
+      setAvailability((prev) => {
+        const newAvailability = prev.map((r) => [...r]);
+        newAvailability[row][col] = newValue;
+        return newAvailability;
+      });
+    },
+    [availability],
+  );
+
+  const handleMouseEnter = useCallback(
+    (row: number, col: number) => {
+      if (isDragging) {
+        setAvailability((prev) => {
+          if (prev[row][col] === dragValue) return prev;
+          const newAvailability = prev.map((r) => [...r]);
+          newAvailability[row][col] = dragValue;
+          return newAvailability;
+        });
+      }
+    },
+    [isDragging, dragValue],
+  );
+
+  const handleMouseUp = useCallback(() => {
+    setIsDragging(false);
   }, []);
+
+  useEffect(() => {
+    window.addEventListener('mouseup', handleMouseUp);
+    return () => window.removeEventListener('mouseup', handleMouseUp);
+  }, [handleMouseUp]);
 
   const handleCancel = useCallback(() => {
     onClose?.();
@@ -91,15 +122,21 @@ const SetAvailableTime: FunctionComponent<SetAvailableTimeProps> = ({ onClose })
               row.map((isAvailable, colIdx) => (
                 <div
                   key={`${rowIdx}-${colIdx}`}
-                  onClick={() => handleTileClick(rowIdx, colIdx)}
-                  className={`h-10 overflow-hidden flex items-start p-num-10 box-border cursor-pointer transition-colors hover:opacity-80 ${
+                  onMouseDown={() => handleMouseDown(rowIdx, colIdx)}
+                  onMouseEnter={() => handleMouseEnter(rowIdx, colIdx)}
+                  className={`h-10 overflow-hidden flex items-start p-num-10 box-border cursor-pointer transition-colors hover:opacity-80 select-none ${
                     isAvailable ? 'bg-teal dark:bg-[#72cbb8]' : 'bg-white dark:bg-[#1f2022]'
                   }`}
                   role="button"
                   tabIndex={0}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
-                      handleTileClick(rowIdx, colIdx);
+                      const newValue = !availability[rowIdx][colIdx];
+                      setAvailability((prev) => {
+                        const next = prev.map((r) => [...r]);
+                        next[rowIdx][colIdx] = newValue;
+                        return next;
+                      });
                     }
                   }}
                   aria-pressed={isAvailable}
