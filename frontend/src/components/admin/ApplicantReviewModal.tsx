@@ -1,10 +1,13 @@
+import { useMemo, useState } from 'react';
 import { Icon } from '@iconify/react';
+import Lightbox from 'yet-another-react-lightbox';
+import 'yet-another-react-lightbox/styles.css';
 import AdminPopupOverlay from './AdminPopupOverlay';
 
 export type VerificationDocument = {
   docId: string;
   name: string;
-  status: 'accepted' | 'rejected' | 'pending';
+  status: "accepted" | "rejected" | "pending";
   message?: string;
   files: string[];
 };
@@ -17,9 +20,9 @@ export type VerificationApplicant = {
   emails: string[];
   address?: string;
   contact?: string;
-  userType?: 'Student' | 'Landlord' | 'Manager' | 'Admin';
-  status: 'setup' | 'unverified' | 'verified' | 'inactive' | 'disabled';
-  verificationStatus: 'pending' | 'submitted' | 'rejected' | 'approved';
+  userType?: "Student" | "Landlord" | "Manager" | "Admin";
+  status: "setup" | "unverified" | "verified" | "inactive" | "disabled";
+  verificationStatus: "pending" | "submitted" | "rejected" | "approved";
   documents: VerificationDocument[];
   createdAt?: string;
   updatedAt?: string;
@@ -40,18 +43,72 @@ type ApplicantReviewModalProps = {
   onRejectDocument: (docId: string) => void;
   onApproveUser: () => void;
   onRejectUser: () => void;
+  onDownloadDocument: (docId: string, fileIndex: number) => void;
 };
 
 const DOC_STATUS_STYLES: Record<string, string> = {
-  pending: 'bg-amber-50 text-amber-700 border-amber-200',
-  accepted: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-  rejected: 'bg-red-50 text-red-600 border-red-200',
+  pending: "bg-amber-50 text-amber-700 border-amber-200",
+  accepted: "bg-emerald-50 text-emerald-700 border-emerald-200",
+  rejected: "bg-red-50 text-red-600 border-red-200",
+};
+
+type VerificationFileItem = {
+  docId: string;
+  file: string;
+  label: string;
+  url: string;
+  isImage: boolean;
 };
 
 export const getDisplayName = (user: VerificationApplicant) =>
-  [user.firstName, user.middleName, user.lastName].filter(Boolean).join(' ');
+  [user.firstName, user.middleName, user.lastName].filter(Boolean).join(" ");
 
-export const formatRole = (role?: string) => role ?? 'Unassigned';
+export const formatRole = (role?: string) => role ?? "Unassigned";
+
+const getFileKey = (value: string) => {
+  if (!value.startsWith('http')) return value.replace(/^\/+/, '');
+
+  try {
+    return new URL(value).pathname.replace(/^\/+/, '');
+  } catch {
+    return value;
+  }
+};
+
+const toPublicFileUrl = (value: string) => {
+  const key = getFileKey(value);
+  return `/api/files/public?key=${encodeURIComponent(key)}`;
+};
+
+const getFileLabel = (value: string) => {
+  const key = getFileKey(value);
+  return key.split('/').pop() || 'Uploaded file';
+};
+
+const isLikelyImage = (value: string) => /\.(avif|gif|jpe?g|png|webp)$/i.test(getFileKey(value));
+
+const getImageCandidates = (url: string) => {
+  const candidates = [url];
+
+  try {
+    const parsedUrl = new URL(url, window.location.origin);
+    const pathname = parsedUrl.pathname;
+
+    if (pathname.startsWith('/atlas/atlas/')) {
+      candidates.push(`${parsedUrl.origin}${pathname.replace('/atlas/atlas/', '/atlas/')}`);
+    }
+
+    if (pathname.startsWith('/atlas/')) {
+      candidates.push(`${parsedUrl.origin}${pathname.replace('/atlas/', '/')}`);
+    } else {
+      candidates.push(`${parsedUrl.origin}/atlas${pathname}`);
+    }
+  } catch {
+    return candidates;
+  }
+
+  return [...new Set(candidates)];
+};
 
 const ApplicantReviewModal = ({
   isOpen,
@@ -68,7 +125,43 @@ const ApplicantReviewModal = ({
   onRejectDocument,
   onApproveUser,
   onRejectUser,
+  onDownloadDocument,
 }: ApplicantReviewModalProps) => {
+  const [lightboxIndex, setLightboxIndex] = useState(-1);
+  const [thumbnailUrls, setThumbnailUrls] = useState<Record<string, string>>({});
+  const fileItems = useMemo<VerificationFileItem[]>(
+    () =>
+      applicant?.documents.flatMap((doc) =>
+        doc.files.map((file) => ({
+          docId: doc.docId,
+          file,
+          label: getFileLabel(file),
+          url: toPublicFileUrl(file),
+          isImage: isLikelyImage(file),
+        })),
+      ) ?? [],
+    [applicant?.documents],
+  );
+  const imageItems = useMemo(() => fileItems.filter((item) => item.isImage), [fileItems]);
+  const imageCandidates = useMemo(
+    () => imageItems.map((item) => getImageCandidates(item.url)),
+    [imageItems],
+  );
+  const getThumbnailUrl = (item: VerificationFileItem) => thumbnailUrls[item.file] ?? item.url;
+  const slides = imageCandidates.map((candidates, index) => ({
+    src: thumbnailUrls[imageItems[index]?.file ?? ''] ?? candidates[0],
+  }));
+  const tryNextThumbnailUrl = (item: VerificationFileItem) => {
+    const currentUrl = getThumbnailUrl(item);
+    const imageIndex = imageItems.findIndex((imageItem) => imageItem.file === item.file);
+    const candidates = imageCandidates[imageIndex] ?? [];
+    const currentIndex = candidates.indexOf(currentUrl);
+    const nextUrl = candidates[currentIndex + 1];
+    if (nextUrl) {
+      setThumbnailUrls((urls) => ({ ...urls, [item.file]: nextUrl }));
+    }
+  };
+
   if (!isOpen || !applicant) return null;
 
   return (
@@ -98,7 +191,7 @@ const ApplicantReviewModal = ({
             </p>
             {applicant.contact && (
               <p className="mt-1 font-['Inter',sans-serif] text-[14px] font-medium text-[#666] dark:text-[#a4acba]">
-                Contact:{' '}
+                Contact:{" "}
                 <span className="font-bold text-[#2f3136] dark:text-[#d7e0ef]">
                   {applicant.contact}
                 </span>
@@ -107,7 +200,7 @@ const ApplicantReviewModal = ({
           </div>
 
           {/* Student Fields */}
-          {applicant.userType === 'Student' && (
+          {applicant.userType === "Student" && (
             <div className="mb-6 grid grid-cols-2 gap-4 rounded-[16px] border border-[#e5e7eb] dark:border-[#303331] bg-[#f8fffe] dark:bg-[#17201d] p-5">
               <label className="flex flex-col gap-1.5">
                 <span className="font-['Inter',sans-serif] text-[14px] font-bold text-[#666] dark:text-[#a4acba]">
@@ -159,15 +252,34 @@ const ApplicantReviewModal = ({
                         {doc.name}
                       </p>
                       <p className="font-['Inter',sans-serif] text-[13px] font-medium text-[#64748b] dark:text-[#a4acba]">
-                        {doc.files.length} file{doc.files.length !== 1 ? 's' : ''} attached
+                        {doc.files.length} file
+                        {doc.files.length !== 1 ? "s" : ""} attached
                       </p>
                     </div>
                   </div>
-                  <span
-                    className={`inline-flex items-center rounded-full border px-3 py-1 font-['Inter',sans-serif] text-[12px] font-semibold ${DOC_STATUS_STYLES[doc.status] ?? DOC_STATUS_STYLES.pending}`}
-                  >
-                    {doc.status.charAt(0).toUpperCase() + doc.status.slice(1)}
-                  </span>
+                  <div className="flex items-center gap-3">
+                    <div className="flex flex-col gap-1.5">
+                      {doc.files.map((file, index) => (
+                        <button
+                          key={index}
+                          type="button"
+                          onClick={() => onDownloadDocument(doc.docId, index)}
+                          className="flex items-center justify-center transition-opacity hover:opacity-60 cursor-pointer"
+                          title={`Download ${file.split("/").pop() || file}`}
+                        >
+                          <Icon
+                            icon="solar:download-bold"
+                            className="h-5 w-5 text-[#096c5b] dark:text-[#72cbb8]"
+                          />
+                        </button>
+                      ))}
+                    </div>
+                    <span
+                      className={`inline-flex items-center rounded-full border px-3 py-1 font-['Inter',sans-serif] text-[12px] font-semibold ${DOC_STATUS_STYLES[doc.status] ?? DOC_STATUS_STYLES.pending}`}
+                    >
+                      {doc.status.charAt(0).toUpperCase() + doc.status.slice(1)}
+                    </span>
+                  </div>
                 </div>
 
                 {doc.message && (
@@ -176,11 +288,75 @@ const ApplicantReviewModal = ({
                   </p>
                 )}
 
+                {doc.files.length > 0 && (
+                  <div className="mt-3 grid grid-cols-2 gap-3">
+                    {doc.files.map((file) => {
+                      const item = fileItems.find(
+                        (fileItem) => fileItem.docId === doc.docId && fileItem.file === file,
+                      );
+                      if (!item) return null;
+
+                      const imageIndex = imageItems.findIndex(
+                        (imageItem) => imageItem.file === item.file,
+                      );
+
+                      return (
+                        <div
+                          key={`${doc.docId}-${file}`}
+                          className="overflow-hidden rounded-[12px] border border-[#e5e7eb] bg-[#f8fafc] dark:border-[#303331] dark:bg-[#141515]"
+                        >
+                          {item.isImage ? (
+                            <button
+                              type="button"
+                              onClick={() => setLightboxIndex(imageIndex)}
+                              className="group relative block h-24 w-full cursor-pointer overflow-hidden bg-[#edf7f5] p-0 dark:bg-[#12342e]"
+                            >
+                              <img
+                                src={getThumbnailUrl(item)}
+                                alt={`${doc.name} attachment`}
+                                className="h-full w-full object-cover"
+                                loading="lazy"
+                                onError={() => tryNextThumbnailUrl(item)}
+                              />
+                              <div className="absolute inset-0 flex items-center justify-center bg-black/0 text-white opacity-0 transition group-hover:bg-black/30 group-hover:opacity-100">
+                                <Icon icon="iconamoon:eye" className="h-6 w-6" />
+                              </div>
+                            </button>
+                          ) : (
+                            <a
+                              href={item.url}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="flex h-24 w-full items-center justify-center bg-[#edf7f5] text-[#096c5b] transition-opacity hover:opacity-80 dark:bg-[#12342e] dark:text-[#72cbb8]"
+                            >
+                              <Icon icon="solar:document-text-bold" className="h-8 w-8" />
+                            </a>
+                          )}
+                          <a
+                            href={item.url}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="flex items-center justify-between gap-2 px-3 py-2 font-['Inter',sans-serif] text-[12px] font-semibold text-[#096c5b] transition-opacity hover:opacity-80 dark:text-[#72cbb8]"
+                          >
+                            <span className="truncate">{item.label}</span>
+                            <Icon
+                              icon="heroicons:arrow-top-right-on-square"
+                              className="h-4 w-4 shrink-0"
+                            />
+                          </a>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+
                 {doc.status === 'pending' && (
                   <>
                     <input
-                      value={rejectionMessages[doc.docId] ?? ''}
-                      onChange={(e) => onRejectionMessageChange(doc.docId, e.target.value)}
+                      value={rejectionMessages[doc.docId] ?? ""}
+                      onChange={(e) =>
+                        onRejectionMessageChange(doc.docId, e.target.value)
+                      }
                       placeholder="Rejection reason (optional)"
                       className="mt-3 w-full rounded-[12px] border border-[#e5e7eb] dark:border-[#303331] bg-[#fafafa] dark:bg-[#141515] px-4 py-2.5 font-['Inter',sans-serif] text-[13px] font-medium text-black dark:text-[#d7e0ef] outline-none transition-colors placeholder:text-[#94a3b8] dark:placeholder:text-[#a4acba] focus:border-[#096c5b] dark:focus:border-[#72cbb8]"
                     />
@@ -212,6 +388,13 @@ const ApplicantReviewModal = ({
             </p>
           )}
         </div>
+
+        <Lightbox
+          open={lightboxIndex >= 0}
+          close={() => setLightboxIndex(-1)}
+          index={Math.max(lightboxIndex, 0)}
+          slides={slides}
+        />
 
         {/* Footer Buttons */}
         <div className="flex shrink-0 items-center justify-center gap-4 border-t border-[#f0f0f0] dark:border-[#303331] bg-white dark:bg-[#141515] px-12 py-5">

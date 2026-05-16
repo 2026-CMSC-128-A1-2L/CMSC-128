@@ -1,16 +1,27 @@
+import { useMemo, useState } from 'react';
 import { Icon } from '@iconify/react';
+import Lightbox from 'yet-another-react-lightbox';
+import 'yet-another-react-lightbox/styles.css';
 import AdminPopupOverlay from './AdminPopupOverlay';
+
+type ReportUser = {
+  _id: string;
+  firstName: string;
+  middleName?: string;
+  lastName: string;
+  emails?: string[];
+};
 
 type ReportData = {
   _id: string;
-  userId: any;
+  userId: string | ReportUser;
   description: string;
   flags: string[];
   evidence: string[];
   status: string;
   createdAt?: string;
   __t?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 };
 
 type Props = {
@@ -18,7 +29,7 @@ type Props = {
   report: ReportData | null;
   onClose: () => void;
   onResolve: (status: 'resolved' | 'dismissed') => void;
-  getReporterName: (userId: any) => string;
+  getReporterName: (userId: string | ReportUser) => string;
   getReportType: (report: ReportData) => string;
 };
 
@@ -53,6 +64,50 @@ const Label = ({ children }: { children: React.ReactNode }) => (
   </p>
 );
 
+const getEvidenceKey = (value: string) => {
+  if (!value.startsWith('http')) return value.replace(/^\/+/, '');
+
+  try {
+    return new URL(value).pathname.replace(/^\/+/, '');
+  } catch {
+    return value;
+  }
+};
+
+const toPublicEvidenceUrl = (value: string) => {
+  const key = getEvidenceKey(value);
+  return `/api/files/public?key=${encodeURIComponent(key)}`;
+};
+
+const getEvidenceLabel = (value: string, index: number) => {
+  const key = getEvidenceKey(value);
+  const fallback = `Evidence ${index + 1}`;
+  return key.split('/').pop() || fallback;
+};
+
+const getImageCandidates = (url: string) => {
+  const candidates = [url];
+
+  try {
+    const parsedUrl = new URL(url, window.location.origin);
+    const pathname = parsedUrl.pathname;
+
+    if (pathname.startsWith('/atlas/atlas/')) {
+      candidates.push(`${parsedUrl.origin}${pathname.replace('/atlas/atlas/', '/atlas/')}`);
+    }
+
+    if (pathname.startsWith('/atlas/')) {
+      candidates.push(`${parsedUrl.origin}${pathname.replace('/atlas/', '/')}`);
+    } else {
+      candidates.push(`${parsedUrl.origin}/atlas${pathname}`);
+    }
+  } catch {
+    return candidates;
+  }
+
+  return [...new Set(candidates)];
+};
+
 export default function ReportDetailModal({
   isOpen,
   report,
@@ -61,6 +116,35 @@ export default function ReportDetailModal({
   getReporterName,
   getReportType,
 }: Props) {
+  const [lightboxIndex, setLightboxIndex] = useState(-1);
+  const [thumbnailUrls, setThumbnailUrls] = useState<Record<number, string>>({});
+  const evidenceItems = useMemo(
+    () =>
+      (report?.evidence ?? []).map((item, index) => ({
+        source: item,
+        label: getEvidenceLabel(item, index),
+        url: toPublicEvidenceUrl(item),
+      })) ?? [],
+    [report?.evidence],
+  );
+  const evidenceCandidates = useMemo(
+    () => evidenceItems.map((item) => getImageCandidates(item.url)),
+    [evidenceItems],
+  );
+  const getThumbnailUrl = (index: number) => thumbnailUrls[index] ?? evidenceCandidates[index]?.[0];
+  const slides = evidenceCandidates.map((candidates, index) => ({
+    src: getThumbnailUrl(index) ?? candidates[0],
+  }));
+  const tryNextThumbnailUrl = (index: number) => {
+    const currentUrl = getThumbnailUrl(index);
+    const candidates = evidenceCandidates[index] ?? [];
+    const currentIndex = candidates.indexOf(currentUrl ?? '');
+    const nextUrl = candidates[currentIndex + 1];
+    if (nextUrl) {
+      setThumbnailUrls((urls) => ({ ...urls, [index]: nextUrl }));
+    }
+  };
+
   if (!isOpen || !report) return null;
   return (
     <AdminPopupOverlay onClose={onClose}>
@@ -117,17 +201,44 @@ export default function ReportDetailModal({
               ))}
             </div>
           </Card>
-          {report.evidence.length > 0 && (
+          {evidenceItems.length > 0 && (
             <Card>
               <Label>Evidence</Label>
-              <div className="flex flex-wrap gap-2">
-                {report.evidence.map((ev) => (
-                  <span
-                    key={ev}
-                    className="rounded-full bg-[#edf7f5] dark:bg-[#12342e] px-3 py-1 font-['Inter',sans-serif] text-[12px] font-semibold text-[#096c5b] dark:text-[#72cbb8]"
+              <div className="grid grid-cols-2 gap-3">
+                {evidenceItems.map((evidence, index) => (
+                  <div
+                    key={evidence.source}
+                    className="overflow-hidden rounded-[12px] border border-[#e5e7eb] bg-[#f8fafc] dark:border-[#303331] dark:bg-[#141515]"
                   >
-                    {ev}
-                  </span>
+                    <button
+                      type="button"
+                      onClick={() => setLightboxIndex(index)}
+                      className="group relative block h-28 w-full cursor-pointer overflow-hidden bg-[#edf7f5] p-0 dark:bg-[#12342e]"
+                    >
+                      <img
+                        src={getThumbnailUrl(index)}
+                        alt={`Report evidence ${index + 1}`}
+                        className="h-full w-full object-cover"
+                        loading="lazy"
+                        onError={() => tryNextThumbnailUrl(index)}
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/0 text-white opacity-0 transition group-hover:bg-black/30 group-hover:opacity-100">
+                        <Icon icon="iconamoon:eye" className="h-6 w-6" />
+                      </div>
+                    </button>
+                    <a
+                      href={evidence.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="flex items-center justify-between gap-2 px-3 py-2 font-['Inter',sans-serif] text-[12px] font-semibold text-[#096c5b] transition-opacity hover:opacity-80 dark:text-[#72cbb8]"
+                    >
+                      <span className="truncate">{evidence.label}</span>
+                      <Icon
+                        icon="heroicons:arrow-top-right-on-square"
+                        className="h-4 w-4 shrink-0"
+                      />
+                    </a>
+                  </div>
                 ))}
               </div>
             </Card>
@@ -147,6 +258,12 @@ export default function ReportDetailModal({
             </div>
           )}
         </div>
+        <Lightbox
+          open={lightboxIndex >= 0}
+          close={() => setLightboxIndex(-1)}
+          index={Math.max(lightboxIndex, 0)}
+          slides={slides}
+        />
         <div className="flex shrink-0 items-center justify-center gap-4 border-t border-[#f0f0f0] dark:border-[#303331] bg-white dark:bg-[#141515] px-12 py-5">
           <button
             type="button"

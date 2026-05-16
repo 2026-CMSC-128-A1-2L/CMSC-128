@@ -40,7 +40,7 @@ const AddBuilding: FunctionComponent = () => {
   const steps = ['Requirements', 'Building Information', 'Finalize'];
 
   return (
-    <div className="w-screen font-inter min-h-screen bg-white dark:bg-darkmode dark:text-gray-100">
+    <div className="w-screen font-inter min-h-screen bg-transparent dark:text-gray-100">
       <div className="px-10 lg:px-20 pt-4 pb-12">
         <button
           type="button"
@@ -85,7 +85,7 @@ const AddBuilding: FunctionComponent = () => {
       {/* ======= FLOATING HELP ICON ========== */}
       <button
         type="button"
-        className="help-button-animated bottom-10 right-10 z-50 cursor-pointer transition-all hover:scale-110 active:scale-95 outline-none"
+        className="help-button-animated z-50 cursor-pointer transition-all hover:scale-110 active:scale-95 outline-none"
         onClick={() => setShowHelp(!showHelp)}
         aria-label="Toggle Help"
       >

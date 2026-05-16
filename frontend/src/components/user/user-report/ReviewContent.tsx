@@ -152,12 +152,12 @@ export default function ReviewContent(props: ReviewContentProps) {
             placeholder="Additional message..."
             value={textReport}
             rows={1}
-            maxLength={500}
+            maxLength={200}
             className="relative min-h-9 max-h-32 w-full resize-none overflow-auto bg-transparent px-4 py-2 border-none outline-none focus:ring-0 placeholder-dimgray text-[14px] font-medium leading-5 text-black"
             onChange={handleMessageChange}
           />
           <span className="absolute -bottom-5 right-3 text-[11px] font-medium text-[#62728b]">
-            {textReport.length}/500
+            {textReport.length}/200
           </span>
         </div>
         <button

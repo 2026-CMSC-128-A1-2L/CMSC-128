@@ -215,7 +215,7 @@ const DmsLanding: FunctionComponent = () => {
   };
 
   return (
-    <div className="user-messages-shell w-full h-screen flex items-start font-inter overflow-hidden relative bg-white text-[#2d3748] dark:bg-[#0f1010] dark:text-[#d7e0ef]">
+    <div className="user-messages-shell w-full h-screen flex items-start font-inter overflow-hidden relative bg-transparent text-[#2d3748] dark:text-[#d7e0ef]">
       {/* Background Accents (Restricted to non-navbar area) */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div className="opacity-50 dark:opacity-100">
@@ -244,7 +244,7 @@ const DmsLanding: FunctionComponent = () => {
 
       {/* ======= FLOATING ICON ========== */}
       <div
-        className="help-button-animated bottom-32 right-10 z-[1000] cursor-pointer transition-all hover:scale-110 active:scale-95"
+        className="help-button-animated z-[1000] cursor-pointer transition-all hover:scale-110 active:scale-95"
         onClick={() => setShowHelp(!showHelp)}
       >
         <img src={TutorialIcon} alt="Help" className="w-16 h-16 drop-shadow-lg" />

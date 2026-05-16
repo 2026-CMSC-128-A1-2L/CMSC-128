@@ -6,6 +6,7 @@ import AdminPagination from '../../components/admin/AdminPagination';
 import FacilityReviewModal from '../../components/admin/FacilityReviewModal';
 import PageBackground from '../../components/general/PageBackground';
 import { FacilityService } from '../../service/FacilityService';
+import { useDebouncedValue } from '../../hooks/useDebouncedValue';
 
 type FacilityDocument = {
   docId: string;
@@ -67,6 +68,7 @@ function Listings() {
   const [facilities, setFacilities] = useState<FacilityForReview[]>([]);
   const [selectedFacilityId, setSelectedFacilityId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const debouncedSearchQuery = useDebouncedValue(searchQuery, 300);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [actionMessage, setActionMessage] = useState<string | null>(null);
@@ -77,7 +79,7 @@ function Listings() {
   const selectedFacility = facilities.find((f) => (f._id ?? f.id) === selectedFacilityId) ?? null;
 
   const filteredFacilities = useMemo(() => {
-    const q = searchQuery.trim().toLowerCase();
+    const q = debouncedSearchQuery.trim().toLowerCase();
     if (!q) return facilities;
     return facilities.filter((f) =>
       [f.name, f.location.text, f.type, f.description]
@@ -86,7 +88,11 @@ function Listings() {
         .toLowerCase()
         .includes(q),
     );
-  }, [facilities, searchQuery]);
+  }, [facilities, debouncedSearchQuery]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [debouncedSearchQuery]);
 
   const totalPages = Math.ceil(filteredFacilities.length / itemsPerPage);
   const paginatedFacilities = useMemo(() => {
@@ -174,10 +180,7 @@ function Listings() {
                   <input
                     type="text"
                     value={searchQuery}
-                    onChange={(e) => {
-                      setSearchQuery(e.target.value);
-                      setCurrentPage(1);
-                    }}
+                    onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search"
                     className="flex-1 bg-transparent font-['Poppins'] text-sm text-black dark:text-[#d7e0ef] outline-none placeholder:text-[#7c8db5] dark:placeholder:text-[#a4acba]"
                   />
