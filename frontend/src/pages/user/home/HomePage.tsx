@@ -1,13 +1,19 @@
-﻿import { type FunctionComponent, useEffect, useRef, useState } from 'react';
-import { Icon } from '@iconify/react';
-import { useSearchParams } from 'react-router-dom';
-import SideBar from '../../../components/user/SideBar';
-import DormCard from '../../../components/user/DormCard';
-import Banner from '../../../components/general/Banner';
-import FilterTab from '../../../components/user/Filter/FilterTab';
-import LoadingPage from '../../general/LoadingPage';
-import { useFacilities, type DormCardData } from '../../../hooks/useFacilities';
-import TutorialIcon from '../../../../assets/help-chat.svg';
+import {
+  type FunctionComponent,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { Icon } from "@iconify/react";
+import { useSearchParams } from "react-router-dom";
+import SideBar from "../../../components/user/SideBar";
+import DormCard from "../../../components/user/DormCard";
+import Banner from "../../../components/general/Banner";
+import FilterTab from "../../../components/user/Filter/FilterTab";
+import LoadingPage from "../../general/LoadingPage";
+import { useFacilities, type DormCardData } from "../../../hooks/useFacilities";
+import TutorialIcon from "../../../../assets/help-chat.svg";
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
@@ -25,7 +31,7 @@ const useCarousel = (total: number) => {
     setCurrent(clamped);
     trackRef.current?.scrollTo({
       left: clamped * (CARD_WIDTH + CARD_GAP),
-      behavior: 'smooth',
+      behavior: "smooth",
     });
   };
 
@@ -34,13 +40,13 @@ const useCarousel = (total: number) => {
 
 // ─── View-all types ───────────────────────────────────────────────────────────
 
-type ViewAllCategory = 'pasalo' | 'popular' | 'near' | 'mayLike' | null;
+type ViewAllCategory = "pasalo" | "popular" | "near" | "mayLike" | null;
 
 const CATEGORY_LABELS: Record<NonNullable<ViewAllCategory>, string> = {
-  pasalo: 'Pasalo Units',
-  popular: 'Popular Listings',
-  near: 'Near Campus',
-  mayLike: 'Listings You May Like',
+  pasalo: "Pasalo Units",
+  popular: "Popular Listings",
+  near: "Near Campus",
+  mayLike: "Listings You May Like",
 };
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
@@ -62,7 +68,10 @@ const NavArrows = ({
       className="flex h-[32px] w-[32px] items-center justify-center rounded-full border border-[#f0f0f0] bg-white transition-opacity hover:opacity-70 disabled:opacity-30"
       aria-label="Previous property"
     >
-      <Icon icon="solar:arrow-left-bold" className="h-[16px] w-[16px] text-[#2f3136]" />
+      <Icon
+        icon="solar:arrow-left-bold"
+        className="h-[16px] w-[16px] text-[#2f3136]"
+      />
     </button>
     <button
       type="button"
@@ -71,7 +80,10 @@ const NavArrows = ({
       className="flex h-[32px] w-[32px] items-center justify-center rounded-full bg-[#e0f7f4] transition-opacity hover:opacity-70 disabled:opacity-30"
       aria-label="Next property"
     >
-      <Icon icon="solar:arrow-right-bold" className="h-[16px] w-[16px] text-[#096c5b]" />
+      <Icon
+        icon="solar:arrow-right-bold"
+        className="h-[16px] w-[16px] text-[#096c5b]"
+      />
     </button>
   </div>
 );
@@ -118,11 +130,22 @@ const CarouselSection = ({
         <div className="h-full flex items-center gap-2">
           <div className="w-fit h-full flex items-start gap-2">
             <b className="w-fit relative flex items-start">{title}</b>
-            {infoIcon && <Icon icon="material-symbols-light:info-outline" className="w-5 h-5" />}
+            {infoIcon && (
+              <Icon
+                icon="material-symbols-light:info-outline"
+                className="w-5 h-5"
+              />
+            )}
           </div>
-          {category && <ViewAllLink category={category} onViewAll={onViewAll} />}
+          {category && (
+            <ViewAllLink category={category} onViewAll={onViewAll} />
+          )}
         </div>
-        <NavArrows current={carousel.current} total={carousel.total} scrollTo={carousel.scrollTo} />
+        <NavArrows
+          current={carousel.current}
+          total={carousel.total}
+          scrollTo={carousel.scrollTo}
+        />
       </div>
       <div
         ref={carousel.trackRef}
@@ -145,9 +168,18 @@ const CarouselSection = ({
 
 // ─── Empty / error states ─────────────────────────────────────────────────────
 
-const EmptyState = ({ onBack, label }: { onBack: () => void; label: string }) => (
+const EmptyState = ({
+  onBack,
+  label,
+}: {
+  onBack: () => void;
+  label: string;
+}) => (
   <div className="w-full flex flex-col items-center justify-center py-20 gap-3 text-center">
-    <Icon icon="mdi:home-search-outline" className="w-16 h-16 text-unselected" />
+    <Icon
+      icon="mdi:home-search-outline"
+      className="w-16 h-16 text-unselected"
+    />
     <p className="text-[1rem] font-semibold text-dimgray">{label}</p>
     <button
       type="button"
@@ -159,10 +191,18 @@ const EmptyState = ({ onBack, label }: { onBack: () => void; label: string }) =>
   </div>
 );
 
-const ErrorState = ({ message, onRetry }: { message: string; onRetry: () => void }) => (
+const ErrorState = ({
+  message,
+  onRetry,
+}: {
+  message: string;
+  onRetry: () => void;
+}) => (
   <div className="w-full flex flex-col items-center justify-center py-20 gap-3 text-center">
     <Icon icon="mdi:alert-circle-outline" className="w-16 h-16 text-red-400" />
-    <p className="text-[1rem] font-semibold text-dimgray">Could not load listings</p>
+    <p className="text-[1rem] font-semibold text-dimgray">
+      Could not load listings
+    </p>
     <p className="text-[0.875rem] text-unselected max-w-xs">{message}</p>
     <button
       type="button"
@@ -177,24 +217,24 @@ const ErrorState = ({ message, onRetry }: { message: string; onRetry: () => void
 const ApplicationGuideModal = ({ onClose }: { onClose: () => void }) => {
   const steps = [
     {
-      title: 'Pick a dorm',
+      title: "Pick a dorm",
       description: (
         <>
-          Select your preferred residence from the Listings dashboard. You can filter by{' '}
-          <b>Budget-Friendly Picks</b> or browse <b>Popular Listings</b> to find the unit that best
-          fit your needs.
+          Select your preferred residence from the Listings dashboard. You can
+          filter by <b>Budget-Friendly Picks</b> or browse{" "}
+          <b>Popular Listings</b> to find the unit that best fit your needs.
         </>
       ),
     },
     {
-      title: 'Fill up your details',
+      title: "Fill up your details",
       description:
-        'Once you select a dorm, a detailed summary of your choice will be displayed. Fill out the necessary information before submitting your application to the landlord.',
+        "Once you select a dorm, a detailed summary of your choice will be displayed. Fill out the necessary information before submitting your application to the landlord.",
     },
     {
-      title: 'Wait for confirmation',
+      title: "Wait for confirmation",
       description:
-        'Once confirmed, the landlord will reach out to you via system notifications. Be sure to check your DMs regularly for updates.',
+        "Once confirmed, the landlord will reach out to you via system notifications. Be sure to check your DMs regularly for updates.",
     },
   ];
 
@@ -268,13 +308,15 @@ const HomePage: FunctionComponent = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
-  const [searchTerm, setSearchTerm] = useState(searchParams.get('search') ?? '');
+  const [searchTerm, setSearchTerm] = useState(
+    searchParams.get("search") ?? "",
+  );
   const [viewAllCategory, setViewAllCategory] = useState<ViewAllCategory>(null);
   const [filterCriteria, setFilterCriteria] = useState({
     minPrice: 0,
     maxPrice: 10000,
-    pax: 'Any' as number | 'Any',
-    propertyType: 'Dormitory',
+    pax: "Any" as number | "Any",
+    propertyType: "Dormitory",
     selectedEssentials: [] as string[],
     distance: 1,
   });
@@ -286,7 +328,8 @@ const HomePage: FunctionComponent = () => {
   // TODO: extend with rating, distance, and tags once available in DormCardData
   const filterApplied = facilities.filter(
     (dorm) =>
-      dorm.price.min >= filterCriteria.minPrice && dorm.price.max <= filterCriteria.maxPrice,
+      dorm.price.min >= filterCriteria.minPrice &&
+      dorm.price.max <= filterCriteria.maxPrice,
   );
 
   // Apply search on top of the filtered results
@@ -301,9 +344,14 @@ const HomePage: FunctionComponent = () => {
 
   // Category slices — swap for real filtered endpoints later
   const pasaloDorms = filterApplied.slice(0, 10);
-  const popularDorms = filterApplied.slice(0, 10);
+  const popularDorms = [...filterApplied]
+    .sort((a, b) => parseFloat(b.rating) - parseFloat(a.rating))
+    .slice(0, 10);
   const nearDorms = filterApplied.slice(0, 10);
-  const mayLikeDorms = filterApplied.slice(0, 10);
+  const mayLikeDorms = useMemo(
+    () => [...filterApplied].sort(() => Math.random() - 0.5).slice(0, 10),
+    [filterApplied],
+  );
 
   const CATEGORY_DATA: Record<NonNullable<ViewAllCategory>, DormCardData[]> = {
     pasalo: pasaloDorms,
@@ -314,23 +362,23 @@ const HomePage: FunctionComponent = () => {
 
   const handleViewAll = (category: ViewAllCategory) => {
     setViewAllCategory(category);
-    setSearchTerm('');
+    setSearchTerm("");
   };
 
   const handleSearch = (value: string) => {
     setSearchTerm(value);
     const nextParams = new URLSearchParams(searchParams);
     if (value.trim()) {
-      nextParams.set('search', value);
+      nextParams.set("search", value);
     } else {
-      nextParams.delete('search');
+      nextParams.delete("search");
     }
     setSearchParams(nextParams, { replace: true });
     if (value.trim().length > 0) setViewAllCategory(null);
   };
 
   useEffect(() => {
-    const searchFromUrl = searchParams.get('search') ?? '';
+    const searchFromUrl = searchParams.get("search") ?? "";
     setSearchTerm(searchFromUrl);
     if (searchFromUrl.trim()) setViewAllCategory(null);
   }, [searchParams]);
@@ -350,7 +398,10 @@ const HomePage: FunctionComponent = () => {
             {/* search bar */}
             <div className="w-full h-full overflow-hidden flex items-center pb-6 box-border">
               <div className="w-full flex items-center transition-all duration-300 bg-[#f8f9fa] rounded-num-12 py-3 pl-3 pr-4 border border-transparent focus-within:bg-white focus-within:shadow-[0_8px_10px_rgb(0,0,0,0.06)] focus-within:transform focus-within:-translate-y-[1px]">
-                <Icon icon="ic:outline-search" className="w-5 h-5 text-unselected shrink-0" />
+                <Icon
+                  icon="ic:outline-search"
+                  className="w-5 h-5 text-unselected shrink-0"
+                />
                 <input
                   type="text"
                   placeholder="Search for Dorms, Apartments, or Locations (e.g. UPLB, Umali Subdivision)"
@@ -362,10 +413,13 @@ const HomePage: FunctionComponent = () => {
                 {searchTerm && (
                   <button
                     type="button"
-                    onClick={() => handleSearch('')}
+                    onClick={() => handleSearch("")}
                     className="text-unselected hover:text-darkgreen"
                   >
-                    <Icon icon="material-symbols:close-rounded" className="w-4 h-4" />
+                    <Icon
+                      icon="material-symbols:close-rounded"
+                      className="w-4 h-4"
+                    />
                   </button>
                 )}
               </div>
@@ -375,7 +429,9 @@ const HomePage: FunctionComponent = () => {
               {/* greeting / filter button */}
               <div className="w-full flex items-center justify-between box-border">
                 <div className="w-full h-8 flex-1 flex flex-col items-start justify-center">
-                  <b className="relative leading-8 text-teal">Mabuhay, iskolar!</b>
+                  <b className="relative leading-8 text-teal">
+                    Mabuhay, iskolar!
+                  </b>
                 </div>
                 <div className="w-fit h-fit flex items-center">
                   <button
@@ -415,16 +471,17 @@ const HomePage: FunctionComponent = () => {
                     <div className="w-full flex items-center justify-between">
                       <div className="flex items-center gap-2 flex-wrap">
                         <b className="text-[1rem] text-darkgreen">
-                          Results for <span className="text-teal">"{searchTerm}"</span>
+                          Results for{" "}
+                          <span className="text-teal">"{searchTerm}"</span>
                         </b>
                         <span className="text-[0.75rem] text-unselected font-normal">
-                          — {filteredDorms.length} listing{filteredDorms.length !== 1 ? 's' : ''}{' '}
-                          found
+                          — {filteredDorms.length} listing
+                          {filteredDorms.length !== 1 ? "s" : ""} found
                         </span>
                       </div>
                       <button
                         type="button"
-                        onClick={() => handleSearch('')}
+                        onClick={() => handleSearch("")}
                         className="text-[0.75rem] text-teal-100 underline font-semibold hover:opacity-70 transition-opacity whitespace-nowrap"
                       >
                         Clear search
@@ -439,7 +496,7 @@ const HomePage: FunctionComponent = () => {
                       </div>
                     ) : (
                       <EmptyState
-                        onBack={() => handleSearch('')}
+                        onBack={() => handleSearch("")}
                         label={`No listings found for "${searchTerm}"`}
                       />
                     )}
@@ -454,14 +511,19 @@ const HomePage: FunctionComponent = () => {
                           onClick={() => setViewAllCategory(null)}
                           className="flex items-center justify-center h-8 w-8 rounded-full bg-whitesmoke-100 hover:bg-lightcyan/45 transition-colors"
                         >
-                          <Icon icon="solar:arrow-left-bold" className="w-4 h-4 text-darkgreen" />
+                          <Icon
+                            icon="solar:arrow-left-bold"
+                            className="w-4 h-4 text-darkgreen"
+                          />
                         </button>
                         <b className="text-[1rem] text-darkgreen">
                           {CATEGORY_LABELS[viewAllCategory]}
                         </b>
                         <span className="text-[0.75rem] text-unselected font-normal">
                           — {CATEGORY_DATA[viewAllCategory].length} listing
-                          {CATEGORY_DATA[viewAllCategory].length !== 1 ? 's' : ''}
+                          {CATEGORY_DATA[viewAllCategory].length !== 1
+                            ? "s"
+                            : ""}
                         </span>
                       </div>
                       <button
@@ -552,7 +614,11 @@ const HomePage: FunctionComponent = () => {
         onClick={() => setShowHelp(true)}
         aria-label="Open application guide"
       >
-        <img src={TutorialIcon} alt="Help" className="w-16 h-16 drop-shadow-lg" />
+        <img
+          src={TutorialIcon}
+          alt="Help"
+          className="w-16 h-16 drop-shadow-lg"
+        />
       </button>
 
       {showHelp && <ApplicationGuideModal onClose={() => setShowHelp(false)} />}
