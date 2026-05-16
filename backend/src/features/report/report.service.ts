@@ -29,9 +29,46 @@ export type ResolveReportArgs = {
 };
 
 export const getReports = async () => {
-  return await Report.find()
+  const reports = await Report.find()
     .populate('userId', 'firstName middleName lastName emails')
-    .sort({ createdAt: -1 });
+    .sort({ createdAt: -1 })
+    .lean();
+
+  const userIds = [
+    ...new Set(
+      reports.map((r) => {
+        const uid = r.userId;
+        return typeof uid === 'object' && uid !== null ? (uid as any)._id : uid;
+      }),
+    ),
+  ];
+
+  const rentals = await Rental.find({
+    userId: { $in: userIds },
+    status: 'active',
+  })
+    .populate('facilityId', 'name')
+    .lean();
+
+  const facilityByUserId = new Map<string, string>();
+  for (const rental of rentals) {
+    const uid = rental.userId.toString();
+    if (!facilityByUserId.has(uid) && rental.facilityId) {
+      const facility = rental.facilityId as any;
+      facilityByUserId.set(uid, facility.name || null);
+    }
+  }
+
+  return reports.map((report) => {
+    const uid =
+      typeof report.userId === 'object' && report.userId !== null
+        ? (report.userId as any)._id.toString()
+        : (report.userId as any).toString();
+    return {
+      ...report,
+      reporterFacility: facilityByUserId.get(uid) || null,
+    };
+  });
 };
 
 export const getReport = async (reportId: mongoose.Types.ObjectId) => {

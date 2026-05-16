@@ -26,6 +26,7 @@ type ReportData = {
   listingId?: string;
   facilityId?: string;
   userReported?: string | ReportUser;
+  reporterFacility?: string | null;
   createdAt?: string;
   updatedAt?: string;
 };
