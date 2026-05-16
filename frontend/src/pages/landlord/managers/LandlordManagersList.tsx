@@ -22,38 +22,47 @@ import { useAuthStore } from "../../../store/useAuthStore";
 const Managers = () => {
   const navigate = useNavigate();
   const [isAddManagerOpen, setAddManagerOpen] = useState(false);
+  const [addManagerFacilityId, setAddManagerFacilityId] = useState<string>("");
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [reportTarget, setReportTarget] = useState<Manager | null>(null);
-  const [removeTarget, setRemoveTarget] = useState<Manager | null>(null);
+  const [removeTarget, setRemoveTarget] = useState<{
+    manager: Manager;
+    facilityId: string;
+  } | null>(null);
   //
   const [properties, setProperties] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   //
   const { user } = useAuthStore();
 
+  const fetchFacilitiesData = async () => {
+    try {
+      const response = await FacilityService.getFacilities();
+      const landlordFacilities = response.data.filter((f: any) => {
+        const fLandlordId = (f.landlordId?._id || f.landlordId)?.toString();
+        const myId =
+          (user as any)._id?.toString() || (user as any).id?.toString();
+        return fLandlordId === myId;
+      });
+      setProperties(landlordFacilities);
+    } catch (error) {
+      console.error("Error fetching manager data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // TODO: add bauble for zero facilities owned
   useEffect(() => {
     if (!user) return;
-    const fetchFacilitiesData = async () => {
-      try {
-        const response = await FacilityService.getFacilities();
-        const landlordFacilities = response.data.filter((f: any) => {
-          const fLandlordId = (f.landlordId?._id || f.landlordId)?.toString();
-          const myId =
-            (user as any)._id?.toString() || (user as any).id?.toString();
-          return fLandlordId === myId;
-        });
-        setProperties(landlordFacilities);
-      } catch (error) {
-        console.error("Error fetching manager data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchFacilitiesData();
   }, [user]);
 
-  const handleAction = (manager: Manager, action: ManagerAction) => {
+  const handleAction = (
+    manager: Manager,
+    action: ManagerAction,
+    facilityId: string,
+  ) => {
     setOpenMenuId(null);
     if (action === "message") {
       navigate("/landlord/messages");
@@ -64,7 +73,7 @@ const Managers = () => {
       return;
     }
     if (action === "remove") {
-      setRemoveTarget(manager);
+      setRemoveTarget({ manager, facilityId });
     }
   };
 
@@ -88,7 +97,7 @@ const Managers = () => {
 
         <div className="flex flex-col gap-[48px]">
           {properties.map((property) => {
-            const propId = property.id || property._id;
+            const propId = (property.id || property._id).toString();
             const propertyManagers = Array.from(
               new Map(
                 (property.managers || [])
@@ -111,7 +120,10 @@ const Managers = () => {
                     {property.name}
                   </span>
                   <button
-                    onClick={() => setAddManagerOpen(true)}
+                    onClick={() => {
+                      setAddManagerFacilityId(propId);
+                      setAddManagerOpen(true);
+                    }}
                     aria-label={`Add manager to ${property.name}`}
                     className="flex items-center justify-center rounded-full transition-opacity hover:opacity-70"
                   >
@@ -129,7 +141,7 @@ const Managers = () => {
                 ) : (
                   <div className="flex flex-wrap gap-[24px]">
                     {propertyManagers.map((manager) => {
-                      const cardKey = `${property.id}-${manager.id}`;
+                      const cardKey = `${propId}-${manager.id}`;
                       const menuOpen = openMenuId === cardKey;
 
                       return (
@@ -185,7 +197,7 @@ const Managers = () => {
                               open={menuOpen}
                               onClose={() => setOpenMenuId(null)}
                               onAction={(action) =>
-                                handleAction(manager, action)
+                                handleAction(manager, action, propId)
                               }
                               subjectName={`${manager.firstName} ${manager.lastName}`}
                             />
@@ -204,6 +216,7 @@ const Managers = () => {
       <AddManager
         isOpen={isAddManagerOpen}
         onClose={() => setAddManagerOpen(false)}
+        facilityId={addManagerFacilityId}
       />
       <ReportManager
         isOpen={!!reportTarget}
@@ -213,7 +226,9 @@ const Managers = () => {
       <RemoveManager
         isOpen={!!removeTarget}
         onClose={() => setRemoveTarget(null)}
-        manager={removeTarget}
+        manager={removeTarget?.manager || null}
+        facilityId={removeTarget?.facilityId || ""}
+        onSuccess={fetchFacilitiesData}
       />
     </LandlordLayout>
   );
