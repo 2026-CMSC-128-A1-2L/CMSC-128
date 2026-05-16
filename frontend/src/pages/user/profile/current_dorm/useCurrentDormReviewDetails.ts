@@ -156,10 +156,12 @@ const mapDetails = (
   source: CurrentDormSource,
   facility?: FacilityResponse,
 ): CurrentDormReviewDetails => {
-  const listingId = getId(source.listingId);
+  const unit = source.unitId;
+  const listingId =
+    getId(source.listingId) ??
+    (unit && typeof unit === 'object' ? getId(unit.listingId as EntityRef) : undefined);
   const listingFromFacility = facility?.listings?.find((listing) => getId(listing) === listingId);
   const listing = source.listingId;
-  const unit = source.unitId;
   const roomType =
     getRoomLabel(listing) !== 'Selected Room'
       ? getRoomLabel(listing)
