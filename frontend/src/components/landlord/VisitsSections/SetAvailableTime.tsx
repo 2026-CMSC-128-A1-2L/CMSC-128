@@ -6,9 +6,10 @@ const DAYS = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
 
 interface SetAvailableTimeProps {
   onClose?: () => void;
+  onSave?: () => void;
 }
 
-const SetAvailableTime: FunctionComponent<SetAvailableTimeProps> = ({ onClose }) => {
+const SetAvailableTime: FunctionComponent<SetAvailableTimeProps> = ({ onClose, onSave }) => {
   const [availability, setAvailability] = useState<boolean[][]>(
     Array.from({ length: 10 }, () => Array(7).fill(false)),
   );
@@ -76,12 +77,16 @@ const SetAvailableTime: FunctionComponent<SetAvailableTimeProps> = ({ onClose })
   const handleSave = useCallback(async () => {
     try {
       await api.patch('/api/availability/me', { grid: availability });
-      onClose?.();
+      if (onSave) {
+        onSave();
+      } else {
+        onClose?.();
+      }
     } catch (error) {
       console.error('Failed to save availability:', error);
       alert('Failed to save availability. Please try again.');
     }
-  }, [availability, onClose]);
+  }, [availability, onClose, onSave]);
   return (
     <div className="relative rounded-2xl bg-white dark:bg-[#141515] w-[900px] overflow-hidden flex flex-col items-start py-8 px-12 box-border gap-2.5 text-center text-[24px] text-teal dark:text-[#72cbb8] font-inter">
       <div className="self-stretch overflow-hidden flex flex-col items-start p-num-10 gap-2.5">
