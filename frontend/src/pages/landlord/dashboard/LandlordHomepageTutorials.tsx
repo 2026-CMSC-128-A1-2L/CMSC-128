@@ -159,7 +159,7 @@ const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose 
                   </button>
                 )}
 
-{/* for commit purposes, ignore pls hahaha */}
+                {/* for commit purposes, ignore pls hahaha */}
                 <button
                   onClick={handleNext}
                   className="w-[54px] rounded-lg bg-[#d0dbe3] py-1 text-[12px] text-[#2f3136] font-semibold font-lora text-center cursor-pointer hover:brightness-95 transition-all"

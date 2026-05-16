@@ -3,6 +3,7 @@ import type { QueryFilter } from 'mongoose';
 import { AppError } from '../../error.js';
 import { combineFilters } from '../../middleware.js';
 import { ApplicationForm } from '../application/application.model.js';
+import { Billing } from '../billing/billing.model.js';
 import { Rental, type RentalType } from './rental.model.js';
 import { Unit } from '../unit/unit.model.js';
 
@@ -19,6 +20,10 @@ export type CreateRentalArguments = {
   expectedMoveOutDate?: Date | null;
 };
 
+type CreateRentalOptions = {
+  session?: mongoose.ClientSession;
+};
+
 // No activities field yet
 export type UpdateRentalArguments = {
   status?: string | null;
@@ -29,7 +34,10 @@ export type UpdateRentalArguments = {
   actualMoveOutDate?: Date | null;
 };
 
-export const createRental = async (data: CreateRentalArguments) => {
+export const createRental = async (
+  data: CreateRentalArguments,
+  options: CreateRentalOptions = {},
+) => {
   if (
     data.expectedMoveInDate &&
     data.expectedMoveOutDate &&
@@ -38,7 +46,7 @@ export const createRental = async (data: CreateRentalArguments) => {
     throw new AppError(422, 'Expected move-out date should not be before expected move-in date.');
   }
 
-  const unit = await Unit.findById(data.unitId);
+  const unit = await Unit.findById(data.unitId).session(options.session ?? null);
 
   if (!unit) throw new AppError(404, 'Unit not found.');
 
@@ -54,11 +62,26 @@ export const createRental = async (data: CreateRentalArguments) => {
     status: 'active',
     expectedMoveInDate: data.expectedMoveInDate,
     expectedMoveOutDate: data.expectedMoveOutDate,
-  }).save();
+  }).save(options.session ? { session: options.session } : undefined);
 
   // add the rental id of the newly created rental to the currentRentals of unit
   unit.currentRentals.push(newRental._id);
-  await unit.save();
+  await unit.save(options.session ? { session: options.session } : undefined);
+
+  await new Billing({
+    userId: newRental.userId,
+    unitId: newRental.unitId,
+    facilityId: newRental.facilityId,
+    rentalId: newRental._id,
+    dueDate: data.expectedMoveInDate ?? new Date(),
+    paymentDate: null,
+    paidAmount: 0,
+    totalAmount: unit.price,
+    paymentStatus: 'unpaid',
+    documents: [],
+    paymentMethod: [],
+    breakdown: [],
+  }).save(options.session ? { session: options.session } : undefined);
 
   return newRental;
 };
@@ -166,7 +189,9 @@ export const getRentalsByUser = async (
   userId: mongoose.Types.ObjectId,
   filters: QueryFilter<RentalType>,
 ) => {
-  const rentals = await Rental.find(combineFilters(filters, { userId }));
+  const rentals = await Rental.find(combineFilters(filters, { userId }))
+    .populate('facilityId', 'name location media')
+    .populate('unitId', 'roomNumber location listingId');
 
   if (!rentals.length) {
     const rentalsNoFilter = await Rental.find({ userId });

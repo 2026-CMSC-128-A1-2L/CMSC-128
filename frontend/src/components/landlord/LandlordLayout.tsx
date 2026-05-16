@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Icon } from '@iconify/react';
 import PageBackground from '../general/PageBackground';
+import RightArrow from '../../../assets/iconamoon_arrow-right-2.svg';
 import SideBarLandlord, { type SideBarLandlordItemKey } from './SideBarLandlord';
 import LandlordFooter from './LandlordFooter';
 import TutorialBubble from '../../../../frontend/src/components/landlord/TutorialsForLandlord';
@@ -15,17 +15,17 @@ export type BreadcrumbItem = {
 type LandlordLayoutProps = {
   activeSidebarItem?: SideBarLandlordItemKey;
   breadcrumbs?: BreadcrumbItem[];
-  activeTab?:string;
+  activeTab?: string;
   children: ReactNode;
 };
 
-const LandlordLayout = ({
-  activeSidebarItem,
-  breadcrumbs = [],
-  children,
-}: LandlordLayoutProps) => {
+const LandlordLayout = ({ activeSidebarItem, breadcrumbs = [], children }: LandlordLayoutProps) => {
   const navigate = useNavigate();
   const [showHelp, setShowHelp] = useState(false);
+  const normalizedBreadcrumbs =
+    breadcrumbs.length >= 2 && breadcrumbs[0]?.label !== 'Home'
+      ? [{ label: 'Home', to: '/landlord-homepage' }, ...breadcrumbs]
+      : breadcrumbs;
 
   return (
     <div className="landlord-shell relative flex h-screen w-screen flex-col overflow-hidden">
@@ -33,47 +33,49 @@ const LandlordLayout = ({
       <div className="relative z-10 flex flex-1 overflow-hidden">
         <SideBarLandlord
           activeItem={activeSidebarItem}
-          onProfileClick={() => navigate("/landlord/profile/switcher")}
-          onAddListing={() => navigate("/landlord/properties/new")}
+          onProfileClick={() => navigate('/landlord/profile/switcher')}
+          onAddListing={() => navigate('/landlord/properties/new')}
         />
 
         <div className="flex min-w-0 flex-1 flex-col overflow-hidden pl-[68px] md:pl-0">
           <main className="flex min-w-0 flex-1 flex-col overflow-y-auto">
-            {breadcrumbs.length > 0 && (
+            {normalizedBreadcrumbs.length >= 3 && (
               <nav
                 aria-label="Breadcrumb"
-                className="flex h-[64px] shrink-0 items-end gap-[10px] p-[10px]"
+                className="flex h-[64px] shrink-0 items-end gap-[10px] p-[10px] font-inter text-num-12 font-semibold"
               >
-                <ol className="flex h-[24px] items-center gap-[6px]">
-                  {breadcrumbs.map((item, idx) => {
-                    const isLast = idx === breadcrumbs.length - 1;
-                    const labelClass =
-                      "font-['Lora',serif] text-[14px] font-semibold whitespace-nowrap";
+                <ol className="flex h-[24px] items-center">
+                  {normalizedBreadcrumbs.map((item, idx) => {
+                    const isLast = idx === normalizedBreadcrumbs.length - 1;
                     return (
                       <li
                         key={`${item.to ?? item.label}-${item.label}`}
-                        className="flex items-center gap-[6px] pl-2 pb-2"
+                        className="flex items-center pb-2 pl-2"
                       >
-                        {item.to ? (
+                        {!isLast && item.to ? (
                           <Link
                             to={item.to}
-                            className={`${labelClass} text-[#096c5b] hover:underline dark:text-teal-100`}
+                            className="whitespace-nowrap text-black transition-colors hover:text-darkslategray dark:text-[#edf6f4] dark:hover:text-[#72cbb8]"
                           >
                             {item.label}
                           </Link>
                         ) : (
                           <span
-                            className={`${labelClass} text-[#2f3136] dark:text-[#d7e0ef]`}
-                            aria-current={isLast ? "page" : undefined}
+                            className={`whitespace-nowrap ${
+                              isLast
+                                ? 'text-darkslategray dark:text-[#d7e0ef]'
+                                : 'text-black dark:text-[#edf6f4]'
+                            }`}
+                            aria-current={isLast ? 'page' : undefined}
                           >
                             {item.label}
                           </span>
                         )}
                         {!isLast && (
-                          <Icon
-                            icon="iconamoon:arrow-right-2"
-                            className="h-[24px] w-[24px] text-[#2f3136] dark:text-[#a4acba]"
-                            aria-hidden="true"
+                          <img
+                            src={RightArrow}
+                            alt="Separator"
+                            className="mx-2 h-[24px] w-[24px]"
                           />
                         )}
                       </li>

@@ -555,7 +555,10 @@ export const getTenantsByLandlord = async (landlordId: mongoose.Types.ObjectId) 
   for (const billing of allBillings) {
     const key = billing.rentalId.toString();
     const existing = latestBillingByRentalId.get(key);
-    if (!existing || (billing.dueDate && (!existing.dueDate || billing.dueDate > existing.dueDate))) {
+    if (
+      !existing ||
+      (billing.dueDate && (!existing.dueDate || billing.dueDate > existing.dueDate))
+    ) {
       latestBillingByRentalId.set(key, billing);
     }
   }

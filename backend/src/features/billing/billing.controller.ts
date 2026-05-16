@@ -17,7 +17,9 @@ import {
   updateBilling,
   updateBillingPayment,
   sumbitBillingPayment,
+  getBillingsPdf,
 } from './billing.service.js';
+import { generateBillingPdfBuffer } from './pdf.js';
 import { AppError } from '../../error.js';
 
 import assert from 'node:assert';
@@ -72,7 +74,7 @@ export const routeGetUnitBillings: RequestHandler = async (req, res, _next) => {
 // GET /billings/summary
 export const routeGetBillingsSummary: RequestHandler = async (req, res, _next) => {
   assert.ok(req.user);
-  const userId = ObjectIdSchema.parse(req.user._id);
+  const userId = ObjectIdSchema.parse(req.user._id.toString());
   const billingsSummary = await getBillingsSummary(userId, res.locals.filters);
   res.status(200).json({ data: billingsSummary });
 };
@@ -94,4 +96,22 @@ export const routeSubmitBillingPayment: RequestHandler = async (req, res, _next)
   const params = SubmitBillingPaymentArgumentsSchema.parse(req.body);
   const billing = await sumbitBillingPayment(billingId, params, res.locals.filters);
   res.status(200).json({ data: billing });
+};
+
+export const routeDownloadBillingPdf: RequestHandler = async (req, res, _next) => {
+  const userId = ObjectIdSchema.parse(req.params.userId);
+  const pdfData = await getBillingsPdf(userId, req.query, res.locals.filters);
+
+  const pdf = await generateBillingPdfBuffer(pdfData);
+  const safeName = pdfData.studentName ? pdfData.studentName.replace(/\s+/g, '_') : 'User';
+  const filename = `Billing_${safeName}.pdf`;
+
+  res.set({
+    'Content-Type': 'application/pdf',
+    'Content-Disposition': `attachment; filename="${filename}"`,
+    'Content-Length': pdf.length,
+    'Cache-Control': 'no-cache',
+  });
+
+  res.status(200).send(pdf);
 };

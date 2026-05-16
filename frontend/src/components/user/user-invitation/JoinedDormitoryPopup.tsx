@@ -22,7 +22,9 @@ const JoinedDormitoryPopup: FunctionComponent<JoinedDormitoryPopupType> = ({
             </div>
           </div>
           <div className="self-stretch overflow-hidden flex flex-col items-center justify-center p-num-10 gap-2.5">
-            <b className="self-stretch relative leading-num-32 text-gray-200 dark:text-white">Successfully joined dormitory!</b>
+            <b className="self-stretch relative leading-num-32 text-gray-200 dark:text-white">
+              Successfully joined dormitory!
+            </b>
             <div className="self-stretch relative text-num-14 leading-5 font-medium text-gray-200 dark:text-[#a4acba]">
               Welcome home! You are now a member of the dormitory. You can now access all shared
               features and dorm settings.

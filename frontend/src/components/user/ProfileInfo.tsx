@@ -227,7 +227,7 @@ const ProfileInfo = () => {
 
   return (
     <div className="self-stretch h-[382px] rounded-2xl flex flex-col items-start gap-3 dark:text-[#a4acba]">
-      <div className="self-stretch rounded-2xl overflow-hidden flex flex-col items-start p-num-32">
+      <div className="self-stretch rounded-2xl overflow-hidden flex flex-col items-start px-num-32 pb-num-32">
         <div className="self-stretch flex flex-col items-start gap-2.5">
           <b className="relative">{roleLabel(user?.userType)} Profile</b>
           <div className="flex items-center justify-center gap-2.5 text-[24px] text-darkslategray-200 dark:text-[#b9eadf]">
@@ -388,7 +388,9 @@ const ProfileInfo = () => {
                 to="/finance"
                 className="flex items-center gap-1 text-[12px] text-teal-100 cursor-pointer hover:underline dark:text-[#72cbb8]"
               >
-                <div className="relative font-medium text-[#096c5b] dark:text-[#72cbb8]">See Finance</div>
+                <div className="relative font-medium text-[#096c5b] dark:text-[#72cbb8]">
+                  See Finance
+                </div>
                 <Icon
                   icon="solar:arrow-right-up-linear"
                   className="h-4 w-4 relative text-[#096c5b] dark:text-[#72cbb8]"

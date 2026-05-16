@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { documentSchema, type DocumentType } from '../document/document.model.js';
 
-const PAYMENT_STATUS = ['unpaid', 'paid', 'overdue'];
+const PAYMENT_STATUS = ['unpaid', 'paid', 'overdue', 'partially_paid'] as const;
 const PAYMENT_METHODS = ['gcash', 'bank_transfer'];
 type PaymentStatusType = (typeof PAYMENT_STATUS)[number];
 type PaymentMethodType = (typeof PAYMENT_METHODS)[number];
@@ -50,10 +50,14 @@ const billingSchema = new mongoose.Schema<BillingType>(
       default: 'unpaid',
     },
 
-    // TODO: Clarify
     paymentMethod: {
-      method: { type: String, enum: PAYMENT_METHODS, required: true },
-      qr: { type: [documentSchema], default: [] },
+      type: [
+        {
+          method: { type: String, enum: PAYMENT_METHODS, required: true },
+          qr: { type: [documentSchema], default: [] },
+        },
+      ],
+      default: [],
     },
 
     // URL or file path to the proof of payment

@@ -1,6 +1,6 @@
 import type { FunctionComponent } from 'react';
 import { Icon } from '@iconify/react';
-import success from '../../../../assets/reportSuccess.svg'; 
+import success from '../../../../assets/reportSuccess.svg';
 
 type Props = {
   onClose: () => void;
@@ -9,14 +9,13 @@ type Props = {
 const ConfirmReview: FunctionComponent<Props> = ({ onClose }) => {
   return (
     <div className="w-full max-w-md mx-auto relative rounded-2xl bg-white shadow-xl overflow-hidden flex flex-col items-center p-8 box-border text-center font-inter">
-      
       <div className="self-stretch flex flex-col items-center py-8 gap-6">
         {/* Success Icon Section */}
         <div className="flex flex-col items-center gap-4">
           <div className="bg-lightcyan/20 rounded-full flex items-center justify-center p-4">
             {/* If you prefer your SVG: */}
             <img className="h-20 w-20" alt="Success" src={success} />
-            
+
             {/* Alternatively, using an iconify star/check:
             <Icon icon="solar:star-bold-duotone" className="h-20 w-20 text-teal" /> 
             */}

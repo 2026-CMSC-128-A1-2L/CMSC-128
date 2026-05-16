@@ -199,8 +199,8 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
 
           setCurrentRental(
             rentals.find((rental) => rental.status === 'active') ??
-            rentals.find((rental) => rental.status === 'inactive') ??
-            rentals[0],
+              rentals.find((rental) => rental.status === 'inactive') ??
+              rentals[0],
           );
         }
 
@@ -380,7 +380,9 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
                           <div className="flex flex-col items-start gap-1">
                             <b className="relative">Student Number</b>
                             <b className="relative text-black">
-                              {isStudent ? redactStudentNumber(user?.studentNumber) : 'Not applicable'}
+                              {isStudent
+                                ? redactStudentNumber(user?.studentNumber)
+                                : 'Not applicable'}
                             </b>
                           </div>
 
@@ -436,9 +438,10 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
                           <button
                             type="button"
                             className={`relative text-num-12 font-medium cursor-pointer border-b border-solid transition-all 
-                              ${uploadedCount === 0
-                                ? 'opacity-30 pointer-events-none border-slategray text-slategray'
-                                : 'text-transparent bg-clip-text! [background:linear-gradient(180deg,#c00f0f,#e44f4f)] border-[#c00f0f] hover:opacity-80'
+                              ${
+                                uploadedCount === 0
+                                  ? 'opacity-30 pointer-events-none border-slategray text-slategray'
+                                  : 'text-transparent bg-clip-text! [background:linear-gradient(180deg,#c00f0f,#e44f4f)] border-[#c00f0f] hover:opacity-80'
                               }`}
                             onClick={uploadedCount > 0 ? onCancelClick : undefined}
                           >

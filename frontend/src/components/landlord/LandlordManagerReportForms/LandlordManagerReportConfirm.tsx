@@ -6,7 +6,11 @@ type Props = {
   type?: 'manager' | 'tenant';
 };
 
-const LandlordManagerReportConfirm: FunctionComponent<Props> = ({ onBack, onSubmit, type = 'manager' }) => {
+const LandlordManagerReportConfirm: FunctionComponent<Props> = ({
+  onBack,
+  onSubmit,
+  type = 'manager',
+}) => {
   const [acknowledged, setAcknowledged] = useState(false);
 
   const handleSubmit = () => {

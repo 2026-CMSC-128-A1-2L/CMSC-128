@@ -210,7 +210,6 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
         endDate: selectedSlot.endDate as unknown as Date,
         message: message.trim() || undefined,
       });
-      setSuccess('Visit booked. You can now see it in My Calendar.');
       onBooked?.();
       setTimeout(onClose, 900);
     } catch (err) {
@@ -227,98 +226,98 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
 
   return (
     <div
-      className={`w-[760px] max-w-full max-h-full overflow-auto rounded-[16px] bg-white px-6 py-6 text-left text-num-14 text-dimgray font-inter shadow-xl sm:px-10 ${className}`}
+      className={`h-[602px] w-[687px] max-h-[calc(100vh-2rem)] max-w-[calc(100vw-2rem)] overflow-auto rounded-[12px] bg-white px-6 py-6 text-left text-num-14 text-dimgray font-inter shadow-xl ${className}`}
     >
       <div className="relative text-center">
         <button
           type="button"
           onClick={onClose}
-          className="absolute right-0 top-0 grid h-8 w-8 place-items-center rounded-full text-dimgray hover:bg-whitesmoke-100"
+          className="absolute right-0 top-0 grid h-7 w-7 place-items-center rounded-full text-dimgray hover:bg-whitesmoke-100"
           aria-label="Close booking form"
         >
           <Icon icon="material-symbols:close-rounded" className="h-5 w-5" />
         </button>
-        <div className="text-base font-bold text-[#666]">Booking a visit for</div>
-        <h2 className="mt-1.5 text-[26px] font-extrabold leading-tight text-[#004236] sm:text-[30px]">
+        <div className="text-num-14 font-bold text-[#666]">Booking a visit for</div>
+        <h2 className="mt-1 text-[24px] font-extrabold leading-tight text-[#004236]">
           {facilityName}
         </h2>
-        <p className="mx-auto mt-1.5 max-w-[390px] text-center text-[14px] font-bold leading-5 text-black font-lora">
+        <p className="mx-auto mt-1 max-w-[340px] text-center text-num-12 font-bold leading-4 text-black font-lora">
           {facilityAddress}
         </p>
       </div>
 
-      <div className="my-5 h-0.5 rounded-full bg-whitesmoke-300" />
+      <div className="my-4 h-0.5 rounded-full bg-whitesmoke-300" />
 
-      <div className="grid gap-8 lg:grid-cols-[1fr_300px]">
-        <div className="flex flex-col gap-3">
-          <b className="text-[22px] tracking-num--0_01 text-black">Your booking details</b>
-          <div className="grid gap-3">
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_250px]">
+        <div className="flex flex-col gap-2">
+          <b className="text-[20px] tracking-num--0_01 text-black">Your booking details</b>
+          <div className="grid gap-2">
             <label className="grid gap-1.5">
-              <span className="text-base font-bold text-[#666]">First name</span>
+              <span className="text-num-14 font-bold text-[#666]">First name</span>
               <input
                 value={isLoadingUser ? 'Loading...' : firstName}
                 readOnly
                 placeholder="First name"
-                className="h-[44px] rounded-[20px] bg-white px-4 text-base font-medium text-black shadow-[0_1px_8px_rgba(0,0,0,0.2)] outline-none placeholder:text-[#9b9b9b]"
+                className="h-9 rounded-xl bg-white border border-[#e5e5e5] px-4 text-num-14 font-medium text-black outline-none placeholder:text-[#9b9b9b]"
               />
             </label>
             <label className="grid gap-1.5">
-              <span className="text-base font-bold text-[#666]">Last name</span>
+              <span className="text-num-14 font-bold text-[#666]">Last name</span>
               <input
                 value={isLoadingUser ? 'Loading...' : lastName}
                 readOnly
                 placeholder="Last name"
-                className="h-[44px] rounded-[20px] bg-white px-4 text-base font-medium text-black shadow-[0_1px_8px_rgba(0,0,0,0.2)] outline-none placeholder:text-[#9b9b9b]"
+                className="h-9 rounded-xl bg-white border border-[#e5e5e5] px-4 text-num-14 font-medium text-black outline-none placeholder:text-[#9b9b9b]"
               />
             </label>
             <label className="grid gap-1.5">
-              <span className="text-base font-bold text-[#666]">Email address</span>
+              <span className="text-num-14 font-bold text-[#666]">Email address</span>
               <input
                 value={isLoadingUser ? 'Loading...' : email}
                 readOnly
                 placeholder="Email addr."
-                className="h-[44px] rounded-[20px] bg-white px-4 text-base font-medium text-black shadow-[0_1px_8px_rgba(0,0,0,0.2)] outline-none placeholder:text-[#9b9b9b]"
+                className="h-9 rounded-xl bg-white border border-[#e5e5e5] px-4 text-num-14 font-medium text-black outline-none placeholder:text-[#9b9b9b]"
               />
             </label>
             <label className="grid gap-1.5">
-              <span className="text-base font-bold text-[#666]">Home address</span>
+              <span className="text-num-14 font-bold text-[#666]">Home address</span>
               <input
                 value={isLoadingUser ? 'Loading...' : (user?.address ?? '')}
                 readOnly
                 placeholder="Home address"
-                className="h-[44px] rounded-[20px] bg-white px-4 text-sm font-medium text-black shadow-[0_1px_8px_rgba(0,0,0,0.2)] outline-none placeholder:text-[#9b9b9b]"
+                className="h-9 rounded-xl bg-white border border-[#e5e5e5] px-4 text-num-14 font-medium text-black outline-none placeholder:text-[#9b9b9b]"
               />
             </label>
             <label className="grid gap-1.5">
-              <span className="text-base font-bold text-[#666]">
-                Message <span className="text-sm font-semibold text-slategray">(optional)</span>
+              <span className="text-num-14 font-bold text-[#666]">
+                Message <span className="text-num-12 font-semibold text-slategray">(optional)</span>
               </span>
               <textarea
                 value={message}
                 onChange={(event) => setMessage(event.target.value)}
                 placeholder="Add a note for the landlord or manager"
-                className="min-h-[70px] resize-none rounded-[18px] border border-transparent bg-white px-4 py-2.5 text-sm font-medium text-black shadow-[0_1px_8px_rgba(0,0,0,0.16)] outline-none placeholder:text-[#9b9b9b] focus:border-teal-200"
+                className="min-h-[48px] resize-none rounded-[18px] border border-[#e5e5e5] bg-white px-4 py-2 text-num-12 font-medium text-black outline-none placeholder:text-[#9b9b9b] focus:border-teal-200"
               />
             </label>
           </div>
         </div>
 
-        <div className="flex flex-col gap-4">
-          <b className="text-[22px] tracking-num--0_01 text-black">Date and Time</b>
-          <div className="rounded-[16px] border border-[#dedede] bg-white p-4">
-            <div className="mb-4 flex items-center gap-2 text-black">
+        <div className="flex flex-col gap-3">
+          <b className="text-[20px] tracking-num--0_01 text-black">Date and Time</b>
+          <div className="rounded-[16px] border border-[#dedede] bg-white p-3">
+            <div className="mb-3 flex items-center gap-1.5 text-black">
               <button
                 type="button"
                 onClick={() => goToMonth(-1)}
-                className="grid h-8 w-8 place-items-center rounded-full hover:bg-whitesmoke-100"
+                className="grid h-7 w-7 place-items-center rounded-full hover:bg-whitesmoke-100"
                 aria-label="Previous month"
               >
-                <Icon icon="material-symbols:chevron-left-rounded" className="h-6 w-6" />
+                <Icon icon="material-symbols:chevron-left-rounded" className="h-5 w-5" />
               </button>
               <select
                 value={month}
                 onChange={(event) => handleMonthSelect(Number(event.target.value))}
-                className="h-8 flex-1 rounded-lg border border-[#dedede] bg-white px-2 text-sm font-medium outline-none"
+                className="h-7 flex-1 rounded-lg border border-[#dedede] bg-white px-2 text-num-12 font-medium outline-none"
               >
                 {MONTHS.map((monthLabel, index) => (
                   <option key={monthLabel} value={index}>
@@ -329,7 +328,7 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
               <select
                 value={year}
                 onChange={(event) => handleYearSelect(Number(event.target.value))}
-                className="h-8 flex-1 rounded-lg border border-[#dedede] bg-white px-2 text-sm font-medium outline-none"
+                className="h-7 flex-1 rounded-lg border border-[#dedede] bg-white px-2 text-num-12 font-medium outline-none"
               >
                 {years.map((yearOption) => (
                   <option key={yearOption} value={yearOption}>
@@ -340,21 +339,21 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
               <button
                 type="button"
                 onClick={() => goToMonth(1)}
-                className="grid h-8 w-8 place-items-center rounded-full hover:bg-whitesmoke-100"
+                className="grid h-7 w-7 place-items-center rounded-full hover:bg-whitesmoke-100"
                 aria-label="Next month"
               >
-                <Icon icon="material-symbols:chevron-right-rounded" className="h-6 w-6" />
+                <Icon icon="material-symbols:chevron-right-rounded" className="h-5 w-5" />
               </button>
             </div>
 
-            <div className="grid grid-cols-7 gap-y-1.5 text-center">
+            <div className="grid grid-cols-7 gap-y-1 text-center">
               {DAYS.map((day) => (
-                <div key={day} className="pb-1 text-xs font-medium text-[#777]">
+                <div key={day} className="pb-0.5 text-[10px] font-medium text-[#777]">
                   {day}
                 </div>
               ))}
               {calendarCells.map(({ key, day }) => {
-                if (day == null) return <div key={key} className="h-8" />;
+                if (day == null) return <div key={key} className="h-7" />;
 
                 const dateValue = formatDateInput(new Date(year, month, day));
                 const isPast = dateValue < today;
@@ -366,13 +365,12 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
                     type="button"
                     disabled={isPast}
                     onClick={() => selectCalendarDay(day)}
-                    className={`mx-auto grid h-8 w-8 place-items-center rounded-lg text-sm font-medium transition-colors disabled:cursor-not-allowed ${
-                      isSelected
-                        ? 'bg-[#bdf1e6] text-[#006f5e] font-bold'
-                        : isPast
-                          ? 'text-[#b4b4b4]'
-                          : 'text-black hover:bg-whitesmoke-100'
-                    }`}
+                    className={`mx-auto grid h-7 w-7 place-items-center rounded-lg text-num-12 font-medium transition-colors disabled:cursor-not-allowed ${isSelected
+                      ? 'bg-[#bdf1e6] text-[#006f5e] font-bold'
+                      : isPast
+                        ? 'text-[#b4b4b4]'
+                        : 'text-black hover:bg-whitesmoke-100'
+                      }`}
                   >
                     {day}
                   </button>
@@ -382,13 +380,13 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
           </div>
 
           <div className="flex items-center justify-center gap-4 text-black">
-            <Icon icon="solar:clock-circle-outline" className="h-7 w-7" />
-            <div className="relative w-[165px]">
+            <Icon icon="solar:clock-circle-outline" className="h-5 w-5" />
+            <div className="relative w-[150px]">
               <button
                 type="button"
                 onClick={() => setTimeMenuOpen((isOpen) => !isOpen)}
                 disabled={isLoadingSlots || availableSlots.length === 0}
-                className="flex h-[48px] w-full items-center justify-between rounded-xl border border-whitesmoke-300 bg-white px-3 text-left text-base font-semibold text-[#5d5d5d] shadow-sm disabled:cursor-not-allowed disabled:opacity-60 font-lora"
+                className="flex h-9 w-full items-center justify-between rounded-[10px] border border-[#e5e5e5] bg-white px-3 text-left text-num-12 font-medium text-[#5d5d5d] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 <span className="truncate">
                   {isLoadingSlots
@@ -401,13 +399,12 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
                 </span>
                 <Icon
                   icon="material-symbols:keyboard-arrow-down-rounded"
-                  className={`h-5 w-5 shrink-0 text-[#356c65] transition-transform ${
-                    isTimeMenuOpen ? 'rotate-180' : ''
-                  }`}
+                  className={`h-4 w-4 shrink-0 text-[#356c65] transition-transform ${isTimeMenuOpen ? 'rotate-180' : ''
+                    }`}
                 />
               </button>
               {isTimeMenuOpen && availableSlots.length > 0 && (
-                <div className="absolute left-0 right-0 z-20 mt-2 max-h-52 overflow-y-auto rounded-xl border border-whitesmoke-300 bg-white p-1 shadow-lg">
+                <div className="absolute left-0 right-0 z-20 mt-2 max-h-44 overflow-y-auto rounded-[10px] border border-whitesmoke-300 bg-white p-1 shadow-lg">
                   {availableSlots.map((slot) => (
                     <button
                       key={slot.startDate}
@@ -416,7 +413,7 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
                         setSelectedSlotStart(slot.startDate);
                         setTimeMenuOpen(false);
                       }}
-                      className="w-full rounded-lg px-3 py-2 text-left text-xs font-semibold text-black hover:bg-lightcyan"
+                      className="w-full rounded-lg px-3 py-1.5 text-left text-xs font-medium text-black hover:bg-lightcyan"
                     >
                       {formatTimeRange(slot)}
                     </button>
@@ -430,19 +427,18 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
 
       {(error || success) && (
         <p
-          className={`mt-4 text-center text-xs font-semibold ${
-            success ? 'text-teal-200' : 'text-red-500'
-          }`}
+          className={`mt-4 text-center text-xs font-semibold ${success ? 'text-teal-200' : 'text-red-500'
+            }`}
         >
           {success ?? error}
         </p>
       )}
 
-      <div className="mt-5 flex items-center justify-center gap-14">
+      <div className="mt-4 flex items-center justify-center gap-12">
         <button
           type="button"
           onClick={onClose}
-          className="h-9 rounded-num-16 px-5 text-lg font-medium text-red-500 hover:bg-red-50"
+          className="h-8 rounded-num-16 px-5 text-base font-medium text-red-500 hover:bg-red-50"
         >
           Cancel
         </button>
@@ -450,7 +446,7 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
           type="button"
           onClick={handleBook}
           disabled={isSubmitting || isLoadingUser || isLoadingSlots}
-          className="h-10 rounded-[20px] bg-aliceblue px-7 text-lg font-bold text-teal-200 disabled:cursor-not-allowed disabled:opacity-60"
+          className="h-9 rounded-[20px] bg-aliceblue px-7 text-base font-bold text-teal-200 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isSubmitting ? 'Booking...' : 'Book'}
         </button>

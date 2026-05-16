@@ -2,7 +2,9 @@ import { useState, useMemo, useEffect } from 'react';
 import LandlordLayout from '../../../components/landlord/LandlordLayout';
 import LandlordInfoCard, { type LandlordInfo } from '../../../components/landlord/LandlordInfoCard';
 import LandlordProfileSwitch from './component/LandlordProfileSwitch';
-import VerificationProgress, { type VerificationStep } from '../../../components/landlord/VerificationProgress';
+import VerificationProgress, {
+  type VerificationStep,
+} from '../../../components/landlord/VerificationProgress';
 import DocumentsSubmissionHeader from '../../../components/landlord/LandlordVerification/DocumentsSubmissionHeader';
 import DocumentsUploadList from '../../../components/landlord/LandlordVerification/DocumentsUploadList';
 import { documents } from '../../../components/landlord/LandlordVerification/DocumentsData';
@@ -18,8 +20,8 @@ const landlord: LandlordInfo = {
   displayName: 'Quevin Custodio',
   email: 'qacustodio@up.edu.ph',
   fullName: 'Quevin James A. Custodio',
-  contactNumber:'-----',
-  homeAddress:'-----',
+  contactNumber: '-----',
+  homeAddress: '-----',
   role: 'Landlord',
   employees: ['Nathaniel Cunanan', 'Lance De Jesus'],
   verified: true,
@@ -34,8 +36,20 @@ type Property = {
 };
 
 const properties: Property[] = [
-  { id: '1', name: 'Tri-AD Hall Dormitory', location: 'Umali Subdivision, Los Baños', rating: 4.3, image: dorm1 },
-  { id: '2', name: 'Two Sapphire Place', location: 'Umali Subdivision, Los Baños', rating: 3.7, image: dorm2 },
+  {
+    id: '1',
+    name: 'Tri-AD Hall Dormitory',
+    location: 'Umali Subdivision, Los Baños',
+    rating: 4.3,
+    image: dorm1,
+  },
+  {
+    id: '2',
+    name: 'Two Sapphire Place',
+    location: 'Umali Subdivision, Los Baños',
+    rating: 3.7,
+    image: dorm2,
+  },
   { id: '3', name: "Women's Dormitory", location: 'Inside UPLB', rating: 3.7, image: dorm3 },
 ];
 
@@ -80,7 +94,11 @@ const PropertyCard = ({ property }: { property: Property }) => (
         aria-label={`Bookmark ${property.name}`}
         className="absolute right-[10px] top-[10px] flex h-[30px] w-[30px] cursor-pointer items-center justify-center rounded-full bg-white/95 text-[#096c5b] shadow-sm transition-colors hover:bg-white"
       >
-        <Icon icon="material-symbols:bookmark-outline" className="h-[18px] w-[18px]" aria-hidden="true" />
+        <Icon
+          icon="material-symbols:bookmark-outline"
+          className="h-[18px] w-[18px]"
+          aria-hidden="true"
+        />
       </button>
     </div>
     <div className="flex flex-col gap-[6px] px-[16px] py-[14px]">
@@ -89,13 +107,21 @@ const PropertyCard = ({ property }: { property: Property }) => (
           {property.name}
         </h3>
         <span className="flex shrink-0 items-center gap-[4px] font-['Lora',serif] text-[12px] font-semibold tracking-[0.24px] text-[#2f3136]">
-          <Icon icon="material-symbols:star-rounded" className="h-[14px] w-[14px] text-[#f5b301]" aria-hidden="true" />
+          <Icon
+            icon="material-symbols:star-rounded"
+            className="h-[14px] w-[14px] text-[#f5b301]"
+            aria-hidden="true"
+          />
           {property.rating.toFixed(1)}
         </span>
       </div>
       <div className="flex items-center justify-between gap-[8px]">
         <span className="flex min-w-0 items-center gap-[6px] font-['Lora',serif] text-[12px] font-semibold tracking-[0.24px] text-[#2f3136]">
-          <Icon icon="material-symbols:location-on-outline" className="h-[14px] w-[14px] shrink-0 text-[#096c5b]" aria-hidden="true" />
+          <Icon
+            icon="material-symbols:location-on-outline"
+            className="h-[14px] w-[14px] shrink-0 text-[#096c5b]"
+            aria-hidden="true"
+          />
           <span className="truncate">{property.location}</span>
         </span>
         <button
@@ -103,7 +129,11 @@ const PropertyCard = ({ property }: { property: Property }) => (
           aria-label={`More info for ${property.name}`}
           className="flex h-[20px] w-[20px] shrink-0 cursor-pointer items-center justify-center text-[#2f3136] hover:text-[#096c5b]"
         >
-          <Icon icon="material-symbols:info-outline" className="h-[18px] w-[18px]" aria-hidden="true" />
+          <Icon
+            icon="material-symbols:info-outline"
+            className="h-[18px] w-[18px]"
+            aria-hidden="true"
+          />
         </button>
       </div>
     </div>
@@ -117,7 +147,9 @@ type SectionHeaderProps = {
 
 const SectionHeader = ({ title, onEdit }: SectionHeaderProps) => (
   <div className="flex items-center gap-[12px]">
-    <h2 className="font-['Inter',sans-serif] text-[22px] font-bold leading-[28px] text-[#2f3136]">{title}</h2>
+    <h2 className="font-['Inter',sans-serif] text-[22px] font-bold leading-[28px] text-[#2f3136]">
+      {title}
+    </h2>
     {onEdit && (
       <button
         type="button"
@@ -135,17 +167,18 @@ const LandlordProfileSwitcher = () => {
   const [activeTab, setActiveTab] = useState<'info' | 'verification'>('info');
 
   const [uploads, setUploads] = useState<Record<string, File | undefined>>({});
-  
+
   //change step into a stateful variable
   const step: VerificationStep = 'submit';
 
-  const [statefulVerificationStep,setStatefulVerificationStep]=useState<VerificationStep>('submit');
+  const [statefulVerificationStep, setStatefulVerificationStep] =
+    useState<VerificationStep>('submit');
 
   const uploadedCount = useMemo(() => Object.values(uploads).filter(Boolean).length, [uploads]);
-  
+
   //if user has recently submitted documents, disable submit button until user has reuploaded new documents
   const canSubmit = uploadedCount === documents.length;
-  const [isRecentSubmit,setIsRecentSubmit]=useState(false);
+  const [isRecentSubmit, setIsRecentSubmit] = useState(false);
 
   const handleFile = (id: string, file: File) => {
     setUploads((prev) => ({ ...prev, [id]: file }));
@@ -153,9 +186,9 @@ const LandlordProfileSwitcher = () => {
 
   const handleSubmit = () => {
     console.log('Submitting documents:', uploads);
-    setStatefulVerificationStep('reviewing') //only admin has the power to set verification to 'finished'
+    setStatefulVerificationStep('reviewing'); //only admin has the power to set verification to 'finished'
     //after every submit, set isRecentSubmit to true
-    setIsRecentSubmit(true)
+    setIsRecentSubmit(true);
   };
 
   // stateful variable for contacts and home address
@@ -163,25 +196,24 @@ const LandlordProfileSwitcher = () => {
   //LIFTED DECLARATIONS FROM USER/PROFILEINFO.TSX
   //stateful contact number variable
   const [contactNumber, setContactNumber] = useState(landlord.contactNumber);
-  
+
   // stateful home variable
   const [homeAddress, setHomeAddress] = useState(landlord.homeAddress);
 
   const [isEditing, setIsEditing] = useState(false);
   const [isEditingAddress, setIsEditingAddress] = useState(false);
-  
+
   //on change to uploads, setIsRecentSubmit(false)
-  useEffect(()=>{
-    setIsRecentSubmit(false)
-  },[uploads])
+  useEffect(() => {
+    setIsRecentSubmit(false);
+  }, [uploads]);
 
   //on change to contact number and home address, update landlord info object
   useEffect(() => {
-  landlord.contactNumber = contactNumber;
-  landlord.homeAddress = homeAddress;
-}, [contactNumber, homeAddress]);
+    landlord.contactNumber = contactNumber;
+    landlord.homeAddress = homeAddress;
+  }, [contactNumber, homeAddress]);
   return (
-
     <LandlordLayout
       breadcrumbs={[
         { label: 'User Profile' },
@@ -190,25 +222,23 @@ const LandlordProfileSwitcher = () => {
       activeTab={activeTab}
     >
       <div className="flex w-full flex-col gap-[12px] rounded-[16px] bg-white/70 p-[8px] pb-[32px]">
-        
-        <LandlordInfoCard 
-        info={landlord} 
-        activeTab={activeTab} 
-        setActiveTab={setActiveTab} 
-        setContactNumber={setContactNumber}
-        setHomeAddress={setHomeAddress}
-
-        onEditContact={()=>{
-          setIsEditing(!isEditing)
-        }}
-        onEditHomeAddress={()=>{
-          setIsEditingAddress(!isEditingAddress)
-        }}
-        setIsEditing={setIsEditing}
-        isEditing={isEditing}
-        setIsEditingAddress={setIsEditingAddress}
-        isEditingAddress={isEditingAddress}
-      />
+        <LandlordInfoCard
+          info={landlord}
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          setContactNumber={setContactNumber}
+          setHomeAddress={setHomeAddress}
+          onEditContact={() => {
+            setIsEditing(!isEditing);
+          }}
+          onEditHomeAddress={() => {
+            setIsEditingAddress(!isEditingAddress);
+          }}
+          setIsEditing={setIsEditing}
+          isEditing={isEditing}
+          setIsEditingAddress={setIsEditingAddress}
+          isEditingAddress={isEditingAddress}
+        />
 
         <LandlordProfileSwitch activeTab={activeTab} setActiveTab={setActiveTab} />
 
@@ -242,7 +272,7 @@ const LandlordProfileSwitcher = () => {
         ) : (
           <>
             <div className="flex w-full flex-col items-center px-[32px] py-[12px]">
-              <VerificationProgress currentStep={statefulVerificationStep}  />
+              <VerificationProgress currentStep={statefulVerificationStep} />
             </div>
             <DocumentsSubmissionHeader
               uploadedCount={uploadedCount}

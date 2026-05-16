@@ -176,7 +176,9 @@ const AddManager1: FunctionComponent<Props> = ({ onCancel, onSend }) => {
         <div className="pb-[32px]" />
         {/* Email */}
         <div className="self-stretch flex flex-col items-start gap-[6px]">
-          <b className="font-['Inter',sans-serif] text-[13px] text-[#666] dark:text-[#a4acba]">Email Address</b>
+          <b className="font-['Inter',sans-serif] text-[13px] text-[#666] dark:text-[#a4acba]">
+            Email Address
+          </b>
           <div className="self-stretch flex flex-col gap-1">
             <div className="self-stretch h-[38px] rounded-[10px] border border-[#f5f5f5] dark:border-[#303331] flex items-center px-[13px]">
               <input
@@ -208,7 +210,9 @@ const AddManager1: FunctionComponent<Props> = ({ onCancel, onSend }) => {
           return (
             <div key={group.section} className="self-stretch flex flex-col items-start gap-[16px]">
               {/* Section header — no per-section Select All */}
-              <b className="font-['Inter',sans-serif] text-[13px] text-[#666] dark:text-[#a4acba]">{group.section}</b>
+              <b className="font-['Inter',sans-serif] text-[13px] text-[#666] dark:text-[#a4acba]">
+                {group.section}
+              </b>
 
               {/* Permission rows */}
               <div className="self-stretch flex flex-col gap-[17px]">
@@ -220,7 +224,9 @@ const AddManager1: FunctionComponent<Props> = ({ onCancel, onSend }) => {
                       type="button"
                       onClick={() => toggleOne(item.field)}
                       className={`self-stretch rounded-[10px] flex items-center py-[10px] pl-[10px] pr-[18px] gap-[13px] text-left transition-colors ${
-                        active ? 'bg-[#f0fdf9] dark:bg-[#12342e]' : 'hover:bg-[#fafafa] dark:hover:bg-[#1f2022]'
+                        active
+                          ? 'bg-[#f0fdf9] dark:bg-[#12342e]'
+                          : 'hover:bg-[#fafafa] dark:hover:bg-[#1f2022]'
                       }`}
                     >
                       {/* Hidden RHF field to keep form values in sync */}

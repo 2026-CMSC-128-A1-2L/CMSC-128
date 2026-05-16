@@ -7,10 +7,7 @@ interface SignInPopUpProps {
   onClose: () => void;
 }
 
-const SignInPopUp: FunctionComponent<SignInPopUpProps> = ({
-  isOpen = true,
-  onClose,
-}) => {
+const SignInPopUp: FunctionComponent<SignInPopUpProps> = ({ isOpen = true, onClose }) => {
   useEffect(() => {
     if (!isOpen) return;
 
@@ -81,9 +78,7 @@ const SignInPopUp: FunctionComponent<SignInPopUpProps> = ({
               src="https://www.svgrepo.com/show/475656/google-color.svg"
             />
 
-            <b className="relative tracking-num--0_01 text-gray">
-              Sign in with Google
-            </b>
+            <b className="relative tracking-num--0_01 text-gray">Sign in with Google</b>
           </a>
         </div>
 

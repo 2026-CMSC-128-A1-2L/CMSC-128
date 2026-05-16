@@ -1,19 +1,61 @@
 import type { FunctionComponent } from 'react';
 import { Icon } from '@iconify/react';
+import type { RegistrationProfileData } from '../../pages/Registration';
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 
 interface RegistrationVerificationProps {
+  role?: RegistrationProfileData['role'];
   onNextClick: () => void;
   onBackClick: () => void;
 }
 
+type DocumentRequirement = {
+  title: string;
+  description: string;
+};
+
+const DOCUMENTS_BY_ROLE: Record<
+  Exclude<RegistrationProfileData['role'], ''>,
+  DocumentRequirement[]
+> = {
+  student: [
+    {
+      title: 'School ID',
+      description: 'University-issued school ID for currently enrolled students',
+    },
+    {
+      title: 'Notice of Admission',
+      description: 'Official admission notice for incoming students',
+    },
+  ],
+  landlord: [
+    {
+      title: 'Valid ID',
+      description: "e.g. Passport, Driver's License, UMID, etc.",
+    },
+    {
+      title: 'Business Permit',
+      description: 'Current and valid local government permit to operate a rental business',
+    },
+  ],
+  manager: [
+    {
+      title: 'Valid ID',
+      description: "e.g. Passport, Driver's License, UMID, etc.",
+    },
+  ],
+};
+
 // ─── Component ────────────────────────────────────────────────────────────────
 
 const RegistrationVerification: FunctionComponent<RegistrationVerificationProps> = ({
+  role,
   onNextClick,
   onBackClick,
 }) => {
+  const documents = role ? DOCUMENTS_BY_ROLE[role] : [];
+
   return (
     <div className="flex-1 w-full relative overflow-hidden flex items-start justify-center text-left text-num-14 text-dimgray font-inter">
       <div className="w-[620px] rounded-xl border-whitesmoke dark:border-[#303331] bg-white dark:bg-[#141515] border-solid border box-border overflow-hidden flex flex-col items-start pt-3 px-4 pb-5 gap-6">
@@ -33,7 +75,10 @@ const RegistrationVerification: FunctionComponent<RegistrationVerificationProps>
 
           {/* Info banner */}
           <div className="self-stretch rounded-xl bg-lightcyan dark:bg-[#12342e] border-teal-100 dark:border-[#72cbb8] border-solid border box-border flex items-center py-0 px-6 gap-6 text-[12px] text-darkslategray dark:text-[#a4acba] font-lora">
-            <Icon icon="material-symbols:info-outline-rounded" className="h-6 w-6 shrink-0 my-4 text-teal-600 dark:text-[#72cbb8]" />
+            <Icon
+              icon="material-symbols:info-outline-rounded"
+              className="h-6 w-6 shrink-0 my-4 text-teal-600 dark:text-[#72cbb8]"
+            />
             <div className="flex-1 flex items-center justify-center py-4">
               <div className="flex-1 relative tracking-[0.02em] font-semibold">
                 <span>No uploads required right now. </span>
@@ -49,30 +94,24 @@ const RegistrationVerification: FunctionComponent<RegistrationVerificationProps>
           <div className="self-stretch flex items-center justify-between gap-3.5 text-center text-black dark:text-[#d7e0ef]">
             <b className="relative">Documents needed</b>
             <div className="h-0.5 flex-1 rounded-[100px] bg-whitesmoke dark:bg-[#303331]" />
-            <b className="relative">0/2</b>
+            <b className="relative">0/{documents.length}</b>
           </div>
 
-          {/* Valid ID */}
-          <div className="self-stretch h-[60px] rounded-xl bg-aliceblue dark:bg-[#1f2022] border-whitesmoke dark:border-[#303331] border-solid border box-border flex flex-col items-start justify-center py-0 px-6 gap-1">
-            <div className="self-stretch flex items-center justify-center">
-              <b className="flex-1 relative text-black dark:text-[#d7e0ef]">Valid ID</b>
-            </div>
-            <div className="self-stretch flex items-center justify-center text-[12px] font-lora">
-              <div className="flex-1 relative tracking-[0.02em] font-semibold text-slategray dark:text-[#a4acba]">
-                e.g. Passport, Driver’s License, etc.
+          {documents.map((document) => (
+            <div
+              key={document.title}
+              className="self-stretch h-[60px] rounded-xl bg-aliceblue dark:bg-[#1f2022] border-whitesmoke dark:border-[#303331] border-solid border box-border flex flex-col items-start justify-center py-0 px-6 gap-1"
+            >
+              <div className="self-stretch flex items-center justify-center">
+                <b className="flex-1 relative text-black dark:text-[#d7e0ef]">{document.title}</b>
+              </div>
+              <div className="self-stretch flex items-center justify-center text-[12px] font-lora">
+                <div className="flex-1 relative tracking-[0.02em] font-semibold text-slategray dark:text-[#a4acba]">
+                  {document.description}
+                </div>
               </div>
             </div>
-          </div>
-          <div className="self-stretch h-[60px] rounded-xl bg-aliceblue dark:bg-[#1f2022] border-whitesmoke dark:border-[#303331] border-solid border box-border flex flex-col items-start justify-center py-0 px-6 gap-1">
-            <div className="self-stretch flex items-center justify-center">
-              <b className="flex-1 relative text-black dark:text-[#d7e0ef]">Business Permit</b>
-            </div>
-            <div className="self-stretch flex items-center justify-center text-[12px] font-lora">
-              <div className="flex-1 relative tracking-[0.02em] font-semibold text-slategray dark:text-[#a4acba]">
-                Current and valid local government permit to operate a rental business
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
 
         {/* Back / Proceed */}

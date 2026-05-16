@@ -291,7 +291,10 @@ const SideBarAdmin = ({
                     : 'default';
 
               return (
-                <div key={item.key} className="duration-200 hover:bg-[#F0FAF6] dark:hover:bg-[#17201d]">
+                <div
+                  key={item.key}
+                  className="duration-200 hover:bg-[#F0FAF6] dark:hover:bg-[#17201d]"
+                >
                   <SideBarAdminButton
                     icon={item.iconName}
                     label={item.label}
@@ -314,19 +317,22 @@ const SideBarAdmin = ({
               aria-label="Toggle dark mode"
               className="flex w-[180px] cursor-pointer items-center gap-[24px] pr-[20px] transition-colors hover:bg-[#F0FAF6] dark:hover:bg-[#17201d]"
             >
-              <span aria-hidden="true" className="h-[44px] w-[8px] shrink-0 rounded-[4px] bg-transparent opacity-0" />
+              <span
+                aria-hidden="true"
+                className="h-[44px] w-[8px] shrink-0 rounded-[4px] bg-transparent opacity-0"
+              />
               <span className="flex h-[44px] flex-1 items-center gap-[16px] rounded-[12px] px-[4px]">
                 <Icon
                   icon="gg:dark-mode"
                   onAnimationEnd={() => setDarkModeIconSpinning(false)}
                   className={[
-                    "h-[24px] w-[24px] shrink-0 text-[#001d18] dark:text-white",
-                    darkModeIconSpinning ? "dark-mode-icon-turn" : "",
-                  ].join(" ")}
+                    'h-[24px] w-[24px] shrink-0 text-[#001d18] dark:text-white',
+                    darkModeIconSpinning ? 'dark-mode-icon-turn' : '',
+                  ].join(' ')}
                   aria-hidden="true"
                 />
                 <span className="font-['Inter',sans-serif] text-[14px] font-semibold leading-normal text-[#001d18] dark:text-[#d7e0ef]">
-                  {isDark ? "Light Mode" : "Dark Mode"}
+                  {isDark ? 'Light Mode' : 'Dark Mode'}
                 </span>
               </span>
             </button>

@@ -179,7 +179,9 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
                       key={m}
                       onClick={() => handleMonthSelect(idx)}
                       className={`w-full text-left px-3 py-2 text-xs hover:bg-blue-50 ${
-                        idx === month ? 'bg-lightcyan-100 text-teal-200 font-bold dark:bg-[#17362f] dark:text-[#72cbb8]' : ''
+                        idx === month
+                          ? 'bg-lightcyan-100 text-teal-200 font-bold dark:bg-[#17362f] dark:text-[#72cbb8]'
+                          : ''
                       }`}
                     >
                       {m}
@@ -208,7 +210,9 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
                       key={y}
                       onClick={() => handleYearSelect(y)}
                       className={`w-full text-left px-3 py-2 text-xs hover:bg-blue-50 ${
-                        y === year ? 'bg-lightcyan-100 text-teal-200 font-bold dark:bg-[#17362f] dark:text-[#72cbb8]' : ''
+                        y === year
+                          ? 'bg-lightcyan-100 text-teal-200 font-bold dark:bg-[#17362f] dark:text-[#72cbb8]'
+                          : ''
                       }`}
                     >
                       {y}
@@ -249,7 +253,9 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
                       disabled={day === null}
                       className={[
                         'rounded-md flex items-center justify-center p-2 aspect-square transition-colors dark:text-[#edf6f4]',
-                        day === null ? 'cursor-default opacity-40' : 'cursor-pointer hover:bg-gray-100 dark:hover:bg-[#1f2022]',
+                        day === null
+                          ? 'cursor-default opacity-40'
+                          : 'cursor-pointer hover:bg-gray-100 dark:hover:bg-[#1f2022]',
                         isTodayDay
                           ? 'bg-lightcyan-100 text-teal-200 font-bold hover:bg-lightcyan-200 dark:bg-[#17362f] dark:text-[#72cbb8] dark:hover:bg-[#1c473d]'
                           : '',

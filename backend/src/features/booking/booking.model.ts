@@ -12,7 +12,7 @@ export type BookingType = {
 
 const visitBookingSchema = new mongoose.Schema<BookingType>(
   {
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'Student', required: true },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     facilityId: { type: mongoose.Schema.Types.ObjectId, ref: 'HousingFacility', required: true },
     status: { type: String, enum: BOOKING_STATUS, default: 'pending' },
     endDate: { type: Date, required: true },

@@ -1,94 +1,58 @@
-import { type FunctionComponent, useState, useEffect } from 'react';
+import type { FunctionComponent } from 'react';
 import StatCard from './StatCard';
 import MonthlyIncomeChart from './MonthlyIncomeChart';
 import IncomeBreakdown from './IncomeBreakdown';
-import type { Billing } from '../types/billing';
+import type { FacilityOverview, MonthlyIncomeData, IncomeBreakdownData } from '../../../../hooks/useFacilityFinance';
 
-interface OverviewStats {
-  income: number;
-  occupancy: { current: number; total: number };
-  paymentsCollected: { current: number; total: number };
-  outstandingBalance: number;
+interface OverviewTabProps {
+  overview: FacilityOverview | null;
+  monthlyIncome: MonthlyIncomeData[];
+  incomeBreakdown: IncomeBreakdownData | null;
 }
 
-const OverviewTab: FunctionComponent = () => {
-  const [stats, setStats] = useState<OverviewStats>({
-    income: 0,
-    occupancy: { current: 0, total: 0 },
-    paymentsCollected: { current: 0, total: 0 },
-    outstandingBalance: 0,
-  });
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchOverviewStats = async () => {
-      setIsLoading(true);
-      try {
-        const mockBillings: Billing[] = [
-          { totalAmount: 4500, paidAmount: 4500, paymentStatus: 'paid' } as Billing,
-          { totalAmount: 4850, paidAmount: 1850, paymentStatus: 'partially_paid' } as Billing,
-          { totalAmount: 4300, paidAmount: 0, paymentStatus: 'unpaid' } as Billing,
-          { totalAmount: 4500, paidAmount: 0, paymentStatus: 'unpaid' } as Billing,
-        ];
-
-        const totalIncome = mockBillings.reduce((sum, b) => sum + (b.paidAmount || 0), 0);
-        const totalOutstanding = mockBillings.reduce(
-          (sum, b) => sum + (b.totalAmount - (b.paidAmount || 0)),
-          0,
-        );
-        const paidCount = mockBillings.filter((b) => b.paymentStatus === 'paid').length;
-
-        setStats({
-          income: totalIncome,
-          occupancy: { current: 28, total: 30 },
-          paymentsCollected: { current: paidCount, total: mockBillings.length },
-          outstandingBalance: totalOutstanding,
-        });
-      } catch (error) {
-        console.error('Failed to fetch overview stats:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchOverviewStats();
-  }, []);
-
+const OverviewTab: FunctionComponent<OverviewTabProps> = ({ overview, monthlyIncome, incomeBreakdown }) => {
   const statCards = [
-    { label: 'Income', value: `₱${stats.income.toFixed(2)}`, highlight: true },
-    { label: 'Occupancy', value: `${stats.occupancy.current}/${stats.occupancy.total}` },
+    { label: 'Income', value: `₱${(overview?.totalIncome ?? 0).toFixed(2)}`, highlight: true },
     {
-      label: 'Payments Collected',
-      value: `${stats.paymentsCollected.current}/${stats.paymentsCollected.total}`,
+      label: 'Occupancy',
+      value: `${overview?.occupiedUnits ?? 0}/${overview?.totalUnits ?? 0}`,
     },
-    { label: 'Outstanding Balance', value: `₱${stats.outstandingBalance.toFixed(2)}` },
+    {
+      label: 'Collection Rate',
+      value: `${overview?.collectionRate ?? 0}%`,
+    },
+    {
+      label: 'Occupancy Rate',
+      value: `${overview?.occupancyRate ?? 0}%`,
+    },
   ];
 
-  if (isLoading) {
+  if (!overview) {
     return (
-      <div className="flex flex-col items-start gap-5 text-left text-[18px] text-gray font-inter w-full">
-        <div className="w-full h-[84px] bg-gray-100 animate-pulse rounded-[10px]" />
-        <div className="w-full h-[280px] bg-gray-100 animate-pulse rounded-2xl" />
-        <div className="w-full h-[280px] bg-gray-100 animate-pulse rounded-2xl" />
+      <div className="flex flex-col items-start gap-5 w-full">
+        <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[15px]">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="h-[84px] rounded-[10px] bg-gray-100 animate-pulse" />
+          ))}
+        </div>
+        <div className="w-full h-[280px] rounded-2xl bg-gray-100 animate-pulse" />
+        <div className="w-full h-[280px] rounded-2xl bg-gray-100 animate-pulse" />
       </div>
     );
   }
 
   return (
     <div className="flex flex-col items-start gap-5 text-left text-[18px] text-gray font-inter w-full">
-      {/* Stat cards row */}
       <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[15px]">
         {statCards.map((card) => (
           <StatCard key={card.label} {...card} />
         ))}
       </div>
-
-      {/* Charts */}
       <div className="w-full">
-        <MonthlyIncomeChart />
+        <MonthlyIncomeChart monthlyIncome={monthlyIncome} />
       </div>
       <div className="w-full">
-        <IncomeBreakdown />
+        <IncomeBreakdown incomeBreakdown={incomeBreakdown} />
       </div>
     </div>
   );

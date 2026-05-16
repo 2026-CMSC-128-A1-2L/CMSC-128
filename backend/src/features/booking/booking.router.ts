@@ -9,7 +9,8 @@ import {
 import {
   isSuperAdmin,
   isVerifiedStudent,
-  manageListingsFilter,
+  isLoggedIn,
+  manageBookingsFilter,
   selfFilter,
 } from '../../middleware.js';
 
@@ -18,7 +19,7 @@ const router = Router();
 // ============================================================================
 // GET /api/bookings
 // ============================================================================
-router.get('/', isSuperAdmin, routeGetBookings);
+router.get('/', isLoggedIn, (req, res, next) => { console.log('ROUTER: User Type:', req.user?.userType); next(); }, manageBookingsFilter, (req, res, next) => { console.log('ROUTER: Passed manageBookingsFilter'); next(); }, routeGetBookings);
 
 // ============================================================================
 // GET /api/bookings/facilities/:facilityId/available-slots
@@ -37,7 +38,7 @@ router.post('/', isVerifiedStudent, routeCreateBooking);
 // ============================================================================
 // PATCH /api/bookings/:bookingId
 // ============================================================================
-router.patch('/:bookingId', manageListingsFilter, routeUpdateBookingStatus);
+router.patch('/:bookingId', isLoggedIn, manageBookingsFilter, routeUpdateBookingStatus);
 
 // ============================================================================
 // DELETE /api/bookings/:bookingId

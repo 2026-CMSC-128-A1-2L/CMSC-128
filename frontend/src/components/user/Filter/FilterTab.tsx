@@ -26,7 +26,9 @@ const Filter: FunctionComponent<FilterCriteriaProps> = ({
   const [activeThumb, setActiveThumb] = useState<'min' | 'max'>('min');
   const [pax, setPax] = useState<number | 'Any'>(filterCriteria.pax);
   const [propertyType, setPropertyType] = useState(filterCriteria.propertyType);
-  const [selectedEssentials, setSelectedEssentials] = useState<string[]>(filterCriteria.selectedEssentials);
+  const [selectedEssentials, setSelectedEssentials] = useState<string[]>(
+    filterCriteria.selectedEssentials,
+  );
   const [distance, setDistance] = useState(filterCriteria.distance);
 
   useEffect(() => {
@@ -97,10 +99,11 @@ const Filter: FunctionComponent<FilterCriteriaProps> = ({
 
   return (
     <div className="flex flex-col h-full bg-white shadow-xl font-inter overflow-hidden dark:bg-[#101111] dark:text-[#d7e0ef]">
-
       {/* STICKY HEADER */}
       <div className="w-full flex items-center justify-between py-6 px-8 border-b border-whitesmoke shrink-0 dark:border-[#303331]">
-        <b className="text-[1.322rem] leading-[1.763rem] text-black dark:text-[#edf6f4]">Select filter</b>
+        <b className="text-[1.322rem] leading-[1.763rem] text-black dark:text-[#edf6f4]">
+          Select filter
+        </b>
         <div className="flex items-center gap-3">
           <button
             onClick={handleReset}
@@ -112,14 +115,16 @@ const Filter: FunctionComponent<FilterCriteriaProps> = ({
             onClick={onClose}
             className="flex items-center justify-center p-2 rounded-full hover:bg-whitesmoke transition-colors border-none bg-transparent cursor-pointer dark:hover:bg-[#242526]"
           >
-            <Icon icon="material-symbols:close-rounded" className="w-7 h-7 text-gray dark:text-[#d7e0ef]" />
+            <Icon
+              icon="material-symbols:close-rounded"
+              className="w-7 h-7 text-gray dark:text-[#d7e0ef]"
+            />
           </button>
         </div>
       </div>
 
       {/* SCROLLABLE BODY */}
       <div className="flex-1 overflow-y-auto py-4 px-8 flex flex-col gap-8">
-
         {/* Property Type */}
         <div className="w-full flex flex-col items-start gap-4">
           <b className="text-darkgreen text-num-14 dark:text-[#edf6f4]">Property Type</b>
@@ -134,9 +139,11 @@ const Filter: FunctionComponent<FilterCriteriaProps> = ({
                 key={type.id}
                 onClick={() => setPropertyType(type.id)}
                 className={`cursor-pointer rounded-num-12 flex flex-col items-center justify-center p-3 gap-2 transition-all border border-solid
-                  ${propertyType === type.id
-                    ? 'bg-lightcyan/45 text-teal border-teal dark:bg-[#12342e] dark:text-[#72cbb8] dark:border-[#72cbb8]'
-                    : 'bg-white text-dimgray border-whitesmoke hover:border-teal/50 dark:bg-[#141515] dark:text-[#a4acba] dark:border-[#303331] dark:hover:border-[#72cbb8]'}`}
+                  ${
+                    propertyType === type.id
+                      ? 'bg-lightcyan/45 text-teal border-teal dark:bg-[#12342e] dark:text-[#72cbb8] dark:border-[#72cbb8]'
+                      : 'bg-white text-dimgray border-whitesmoke hover:border-teal/50 dark:bg-[#141515] dark:text-[#a4acba] dark:border-[#303331] dark:hover:border-[#72cbb8]'
+                  }`}
               >
                 <Icon icon={type.icon} className="w-6 h-6" />
                 <div className="text-[0.65rem] font-bold text-center leading-tight">{type.id}</div>
@@ -149,11 +156,17 @@ const Filter: FunctionComponent<FilterCriteriaProps> = ({
         <div className="w-full flex items-center justify-between py-2">
           <b className="text-black text-num-14 dark:text-[#edf6f4]">Pax</b>
           <div className="flex items-center gap-4 text-teal dark:text-[#72cbb8]">
-            <button onClick={() => handlePaxChange('minus')} className="bg-transparent border border-solid border-teal/30 rounded-full p-1 cursor-pointer flex items-center hover:bg-teal/10 dark:border-[#72cbb8]/40 dark:hover:bg-[#12342e]">
+            <button
+              onClick={() => handlePaxChange('minus')}
+              className="bg-transparent border border-solid border-teal/30 rounded-full p-1 cursor-pointer flex items-center hover:bg-teal/10 dark:border-[#72cbb8]/40 dark:hover:bg-[#12342e]"
+            >
               <Icon icon="lsicon:minus-outline" className="w-5 h-5 text-teal dark:text-[#72cbb8]" />
             </button>
             <b className="text-lg min-w-[2rem] text-center">{pax}</b>
-            <button onClick={() => handlePaxChange('add')} className="bg-transparent border border-solid border-teal/30 rounded-full p-1 cursor-pointer flex items-center hover:bg-teal/10 dark:border-[#72cbb8]/40 dark:hover:bg-[#12342e]">
+            <button
+              onClick={() => handlePaxChange('add')}
+              className="bg-transparent border border-solid border-teal/30 rounded-full p-1 cursor-pointer flex items-center hover:bg-teal/10 dark:border-[#72cbb8]/40 dark:hover:bg-[#12342e]"
+            >
               <Icon icon="formkit:add" className="w-5 h-5 text-teal dark:text-[#72cbb8]" />
             </button>
           </div>
@@ -168,10 +181,22 @@ const Filter: FunctionComponent<FilterCriteriaProps> = ({
               className="absolute h-1.5 bg-teal rounded-full dark:bg-[#72cbb8]"
               style={{ left: `${minPercent}%`, right: `${100 - maxPercent}%` }}
             />
-            <input type="range" min={PRICE_LIMITS.min} max={PRICE_LIMITS.max} step={PRICE_LIMITS.step} value={minPrice} onChange={handleMinChange}
+            <input
+              type="range"
+              min={PRICE_LIMITS.min}
+              max={PRICE_LIMITS.max}
+              step={PRICE_LIMITS.step}
+              value={minPrice}
+              onChange={handleMinChange}
               className={`absolute w-full pointer-events-none appearance-none bg-transparent ${activeThumb === 'min' ? 'z-40' : 'z-30'} ${thumbStyles}`}
             />
-            <input type="range" min={PRICE_LIMITS.min} max={PRICE_LIMITS.max} step={PRICE_LIMITS.step} value={maxPrice} onChange={handleMaxChange}
+            <input
+              type="range"
+              min={PRICE_LIMITS.min}
+              max={PRICE_LIMITS.max}
+              step={PRICE_LIMITS.step}
+              value={maxPrice}
+              onChange={handleMaxChange}
               className={`absolute w-full pointer-events-none appearance-none bg-transparent ${activeThumb === 'max' ? 'z-40' : 'z-30'} ${thumbStyles}`}
             />
           </div>
@@ -201,14 +226,21 @@ const Filter: FunctionComponent<FilterCriteriaProps> = ({
         <div className="w-full flex flex-col gap-4 pb-4">
           <b className="text-teal text-[1.1rem] dark:text-[#72cbb8]">Distance from Campus</b>
           <Distance distance={distance} />
-          <input type="range" min={0.1} max={5} step={0.1} value={distance}
+          <input
+            type="range"
+            min={0.1}
+            max={5}
+            step={0.1}
+            value={distance}
             onChange={(e) => setDistance(parseFloat(e.target.value))}
             className="w-full accent-teal cursor-pointer"
           />
           <div className="flex items-center justify-between">
             <span className="font-bold text-dimgray dark:text-[#a4acba]">Kilometers</span>
             <div className="flex items-center justify-center w-28 h-10 border border-solid border-whitesmoke rounded-lg bg-white shadow-sm gap-2 px-3 dark:border-[#303331] dark:bg-[#141515]">
-              <span className="font-bold text-teal text-lg dark:text-[#72cbb8]">{distance.toFixed(1)}</span>
+              <span className="font-bold text-teal text-lg dark:text-[#72cbb8]">
+                {distance.toFixed(1)}
+              </span>
               <div className="flex flex-col border-l border-whitesmoke pl-2 dark:border-[#303331]">
                 <Icon icon="heroicons:chevron-up-20-solid" className="w-4 h-4 text-gray-400" />
                 <Icon icon="heroicons:chevron-down-20-solid" className="w-4 h-4 text-gray-400" />

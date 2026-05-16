@@ -129,7 +129,12 @@ const CarouselSection = ({
       >
         {items.map((dorm) => (
           <div key={dorm.id} className="shrink-0">
-            <DormCard key={dorm.id} {...dorm} />
+            <DormCard
+              key={dorm.id}
+              {...dorm}
+              sourceLabel={category ? CATEGORY_LABELS[category] : undefined}
+              sourceUrl="/home"
+            />
           </div>
         ))}
       </div>
@@ -191,8 +196,7 @@ const HomePage: FunctionComponent = () => {
   // TODO: extend with rating, distance, and tags once available in DormCardData
   const filterApplied = facilities.filter(
     (dorm) =>
-      dorm.price.min >= filterCriteria.minPrice &&
-      dorm.price.max <= filterCriteria.maxPrice,
+      dorm.price.min >= filterCriteria.minPrice && dorm.price.max <= filterCriteria.maxPrice,
   );
 
   // Apply search on top of the filtered results
@@ -253,7 +257,6 @@ const HomePage: FunctionComponent = () => {
       <div className="w-full min-w-0 h-fit flex items-start pt-15 pr-20 pb-20">
         <div className="h-fit w-full min-w-0 flex flex-col items-start gap-80">
           <div className="w-full min-w-0 flex flex-col items-start">
-
             {/* search bar */}
             <div className="w-full h-full overflow-hidden flex items-center pb-6 box-border">
               <div className="w-full flex items-center transition-all duration-300 bg-[#f8f9fa] rounded-num-12 py-3 pl-3 pr-4 border border-transparent focus-within:bg-white focus-within:shadow-[0_8px_10px_rgb(0,0,0,0.06)] focus-within:transform focus-within:-translate-y-[1px]">
@@ -279,7 +282,6 @@ const HomePage: FunctionComponent = () => {
             </div>
 
             <div className="w-full flex flex-col items-start gap-6 text-[1.5rem] text-gray">
-
               {/* greeting / filter button */}
               <div className="w-full flex items-center justify-between box-border">
                 <div className="w-full h-8 flex-1 flex flex-col items-start justify-center">
@@ -326,7 +328,8 @@ const HomePage: FunctionComponent = () => {
                           Results for <span className="text-teal">"{searchTerm}"</span>
                         </b>
                         <span className="text-[0.75rem] text-unselected font-normal">
-                          — {filteredDorms.length} listing{filteredDorms.length !== 1 ? 's' : ''} found
+                          — {filteredDorms.length} listing{filteredDorms.length !== 1 ? 's' : ''}{' '}
+                          found
                         </span>
                       </div>
                       <button
@@ -383,7 +386,12 @@ const HomePage: FunctionComponent = () => {
                     {CATEGORY_DATA[viewAllCategory].length > 0 ? (
                       <div className="w-full flex flex-wrap gap-6 py-1">
                         {CATEGORY_DATA[viewAllCategory].map((dorm) => (
-                          <DormCard key={dorm.id} {...dorm} />
+                          <DormCard
+                            key={dorm.id}
+                            {...dorm}
+                            sourceLabel={CATEGORY_LABELS[viewAllCategory]}
+                            sourceUrl="/home"
+                          />
                         ))}
                       </div>
                     ) : (
@@ -431,7 +439,12 @@ const HomePage: FunctionComponent = () => {
                       </div>
                       <div className="w-full flex flex-wrap gap-6">
                         {filterApplied.map((dorm) => (
-                          <DormCard key={dorm.id} {...dorm} />
+                          <DormCard
+                            key={dorm.id}
+                            {...dorm}
+                            sourceLabel="All Listings"
+                            sourceUrl="/home"
+                          />
                         ))}
                       </div>
                     </div>
