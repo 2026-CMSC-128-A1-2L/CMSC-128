@@ -9,6 +9,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import ConfirmReport from '../../../components/user/Profile/ConfirmReport';
 import FileUploadCard from '../../general/FileUploadCard';
+import { FileService } from '../../../service/FileService';
 import { ReportService } from '../../../service/ReportService';
 
 interface FinalizeContentProps {
@@ -91,12 +92,14 @@ export default function FinalizeContent(props: FinalizeContentProps) {
     setIsSubmitting(true);
     setSubmitError(null);
     try {
+      const uploadedFiles = await Promise.all(
+        evidenceFiles.filter((file): file is File => Boolean(file)).map(FileService.uploadFile),
+      );
+
       await ReportService.reportListing(listingId, {
         description: reportDescription,
         flags: reportFlags,
-        evidence: evidenceFiles
-          .filter((file): file is File => Boolean(file))
-          .map((file) => file.name),
+        evidence: uploadedFiles.map((file) => file.key),
       });
       setShowSuccessPopup(true);
     } catch (error) {
