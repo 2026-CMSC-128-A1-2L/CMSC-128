@@ -9,13 +9,13 @@
 /> */
 }
 
-import React from 'react';
-import RightArrow from '../../../assets/iconamoon_arrow-right-2.svg';
-import { Link } from 'react-router-dom';
-// 1. Define the shape of your new route objects
+import React from "react";
+import RightArrow from "../../../assets/iconamoon_arrow-right-2.svg";
+import { Link } from "react-router-dom";
+
 export interface BreadcrumbRoute {
   name: string;
-  url?: string; // Optional, because the last item usually doesn't need a link
+  url?: string;
 }
 
 interface BreadcrumbHeaderProps {
@@ -23,17 +23,18 @@ interface BreadcrumbHeaderProps {
 }
 
 export default function BreadcrumbHeader({ routes }: BreadcrumbHeaderProps) {
-  if (!routes || routes.length === 0) return null;
+  if (!routes || routes.length < 3) return null;
 
   return (
-    <div className="flex py-2 items-center font-lora text-num-14 font-semibold">
+    <nav
+      aria-label="Breadcrumb"
+      className="flex items-center py-2 font-inter text-num-12 font-semibold"
+    >
       {routes.map((route, index) => {
-        // Check if this is the current page we are on
         const isLast = index === routes.length - 1;
 
         return (
-          <React.Fragment key={index}>
-            {/* 2. If it has a URL and isn't the last item, render an anchor tag. Otherwise, just text. */}
+          <React.Fragment key={`${route.name}-${index}`}>
             {!isLast && route.url ? (
               <Link
                 to={route.url}
@@ -42,15 +43,17 @@ export default function BreadcrumbHeader({ routes }: BreadcrumbHeaderProps) {
                 {route.name}
               </Link>
             ) : (
-              // The current page text is usually darker to show it's active
-              <p className={isLast ? 'text-darkslategray' : 'text-black'}>{route.name}</p>
+              <p className={isLast ? "text-darkslategray" : "text-black"}>
+                {route.name}
+              </p>
             )}
 
-            {/* 3. The Arrow */}
-            {!isLast && <img src={RightArrow} alt="Separator" className="mx-2" />}
+            {!isLast && (
+              <img src={RightArrow} alt="Separator" className="mx-2" />
+            )}
           </React.Fragment>
         );
       })}
-    </div>
+    </nav>
   );
 }

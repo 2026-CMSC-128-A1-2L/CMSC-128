@@ -46,9 +46,9 @@ export const BookingService = {
     }
   },
 
-  async updateBookingStatus(bookingId: string) {
+  async updateBookingStatus(bookingId: string, status: 'accepted' | 'cancelled') {
     try {
-      const response = await api.patch(`/api/bookings/${bookingId}`, {});
+      const response = await api.patch(`/api/bookings/${bookingId}`, { status });
 
       return response.data;
     } catch (error) {

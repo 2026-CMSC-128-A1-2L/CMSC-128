@@ -27,6 +27,7 @@ export const getCalendar = async (
   if (userType === 'Student') {
     const bookings = await VisitBooking.find({
       userId: userId,
+      status: 'accepted',
       startDate: { $lte: endDate },
       endDate: { $gte: startDate },
     });
@@ -125,6 +126,7 @@ export const getCalendar = async (
     if (facilityIds.length > 0) {
       const bookings = await VisitBooking.find({
         facilityId: { $in: facilityIds },
+        status: 'accepted',
         startDate: { $lte: endDate },
         endDate: { $gte: startDate },
       });

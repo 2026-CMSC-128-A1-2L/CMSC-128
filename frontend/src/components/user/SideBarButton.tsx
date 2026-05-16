@@ -41,7 +41,10 @@ const SideBarButton = ({ icon, label, state = 'default', onClick }: SideBarButto
       >
         <Icon
           icon={icon}
-          className={['w-7 h-7', active ? 'text-[#096c5b] dark:text-[#72cbb8]' : 'text-[#2d3748] dark:text-[#d7e0ef]'].join(' ')}
+          className={[
+            'w-7 h-7',
+            active ? 'text-[#096c5b] dark:text-[#72cbb8]' : 'text-[#2d3748] dark:text-[#d7e0ef]',
+          ].join(' ')}
           aria-hidden="true"
         />
         <span

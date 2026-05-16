@@ -8,6 +8,7 @@ import {
   routeSubmitBillingPayment,
   routeGetBillingsSummary,
   routeGetUserBillingDashboard,
+  routeDownloadBillingPdf,
 } from './billing.controller.js';
 import {
   getBillingId,
@@ -58,6 +59,8 @@ router.get('/landlord/summary', manageBillingsFilter, routeGetBillingsSummary);
 router.get('/facility/:facilityId/summary', manageBillingsFilter, routeGetBillingsSummary);
 
 router.get('/users/:userId/dashboard', selfFilter, routeGetUserBillingDashboard);
+
+router.get('/download/:userId', selfFilter, routeDownloadBillingPdf);
 
 // ============================================================================
 // GET /api/billings/:billingId

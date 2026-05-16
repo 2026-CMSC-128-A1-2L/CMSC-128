@@ -27,6 +27,10 @@ export type CreateBillingArguments = {
 
 export type UpdateBillingArguments = {
   dueDate?: Date;
+  breakdown?: { name: string; amount: number }[];
+  totalAmount?: number;
+  paidAmount?: number | null;
+  paymentStatus?: string;
 };
 
 export type submitBillingPaymentArguments = {
@@ -56,12 +60,13 @@ export const createBilling = async (
   const rental = await Rental.where(filters).findOne({ _id: data.rentalId, status: 'active' });
   if (!rental) throw new AppError(404, 'Rental not found.');
 
-  const totalAmount = data.breakdown.map((x) => x.amount).reduce((x, y) => x + y);
+  const totalAmount = data.breakdown.map((x) => x.amount).reduce((x, y) => x + y, 0);
 
   const billing = new Billing({
     userId: rental.userId,
     unitId: rental.unitId,
     facilityId: rental.facilityId,
+    rentalId: rental._id,
     dueDate: data.dueDate,
     totalAmount,
     breakdown: data.breakdown,
@@ -567,9 +572,111 @@ export const sumbitBillingPayment = async (
     message: `Payment method: ${data.paymentMethod}`,
   };
   billing.documents.push(receiptDocument);
-  return await Billing.findByIdAndUpdate(
-    billingId,
-    { $push: { documents: receiptDocument } },
-    { returnDocument: 'after', runValidators: false },
-  );
+  return await billing.save();
+};
+
+export const getBillingsPdf = async (
+  userId: mongoose.Types.ObjectId,
+  _query: Partial<GetBillingArguments>,
+  filters: QueryFilter<BillingType>,
+) => {
+  const currentMonth = new Date().getMonth() + 1;
+  const currentYear = new Date().getFullYear();
+
+  const userBillingSummary = await Billing.aggregate([
+    {
+      $match: combineFilters<BillingType>(filters, {
+        userId,
+        $expr: {
+          $and: [
+            { $eq: [{ $month: '$dueDate' }, currentMonth] },
+            { $eq: [{ $year: '$dueDate' }, currentYear] },
+          ],
+        },
+      }),
+    },
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'userId',
+        foreignField: '_id',
+        as: 'studentProfile',
+      },
+    },
+    { $unwind: '$studentProfile' },
+    {
+      $lookup: {
+        from: 'housingfacilities',
+        localField: 'facilityId',
+        foreignField: '_id',
+        as: 'facility',
+      },
+    },
+    { $unwind: '$facility' },
+    {
+      $lookup: {
+        from: 'units',
+        localField: 'unitId',
+        foreignField: '_id',
+        as: 'unit',
+      },
+    },
+    { $unwind: '$unit' },
+
+    {
+      $group: {
+        _id: '$userId',
+
+        studentName: {
+          $first: { $concat: ['$studentProfile.firstName', ' ', '$studentProfile.lastName'] },
+        },
+
+        studentNumber: { $first: '$studentProfile.studentNumber' },
+        degreeProgram: { $first: '$studentProfile.degreeProgram' },
+        upMail: { $first: '$studentProfile.email' },
+
+        dormitory: { $first: '$facility.name' },
+        roomSpace: { $first: '$unit.roomNumber' },
+
+        // Get all breakdowns
+        allBreakdowns: { $push: '$breakdown' },
+        totalAmount: { $sum: '$totalAmount' },
+        latestDueDate: { $max: '$dueDate' },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        statementNo: { $toUpper: { $substr: [{ $toString: '$_id' }, 18, 6] } },
+        statementDate: { $dateToString: { format: '%m/%d/%Y', date: new Date() } },
+        billingPeriod: {
+          $literal: new Date().toLocaleString('default', { month: 'long', year: 'numeric' }),
+        },
+        dueDate: { $dateToString: { format: '%m/%d/%Y', date: '$latestDueDate' } },
+
+        studentName: 1,
+        studentNumber: 1,
+        degreeProgram: 1,
+        upMail: 1,
+        dormitory: 1,
+        roomSpace: 1,
+
+        // Flatten to a single list
+        breakdown: {
+          $reduce: {
+            input: '$allBreakdowns',
+            initialValue: [],
+            in: { $concatArrays: ['$$value', '$$this'] },
+          },
+        },
+        totalDue: '$totalAmount',
+      },
+    },
+  ]);
+
+  if (!userBillingSummary.length) {
+    throw new AppError(404, 'No billing records found for this student in the current month.');
+  }
+
+  return userBillingSummary[0];
 };

@@ -6,9 +6,13 @@ import multer from "multer";
 import multerS3 from "multer-s3";
 
 import { S3Client } from "@aws-sdk/client-s3";
-import path from "path";
+import path from "node:path";
 import { isLoggedIn } from "../../middleware.js";
-import { routeUploadFile, routeDownloadFile } from "./file.controller.js";
+import {
+  routeGetPublicFile,
+  routeDownloadFile,
+  routeUploadFile,
+} from "./file.controller.js";
 
 if (
   !process.env.R2_ENDPOINT ||
@@ -33,18 +37,19 @@ const upload = multer({
     bucket: process.env.R2_BUCKET_NAME,
     // eslint-disable-next-line @typescript-eslint/unbound-method
     contentType: multerS3.AUTO_CONTENT_TYPE,
-    metadata: (req, file, cb) => {
+    metadata: (_req, file, cb) => {
       cb(null, { fieldName: file.fieldname });
     },
-    key: (req, file, cb) => {
+    key: (_req, file, cb) => {
       const uniqueSuffix = `${Date.now().toString()}-${Math.round(Math.random() * 1e9).toString()}`;
-      cb(null, uniqueSuffix + path.extname(file.originalname));
+      cb(null, `atlas/${uniqueSuffix}${path.extname(file.originalname)}`);
     },
   }),
 });
 
 // Files
+router.get("/public", isLoggedIn, routeGetPublicFile);
+router.get("/download", isLoggedIn, routeDownloadFile);
 router.post("/", isLoggedIn, upload.single("file"), routeUploadFile);
-router.get("/download", routeDownloadFile);
 
 export default router;

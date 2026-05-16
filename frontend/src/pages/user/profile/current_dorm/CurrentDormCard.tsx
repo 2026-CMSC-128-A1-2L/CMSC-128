@@ -1,9 +1,17 @@
 import { Icon } from '@iconify/react';
 import placeholder from '../../../../../assets/one_sapphire_place.png';
-import { Link, useNavigate } from 'react-router-dom';
-import { act, useState } from 'react';
-import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { ReviewService } from '../../../../service/ReviewService';
+import { ReportService } from '../../../../service/ReportService';
+import { UserService } from '../../../../service/UserService';
+import { useCurrentDormReviewDetails } from './useCurrentDormReviewDetails';
+
+interface Roommate {
+  name: string;
+  avatarSrc?: string;
+}
+
 interface CurrentDormCardProps {
   propertyImageSrc?: string;
   propertyName?: string;
@@ -11,7 +19,22 @@ interface CurrentDormCardProps {
   contractDuration?: string;
   leaseEndDate?: string;
   verified?: true;
+  roommates?: Roommate[];
 }
+
+type ListingReportSummary = {
+  _id?: string;
+  id?: string;
+  __t?: string;
+  listingId?: string | Record<string, unknown>;
+  status?: 'pending' | 'resolved' | 'dismissed';
+  createdAt?: string;
+};
+
+type ReportStatusState = {
+  status: 'pending' | 'resolved' | 'dismissed' | null;
+  isLoading: boolean;
+};
 
 export default function CurrentDormCard({
   propertyImageSrc = placeholder,
@@ -20,16 +43,119 @@ export default function CurrentDormCard({
   contractDuration = '1 Year',
   leaseEndDate = 'May 18, 2026',
   verified = true,
+  roommates = [
+    { name: 'Nathaniel Cunanan', avatarSrc: placeholder },
+    { name: 'Raven Caduyac', avatarSrc: placeholder },
+    { name: 'Jiro Tipan', avatarSrc: placeholder },
+    { name: 'Ted Villanueva', avatarSrc: placeholder },
+    { name: 'Val Alamillo', avatarSrc: placeholder },
+  ],
   // default values for props, can be overridden when using the component
 }: CurrentDormCardProps) {
   const [activeTab, setActiveTab] = useState('Contract Information');
+  const [hasExistingReview, setHasExistingReview] = useState(false);
+  const [reportStatus, setReportStatus] = useState<ReportStatusState>({
+    status: null,
+    isLoading: false,
+  });
+  const { details } = useCurrentDormReviewDetails();
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadReviewStatus = async () => {
+      if (!details?.listingId) {
+        setHasExistingReview(false);
+        return;
+      }
+
+      try {
+        const [selfResponse, reviewsResponse] = await Promise.all([
+          UserService.getSelf(),
+          ReviewService.getListingReviews(details.listingId),
+        ]);
+
+        if (cancelled) return;
+
+        const self = getDataObject<Record<string, unknown>>(selfResponse);
+        const selfId = getEntityId(self);
+        const reviews = getDataArray<ReviewSummary>(reviewsResponse);
+
+        setHasExistingReview(
+          Boolean(selfId) && reviews.some((review) => getEntityId(review.userId) === selfId),
+        );
+      } catch {
+        if (!cancelled) setHasExistingReview(false);
+      }
+    };
+
+    void loadReviewStatus();
+    return () => {
+      cancelled = true;
+    };
+  }, [details?.listingId]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadReportStatus = async () => {
+      if (!details?.listingId) {
+        setReportStatus({ status: null, isLoading: false });
+        return;
+      }
+
+      setReportStatus((current) => ({ ...current, isLoading: true }));
+
+      try {
+        const response = await ReportService.getMyReports();
+        if (cancelled) return;
+
+        const reports = getDataArray<ListingReportSummary>(response);
+        const latestListingReport = reports.find(
+          (report) =>
+            report.__t === 'ListingReport' && getEntityId(report.listingId) === details.listingId,
+        );
+
+        setReportStatus({
+          status: latestListingReport?.status ?? null,
+          isLoading: false,
+        });
+      } catch {
+        if (!cancelled) setReportStatus({ status: null, isLoading: false });
+      }
+    };
+
+    void loadReportStatus();
+    return () => {
+      cancelled = true;
+    };
+  }, [details?.listingId]);
+
+  const handleViewDetails = () => {
+    navigate(details?.facilityId ? `/facilities/${details.facilityId}` : '/current-dorm');
+  };
+
+  const hasPendingReport = reportStatus.status === 'pending';
+  const reportStatusMessage =
+    reportStatus.status === 'pending'
+      ? 'Your report is still pending. You cannot submit another report for this listing yet.'
+      : reportStatus.status === 'dismissed'
+        ? 'Your previous report was dismissed. You may submit another report if needed.'
+        : reportStatus.status === 'resolved'
+          ? 'Your previous report was resolved. You may submit another report if needed.'
+          : "You haven't submitted any reports yet.";
+
   return (
     <div className="flex flex-col gap-5 max-w-4xl mx-auto dark:text-[#edf6f4]">
       <div className="max-w-4xl mx-auto rounded-xl border border-[#f0f0f0] bg-white overflow-hidden shadow-sm text-black dark:border-[#303331] dark:bg-[#101111] dark:text-[#edf6f4] dark:shadow-none">
         {/* Property Image */}
-        <img src={propertyImageSrc} alt={propertyName} className="w-[1200px] h-[400px] object-cover" />
+        <img
+          src={propertyImageSrc}
+          alt={propertyName}
+          className="w-[1200px] h-[400px] object-cover"
+        />
 
         <div className="p-6">
           {/* Property Title */}
@@ -56,6 +182,43 @@ export default function CurrentDormCard({
             </div>
           </div>
 
+          {/* Roommates Section */}
+          {roommates && roommates.length > 0 && (
+            <div className="mb-8">
+              <h3 className="text-xl font-bold mb-4 text-center">Your Roommates</h3>
+
+              <div className="flex flex-wrap justify-center gap-4">
+                {roommates.map((roommate, index) => (
+                  <div
+                    key={roommate.name}
+                    className="w-[180px] flex flex-col items-center border border-[#f0f0f0] rounded-lg p-4 dark:border-[#303331] dark:bg-[#101111]"
+                  >
+                    {roommate.avatarSrc && (
+                      <img
+                        src={roommate.avatarSrc}
+                        alt={roommate.name}
+                        className="w-16 h-16 rounded-full object-cover mb-2"
+                      />
+                    )}
+
+                    <p className="text-sm font-semibold text-center">{roommate.name}</p>
+
+                    <p className="text-xs">Roommate {index + 1}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Action Button */}
+          <button
+            type="button"
+            onClick={handleViewDetails}
+            className="w-full border border-[#f0f0f0] text-teal-700 text-sm font-semibold rounded-md py-3 flex items-center justify-center gap-2 hover:border-teal-500 cursor-pointer transition dark:border-[#303331] dark:text-[#72cbb8] dark:hover:border-[#72cbb8]"
+          >
+            View Details
+            <Icon icon="heroicons:arrow-top-right-on-square" className="w-4 h-4" />
+          </button>
         </div>
       </div>
       <div className="self-stretch flex items-start justify-center pt-num-24 px-num-32 pb-20 gap-6 text-num-14 text-black dark:text-[#edf6f4]">
@@ -63,8 +226,9 @@ export default function CurrentDormCard({
         <div className="h-[168px] w-[280px] rounded-2xl border-whitesmoke-200 border-solid border box-border overflow-hidden shrink-0 flex flex-col items-start py-3 px-4 dark:border-[#303331] dark:bg-[#101111]">
           <div className="self-stretch flex flex-col items-end py-1 px-0 gap-1">
             {/* contract info */}
-            <div
-              className="self-stretch flex items-center justify-end py-1 px-3 cursor-pointer group"
+            <button
+              type="button"
+              className="self-stretch flex items-center justify-end py-1 px-3 cursor-pointer group bg-transparent border-0 text-right"
               onClick={() => setActiveTab('Contract Information')}
             >
               <div className="flex items-center gap-2">
@@ -78,11 +242,12 @@ export default function CurrentDormCard({
                   className={`h-6 w-6 transition-colors ${activeTab === 'Contract Information' ? 'text-[#096C5B]' : 'text-black'}`}
                 />
               </div>
-            </div>
+            </button>
 
             {/* rate and review */}
-            <div
-              className="self-stretch flex items-center justify-end py-1 px-3 cursor-pointer group"
+            <button
+              type="button"
+              className="self-stretch flex items-center justify-end py-1 px-3 cursor-pointer group bg-transparent border-0 text-right"
               onClick={() => setActiveTab('Rate and Review')}
             >
               <div className="flex items-center gap-2">
@@ -96,11 +261,12 @@ export default function CurrentDormCard({
                   className={`h-6 w-6 transition-colors ${activeTab === 'Rate and Review' ? 'text-[#096C5B]' : 'text-black'}`}
                 />
               </div>
-            </div>
+            </button>
 
             {/* report listing */}
-            <div
-              className="self-stretch flex items-center justify-end py-1 px-3 cursor-pointer group"
+            <button
+              type="button"
+              className="self-stretch flex items-center justify-end py-1 px-3 cursor-pointer group bg-transparent border-0 text-right"
               onClick={() => setActiveTab('Report Listing')}
             >
               <div className="flex items-center gap-2">
@@ -114,11 +280,12 @@ export default function CurrentDormCard({
                   className={`h-6 w-6 transition-colors ${activeTab === 'Report Listing' ? 'text-[#096C5B]' : 'text-black'}`}
                 />
               </div>
-            </div>
+            </button>
 
             {/* pasalo unit */}
-            <div
-              className="self-stretch flex items-center justify-end py-1 px-3 cursor-pointer group"
+            <button
+              type="button"
+              className="self-stretch flex items-center justify-end py-1 px-3 cursor-pointer group bg-transparent border-0 text-right"
               onClick={() => setActiveTab('Pasalo Unit')}
             >
               <div className="flex items-center gap-2">
@@ -132,7 +299,7 @@ export default function CurrentDormCard({
                   className={`h-6 w-6 transition-colors ${activeTab === 'Pasalo Unit' ? 'text-[#096C5B]' : 'text-black'}`}
                 />
               </div>
-            </div>
+            </button>
           </div>
         </div>
 
@@ -162,17 +329,19 @@ export default function CurrentDormCard({
               <p className="text-2xl font-bold  text-[#024338]">Accommodation Review</p>
 
               <p className="text-[14px] text-slategray">
-                {' '}
-                You haven't rated or reviewed this property yet.
+                {hasExistingReview
+                  ? 'You already reviewed this dormitory. Proceeding will update your existing review.'
+                  : "You haven't rated or reviewed this property yet."}
               </p>
 
               <button
+                type="button"
                 className="px-4 py-1 cursor-pointer text-[#096c5b] bg-[#f1f5f9] rounded-full dark:bg-[#0d3a32] dark:text-[#72cbb8]"
                 onClick={() => {
                   navigate('/rate-review');
                 }}
               >
-                Proceed
+                {hasExistingReview ? 'Update Review' : 'Proceed'}
               </button>
             </div>
           )}
@@ -187,8 +356,9 @@ export default function CurrentDormCard({
               </p>
 
               <button
+                type="button"
                 className="px-4 py-1 text-gray-100 bg-[#f1f5f9] rounded-full dark:bg-[#202123] dark:text-[#a4acba]"
-                onClick={() => { }}
+                onClick={() => {}}
               >
                 Proceed
               </button>
@@ -199,10 +369,14 @@ export default function CurrentDormCard({
             <div className="flex-1 flex flex-col items-center  justify-between h-full py-5">
               <p className="text-2xl font-bold  text-[#024338]">Report Status</p>
 
-              <p className="text-[14px] text-slategray"> You haven't submitted any reports yet.</p>
+              <p className="text-[14px] text-slategray">
+                {reportStatus.isLoading ? 'Checking report status...' : reportStatusMessage}
+              </p>
 
               <button
-                className="px-4 py-1 cursor-pointer text-[#096c5b] bg-[#f1f5f9] rounded-full dark:bg-[#0d3a32] dark:text-[#72cbb8]"
+                type="button"
+                disabled={reportStatus.isLoading || hasPendingReport || !details?.listingId}
+                className="px-4 py-1 cursor-pointer text-[#096c5b] bg-[#f1f5f9] rounded-full disabled:cursor-not-allowed disabled:opacity-50 dark:bg-[#0d3a32] dark:text-[#72cbb8]"
                 onClick={() => {
                   navigate('/report-dorm');
                 }}
@@ -223,8 +397,9 @@ export default function CurrentDormCard({
               </p>
 
               <button
+                type="button"
                 className="px-4 py-1 text-gray-100 bg-[#f1f5f9] rounded-full dark:bg-[#202123] dark:text-[#a4acba]"
-                onClick={() => { }}
+                onClick={() => {}}
               >
                 Proceed
               </button>
@@ -241,6 +416,7 @@ export default function CurrentDormCard({
               </p>
 
               <button
+                type="button"
                 className="px-4 py-1 cursor-pointer text-[#096c5b] bg-[#f1f5f9] rounded-full dark:bg-[#0d3a32] dark:text-[#72cbb8]"
                 onClick={() => {
                   navigate('/lease-transfer');
@@ -262,8 +438,9 @@ export default function CurrentDormCard({
               </p>
 
               <button
+                type="button"
                 className="px-4 py-1  text-gray-100  bg-[#f1f5f9] rounded-full"
-                onClick={() => { }}
+                onClick={() => {}}
               >
                 Proceed
               </button>
@@ -274,3 +451,29 @@ export default function CurrentDormCard({
     </div>
   );
 }
+
+type ReviewSummary = {
+  userId?: string | Record<string, unknown>;
+};
+
+const getDataArray = <T,>(response: unknown): T[] => {
+  if (Array.isArray(response)) return response as T[];
+  if (response && typeof response === 'object' && 'data' in response) {
+    const data = (response as { data?: unknown }).data;
+    return Array.isArray(data) ? (data as T[]) : [];
+  }
+  return [];
+};
+
+const getDataObject = <T,>(response: unknown): T | undefined => {
+  if (!response || typeof response !== 'object') return undefined;
+  if ('data' in response) return (response as { data?: T }).data;
+  return response as T;
+};
+
+const getEntityId = (value: unknown) => {
+  if (typeof value === 'string') return value;
+  if (!value || typeof value !== 'object') return undefined;
+  const id = (value as { id?: unknown; _id?: unknown }).id ?? (value as { _id?: unknown })._id;
+  return typeof id === 'string' ? id : id ? String(id) : undefined;
+};

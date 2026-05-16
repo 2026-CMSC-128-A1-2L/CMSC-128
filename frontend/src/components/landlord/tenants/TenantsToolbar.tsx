@@ -82,7 +82,9 @@ const TenantsToolbar: FunctionComponent<TenantsToolbarProps> = ({
   };
 
   const summaryLabel =
-    showTenantFilters && filter && tenantFiltersActive(filter) ? 'Filters · active' : 'Tenants filter';
+    showTenantFilters && filter && tenantFiltersActive(filter)
+      ? 'Filters · active'
+      : 'Tenants filter';
 
   const handleStatus = (value: TenantListFilters['status']) => {
     onFilterChange?.({ status: value });

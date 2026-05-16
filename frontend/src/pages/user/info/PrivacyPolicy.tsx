@@ -1,4 +1,11 @@
-import { type FunctionComponent, type ReactNode, useCallback, useEffect, useState } from 'react';
+import {
+  type FunctionComponent,
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { Icon } from '@iconify/react';
 import SideBar from '../../../components/user/SideBar';
 import SideBarLandlord from '../../../components/landlord/SideBarLandlord';
@@ -22,6 +29,35 @@ const articleSections: ArticleSection[] = [
   { id: 'privacy-act', title: 'Data Privacy Act of 2012 (RA 10173)' },
 ];
 
+function useRevealOnScroll() {
+  const ref = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(18px)';
+    el.style.transition = 'opacity 0.45s ease, transform 0.45s ease';
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.08 },
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  return ref;
+}
+
 const SectionHeading = ({ id, children }: { id: string; children: ReactNode }) => (
   <h2
     id={id}
@@ -41,6 +77,16 @@ const Paragraph = ({ children }: { children: ReactNode }) => (
   <p className="text-num-14 font-medium leading-6 text-black dark:text-[#edf6f4]">{children}</p>
 );
 
+const RevealedSection = ({ children, className }: { children: ReactNode; className: string }) => {
+  const ref = useRevealOnScroll();
+
+  return (
+    <section ref={ref} className={className}>
+      {children}
+    </section>
+  );
+};
+
 const PrivacyPolicy: FunctionComponent = () => {
   const navigate = useNavigate();
   const user = useAuthStore((state) => state.user);
@@ -48,6 +94,7 @@ const PrivacyPolicy: FunctionComponent = () => {
   const usesLandlordShell = user?.userType === 'Landlord' || user?.userType === 'Manager';
   const signedInHomeUrl = usesLandlordShell ? '/landlord-homepage' : '/home';
   const [activeSectionId, setActiveSectionId] = useState(articleSections[0].id);
+  const [showScrollTop, setShowScrollTop] = useState(false);
 
   const scrollToSection = useCallback((id: string) => {
     setActiveSectionId(id);
@@ -81,6 +128,7 @@ const PrivacyPolicy: FunctionComponent = () => {
       }
 
       setActiveSectionId(nextActiveSectionId);
+      setShowScrollTop(window.scrollY > 300);
     };
 
     const handleArticleScroll = () => {
@@ -140,7 +188,7 @@ const PrivacyPolicy: FunctionComponent = () => {
 
             <div className="grid gap-12 lg:grid-cols-[minmax(0,740px)_280px] xl:grid-cols-[minmax(0,800px)_320px]">
               <article className="flex min-w-0 flex-col gap-12 pb-12 font-inter">
-                <section className="flex flex-col gap-3">
+                <RevealedSection className="flex flex-col gap-3">
                   <SectionHeading id="privacy-statement">ATLAS Privacy Statement</SectionHeading>
                   <Paragraph>
                     Welcome to <b>ATLAS</b>, a student-centric housing portal for the UPLB
@@ -148,9 +196,9 @@ const PrivacyPolicy: FunctionComponent = () => {
                     how we collect, use, and protect your personal information when you use our
                     platform to find or list student housing.
                   </Paragraph>
-                </section>
+                </RevealedSection>
 
-                <section className="flex flex-col gap-4">
+                <RevealedSection className="flex flex-col gap-4">
                   <SectionHeading id="personal-data">Personal Data We Collect</SectionHeading>
                   <Paragraph>
                     We collect Personal Data in different ways depending on how you interact with
@@ -250,9 +298,9 @@ const PrivacyPolicy: FunctionComponent = () => {
                       authentication services to verify identity and pre-populate your profile.
                     </li>
                   </ul>
-                </section>
+                </RevealedSection>
 
-                <section className="flex flex-col gap-4">
+                <RevealedSection className="flex flex-col gap-4">
                   <SectionHeading id="data-use">How We Use Your Personal Data</SectionHeading>
                   <Paragraph>
                     We use the Personal Data we collect to provide, maintain, and improve ATLAS.
@@ -296,9 +344,9 @@ const PrivacyPolicy: FunctionComponent = () => {
                       anonymous misuse.
                     </li>
                   </ul>
-                </section>
+                </RevealedSection>
 
-                <section className="flex flex-col gap-4">
+                <RevealedSection className="flex flex-col gap-4">
                   <SectionHeading id="data-sharing">
                     How Your Personal Data is Shared
                   </SectionHeading>
@@ -337,9 +385,9 @@ const PrivacyPolicy: FunctionComponent = () => {
                     We may share technical data with trusted service providers who help maintain
                     hosting, database, communication, and security systems.
                   </Paragraph>
-                </section>
+                </RevealedSection>
 
-                <section className="flex flex-col gap-4">
+                <RevealedSection className="flex flex-col gap-4">
                   <SectionHeading id="retention">
                     Data Retention & Verification Cycles
                   </SectionHeading>
@@ -384,9 +432,9 @@ const PrivacyPolicy: FunctionComponent = () => {
                       Settings.
                     </li>
                   </ul>
-                </section>
+                </RevealedSection>
 
-                <section className="flex flex-col gap-4">
+                <RevealedSection className="flex flex-col gap-4">
                   <SectionHeading id="rights">Your Rights & Choices</SectionHeading>
                   <Paragraph>You maintain control over your editable information:</Paragraph>
                   <ul className="list-disc space-y-2 pl-6 text-num-14 leading-6 text-black dark:text-[#edf6f4]">
@@ -399,9 +447,9 @@ const PrivacyPolicy: FunctionComponent = () => {
                       documents or data.
                     </li>
                   </ul>
-                </section>
+                </RevealedSection>
 
-                <section className="flex flex-col gap-4">
+                <RevealedSection className="flex flex-col gap-4">
                   <SectionHeading id="privacy-act">
                     Data Privacy Act of 2012 (RA 10173)
                   </SectionHeading>
@@ -495,7 +543,7 @@ const PrivacyPolicy: FunctionComponent = () => {
                     By using ATLAS, you acknowledge that your data will be processed in accordance
                     with this Privacy Policy.
                   </Paragraph>
-                </section>
+                </RevealedSection>
               </article>
 
               <aside className="relative hidden lg:block">
@@ -536,7 +584,13 @@ const PrivacyPolicy: FunctionComponent = () => {
         type="button"
         onClick={scrollToTop}
         aria-label="Scroll to top"
-        className="fixed bottom-10 right-10 z-20 hidden h-14 w-14 items-center justify-center rounded-full bg-teal-200 text-white shadow-lg transition-transform hover:-translate-y-1 hover:bg-darkslategray-200 md:flex dark:bg-[#2f9b86] dark:hover:bg-[#155444]"
+        className="fixed bottom-10 right-10 z-20 flex h-14 w-14 items-center justify-center rounded-full bg-teal-200 text-white shadow-lg hover:-translate-y-1 hover:bg-darkslategray-200 dark:bg-[#2f9b86] dark:hover:bg-[#155444]"
+        style={{
+          transition: 'opacity 0.25s ease, transform 0.25s ease, background-color 0.2s',
+          opacity: showScrollTop ? 1 : 0,
+          transform: showScrollTop ? 'translateY(0) scale(1)' : 'translateY(12px) scale(0.9)',
+          pointerEvents: showScrollTop ? 'auto' : 'none',
+        }}
       >
         <Icon icon="material-symbols:arrow-upward-rounded" className="h-8 w-8" />
       </button>

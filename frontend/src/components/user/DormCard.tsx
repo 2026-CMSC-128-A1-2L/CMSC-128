@@ -31,6 +31,8 @@ type DormCardProps = {
   price: { min: number; max: number };
   location: string;
   image: string;
+  sourceLabel?: string;
+  sourceUrl?: string;
   room_types: {
     id?: string;
     pax: string;
@@ -47,6 +49,8 @@ const DormCard: FunctionComponent<DormCardProps> = ({
   price,
   location,
   image,
+  sourceLabel,
+  sourceUrl,
   room_types,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -78,6 +82,8 @@ const DormCard: FunctionComponent<DormCardProps> = ({
           room_types,
         },
         selectedRoomType,
+        sourceLabel,
+        sourceUrl,
       },
     });
   };

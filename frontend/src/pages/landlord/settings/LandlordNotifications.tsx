@@ -75,7 +75,10 @@ const EmailDropdown: FunctionComponent<DropdownProps> = ({
                 <button
                   key={opt}
                   type="button"
-                  onClick={() => { onSelect(opt); setOpen(false); }}
+                  onClick={() => {
+                    onSelect(opt);
+                    setOpen(false);
+                  }}
                   className={`w-full text-left px-4 py-2 text-sm font-semibold cursor-pointer border-none bg-transparent transition-all duration-150 hover:bg-azure hover:text-teal hover:pl-5 ${
                     selected === opt ? 'text-teal bg-azure' : 'text-black'
                   }`}
@@ -114,9 +117,7 @@ const MultiSelectDropdown: FunctionComponent<MultiDropdownProps> = ({
   }, []);
 
   const toggle = (opt: string) => {
-    onChange(
-      selected.includes(opt) ? selected.filter((s) => s !== opt) : [...selected, opt],
-    );
+    onChange(selected.includes(opt) ? selected.filter((s) => s !== opt) : [...selected, opt]);
   };
 
   const label = selected.length === 0 ? 'Select updates' : selected.join(', ');
@@ -242,7 +243,6 @@ const LandlordNotification: FunctionComponent = () => {
 
   return (
     <div className="rounded-t-none rounded-b-num-16 border-whitesmoke-200 border-solid border flex flex-col py-6 px-8 gap-8 text-center text-black">
-
       {/* System Notifications */}
       <div className="self-stretch flex flex-col items-start gap-6">
         <b className="text-[1.5rem] leading-8">System Notifications</b>
@@ -254,8 +254,8 @@ const LandlordNotification: FunctionComponent = () => {
               <b className="relative text-num-14">Default System Notifications Email</b>
               <div className="self-stretch relative leading-6 font-medium text-darkslategray-100 text-left text-num-14">
                 Decide where you want to receive your system updates. System notifications may
-                include account verification approval/rejection, maintenance updates, and new
-                login attempts. You can only choose emails already linked to your ATLAS account.
+                include account verification approval/rejection, maintenance updates, and new login
+                attempts. You can only choose emails already linked to your ATLAS account.
               </div>
             </div>
             <div className="self-stretch flex flex-col items-start py-2.5 px-0 text-left text-teal">
@@ -313,10 +313,10 @@ const LandlordNotification: FunctionComponent = () => {
             <div className="self-stretch flex flex-col items-start gap-2 text-center">
               <b className="relative">Default Listings Notifications Email</b>
               <div className="self-stretch relative leading-6 font-medium text-darkslategray-100 text-left">
-                Decide where you want to receive your listing updates. Listing notifications
-                include new rental applications, booking requests from students, payment
-                submissions, overdue billing alerts, and tenant move-out notices.
-                You can only choose emails already linked to your ATLAS account.
+                Decide where you want to receive your listing updates. Listing notifications include
+                new rental applications, booking requests from students, payment submissions,
+                overdue billing alerts, and tenant move-out notices. You can only choose emails
+                already linked to your ATLAS account.
               </div>
             </div>
             <div className="self-stretch flex flex-col items-start py-2.5 px-0 text-teal">

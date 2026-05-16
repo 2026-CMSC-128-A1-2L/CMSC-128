@@ -1,67 +1,79 @@
 import CurrentDormInfoCard from '../../../../components/CurrentDormInfoCard';
 import StepIndicator from '../../../../components/StepIndicator';
-import DormitoryImg from '../../../../../assets/image.png';
 import SideBar from '../../../../components/user/SideBar';
 import BreadcrumbHeader from '../../../../components/general/Breadcrumb';
 import InfoContent from '../../../../components/user/user-report/InfoContent';
 import ReviewContent from '../../../../components/user/user-report/ReviewContent';
 import FinalizeContent from '../../../../components/user/user-report/FinalizeContent';
 import { useState } from 'react';
+import { useCurrentDormReviewDetails } from './useCurrentDormReviewDetails';
 
 export default function Reportv2() {
-  const LandlordName = 'Quevin Custodio';
-  const ManagerName = 'Nathaniel Cunanan';
-  const DormitoryName = 'One Sapphire Place';
-  const DormitoryAddress = 'Batong Malake, Los Banos, Laguna';
-  const RoomNumber = 'Room 31';
-  const DormitoryImage = DormitoryImg;
-  const DormitoryTags = ['Single Room', '~18 sqm', 'Contract: April 2026 - April 2027'];
-
   const StepIndicatorStages = ['Information', 'Reviewing', 'Finalize'];
 
   const [reportStages, setReportStages] = useState(1);
   const [reportJsonData, setReportJsonData] = useState('');
+  const { details, isLoading, error } = useCurrentDormReviewDetails();
 
   return (
     <div className="flex">
-      <SideBar />
+      <div className="sticky top-0 left-0 h-screen w-[200px] hidden md:block shrink-0 z-10">
+        <SideBar />
+      </div>
       <div className="flex flex-col max-w-[1128px] ml-5 md:ml-10 py-10">
         <BreadcrumbHeader
           routes={[
+            { name: 'Home', url: '/home' },
             { name: 'User Profile', url: '/profile-switcher' },
             { name: 'Current Dorm', url: '/profile-switcher' },
             { name: 'Report' },
           ]}
         />
         <div className="flex flex-col items-center max-w-[1128px] bg-white border border-whitesmoke-200 rounded-2xl overflow-hidden shadow-sm">
-          <CurrentDormInfoCard
-            LandlordName={LandlordName}
-            ManagerName={ManagerName}
-            DormitoryName={DormitoryName}
-            DormitoryAddress={DormitoryAddress}
-            RoomNumber={RoomNumber}
-            DormitoryImage={DormitoryImage}
-            DormitoryTags={DormitoryTags}
-          />
-          <StepIndicator currentStep={reportStages} steps={StepIndicatorStages} />
+          {isLoading ? (
+            <div className="w-full py-20 text-center text-[15px] font-bold text-[#62728b]">
+              Loading your current dorm...
+            </div>
+          ) : error || !details ? (
+            <div className="w-full py-20 text-center">
+              <p className="text-[18px] font-bold text-[#024338]">No current dorm found</p>
+              <p className="mt-2 text-[14px] font-medium text-[#62728b]">
+                {error ?? 'You need an active dorm before you can report a listing.'}
+              </p>
+            </div>
+          ) : (
+            <>
+              <CurrentDormInfoCard
+                LandlordName={details.landlordName}
+                ManagerName={details.managerName}
+                DormitoryName={details.dormitoryName}
+                DormitoryAddress={details.dormitoryAddress}
+                RoomNumber={details.roomNumber}
+                DormitoryImage={details.dormitoryImage}
+                DormitoryTags={details.tags}
+              />
+              <StepIndicator currentStep={reportStages} steps={StepIndicatorStages} />
 
-          {reportStages === 1 && (
-            <InfoContent reportStages={reportStages} setReportStages={setReportStages} />
-          )}
-          {reportStages === 2 && (
-            <ReviewContent
-              reportStages={reportStages}
-              setReportStages={setReportStages}
-              reportJsonData={reportJsonData}
-              setReportJsonData={setReportJsonData}
-            />
-          )}
-          {reportStages === 3 && (
-            <FinalizeContent
-              reportStages={reportStages}
-              setReportStages={setReportStages}
-              reportJsonData={reportJsonData}
-            />
+              {reportStages === 1 && (
+                <InfoContent reportStages={reportStages} setReportStages={setReportStages} />
+              )}
+              {reportStages === 2 && (
+                <ReviewContent
+                  reportStages={reportStages}
+                  setReportStages={setReportStages}
+                  reportJsonData={reportJsonData}
+                  setReportJsonData={setReportJsonData}
+                />
+              )}
+              {reportStages === 3 && (
+                <FinalizeContent
+                  reportStages={reportStages}
+                  setReportStages={setReportStages}
+                  reportJsonData={reportJsonData}
+                  listingId={details.listingId}
+                />
+              )}
+            </>
           )}
         </div>
       </div>

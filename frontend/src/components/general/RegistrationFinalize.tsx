@@ -20,7 +20,9 @@ const ReadOnlyField: FunctionComponent<{
 }> = ({ icon, value, placeholder = '—' }) => (
   <div className="flex-1 self-stretch rounded-num-12 bg-aliceblue dark:bg-[#1f2022] border-whitesmoke dark:border-[#303331] border-solid border overflow-hidden flex items-center py-num-10 px-3 gap-2.5">
     <Icon icon={icon} className="h-6 w-6 shrink-0 text-dimgray dark:text-[#a4acba]" />
-    <span className="text-sm font-medium text-black dark:text-[#d7e0ef] leading-6">{value || placeholder}</span>
+    <span className="text-sm font-medium text-black dark:text-[#d7e0ef] leading-6">
+      {value || placeholder}
+    </span>
   </div>
 );
 
@@ -55,7 +57,10 @@ const RegistrationFinalize: FunctionComponent<RegistrationFinalizeProps> = ({
       <div className="w-[620px] rounded-num-12 border-whitesmoke dark:border-[#303331] bg-white dark:bg-[#141515] border-solid border box-border overflow-hidden flex flex-col items-start pt-3 px-4 pb-4 gap-4">
         {/* Review banner */}
         <div className="self-stretch rounded-xl bg-lightcyan dark:bg-[#12342e] border border-teal-100 dark:border-[#72cbb8] flex items-center px-4 py-3 gap-3 text-left mt-2">
-          <Icon icon="material-symbols:info-outline" className="w-5 h-5 text-teal-600 dark:text-[#72cbb8] shrink-0" />
+          <Icon
+            icon="material-symbols:info-outline"
+            className="w-5 h-5 text-teal-600 dark:text-[#72cbb8] shrink-0"
+          />
           <p className="text-xs font-semibold text-teal-700 dark:text-[#72cbb8]">
             Please review your information before submitting. Make sure everything looks correct.
           </p>
@@ -88,7 +93,10 @@ const RegistrationFinalize: FunctionComponent<RegistrationFinalizeProps> = ({
           {/* Role */}
           {data.role && (
             <div className="self-stretch rounded-num-12 bg-aliceblue dark:bg-[#1f2022] border-whitesmoke dark:border-[#303331] border-solid border overflow-hidden flex items-center py-num-10 px-3 gap-2.5">
-              <Icon icon={ROLE_ICONS[data.role]} className="h-6 w-6 shrink-0 text-teal-700 dark:text-[#72cbb8]" />
+              <Icon
+                icon={ROLE_ICONS[data.role]}
+                className="h-6 w-6 shrink-0 text-teal-700 dark:text-[#72cbb8]"
+              />
               <span className="text-sm font-medium text-black dark:text-[#d7e0ef] leading-6">
                 {ROLE_LABELS[data.role]}
               </span>

@@ -4,8 +4,18 @@ import { useTheme } from '../../../pages/utilities/DarkMode';
 import type { MonthlyStatistic } from '../../../hooks/useFinance';
 
 const MONTH_LABELS = [
-  'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN',
-  'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC',
+  'JAN',
+  'FEB',
+  'MAR',
+  'APR',
+  'MAY',
+  'JUN',
+  'JUL',
+  'AUG',
+  'SEP',
+  'OCT',
+  'NOV',
+  'DEC',
 ];
 
 type TimeRange = '12' | '6';
@@ -70,9 +80,7 @@ const MonthlyExpensesChart: FunctionComponent<MonthlyExpensesChartProps> = ({
                     className="rounded-[5px] transition-all duration-300"
                     style={{
                       width:
-                        selectedRange === '6'
-                          ? 'clamp(25px, 12%, 45px)'
-                          : 'clamp(20px, 7%, 35px)',
+                        selectedRange === '6' ? 'clamp(25px, 12%, 45px)' : 'clamp(20px, 7%, 35px)',
                       height: `${heights[i]}%`,
                       backgroundColor: isDark
                         ? i === months.length - 1
@@ -101,12 +109,20 @@ const MonthlyExpensesChart: FunctionComponent<MonthlyExpensesChartProps> = ({
 
         <div className="w-full flex items-start justify-between text-left text-[12px] text-silver dark:text-[#a4acba]">
           <div className="flex items-end gap-1">
-            <div className="h-[15px] w-[15px] rounded-[5px]" style={{ backgroundColor: '#096c5b' }} />
+            <div
+              className="h-[15px] w-[15px] rounded-[5px]"
+              style={{ backgroundColor: '#096c5b' }}
+            />
             <div className="h-4 tracking-[0.02em] font-semibold flex items-center">Past Months</div>
           </div>
           <div className="flex items-end gap-1">
-            <div className="h-[15px] w-[15px] rounded-[5px]" style={{ backgroundColor: '#024338' }} />
-            <div className="h-4 tracking-[0.02em] font-semibold flex items-center">Current Month</div>
+            <div
+              className="h-[15px] w-[15px] rounded-[5px]"
+              style={{ backgroundColor: '#024338' }}
+            />
+            <div className="h-4 tracking-[0.02em] font-semibold flex items-center">
+              Current Month
+            </div>
           </div>
         </div>
       </div>

@@ -1,12 +1,11 @@
 import { Icon } from '@iconify/react';
 import type { VerificationStep } from '../VerificationProgress';
 
-
 interface DocumentsSubmissionHeaderProps {
   uploadedCount: number;
   totalCount: number;
   canSubmit: boolean;
-  statefulVerificationStep:VerificationStep;
+  statefulVerificationStep: VerificationStep;
   onSubmit: () => void;
 }
 
@@ -47,11 +46,14 @@ const DocumentsSubmissionHeader = ({
         ].join(' ')}
       >
         {/* conditionally renders button content based on verification step */}
-        {(()=>{
-            switch(statefulVerificationStep){
-            case 'submit': return <>Submit</>;
-            case 'reviewing': return <>Resubmit</>
-            default: return <>Submit</>
+        {(() => {
+          switch (statefulVerificationStep) {
+            case 'submit':
+              return <>Submit</>;
+            case 'reviewing':
+              return <>Resubmit</>;
+            default:
+              return <>Submit</>;
           }
         })()}
       </button>
