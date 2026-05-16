@@ -1,8 +1,9 @@
 import type React from 'react';
 import { useRef } from 'react'; // 1. Added useRef to trigger the hidden file input
-import UploadIcon from '../../../assets/upload_media_icon.svg';
-import EyeIcon from '../../../assets/iconamoon_eye.svg';
-import MoreIcon from '../../../assets/qlementine-icons_menu-dots-16.svg';
+import { Icon } from '@iconify/react';
+// import UploadIcon from '../../../assets/upload_media_icon.svg';
+// import EyeIcon from '../../../assets/iconamoon_eye.svg';
+// import MoreIcon from '../../../assets/qlementine-icons_menu-dots-16.svg';
 
 interface FileUploadCardProps {
   title: string;
@@ -43,10 +44,14 @@ const FileUploadCard: React.FC<FileUploadCardProps> = ({
         {/* Action Icons */}
         <div className="flex items-center gap-[4px] text-gray-600">
           <button className="p-[6px] hover:bg-gray-100 rounded-full transition-colors">
-            <img src={EyeIcon} alt="" />
+          <Icon icon="iconamoon:eye" className="h-[24px] w-[24px]" aria-hidden="true" />
           </button>
           <button className="p-[6px] hover:bg-gray-100 rounded-full transition-colors">
-            <img src={MoreIcon} alt="" />
+            <Icon
+              icon="qlementine-icons:menu-dots-16"
+              className="h-[24px] w-[24px]"
+              aria-hidden="true"
+            />
           </button>
         </div>
       </div>
@@ -67,7 +72,7 @@ const FileUploadCard: React.FC<FileUploadCardProps> = ({
           fileName ? 'border-teal-500 bg-teal-50/20' : 'border-gray-300 hover:bg-gray-50'
         }`}
       >
-        <img src={UploadIcon} alt="" />
+        <Icon icon="icons8:upload-2" className="h-[64px] w-[64px]" aria-hidden="true" />
         <div className="flex flex-col text-left">
           {/* Dynamically swap titles out if a file has been uploaded */}
           <span className="font-bold text-[14px]">

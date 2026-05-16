@@ -10,7 +10,8 @@
 }
 
 import React from "react";
-import RightArrow from "../../../assets/iconamoon_arrow-right-2.svg";
+import { Icon } from '@iconify/react';
+// import RightArrow from "../../../assets/iconamoon_arrow-right-2.svg";
 import { Link } from "react-router-dom";
 
 export interface BreadcrumbRoute {
@@ -49,7 +50,7 @@ export default function BreadcrumbHeader({ routes }: BreadcrumbHeaderProps) {
             )}
 
             {!isLast && (
-              <img src={RightArrow} alt="Separator" className="mx-2" />
+              <Icon icon="iconamoon:arrow-right-2" className="mx-2 h-4 w-4" />
             )}
           </React.Fragment>
         );

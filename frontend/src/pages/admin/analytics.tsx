@@ -104,7 +104,7 @@ function Analytics() {
       {
         value: isLoading ? '...' : facilityCount.toLocaleString(),
         label: 'Total Facilities',
-        iconName: 'fluent-emoji-flat:house',
+        iconName: 'streamline-ultimate:house-1',
       },
       {
         value: isLoading ? '...' : reports.length.toLocaleString(),

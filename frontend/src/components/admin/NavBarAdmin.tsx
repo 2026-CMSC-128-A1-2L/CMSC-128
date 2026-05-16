@@ -1,6 +1,6 @@
 import type { FunctionComponent } from 'react';
+import { Icon } from '@iconify/react';
 import atlasLogo from '../../../assets/admin/atlas_worded_logo.svg';
-import profileAvatar from '../../../assets/admin/empty_profile_icon.svg';
 
 const NavBarAdmin: FunctionComponent = () => {
   return (
@@ -15,7 +15,7 @@ const NavBarAdmin: FunctionComponent = () => {
         </div>
 
         <div className="flex items-center gap-[12px]">
-          <img src={profileAvatar} alt="Admin profile" className="h-[46px] w-[45px] shrink-0" />
+        <Icon icon="solar:user-circle-bold" className="h-[46px] w-[45px] shrink-0" />
           <span className="font-['Lora',serif] text-[20px] text-white">Kopiko</span>
         </div>
       </div>
