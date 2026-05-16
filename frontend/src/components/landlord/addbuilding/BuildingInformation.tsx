@@ -225,7 +225,7 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({
                         e.stopPropagation();
                         handleRemoveImage(index);
                       }}
-                      className="absolute top-1 right-1 bg-white/80 backdrop-blur-sm rounded-full p-1 shadow-sm opacity-0 group-hover:opacity-100 transition-opacity text-red-500 hover:text-red-700"
+                      className="absolute top-1 right-1 bg-white/80 backdrop-blur-sm rounded-full p-1 shadow-sm opacity-0 group-hover:opacity-100 transition-opacity text-red-500 hover:text-red-700 cursor-pointer"
                     >
                       <Icon icon="material-symbols:close" className="w-4 h-4" />
                     </button>
@@ -259,7 +259,7 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({
                 <button
                   type="button"
                   onClick={addRoomType}
-                  className="w-full h-[100px] rounded-xl border border-whitesmoke overflow-hidden flex items-center justify-center hover:bg-gray-50 transition-colors"
+                  className="w-full h-[100px] rounded-xl border border-whitesmoke overflow-hidden flex items-center justify-center hover:bg-gray-50 transition-colors cursor-pointer"
                 >
                   <Icon icon="material-symbols:add-rounded" className="w-8 h-8" color="#096C5B" />
                 </button>
@@ -424,7 +424,7 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({
                       <button
                         type="button"
                         onClick={() => removeManager(manager.email)}
-                        className="text-slategray hover:text-red-500 transition-colors"
+                        className="text-slategray hover:text-red-500 transition-colors cursor-pointer"
                       >
                         <Icon icon="material-symbols:close" className="w-3.5 h-3.5" />
                       </button>

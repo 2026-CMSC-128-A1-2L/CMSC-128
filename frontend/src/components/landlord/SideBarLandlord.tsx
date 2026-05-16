@@ -221,7 +221,7 @@ const SideBarLandlord = ({
           type="button"
           onClick={() => setCollapsed((c) => !c)}
           aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-          className="absolute -right-[12px] top-[24px] z-50 flex h-[24px] w-[24px] items-center justify-center rounded-full border border-[#f0f0f0] bg-white shadow-sm text-[#666] transition-colors hover:text-[#096c5b] dark:border-[#303331] dark:bg-[#1f2022] dark:text-[#d7e0ef] dark:hover:text-[#72cbb8]"
+          className="absolute -right-[12px] top-[24px] z-50 flex h-[24px] w-[24px] items-center justify-center rounded-full border border-[#f0f0f0] bg-white shadow-sm text-[#666] transition-colors hover:text-[#096c5b] dark:border-[#303331] dark:bg-[#1f2022] dark:text-[#d7e0ef] dark:hover:text-[#72cbb8] cursor-pointer"
         >
           <Icon
             icon={
@@ -255,7 +255,7 @@ const SideBarLandlord = ({
                 type="button"
                 onClick={onAddListing}
                 aria-label="Add new listing"
-                className="flex h-[36px] w-[36px] items-center justify-center rounded-full bg-[#096c5b] text-white transition-colors hover:bg-[#075a4c] dark:bg-[#12342e] dark:text-[#72cbb8] dark:hover:bg-[#1f3a34]"
+                className="flex h-[36px] w-[36px] items-center justify-center rounded-full bg-[#096c5b] text-white transition-colors hover:bg-[#075a4c] dark:bg-[#12342e] dark:text-[#72cbb8] dark:hover:bg-[#1f3a34] cursor-pointer"
               >
                 <Icon icon="material-symbols:add-rounded" className="h-[20px] w-[20px]" />
               </button>
@@ -321,7 +321,7 @@ const SideBarLandlord = ({
                           : 'text-[#666] dark:text-[#d7e0ef]',
                       ].join(' ')}
                     >
-                      <Icon icon={item.icon} className="h-[20px] w-[20px]" />
+                      <Icon icon={item.icon} className="h-[20px] w-[20px] cursor-pointer" />
                     </button>
                   ) : (
                     <SideBarLandlordButton
@@ -359,7 +359,7 @@ const SideBarLandlord = ({
             {!collapsed && (
               <span
                 aria-hidden="true"
-                className="h-[44px] w-[8px] shrink-0 rounded-[4px] bg-transparent opacity-0"
+                className="h-[44px] w-[8px] shrink-0 rounded-[4px] bg-transparent opacity-0 cursor-pointer"
               />
             )}
             <span
@@ -426,7 +426,7 @@ const SideBarLandlord = ({
                 collapsed ? 'w-full justify-center' : 'w-full gap-[8px] pl-[32px] pr-[20px]',
               ].join(' ')}
             >
-              <span className="flex h-[36px] w-[36px] shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#e5e7eb] text-[#9ca3af] dark:bg-[#242526] dark:text-[#a4acba]">
+              <span className="flex h-[36px] w-[36px] shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#e5e7eb] text-[#9ca3af] dark:bg-[#242526] dark:text-[#a4acba] cursor-pointer">
                 {user.avatarUrl ? (
                   <img src={user.avatarUrl} alt="" className="h-full w-full object-cover" />
                 ) : (

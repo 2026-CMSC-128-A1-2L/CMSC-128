@@ -58,7 +58,7 @@ const RemoveTenantPopup = ({ targetName, isOpen, onClose }: RemoveTenantPopupPro
             <button
               type="button"
               onClick={closeAll}
-              className="rounded-[12px] bg-[#cbf6ed] px-[32px] py-[12px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b]"
+              className="rounded-[12px] bg-[#cbf6ed] px-[32px] py-[12px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] cursor-pointer"
             >
               Close
             </button>
@@ -108,7 +108,7 @@ const RemoveTenantPopup = ({ targetName, isOpen, onClose }: RemoveTenantPopupPro
                           allSelected ? 'bg-[#096c5b] text-white' : 'bg-[#f2f2f2] text-transparent',
                         ].join(' ')}
                       >
-                        <Icon icon="material-symbols:check-rounded" className="h-[18px] w-[18px]" />
+                        <Icon icon="material-symbols:check-rounded" className="h-[18px] w-[18px] cursor-pointer" />
                       </button>
                     </div>
                   </div>
@@ -143,7 +143,7 @@ const RemoveTenantPopup = ({ targetName, isOpen, onClose }: RemoveTenantPopupPro
                   <button
                     type="button"
                     onClick={() => setStep('select')}
-                    className="mt-[4px] flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[4px] bg-[#096c5b] text-white"
+                    className="mt-[4px] flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[4px] bg-[#096c5b] text-white cursor-pointer"
                   >
                     <Icon icon="material-symbols:check-rounded" className="h-[14px] w-[14px]" />
                   </button>
@@ -164,14 +164,14 @@ const RemoveTenantPopup = ({ targetName, isOpen, onClose }: RemoveTenantPopupPro
               <button
                 type="button"
                 onClick={closeAll}
-                className="rounded-[12px] px-[24px] py-[8px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#ef4444]"
+                className="rounded-[12px] px-[24px] py-[8px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#ef4444] cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 type="button"
                 onClick={() => setStep((prev) => (prev === 'select' ? 'confirm' : 'success'))}
-                className="rounded-[12px] bg-[#cbf6ed] px-[24px] py-[8px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b]"
+                className="rounded-[12px] bg-[#cbf6ed] px-[24px] py-[8px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] cursor-pointer"
               >
                 {step === 'select' ? 'Next' : 'Submit'}
               </button>

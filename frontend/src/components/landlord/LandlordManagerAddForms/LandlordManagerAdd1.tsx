@@ -99,11 +99,11 @@ const Checkbox: FunctionComponent<{ active: boolean; onToggle: () => void }> = (
       active
         ? 'border-[#096c5b] bg-[#096c5b] dark:border-[#12342e] dark:bg-[#12342e]'
         : 'border-[#d1d5db] bg-[#f5f5f5] shadow-[0px_0px_2px_rgba(0,0,0,0.25)] dark:border-[#303331] dark:bg-[#1f2022]'
-    }`}
+    } cursor-pointer`}
     aria-checked={active}
     role="checkbox"
   >
-    {active && <Icon icon="solar:check-bold" className="h-[12px] w-[12px] text-white" />}
+    {active && <Icon icon="solar:check-bold" className="h-[12px] w-[12px] text-white cursor-pointer" />}
   </button>
 );
 
@@ -227,13 +227,13 @@ const AddManager1: FunctionComponent<Props> = ({ onCancel, onSend }) => {
                         active
                           ? 'bg-[#f0fdf9] dark:bg-[#12342e]'
                           : 'hover:bg-[#fafafa] dark:hover:bg-[#1f2022]'
-                      }`}
+                      } cursor-pointer`}
                     >
                       {/* Hidden RHF field to keep form values in sync */}
                       <input
                         type="checkbox"
                         {...register(`checkboxes.${item.field}`)}
-                        className="hidden"
+                        className="hidden cursor-pointer"
                       />
 
                       <div className="flex flex-1 items-center gap-[13px]">
@@ -272,13 +272,13 @@ const AddManager1: FunctionComponent<Props> = ({ onCancel, onSend }) => {
           <button
             type="button"
             onClick={onCancel}
-            className="rounded-[10px] py-[6px] px-[20px] font-['Inter',sans-serif] text-[13px] font-semibold text-[#dc143c] dark:text-red-400 transition-opacity hover:opacity-70"
+            className="rounded-[10px] py-[6px] px-[20px] font-['Inter',sans-serif] text-[13px] font-semibold text-[#dc143c] dark:text-red-400 transition-opacity hover:opacity-70 cursor-pointer"
           >
             Cancel
           </button>
           <button
             type="submit"
-            className="rounded-[10px] bg-[#e0f7f4] dark:bg-[#12342e] py-[6px] px-[20px] font-['Inter',sans-serif] text-[13px] font-semibold text-[#096c5b] dark:text-[#72cbb8] transition-opacity hover:opacity-80"
+            className="rounded-[10px] bg-[#e0f7f4] dark:bg-[#12342e] py-[6px] px-[20px] font-['Inter',sans-serif] text-[13px] font-semibold text-[#096c5b] dark:text-[#72cbb8] transition-opacity hover:opacity-80 cursor-pointer"
           >
             Send Invite
           </button>

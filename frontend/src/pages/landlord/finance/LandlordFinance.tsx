@@ -69,7 +69,7 @@ const LandlordFinance: FunctionComponent = () => {
         <p className="text-crimson font-semibold">{error}</p>
         <button
           onClick={refetch}
-          className="px-4 py-2 rounded-xl bg-lightcyan-100 text-teal font-semibold hover:opacity-90"
+          className="px-4 py-2 rounded-xl bg-lightcyan-100 text-teal font-semibold hover:opacity-90 cursor-pointer"
         >
           Retry
         </button>
@@ -126,7 +126,7 @@ const LandlordFinance: FunctionComponent = () => {
               key={property.id}
               className={`transition-all duration-300 hover:translate-y-[-4px] ${
                 clickedPropertyId === property.id ? 'animate-pulse-scale' : ''
-              }`}
+              } cursor-pointer`}
             >
               <PropertyCard
                 id={property.id}

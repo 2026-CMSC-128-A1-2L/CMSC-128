@@ -1,10 +1,10 @@
-import { Icon } from '@iconify/react';
-import AdminPopupOverlay from './AdminPopupOverlay';
+import { Icon } from "@iconify/react";
+import AdminPopupOverlay from "./AdminPopupOverlay";
 
 export type VerificationDocument = {
   docId: string;
   name: string;
-  status: 'accepted' | 'rejected' | 'pending';
+  status: "accepted" | "rejected" | "pending";
   message?: string;
   files: string[];
 };
@@ -17,9 +17,9 @@ export type VerificationApplicant = {
   emails: string[];
   address?: string;
   contact?: string;
-  userType?: 'Student' | 'Landlord' | 'Manager' | 'Admin';
-  status: 'setup' | 'unverified' | 'verified' | 'inactive' | 'disabled';
-  verificationStatus: 'pending' | 'submitted' | 'rejected' | 'approved';
+  userType?: "Student" | "Landlord" | "Manager" | "Admin";
+  status: "setup" | "unverified" | "verified" | "inactive" | "disabled";
+  verificationStatus: "pending" | "submitted" | "rejected" | "approved";
   documents: VerificationDocument[];
   createdAt?: string;
   updatedAt?: string;
@@ -43,15 +43,15 @@ type ApplicantReviewModalProps = {
 };
 
 const DOC_STATUS_STYLES: Record<string, string> = {
-  pending: 'bg-amber-50 text-amber-700 border-amber-200',
-  accepted: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-  rejected: 'bg-red-50 text-red-600 border-red-200',
+  pending: "bg-amber-50 text-amber-700 border-amber-200",
+  accepted: "bg-emerald-50 text-emerald-700 border-emerald-200",
+  rejected: "bg-red-50 text-red-600 border-red-200",
 };
 
 export const getDisplayName = (user: VerificationApplicant) =>
-  [user.firstName, user.middleName, user.lastName].filter(Boolean).join(' ');
+  [user.firstName, user.middleName, user.lastName].filter(Boolean).join(" ");
 
-export const formatRole = (role?: string) => role ?? 'Unassigned';
+export const formatRole = (role?: string) => role ?? "Unassigned";
 
 const ApplicantReviewModal = ({
   isOpen,
@@ -98,7 +98,7 @@ const ApplicantReviewModal = ({
             </p>
             {applicant.contact && (
               <p className="mt-1 font-['Inter',sans-serif] text-[14px] font-medium text-[#666] dark:text-[#a4acba]">
-                Contact:{' '}
+                Contact:{" "}
                 <span className="font-bold text-[#2f3136] dark:text-[#d7e0ef]">
                   {applicant.contact}
                 </span>
@@ -107,7 +107,7 @@ const ApplicantReviewModal = ({
           </div>
 
           {/* Student Fields */}
-          {applicant.userType === 'Student' && (
+          {applicant.userType === "Student" && (
             <div className="mb-6 grid grid-cols-2 gap-4 rounded-[16px] border border-[#e5e7eb] dark:border-[#303331] bg-[#f8fffe] dark:bg-[#17201d] p-5">
               <label className="flex flex-col gap-1.5">
                 <span className="font-['Inter',sans-serif] text-[14px] font-bold text-[#666] dark:text-[#a4acba]">
@@ -159,7 +159,8 @@ const ApplicantReviewModal = ({
                         {doc.name}
                       </p>
                       <p className="font-['Inter',sans-serif] text-[13px] font-medium text-[#64748b] dark:text-[#a4acba]">
-                        {doc.files.length} file{doc.files.length !== 1 ? 's' : ''} attached
+                        {doc.files.length} file
+                        {doc.files.length !== 1 ? "s" : ""} attached
                       </p>
                     </div>
                   </div>
@@ -176,11 +177,13 @@ const ApplicantReviewModal = ({
                   </p>
                 )}
 
-                {doc.status === 'pending' && (
+                {doc.status === "pending" && (
                   <>
                     <input
-                      value={rejectionMessages[doc.docId] ?? ''}
-                      onChange={(e) => onRejectionMessageChange(doc.docId, e.target.value)}
+                      value={rejectionMessages[doc.docId] ?? ""}
+                      onChange={(e) =>
+                        onRejectionMessageChange(doc.docId, e.target.value)
+                      }
                       placeholder="Rejection reason (optional)"
                       className="mt-3 w-full rounded-[12px] border border-[#e5e7eb] dark:border-[#303331] bg-[#fafafa] dark:bg-[#141515] px-4 py-2.5 font-['Inter',sans-serif] text-[13px] font-medium text-black dark:text-[#d7e0ef] outline-none transition-colors placeholder:text-[#94a3b8] dark:placeholder:text-[#a4acba] focus:border-[#096c5b] dark:focus:border-[#72cbb8]"
                     />
@@ -188,14 +191,14 @@ const ApplicantReviewModal = ({
                       <button
                         type="button"
                         onClick={() => onRejectDocument(doc.docId)}
-                        className="rounded-[12px] px-5 py-2 font-['Inter',sans-serif] text-[14px] font-semibold text-[#ef4444] transition-opacity hover:opacity-80"
+                        className="cursor-pointer rounded-[12px] px-5 py-2 font-['Inter',sans-serif] text-[14px] font-semibold text-[#ef4444] transition-opacity hover:opacity-80"
                       >
                         Reject
                       </button>
                       <button
                         type="button"
                         onClick={() => onAcceptDocument(doc.docId)}
-                        className="rounded-[12px] bg-[#cbf6ed] dark:bg-[#12342e] px-5 py-2 font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] dark:text-[#72cbb8] transition-opacity hover:opacity-80"
+                        className="cursor-pointer rounded-[12px] bg-[#cbf6ed] dark:bg-[#12342e] px-5 py-2 font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] dark:text-[#72cbb8] transition-opacity hover:opacity-80"
                       >
                         Accept
                       </button>
@@ -218,21 +221,21 @@ const ApplicantReviewModal = ({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-[12px] px-6 py-2 font-['Inter',sans-serif] text-[14px] font-semibold text-[#64748b] transition-opacity hover:opacity-80"
+            className="cursor-pointer rounded-[12px] px-6 py-2 font-['Inter',sans-serif] text-[14px] font-semibold text-[#64748b] transition-opacity hover:opacity-80"
           >
             Cancel
           </button>
           <button
             type="button"
             onClick={onRejectUser}
-            className="rounded-[12px] px-6 py-2 font-['Inter',sans-serif] text-[14px] font-semibold text-[#ef4444] transition-opacity hover:opacity-80"
+            className="cursor-pointer rounded-[12px] px-6 py-2 font-['Inter',sans-serif] text-[14px] font-semibold text-[#ef4444] transition-opacity hover:opacity-80"
           >
             Reject User
           </button>
           <button
             type="button"
             onClick={onApproveUser}
-            className="rounded-[12px] bg-[#cbf6ed] dark:bg-[#12342e] px-6 py-2 font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] dark:text-[#72cbb8] transition-opacity hover:opacity-80"
+            className="cursor-pointer rounded-[12px] bg-[#cbf6ed] dark:bg-[#12342e] px-6 py-2 font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] dark:text-[#72cbb8] transition-opacity hover:opacity-80"
           >
             Approve User
           </button>

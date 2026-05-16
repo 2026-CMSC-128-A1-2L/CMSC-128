@@ -98,9 +98,9 @@ export default function ReviewContent(props: ReviewContentProps) {
                 activeCategory === category.title
                   ? 'border-[#00796b] bg-[#eaf8f4] text-[#00695c]'
                   : 'border-gainsboro bg-white text-[#62728b] hover:border-[#95cfc5]'
-              }`}
+              } cursor-pointer`}
             >
-              <span className="flex h-4 w-4 shrink-0 items-center justify-center [&_svg]:h-4 [&_svg]:w-4 [&_img]:h-4 [&_img]:w-4">
+              <span className="flex h-4 w-4 shrink-0 items-center justify-center [&_svg]:h-4 [&_svg]:w-4 [&_img]:h-4 [&_img]:w-4 cursor-pointer">
                 {category.icon}
               </span>
               <span className="whitespace-nowrap">{category.title}</span>
@@ -129,9 +129,9 @@ export default function ReviewContent(props: ReviewContentProps) {
                 field.is_checked
                   ? 'border-[#00a897] bg-[#eafffb] text-[#00695c]'
                   : 'border-gainsboro bg-white text-[#62728b] hover:border-[#95cfc5]'
-              }`}
+              } cursor-pointer`}
             >
-              <span className="flex items-center gap-2">
+              <span className="flex items-center gap-2 cursor-pointer">
                 {field.is_checked && (
                   <Icon icon="ic:round-check" className="h-4 w-4 text-[#00a897]" />
                 )}
@@ -162,7 +162,7 @@ export default function ReviewContent(props: ReviewContentProps) {
         </div>
         <button
           type="button"
-          className="w-fit rounded-full bg-[#f1f5f9] px-4 py-1 text-center text-[14px] font-bold text-[#096c5b] transition-all hover:bg-[#e5edf3] active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
+          className="w-fit rounded-full bg-[#f1f5f9] px-4 py-1 text-center text-[14px] font-bold text-[#096c5b] transition-all hover:bg-[#e5edf3] active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
           onClick={() => {
             const payload = {
               'text-report': textReport,

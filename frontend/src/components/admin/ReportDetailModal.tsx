@@ -151,23 +151,23 @@ export default function ReportDetailModal({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-[12px] px-6 py-2 font-['Inter',sans-serif] text-[14px] font-semibold text-[#64748b] transition-opacity hover:opacity-80"
-          >
-            Cancel
-          </button>
-          {report.status === 'pending' && (
-            <>
-              <button
-                type="button"
-                onClick={() => onResolve('dismissed')}
-                className="rounded-[12px] px-6 py-2 font-['Inter',sans-serif] text-[14px] font-semibold text-[#ef4444] transition-opacity hover:opacity-80"
-              >
-                Dismiss
-              </button>
-              <button
-                type="button"
-                onClick={() => onResolve('resolved')}
-                className="rounded-[12px] bg-[#cbf6ed] dark:bg-[#12342e] px-6 py-2 font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] dark:text-[#72cbb8] transition-opacity hover:opacity-80"
+            className="cursor-pointer rounded-[12px] px-6 py-2 font-['Inter',sans-serif] text-[14px] font-semibold text-[#64748b] transition-opacity hover:opacity-80"
+        >
+          Cancel
+        </button>
+        {report.status === 'pending' && (
+          <>
+            <button
+              type="button"
+              onClick={() => onResolve('dismissed')}
+              className="cursor-pointer rounded-[12px] px-6 py-2 font-['Inter',sans-serif] text-[14px] font-semibold text-[#ef4444] transition-opacity hover:opacity-80"
+            >
+              Dismiss
+            </button>
+            <button
+              type="button"
+              onClick={() => onResolve('resolved')}
+              className="cursor-pointer rounded-[12px] bg-[#cbf6ed] dark:bg-[#12342e] px-6 py-2 font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] dark:text-[#72cbb8] transition-opacity hover:opacity-80"
               >
                 Resolve
               </button>

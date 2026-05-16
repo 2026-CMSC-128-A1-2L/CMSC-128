@@ -159,7 +159,7 @@ const UnitDetails: FunctionComponent = () => {
           <button
             type="button"
             onClick={refetch}
-            className="rounded-lg bg-darkslategray-200 px-5 py-2 text-sm font-semibold text-white"
+            className="rounded-lg bg-darkslategray-200 px-5 py-2 text-sm font-semibold text-white cursor-pointer"
           >
             Try again
           </button>
@@ -439,7 +439,7 @@ const UnitDetails: FunctionComponent = () => {
               <button
                 type="button"
                 onClick={() => setSearchTerm("")}
-                className="grid h-7 w-7 place-items-center rounded-full text-unselected hover:bg-whitesmoke-100 hover:text-darkgreen"
+                className="grid h-7 w-7 place-items-center rounded-full text-unselected hover:bg-whitesmoke-100 hover:text-darkgreen cursor-pointer"
                 aria-label="Clear search"
               >
                 <Icon
@@ -450,7 +450,7 @@ const UnitDetails: FunctionComponent = () => {
             )}
             <button
               type="submit"
-              className="rounded-lg bg-darkslategray-200 px-4 py-1.5 text-xs font-semibold text-white shadow-sm transition-colors hover:bg-teal-200"
+              className="rounded-lg bg-darkslategray-200 px-4 py-1.5 text-xs font-semibold text-white shadow-sm transition-colors hover:bg-teal-200 cursor-pointer"
             >
               Search
             </button>
@@ -475,7 +475,7 @@ const UnitDetails: FunctionComponent = () => {
                     type="button"
                     onClick={handleOpenVisitPopout}
                     disabled={!facility.allowVisit}
-                    className="rounded border border-teal-200 py-2 px-6 transition-colors disabled:cursor-not-allowed disabled:opacity-60 hover:bg-lightcyan"
+                    className="rounded border border-teal-200 py-2 px-6 transition-colors disabled:cursor-not-allowed disabled:opacity-60 hover:bg-lightcyan cursor-pointer"
                   >
                     {facility.allowVisit ? "VISIT" : "NO VISIT"}
                   </button>
@@ -487,7 +487,7 @@ const UnitDetails: FunctionComponent = () => {
                       isSelectedListingBookmarked
                         ? "bg-lightcyan text-darkslategray-200"
                         : "hover:bg-lightcyan"
-                    }`}
+                    } cursor-pointer`}
                   >
                     {isBookmarkSaving
                       ? "SAVING"
@@ -498,7 +498,7 @@ const UnitDetails: FunctionComponent = () => {
                 </div>
               </div>
               {bookmarkError && (
-                <div className="px-2 text-xs font-semibold text-red-500">
+                <div className="px-2 text-xs font-semibold text-red-500 cursor-pointer">
                   {bookmarkError}
                 </div>
               )}
@@ -530,7 +530,7 @@ const UnitDetails: FunctionComponent = () => {
                     setMoveInDate("");
                     setMessageToLandlord("");
                   }}
-                  className="shadow rounded-md bg-whitesmoke-100 py-1 px-3 text-xs text-gray font-lora"
+                  className="shadow rounded-md bg-whitesmoke-100 py-1 px-3 text-xs text-gray font-lora cursor-pointer"
                 >
                   Reset
                 </button>
@@ -553,7 +553,7 @@ const UnitDetails: FunctionComponent = () => {
                               isSelected
                                 ? "border-darkslategray-200 bg-darkslategray-200 text-white"
                                 : "border-transparent bg-white text-black hover:bg-lightcyan"
-                            }`}
+                            } cursor-pointer`}
                           >
                             {roomButtonLabel(listing.label)}
                           </button>
@@ -563,7 +563,7 @@ const UnitDetails: FunctionComponent = () => {
                       <button
                         type="button"
                         disabled
-                        className="rounded-lg bg-white py-2 px-3 text-center font-semibold text-xs shadow text-silver"
+                        className="rounded-lg bg-white py-2 px-3 text-center font-semibold text-xs shadow text-silver cursor-pointer"
                       >
                         TBA
                       </button>
@@ -585,7 +585,7 @@ const UnitDetails: FunctionComponent = () => {
                         isLeaseMenuOpen
                           ? "border-teal-200 bg-lightcyan/40 ring-2 ring-lightcyan"
                           : "border-transparent bg-white hover:bg-lightcyan/20"
-                      }`}
+                      } cursor-pointer`}
                     >
                       <span
                         className={`font-semibold text-xs ${
@@ -594,7 +594,7 @@ const UnitDetails: FunctionComponent = () => {
                       >
                         {leaseDuration || "Choose lease duration"}
                       </span>
-                      <span className="grid h-7 w-7 place-items-center rounded-full bg-whitesmoke-100 text-teal-200">
+                      <span className="grid h-7 w-7 place-items-center rounded-full bg-whitesmoke-100 text-teal-200 cursor-pointer">
                         <Icon
                           icon="mdi:chevron-down"
                           className={`h-4 w-4 transition-transform ${
@@ -621,13 +621,13 @@ const UnitDetails: FunctionComponent = () => {
                                 isSelected
                                   ? "bg-darkslategray-200 text-white"
                                   : "text-gray hover:bg-lightcyan"
-                              }`}
+                              } cursor-pointer`}
                             >
                               <span>{duration}</span>
                               {isSelected && (
                                 <Icon
                                   icon="material-symbols:check-rounded"
-                                  className="h-4 w-4"
+                                  className="h-4 w-4 cursor-pointer"
                                 />
                               )}
                             </button>
@@ -719,7 +719,7 @@ const UnitDetails: FunctionComponent = () => {
                   type="button"
                   onClick={handleSubmitApplication}
                   disabled={isSubmittingApplication}
-                  className="w-full rounded-lg bg-darkslategray-200 flex items-center justify-center gap-2 py-3 px-4 disabled:cursor-not-allowed disabled:opacity-60"
+                  className="w-full rounded-lg bg-darkslategray-200 flex items-center justify-center gap-2 py-3 px-4 disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
                 >
                   <span className="font-medium text-sm">
                     {isSubmittingApplication
@@ -746,7 +746,7 @@ const UnitDetails: FunctionComponent = () => {
                 {detailTags.map((label, index) => (
                   <div
                     key={label}
-                    className={`rounded-lg border border-teal-200 py-2 px-4 font-medium ${index === 0 ? "bg-lightcyan" : ""}`}
+                    className={`rounded-lg border border-teal-200 py-2 px-4 font-medium ${index === 0 ? "bg-lightcyan" : ""} cursor-pointer`}
                   >
                     {label}
                   </div>
@@ -877,7 +877,7 @@ const UnitDetails: FunctionComponent = () => {
                   </Link>
                   <button
                     type="button"
-                    className="rounded-lg bg-darkslategray-200 flex items-center justify-center gap-2 py-2 shadow"
+                    className="rounded-lg bg-darkslategray-200 flex items-center justify-center gap-2 py-2 shadow cursor-pointer"
                   >
                     <Icon icon="ic:outline-phone" className="h-5 w-5" />
                     <span className="font-medium">Contact Details</span>

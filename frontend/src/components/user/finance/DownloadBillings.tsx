@@ -30,7 +30,7 @@ const DownloadBillings: FunctionComponent<DownloadBillingsProps> = ({ userId }) 
         !userId || isDownloading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
       }`}
     >
-      <div className="overflow-hidden flex flex-col items-start">
+      <div className="overflow-hidden flex flex-col items-start cursor-pointer">
         <Icon icon="mdi:download" className="h-5 w-5" />
       </div>
       <div className="font-semibold">{isDownloading ? 'Downloading...' : 'Download Billings'}</div>

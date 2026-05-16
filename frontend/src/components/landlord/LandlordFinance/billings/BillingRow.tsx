@@ -135,7 +135,7 @@ const BillingRow: FunctionComponent<BillingRowProps> = ({
             <b
               className={`text-[10px] sm:text-[11px] font-medium transition-all duration-300 ${
                 hasStatus && selectedStatus ? 'text-white' : 'text-darkslategray-100'
-              } ${isChanging ? 'opacity-0' : 'opacity-100'}`}
+              } ${isChanging ? 'opacity-0' : 'opacity-100'} cursor-pointer`}
             >
               {displayStatus}
             </b>
@@ -147,7 +147,7 @@ const BillingRow: FunctionComponent<BillingRowProps> = ({
           createPortal(
             <>
               <div
-                className="fixed inset-0 z-40"
+                className="fixed inset-0 z-40 cursor-pointer"
                 onClick={(e) => {
                   e.stopPropagation();
                   onToggle?.(billing._id);
@@ -170,10 +170,10 @@ const BillingRow: FunctionComponent<BillingRowProps> = ({
                       onClick={() => handleStatusChange(status)}
                       className={`w-full px-2 sm:px-3 py-2 text-[8px] sm:text-[10px] font-bold text-center hover:bg-gray-50 transition-colors font-inter ${
                         isSelected ? statusGradients[status] : ''
-                      }`}
+                      } cursor-pointer`}
                     >
                       {isSelected ? (
-                        <span className="text-white">{getStatusDisplay(status)}</span>
+                        <span className="text-white cursor-pointer">{getStatusDisplay(status)}</span>
                       ) : (
                         <span
                           style={{

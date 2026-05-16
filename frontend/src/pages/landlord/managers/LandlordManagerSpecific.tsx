@@ -136,7 +136,7 @@ const ViewSpecificManager = () => {
             <button
               onClick={() => setUpdateManagerOpen(true)}
               aria-label="Edit permissions"
-              className="flex items-center justify-center rounded-full p-[4px] transition-opacity hover:opacity-70"
+              className="flex items-center justify-center rounded-full p-[4px] transition-opacity hover:opacity-70 cursor-pointer"
             >
               <Icon
                 icon="solar:pen-bold"
@@ -153,7 +153,7 @@ const ViewSpecificManager = () => {
               >
                 <Icon
                   icon={perm.granted ? 'solar:check-circle-bold' : 'solar:close-circle-bold'}
-                  className={`h-[22px] w-[22px] shrink-0 ${perm.granted ? 'text-[#096c5b]' : 'text-[#e53e3e]'}`}
+                  className={`h-[22px] w-[22px] shrink-0 ${perm.granted ? 'text-[#096c5b]' : 'text-[#e53e3e]'} cursor-pointer`}
                   aria-hidden="true"
                 />
                 <span className="font-['Inter',sans-serif] text-[15px] font-medium text-[#2f3136]">

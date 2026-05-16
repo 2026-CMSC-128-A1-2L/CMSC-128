@@ -95,7 +95,7 @@ const ReportTenant5: FunctionComponent = () => {
                 : 'bg-gray-100 text-gray-400 cursor-not-allowed'
             }`}
           >
-            <div className="relative font-bold inline-block">Submit</div>
+            <div className="relative font-bold inline-block cursor-pointer">Submit</div>
           </button>
         </div>
       </div>

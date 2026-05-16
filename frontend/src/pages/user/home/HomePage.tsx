@@ -1,4 +1,4 @@
-﻿import { type FunctionComponent, useEffect, useRef, useState } from 'react';
+import { type FunctionComponent, useEffect, useRef, useState } from 'react';
 import { Icon } from '@iconify/react';
 import { useSearchParams } from 'react-router-dom';
 import SideBar from '../../../components/user/SideBar';
@@ -59,7 +59,7 @@ const NavArrows = ({
       type="button"
       onClick={() => scrollTo(current - 1)}
       disabled={current === 0}
-      className="flex h-[32px] w-[32px] items-center justify-center rounded-full border border-[#f0f0f0] bg-white transition-opacity hover:opacity-70 disabled:opacity-30"
+      className="flex h-[32px] w-[32px] items-center justify-center rounded-full border border-[#f0f0f0] bg-white transition-opacity hover:opacity-70 disabled:opacity-30 cursor-pointer"
       aria-label="Previous property"
     >
       <Icon icon="solar:arrow-left-bold" className="h-[16px] w-[16px] text-[#2f3136]" />
@@ -68,7 +68,7 @@ const NavArrows = ({
       type="button"
       onClick={() => scrollTo(current + 1)}
       disabled={current === total - 1}
-      className="flex h-[32px] w-[32px] items-center justify-center rounded-full bg-[#e0f7f4] transition-opacity hover:opacity-70 disabled:opacity-30"
+      className="flex h-[32px] w-[32px] items-center justify-center rounded-full bg-[#e0f7f4] transition-opacity hover:opacity-70 disabled:opacity-30 cursor-pointer"
       aria-label="Next property"
     >
       <Icon icon="solar:arrow-right-bold" className="h-[16px] w-[16px] text-[#096c5b]" />
@@ -152,7 +152,7 @@ const EmptyState = ({ onBack, label }: { onBack: () => void; label: string }) =>
     <button
       type="button"
       onClick={onBack}
-      className="mt-2 px-5 py-2 rounded-full bg-[#e0f7f4] text-[#096c5b] text-[0.8rem] font-semibold hover:opacity-80 transition-opacity"
+      className="mt-2 px-5 py-2 rounded-full bg-[#e0f7f4] text-[#096c5b] text-[0.8rem] font-semibold hover:opacity-80 transition-opacity cursor-pointer"
     >
       Back to home
     </button>
@@ -167,7 +167,7 @@ const ErrorState = ({ message, onRetry }: { message: string; onRetry: () => void
     <button
       type="button"
       onClick={onRetry}
-      className="mt-2 px-5 py-2 rounded-full bg-[#e0f7f4] text-[#096c5b] text-[0.8rem] font-semibold hover:opacity-80 transition-opacity"
+      className="mt-2 px-5 py-2 rounded-full bg-[#e0f7f4] text-[#096c5b] text-[0.8rem] font-semibold hover:opacity-80 transition-opacity cursor-pointer"
     >
       Try again
     </button>
@@ -202,7 +202,7 @@ const ApplicationGuideModal = ({ onClose }: { onClose: () => void }) => {
     <div className="fixed inset-0 z-[1100] flex items-center justify-center bg-black/35 px-5 py-8">
       <button
         type="button"
-        className="absolute inset-0 cursor-default"
+        className="absolute inset-0 cursor-pointer"
         onClick={onClose}
         aria-label="Close application guide"
       />
@@ -253,7 +253,7 @@ const ApplicationGuideModal = ({ onClose }: { onClose: () => void }) => {
         <button
           type="button"
           onClick={onClose}
-          className="mx-auto mt-auto h-[36px] w-full max-w-[318px] rounded-[5px] bg-[#4c8c7e] font-lora text-[15px] font-bold text-white shadow-[0_3px_8px_rgba(0,0,0,0.2)] transition-all hover:-translate-y-0.5 hover:bg-[#237866] active:translate-y-0"
+          className="mx-auto mt-auto h-[36px] w-full max-w-[318px] rounded-[5px] bg-[#4c8c7e] font-lora text-[15px] font-bold text-white shadow-[0_3px_8px_rgba(0,0,0,0.2)] transition-all hover:-translate-y-0.5 hover:bg-[#237866] active:translate-y-0 cursor-pointer"
         >
           Got it, thanks!
         </button>
@@ -363,7 +363,7 @@ const HomePage: FunctionComponent = () => {
                   <button
                     type="button"
                     onClick={() => handleSearch('')}
-                    className="text-unselected hover:text-darkgreen"
+                    className="text-unselected hover:text-darkgreen cursor-pointer"
                   >
                     <Icon icon="material-symbols:close-rounded" className="w-4 h-4" />
                   </button>
@@ -390,7 +390,7 @@ const HomePage: FunctionComponent = () => {
                     <div className="fixed inset-0 z-100 flex justify-end">
                       <button
                         type="button"
-                        className="absolute inset-0 bg-preview/45 backdrop"
+                        className="absolute inset-0 bg-preview/45 backdrop cursor-pointer"
                         onClick={() => setIsFilterOpen(false)}
                         aria-label="Close filters"
                       />
@@ -425,7 +425,7 @@ const HomePage: FunctionComponent = () => {
                       <button
                         type="button"
                         onClick={() => handleSearch('')}
-                        className="text-[0.75rem] text-teal-100 underline font-semibold hover:opacity-70 transition-opacity whitespace-nowrap"
+                        className="text-[0.75rem] text-teal-100 underline font-semibold hover:opacity-70 transition-opacity whitespace-nowrap cursor-pointer"
                       >
                         Clear search
                       </button>
@@ -452,7 +452,7 @@ const HomePage: FunctionComponent = () => {
                         <button
                           type="button"
                           onClick={() => setViewAllCategory(null)}
-                          className="flex items-center justify-center h-8 w-8 rounded-full bg-whitesmoke-100 hover:bg-lightcyan/45 transition-colors"
+                          className="flex items-center justify-center h-8 w-8 rounded-full bg-whitesmoke-100 hover:bg-lightcyan/45 transition-colors cursor-pointer"
                         >
                           <Icon icon="solar:arrow-left-bold" className="w-4 h-4 text-darkgreen" />
                         </button>
@@ -467,7 +467,7 @@ const HomePage: FunctionComponent = () => {
                       <button
                         type="button"
                         onClick={() => setViewAllCategory(null)}
-                        className="text-[0.75rem] text-teal-100 underline font-semibold hover:opacity-70 transition-opacity whitespace-nowrap"
+                        className="text-[0.75rem] text-teal-100 underline font-semibold hover:opacity-70 transition-opacity whitespace-nowrap cursor-pointer"
                       >
                         Back to home
                       </button>

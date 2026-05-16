@@ -154,7 +154,7 @@ const LandlordTenants = () => {
               <button
                 type="button"
                 onClick={resetAllListFilters}
-                className="rounded-[12px] bg-[#cbf6ed] px-[24px] py-[10px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] transition-opacity hover:opacity-80"
+                className="rounded-[12px] bg-[#cbf6ed] px-[24px] py-[10px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] transition-opacity hover:opacity-80 cursor-pointer"
               >
                 Reset filters
               </button>

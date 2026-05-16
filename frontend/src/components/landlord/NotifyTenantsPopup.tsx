@@ -47,7 +47,7 @@ const NotifyTenantsPopup: FunctionComponent<Props> = ({ isOpen, onClose }) => {
             <button
               type="button"
               onClick={onClose}
-              className="rounded-[10px] bg-[#e0f7f4] py-[6px] px-[20px] font-['Inter',sans-serif] text-[13px] font-semibold text-[#096c5b] transition-opacity hover:opacity-80"
+              className="rounded-[10px] bg-[#e0f7f4] py-[6px] px-[20px] font-['Inter',sans-serif] text-[13px] font-semibold text-[#096c5b] transition-opacity hover:opacity-80 cursor-pointer"
             >
               Got it
             </button>

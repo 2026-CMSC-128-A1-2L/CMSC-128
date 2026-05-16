@@ -89,7 +89,7 @@ const Banner: FunctionComponent = () => {
                   <span className="text-num-14 font-bold">Move In</span>
                 </div>
               </div>
-              <button className="rounded-[45px] [background:linear-gradient(99.18deg,#5dc2a8_27.88%,#0c8873_88.15%)] hover:brightness-110 transition-all flex items-center justify-center py-4 px-6 gap-2 text-white shadow-lg">
+              <button className="rounded-[45px] [background:linear-gradient(99.18deg,#5dc2a8_27.88%,#0c8873_88.15%)] hover:brightness-110 transition-all flex items-center justify-center py-4 px-6 gap-2 text-white shadow-lg cursor-pointer">
                 <b className="text-[1.2rem]">Find my spot!</b>
                 <Icon icon="si:arrow-right-duotone" className="h-6 w-6" />
               </button>

@@ -123,7 +123,7 @@ const LandlordHomepage: FunctionComponent = () => {
             {searchQuery.length > 0 && (
               <button
                 onClick={() => setSearchQuery('')}
-                className="flex items-center justify-center rounded-full p-1 hover:bg-[#e0f0ff] transition-colors"
+                className="flex items-center justify-center rounded-full p-1 hover:bg-[#e0f0ff] transition-colors cursor-pointer"
                 aria-label="Clear search"
               >
                 <Icon
@@ -177,7 +177,7 @@ const LandlordHomepage: FunctionComponent = () => {
                     </span>
                   ) : (
                     <span
-                      className={`font-['Inter',sans-serif] text-[14px] font-medium ${s.subColor}`}
+                      className={`font-['Inter',sans-serif] text-[14px] font-medium ${s.subColor} cursor-pointer`}
                     >
                       {s.sub}
                     </span>
@@ -196,7 +196,7 @@ const LandlordHomepage: FunctionComponent = () => {
                 <button
                   type="button"
                   onClick={() => setShowNotify(true)}
-                  className="flex items-center gap-[8px] rounded-full bg-[#f0f0f0] px-[12px] py-[4px] transition-opacity hover:opacity-80"
+                  className="flex items-center gap-[8px] rounded-full bg-[#f0f0f0] px-[12px] py-[4px] transition-opacity hover:opacity-80 cursor-pointer"
                 >
                   <span className="font-['Inter',sans-serif] text-[12px] font-medium text-[#096c5b]">
                     Notify your tenants
@@ -238,7 +238,7 @@ const LandlordHomepage: FunctionComponent = () => {
                 <button
                   onClick={() => scrollTo(current - 1)}
                   disabled={current === 0}
-                  className="flex h-[32px] w-[32px] items-center justify-center rounded-full border border-[#f0f0f0] bg-white transition-opacity hover:opacity-70 disabled:opacity-30"
+                  className="flex h-[32px] w-[32px] items-center justify-center rounded-full border border-[#f0f0f0] bg-white transition-opacity hover:opacity-70 disabled:opacity-30 cursor-pointer"
                   aria-label="Previous property"
                 >
                   <Icon icon="solar:arrow-left-bold" className="h-[16px] w-[16px] text-[#2f3136]" />
@@ -246,7 +246,7 @@ const LandlordHomepage: FunctionComponent = () => {
                 <button
                   onClick={() => scrollTo(current + 1)}
                   disabled={current === total - 1}
-                  className="flex h-[32px] w-[32px] items-center justify-center rounded-full bg-[#e0f7f4] transition-opacity hover:opacity-70 disabled:opacity-30"
+                  className="flex h-[32px] w-[32px] items-center justify-center rounded-full bg-[#e0f7f4] transition-opacity hover:opacity-70 disabled:opacity-30 cursor-pointer"
                   aria-label="Next property"
                 >
                   <Icon

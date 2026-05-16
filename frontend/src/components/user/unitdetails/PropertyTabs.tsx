@@ -38,7 +38,7 @@ const PropertyTabs: FunctionComponent<{ children: React.ReactElement<TabProps>[]
               </button>
             ))}
           </div>
-          <div className="w-full relative h-[2px] bg-gainsboro dark:bg-[#303331]">
+          <div className="w-full relative h-[2px] bg-gainsboro dark:bg-[#303331] cursor-pointer">
             <div
               className="absolute top-0 h-full bg-teal-600 transition-all duration-300 ease-in-out dark:bg-[#2f8677]"
               style={{

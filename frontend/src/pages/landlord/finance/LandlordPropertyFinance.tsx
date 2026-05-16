@@ -64,7 +64,7 @@ const LandlordPropertyFinance: FunctionComponent = () => {
           <p className="text-crimson font-semibold">{error ?? 'Property not found.'}</p>
           <button
             onClick={() => error ? refetch() : navigate('/landlord/finance')}
-            className="px-4 py-2 rounded-xl bg-lightcyan-100 text-teal font-semibold hover:opacity-90"
+            className="px-4 py-2 rounded-xl bg-lightcyan-100 text-teal font-semibold hover:opacity-90 cursor-pointer"
           >
             {error ? 'Retry' : 'Back to Finance'}
           </button>
@@ -96,7 +96,7 @@ const LandlordPropertyFinance: FunctionComponent = () => {
         {/* Back button */}
         <button
           onClick={() => navigate('/landlord/finance')}
-          className="self-start flex items-center gap-2 mb-4 px-2 py-1 text-teal-200 hover:text-teal-100 transition-colors duration-200"
+          className="self-start flex items-center gap-2 mb-4 px-2 py-1 text-teal-200 hover:text-teal-100 transition-colors duration-200 cursor-pointer"
         >
           <Icon icon="mdi:chevron-left" className="w-5 h-5" />
           <span className="text-sm font-medium">Back to All Properties</span>
@@ -109,7 +109,7 @@ const LandlordPropertyFinance: FunctionComponent = () => {
             <div
               className={`transition-all duration-300 ease-in-out ${
                 isTransitioning ? 'opacity-0 translate-y-2' : 'opacity-100 translate-y-0'
-              }`}
+              } cursor-pointer`}
             >
               {activeTab === 'overview' ? (
                 <OverviewTab

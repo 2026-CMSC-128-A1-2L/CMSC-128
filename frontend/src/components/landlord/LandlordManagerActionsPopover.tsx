@@ -79,7 +79,7 @@ const LandlordManagerActionsPopover: FunctionComponent<Props> = ({
               : 'text-[#2f3136] dark:text-[#a4acba] hover:bg-[#f0faf6] dark:hover:bg-[#1f2022]',
           ].join(' ')}
         >
-          <Icon icon={item.icon} className="h-[18px] w-[18px] shrink-0" aria-hidden="true" />
+          <Icon icon={item.icon} className="h-[18px] w-[18px] shrink-0 cursor-pointer" aria-hidden="true" />
           <span className="font-['Inter',sans-serif] text-[13px] font-semibold">{item.label}</span>
         </button>
       ))}

@@ -110,7 +110,7 @@ const CurrentDorm: FunctionComponent = () => {
                             <b className="relative">Contact number</b>
                             <button
                               onClick={() => (isEditing ? handleSave() : setIsEditing(true))}
-                              className="focus:outline-none hover:opacity-80 transition-opacity"
+                              className="focus:outline-none hover:opacity-80 transition-opacity cursor-pointer"
                             >
                               <Icon
                                 icon={isEditing ? 'solar:check-read-linear' : 'iconamoon:edit'}
@@ -161,7 +161,7 @@ const CurrentDorm: FunctionComponent = () => {
                               onClick={() =>
                                 isEditingAddress ? handleSaveAddress() : setIsEditingAddress(true)
                               }
-                              className="focus:outline-none hover:opacity-80 transition-opacity"
+                              className="focus:outline-none hover:opacity-80 transition-opacity cursor-pointer"
                             >
                               <Icon
                                 icon={

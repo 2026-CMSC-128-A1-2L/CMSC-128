@@ -109,7 +109,7 @@ const DmsSidebar: FunctionComponent<DmsSidebarProps> = ({
           </div>
 
           <button
-            className="w-full mt-1 flex items-center justify-center gap-1 group"
+            className="w-full mt-1 flex items-center justify-center gap-1 group cursor-pointer"
             onClick={() => setShowAllNotifications(!showAllNotifications)}
           >
             <div className="relative font-semibold text-num-12 text-teal group-hover:underline">
@@ -141,20 +141,20 @@ const DmsSidebar: FunctionComponent<DmsSidebarProps> = ({
                 dmFilter === 'all'
                   ? 'bg-teal text-white shadow-md shadow-teal/20 dark:bg-[#0d3a32] dark:text-[#d7e0ef] dark:shadow-none'
                   : 'bg-lightcyan text-teal hover:bg-teal/10 dark:bg-[#102c27] dark:text-[#72cbb8] dark:hover:bg-[#17352f]'
-              }`}
+              } cursor-pointer`}
               onClick={() => setDmFilter('all')}
             >
-              <b className="relative text-num-12 font-inter">All</b>
+              <b className="relative text-num-12 font-inter cursor-pointer">All</b>
             </button>
             <button
               className={`h-fit rounded-full flex items-center justify-center py-1.5 px-5 transition-all active:scale-95 ${
                 dmFilter === 'unread'
                   ? 'bg-teal text-white shadow-md shadow-teal/20 dark:bg-[#0d3a32] dark:text-[#d7e0ef] dark:shadow-none'
                   : 'bg-lightcyan text-teal hover:bg-teal/10 dark:bg-[#102c27] dark:text-[#72cbb8] dark:hover:bg-[#17352f]'
-              }`}
+              } cursor-pointer`}
               onClick={() => setDmFilter('unread')}
             >
-              <b className="relative text-num-12 font-inter flex items-center gap-1">
+              <b className="relative text-num-12 font-inter flex items-center gap-1 cursor-pointer">
                 Unread{' '}
                 {totalUnreadCount > 0 && <span className="opacity-80">{totalUnreadCount}</span>}
               </b>
@@ -212,7 +212,7 @@ const DmsSidebar: FunctionComponent<DmsSidebarProps> = ({
             </div>
 
             <button
-              className="w-full flex items-center justify-center gap-1 text-center group mt-1"
+              className="w-full flex items-center justify-center gap-1 text-center group mt-1 cursor-pointer"
               onClick={() => setShowAllArchive(!showAllArchive)}
             >
               <div className="relative font-semibold text-num-12 text-teal group-hover:underline">

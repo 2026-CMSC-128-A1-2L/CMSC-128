@@ -312,9 +312,9 @@ const TagsSection: FunctionComponent<{ roomType: RoomTypeData }> = ({ roomType }
                 isActive
                   ? 'bg-teal-50 text-teal-800 border border-teal-200'
                   : 'bg-white text-slategray border border-whitesmoke hover:border-gray-300'
-              }`}
+              } cursor-pointer`}
             >
-              <Icon icon={cat.icon} className="w-3.5 h-3.5" />
+              <Icon icon={cat.icon} className="w-3.5 h-3.5 cursor-pointer" />
               {cat.category}
               {catSelectedCount > 0 && (
                 <span
@@ -449,7 +449,7 @@ const RoomEntry: FunctionComponent<{
       <button
         type="button"
         onClick={() => removeRoom(roomTypeId, room.id)}
-        className="mt-6 text-red-400 hover:text-red-600 transition-colors shrink-0"
+        className="mt-6 text-red-400 hover:text-red-600 transition-colors shrink-0 cursor-pointer"
         title="Remove room"
       >
         <Icon icon="material-symbols:remove-circle-outline" className="w-5 h-5" />
@@ -553,7 +553,7 @@ const RoomTypeItem: FunctionComponent<RoomTypeItemProps> = ({ roomType }) => {
         <button
           type="button"
           onClick={() => setIsExpanded((v) => !v)}
-          className="text-sm font-medium leading-6 px-4 py-1"
+          className="text-sm font-medium leading-6 px-4 py-1 cursor-pointer"
           style={{ color: isExpanded ? '#dc2626' : '#096C5B' }}
         >
           {isExpanded ? 'Hide' : 'Show'}
@@ -641,7 +641,7 @@ const RoomTypeItem: FunctionComponent<RoomTypeItemProps> = ({ roomType }) => {
           <button
             type="button"
             onClick={() => removeRoomType(roomType.id)}
-            className="self-end text-xs font-semibold text-red-400 hover:text-red-600 transition-colors"
+            className="self-end text-xs font-semibold text-red-400 hover:text-red-600 transition-colors cursor-pointer"
           >
             Remove this room type
           </button>

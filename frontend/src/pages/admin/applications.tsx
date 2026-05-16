@@ -279,7 +279,7 @@ function Applications() {
                             <button
                               type="button"
                               onClick={() => openModal(row._id)}
-                              className="cursor-pointer rounded-lg bg-[#024338] px-5 py-2 font-['Poppins'] text-[16px] font-bold text-white"
+                              className="cursor-pointer rounded-lg bg-[#024338] px-5 py-2 font-['Poppins'] text-[16px] font-bold text-white transition-colors duration-200 hover:bg-[#096c5b]"
                             >
                               View
                             </button>

@@ -178,9 +178,9 @@ const RegistrationProfile: FunctionComponent<RegistrationProfileProps> = ({
                     isSelected
                       ? 'border-teal-600 bg-teal-50 text-teal-700 dark:border-[#72cbb8] dark:bg-[#12342e] dark:text-[#72cbb8]'
                       : 'border-whitesmoke hover:bg-gray-50 text-dimgray dark:border-[#303331] dark:hover:bg-[#1f2022] dark:text-[#a4acba]'
-                  }`}
+                  } cursor-pointer`}
                 >
-                  <Icon icon={role.icon} className="h-6 w-6" />
+                  <Icon icon={role.icon} className="h-6 w-6 cursor-pointer" />
                   <span className="text-xs font-semibold leading-5">{role.label}</span>
                 </button>
               );
@@ -193,7 +193,7 @@ const RegistrationProfile: FunctionComponent<RegistrationProfileProps> = ({
         <div className="self-stretch overflow-hidden flex items-center justify-center py-0 px-num-10 text-white">
           <button
             type="submit"
-            className="rounded-[45px] flex items-center justify-center py-2 px-8 gap-2.5 hover:opacity-90 transition-opacity"
+            className="rounded-[45px] flex items-center justify-center py-2 px-8 gap-2.5 hover:opacity-90 transition-opacity cursor-pointer"
             style={{ background: '#1a5c50' }}
           >
             <Icon icon="material-symbols-light:owl-rounded" className="h-6 w-6" />
