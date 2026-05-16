@@ -1,6 +1,6 @@
 ﻿import { type FunctionComponent, useEffect, useRef, useState } from 'react';
 import { Icon } from '@iconify/react';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import SideBar from '../../../components/user/SideBar';
 import DormCard from '../../../components/user/DormCard';
 import Banner from '../../../components/general/Banner';
@@ -14,6 +14,18 @@ import TutorialIcon from '../../../../assets/help-chat.svg';
 
 const CARD_WIDTH = 280;
 const CARD_GAP = 24;
+
+const currencyFormatter = new Intl.NumberFormat('en-PH', {
+  style: 'currency',
+  currency: 'PHP',
+  minimumFractionDigits: 0,
+});
+
+const priceRange = (min: number, max: number): string => {
+  if (min === 0 && max === 0) return 'Price TBA';
+  if (min === max) return `${currencyFormatter.format(min)}/month`;
+  return `${currencyFormatter.format(min)} - ${currencyFormatter.format(max)}/month`;
+};
 
 // ─── Carousel hook ────────────────────────────────────────────────────────────
 
@@ -267,9 +279,11 @@ const ApplicationGuideModal = ({ onClose }: { onClose: () => void }) => {
 
 const HomePage: FunctionComponent = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
   const [searchTerm, setSearchTerm] = useState(searchParams.get('search') ?? '');
+  const [isSearchDropdownOpen, setIsSearchDropdownOpen] = useState(false);
   const [viewAllCategory, setViewAllCategory] = useState<ViewAllCategory>(null);
   const [filterCriteria, setFilterCriteria] = useState({
     minPrice: 0,
@@ -299,6 +313,16 @@ const HomePage: FunctionComponent = () => {
           dorm.location.toLowerCase().includes(searchTerm.toLowerCase()),
       )
     : filterApplied;
+  const matchingSearchResults = isSearching
+    ? facilities
+        .filter((dorm) => {
+          const roomTypes = dorm.room_types.map((room) => room.pax).join(' ');
+          return `${dorm.name} ${dorm.location} ${roomTypes}`
+            .toLowerCase()
+            .includes(searchTerm.trim().toLowerCase());
+        })
+        .slice(0, 6)
+    : [];
 
   // Category slices — swap for real filtered endpoints later
   const pasaloDorms = filterApplied.slice(0, 10);
@@ -320,6 +344,7 @@ const HomePage: FunctionComponent = () => {
 
   const handleSearch = (value: string) => {
     setSearchTerm(value);
+    setIsSearchDropdownOpen(value.trim().length > 0);
     const nextParams = new URLSearchParams(searchParams);
     if (value.trim()) {
       nextParams.set('search', value);
@@ -328,6 +353,18 @@ const HomePage: FunctionComponent = () => {
     }
     setSearchParams(nextParams, { replace: true });
     if (value.trim().length > 0) setViewAllCategory(null);
+  };
+
+  const openSearchResult = (dorm: DormCardData) => {
+    const query = searchTerm.trim();
+    setIsSearchDropdownOpen(false);
+    navigate(`/facilities/${dorm.id}`, {
+      state: {
+        dorm,
+        sourceLabel: 'Search Results',
+        sourceUrl: query ? `/home?search=${encodeURIComponent(query)}` : '/home',
+      },
+    });
   };
 
   useEffect(() => {
@@ -350,7 +387,7 @@ const HomePage: FunctionComponent = () => {
         <div className="h-fit w-full min-w-0 flex flex-col items-start gap-80">
           <div className="w-full min-w-0 flex flex-col items-start">
             {/* search bar */}
-            <div className="w-full h-full overflow-hidden flex items-center pb-6 box-border">
+            <div className="relative w-full h-full flex items-center pb-6 box-border">
               <div className="w-full flex items-center transition-all duration-300 bg-[#f8f9fa] rounded-num-12 py-3 pl-3 pr-4 border border-transparent focus-within:bg-white focus-within:shadow-[0_8px_10px_rgb(0,0,0,0.06)] focus-within:transform focus-within:-translate-y-[1px]">
                 <Icon icon="ic:outline-search" className="w-5 h-5 text-unselected shrink-0" />
                 <input
@@ -358,19 +395,66 @@ const HomePage: FunctionComponent = () => {
                   placeholder="Search for Dorms, Apartments, or Locations (e.g. UPLB, Umali Subdivision)"
                   value={searchTerm}
                   maxLength={50}
+                  onFocus={() => setIsSearchDropdownOpen(searchTerm.trim().length > 0)}
+                  onBlur={() => {
+                    window.setTimeout(() => setIsSearchDropdownOpen(false), 120);
+                  }}
                   onChange={(e) => handleSearch(e.target.value)}
                   className="w-full bg-transparent border-none outline-none text-num-14 font-semibold text-darkgreen placeholder:text-unselected placeholder:font-normal"
                 />
                 {searchTerm && (
                   <button
                     type="button"
-                    onClick={() => handleSearch('')}
+                    onClick={() => {
+                      handleSearch('');
+                      setIsSearchDropdownOpen(false);
+                    }}
                     className="text-unselected hover:text-darkgreen"
                   >
                     <Icon icon="material-symbols:close-rounded" className="w-4 h-4" />
                   </button>
                 )}
               </div>
+              {isSearchDropdownOpen && searchTerm.trim() && (
+                <div className="absolute left-0 right-0 top-[calc(100%-1rem)] z-40 overflow-hidden rounded-num-12 border border-whitesmoke-200 bg-white shadow-[0_14px_30px_rgba(0,0,0,0.14)]">
+                  {matchingSearchResults.length > 0 ? (
+                    matchingSearchResults.map((dorm) => (
+                      <button
+                        key={dorm.id}
+                        type="button"
+                        onMouseDown={(event) => event.preventDefault()}
+                        onClick={() => openSearchResult(dorm)}
+                        className="flex w-full items-center gap-3 px-3 py-2.5 text-left transition-colors hover:bg-whitesmoke-100"
+                      >
+                        <img
+                          src={dorm.image}
+                          alt=""
+                          className="h-12 w-16 shrink-0 rounded-md object-cover"
+                        />
+                        <span className="min-w-0 flex-1">
+                          <span className="block truncate text-num-14 font-bold text-darkgreen">
+                            {dorm.name}
+                          </span>
+                          <span className="block truncate text-[0.75rem] font-semibold text-teal-100">
+                            {priceRange(dorm.price.min, dorm.price.max)}
+                          </span>
+                          <span className="block truncate text-[0.72rem] font-semibold text-unselected">
+                            {dorm.location}
+                          </span>
+                        </span>
+                        <Icon
+                          icon="solar:arrow-right-bold"
+                          className="h-4 w-4 shrink-0 text-teal-100"
+                        />
+                      </button>
+                    ))
+                  ) : (
+                    <div className="px-4 py-4 text-sm font-semibold text-unselected">
+                      No matching listings found
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
 
             <div className="w-full flex flex-col items-start gap-6 text-[1.5rem] text-gray">
