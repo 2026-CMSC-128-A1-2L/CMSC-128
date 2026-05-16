@@ -10,6 +10,8 @@ import sapphire3 from '../../../../assets/sapphire3.png';
 
 import TutorialBubble from '../dashboard/LandlordHomepageTutorials';
 import TutorialIcon from '../../../../assets/help-chat.svg';
+import { managers } from '../../../data/landlordManagers';
+import { pendingApplications, tenants } from '../../../data/landlordTenants';
 const STATS = [
   {
     label: 'Monthly Income',
@@ -89,6 +91,32 @@ type LandlordSearchOption = {
   icon: string;
 };
 
+const normalizeSearchText = (value: string) =>
+  value
+    .toLowerCase()
+    .replace(/>/g, ' ')
+    .replace(/[^a-z0-9\s]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+const optionMatchesQuery = (option: LandlordSearchOption, query: string) => {
+  const normalizedQuery = normalizeSearchText(query);
+  if (!normalizedQuery) return false;
+
+  const visibleText = normalizeSearchText(`${option.title} ${option.breadcrumb}`);
+  const visibleWords = visibleText.split(' ').filter(Boolean);
+  const queryWords = normalizedQuery.split(' ').filter(Boolean);
+
+  if (normalizedQuery.length === 1) {
+    return visibleWords.some((word) => word.startsWith(normalizedQuery));
+  }
+
+  return (
+    visibleText.includes(normalizedQuery) ||
+    queryWords.every((queryWord) => visibleWords.some((word) => word.startsWith(queryWord)))
+  );
+};
+
 const LandlordHomepage: FunctionComponent = () => {
   const navigate = useNavigate();
   const trackRef = useRef<HTMLDivElement>(null);
@@ -157,6 +185,41 @@ const LandlordHomepage: FunctionComponent = () => {
         keywords: 'settings preferences account',
         icon: 'solar:settings-outline',
       },
+      {
+        title: 'Profile',
+        breadcrumb: 'Profile',
+        to: '/landlord/profile/switcher',
+        keywords: 'profile account landlord personal information verification',
+        icon: 'solar:user-circle-outline',
+      },
+      {
+        title: 'Profile Verification',
+        breadcrumb: 'Profile > Verification',
+        to: '/landlord/profile/verification',
+        keywords: 'profile verification account landlord documents',
+        icon: 'solar:user-circle-outline',
+      },
+      {
+        title: 'Add New Listing',
+        breadcrumb: 'Properties > Add New Listing',
+        to: '/landlord/properties/new',
+        keywords: 'properties add new listing create listing',
+        icon: 'fluent:pen-16-regular',
+      },
+      {
+        title: 'Add a New Building',
+        breadcrumb: 'Properties > Add a New Building',
+        to: '/landlord/add-building',
+        keywords: 'properties add building create building listing',
+        icon: 'fluent:pen-16-regular',
+      },
+      {
+        title: 'Pending Applications',
+        breadcrumb: 'My Tenants > Pending Applications',
+        to: '/landlord/tenants/unvalidated',
+        keywords: 'tenants pending applications unvalidated applicants',
+        icon: 'tabler:user-search',
+      },
     ];
 
     const buildingOptions = BUILDINGS.flatMap((building) => [
@@ -176,17 +239,44 @@ const LandlordHomepage: FunctionComponent = () => {
       },
     ]);
 
-    return [...buildingOptions, ...staticOptions];
+    const tenantOptions = tenants.map((tenant) => ({
+      title: tenant.displayName,
+      breadcrumb: `My Tenants > ${tenant.displayName}`,
+      to: `/landlord/tenants/${tenant.id}`,
+      keywords: `${tenant.displayName} ${tenant.fullName} ${tenant.email} ${tenant.contactNumber} ${tenant.dormName} ${tenant.unit} tenant billing`,
+      icon: 'tabler:user-search',
+    }));
+
+    const pendingApplicationOptions = pendingApplications.map((application) => ({
+      title: application.displayName,
+      breadcrumb: `My Tenants > Pending Applications > ${application.displayName}`,
+      to: `/landlord/tenants/unvalidated/${application.id}`,
+      keywords: `${application.displayName} ${application.fullName} ${application.email} ${application.contactNumber} ${application.dormName} ${application.unit} pending application unvalidated`,
+      icon: 'tabler:user-search',
+    }));
+
+    const managerOptions = managers.map((manager) => ({
+      title: manager.displayName,
+      breadcrumb: `Managers > ${manager.displayName}`,
+      to: `/landlord/managers/${manager.id}`,
+      keywords: `${manager.displayName} ${manager.fullName} ${manager.email} ${manager.contactNumber} ${manager.property} manager`,
+      icon: 'hugeicons:id',
+    }));
+
+    return [
+      ...buildingOptions,
+      ...tenantOptions,
+      ...pendingApplicationOptions,
+      ...managerOptions,
+      ...staticOptions,
+    ];
   }, []);
   const matchingSearchOptions = useMemo(() => {
-    const query = trimmedDebouncedSearchQuery.toLowerCase();
+    const query = trimmedDebouncedSearchQuery;
     if (!query) return [];
 
     return searchOptions
-      .filter((option) =>
-        `${option.title} ${option.breadcrumb} ${option.keywords}`.toLowerCase().includes(query),
-      )
-      .slice(0, 8);
+      .filter((option) => optionMatchesQuery(option, query))
   }, [searchOptions, trimmedDebouncedSearchQuery]);
   const displayedBuildings = BUILDINGS;
   const total = displayedBuildings.length;
@@ -255,7 +345,7 @@ const LandlordHomepage: FunctionComponent = () => {
             </div>
 
             {isSearchDropdownOpen && trimmedSearchQuery && (
-              <div className="absolute left-0 right-0 top-[calc(100%+0.5rem)] z-40 overflow-hidden rounded-num-12 border border-whitesmoke-200 bg-white shadow-[0_14px_30px_rgba(0,0,0,0.14)] dark:border-[#303331] dark:bg-[#101111] dark:shadow-[0_18px_34px_rgba(0,0,0,0.42)]">
+              <div className="absolute left-0 right-0 top-[calc(100%+0.5rem)] z-40 max-h-[560px] overflow-y-auto rounded-num-12 border border-whitesmoke-200 bg-white shadow-[0_14px_30px_rgba(0,0,0,0.14)] dark:border-[#303331] dark:bg-[#101111] dark:shadow-[0_18px_34px_rgba(0,0,0,0.42)]">
                 {isSearchDebouncing ? (
                   <div className="flex items-center gap-3 px-4 py-4 text-sm font-semibold text-unselected dark:text-[#a4acba]">
                     <Icon icon="eos-icons:loading" className="h-5 w-5 text-teal-100" />
