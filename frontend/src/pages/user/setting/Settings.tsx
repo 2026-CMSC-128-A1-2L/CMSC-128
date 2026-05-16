@@ -7,6 +7,7 @@ import General from './General';
 import Security from './Security';
 import Notification from './Notification';
 import Preferences from './Preferences';
+import PageBackground from '../../../components/general/PageBackground';
 
 const Settings: FunctionComponent = () => {
   return (
