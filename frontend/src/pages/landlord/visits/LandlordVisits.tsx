@@ -12,6 +12,7 @@ import LandlordDayEventsPopout, {
 } from '../../../components/landlord/VisitsSections/LandlordDayEventsPopout';
 import LandlordEventPopout from '../../../components/landlord/VisitsSections/LandlordEventPopout';
 import { BookingService } from '../../../service/BookingService';
+import NotificationToast from '../../../components/general/NotificationToast';
 
 const Visits: FunctionComponent = () => {
   const [isSetAvailableTimeOpen, setSetAvailableTimeOpen] = useState(false);
@@ -23,6 +24,7 @@ const Visits: FunctionComponent = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedDayVisits, setSelectedDayVisits] = useState<VisitSlot[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<VisitSlot | null>(null);
+  const [showNotification, setShowNotification] = useState(false);
 
   const MONTHS = [
     'January',
@@ -93,6 +95,12 @@ const Visits: FunctionComponent = () => {
   const closeSetAvailableTime = useCallback(() => {
     setSetAvailableTimeOpen(false);
   }, []);
+
+  const handleAvailabilitySaved = useCallback(() => {
+    setShowNotification(true);
+    setTimeout(() => setShowNotification(false), 3000);
+    closeSetAvailableTime();
+  }, [closeSetAvailableTime]);
 
   const handlePrevMonth = useCallback(() => {
     setCurrentDate((prev) => new Date(prev.getFullYear(), prev.getMonth() - 1));
@@ -432,12 +440,12 @@ const Visits: FunctionComponent = () => {
                     <div
                       key={idx}
                       className={`min-h-20 sm:min-h-28 p-1 sm:p-3 rounded border transition-colors text-xs sm:text-base ${day === null
-                          ? 'bg-whitesmoke-100 border-whitesmoke-200 dark:bg-[#1f2022] dark:border-[#303331] cursor-default'
-                          : day === new Date().getDate() &&
-                            month === new Date().getMonth() &&
-                            year === new Date().getFullYear()
-                            ? 'bg-teal-50 border-teal dark:bg-[#12342e] dark:border-[#72cbb8]'
-                            : 'bg-white border-whitesmoke-200 cursor-default dark:bg-[#141515] dark:border-[#303331]'
+                        ? 'bg-whitesmoke-100 border-whitesmoke-200 dark:bg-[#1f2022] dark:border-[#303331] cursor-default'
+                        : day === new Date().getDate() &&
+                          month === new Date().getMonth() &&
+                          year === new Date().getFullYear()
+                          ? 'bg-teal-50 border-teal dark:bg-[#12342e] dark:border-[#72cbb8]'
+                          : 'bg-white border-whitesmoke-200 cursor-default dark:bg-[#141515] dark:border-[#303331]'
                         }`}
                     >
                       {day && (
@@ -493,9 +501,18 @@ const Visits: FunctionComponent = () => {
           placement="Centered"
           onOutsideClick={closeSetAvailableTime}
         >
-          <SetAvailableTime onClose={closeSetAvailableTime} />
+          <SetAvailableTime
+            onClose={closeSetAvailableTime}
+            onSave={handleAvailabilitySaved}
+          />
         </PortalPopup>
       )}
+
+      <NotificationToast
+        show={showNotification}
+        message="Availability Time Changed"
+        onClose={() => setShowNotification(false)}
+      />
 
       {isDayPopoutOpen && selectedDate && (
         <PortalPopup
