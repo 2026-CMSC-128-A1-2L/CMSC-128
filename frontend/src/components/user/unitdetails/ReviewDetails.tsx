@@ -31,8 +31,8 @@ const ReviewDetails: FunctionComponent<ReviewDetailsProps> = ({
     : `View all ${totalReviews} review${totalReviews === 1 ? '' : 's'}`;
 
   return (
-    <div className="w-full relative flex flex-col items-start gap-[29px] text-center text-num-18 text-gray font-inter">
-      <div className="self-stretch flex flex-col items-center gap-[26px] text-black">
+    <div className="w-full relative flex flex-col items-start gap-[29px] text-center text-num-18 text-gray font-inter dark:text-[#edf6f4]">
+      <div className="self-stretch flex flex-col items-center gap-[26px] text-black dark:text-[#edf6f4]">
         <div className="self-stretch flex flex-col items-start text-left">
           <div className="self-stretch h-[52px] flex items-center py-2.5 px-num-20 box-border">
             <b className="relative tracking-num--0_01">Reviews</b>
@@ -46,7 +46,7 @@ const ReviewDetails: FunctionComponent<ReviewDetailsProps> = ({
           {visibleReviews.length > 0 ? (
             visibleReviews.map((review) => <ReviewCard key={review.id} {...review} />)
           ) : (
-            <div className="w-full rounded-xl border border-whitesmoke bg-white px-5 py-4 text-left text-sm font-semibold text-silver">
+            <div className="w-full rounded-xl border border-whitesmoke bg-white px-5 py-4 text-left text-sm font-semibold text-silver dark:border-[#303331] dark:bg-[#101111]">
               No approved reviews yet.
             </div>
           )}
@@ -57,7 +57,7 @@ const ReviewDetails: FunctionComponent<ReviewDetailsProps> = ({
             <button
               type="button"
               onClick={() => setShowAllReviews((isShowing) => !isShowing)}
-              className="relative h-max w-full rounded-[10px] bg-white py-2 font-semibold text-darkslategray shadow-[0px_0px_4px_rgba(0,0,0,0.25)] transition-colors hover:bg-lightcyan"
+              className="relative h-max w-full rounded-[10px] bg-white py-2 font-semibold text-darkslategray shadow-[0px_0px_4px_rgba(0,0,0,0.25)] transition-colors hover:bg-lightcyan dark:bg-[#101111] dark:text-[#edf6f4] dark:hover:bg-[#12342e]"
             >
               {hasMoreReviews
                 ? `${buttonLabel} (${reviews.length - visibleReviews.length} more)`

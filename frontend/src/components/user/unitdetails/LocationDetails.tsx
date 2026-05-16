@@ -1,5 +1,5 @@
-import type { FunctionComponent } from 'react';
-import DormMap from '../../utilities/DormMap';
+import type { FunctionComponent } from "react";
+import DormMap from "../../utilities/DormMap";
 
 type LocationDetailsProps = {
   latitude?: number;
@@ -23,33 +23,44 @@ const LocationDetails: FunctionComponent<LocationDetailsProps> = ({
       </div>
 
       <div className="flex flex-col pt-8 px-5 text-left text-sm w-full text-num-14">
-        <div className="mb-4 rounded-xl border border-whitesmoke bg-white px-4 py-3 font-lora text-sm text-gray">
-          <b className="text-darkslategray">Address: </b>
+        <div className="mb-4 rounded-xl border border-whitesmoke bg-white px-4 py-3 font-lora text-sm text-gray dark:border-[#303331] dark:bg-[#101111] dark:text-[#d7e0ef]">
+          <b className="text-darkslategray dark:text-[#edf6f4]">Address: </b>
           {address}
         </div>
         <div
-          className="grid py-3 text-[16px] text-darkslategray font-lora"
-          style={{ gridTemplateColumns: '2fr 1fr 1fr' }}
+          className="grid py-3 text-[16px] text-darkslategray font-lora dark:text-[#edf6f4]"
+          style={{ gridTemplateColumns: "2fr 1fr 1fr" }}
         >
           <div className="font-medium">LANDMARK</div>
           <div className="font-medium">DISTANCE</div>
           <div className="font-medium">EST. WALK</div>
         </div>
-        <div className="w-full h-px bg-gainsboro" />
+        <div className="w-full h-px bg-gainsboro dark:bg-[#303331]" />
 
         {[
-          { landmark: 'UPLB Main Gate', distance: '0.4 km', walk: '~5 min' },
-          { landmark: 'College of Engineering', distance: '0.7 km', walk: '~9 min' },
-          { landmark: 'Freedom Park', distance: '0.1 km', walk: '< 1 min' },
-          { landmark: 'University Health Center', distance: '0.9 km', walk: '~11 min' },
+          { landmark: "UPLB Main Gate", distance: "0.4 km", walk: "~5 min" },
+          {
+            landmark: "College of Engineering",
+            distance: "0.7 km",
+            walk: "~9 min",
+          },
+          { landmark: "Freedom Park", distance: "0.1 km", walk: "< 1 min" },
+          {
+            landmark: "University Health Center",
+            distance: "0.9 km",
+            walk: "~11 min",
+          },
         ].map((row) => (
           <div key={row.landmark} className="flex flex-col">
-            <div className="grid py-4 text-[14px]" style={{ gridTemplateColumns: '2fr 1fr 1fr' }}>
+            <div
+              className="grid py-4 text-[14px]"
+              style={{ gridTemplateColumns: "2fr 1fr 1fr" }}
+            >
               <div className="font-medium">{row.landmark}</div>
               <div className="font-medium">{row.distance}</div>
               <div className="font-medium">{row.walk}</div>
             </div>
-            <div className="w-full h-px bg-gainsboro" />
+            <div className="w-full h-px bg-gainsboro dark:bg-[#303331]" />
           </div>
         ))}
       </div>

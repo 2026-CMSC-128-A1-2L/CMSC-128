@@ -22,7 +22,7 @@ const RatingBreakdown: FunctionComponent<RatingBreakdownProps> = ({
           {totalReviews} reviews
         </div>
       </div>
-      <div className="w-full flex flex-col items-start gap-2 sm:pr-5 text-xs text-dimgray">
+      <div className="w-full flex flex-col items-start gap-2 sm:pr-5 text-xs text-dimgray dark:text-[#a4acba]">
         {rows.map(({ star, width, count }) => (
           <div key={star} className="w-full flex items-center gap-2">
             <div className="h-5 w-[30px] flex items-center shrink-0">
@@ -30,7 +30,7 @@ const RatingBreakdown: FunctionComponent<RatingBreakdownProps> = ({
               <Icon icon="material-symbols:star-rounded" className="w-3 h-3" />
             </div>
             <div className="flex-1 h-1.5 relative">
-              <div className="absolute inset-0 rounded-num-100 bg-whitesmoke-100" />
+              <div className="absolute inset-0 rounded-num-100 bg-whitesmoke-100 dark:bg-[#303331]" />
               {width !== '0%' && (
                 <div
                   className="absolute inset-y-0 left-0 rounded-num-100 [background:linear-gradient(180deg,#5dc2a8_27.88%,#0c8873_84.13%)]"

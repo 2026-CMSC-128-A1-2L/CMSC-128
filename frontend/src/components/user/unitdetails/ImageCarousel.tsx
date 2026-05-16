@@ -121,10 +121,10 @@ const NavButton = memo(
       onClick={onClick}
       disabled={disabled}
       className={`pointer-events-auto h-12 w-12 shadow-md rounded-full bg-white/90 backdrop-blur-sm 
-    flex items-center justify-center hover:bg-white active:scale-90 transition-transform
+    flex items-center justify-center hover:bg-white active:scale-90 transition-transform dark:bg-[#101111]/90 dark:hover:bg-[#101111]
     ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
     >
-      <Icon icon={icon} className="w-8 h-8 text-slate-800" />
+      <Icon icon={icon} className="w-8 h-8 text-slate-800 dark:text-[#d7e0ef]" />
     </button>
   ),
 );

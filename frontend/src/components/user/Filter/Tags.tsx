@@ -1,7 +1,7 @@
-import { Icon } from '@iconify/react';
-import { useState } from 'react';
-import radio from '../../../../assets/radio.svg';
-import radio_check from '../../../../assets/radio_check.svg';
+import { Icon } from "@iconify/react";
+import { useState } from "react";
+import radio from "../../../../assets/radio.svg";
+import radio_check from "../../../../assets/radio_check.svg";
 
 interface Props {
   selected: string[];
@@ -9,31 +9,32 @@ interface Props {
 }
 
 const Tags = ({ selected, onChange }: Props) => {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [isExpanded, setIsExpanded] = useState(false);
 
   const allTags = [
-    'Wi-Fi',
-    'With Aircon',
-    'Bed Mattress',
-    'Own CR',
-    'Curfew',
-    'Security Guard',
-    'CCTV',
-    'Study Lounge',
-    'Laundry',
-    'Gym',
-    'Parking',
-    'Near Restaurants',
-    'Near Grocery',
-    'Near Main Road',
+    "Wi-Fi",
+    "With Aircon",
+    "Bed Mattress",
+    "Own CR",
+    "Curfew",
+    "Security Guard",
+    "CCTV",
+    "Study Lounge",
+    "Laundry",
+    "Gym",
+    "Parking",
+    "Near Restaurants",
+    "Near Grocery",
+    "Near Main Road",
   ];
 
   const filteredTags = allTags.filter((tag) =>
     tag.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
-  const displayTags = searchTerm || isExpanded ? filteredTags : filteredTags.slice(0, 6);
+  const displayTags =
+    searchTerm || isExpanded ? filteredTags : filteredTags.slice(0, 6);
 
   const toggleTag = (tag: string) => {
     if (selected.includes(tag)) {
@@ -55,7 +56,7 @@ const Tags = ({ selected, onChange }: Props) => {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           placeholder="Search tags (e.g. Study Lounge, Gym)"
-          className="w-full bg-unavailable_action rounded-2xl py-3 pl-10 pr-4 border-none text-medium text-num-14 focus:outline-none"
+          className="w-full bg-unavailable_action rounded-2xl py-3 pl-10 pr-4 border-none text-medium text-num-14 focus:outline-none dark:bg-[#141515] dark:text-[#d7e0ef] dark:placeholder:text-[#647483]"
         />
       </div>
 
@@ -64,7 +65,9 @@ const Tags = ({ selected, onChange }: Props) => {
           <label
             key={tag}
             className={`flex items-center gap-2 px-4 py-2 rounded-num-12 border cursor-pointer transition-all border-solid ${
-              selected.includes(tag) ? 'border-teal text-teal' : 'border-whitesmoke text-unselected'
+              selected.includes(tag)
+                ? "border-teal text-teal dark:border-[#72cbb8] dark:text-[#72cbb8]"
+                : "border-whitesmoke text-unselected dark:border-[#303331] dark:text-[#a4acba]"
             }`}
           >
             <input
@@ -73,7 +76,11 @@ const Tags = ({ selected, onChange }: Props) => {
               checked={selected.includes(tag)}
               onChange={() => toggleTag(tag)}
             />
-            <img src={selected.includes(tag) ? radio_check : radio} className="w-5 h-5" alt="" />
+            <img
+              src={selected.includes(tag) ? radio_check : radio}
+              className="w-5 h-5"
+              alt=""
+            />
             <span className="text-sm font-semibold">{tag}</span>
           </label>
         ))}
@@ -83,9 +90,9 @@ const Tags = ({ selected, onChange }: Props) => {
       {!searchTerm && filteredTags.length > 6 && (
         <button
           onClick={() => setIsExpanded(!isExpanded)}
-          className="text-slategray font-bold text-left text-num-12 hover:text-teal transition-colors border-none bg-transparent cursor-pointer"
+          className="text-slategray font-bold text-left text-num-12 hover:text-teal transition-colors border-none bg-transparent cursor-pointer dark:text-[#a4acba] dark:hover:text-[#72cbb8]"
         >
-          {isExpanded ? 'Show Less...' : 'Show More...'}
+          {isExpanded ? "Show Less..." : "Show More..."}
         </button>
       )}
     </div>

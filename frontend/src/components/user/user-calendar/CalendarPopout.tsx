@@ -1,8 +1,11 @@
-import { Icon } from '@iconify/react';
-import axios from 'axios';
-import { type FunctionComponent, useEffect, useMemo, useState } from 'react';
-import { BookingService, type VisitSlotAvailability } from '../../../service/BookingService';
-import { UserService } from '../../../service/UserService';
+import { Icon } from "@iconify/react";
+import axios from "axios";
+import { type FunctionComponent, useEffect, useMemo, useState } from "react";
+import {
+  BookingService,
+  type VisitSlotAvailability,
+} from "../../../service/BookingService";
+import { UserService } from "../../../service/UserService";
 
 type BookingUser = {
   firstName?: string;
@@ -27,15 +30,15 @@ export type CalendarPopoutType = {
 
 const formatDateInput = (date: Date) => {
   const year = date.getFullYear();
-  const month = `${date.getMonth() + 1}`.padStart(2, '0');
-  const day = `${date.getDate()}`.padStart(2, '0');
+  const month = `${date.getMonth() + 1}`.padStart(2, "0");
+  const day = `${date.getDate()}`.padStart(2, "0");
   return `${year}-${month}-${day}`;
 };
 
 const formatTime = (dateValue: string) =>
-  new Intl.DateTimeFormat('en-PH', {
-    hour: 'numeric',
-    minute: '2-digit',
+  new Intl.DateTimeFormat("en-PH", {
+    hour: "numeric",
+    minute: "2-digit",
   }).format(new Date(dateValue));
 
 const formatTimeRange = (slot: VisitSlotAvailability) =>
@@ -45,20 +48,34 @@ const getApiErrorMessage = (error: unknown, fallback: string) => {
   if (!axios.isAxiosError(error)) return fallback;
 
   const payload = error.response?.data as ApiErrorPayload | string | undefined;
-  if (typeof payload === 'string') return payload;
+  if (typeof payload === "string") return payload;
   if (!payload?.error) return fallback;
-  if (typeof payload.error === 'string') return payload.error;
-  if (Array.isArray(payload.error)) return payload.error[0]?.message ?? fallback;
+  if (typeof payload.error === "string") return payload.error;
+  if (Array.isArray(payload.error))
+    return payload.error[0]?.message ?? fallback;
 
   return payload.error.message ?? fallback;
 };
 
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const MONTHS = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
 
-const DAYS = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+const DAYS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
 
 const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
-  className = '',
+  className = "",
   facilityId,
   facilityName,
   facilityAddress,
@@ -68,10 +85,10 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
   const today = useMemo(() => formatDateInput(new Date()), []);
   const [selectedDate, setSelectedDate] = useState(today);
   const [viewDate, setViewDate] = useState(() => new Date());
-  const [selectedSlotStart, setSelectedSlotStart] = useState('');
+  const [selectedSlotStart, setSelectedSlotStart] = useState("");
   const [slots, setSlots] = useState<VisitSlotAvailability[]>([]);
   const [user, setUser] = useState<BookingUser | null>(null);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   const [isTimeMenuOpen, setTimeMenuOpen] = useState(false);
   const [isLoadingUser, setIsLoadingUser] = useState(true);
   const [isLoadingSlots, setIsLoadingSlots] = useState(false);
@@ -88,7 +105,7 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
         const response = await UserService.getSelf();
         if (!cancelled) setUser(response.data);
       } catch (_err) {
-        if (!cancelled) setError('Could not load your booking details.');
+        if (!cancelled) setError("Could not load your booking details.");
       } finally {
         if (!cancelled) setIsLoadingUser(false);
       }
@@ -107,15 +124,20 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
     const loadSlots = async () => {
       setIsLoadingSlots(true);
       setError(null);
-      setSelectedSlotStart('');
+      setSelectedSlotStart("");
 
       try {
-        const response = await BookingService.getAvailableVisitSlots(facilityId, selectedDate);
+        const response = await BookingService.getAvailableVisitSlots(
+          facilityId,
+          selectedDate,
+        );
         if (!cancelled) setSlots(response.data);
       } catch (err) {
         if (!cancelled) {
           setSlots([]);
-          setError(getApiErrorMessage(err, 'Could not load available visit times.'));
+          setError(
+            getApiErrorMessage(err, "Could not load available visit times."),
+          );
         }
       } finally {
         if (!cancelled) setIsLoadingSlots(false);
@@ -129,16 +151,18 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
     };
   }, [facilityId, selectedDate]);
 
-  const selectedSlot = slots.find((slot) => slot.startDate === selectedSlotStart);
+  const selectedSlot = slots.find(
+    (slot) => slot.startDate === selectedSlotStart,
+  );
   const availableSlots = slots.filter((slot) => slot.available);
-  const firstAvailableSlotStart = availableSlots[0]?.startDate ?? '';
+  const firstAvailableSlotStart = availableSlots[0]?.startDate ?? "";
   const years = useMemo(() => {
     const currentYear = new Date().getFullYear();
     return Array.from({ length: 8 }, (_, index) => currentYear + index);
   }, []);
-  const firstName = user?.firstName ?? '';
-  const lastName = user?.lastName ?? '';
-  const email = user?.emails?.[0] ?? '';
+  const firstName = user?.firstName ?? "";
+  const lastName = user?.lastName ?? "";
+  const email = user?.emails?.[0] ?? "";
   const year = viewDate.getFullYear();
   const month = viewDate.getMonth();
   const firstDay = new Date(year, month, 1).getDay();
@@ -195,7 +219,7 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
 
   const handleBook = async () => {
     if (!selectedSlot) {
-      setError('Please choose an available time slot.');
+      setError("Please choose an available time slot.");
       return;
     }
 
@@ -213,7 +237,7 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
       onBooked?.();
       setTimeout(onClose, 900);
     } catch (err) {
-      setError(getApiErrorMessage(err, 'Could not book this visit.'));
+      setError(getApiErrorMessage(err, "Could not book this visit."));
     } finally {
       setIsSubmitting(false);
     }
@@ -226,98 +250,120 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
 
   return (
     <div
-      className={`h-[602px] w-[687px] max-h-[calc(100vh-2rem)] max-w-[calc(100vw-2rem)] overflow-auto rounded-[12px] bg-white px-6 py-6 text-left text-num-14 text-dimgray font-inter shadow-xl ${className}`}
+      className={`h-[602px] w-[687px] max-h-[calc(100vh-2rem)] max-w-[calc(100vw-2rem)] overflow-auto rounded-[12px] bg-white px-6 py-6 text-left text-num-14 text-dimgray font-inter shadow-xl dark:bg-[#101111] dark:text-[#a4acba] ${className}`}
     >
       <div className="relative text-center">
         <button
           type="button"
           onClick={onClose}
-          className="absolute right-0 top-0 grid h-7 w-7 place-items-center rounded-full text-dimgray hover:bg-whitesmoke-100"
+          className="absolute right-0 top-0 grid h-7 w-7 place-items-center rounded-full text-dimgray hover:bg-whitesmoke-100 dark:text-[#a4acba] dark:hover:bg-[#242526]"
           aria-label="Close booking form"
         >
           <Icon icon="material-symbols:close-rounded" className="h-5 w-5" />
         </button>
-        <div className="text-num-14 font-bold text-[#666]">Booking a visit for</div>
-        <h2 className="mt-1 text-[24px] font-extrabold leading-tight text-[#004236]">
+        <div className="text-num-14 font-bold text-[#666] dark:text-[#a4acba]">
+          Booking a visit for
+        </div>
+        <h2 className="mt-1 text-[24px] font-extrabold leading-tight text-[#004236] dark:text-[#edf6f4]">
           {facilityName}
         </h2>
-        <p className="mx-auto mt-1 max-w-[340px] text-center text-num-12 font-bold leading-4 text-black font-lora">
+        <p className="mx-auto mt-1 max-w-[340px] text-center text-num-12 font-bold leading-4 text-black font-lora dark:text-[#d7e0ef]">
           {facilityAddress}
         </p>
       </div>
 
-      <div className="my-4 h-0.5 rounded-full bg-whitesmoke-300" />
+      <div className="my-4 h-0.5 rounded-full bg-whitesmoke-300 dark:bg-[#303331]" />
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_250px]">
         <div className="flex flex-col gap-2">
-          <b className="text-[20px] tracking-num--0_01 text-black">Your booking details</b>
+          <b className="text-[20px] tracking-num--0_01 text-black dark:text-[#edf6f4]">
+            Your booking details
+          </b>
           <div className="grid gap-2">
             <label className="grid gap-1.5">
-              <span className="text-num-14 font-bold text-[#666]">First name</span>
+              <span className="text-num-14 font-bold text-[#666] dark:text-[#a4acba]">
+                First name
+              </span>
               <input
-                value={isLoadingUser ? 'Loading...' : firstName}
+                value={isLoadingUser ? "Loading..." : firstName}
                 readOnly
                 placeholder="First name"
-                className="h-9 rounded-xl bg-white border border-[#e5e5e5] px-4 text-num-14 font-medium text-black outline-none placeholder:text-[#9b9b9b]"
+                className="h-9 rounded-xl bg-white border border-[#e5e5e5] px-4 text-num-14 font-medium text-black outline-none placeholder:text-[#9b9b9b] dark:bg-[#141515] dark:border-[#303331] dark:text-[#edf6f4] dark:placeholder:text-[#647483]"
               />
             </label>
             <label className="grid gap-1.5">
-              <span className="text-num-14 font-bold text-[#666]">Last name</span>
+              <span className="text-num-14 font-bold text-[#666] dark:text-[#a4acba]">
+                Last name
+              </span>
               <input
-                value={isLoadingUser ? 'Loading...' : lastName}
+                value={isLoadingUser ? "Loading..." : lastName}
                 readOnly
                 placeholder="Last name"
-                className="h-9 rounded-xl bg-white border border-[#e5e5e5] px-4 text-num-14 font-medium text-black outline-none placeholder:text-[#9b9b9b]"
+                className="h-9 rounded-xl bg-white border border-[#e5e5e5] px-4 text-num-14 font-medium text-black outline-none placeholder:text-[#9b9b9b] dark:bg-[#141515] dark:border-[#303331] dark:text-[#edf6f4] dark:placeholder:text-[#647483]"
               />
             </label>
             <label className="grid gap-1.5">
-              <span className="text-num-14 font-bold text-[#666]">Email address</span>
+              <span className="text-num-14 font-bold text-[#666] dark:text-[#a4acba]">
+                Email address
+              </span>
               <input
-                value={isLoadingUser ? 'Loading...' : email}
+                value={isLoadingUser ? "Loading..." : email}
                 readOnly
                 placeholder="Email addr."
-                className="h-9 rounded-xl bg-white border border-[#e5e5e5] px-4 text-num-14 font-medium text-black outline-none placeholder:text-[#9b9b9b]"
+                className="h-9 rounded-xl bg-white border border-[#e5e5e5] px-4 text-num-14 font-medium text-black outline-none placeholder:text-[#9b9b9b] dark:bg-[#141515] dark:border-[#303331] dark:text-[#edf6f4] dark:placeholder:text-[#647483]"
               />
             </label>
             <label className="grid gap-1.5">
-              <span className="text-num-14 font-bold text-[#666]">Home address</span>
+              <span className="text-num-14 font-bold text-[#666] dark:text-[#a4acba]">
+                Home address
+              </span>
               <input
-                value={isLoadingUser ? 'Loading...' : (user?.address ?? '')}
+                value={isLoadingUser ? "Loading..." : (user?.address ?? "")}
                 readOnly
                 placeholder="Home address"
-                className="h-9 rounded-xl bg-white border border-[#e5e5e5] px-4 text-num-14 font-medium text-black outline-none placeholder:text-[#9b9b9b]"
+                className="h-9 rounded-xl bg-white border border-[#e5e5e5] px-4 text-num-14 font-medium text-black outline-none placeholder:text-[#9b9b9b] dark:bg-[#141515] dark:border-[#303331] dark:text-[#edf6f4] dark:placeholder:text-[#647483]"
               />
             </label>
             <label className="grid gap-1.5">
-              <span className="text-num-14 font-bold text-[#666]">
-                Message <span className="text-num-12 font-semibold text-slategray">(optional)</span>
+              <span className="text-num-14 font-bold text-[#666] dark:text-[#a4acba]">
+                Message{" "}
+                <span className="text-num-12 font-semibold text-slategray dark:text-[#647483]">
+                  (optional)
+                </span>
               </span>
               <textarea
                 value={message}
                 onChange={(event) => setMessage(event.target.value)}
                 placeholder="Add a note for the landlord or manager"
-                className="min-h-[48px] resize-none rounded-[18px] border border-[#e5e5e5] bg-white px-4 py-2 text-num-12 font-medium text-black outline-none placeholder:text-[#9b9b9b] focus:border-teal-200"
+                className="min-h-[48px] resize-none rounded-[18px] border border-[#e5e5e5] bg-white px-4 py-2 text-num-12 font-medium text-black outline-none placeholder:text-[#9b9b9b] focus:border-teal-200 dark:bg-[#141515] dark:border-[#303331] dark:text-[#edf6f4] dark:placeholder:text-[#647483] dark:focus:border-[#2f8677]"
               />
             </label>
           </div>
         </div>
 
         <div className="flex flex-col gap-3">
-          <b className="text-[20px] tracking-num--0_01 text-black">Date and Time</b>
-          <div className="rounded-[16px] border border-[#dedede] bg-white p-3">
-            <div className="mb-3 flex items-center gap-1.5 text-black">
+          <b className="text-[20px] tracking-num--0_01 text-black dark:text-[#edf6f4]">
+            Date and Time
+          </b>
+          <div className="rounded-[16px] border border-[#dedede] bg-white p-3 dark:border-[#303331] dark:bg-[#101111]">
+            <div className="mb-3 flex items-center gap-1.5 text-black dark:text-[#edf6f4]">
               <button
                 type="button"
                 onClick={() => goToMonth(-1)}
-                className="grid h-7 w-7 place-items-center rounded-full hover:bg-whitesmoke-100"
+                className="grid h-7 w-7 place-items-center rounded-full hover:bg-whitesmoke-100 dark:hover:bg-[#242526]"
                 aria-label="Previous month"
               >
-                <Icon icon="material-symbols:chevron-left-rounded" className="h-5 w-5" />
+                <Icon
+                  icon="material-symbols:chevron-left-rounded"
+                  className="h-5 w-5"
+                />
               </button>
               <select
                 value={month}
-                onChange={(event) => handleMonthSelect(Number(event.target.value))}
-                className="h-7 flex-1 rounded-lg border border-[#dedede] bg-white px-2 text-num-12 font-medium outline-none"
+                onChange={(event) =>
+                  handleMonthSelect(Number(event.target.value))
+                }
+                className="h-7 flex-1 rounded-lg border border-[#dedede] bg-white px-2 text-num-12 font-medium outline-none dark:border-[#303331] dark:bg-[#141515] dark:text-[#edf6f4]"
               >
                 {MONTHS.map((monthLabel, index) => (
                   <option key={monthLabel} value={index}>
@@ -327,8 +373,10 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
               </select>
               <select
                 value={year}
-                onChange={(event) => handleYearSelect(Number(event.target.value))}
-                className="h-7 flex-1 rounded-lg border border-[#dedede] bg-white px-2 text-num-12 font-medium outline-none"
+                onChange={(event) =>
+                  handleYearSelect(Number(event.target.value))
+                }
+                className="h-7 flex-1 rounded-lg border border-[#dedede] bg-white px-2 text-num-12 font-medium outline-none dark:border-[#303331] dark:bg-[#141515] dark:text-[#edf6f4]"
               >
                 {years.map((yearOption) => (
                   <option key={yearOption} value={yearOption}>
@@ -339,16 +387,22 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
               <button
                 type="button"
                 onClick={() => goToMonth(1)}
-                className="grid h-7 w-7 place-items-center rounded-full hover:bg-whitesmoke-100"
+                className="grid h-7 w-7 place-items-center rounded-full hover:bg-whitesmoke-100 dark:hover:bg-[#242526]"
                 aria-label="Next month"
               >
-                <Icon icon="material-symbols:chevron-right-rounded" className="h-5 w-5" />
+                <Icon
+                  icon="material-symbols:chevron-right-rounded"
+                  className="h-5 w-5"
+                />
               </button>
             </div>
 
             <div className="grid grid-cols-7 gap-y-1 text-center">
               {DAYS.map((day) => (
-                <div key={day} className="pb-0.5 text-[10px] font-medium text-[#777]">
+                <div
+                  key={day}
+                  className="pb-0.5 text-[10px] font-medium text-[#777] dark:text-[#647483]"
+                >
                   {day}
                 </div>
               ))}
@@ -365,12 +419,13 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
                     type="button"
                     disabled={isPast}
                     onClick={() => selectCalendarDay(day)}
-                    className={`mx-auto grid h-7 w-7 place-items-center rounded-lg text-num-12 font-medium transition-colors disabled:cursor-not-allowed ${isSelected
-                      ? 'bg-[#bdf1e6] text-[#006f5e] font-bold'
-                      : isPast
-                        ? 'text-[#b4b4b4]'
-                        : 'text-black hover:bg-whitesmoke-100'
-                      }`}
+                    className={`mx-auto grid h-7 w-7 place-items-center rounded-lg text-num-12 font-medium transition-colors disabled:cursor-not-allowed ${
+                      isSelected
+                        ? "bg-[#bdf1e6] text-[#006f5e] font-bold dark:bg-[#12342e] dark:text-[#72cbb8]"
+                        : isPast
+                          ? "text-[#b4b4b4] dark:text-[#4a4d4e]"
+                          : "text-black hover:bg-whitesmoke-100 dark:text-[#edf6f4] dark:hover:bg-[#242526]"
+                    }`}
                   >
                     {day}
                   </button>
@@ -379,32 +434,33 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
             </div>
           </div>
 
-          <div className="flex items-center justify-center gap-4 text-black">
+          <div className="flex items-center justify-center gap-4 text-black dark:text-[#edf6f4]">
             <Icon icon="solar:clock-circle-outline" className="h-5 w-5" />
             <div className="relative w-[150px]">
               <button
                 type="button"
                 onClick={() => setTimeMenuOpen((isOpen) => !isOpen)}
                 disabled={isLoadingSlots || availableSlots.length === 0}
-                className="flex h-9 w-full items-center justify-between rounded-[10px] border border-[#e5e5e5] bg-white px-3 text-left text-num-12 font-medium text-[#5d5d5d] disabled:cursor-not-allowed disabled:opacity-60"
+                className="flex h-9 w-full items-center justify-between rounded-[10px] border border-[#e5e5e5] bg-white px-3 text-left text-num-12 font-medium text-[#5d5d5d] disabled:cursor-not-allowed disabled:opacity-60 dark:border-[#303331] dark:bg-[#141515] dark:text-[#a4acba]"
               >
                 <span className="truncate">
                   {isLoadingSlots
-                    ? 'Loading...'
+                    ? "Loading..."
                     : selectedSlot
                       ? formatTimeRange(selectedSlot)
                       : availableSlots.length > 0
-                        ? 'Select time'
-                        : 'No slots'}
+                        ? "Select time"
+                        : "No slots"}
                 </span>
                 <Icon
                   icon="material-symbols:keyboard-arrow-down-rounded"
-                  className={`h-4 w-4 shrink-0 text-[#356c65] transition-transform ${isTimeMenuOpen ? 'rotate-180' : ''
-                    }`}
+                  className={`h-4 w-4 shrink-0 text-[#356c65] transition-transform dark:text-[#72cbb8] ${
+                    isTimeMenuOpen ? "rotate-180" : ""
+                  }`}
                 />
               </button>
               {isTimeMenuOpen && availableSlots.length > 0 && (
-                <div className="absolute left-0 right-0 z-20 mt-2 max-h-44 overflow-y-auto rounded-[10px] border border-whitesmoke-300 bg-white p-1 shadow-lg">
+                <div className="absolute left-0 right-0 z-20 mt-2 max-h-44 overflow-y-auto rounded-[10px] border border-whitesmoke-300 bg-white p-1 shadow-lg dark:border-[#303331] dark:bg-[#101111]">
                   {availableSlots.map((slot) => (
                     <button
                       key={slot.startDate}
@@ -413,7 +469,7 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
                         setSelectedSlotStart(slot.startDate);
                         setTimeMenuOpen(false);
                       }}
-                      className="w-full rounded-lg px-3 py-1.5 text-left text-xs font-medium text-black hover:bg-lightcyan"
+                      className="w-full rounded-lg px-3 py-1.5 text-left text-xs font-medium text-black hover:bg-lightcyan dark:text-[#edf6f4] dark:hover:bg-[#12342e]"
                     >
                       {formatTimeRange(slot)}
                     </button>
@@ -427,8 +483,9 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
 
       {(error || success) && (
         <p
-          className={`mt-4 text-center text-xs font-semibold ${success ? 'text-teal-200' : 'text-red-500'
-            }`}
+          className={`mt-4 text-center text-xs font-semibold ${
+            success ? "text-teal-200 dark:text-[#72cbb8]" : "text-red-500"
+          }`}
         >
           {success ?? error}
         </p>
@@ -438,7 +495,7 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
         <button
           type="button"
           onClick={onClose}
-          className="h-8 rounded-num-16 px-5 text-base font-medium text-red-500 hover:bg-red-50"
+          className="h-8 rounded-num-16 px-5 text-base font-medium text-red-500 hover:bg-red-50 dark:hover:bg-[#242526]"
         >
           Cancel
         </button>
@@ -446,9 +503,9 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
           type="button"
           onClick={handleBook}
           disabled={isSubmitting || isLoadingUser || isLoadingSlots}
-          className="h-9 rounded-[20px] bg-aliceblue px-7 text-base font-bold text-teal-200 disabled:cursor-not-allowed disabled:opacity-60"
+          className="h-9 rounded-[20px] bg-aliceblue px-7 text-base font-bold text-teal-200 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-[#12342e] dark:text-[#72cbb8]"
         >
-          {isSubmitting ? 'Booking...' : 'Book'}
+          {isSubmitting ? "Booking..." : "Book"}
         </button>
       </div>
     </div>

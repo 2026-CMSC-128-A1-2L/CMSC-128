@@ -145,7 +145,7 @@ const UnitDetails: FunctionComponent = () => {
 
   if (error && !facility) {
     return (
-      <div className="flex min-h-screen font-lora text-darkslategray-100">
+      <div className="flex min-h-screen font-lora text-darkslategray-100 dark:bg-[#0f1010] dark:text-[#edf6f4]">
         <div className="sticky top-0 h-screen shrink-0 z-10">
           <SideBar />
         </div>
@@ -154,8 +154,12 @@ const UnitDetails: FunctionComponent = () => {
             icon="mdi:alert-circle-outline"
             className="h-16 w-16 text-red-400"
           />
-          <b className="text-xl text-darkgreen">Could not load this facility</b>
-          <p className="max-w-md text-sm text-dimgray">{error}</p>
+          <b className="text-xl text-darkgreen dark:text-[#edf6f4]">
+            Could not load this facility
+          </b>
+          <p className="max-w-md text-sm text-dimgray dark:text-[#a4acba]">
+            {error}
+          </p>
           <button
             type="button"
             onClick={refetch}
@@ -381,7 +385,7 @@ const UnitDetails: FunctionComponent = () => {
   };
 
   return (
-    <div className="flex min-h-screen font-inter text-darkslategray-100">
+    <div className="flex min-h-screen font-inter text-darkslategray-100 dark:bg-[#0f1010] dark:text-[#edf6f4]">
       {showSignIn && <SignInPopUp onClose={() => setShowSignIn(false)} />}
       {isVisitPopoutOpen && (
         <PortalPopup
@@ -421,11 +425,11 @@ const UnitDetails: FunctionComponent = () => {
           {/* Search */}
           <form
             onSubmit={submitSearch}
-            className="w-full max-w-2xl rounded-xl bg-aliceblue flex items-center py-2.5 px-4 gap-2.5 text-dimgray font-inter border border-transparent focus-within:bg-white focus-within:border-lightcyan focus-within:shadow-[0_8px_14px_rgba(0,0,0,0.06)] transition-all"
+            className="w-full max-w-2xl rounded-xl bg-aliceblue flex items-center py-2.5 px-4 gap-2.5 text-dimgray font-inter border border-transparent focus-within:bg-white focus-within:border-lightcyan focus-within:shadow-[0_8px_14px_rgba(0,0,0,0.06)] transition-all dark:bg-[#141515] dark:focus-within:bg-[#1a1b1b] dark:focus-within:border-[#303331]"
           >
             <Icon
               icon="material-symbols:search"
-              className="w-6 h-6 shrink-0 text-teal-200"
+              className="w-6 h-6 shrink-0 text-teal-200 dark:text-[#72cbb8]"
             />
             <input
               type="text"
@@ -433,13 +437,13 @@ const UnitDetails: FunctionComponent = () => {
               maxLength={50}
               onChange={(event) => setSearchTerm(event.target.value)}
               placeholder="Search for Dorms, Apartments, or Locations (e.g. UPLB, Umali Subdivision)"
-              className="min-w-0 flex-1 bg-transparent outline-none text-sm font-semibold text-darkgreen placeholder:text-dimgray placeholder:font-semibold"
+              className="min-w-0 flex-1 bg-transparent outline-none text-sm font-semibold text-darkgreen placeholder:text-dimgray placeholder:font-semibold dark:text-[#d7e0ef] dark:placeholder:text-[#647483]"
             />
             {searchTerm && (
               <button
                 type="button"
                 onClick={() => setSearchTerm("")}
-                className="grid h-7 w-7 place-items-center rounded-full text-unselected hover:bg-whitesmoke-100 hover:text-darkgreen"
+                className="grid h-7 w-7 place-items-center rounded-full text-unselected hover:bg-whitesmoke-100 hover:text-darkgreen dark:hover:bg-[#242526] dark:hover:text-[#d7e0ef]"
                 aria-label="Clear search"
               >
                 <Icon
@@ -457,7 +461,7 @@ const UnitDetails: FunctionComponent = () => {
           </form>
 
           {/* Top section: image + apply card */}
-          <div className="flex flex-col xl:flex-row gap-6 font-inter text-black">
+          <div className="flex flex-col xl:flex-row gap-6 font-inter text-black dark:text-[#edf6f4]">
             {/* Left: image + info */}
             <div className="flex-1 min-w-0 flex flex-col gap-6">
               <ImageCarousel images={facility.gallery} />
@@ -470,12 +474,12 @@ const UnitDetails: FunctionComponent = () => {
                     {availableListings.length === 1 ? "" : "s"}
                   </b>
                 </div>
-                <div className="flex items-center gap-3 text-xs text-teal-200 font-poppins">
+                <div className="flex items-center gap-3 text-xs text-teal-200 font-poppins dark:text-[#72cbb8]">
                   <button
                     type="button"
                     onClick={handleOpenVisitPopout}
                     disabled={!facility.allowVisit}
-                    className="rounded border border-teal-200 py-2 px-6 transition-colors disabled:cursor-not-allowed disabled:opacity-60 hover:bg-lightcyan"
+                    className="rounded border border-teal-200 py-2 px-6 transition-colors disabled:cursor-not-allowed disabled:opacity-60 hover:bg-lightcyan dark:border-[#72cbb8] dark:hover:bg-[#12342e]"
                   >
                     {facility.allowVisit ? "VISIT" : "NO VISIT"}
                   </button>
@@ -483,10 +487,10 @@ const UnitDetails: FunctionComponent = () => {
                     type="button"
                     onClick={handleBookmarkToggle}
                     disabled={!selectedListing || isBookmarkSaving}
-                    className={`rounded border border-teal-200 py-2 px-6 transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${
+                    className={`rounded border border-teal-200 py-2 px-6 transition-colors disabled:cursor-not-allowed disabled:opacity-60 dark:border-[#72cbb8] ${
                       isSelectedListingBookmarked
-                        ? "bg-lightcyan text-darkslategray-200"
-                        : "hover:bg-lightcyan"
+                        ? "bg-lightcyan text-darkslategray-200 dark:bg-[#12342e] dark:text-[#72cbb8]"
+                        : "hover:bg-lightcyan dark:hover:bg-[#12342e]"
                     }`}
                   >
                     {isBookmarkSaving
@@ -515,7 +519,7 @@ const UnitDetails: FunctionComponent = () => {
             </div>
 
             {/* Right: Apply card */}
-            <div className="w-full xl:w-[280px] shrink-0 bg-white border border-whitesmoke-300 rounded-xl flex flex-col items-center p-5 gap-5 text-sm font-inter">
+            <div className="w-full xl:w-[280px] shrink-0 bg-white border border-whitesmoke-300 rounded-xl flex flex-col items-center p-5 gap-5 text-sm font-inter dark:bg-[#101111] dark:border-[#303331] dark:text-[#edf6f4]">
               <div className="w-full flex items-center justify-between text-xl">
                 <div className="flex items-center gap-2">
                   <Icon icon="ri:grid-fill" className="h-5 w-5" />
@@ -530,16 +534,18 @@ const UnitDetails: FunctionComponent = () => {
                     setMoveInDate("");
                     setMessageToLandlord("");
                   }}
-                  className="shadow rounded-md bg-whitesmoke-100 py-1 px-3 text-xs text-gray font-lora"
+                  className="shadow rounded-md bg-whitesmoke-100 py-1 px-3 text-xs text-gray font-lora dark:bg-[#242526] dark:text-[#a4acba]"
                 >
                   Reset
                 </button>
               </div>
 
-              <div className="w-full flex flex-col gap-4 text-gray font-lora text-xs">
+              <div className="w-full flex flex-col gap-4 text-gray font-lora text-xs dark:text-[#a4acba]">
                 <div className="flex flex-col gap-1.5">
-                  <div className="font-medium">Rooms Available</div>
-                  <div className="grid grid-cols-1 gap-2 text-black sm:grid-cols-2 xl:grid-cols-1">
+                  <div className="font-medium dark:text-[#edf6f4]">
+                    Rooms Available
+                  </div>
+                  <div className="grid grid-cols-1 gap-2 text-black sm:grid-cols-2 xl:grid-cols-1 dark:text-[#edf6f4]">
                     {availableListings.length > 0 ? (
                       availableListings.map((listing) => {
                         const isSelected = selectedListing?.id === listing.id;
@@ -552,7 +558,7 @@ const UnitDetails: FunctionComponent = () => {
                             className={`rounded-lg border py-2 px-3 text-center font-semibold text-xs shadow transition-colors ${
                               isSelected
                                 ? "border-darkslategray-200 bg-darkslategray-200 text-white"
-                                : "border-transparent bg-white text-black hover:bg-lightcyan"
+                                : "border-transparent bg-white text-black hover:bg-lightcyan dark:border-[#303331] dark:bg-[#141515] dark:text-[#edf6f4] dark:hover:bg-[#12342e]"
                             }`}
                           >
                             {roomButtonLabel(listing.label)}
@@ -572,7 +578,7 @@ const UnitDetails: FunctionComponent = () => {
                 </div>
                 <div className="flex flex-col gap-1.5">
                   <label
-                    className="font-medium"
+                    className="font-medium dark:text-[#edf6f4]"
                     htmlFor="lease-duration-select"
                   >
                     Lease Duration
@@ -583,18 +589,20 @@ const UnitDetails: FunctionComponent = () => {
                       onClick={() => setIsLeaseMenuOpen((isOpen) => !isOpen)}
                       className={`shadow rounded-lg border w-full flex items-center justify-between py-2.5 px-3 gap-2 text-left transition-all ${
                         isLeaseMenuOpen
-                          ? "border-teal-200 bg-lightcyan/40 ring-2 ring-lightcyan"
-                          : "border-transparent bg-white hover:bg-lightcyan/20"
+                          ? "border-teal-200 bg-lightcyan/40 ring-2 ring-lightcyan dark:border-[#72cbb8] dark:bg-[#12342e]/50"
+                          : "border-transparent bg-white hover:bg-lightcyan/20 dark:border-[#303331] dark:bg-[#141515] dark:hover:bg-[#1a1b1b]"
                       }`}
                     >
                       <span
                         className={`font-semibold text-xs ${
-                          leaseDuration ? "text-black" : "text-silver"
+                          leaseDuration
+                            ? "text-black dark:text-[#edf6f4]"
+                            : "text-silver"
                         }`}
                       >
                         {leaseDuration || "Choose lease duration"}
                       </span>
-                      <span className="grid h-7 w-7 place-items-center rounded-full bg-whitesmoke-100 text-teal-200">
+                      <span className="grid h-7 w-7 place-items-center rounded-full bg-whitesmoke-100 text-teal-200 dark:bg-[#242526] dark:text-[#72cbb8]">
                         <Icon
                           icon="mdi:chevron-down"
                           className={`h-4 w-4 transition-transform ${
@@ -605,7 +613,7 @@ const UnitDetails: FunctionComponent = () => {
                     </button>
 
                     {isLeaseMenuOpen && (
-                      <div className="absolute z-20 mt-2 w-full overflow-hidden rounded-lg border border-lightcyan bg-white p-1 shadow-[0_12px_24px_rgba(0,0,0,0.14)]">
+                      <div className="absolute z-20 mt-2 w-full overflow-hidden rounded-lg border border-lightcyan bg-white p-1 shadow-[0_12px_24px_rgba(0,0,0,0.14)] dark:border-[#303331] dark:bg-[#101111]">
                         {leaseDurations.map((duration) => {
                           const isSelected = leaseDuration === duration;
 
@@ -620,7 +628,7 @@ const UnitDetails: FunctionComponent = () => {
                               className={`flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-xs font-semibold transition-colors ${
                                 isSelected
                                   ? "bg-darkslategray-200 text-white"
-                                  : "text-gray hover:bg-lightcyan"
+                                  : "text-gray hover:bg-lightcyan dark:text-[#a4acba] dark:hover:bg-[#12342e]"
                               }`}
                             >
                               <span>{duration}</span>
@@ -638,24 +646,32 @@ const UnitDetails: FunctionComponent = () => {
                   </div>
                 </div>
                 <div className="flex flex-col gap-1.5">
-                  <label className="font-medium" htmlFor="move-in-date">
+                  <label
+                    className="font-medium dark:text-[#edf6f4]"
+                    htmlFor="move-in-date"
+                  >
                     Preferred Move-in Date
                   </label>
-                  <div className="shadow rounded-lg bg-white flex items-center py-2 px-3 gap-2 text-silver">
+                  <div className="shadow rounded-lg bg-white flex items-center py-2 px-3 gap-2 text-silver dark:bg-[#141515] dark:border dark:border-[#303331]">
                     <input
                       id="move-in-date"
                       type="date"
                       value={moveInDate}
                       onChange={(event) => setMoveInDate(event.target.value)}
                       className={`flex-1 bg-transparent outline-none font-semibold text-xs ${
-                        moveInDate ? "text-black" : "text-silver"
+                        moveInDate
+                          ? "text-black dark:text-[#edf6f4]"
+                          : "text-silver"
                       }`}
                     />
                     <Icon icon="mdi:calendar" className="h-4 w-4" />
                   </div>
                 </div>
                 <div className="flex flex-col gap-1.5">
-                  <label className="font-medium" htmlFor="landlord-message">
+                  <label
+                    className="font-medium dark:text-[#edf6f4]"
+                    htmlFor="landlord-message"
+                  >
                     Message to Landlord{" "}
                     <span className="text-silver">(optional)</span>
                   </label>
@@ -666,12 +682,12 @@ const UnitDetails: FunctionComponent = () => {
                       setMessageToLandlord(event.target.value)
                     }
                     placeholder="Introduce yourself or ask a question.."
-                    className="shadow rounded-lg bg-white py-2 px-3 h-20 resize-none text-black placeholder:text-silver font-semibold text-xs outline-none"
+                    className="shadow rounded-lg bg-white py-2 px-3 h-20 resize-none text-black placeholder:text-silver font-semibold text-xs outline-none dark:bg-[#141515] dark:text-[#edf6f4] dark:border dark:border-[#303331]"
                   />
                 </div>
 
                 {/* Cost summary */}
-                <div className="shadow rounded-lg bg-whitesmoke-200 flex flex-col p-3 gap-1 text-dimgray font-poppins text-xs">
+                <div className="shadow rounded-lg bg-whitesmoke-200 flex flex-col p-3 gap-1 text-dimgray font-poppins text-xs dark:bg-[#1a1b1b] dark:text-[#a4acba]">
                   {[
                     [
                       "Monthly Rent",
@@ -697,8 +713,8 @@ const UnitDetails: FunctionComponent = () => {
                       <span>{v}</span>
                     </div>
                   ))}
-                  <div className="h-px bg-gray-200 my-1" />
-                  <div className="flex justify-between font-bold text-gray">
+                  <div className="h-px bg-gray-200 dark:bg-[#303331] my-1" />
+                  <div className="flex justify-between font-bold text-gray dark:text-[#edf6f4]">
                     <span>Est. Move-in Cost</span>
                     <span>
                       {moveInCost > 0
@@ -728,7 +744,7 @@ const UnitDetails: FunctionComponent = () => {
                   </span>
                   <Icon icon="formkit:arrowright" className="h-5 w-5" />
                 </button>
-                <p className="text-xs text-dimgray font-lora text-center">
+                <p className="text-xs text-dimgray font-lora text-center dark:text-[#a4acba]">
                   Landlord will respond within 24–48 hrs.
                   <br />
                   Your info is kept private until approved.
@@ -738,15 +754,15 @@ const UnitDetails: FunctionComponent = () => {
           </div>
 
           {/* Tags + tabs + sidebar */}
-          <div className="flex flex-col xl:flex-row gap-6 text-sm font-lora text-darkslategray-200">
+          <div className="flex flex-col xl:flex-row gap-6 text-sm font-lora text-darkslategray-200 dark:text-[#edf6f4]">
             {/* Left: tags + tabs */}
             <div className="flex-1 min-w-0 flex flex-col gap-6">
               {/* Tags */}
-              <div className="flex flex-wrap gap-2 text-xs text-center text-teal-200">
+              <div className="flex flex-wrap gap-2 text-xs text-center text-teal-200 dark:text-[#72cbb8]">
                 {detailTags.map((label, index) => (
                   <div
                     key={label}
-                    className={`rounded-lg border border-teal-200 py-2 px-4 font-medium ${index === 0 ? "bg-lightcyan" : ""}`}
+                    className={`rounded-lg border border-teal-200 py-2 px-4 font-medium dark:border-[#2f8677] ${index === 0 ? "bg-lightcyan dark:bg-[#12342e]" : ""}`}
                   >
                     {label}
                   </div>
@@ -754,7 +770,7 @@ const UnitDetails: FunctionComponent = () => {
                 {selectedListingTags.map(({ name, label, value }) => (
                   <div
                     key={`${name}-${String(value)}`}
-                    className="rounded-lg border border-teal-200 py-2 px-4 font-medium"
+                    className="rounded-lg border border-teal-200 py-2 px-4 font-medium dark:border-[#2f8677]"
                   >
                     {`${label}: ${formatTagValue(value)}`}
                   </div>
@@ -812,9 +828,9 @@ const UnitDetails: FunctionComponent = () => {
             </div>
 
             {/* Right: landlord card + similar */}
-            <div className="w-full xl:w-[280px] shrink-0 flex flex-col gap-5 font-inter text-black">
+            <div className="w-full xl:w-[280px] shrink-0 flex flex-col gap-5 font-inter text-black dark:text-[#edf6f4]">
               {/* Landlord card */}
-              <div className="rounded-lg shadow bg-white flex flex-col p-4 gap-4">
+              <div className="rounded-lg shadow bg-white flex flex-col p-4 gap-4 dark:bg-[#101111] dark:shadow-none dark:border dark:border-[#303331]">
                 <div className="flex items-center gap-2 text-xl">
                   <Icon
                     icon="material-symbols:wifi-home-outline-rounded"
@@ -830,7 +846,7 @@ const UnitDetails: FunctionComponent = () => {
                       alt={facility.landlord.name}
                     />
                   ) : (
-                    <div className="h-12 w-12 rounded-full bg-lightcyan shadow flex items-center justify-center text-sm font-bold text-teal-200">
+                    <div className="h-12 w-12 rounded-full bg-lightcyan shadow flex items-center justify-center text-sm font-bold text-teal-200 dark:bg-[#12342e] dark:text-[#72cbb8]">
                       {facility.landlord?.name?.slice(0, 1) ?? "L"}
                     </div>
                   )}
@@ -843,7 +859,7 @@ const UnitDetails: FunctionComponent = () => {
                     </div>
                   </div>
                 </div>
-                <div className="flex gap-2 text-teal-100 text-sm">
+                <div className="flex gap-2 text-teal-100 text-sm dark:text-[#72cbb8]">
                   {[
                     [
                       String(
@@ -855,10 +871,10 @@ const UnitDetails: FunctionComponent = () => {
                   ].map(([val, lbl]) => (
                     <div
                       key={lbl}
-                      className="flex-1 border border-teal-100 rounded-lg flex flex-col items-center py-2"
+                      className="flex-1 border border-teal-100 rounded-lg flex flex-col items-center py-2 dark:border-[#2f8677]"
                     >
                       <b className="font-semibold">{val}</b>
-                      <div className="text-[10px] font-semibold font-lora text-darkslategray-100">
+                      <div className="text-[10px] font-semibold font-lora text-darkslategray-100 dark:text-[#a4acba]">
                         {lbl}
                       </div>
                     </div>
