@@ -251,7 +251,7 @@ const ViewSpecificManager = () => {
             <button
               onClick={() => setUpdateManagerOpen(true)}
               aria-label="Edit permissions"
-              className="flex items-center justify-center rounded-full p-[4px] transition-opacity hover:opacity-70"
+              className="flex items-center justify-center rounded-full p-[4px] transition-opacity hover:opacity-70 cursor-pointer"
             >
               <Icon
                 icon="solar:pen-bold"

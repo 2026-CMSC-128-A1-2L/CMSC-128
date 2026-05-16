@@ -171,7 +171,7 @@ const DormCard: FunctionComponent<DormCardProps> = ({
                           : 'text-black hover:bg-lightcyan dark:text-[#d7e0ef] dark:hover:bg-[#1f3a34]'
                       }`}
                     >
-                      <span className="font-bold">{room.pax}</span>
+                      <span className="font-bold cursor-pointer">{room.pax}</span>
                       <span
                         className={
                           isFull
@@ -239,7 +239,7 @@ const DormCard: FunctionComponent<DormCardProps> = ({
                   type="button"
                   data-card-interactive="true"
                   onClick={handleToggleExpand}
-                  className="hover:scale-125 transition-transform flex items-center justify-center p-1"
+                  className="hover:scale-125 transition-transform flex items-center justify-center p-1 cursor-pointer"
                   aria-label={isExpanded ? 'Collapse' : 'Expand'}
                 >
                   <Icon

@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import React, { type ReactNode } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import PageBackground from '../general/PageBackground';
 import RightArrow from '../../../assets/iconamoon_arrow-right-2.svg';
@@ -37,47 +37,41 @@ const LandlordLayout = ({ activeSidebarItem, breadcrumbs = [], children }: Landl
 
         <div className="flex min-w-0 flex-1 flex-col overflow-hidden pl-[68px] md:pl-0">
           <main className="flex min-w-0 flex-1 flex-col overflow-y-auto">
-            <div className="flex h-[64px] shrink-0 items-end gap-[10px] px-4 pb-[10px] pt-[10px] font-inter text-num-12 font-semibold sm:px-6 md:px-8 lg:px-[32px]">
+            <div className="flex h-[60px] shrink-0 items-center gap-[10px] px-4 font-inter text-num-12 font-semibold sm:px-6 md:px-8 lg:px-[32px]">
               {shouldShowBreadcrumbs && (
-                <nav aria-label="Breadcrumb">
-                  <ol className="flex h-[24px] items-center">
-                    {normalizedBreadcrumbs.map((item, idx) => {
-                      const isLast = idx === normalizedBreadcrumbs.length - 1;
-                      return (
-                        <li
-                          key={`${item.to ?? item.label}-${item.label}`}
-                          className="flex items-center pb-2"
-                        >
-                          {!isLast && item.to ? (
-                            <Link
-                              to={item.to}
-                              className="whitespace-nowrap text-black transition-colors hover:text-darkslategray dark:text-[#edf6f4] dark:hover:text-[#72cbb8]"
-                            >
-                              {item.label}
-                            </Link>
-                          ) : (
-                            <span
-                              className={`whitespace-nowrap ${
-                                isLast
-                                  ? 'text-darkslategray dark:text-[#d7e0ef]'
-                                  : 'text-black dark:text-[#edf6f4]'
-                              }`}
-                              aria-current={isLast ? 'page' : undefined}
-                            >
-                              {item.label}
-                            </span>
-                          )}
-                          {!isLast && (
-                            <img
-                              src={RightArrow}
-                              alt="Separator"
-                              className="mx-2 h-[24px] w-[24px]"
-                            />
-                          )}
-                        </li>
-                      );
-                    })}
-                  </ol>
+                <nav
+                  aria-label="Breadcrumb"
+                  className="flex items-center py-2 font-inter text-num-12 font-semibold"
+                >
+                  {normalizedBreadcrumbs.map((item, idx) => {
+                    const isLast = idx === normalizedBreadcrumbs.length - 1;
+
+                    return (
+                      <React.Fragment key={`${item.label}-${idx}`}>
+                        {!isLast && item.to ? (
+                          <Link
+                            to={item.to}
+                            className="text-black transition-colors hover:text-darkslategray dark:text-[#edf6f4] dark:hover:text-[#72cbb8]"
+                          >
+                            {item.label}
+                          </Link>
+                        ) : (
+                          <p
+                            className={
+                              isLast
+                                ? 'text-darkslategray dark:text-[#d7e0ef]'
+                                : 'text-black dark:text-[#edf6f4]'
+                            }
+                            aria-current={isLast ? 'page' : undefined}
+                          >
+                            {item.label}
+                          </p>
+                        )}
+
+                        {!isLast && <img src={RightArrow} alt="Separator" className="mx-2" />}
+                      </React.Fragment>
+                    );
+                  })}
                 </nav>
               )}
             </div>

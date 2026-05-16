@@ -13,28 +13,28 @@ const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose 
     {
       title: 'Landlord Profile',
       text: 'This is your profile page!',
-      position: 'top-[50px] left-[390px]',
+      position: { top: 118, left: 390 },
       total: 2,
       currentStep: 1,
     },
     {
       title: 'Landlord Profile',
       text: 'Here, you can view your personal information and modify it as needed.',
-      position: 'top-[30px] left-[390px]',
+      position: { top: 118, left: 390 },
       total: 2,
       currentStep: 2,
     },
     {
       title: 'Availability',
       text: 'This section is your availability schedule. You can set your available time slots for potential tenant visits.',
-      position: 'top-[480px] left-[390px]',
+      position: { top: 480, left: 390 },
       total: 1,
       currentStep: 1,
     },
     {
       title: 'Managed Properties',
       text: 'This section shows all of your registered properties. You can manage your properties and track their performance here.',
-      position: 'top-[650px] left-[540px]',
+      position: { top: 620, left: 540 },
       total: 1,
       currentStep: 1,
     },
@@ -45,6 +45,10 @@ const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose 
   const current = helpContent[step - 1];
   const totalSteps = helpContent.length;
   const isLastStep = step === totalSteps;
+  const bubbleStyle = {
+    top: `clamp(76px, ${current.position.top}px, calc(100vh - 220px))`,
+    left: `clamp(88px, ${current.position.left}px, calc(100vw - 300px))`,
+  };
 
   const handleNext = () => {
     if (step < totalSteps) {
@@ -61,7 +65,8 @@ const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose 
 
   return (
     <div
-      className={`absolute ${current.position} z-999 flex flex-col items-start animate-in fade-in zoom-in duration-200 transition-all`}
+      className="fixed z-[999] flex flex-col items-start animate-in fade-in zoom-in duration-200 transition-all"
+      style={bubbleStyle}
     >
       <div className="w-[232px] flex flex-row items-center">
         <Icon icon="ph:caret-left-fill" className="text-aliceblue w-14 h-15 mr-[-23px] z-10" />

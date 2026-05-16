@@ -319,7 +319,7 @@ const ProfileInfo = () => {
                 type="button"
                 onClick={() => (isEditing ? handleSave() : setIsEditing(true))}
                 disabled={isSavingContact}
-                className="focus:outline-none hover:opacity-80 transition-opacity disabled:opacity-50"
+                className="focus:outline-none hover:opacity-80 transition-opacity disabled:opacity-50 cursor-pointer"
               >
                 <Icon
                   icon={isEditing ? 'solar:check-read-linear' : 'iconamoon:edit'}
@@ -361,7 +361,7 @@ const ProfileInfo = () => {
                 type="button"
                 onClick={() => (isEditingAddress ? handleSaveAddress() : setIsEditingAddress(true))}
                 disabled={isSavingAddress}
-                className="focus:outline-none hover:opacity-80 transition-opacity disabled:opacity-50"
+                className="focus:outline-none hover:opacity-80 transition-opacity disabled:opacity-50 cursor-pointer"
               >
                 <Icon
                   icon={isEditingAddress ? 'solar:check-read-linear' : 'iconamoon:edit'}

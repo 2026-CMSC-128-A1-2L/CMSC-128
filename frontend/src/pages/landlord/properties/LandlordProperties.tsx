@@ -70,14 +70,14 @@ const LandlordProperties: FunctionComponent = () => {
                   <span className="hidden sm:inline font-['Inter',sans-serif] text-[14px] font-bold text-black">
                     Filter By:
                   </span>
-                  <button className="flex items-center gap-[10px] rounded-[16px] bg-[#f5f5f5] px-[12px] py-[8px] text-[#666]">
+                  <button className="flex items-center gap-[10px] rounded-[16px] bg-[#f5f5f5] px-[12px] py-[8px] text-[#666] cursor-pointer">
                     <span className="text-[12px] sm:text-[14px] font-medium whitespace-nowrap">
                       Recently Added
                     </span>
                     <Icon icon="mdi-light:chevron-down" className="h-4 w-4 sm:h-5 sm:w-5" />
                   </button>
                 </div>
-                <button className="h-7 w-7 sm:h-8 sm:w-8 transition-opacity hover:opacity-70 shrink-0">
+                <button className="h-7 w-7 sm:h-8 sm:w-8 transition-opacity hover:opacity-70 shrink-0 cursor-pointer">
                   <img src={search} alt="Search" className="h-full w-full" />
                 </button>
               </div>
@@ -106,7 +106,7 @@ const LandlordProperties: FunctionComponent = () => {
 
           <button
             onClick={onAddBuildingContainerClick}
-            className="flex w-full flex-col items-center justify-center gap-[16px] rounded-[10px] border border-dashed border-black bg-white py-[24px] sm:py-[32px] transition-colors hover:shadow-md hover:bg-gray-50"
+            className="flex w-full flex-col items-center justify-center gap-[16px] rounded-[10px] border border-dashed border-black bg-white py-[24px] sm:py-[32px] transition-colors hover:shadow-md hover:bg-gray-50 cursor-pointer"
           >
             <img src={plus} alt="plus" className="w-7 sm:w-8" />
             <div className="flex flex-col items-center">

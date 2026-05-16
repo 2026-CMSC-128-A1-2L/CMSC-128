@@ -26,9 +26,9 @@ const ReportManagerSection = ({ section, items, checked, onToggle, onToggleAll }
         active
           ? 'border-[#096c5b] bg-[#096c5b]'
           : 'border-[#d1d5db] bg-[#f5f5f5] shadow-[0px_0px_1.6px_rgba(0,0,0,0.25)]'
-      }`}
+      } cursor-pointer`}
     >
-      {active && <Icon icon="solar:check-bold" className="h-[11px] w-[11px] text-white" />}
+      {active && <Icon icon="solar:check-bold" className="h-[11px] w-[11px] text-white cursor-pointer" />}
     </button>
   );
 
@@ -50,9 +50,9 @@ const ReportManagerSection = ({ section, items, checked, onToggle, onToggleAll }
             <button
               key={item.title}
               onClick={() => onToggle(item.title)}
-              className={`self-stretch rounded-[9.6px] flex items-center py-[9.6px] pl-[19.2px] pr-[17.6px] gap-[12.8px] text-left transition-colors ${active ? 'bg-[#f0fdf9]' : 'hover:bg-[#fafafa]'}`}
+              className={`self-stretch rounded-[9.6px] flex items-center py-[9.6px] pl-[19.2px] pr-[17.6px] gap-[12.8px] text-left transition-colors ${active ? 'bg-[#f0fdf9]' : 'hover:bg-[#fafafa]'} cursor-pointer`}
             >
-              <div className="flex flex-1 flex-col gap-[3.2px]">
+              <div className="flex flex-1 flex-col gap-[3.2px] cursor-pointer">
                 <b className="font-['Inter',sans-serif] text-[14px] text-black">{item.title}</b>
                 {item.desc && (
                   <span className="font-['Inter',sans-serif] text-[12px] font-medium text-[#666]">

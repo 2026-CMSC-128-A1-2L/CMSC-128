@@ -133,12 +133,12 @@ const MainCalendarGrid: FunctionComponent<MainCalendarGridProps> = ({
                   <button
                     key={event.referenceId}
                     onClick={() => onEventClick?.(event)}
-                    className="w-full rounded-sm bg-blue-50 py-0.5 px-1 opacity-80 hover:opacity-100 transition-opacity text-left"
+                    className="w-full rounded-sm bg-blue-50 py-0.5 px-1 opacity-80 hover:opacity-100 transition-opacity text-left cursor-pointer"
                   >
                     <b
                       className={`text-[9px] sm:text-[11px] bg-gradient-to-b ${getEventColor(
                         event.type,
-                      )} bg-clip-text text-transparent`}
+                      )} bg-clip-text text-transparent cursor-pointer`}
                     >
                       {event.title}
                     </b>

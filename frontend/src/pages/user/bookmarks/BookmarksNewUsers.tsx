@@ -81,7 +81,7 @@ const BookmarkCard: FunctionComponent<BookmarkCardProps> = ({ bookmark, onRemove
               event.stopPropagation();
               void onRemove(bookmark.listingId);
             }}
-            className="relative z-20 flex h-10 w-10 items-center justify-center rounded-full border border-whitesmoke-200 text-teal-200 transition-colors hover:bg-lightcyan"
+            className="relative z-20 flex h-10 w-10 items-center justify-center rounded-full border border-whitesmoke-200 text-teal-200 transition-colors hover:bg-lightcyan cursor-pointer"
             aria-label={`Remove ${roomLabel} bookmark`}
           >
             <Icon icon="material-symbols:bookmark-remove-outline" className="h-5 w-5" />
@@ -141,7 +141,7 @@ const BookmarksNewUsers: FunctionComponent = () => {
                         <button
                           type="button"
                           onClick={refetch}
-                          className="rounded-lg bg-lightcyan px-4 py-2 text-sm font-semibold text-teal-200"
+                          className="rounded-lg bg-lightcyan px-4 py-2 text-sm font-semibold text-teal-200 cursor-pointer"
                         >
                           Retry
                         </button>

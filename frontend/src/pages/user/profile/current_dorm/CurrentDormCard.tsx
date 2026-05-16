@@ -315,7 +315,7 @@ export default function CurrentDormCard({
             >
               <div className="flex items-center gap-2">
                 <div
-                  className={`relative font-semibold transition-colors ${activeTab === 'Contract Information' ? 'text-[#096C5B]' : 'text-black'}`}
+                  className={`relative font-semibold transition-colors ${activeTab === 'Contract Information' ? 'text-[#096C5B]' : 'text-black'} cursor-pointer`}
                 >
                   Contract Information
                 </div>
@@ -334,7 +334,7 @@ export default function CurrentDormCard({
             >
               <div className="flex items-center gap-2">
                 <div
-                  className={`relative font-semibold transition-colors ${activeTab === 'Rate and Review' ? 'text-[#096C5B]' : 'text-black'}`}
+                  className={`relative font-semibold transition-colors ${activeTab === 'Rate and Review' ? 'text-[#096C5B]' : 'text-black'} cursor-pointer`}
                 >
                   Rate and Review
                 </div>
@@ -353,7 +353,7 @@ export default function CurrentDormCard({
             >
               <div className="flex items-center gap-2">
                 <div
-                  className={`relative font-semibold transition-colors ${activeTab === 'Report Listing' ? 'text-[#096C5B]' : 'text-black'}`}
+                  className={`relative font-semibold transition-colors ${activeTab === 'Report Listing' ? 'text-[#096C5B]' : 'text-black'} cursor-pointer`}
                 >
                   Report Listing
                 </div>
@@ -372,7 +372,7 @@ export default function CurrentDormCard({
             >
               <div className="flex items-center gap-2">
                 <div
-                  className={`relative font-semibold transition-colors ${activeTab === 'Pasalo Unit' ? 'text-[#096C5B]' : 'text-black'}`}
+                  className={`relative font-semibold transition-colors ${activeTab === 'Pasalo Unit' ? 'text-[#096C5B]' : 'text-black'} cursor-pointer`}
                 >
                   Pasalo Unit
                 </div>
@@ -439,7 +439,7 @@ export default function CurrentDormCard({
 
               <button
                 type="button"
-                className="px-4 py-1 text-gray-100 bg-[#f1f5f9] rounded-full dark:bg-[#202123] dark:text-[#a4acba]"
+                className="px-4 py-1 text-gray-100 bg-[#f1f5f9] rounded-full dark:bg-[#202123] dark:text-[#a4acba] cursor-pointer"
                 onClick={() => {}}
               >
                 Proceed
@@ -480,7 +480,7 @@ export default function CurrentDormCard({
 
               <button
                 type="button"
-                className="px-4 py-1 text-gray-100 bg-[#f1f5f9] rounded-full dark:bg-[#202123] dark:text-[#a4acba]"
+                className="px-4 py-1 text-gray-100 bg-[#f1f5f9] rounded-full dark:bg-[#202123] dark:text-[#a4acba] cursor-pointer"
                 onClick={() => {}}
               >
                 Proceed
@@ -521,7 +521,7 @@ export default function CurrentDormCard({
 
               <button
                 type="button"
-                className="px-4 py-1  text-gray-100  bg-[#f1f5f9] rounded-full"
+                className="px-4 py-1  text-gray-100  bg-[#f1f5f9] rounded-full cursor-pointer"
                 onClick={() => {}}
               >
                 Proceed

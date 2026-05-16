@@ -26,7 +26,7 @@ const AddManager2: FunctionComponent<Props> = ({ onClose }) => {
         </div>
         <div className="self-stretch flex-1 overflow-hidden flex flex-col items-center p-2.5 text-sm text-teal">
           <div className="rounded-xl bg-lightcyan overflow-hidden flex items-center justify-center py-3 px-8">
-            <button className="relative font-semibold" onClick={onClose}>
+            <button className="relative font-semibold cursor-pointer" onClick={onClose}>
               Close
             </button>
           </div>

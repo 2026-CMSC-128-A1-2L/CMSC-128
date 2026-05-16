@@ -70,7 +70,7 @@ const DetailForm: FunctionComponent<DetailFormProps> = ({
   };
 
   return (
-    <div className="flex-1 w-full relative flex flex-col items-start justify-center gap-4 text-left text-num-14 text-teal font-inter">
+    <div className="flex-1 w-full relative flex flex-col items-start justify-center gap-4 text-left text-num-14 text-teal font-inter dark:text-[#72cbb8]">
       {/* Header */}
       <div className="self-stretch flex items-center gap-2.5 text-[17.7px]">
         <div className="flex-1 flex items-center justify-center">
@@ -87,14 +87,14 @@ const DetailForm: FunctionComponent<DetailFormProps> = ({
       </div>
 
       {/* Name + Account Number */}
-      <div className="self-stretch flex items-start gap-10 text-black">
+      <div className="self-stretch flex items-start gap-10 text-black dark:text-[#a4acba]">
         <div className="flex-1 flex flex-col items-start gap-3">
           <b className="relative">Name</b>
-          <div className="self-stretch rounded-xl bg-aliceblue border-whitesmoke border-solid border flex items-center py-3 px-4">
+          <div className="self-stretch rounded-xl bg-aliceblue border-whitesmoke border-solid border flex items-center py-3 px-4 dark:bg-[#1f2022] dark:border-[#343737]">
             <input
               {...register('name')}
               placeholder="Aa"
-              className="flex-1 bg-transparent text-sm text-black placeholder-slategray outline-none font-medium leading-6"
+              className="flex-1 bg-transparent text-sm text-black placeholder-slategray outline-none font-medium leading-6 dark:text-[#d7e0ef] dark:placeholder-[#8c95a3]"
             />
           </div>
         </div>
@@ -102,11 +102,11 @@ const DetailForm: FunctionComponent<DetailFormProps> = ({
           <b className="self-stretch h-[15.2px] relative flex items-center shrink-0">
             {accountLabel}
           </b>
-          <div className="self-stretch rounded-xl bg-aliceblue border-whitesmoke border-solid border flex items-center py-3 px-4">
+          <div className="self-stretch rounded-xl bg-aliceblue border-whitesmoke border-solid border flex items-center py-3 px-4 dark:bg-[#1f2022] dark:border-[#343737]">
             <input
               {...register('accountNumber')}
               placeholder="09"
-              className="flex-1 bg-transparent text-sm text-black placeholder-slategray outline-none font-medium leading-6"
+              className="flex-1 bg-transparent text-sm text-black placeholder-slategray outline-none font-medium leading-6 dark:text-[#d7e0ef] dark:placeholder-[#8c95a3]"
             />
           </div>
         </div>
@@ -114,7 +114,7 @@ const DetailForm: FunctionComponent<DetailFormProps> = ({
 
       {/* QR Upload */}
       <div
-        className="self-stretch rounded-2xl border-dimgray border-dashed border overflow-hidden flex items-center py-3 px-4 text-black cursor-pointer hover:bg-gray-50 transition-colors"
+        className="self-stretch rounded-2xl border-dimgray border-dashed border overflow-hidden flex items-center py-3 px-4 text-black cursor-pointer hover:bg-gray-50 transition-colors dark:border-[#343737] dark:text-[#d7e0ef] dark:hover:bg-[#1f2022]"
         onClick={() => qrInputRef.current?.click()}
       >
         {qrPreview ? (
@@ -132,12 +132,12 @@ const DetailForm: FunctionComponent<DetailFormProps> = ({
           </div>
         ) : (
           <div className="h-16 flex items-center gap-6">
-            <div className="h-16 w-16 relative rounded-md flex items-center justify-center overflow-hidden">
+            <div className="h-16 w-16 relative rounded-md flex items-center justify-center overflow-hidden dark:text-[#72cbb8]">
               <Icon icon="icons8:upload-2" className="w-full h-full" />
             </div>
             <div className="flex flex-col items-start justify-center gap-2">
               <b className="relative">Upload QR</b>
-              <div className="relative text-[12px] tracking-[0.02em] font-semibold font-lora text-slategray">
+              <div className="relative text-[12px] tracking-[0.02em] font-semibold font-lora text-slategray dark:text-[#a4acba]">
                 .jpg or .png — max 2 MB
               </div>
             </div>
@@ -184,7 +184,7 @@ const Payments: FunctionComponent = () => {
   return (
     <div
       className={`w-full relative rounded-[11.8px] flex flex-col items-start py-4 px-3 box-border transform-[rotate(-0.3deg)] origin-top-left text-left text-[17.7px] font-inter transition-all ${
-        payment.enabled ? 'gap-[15.7px] text-teal-200' : 'text-teal'
+        payment.enabled ? 'gap-[15.7px] text-teal-200 dark:text-[#72cbb8]' : 'text-teal dark:text-[#72cbb8]'
       }`}
     >
       {/* Header & Toggle */}
@@ -195,7 +195,7 @@ const Payments: FunctionComponent = () => {
         <div className="h-[30.5px] w-[64.9px] relative cursor-pointer" onClick={handleToggle}>
           <div
             className={`absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] rounded-[19.67px] transition-colors ${
-              payment.enabled ? 'bg-teal-100' : 'bg-silver'
+              payment.enabled ? 'bg-teal-100 dark:bg-[#124f43]' : 'bg-silver dark:bg-[#303331]'
             }`}
           />
           <div
@@ -208,7 +208,7 @@ const Payments: FunctionComponent = () => {
 
       {/* Expanded Content */}
       {payment.enabled && (
-        <div className="flex flex-col items-start gap-[30px] text-slategray w-full">
+        <div className="flex flex-col items-start gap-[30px] text-slategray w-full dark:text-[#a4acba]">
           {/* GCash */}
           {!isGcashOpen ? (
             <div

@@ -39,7 +39,7 @@ const SignInPopUp: FunctionComponent<SignInPopUpProps> = ({ isOpen = true, onClo
           type="button"
           onClick={onClose}
           aria-label="Close sign in popup"
-          className="absolute right-5 top-5 z-[2147483647] flex h-8 w-8 items-center justify-center rounded-full text-gray-500 hover:bg-gray-100 hover:text-gray-800 transition-colors dark:text-[#a4acba] dark:hover:bg-[#202123] dark:hover:text-[#edf6f4]"
+          className="absolute right-5 top-5 z-[2147483647] flex h-8 w-8 items-center justify-center rounded-full text-gray-500 hover:bg-gray-100 hover:text-gray-800 transition-colors dark:text-[#a4acba] dark:hover:bg-[#202123] dark:hover:text-[#edf6f4] cursor-pointer"
         >
           ×
         </button>

@@ -104,7 +104,7 @@ const SideBarAdminMessagesView = ({
       </div>
 
       {/* Message list */}
-      <div className="flex flex-1 flex-col gap-[12px] overflow-y-auto pb-[12px] pr-[2px]">
+      <div className="flex flex-1 flex-col gap-[12px] overflow-y-auto pb-[12px] pr-[2px] cursor-pointer">
         {filtered.length === 0 ? (
           <p className="mt-4 text-center font-['Lora'] text-[12px] text-[#666] dark:text-[#a4acba]">
             No messages found.

@@ -1,9 +1,9 @@
-import type { FunctionComponent } from 'react';
-import { useEffect, useRef, useState } from 'react';
-import { Icon } from '@iconify/react';
-import pic1 from '../../../assets/promotion-1.jpg';
-import pic2 from '../../../assets/promotion-2.jpg';
-import pic3 from '../../../assets/accent.svg';
+import type { FunctionComponent } from "react";
+import { useEffect, useRef, useState } from "react";
+import { Icon } from "@iconify/react";
+import pic1 from "../../../assets/promotion-1.jpg";
+import pic2 from "../../../assets/promotion-2.jpg";
+import pic3 from "../../../assets/accent.svg";
 
 const DESIGN_WIDTH = 1992; // 7 w-66 cards + 6 gap-6 spaces
 const DESIGN_HEIGHT = 680;
@@ -36,7 +36,7 @@ const Banner: FunctionComponent = () => {
           width: DESIGN_WIDTH,
           height: DESIGN_HEIGHT,
           transform: `scale(${scale})`,
-          transformOrigin: 'top left',
+          transformOrigin: "top left",
         }}
       >
         <img
@@ -62,8 +62,8 @@ const Banner: FunctionComponent = () => {
               Built for students, by students.
             </b>
             <b className="text-[34px] leading-[1.22] text-teal">
-              Discover a community-backed way to find your next home in Los Ba&ntilde;os with
-              transparency and ease.
+              Discover a community-backed way to find your next home in Los
+              Ba&ntilde;os with transparency and ease.
             </b>
           </div>
 
@@ -73,12 +73,18 @@ const Banner: FunctionComponent = () => {
                 <Icon icon="ic:twotone-search" className="h-[54px] w-[54px]" />
                 <span className="text-[28px] font-bold">Search</span>
               </div>
-              <Icon icon="gg:arrow-right" className="h-[34px] w-[34px] opacity-40" />
+              <Icon
+                icon="gg:arrow-right"
+                className="h-[34px] w-[34px] opacity-40"
+              />
               <div className="flex w-[120px] flex-col items-center gap-[14px]">
                 <Icon icon="boxicons:calendar" className="h-[54px] w-[54px]" />
                 <span className="text-[28px] font-bold">Book</span>
               </div>
-              <Icon icon="gg:arrow-right" className="h-[34px] w-[34px] opacity-40" />
+              <Icon
+                icon="gg:arrow-right"
+                className="h-[34px] w-[34px] opacity-40"
+              />
               <div className="flex w-[120px] flex-col items-center gap-[14px]">
                 <Icon icon="solar:home-linear" className="h-[54px] w-[54px]" />
                 <span className="text-[28px] font-bold">Move In</span>
@@ -90,7 +96,10 @@ const Banner: FunctionComponent = () => {
               className="flex h-[102px] w-[420px] items-center justify-center gap-[24px] rounded-[60px] [background:linear-gradient(99.18deg,#5dc2a8_27.88%,#0c8873_88.15%)] text-white shadow-lg transition-all hover:brightness-110"
             >
               <b className="text-[36px]">Find my spot!</b>
-              <Icon icon="si:arrow-right-duotone" className="h-[36px] w-[36px]" />
+              <Icon
+                icon="si:arrow-right-duotone"
+                className="h-[36px] w-[36px]"
+              />
             </button>
           </div>
         </div>

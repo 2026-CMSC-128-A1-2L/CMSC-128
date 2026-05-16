@@ -145,7 +145,7 @@ const LandingFAQ: FunctionComponent = () => {
                     : 'bg-transparent text-gray-300 hover:bg-teal-50'
                 }`}
               >
-                <Icon icon={TAB_ICONS[tab]} className="w-6 h-6" />
+                <Icon icon={TAB_ICONS[tab]} className="w-6 h-6 cursor-pointer" />
                 <span>{tab}</span>
                 {isActive && <div className="w-8 h-1 rounded-full bg-white mt-1" />}
               </button>
@@ -171,7 +171,7 @@ const LandingFAQ: FunctionComponent = () => {
                     icon="lucide:chevron-down"
                     className={`w-5 h-5 shrink-0 text-teal-200 transition-transform duration-300 ${
                       isOpen ? 'rotate-180' : ''
-                    }`}
+                    } cursor-pointer`}
                   />
                 </button>
                 <div

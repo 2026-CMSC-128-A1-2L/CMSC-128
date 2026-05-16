@@ -41,10 +41,10 @@ const EventDetails: FunctionComponent<EventDetailsProps> = ({
       </div>
 
       <div className="flex gap-2 pt-4">
-        <button className="flex-1 py-2 px-4 bg-teal-200 text-white rounded-lg font-medium hover:opacity-90 transition-opacity">
+        <button className="flex-1 py-2 px-4 bg-teal-200 text-white rounded-lg font-medium hover:opacity-90 transition-opacity cursor-pointer">
           Accept
         </button>
-        <button className="flex-1 py-2 px-4 border border-gray-200 rounded-lg font-medium hover:bg-gray-50 transition-colors">
+        <button className="flex-1 py-2 px-4 border border-gray-200 rounded-lg font-medium hover:bg-gray-50 transition-colors cursor-pointer">
           Decline
         </button>
       </div>
