@@ -1,7 +1,6 @@
 import type { FunctionComponent } from 'react';
 import SideBar from '../../../components/user/SideBar';
 import Footer from '../../../components/general/Footer';
-import PageBackground from '../../../components/general/PageBackground';
 import PropertyTabs from '../../../components/user/unitdetails/PropertyTabs';
 import PropertyTab from '../../../components/user/unitdetails/PropertyTab';
 import General from './General';
