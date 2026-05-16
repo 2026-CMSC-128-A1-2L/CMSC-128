@@ -46,6 +46,7 @@ type Person = {
 export type CurrentDormReviewDetails = {
   facilityId?: string;
   listingId?: string;
+  unitId?: string;
   dormitoryName: string;
   dormitoryAddress: string;
   dormitoryImage: string;
@@ -170,6 +171,7 @@ const mapDetails = (
   return {
     facilityId: getId(source.facilityId) ?? getId(facility),
     listingId,
+    unitId: getId(unit),
     dormitoryName:
       (source.facilityId &&
         typeof source.facilityId === 'object' &&

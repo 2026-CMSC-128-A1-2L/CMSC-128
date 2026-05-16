@@ -2,12 +2,15 @@ import { Icon } from '@iconify/react';
 import placeholder from '../../../../../assets/one_sapphire_place.png';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import DefaultAvatar from '../../../../../assets/default_avatar.svg';
+import { RentalService } from '../../../../service/RentalService';
 import { ReviewService } from '../../../../service/ReviewService';
 import { ReportService } from '../../../../service/ReportService';
 import { UserService } from '../../../../service/UserService';
 import { useCurrentDormReviewDetails } from './useCurrentDormReviewDetails';
 
 interface Roommate {
+  id?: string;
   name: string;
   avatarSrc?: string;
 }
@@ -36,6 +39,27 @@ type ReportStatusState = {
   isLoading: boolean;
 };
 
+type RentalUser = {
+  id?: string;
+  _id?: string;
+  firstName?: string;
+  middleName?: string;
+  lastName?: string;
+  profilePicture?: string | null;
+};
+
+type UnitRental = {
+  id?: string;
+  _id?: string;
+  status?: 'active' | 'ended' | 'on_waitlist' | 'inactive';
+  userId?: string | RentalUser;
+  facilityId?: string | Record<string, unknown>;
+  unitId?: string | Record<string, unknown>;
+};
+
+const getDisplayName = (user: RentalUser) =>
+  [user.firstName, user.middleName, user.lastName].filter(Boolean).join(' ') || 'Roommate';
+
 export default function CurrentDormCard({
   propertyImageSrc = placeholder,
   propertyName = 'One Sapphire Place',
@@ -43,17 +67,13 @@ export default function CurrentDormCard({
   contractDuration = '1 Year',
   leaseEndDate = 'May 18, 2026',
   verified = true,
-  roommates = [
-    { name: 'Nathaniel Cunanan', avatarSrc: placeholder },
-    { name: 'Raven Caduyac', avatarSrc: placeholder },
-    { name: 'Jiro Tipan', avatarSrc: placeholder },
-    { name: 'Ted Villanueva', avatarSrc: placeholder },
-    { name: 'Val Alamillo', avatarSrc: placeholder },
-  ],
+  roommates,
   // default values for props, can be overridden when using the component
 }: CurrentDormCardProps) {
   const [activeTab, setActiveTab] = useState('Contract Information');
   const [hasExistingReview, setHasExistingReview] = useState(false);
+  const [fetchedRoommates, setFetchedRoommates] = useState<Roommate[]>([]);
+  const [isLoadingRoommates, setIsLoadingRoommates] = useState(false);
   const [reportStatus, setReportStatus] = useState<ReportStatusState>({
     status: null,
     isLoading: false,
@@ -100,6 +120,61 @@ export default function CurrentDormCard({
   useEffect(() => {
     let cancelled = false;
 
+    const loadRoommates = async () => {
+      if (!details?.unitId) {
+        setFetchedRoommates([]);
+        return;
+      }
+
+      setIsLoadingRoommates(true);
+
+      try {
+        const [selfResponse, rentalsResponse] = await Promise.all([
+          UserService.getSelf(),
+          RentalService.getRentalByUnit(details.unitId),
+        ]);
+
+        if (cancelled) return;
+
+        const self = getDataObject<Record<string, unknown>>(selfResponse);
+        const selfId = getEntityId(self);
+        const rentals = getDataArray<UnitRental>(rentalsResponse);
+
+        const roommatesById = new Map<string, Roommate>();
+        rentals
+          .filter(
+            (rental) => rental.status !== 'ended' && getEntityId(rental.unitId) === details.unitId,
+          )
+          .forEach((rental) => {
+            if (!rental.userId || typeof rental.userId === 'string') return;
+
+            const roommateId = getEntityId(rental.userId);
+            if (!roommateId || roommateId === selfId || roommatesById.has(roommateId)) return;
+
+            roommatesById.set(roommateId, {
+              id: roommateId,
+              name: getDisplayName(rental.userId),
+              avatarSrc: rental.userId.profilePicture ?? undefined,
+            });
+          });
+
+        setFetchedRoommates([...roommatesById.values()]);
+      } catch {
+        if (!cancelled) setFetchedRoommates([]);
+      } finally {
+        if (!cancelled) setIsLoadingRoommates(false);
+      }
+    };
+
+    void loadRoommates();
+    return () => {
+      cancelled = true;
+    };
+  }, [details?.unitId]);
+
+  useEffect(() => {
+    let cancelled = false;
+
     const loadReportStatus = async () => {
       if (!details?.listingId) {
         setReportStatus({ status: null, isLoading: false });
@@ -137,6 +212,7 @@ export default function CurrentDormCard({
     navigate(details?.facilityId ? `/facilities/${details.facilityId}` : '/current-dorm');
   };
 
+  const displayedRoommates = roommates ?? fetchedRoommates;
   const hasPendingReport = reportStatus.status === 'pending';
   const reportStatusMessage =
     reportStatus.status === 'pending'
@@ -183,23 +259,25 @@ export default function CurrentDormCard({
           </div>
 
           {/* Roommates Section */}
-          {roommates && roommates.length > 0 && (
-            <div className="mb-8">
-              <h3 className="text-xl font-bold mb-4 text-center">Your Roommates</h3>
+          <div className="mb-8">
+            <h3 className="text-xl font-bold mb-4 text-center">Your Roommates</h3>
 
+            {isLoadingRoommates ? (
+              <p className="text-center text-sm font-semibold text-slategray">
+                Loading roommates...
+              </p>
+            ) : displayedRoommates.length > 0 ? (
               <div className="flex flex-wrap justify-center gap-4">
-                {roommates.map((roommate, index) => (
+                {displayedRoommates.map((roommate, index) => (
                   <div
-                    key={roommate.name}
+                    key={roommate.id ?? roommate.name}
                     className="w-[180px] flex flex-col items-center border border-[#f0f0f0] rounded-lg p-4 dark:border-[#303331] dark:bg-[#101111]"
                   >
-                    {roommate.avatarSrc && (
-                      <img
-                        src={roommate.avatarSrc}
-                        alt={roommate.name}
-                        className="w-16 h-16 rounded-full object-cover mb-2"
-                      />
-                    )}
+                    <img
+                      src={roommate.avatarSrc || DefaultAvatar}
+                      alt={roommate.name}
+                      className="w-16 h-16 rounded-full object-cover mb-2"
+                    />
 
                     <p className="text-sm font-semibold text-center">{roommate.name}</p>
 
@@ -207,8 +285,12 @@ export default function CurrentDormCard({
                   </div>
                 ))}
               </div>
-            </div>
-          )}
+            ) : (
+              <p className="text-center text-sm font-semibold text-slategray">
+                No roommates found for this unit.
+              </p>
+            )}
+          </div>
 
           {/* Action Button */}
           <button
