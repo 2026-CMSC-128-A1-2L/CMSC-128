@@ -26,7 +26,7 @@ const LandlordLayout = ({ activeSidebarItem, breadcrumbs = [], children }: Landl
   const shouldShowBreadcrumbs = normalizedBreadcrumbs.length >= 3;
 
   return (
-    <div className="landlord-shell relative flex h-screen w-screen flex-col overflow-hidden">
+    <div className="landlord-shell relative flex min-h-screen flex-col overflow-x-hidden">
       <PageBackground />
       <div className="relative z-10 flex flex-1 overflow-hidden">
         <SideBarLandlord

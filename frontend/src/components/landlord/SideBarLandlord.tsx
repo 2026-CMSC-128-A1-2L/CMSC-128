@@ -193,9 +193,7 @@ const SideBarLandlord = ({
   };
 
   const w = collapsed ? 'w-[68px]' : 'w-[200px]';
-  const positionClass = isMobile
-    ? 'fixed top-0 left-0 z-40 h-screen'
-    : 'relative h-full min-h-screen';
+  const positionClass = 'fixed top-0 left-0 z-40 h-screen';
 
   return (
     <>
@@ -205,6 +203,10 @@ const SideBarLandlord = ({
           aria-hidden="true"
           onClick={handleBackdropClick}
         />
+      )}
+
+      {!isMobile &&(
+      <div className={['shrink-0 transition-[width] duration-200', w].join(' ')} aria-hidden="true" />
       )}
 
       <aside
