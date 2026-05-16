@@ -272,7 +272,7 @@ const HomePage: FunctionComponent = () => {
   const [viewAllCategory, setViewAllCategory] = useState<ViewAllCategory>(null);
   const [filterCriteria, setFilterCriteria] = useState({
     minPrice: 0,
-    maxPrice: 10000,
+    maxPrice: 30000,
     pax: 'Any' as number | 'Any',
     propertyType: 'Dormitory',
     selectedEssentials: [] as string[],
