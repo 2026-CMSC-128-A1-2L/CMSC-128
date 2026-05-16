@@ -95,6 +95,17 @@ export default function ReportDetailModal({
                 <p className="font-['Inter',sans-serif] text-[16px] font-bold text-[#001d18] dark:text-[#d7e0ef]">
                   {getReporterName(report.userId)}
                 </p>
+                {report.reporterFacility && (
+                  <div className="mt-1 flex items-center gap-1.5">
+                    <Icon
+                      icon="solar:buildings-bold"
+                      className="h-3.5 w-3.5 text-[#096c5b] dark:text-[#72cbb8]"
+                    />
+                    <span className="font-['Inter',sans-serif] text-[13px] font-medium text-[#096c5b] dark:text-[#72cbb8]">
+                      {report.reporterFacility}
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
           </Card>
