@@ -3,6 +3,7 @@ import placeholder from '../../../../../assets/one_sapphire_place.png';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { ReviewService } from '../../../../service/ReviewService';
+import { ReportService } from '../../../../service/ReportService';
 import { UserService } from '../../../../service/UserService';
 import { useCurrentDormReviewDetails } from './useCurrentDormReviewDetails';
 
@@ -20,6 +21,20 @@ interface CurrentDormCardProps {
   verified?: true;
   roommates?: Roommate[];
 }
+
+type ListingReportSummary = {
+  _id?: string;
+  id?: string;
+  __t?: string;
+  listingId?: string | Record<string, unknown>;
+  status?: 'pending' | 'resolved' | 'dismissed';
+  createdAt?: string;
+};
+
+type ReportStatusState = {
+  status: 'pending' | 'resolved' | 'dismissed' | null;
+  isLoading: boolean;
+};
 
 export default function CurrentDormCard({
   propertyImageSrc = placeholder,
@@ -39,6 +54,10 @@ export default function CurrentDormCard({
 }: CurrentDormCardProps) {
   const [activeTab, setActiveTab] = useState('Contract Information');
   const [hasExistingReview, setHasExistingReview] = useState(false);
+  const [reportStatus, setReportStatus] = useState<ReportStatusState>({
+    status: null,
+    isLoading: false,
+  });
   const { details } = useCurrentDormReviewDetails();
 
   const navigate = useNavigate();
@@ -78,9 +97,55 @@ export default function CurrentDormCard({
     };
   }, [details?.listingId]);
 
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadReportStatus = async () => {
+      if (!details?.listingId) {
+        setReportStatus({ status: null, isLoading: false });
+        return;
+      }
+
+      setReportStatus((current) => ({ ...current, isLoading: true }));
+
+      try {
+        const response = await ReportService.getMyReports();
+        if (cancelled) return;
+
+        const reports = getDataArray<ListingReportSummary>(response);
+        const latestListingReport = reports.find(
+          (report) =>
+            report.__t === 'ListingReport' && getEntityId(report.listingId) === details.listingId,
+        );
+
+        setReportStatus({
+          status: latestListingReport?.status ?? null,
+          isLoading: false,
+        });
+      } catch {
+        if (!cancelled) setReportStatus({ status: null, isLoading: false });
+      }
+    };
+
+    void loadReportStatus();
+    return () => {
+      cancelled = true;
+    };
+  }, [details?.listingId]);
+
   const handleViewDetails = () => {
     navigate(details?.facilityId ? `/facilities/${details.facilityId}` : '/current-dorm');
   };
+
+  const hasPendingReport = reportStatus.status === 'pending';
+  const reportStatusMessage =
+    reportStatus.status === 'pending'
+      ? 'Your report is still pending. You cannot submit another report for this listing yet.'
+      : reportStatus.status === 'dismissed'
+        ? 'Your previous report was dismissed. You may submit another report if needed.'
+        : reportStatus.status === 'resolved'
+          ? 'Your previous report was resolved. You may submit another report if needed.'
+          : "You haven't submitted any reports yet.";
 
   return (
     <div className="flex flex-col gap-5 max-w-4xl mx-auto dark:text-[#edf6f4]">
@@ -304,11 +369,14 @@ export default function CurrentDormCard({
             <div className="flex-1 flex flex-col items-center  justify-between h-full py-5">
               <p className="text-2xl font-bold  text-[#024338]">Report Status</p>
 
-              <p className="text-[14px] text-slategray"> You haven't submitted any reports yet.</p>
+              <p className="text-[14px] text-slategray">
+                {reportStatus.isLoading ? 'Checking report status...' : reportStatusMessage}
+              </p>
 
               <button
                 type="button"
-                className="px-4 py-1 cursor-pointer text-[#096c5b] bg-[#f1f5f9] rounded-full dark:bg-[#0d3a32] dark:text-[#72cbb8]"
+                disabled={reportStatus.isLoading || hasPendingReport || !details?.listingId}
+                className="px-4 py-1 cursor-pointer text-[#096c5b] bg-[#f1f5f9] rounded-full disabled:cursor-not-allowed disabled:opacity-50 dark:bg-[#0d3a32] dark:text-[#72cbb8]"
                 onClick={() => {
                   navigate('/report-dorm');
                 }}
