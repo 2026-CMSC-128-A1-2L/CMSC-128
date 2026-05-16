@@ -38,8 +38,8 @@ const Filter: FunctionComponent<FilterCriteriaProps> = ({
   const PRICE_LIMITS = { min: 0, max: 30000, step: 500 };
 
   const handleReset = () => {
-    setMinPrice(2000);
-    setMaxPrice(15000);
+    setMinPrice(0);
+    setMaxPrice(30000);
     setPax('Any');
     setPropertyType('Dormitory');
     setSelectedEssentials([]);
