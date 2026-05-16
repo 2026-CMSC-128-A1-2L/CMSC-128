@@ -3,6 +3,7 @@ import { type ChangeEvent, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import DefaultAvatar from '../../../assets/default_avatar.svg';
 import VerifiedBadge from '../../../assets/verified_badge.svg';
+import { FileService, getPublicFileUrl } from '../../service/FileService';
 import { UserService } from '../../service/UserService';
 import { useAuthStore } from '../../store/useAuthStore';
 
@@ -115,6 +116,7 @@ const ProfileInfo = () => {
   const [profileImage, setProfileImage] = useState<string>(DefaultAvatar);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isUploadingProfilePicture, setIsUploadingProfilePicture] = useState(false);
   const [isSavingContact, setIsSavingContact] = useState(false);
   const [isSavingAddress, setIsSavingAddress] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -178,10 +180,38 @@ const ProfileInfo = () => {
     };
   }, []);
 
-  const handleProfileImageChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleProfileImageChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (file) {
-      setProfileImage(URL.createObjectURL(file));
+    event.target.value = '';
+
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      setError('Please choose an image file.');
+      return;
+    }
+
+    const previewUrl = URL.createObjectURL(file);
+    const previousImage = profileImage;
+    setProfileImage(previewUrl);
+    setIsUploadingProfilePicture(true);
+    setError(null);
+
+    try {
+      const uploadedFile = await FileService.uploadFile(file);
+      const profilePicture = getPublicFileUrl(uploadedFile.key);
+      const response = await UserService.updateSelf({ profilePicture });
+      const updatedUser = response.data as ProfileUser;
+
+      setUser(updatedUser);
+      setProfileImage(updatedUser.profilePicture || profilePicture);
+      await fetchMe();
+    } catch {
+      setProfileImage(previousImage);
+      setError('Could not update your profile picture.');
+    } finally {
+      URL.revokeObjectURL(previewUrl);
+      setIsUploadingProfilePicture(false);
     }
   };
 
@@ -246,6 +276,8 @@ const ProfileInfo = () => {
             type="button"
             className="h-full w-full cursor-pointer rounded-full border-0 bg-transparent p-0"
             onClick={() => fileInputRef.current?.click()}
+            disabled={isUploadingProfilePicture}
+            aria-label="Change profile picture"
           >
             <img
               className="w-full h-full rounded-full object-cover transition-all duration-300 group-hover:blur-sm"
@@ -256,8 +288,11 @@ const ProfileInfo = () => {
 
             <div className="absolute inset-0 flex items-center justify-center rounded-full transition-all duration-300">
               <Icon
-                icon="iconamoon:edit"
-                className="opacity-0 group-hover:opacity-100 h-10 w-10 drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]"
+                icon={isUploadingProfilePicture ? 'eos-icons:loading' : 'iconamoon:edit'}
+                className={[
+                  'h-10 w-10 drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]',
+                  isUploadingProfilePicture ? 'opacity-100' : 'opacity-0 group-hover:opacity-100',
+                ].join(' ')}
                 color="#096C5B"
               />
             </div>

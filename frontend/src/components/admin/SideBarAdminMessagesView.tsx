@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Icon } from '@iconify/react';
 import MessageCard, { type MessageCardState } from '../general/MessageCard';
+import { useDebouncedValue } from '../../hooks/useDebouncedValue';
 
 export type MessageItem = {
   id: string;
@@ -28,14 +29,15 @@ const SideBarAdminMessagesView = ({
   const [filter, setFilter] = useState<'all' | 'unread'>('all');
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [query, setQuery] = useState('');
+  const debouncedQuery = useDebouncedValue(query, 250);
 
   const unreadCount = messages.filter((m) => m.unread).length;
 
   const filtered = messages
     .filter((m) => (filter === 'unread' ? m.unread : true))
     .filter((m) => {
-      if (!query.trim()) return true;
-      const q = query.toLowerCase();
+      if (!debouncedQuery.trim()) return true;
+      const q = debouncedQuery.toLowerCase();
       return m.sender.toLowerCase().includes(q) || m.preview.toLowerCase().includes(q);
     });
 

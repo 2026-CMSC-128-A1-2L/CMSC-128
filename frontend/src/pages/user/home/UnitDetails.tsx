@@ -7,6 +7,7 @@ import {
 } from "react";
 import SideBar from "../../../components/user/SideBar";
 import Footer from "../../../components/general/Footer";
+import PageBackground from "../../../components/general/PageBackground";
 import SignInPopUp from "../../../components/general/SignInPopUp";
 import { Icon } from "@iconify/react";
 import axios from "axios";
@@ -24,6 +25,7 @@ import DormCard from "../../../components/user/DormCard";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import LoadingPage from "../../general/LoadingPage";
 import { useFacilities, type DormCardData } from "../../../hooks/useFacilities";
+import { useDebouncedValue } from "../../../hooks/useDebouncedValue";
 import { useFacilityDetails } from "../../../hooks/useFacilityDetails";
 import { useBookmarks } from "../../../hooks/useBookmarks";
 import { BookmarkService } from "../../../service/BookmarkService";
@@ -36,6 +38,12 @@ const currencyFormatter = new Intl.NumberFormat("en-PH", {
   currency: "PHP",
   minimumFractionDigits: 0,
 });
+
+const priceRange = (min: number, max: number): string => {
+  if (min === 0 && max === 0) return "Price TBA";
+  if (min === max) return `${currencyFormatter.format(min)}/month`;
+  return `${currencyFormatter.format(min)} - ${currencyFormatter.format(max)}/month`;
+};
 
 const roomButtonLabel = (label: string) =>
   label.replace(/\s*\([^)]*\)\s*$/, "");
@@ -118,6 +126,8 @@ const UnitDetails: FunctionComponent = () => {
   const [moveInDate, setMoveInDate] = useState("");
   const [messageToLandlord, setMessageToLandlord] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [isSearchDropdownOpen, setIsSearchDropdownOpen] = useState(false);
+  const debouncedSearchTerm = useDebouncedValue(searchTerm, 500);
   const [isBookmarkSaving, setIsBookmarkSaving] = useState(false);
   const [bookmarkError, setBookmarkError] = useState<string | null>(null);
   const [applicationError, setApplicationError] = useState<string | null>(null);
@@ -170,10 +180,38 @@ const UnitDetails: FunctionComponent = () => {
 
   if (!facility) return null;
 
+  const trimmedSearchTerm = searchTerm.trim();
+  const trimmedDebouncedSearchTerm = debouncedSearchTerm.trim();
+  const isSearchDebouncing = trimmedSearchTerm !== trimmedDebouncedSearchTerm;
+  const matchingSearchResults = trimmedDebouncedSearchTerm
+    ? recommendedDorms
+        .filter((dorm) => {
+          const roomTypes = dorm.room_types.map((room) => room.pax).join(" ");
+          return `${dorm.name} ${dorm.location} ${roomTypes}`
+            .toLowerCase()
+            .includes(trimmedDebouncedSearchTerm.toLowerCase());
+        })
+        .slice(0, 6)
+    : [];
+
   const submitSearch = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const query = searchTerm.trim();
     navigate(query ? `/home?search=${encodeURIComponent(query)}` : "/home");
+  };
+
+  const openSearchResult = (dorm: DormCardData) => {
+    const query = searchTerm.trim();
+    setIsSearchDropdownOpen(false);
+    navigate(`/facilities/${dorm.id}`, {
+      state: {
+        dorm,
+        sourceLabel: "Search Results",
+        sourceUrl: query
+          ? `/home?search=${encodeURIComponent(query)}`
+          : "/home",
+      },
+    });
   };
 
   const selectedListing =
@@ -381,7 +419,8 @@ const UnitDetails: FunctionComponent = () => {
   };
 
   return (
-    <div className="flex min-h-screen font-inter text-darkslategray-100">
+    <div className="user-unit-details-shell relative flex min-h-screen bg-transparent font-inter text-darkslategray-100 dark:text-[#edf6f4]">
+      <PageBackground />
       {showSignIn && <SignInPopUp onClose={() => setShowSignIn(false)} />}
       {isVisitPopoutOpen && (
         <PortalPopup
@@ -398,12 +437,12 @@ const UnitDetails: FunctionComponent = () => {
         </PortalPopup>
       )}
       {/* Sidebar */}
-      <div className="sticky top-0 h-screen shrink-0 z-10 font-inter">
+      <div className="sticky top-0 h-screen shrink-0 z-20 font-inter">
         <SideBar />
       </div>
 
       {/* Main */}
-      <div className="flex flex-1 flex-col min-w-0 overflow-y-auto">
+      <div className="relative z-10 flex flex-1 flex-col min-w-0 overflow-y-auto">
         <div className="flex-1 flex flex-col px-4 sm:px-8 lg:px-20 pt-8 lg:pt-16 pb-0 gap-6">
           {/* Breadcrumb */}
           <div
@@ -421,39 +460,93 @@ const UnitDetails: FunctionComponent = () => {
           {/* Search */}
           <form
             onSubmit={submitSearch}
-            className="w-full max-w-2xl rounded-xl bg-aliceblue flex items-center py-2.5 px-4 gap-2.5 text-dimgray font-inter border border-transparent focus-within:bg-white focus-within:border-lightcyan focus-within:shadow-[0_8px_14px_rgba(0,0,0,0.06)] transition-all"
+            className="relative w-full h-full flex items-center pb-6 box-border"
           >
-            <Icon
-              icon="material-symbols:search"
-              className="w-6 h-6 shrink-0 text-teal-200"
-            />
-            <input
-              type="text"
-              value={searchTerm}
-              maxLength={50}
-              onChange={(event) => setSearchTerm(event.target.value)}
-              placeholder="Search for Dorms, Apartments, or Locations (e.g. UPLB, Umali Subdivision)"
-              className="min-w-0 flex-1 bg-transparent outline-none text-sm font-semibold text-darkgreen placeholder:text-dimgray placeholder:font-semibold"
-            />
-            {searchTerm && (
-              <button
-                type="button"
-                onClick={() => setSearchTerm("")}
-                className="grid h-7 w-7 place-items-center rounded-full text-unselected hover:bg-whitesmoke-100 hover:text-darkgreen cursor-pointer"
-                aria-label="Clear search"
-              >
-                <Icon
-                  icon="material-symbols:close-rounded"
-                  className="h-4 w-4"
-                />
-              </button>
+            <div className="w-full flex items-center transition-all duration-300 bg-[#f8f9fa] rounded-num-12 py-3 pl-3 pr-4 border border-transparent focus-within:bg-white focus-within:shadow-[0_8px_10px_rgb(0,0,0,0.06)] focus-within:transform focus-within:-translate-y-[1px] gap-2">
+              <Icon
+                icon="ic:outline-search"
+                className="w-5 h-5 text-unselected shrink-0"
+              />
+              <input
+                type="text"
+                value={searchTerm}
+                maxLength={50}
+                onFocus={() => setIsSearchDropdownOpen(true)}
+                onBlur={() => {
+                  window.setTimeout(() => setIsSearchDropdownOpen(false), 120);
+                }}
+                onChange={(event) => {
+                  setSearchTerm(event.target.value);
+                  setIsSearchDropdownOpen(true);
+                }}
+                placeholder="Search for Dorms, Apartments, or Locations (e.g. UPLB, Umali Subdivision)"
+                className="w-full bg-transparent border-none outline-none text-num-14 font-semibold text-darkgreen placeholder:text-unselected placeholder:font-normal"
+              />
+              {searchTerm && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSearchTerm("");
+                    setIsSearchDropdownOpen(false);
+                  }}
+                  className="text-unselected hover:text-darkgreen cursor-pointer"
+                  aria-label="Clear search"
+                >
+                  <Icon
+                    icon="material-symbols:close-rounded"
+                    className="w-4 h-4"
+                  />
+                </button>
+              )}
+            </div>
+            {isSearchDropdownOpen && trimmedSearchTerm && (
+              <div className="absolute left-0 right-0 top-[calc(100%-1rem)] z-40 overflow-hidden rounded-num-12 border border-whitesmoke-200 bg-white shadow-[0_14px_30px_rgba(0,0,0,0.14)]">
+                {isSearchDebouncing ? (
+                  <div className="flex items-center gap-3 px-4 py-4 text-sm font-semibold text-unselected">
+                    <Icon
+                      icon="eos-icons:loading"
+                      className="h-5 w-5 text-teal-100"
+                    />
+                    Searching listings...
+                  </div>
+                ) : matchingSearchResults.length > 0 ? (
+                  matchingSearchResults.map((dorm) => (
+                    <button
+                      key={dorm.id}
+                      type="button"
+                      onMouseDown={(event) => event.preventDefault()}
+                      onClick={() => openSearchResult(dorm)}
+                      className="flex w-full items-center gap-3 px-3 py-2.5 text-left transition-colors hover:bg-whitesmoke-100"
+                    >
+                      <img
+                        src={dorm.image}
+                        alt=""
+                        className="h-12 w-16 shrink-0 rounded-md object-cover"
+                      />
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate text-num-14 font-bold text-darkgreen">
+                          {dorm.name}
+                        </span>
+                        <span className="block truncate text-[0.75rem] font-semibold text-teal-100">
+                          {priceRange(dorm.price.min, dorm.price.max)}
+                        </span>
+                        <span className="block truncate text-[0.72rem] font-semibold text-unselected">
+                          {dorm.location}
+                        </span>
+                      </span>
+                      <Icon
+                        icon="solar:arrow-right-bold"
+                        className="h-4 w-4 shrink-0 text-teal-100"
+                      />
+                    </button>
+                  ))
+                ) : (
+                  <div className="px-4 py-4 text-sm font-semibold text-unselected">
+                    No matching listings found
+                  </div>
+                )}
+              </div>
             )}
-            <button
-              type="submit"
-              className="rounded-lg bg-darkslategray-200 px-4 py-1.5 text-xs font-semibold text-white shadow-sm transition-colors hover:bg-teal-200 cursor-pointer"
-            >
-              Search
-            </button>
           </form>
 
           {/* Top section: image + apply card */}
