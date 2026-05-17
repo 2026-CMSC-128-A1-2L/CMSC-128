@@ -5,7 +5,7 @@ import LandlordLayout from '../../../components/landlord/LandlordLayout';
 import LandlordManagerActionsPopover, {
   type ManagerAction,
 } from '../../../components/landlord/LandlordManagerActionsPopover';
-import ReportManager from '../../../components/landlord/LandlordManagerReportController';
+import ReportTenant from '../../../components/landlord/LandlordTenantReportController';
 import TenantsToolbar from '../../../components/landlord/tenants/TenantsToolbar';
 import TenantCard from '../../../components/landlord/tenants/TenantCard';
 import RemoveTenantPopup from '../../../components/landlord/tenants/popups/RemoveTenantPopup';
@@ -193,13 +193,12 @@ const LandlordTenants = () => {
         isOpen={Boolean(removeTarget)}
         onClose={() => setRemoveTarget(null)}
       />
-      <ReportManager
+      <ReportTenant
         isOpen={Boolean(reportTarget)}
         onClose={() => setReportTarget(null)}
-        manager={
+        tenant={
           reportTarget ? { displayName: reportTarget.displayName, email: reportTarget.email } : null
         }
-        type="tenant"
       />
     </LandlordLayout>
   );
