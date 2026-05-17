@@ -1,17 +1,14 @@
-import { type FunctionComponent, useMemo, useRef, useState } from "react";
+import { type FunctionComponent, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Icon } from "@iconify/react";
 import LandlordLayout from "../../../components/landlord/LandlordLayout";
 import NotifyTenantsPopup from "../../../components/landlord/NotifyTenantsPopup";
 import { useDebouncedValue } from "../../../hooks/useDebouncedValue";
-import sapphire1 from "../../../../assets/sapphire1.jpg";
-import sapphire2 from "../../../../assets/sapphire2.jpg";
-import sapphire3 from "../../../../assets/sapphire3.png";
-
 import TutorialBubble from "../dashboard/LandlordHomepageTutorials";
 import TutorialIcon from "../../../../assets/help-chat.svg";
 import { managers } from "../../../data/landlordManagers";
 import { pendingApplications, tenants } from "../../../data/landlordTenants";
+import { FacilityService } from "../../../service/FacilityService";
 const STATS = [
   {
     label: "Monthly Income",
@@ -27,8 +24,6 @@ const STATS = [
   },
   { label: "Overdue Rent", value: "1", sub: "Tenant", subColor: "text-[#666]" },
 ];
-
-import { BUILDINGS } from "../../../data/buildings";
 
 const PENDING = [
   { name: "Daphne Dayne", email: "dcanape@up.edu.ph" },
@@ -131,12 +126,36 @@ const optionMatchesQuery = (option: LandlordSearchOption, query: string) => {
   );
 };
 
+const getImage = (facility: any): string =>
+  facility.image ??
+  facility.media?.[0]?.value ??
+  'https://placehold.co/280x120?text=No+image';
+
+const getOccupiedUnits = (facility: any): number => {
+  const total = (facility.listings ?? []).reduce(
+    (sum: number, l: any) => sum + (l.unitCount ?? 0), 0,
+  );
+  const avail = (facility.listings ?? []).reduce(
+    (sum: number, l: any) => sum + (l.availableUnitCount ?? 0), 0,
+  );
+  return total - avail;
+};
+
 const LandlordHomepage: FunctionComponent = () => {
   const navigate = useNavigate();
   const trackRef = useRef<HTMLDivElement>(null);
   const [current, setCurrent] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearchDropdownOpen, setIsSearchDropdownOpen] = useState(false);
+  const [facilities, setFacilities] = useState<any[]>([]);
+
+  useEffect(() => {
+    let cancelled = false;
+    FacilityService.getLandlordFacilities()
+      .then((res) => { if (!cancelled) setFacilities(res.data); })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, []);
   const debouncedSearchQuery = useDebouncedValue(searchQuery, 300);
   const trimmedSearchQuery = searchQuery.trim();
   const trimmedDebouncedSearchQuery = debouncedSearchQuery.trim();
@@ -236,19 +255,19 @@ const LandlordHomepage: FunctionComponent = () => {
       },
     ];
 
-    const buildingOptions = BUILDINGS.flatMap((building) => [
+    const buildingOptions = facilities.flatMap((facility) => [
       {
-        title: building.name,
-        breadcrumb: `Properties > ${building.name}`,
-        to: building.url,
-        keywords: `${building.name} ${building.address} ${building.buildingType} property building rooms units`,
+        title: facility.name,
+        breadcrumb: `Properties > ${facility.name}`,
+        to: `/landlord/properties/${facility.id}`,
+        keywords: `${facility.name} ${facility.location?.text ?? ''} ${facility.type ?? ''} property building rooms units`,
         icon: "fluent:pen-16-regular",
       },
       {
-        title: building.name,
-        breadcrumb: `Finance > ${building.name}`,
-        to: `/landlord/finance/property/${building.id}`,
-        keywords: `${building.name} ${building.address} ${building.buildingType} finance income rent billing collection occupancy`,
+        title: facility.name,
+        breadcrumb: `Finance > ${facility.name}`,
+        to: `/landlord/finance/property/${facility.id}`,
+        keywords: `${facility.name} ${facility.location?.text ?? ''} ${facility.type ?? ''} finance income rent billing collection occupancy`,
         icon: "solar:card-outline",
       },
     ]);
@@ -286,14 +305,14 @@ const LandlordHomepage: FunctionComponent = () => {
       ...managerOptions,
       ...staticOptions,
     ];
-  }, []);
+  }, [facilities]);
   const matchingSearchOptions = useMemo(() => {
     const query = trimmedDebouncedSearchQuery;
     if (!query) return [];
 
     return searchOptions.filter((option) => optionMatchesQuery(option, query));
   }, [searchOptions, trimmedDebouncedSearchQuery]);
-  const displayedBuildings = BUILDINGS;
+  const displayedBuildings = facilities;
   const total = displayedBuildings.length;
   const [showNotify, setShowNotify] = useState(false);
 
@@ -544,27 +563,28 @@ const LandlordHomepage: FunctionComponent = () => {
               ref={trackRef}
               className="flex gap-[16px] overflow-x-auto scroll-smooth pb-[8px] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             >
-              {displayedBuildings.map((b) => (
+              {displayedBuildings.map((facility) => (
                 <Link
-                  key={b.name}
-                  to={`/landlord/properties/${b.id}`} // Dynamic Route
+                  key={facility.id}
+                  to={`/landlord/properties/${facility.id}`}
+                  state={{ facilityStatus: facility.status, facilityCapacity: facility.capacity }}
                   className="flex shrink-0 flex-col overflow-hidden rounded-[10px] bg-white shadow-[0px_4px_20px_rgba(0,0,0,0.15)] transition-transform hover:scale-[1.02]"
                   style={{ width: CARD_WIDTH }}
                 >
                   <img
-                    src={b.img}
-                    alt={b.name}
+                    src={getImage(facility)}
+                    alt={facility.name}
                     className="h-[120px] w-full object-cover"
                   />
                   <div className="flex flex-col gap-[8px] p-[12px]">
                     <div className="flex items-center justify-between gap-[8px]">
                       <b className="truncate font-['Inter',sans-serif] text-[16px] tracking-[-0.01em] text-black">
-                        {b.name}
+                        {facility.name}
                       </b>
                       <span className="flex shrink-0 items-center gap-[4px] rounded-[5px] border border-[#096c5b] px-[8px] py-[2px]">
                         <span className="h-[6px] w-[6px] rounded-full bg-[#096c5b]" />
                         <span className="font-['Poppins',sans-serif] text-[12px] text-[#096c5b]">
-                          Active
+                          {facility.status === 'approved' ? 'Active' : 'Inactive'}
                         </span>
                       </span>
                     </div>
@@ -575,7 +595,7 @@ const LandlordHomepage: FunctionComponent = () => {
                         aria-hidden="true"
                       />
                       <b className="font-['Poppins',sans-serif] text-[14px] tracking-[-0.01em] text-[#666]">
-                        {b.occupiedUnits}
+                        {getOccupiedUnits(facility)}
                       </b>
                     </div>
                     <div className="flex items-center justify-between">
@@ -594,7 +614,7 @@ const LandlordHomepage: FunctionComponent = () => {
                             WebkitTextFillColor: "transparent",
                           }}
                         >
-                          {b.income}
+                          —
                         </b>
                       </div>
                       <div className="flex items-center gap-[6px]">
@@ -612,10 +632,9 @@ const LandlordHomepage: FunctionComponent = () => {
                             WebkitTextFillColor: "transparent",
                           }}
                         >
-                          {b.outstanding}
+                          —
                         </b>
                       </div>
-                      {/* Changed eye icon from Link to simple Icon since parent is now a Link */}
                       <div className="transition-opacity hover:opacity-70">
                         <Icon
                           icon="solar:eye-bold"
