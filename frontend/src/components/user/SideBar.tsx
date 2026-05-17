@@ -1,4 +1,4 @@
-﻿import { useCallback, useEffect, useRef, useState, type MouseEventHandler } from 'react';
+import { useCallback, useEffect, useRef, useState, type MouseEventHandler } from 'react';
 import { createPortal } from 'react-dom';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
@@ -433,7 +433,31 @@ const SideBar = ({
                     {username ?? 'Sign In'}
                   </b>
 
-                  {!user && (
+                  {user ? (
+                    <span className="flex items-center gap-[4px]">
+                      {user.status === 'verified' ? (
+                        <>
+                          <span className="bg-gradient-to-b from-[#5dc2a8] to-[#0c8873] bg-clip-text font-inter text-[10px] font-bold leading-normal whitespace-nowrap text-transparent">
+                            Verified
+                          </span>
+                          <Icon
+                            icon="material-symbols:verified"
+                            className="h-[10px] w-[10px] text-[#0c8873] dark:text-[#72cbb8]"
+                          />
+                        </>
+                      ) : (
+                        <>
+                          <span className="bg-gradient-to-b from-[#e0a825] to-[#c48a1a] bg-clip-text font-inter text-[10px] font-bold leading-normal whitespace-nowrap text-transparent">
+                            Unverified
+                          </span>
+                          <Icon
+                            icon="material-symbols:warning-rounded"
+                            className="h-[10px] w-[10px] text-[#c48a1a] dark:text-[#e0a825]"
+                          />
+                        </>
+                      )}
+                    </span>
+                  ) : (
                     <span className="text-[10px] text-[#9ca3af] font-bold dark:text-[#a4acba]">
                       to continue
                     </span>
