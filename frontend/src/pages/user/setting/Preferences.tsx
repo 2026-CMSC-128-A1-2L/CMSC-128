@@ -39,7 +39,7 @@ const Preferences: FunctionComponent = () => {
                   : 'border-whitesmoke-200 group-hover:border-teal-100 group-hover:shadow-md group-hover:scale-[1.02]',
               ].join(' ')}
             >
-              <div className="self-stretch h-10 rounded-t-num-16 rounded-b-num-0 bg-darkslategray-200 overflow-hidden shrink-0 flex items-start p-num-10 box-border" />
+              <div className="self-stretch h-10 rounded-t-num-16 rounded-b-num-0 bg-darkslategray-200 overflow-hidden shrink-0 flex items-start p-num-10 box-border cursor-pointer" />
               <div className="self-stretch flex flex-col items-start">
                 <div className="self-stretch flex items-start py-0 px-5">
                   <div className="h-[148px] w-20 rounded bg-slategray overflow-hidden shrink-0 flex flex-col items-start py-num-10 px-0 box-border" />
@@ -102,7 +102,7 @@ const Preferences: FunctionComponent = () => {
                   : 'border-black group-hover:border-teal-100 group-hover:shadow-md group-hover:scale-[1.02]',
               ].join(' ')}
             >
-              <div className="self-stretch h-10 rounded-t-num-16 rounded-b-num-0 bg-darkslategray-200 overflow-hidden shrink-0 flex items-start p-num-10 box-border" />
+              <div className="self-stretch h-10 rounded-t-num-16 rounded-b-num-0 bg-darkslategray-200 overflow-hidden shrink-0 flex items-start p-num-10 box-border cursor-pointer" />
               <div className="self-stretch flex flex-col items-start">
                 <div className="self-stretch flex items-start py-0 px-5">
                   <div className="h-[148px] w-20 rounded bg-darkslategray-200 overflow-hidden shrink-0 flex flex-col items-start py-num-10 px-0 box-border" />

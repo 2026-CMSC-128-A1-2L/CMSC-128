@@ -73,7 +73,7 @@ const LandlordManagerReportConfirm: FunctionComponent<Props> = ({
               </svg>
             )}
           </button>
-          <p className="flex-1 text-center font-['Inter',sans-serif] text-[14px] font-medium leading-[25px] text-black dark:text-[#d7e0ef]">
+          <p className="flex-1 text-center font-['Inter',sans-serif] text-[14px] font-medium leading-[25px] text-black dark:text-[#d7e0ef] cursor-pointer">
             I declare that all information and reports submitted are{' '}
             <span className="font-bold text-[#096c5b] dark:text-[#72cbb8]">truthful</span>,{' '}
             <span className="font-bold text-[#096c5b] dark:text-[#72cbb8]">complete</span>, and{' '}
@@ -89,7 +89,7 @@ const LandlordManagerReportConfirm: FunctionComponent<Props> = ({
         <button
           type="button"
           onClick={onBack}
-          className="rounded-[12px] px-[24px] py-[8px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#ef4444] dark:text-red-400 transition-opacity hover:opacity-70"
+          className="rounded-[12px] px-[24px] py-[8px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#ef4444] dark:text-red-400 transition-opacity hover:opacity-70 cursor-pointer"
         >
           Cancel
         </button>

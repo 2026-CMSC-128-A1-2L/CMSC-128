@@ -39,7 +39,7 @@ const LandlordManagerReportSuccess: FunctionComponent<Props> = ({ onClose }) => 
           <button
             type="button"
             onClick={onClose}
-            className="rounded-[12px] bg-[#cbf6ed] dark:bg-[#12342e] px-[32px] py-[12px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] dark:text-[#72cbb8] transition-opacity hover:opacity-80"
+            className="rounded-[12px] bg-[#cbf6ed] dark:bg-[#12342e] px-[32px] py-[12px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] dark:text-[#72cbb8] transition-opacity hover:opacity-80 cursor-pointer"
           >
             Close
           </button>

@@ -6,6 +6,7 @@ import PageBackground from '../../components/general/PageBackground';
 import AdminPagination from '../../components/admin/AdminPagination';
 import ReportDetailModal from '../../components/admin/ReportDetailModal';
 import { ReportService } from '../../service/ReportService';
+import { useDebouncedValue } from '../../hooks/useDebouncedValue';
 
 type ReportUser = {
   _id: string;
@@ -25,6 +26,7 @@ type ReportData = {
   listingId?: string;
   facilityId?: string;
   userReported?: string | ReportUser;
+  reporterFacility?: string | null;
   createdAt?: string;
   updatedAt?: string;
 };
@@ -66,6 +68,7 @@ function Reports() {
   const [reports, setReports] = useState<ReportData[]>([]);
   const [selectedReportId, setSelectedReportId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const debouncedSearchQuery = useDebouncedValue(searchQuery, 300);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [actionMessage, setActionMessage] = useState<string | null>(null);
@@ -76,7 +79,7 @@ function Reports() {
   const selectedReport = reports.find((r) => r._id === selectedReportId) ?? null;
 
   const filteredReports = useMemo(() => {
-    const q = searchQuery.trim().toLowerCase();
+    const q = debouncedSearchQuery.trim().toLowerCase();
     if (!q) return reports;
     return reports.filter((r) =>
       [getReporterName(r.userId), r.description, getReportType(r), r.status]
@@ -85,7 +88,11 @@ function Reports() {
         .toLowerCase()
         .includes(q),
     );
-  }, [reports, searchQuery]);
+  }, [reports, debouncedSearchQuery]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [debouncedSearchQuery]);
 
   const totalPages = Math.ceil(filteredReports.length / itemsPerPage);
   const paginatedReports = useMemo(() => {
@@ -156,10 +163,7 @@ function Reports() {
                   <input
                     type="text"
                     value={searchQuery}
-                    onChange={(e) => {
-                      setSearchQuery(e.target.value);
-                      setCurrentPage(1);
-                    }}
+                    onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search"
                     className="flex-1 bg-transparent font-['Poppins'] text-sm text-black dark:text-[#d7e0ef] outline-none placeholder:text-[#7c8db5] dark:placeholder:text-[#a4acba]"
                   />

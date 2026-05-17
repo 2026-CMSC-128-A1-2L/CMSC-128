@@ -1,42 +1,54 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Icon } from '@iconify/react';
-import SideBarAdmin from '../../components/admin/SideBarAdmin';
-import AdminPageTransition from '../../components/admin/AdminPageTransition';
-import PageBackground from '../../components/general/PageBackground';
-import AdminPagination from '../../components/admin/AdminPagination';
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Icon } from "@iconify/react";
+import SideBarAdmin from "../../components/admin/SideBarAdmin";
+import AdminPageTransition from "../../components/admin/AdminPageTransition";
+import PageBackground from "../../components/general/PageBackground";
+import AdminPagination from "../../components/admin/AdminPagination";
 import ApplicantReviewModal, {
   type VerificationApplicant,
   type VerificationDocument,
   getDisplayName,
   formatRole,
-} from '../../components/admin/ApplicantReviewModal';
-import { DocumentService } from '../../service/DocumentService';
-import { UserService } from '../../service/UserService';
+} from "../../components/admin/ApplicantReviewModal";
+import { DocumentService } from "../../service/DocumentService";
+import { UserService } from "../../service/UserService";
 
-const tableHeaders = ['Name', 'Email', 'Role', 'Submitted Docs', 'Status', 'Details'];
+const tableHeaders = [
+  "Name",
+  "Email",
+  "Role",
+  "Submitted Docs",
+  "Status",
+  "Details",
+];
 
 const getApplicationStatusLabel = (user: VerificationApplicant) => {
-  if (user.verificationStatus === 'submitted') return 'For Review';
-  if (user.verificationStatus === 'rejected') return 'Rejected';
-  if (user.verificationStatus === 'approved') return 'Approved';
-  return 'Pending';
+  if (user.verificationStatus === "submitted") return "For Review";
+  if (user.verificationStatus === "rejected") return "Rejected";
+  if (user.verificationStatus === "approved") return "Approved";
+  return "Pending";
 };
 
 function Applications() {
   const [applicants, setApplicants] = useState<VerificationApplicant[]>([]);
-  const [selectedApplicantId, setSelectedApplicantId] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedApplicantId, setSelectedApplicantId] = useState<string | null>(
+    null,
+  );
+  const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [actionMessage, setActionMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [rejectionMessages, setRejectionMessages] = useState<Record<string, string>>({});
-  const [studentNumber, setStudentNumber] = useState('');
-  const [degreeProgram, setDegreeProgram] = useState('');
+  const [rejectionMessages, setRejectionMessages] = useState<
+    Record<string, string>
+  >({});
+  const [studentNumber, setStudentNumber] = useState("");
+  const [degreeProgram, setDegreeProgram] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const itemsPerPage = 10;
 
-  const selectedApplicant = applicants.find((u) => u._id === selectedApplicantId) ?? null;
+  const selectedApplicant =
+    applicants.find((u) => u._id === selectedApplicantId) ?? null;
 
   const filteredApplicants = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
@@ -44,7 +56,7 @@ function Applications() {
     return applicants.filter((u) =>
       [getDisplayName(u), u.emails?.[0], u.userType, u.address, u.contact]
         .filter(Boolean)
-        .join(' ')
+        .join(" ")
         .toLowerCase()
         .includes(q),
     );
@@ -61,7 +73,7 @@ function Applications() {
     setError(null);
     try {
       const response = await UserService.getUsers<VerificationApplicant>({
-        verificationStatus: 'submitted',
+        verificationStatus: "submitted",
       });
       const users = response.data ?? [];
       setApplicants(users);
@@ -71,7 +83,7 @@ function Applications() {
           : (users[0]?._id ?? null),
       );
     } catch {
-      setError('Could not load verification applications.');
+      setError("Could not load verification applications.");
     } finally {
       setIsLoading(false);
     }
@@ -83,8 +95,8 @@ function Applications() {
 
   const openModal = (userId: string) => {
     setSelectedApplicantId(userId);
-    setStudentNumber('');
-    setDegreeProgram('');
+    setStudentNumber("");
+    setDegreeProgram("");
     setActionMessage(null);
     setIsModalOpen(true);
   };
@@ -97,7 +109,9 @@ function Applications() {
   const updateDocs = (documents: VerificationDocument[]) => {
     if (!selectedApplicant) return;
     setApplicants((cur) =>
-      cur.map((u) => (u._id === selectedApplicant._id ? { ...u, documents } : u)),
+      cur.map((u) =>
+        u._id === selectedApplicant._id ? { ...u, documents } : u,
+      ),
     );
   };
 
@@ -106,42 +120,49 @@ function Applications() {
     setActionMessage(null);
     setError(null);
     try {
-      const res = await DocumentService.acceptDocument('users', selectedApplicant._id, docId);
+      const res = await DocumentService.acceptDocument(
+        "users",
+        selectedApplicant._id,
+        docId,
+      );
       updateDocs(res.data ?? []);
-      setActionMessage('Document accepted.');
+      setActionMessage("Document accepted.");
     } catch {
-      setError('Could not accept this document.');
+      setError("Could not accept this document.");
     }
   };
 
   const handleRejectDocument = async (docId: string) => {
     if (!selectedApplicant) return;
-    const message = rejectionMessages[docId]?.trim() || 'Please resubmit a clearer document.';
+    const message =
+      rejectionMessages[docId]?.trim() || "Please resubmit a clearer document.";
     setActionMessage(null);
     setError(null);
     try {
       const res = await DocumentService.rejectDocument(
-        'users',
+        "users",
         selectedApplicant._id,
         docId,
         message,
       );
       updateDocs(res.data ?? []);
-      setActionMessage('Document rejected.');
+      setActionMessage("Document rejected.");
     } catch {
-      setError('Could not reject this document.');
+      setError("Could not reject this document.");
     }
   };
 
   const handleApproveApplicant = async () => {
     if (!selectedApplicant) return;
-    if (!selectedApplicant.documents.every((d) => d.status === 'accepted')) {
-      setError('Accept all submitted documents before approving the user.');
+    if (!selectedApplicant.documents.every((d) => d.status === "accepted")) {
+      setError("Accept all submitted documents before approving the user.");
       return;
     }
-    if (selectedApplicant.userType === 'Student') {
+    if (selectedApplicant.userType === "Student") {
       if (!/^[0-9]{9}$/.test(studentNumber.trim()) || !degreeProgram.trim()) {
-        setError('Enter the student number and degree program before approving a student.');
+        setError(
+          "Enter the student number and degree program before approving a student.",
+        );
         return;
       }
     }
@@ -150,15 +171,20 @@ function Applications() {
     try {
       await UserService.approveUser(
         selectedApplicant._id,
-        selectedApplicant.userType === 'Student'
-          ? { studentNumber: studentNumber.trim(), degreeProgram: degreeProgram.trim() }
+        selectedApplicant.userType === "Student"
+          ? {
+              studentNumber: studentNumber.trim(),
+              degreeProgram: degreeProgram.trim(),
+            }
           : undefined,
       );
-      setActionMessage(`${getDisplayName(selectedApplicant)} has been verified.`);
+      setActionMessage(
+        `${getDisplayName(selectedApplicant)} has been verified.`,
+      );
       await loadApplicants();
       closeModal();
     } catch {
-      setError('Could not approve this user.');
+      setError("Could not approve this user.");
     }
   };
 
@@ -168,11 +194,27 @@ function Applications() {
     setError(null);
     try {
       await UserService.rejectUser(selectedApplicant._id);
-      setActionMessage(`${getDisplayName(selectedApplicant)} has been rejected.`);
+      setActionMessage(
+        `${getDisplayName(selectedApplicant)} has been rejected.`,
+      );
       await loadApplicants();
       closeModal();
     } catch {
-      setError('Could not reject this user. Reject at least one document first.');
+      setError(
+        "Could not reject this user. Reject at least one document first.",
+      );
+    }
+  };
+
+  const handleDownloadDocument = async (docId: string, fileIndex: number) => {
+    const doc = selectedApplicant?.documents.find((d) => d.docId === docId);
+    const filePath = doc?.files[fileIndex];
+    if (filePath) {
+      try {
+        await DocumentService.downloadDocument(filePath);
+      } catch {
+        setError("Could not download this document.");
+      }
     }
   };
 
@@ -264,13 +306,14 @@ function Applications() {
                             {getDisplayName(row)}
                           </td>
                           <td className="px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black dark:text-[#d7e0ef]">
-                            {row.emails?.[0] ?? 'No email'}
+                            {row.emails?.[0] ?? "No email"}
                           </td>
                           <td className="px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black dark:text-[#d7e0ef]">
                             {formatRole(row.userType)}
                           </td>
                           <td className="px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black dark:text-[#d7e0ef]">
-                            {row.documents?.filter((d) => d.files.length > 0).length ?? 0}
+                            {row.documents?.filter((d) => d.files.length > 0)
+                              .length ?? 0}
                           </td>
                           <td className="px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black dark:text-[#d7e0ef]">
                             {getApplicationStatusLabel(row)}
@@ -315,6 +358,7 @@ function Applications() {
                 onRejectDocument={handleRejectDocument}
                 onApproveUser={handleApproveApplicant}
                 onRejectUser={handleRejectApplicant}
+                onDownloadDocument={handleDownloadDocument}
               />
             </div>
           </div>

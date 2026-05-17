@@ -87,9 +87,9 @@ const UpdateManager1: FunctionComponent<Props> = ({ onCancel, onSave }) => {
         active
           ? 'border-[#096c5b] bg-[#096c5b]'
           : 'border-[#d1d5db] bg-[#f5f5f5] shadow-[0px_0px_1.6px_rgba(0,0,0,0.25)]'
-      }`}
+      } cursor-pointer`}
     >
-      {active && <Icon icon="solar:check-bold" className="h-[11px] w-[11px] text-white" />}
+      {active && <Icon icon="solar:check-bold" className="h-[11px] w-[11px] text-white cursor-pointer" />}
     </button>
   );
 
@@ -146,9 +146,9 @@ const UpdateManager1: FunctionComponent<Props> = ({ onCancel, onSave }) => {
                     <button
                       key={item.title}
                       onClick={() => toggle(item.title)}
-                      className={`self-stretch rounded-[9.6px] flex items-center py-[9.6px] pl-[9.6px] pr-[17.6px] gap-[12.8px] text-left transition-colors ${active ? 'bg-[#f0fdf9]' : 'hover:bg-[#fafafa]'}`}
+                      className={`self-stretch rounded-[9.6px] flex items-center py-[9.6px] pl-[9.6px] pr-[17.6px] gap-[12.8px] text-left transition-colors ${active ? 'bg-[#f0fdf9]' : 'hover:bg-[#fafafa]'} cursor-pointer`}
                     >
-                      <div className="flex flex-1 items-center gap-[12.8px]">
+                      <div className="flex flex-1 items-center gap-[12.8px] cursor-pointer">
                         <div
                           className={`flex h-[24px] w-[24px] shrink-0 items-center justify-center rounded-full transition-colors ${active ? 'bg-[#096c5b]' : 'bg-[#f5f5f5]'}`}
                         >
@@ -180,13 +180,13 @@ const UpdateManager1: FunctionComponent<Props> = ({ onCancel, onSave }) => {
         <div className="self-stretch flex items-center justify-center gap-[12.8px] pt-[8px] pb-[42px]">
           <button
             onClick={onCancel}
-            className="rounded-[9.6px] py-[6.4px] px-[19.2px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#dc143c] transition-opacity hover:opacity-70"
+            className="rounded-[9.6px] py-[6.4px] px-[19.2px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#dc143c] transition-opacity hover:opacity-70 cursor-pointer"
           >
             Cancel
           </button>
           <button
             onClick={onSave}
-            className="rounded-[9.6px] bg-[#e0f7f4] py-[6.4px] px-[19.2px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] transition-opacity hover:opacity-80"
+            className="rounded-[9.6px] bg-[#e0f7f4] py-[6.4px] px-[19.2px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] transition-opacity hover:opacity-80 cursor-pointer"
           >
             Save
           </button>

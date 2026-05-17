@@ -113,7 +113,7 @@ const RoomItem: FunctionComponent<RoomItemProps> = ({ room, roomTypeId, index, c
       <button
         type="button"
         onClick={() => removeRoom(roomTypeId, room.id)}
-        className="mt-[34px] text-red-400 hover:text-red-600 transition-colors shrink-0"
+        className="mt-[34px] text-red-400 hover:text-red-600 transition-colors shrink-0 cursor-pointer"
         title="Remove room"
       >
         <Icon icon="typcn:minus" className="w-5 h-5" />

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Icon } from '@iconify/react';
 import MessageCard, { type MessageCardState } from '../general/MessageCard';
+import { useDebouncedValue } from '../../hooks/useDebouncedValue';
 
 export type MessageItem = {
   id: string;
@@ -28,14 +29,15 @@ const SideBarAdminMessagesView = ({
   const [filter, setFilter] = useState<'all' | 'unread'>('all');
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [query, setQuery] = useState('');
+  const debouncedQuery = useDebouncedValue(query, 250);
 
   const unreadCount = messages.filter((m) => m.unread).length;
 
   const filtered = messages
     .filter((m) => (filter === 'unread' ? m.unread : true))
     .filter((m) => {
-      if (!query.trim()) return true;
-      const q = query.toLowerCase();
+      if (!debouncedQuery.trim()) return true;
+      const q = debouncedQuery.toLowerCase();
       return m.sender.toLowerCase().includes(q) || m.preview.toLowerCase().includes(q);
     });
 
@@ -102,7 +104,7 @@ const SideBarAdminMessagesView = ({
       </div>
 
       {/* Message list */}
-      <div className="flex flex-1 flex-col gap-[12px] overflow-y-auto pb-[12px] pr-[2px]">
+      <div className="flex flex-1 flex-col gap-[12px] overflow-y-auto pb-[12px] pr-[2px] cursor-pointer">
         {filtered.length === 0 ? (
           <p className="mt-4 text-center font-['Lora'] text-[12px] text-[#666] dark:text-[#a4acba]">
             No messages found.

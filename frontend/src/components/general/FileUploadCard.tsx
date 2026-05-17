@@ -42,10 +42,10 @@ const FileUploadCard: React.FC<FileUploadCardProps> = ({
 
         {/* Action Icons */}
         <div className="flex items-center gap-[4px] text-gray-600">
-          <button className="p-[6px] hover:bg-gray-100 rounded-full transition-colors">
+          <button className="p-[6px] hover:bg-gray-100 rounded-full transition-colors cursor-pointer">
             <img src={EyeIcon} alt="" />
           </button>
-          <button className="p-[6px] hover:bg-gray-100 rounded-full transition-colors">
+          <button className="p-[6px] hover:bg-gray-100 rounded-full transition-colors cursor-pointer">
             <img src={MoreIcon} alt="" />
           </button>
         </div>

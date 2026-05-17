@@ -39,13 +39,13 @@ const ReportManagerShell: FunctionComponent<Props> = ({
     <div className="flex items-center gap-[12.8px]">
       <button
         onClick={onCancel}
-        className="rounded-[9.6px] py-[6.4px] px-[19.2px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#dc143c] transition-opacity hover:opacity-70"
+        className="rounded-[9.6px] py-[6.4px] px-[19.2px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#dc143c] transition-opacity hover:opacity-70 cursor-pointer"
       >
         Cancel
       </button>
       <button
         onClick={onNext}
-        className="rounded-[9.6px] bg-[#e0f7f4] py-[6.4px] px-[19.2px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] transition-opacity hover:opacity-80"
+        className="rounded-[9.6px] bg-[#e0f7f4] py-[6.4px] px-[19.2px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] transition-opacity hover:opacity-80 cursor-pointer"
       >
         {nextLabel}
       </button>

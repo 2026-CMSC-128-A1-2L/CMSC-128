@@ -38,8 +38,8 @@ const Filter: FunctionComponent<FilterCriteriaProps> = ({
   const PRICE_LIMITS = { min: 0, max: 30000, step: 500 };
 
   const handleReset = () => {
-    setMinPrice(2000);
-    setMaxPrice(15000);
+    setMinPrice(0);
+    setMaxPrice(30000);
     setPax('Any');
     setPropertyType('Dormitory');
     setSelectedEssentials([]);
@@ -188,7 +188,7 @@ const Filter: FunctionComponent<FilterCriteriaProps> = ({
               step={PRICE_LIMITS.step}
               value={minPrice}
               onChange={handleMinChange}
-              className={`absolute w-full pointer-events-none appearance-none bg-transparent ${activeThumb === 'min' ? 'z-40' : 'z-30'} ${thumbStyles}`}
+              className={`absolute w-full pointer-events-none appearance-none bg-transparent ${activeThumb === 'min' ? 'z-40' : 'z-30'} ${thumbStyles} cursor-pointer`}
             />
             <input
               type="range"

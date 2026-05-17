@@ -30,7 +30,7 @@ export default function VisitRequestCard({
       <div className="flex items-center gap-2 shrink-0">
         <button
           onClick={onReject}
-          className="rounded-num-8 overflow-hidden flex items-center justify-center py-2 px-4"
+          className="rounded-num-8 overflow-hidden flex items-center justify-center py-2 px-4 cursor-pointer"
         >
           <span className="text-num-14 font-semibold text-crimson">Reject</span>
         </button>

@@ -36,7 +36,7 @@ const LandlordManagerRemoveSuccess: FunctionComponent<Props> = ({ managerName, o
           <button
             type="button"
             onClick={onClose}
-            className="rounded-[12px] bg-[#cbf6ed] px-[32px] py-[12px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] transition-opacity hover:opacity-80"
+            className="rounded-[12px] bg-[#cbf6ed] px-[32px] py-[12px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] transition-opacity hover:opacity-80 cursor-pointer"
           >
             Close
           </button>

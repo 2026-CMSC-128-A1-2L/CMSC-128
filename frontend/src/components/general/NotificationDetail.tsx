@@ -70,13 +70,13 @@ const NotificationDetail: FunctionComponent<NotificationDetailProps> = ({
           <div className="flex items-center gap-6 mt-4">
             <button
               onClick={onCancel}
-              className="px-10 py-3 rounded-2xl font-bold text-crimson hover:bg-crimson/5 transition-colors active:scale-95"
+              className="px-10 py-3 rounded-2xl font-bold text-crimson hover:bg-crimson/5 transition-colors active:scale-95 cursor-pointer"
             >
               Cancel
             </button>
             <button
               onClick={onAccept}
-              className="px-10 py-3 rounded-2xl bg-lightcyan text-teal-200 font-bold hover:bg-lightcyan/80 transition-colors active:scale-95 shadow-sm"
+              className="px-10 py-3 rounded-2xl bg-lightcyan text-teal-200 font-bold hover:bg-lightcyan/80 transition-colors active:scale-95 shadow-sm cursor-pointer"
             >
               Accept
             </button>

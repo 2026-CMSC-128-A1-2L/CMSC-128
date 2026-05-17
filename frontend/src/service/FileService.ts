@@ -12,6 +12,16 @@ export type FileUploadResponse = {
   updatedAt: string;
 };
 
+export const getPublicFileUrl = (key: string) => {
+  const publicPath = `/api/files/public?key=${encodeURIComponent(key)}`;
+
+  if (typeof window === 'undefined') {
+    return publicPath;
+  }
+
+  return new URL(publicPath, window.location.origin).toString();
+};
+
 export const FileService = {
   async uploadFile(file: File): Promise<FileUploadResponse> {
     try {

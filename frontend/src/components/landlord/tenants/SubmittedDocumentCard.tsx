@@ -89,7 +89,7 @@ const SubmittedDocumentCard = ({
       <button
         type="button"
         onClick={() => onView?.(document)}
-        className="flex w-full items-center gap-[16px] overflow-hidden py-[12px] text-left transition-colors duration-200 hover:text-[#096c5b] focus:outline-none"
+        className="flex w-full items-center gap-[16px] overflow-hidden py-[12px] text-left transition-colors duration-200 hover:text-[#096c5b] focus:outline-none cursor-pointer"
       >
         <span className="flex h-[64px] w-[64px] shrink-0 items-center justify-center text-[#2f3136]">
           <Icon icon={kindIcon[document.kind]} className="h-[52px] w-[52px]" aria-hidden="true" />

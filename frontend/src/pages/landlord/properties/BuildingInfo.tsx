@@ -93,7 +93,7 @@ const TextField = ({
   className: string;
   value: string;
 }) => (
-  <div className={`${className} flex flex-col gap-3 min-w-0`}>
+  <div className={`${className} flex flex-col gap-3 min-w-0 cursor-pointer`}>
     <label htmlFor={id} className="truncate">
       <b>{text}</b>
     </label>

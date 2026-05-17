@@ -20,9 +20,9 @@ const ReportManager5: FunctionComponent<Props> = ({ onSubmit, onCancel }) => {
       <div className="self-stretch px-[38.4px] pb-[16px]">
         <button
           onClick={() => setAgreed((p) => !p)}
-          className={`self-stretch w-full flex items-start gap-[10px] rounded-[9.6px] p-[12px] text-left transition-colors ${agreed ? 'bg-[#f0fdf9]' : 'hover:bg-[#fafafa]'}`}
+          className={`self-stretch w-full flex items-start gap-[10px] rounded-[9.6px] p-[12px] text-left transition-colors ${agreed ? 'bg-[#f0fdf9]' : 'hover:bg-[#fafafa]'} cursor-pointer`}
         >
-          <div className="mt-[3px] flex shrink-0">
+          <div className="mt-[3px] flex shrink-0 cursor-pointer">
             <span
               className={`flex h-[18px] w-[18px] items-center justify-center rounded-[3px] border transition-colors ${agreed ? 'border-[#096c5b] bg-[#096c5b]' : 'border-[#d1d5db] bg-[#f5f5f5] shadow-[0px_0px_2px_rgba(0,0,0,0.25)]'}`}
             >
@@ -50,14 +50,14 @@ const ReportManager5: FunctionComponent<Props> = ({ onSubmit, onCancel }) => {
       <div className="flex items-center gap-[12.8px]">
         <button
           onClick={onCancel}
-          className="rounded-[9.6px] py-[6.4px] px-[19.2px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#dc143c] transition-opacity hover:opacity-70"
+          className="rounded-[9.6px] py-[6.4px] px-[19.2px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#dc143c] transition-opacity hover:opacity-70 cursor-pointer"
         >
           Cancel
         </button>
         <button
           onClick={onSubmit}
           disabled={!agreed}
-          className="rounded-[9.6px] bg-[#e0f7f4] py-[6.4px] px-[19.2px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] transition-opacity hover:opacity-80 disabled:opacity-40 disabled:cursor-not-allowed"
+          className="rounded-[9.6px] bg-[#e0f7f4] py-[6.4px] px-[19.2px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] transition-opacity hover:opacity-80 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
         >
           Submit
         </button>

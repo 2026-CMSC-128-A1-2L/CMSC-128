@@ -183,7 +183,7 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
         <div className="self-stretch flex items-center gap-3">
           <button
             onClick={onPrevMonth}
-            className="rounded-full p-2 hover:bg-whitesmoke-100 transition-colors"
+            className="rounded-full p-2 hover:bg-whitesmoke-100 transition-colors cursor-pointer"
           >
             <Icon icon="ic:round-chevron-left" className="h-5 w-5" />
           </button>
@@ -192,14 +192,14 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
             <div className="flex-1 relative">
               <button
                 onClick={() => setShowMonthDropdown(!showMonthDropdown)}
-                className="w-full rounded-md border border-gainsboro flex items-center p-2 gap-1 text-xs hover:bg-gray-50"
+                className="w-full rounded-md border border-gainsboro flex items-center p-2 gap-1 text-xs hover:bg-gray-50 cursor-pointer"
               >
                 <span className="flex-1">{monthName}</span>
                 <Icon
                   icon="ic:round-keyboard-arrow-down"
                   className={`h-4 w-4 transition-transform ${
                     showMonthDropdown ? 'rotate-180' : ''
-                  }`}
+                  } cursor-pointer`}
                 />
               </button>
               {showMonthDropdown && (
@@ -210,7 +210,7 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
                       onClick={() => handleMonthSelect(idx)}
                       className={`w-full text-left px-3 py-2 text-xs hover:bg-blue-50 ${
                         idx === month ? 'bg-lightcyan-100 font-bold' : ''
-                      }`}
+                      } cursor-pointer`}
                     >
                       {m}
                     </button>
@@ -220,15 +220,15 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
             </div>
 
             {/* Year Dropdown */}
-            <div className="flex-1 relative">
+            <div className="flex-1 relative cursor-pointer">
               <button
                 onClick={() => setShowYearDropdown(!showYearDropdown)}
-                className="w-full rounded-md border border-gainsboro flex items-center p-2 gap-1 text-xs hover:bg-gray-50"
+                className="w-full rounded-md border border-gainsboro flex items-center p-2 gap-1 text-xs hover:bg-gray-50 cursor-pointer"
               >
                 <span className="flex-1">{yearStr}</span>
                 <Icon
                   icon="ic:round-keyboard-arrow-down"
-                  className={`h-4 w-4 transition-transform ${showYearDropdown ? 'rotate-180' : ''}`}
+                  className={`h-4 w-4 transition-transform ${showYearDropdown ? 'rotate-180' : ''} cursor-pointer`}
                 />
               </button>
               {showYearDropdown && (
@@ -239,7 +239,7 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
                       onClick={() => handleYearSelect(y)}
                       className={`w-full text-left px-3 py-2 text-xs hover:bg-blue-50 ${
                         y === year ? 'bg-lightcyan-100 font-bold' : ''
-                      }`}
+                      } cursor-pointer`}
                     >
                       {y}
                     </button>
@@ -250,7 +250,7 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
           </div>
           <button
             onClick={onNextMonth}
-            className="rounded-full p-2 hover:bg-whitesmoke-100 transition-colors"
+            className="rounded-full p-2 hover:bg-whitesmoke-100 transition-colors cursor-pointer"
           >
             <Icon icon="ic:round-chevron-right" className="h-5 w-5" />
           </button>
@@ -296,7 +296,7 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
       </div>
 
       {/* Upcoming events */}
-      <div className="flex flex-col gap-2 text-sm">
+      <div className="flex flex-col gap-2 text-sm cursor-pointer">
         <b className="font-semibold">Upcoming Events</b>
         {loading ? (
           <div className="text-xs text-dimgray">Loading events...</div>

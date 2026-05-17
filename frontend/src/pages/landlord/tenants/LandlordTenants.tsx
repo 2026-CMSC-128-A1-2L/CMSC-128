@@ -17,6 +17,7 @@ import {
 } from '../../../utils/tenantListFilters';
 import { pendingApplications, type Tenant } from '../../../data/landlordTenants';
 import { FacilityService } from '../../../service/FacilityService';
+import { useDebouncedValue } from '../../../hooks/useDebouncedValue';
 
 const LandlordTenants = () => {
   const navigate = useNavigate();
@@ -26,6 +27,7 @@ const LandlordTenants = () => {
   const [removeTarget, setRemoveTarget] = useState<Tenant | null>(null);
   const [filters, setFilters] = useState(defaultTenantListFilters);
   const [nameSearchQuery, setNameSearchQuery] = useState('');
+  const debouncedNameSearchQuery = useDebouncedValue(nameSearchQuery, 300);
   const [tenants, setTenants] = useState<Tenant[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -61,8 +63,8 @@ const LandlordTenants = () => {
 
   const filteredTenants = useMemo(() => {
     const sorted = filterAndSortTenants(tenants, filters);
-    return filterTenantsByName(sorted, nameSearchQuery);
-  }, [tenants, filters, nameSearchQuery]);
+    return filterTenantsByName(sorted, debouncedNameSearchQuery);
+  }, [tenants, filters, debouncedNameSearchQuery]);
 
   const patchFilters = (patch: Partial<typeof filters>) => {
     setFilters((prev) => ({ ...prev, ...patch }));
@@ -73,7 +75,8 @@ const LandlordTenants = () => {
     setNameSearchQuery('');
   };
 
-  const hasActiveListFilters = tenantFiltersActive(filters) || nameSearchQuery.trim().length > 0;
+  const hasActiveListFilters =
+    tenantFiltersActive(filters) || debouncedNameSearchQuery.trim().length > 0;
 
   return (
     <LandlordLayout activeSidebarItem="tenants" breadcrumbs={[{ label: 'My Tenants' }]}>
@@ -154,7 +157,7 @@ const LandlordTenants = () => {
               <button
                 type="button"
                 onClick={resetAllListFilters}
-                className="rounded-[12px] bg-[#cbf6ed] px-[24px] py-[10px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] transition-opacity hover:opacity-80"
+                className="rounded-[12px] bg-[#cbf6ed] px-[24px] py-[10px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] transition-opacity hover:opacity-80 cursor-pointer"
               >
                 Reset filters
               </button>

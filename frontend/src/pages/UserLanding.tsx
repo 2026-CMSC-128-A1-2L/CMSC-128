@@ -204,7 +204,7 @@ const UserLanding: FunctionComponent = () => {
             <div ref={whatIsAtlasRef} />
             <div
               ref={whatIsReveal.ref}
-              className={`self-stretch bg-white flex items-center py-16 px-20 gap-3 ${reveal(whatIsReveal.isVisible)}`}
+              className={`self-stretch bg-white flex items-center py-16 px-20 gap-3 ${reveal(whatIsReveal.isVisible)} cursor-pointer`}
             >
               <div className="flex-1 flex flex-col items-start gap-3">
                 <b className="self-stretch relative">What is ATLAS?</b>
@@ -487,7 +487,7 @@ const UserLanding: FunctionComponent = () => {
                         >
                           <Icon
                             icon="lucide:plus"
-                            className={`h-[26px] w-[26px] transition-transform duration-300 ${isOpen ? 'rotate-45 text-teal-200' : ''}`}
+                            className={`h-[26px] w-[26px] transition-transform duration-300 ${isOpen ? 'rotate-45 text-teal-200' : ''} cursor-pointer`}
                           />
                         </button>
                       </div>
@@ -556,10 +556,10 @@ const UserLanding: FunctionComponent = () => {
       <button
         type="button"
         onClick={scrollToTop}
-        className={`fixed bottom-8 right-8 z-50 bg-[#0c8873] text-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg transition-all duration-300 hover:scale-110 ${showScrollTop ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}
+        className={`fixed bottom-8 right-8 z-50 bg-[#0c8873] text-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg transition-all duration-300 hover:scale-110 ${showScrollTop ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'} cursor-pointer`}
         aria-label="Scroll to top"
       >
-        <Icon icon="lucide:arrow-up" className="w-5 h-5" />
+        <Icon icon="lucide:arrow-up" className="w-5 h-5 cursor-pointer" />
       </button>
     </div>
   );
