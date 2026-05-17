@@ -73,7 +73,11 @@ export const sendMessage = async (
   if (userType === 'Student' && otherUser.userType === 'Student')
     throw new AppError(403, 'Students cannot message other students.');
 
-  if (['Manager', 'Landlord'].includes(userType) && ['Manager', 'Landlord'].includes(userType)) {
+  console.log(userType, otherUser.userType);
+  if (
+    ['Manager', 'Landlord'].includes(userType) &&
+    ['Manager', 'Landlord'].includes(otherUser.userType!)
+  ) {
     // there should be an intersection in what they manage for them to be able to message each other
     const selfFacilities = new Set((await getManagedFacilities(userId)).map((x) => x.toString()));
     const otherFacilities = new Set((await getManagedFacilities(otherId)).map((x) => x.toString()));
