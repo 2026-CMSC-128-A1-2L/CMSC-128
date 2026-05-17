@@ -4,6 +4,7 @@ import { User, UserType } from '../user/user.model.js';
 import { AppError } from '../../error.js';
 import { UserTypeType } from 'shared';
 import { getManagedFacilities } from '../facility/facility.service.js';
+import { triggerNewMessage } from '../../pusher.js';
 
 export type ConversationAggregateResult = {
   _id: mongoose.Types.ObjectId;
@@ -87,6 +88,14 @@ export const sendMessage = async (
     receiverId: otherId,
     text: text,
     senderSeenAt: new Date(),
+  });
+
+  await triggerNewMessage(userId.toString(), otherId.toString(), {
+    _id: newMessage._id.toString(),
+    senderId: newMessage.senderId.toString(),
+    receiverId: newMessage.receiverId.toString(),
+    text: newMessage.text,
+    createdAt: newMessage.createdAt,
   });
 
   return newMessage;

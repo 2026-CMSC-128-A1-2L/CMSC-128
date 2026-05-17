@@ -24,6 +24,18 @@ export const getApp = (envOverride: Record<string, string>) => {
   if (!process.env.MONGO_URL) {
     throw new Error('Missing MONGO_URL in environment variables.');
   }
+  if (!process.env.PUSHER_APP_ID) {
+    throw new Error('Missing PUSHER_APP_ID in environment variables.');
+  }
+  if (!process.env.PUSHER_KEY) {
+    throw new Error('Missing PUSHER_KEY in environment variables.');
+  }
+  if (!process.env.PUSHER_SECRET) {
+    throw new Error('Missing PUSHER_SECRET in environment variables.');
+  }
+  if (!process.env.PUSHER_CLUSTER) {
+    throw new Error('Missing PUSHER_CLUSTER in environment variables.');
+  }
 
   const store = new MongoDBStore({
     uri: process.env.MONGO_URL,

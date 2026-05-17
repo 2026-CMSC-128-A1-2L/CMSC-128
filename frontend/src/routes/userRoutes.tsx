@@ -40,9 +40,13 @@ const userRoutes = [
   <Route key="bookmark" path="/bookmark" element={<BookmarksNewUsers />} />,
   <Route key="unit" path="/unit" element={<UnitDetails />} />,
   <Route key="facility-details" path="/facilities/:facilityId" element={<UnitDetails />} />,
-  <Route key="dms-landing" path="/direct-messages" element={<DmsLanding />}>
-    <Route key="dms-dorm-invitation" path="dorm-invitation" element={<InviteAccomodation />} />
-  </Route>,
+  <Route key="dms-landing" path="/direct-messages" element={<DmsLanding />} />,
+  <Route key="dms-user" path="/direct-messages/:userId" element={<DmsLanding />} />,
+  <Route
+    key="dms-dorm-invitation"
+    path="/direct-messages/dorm-invitation"
+    element={<InviteAccomodation />}
+  />,
   <Route key="current-dorm" path="/current-dorm" element={<CurrentDorm />} />,
   <Route key="contract" path="/contract-information" element={<ContractInformation />} />,
   <Route key="ratereview" path="/rate-review" element={<RateAndReview />} />,
