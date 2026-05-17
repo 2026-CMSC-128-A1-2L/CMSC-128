@@ -1,12 +1,12 @@
-import { useEffect, useState, useMemo, useRef } from 'react';
-import SideBarAdmin from '../../components/admin/SideBarAdmin';
-import AdminPageTransition from '../../components/admin/AdminPageTransition';
-import PageBackground from '../../components/general/PageBackground';
-import { Icon } from '@iconify/react';
-import { motion, useInView, animate } from 'framer-motion';
-import { UserService } from '../../service/UserService';
-import { ReportService } from '../../service/ReportService';
-import { FacilityService } from '../../service/FacilityService';
+import { useEffect, useState, useMemo, useRef } from "react";
+import SideBarAdmin from "../../components/admin/SideBarAdmin";
+import AdminPageTransition from "../../components/admin/AdminPageTransition";
+import PageBackground from "../../components/general/PageBackground";
+import { Icon } from "@iconify/react";
+import { motion, useInView, animate } from "framer-motion";
+import { UserService } from "../../service/UserService";
+import { ReportService } from "../../service/ReportService";
+import { FacilityService } from "../../service/FacilityService";
 
 type UserData = {
   _id: string;
@@ -33,7 +33,7 @@ const buildMonthLabels = (): { labels: string[]; dates: Date[] } => {
   const dates: Date[] = [];
   for (let i = 6; i >= 0; i--) {
     const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-    labels.push(d.toLocaleString('en-US', { month: 'short' }));
+    labels.push(d.toLocaleString("en-US", { month: "short" }));
     dates.push(d);
   }
   return { labels, dates };
@@ -60,16 +60,22 @@ const countByMonth = (
 
 const Y_STEPS = 5;
 
-const AnimatedCounter = ({ value, duration = 1.5 }: { value: number; duration?: number }) => {
+const AnimatedCounter = ({
+  value,
+  duration = 1.5,
+}: {
+  value: number;
+  duration?: number;
+}) => {
   const ref = useRef<HTMLSpanElement>(null);
-  const isInView = useInView(ref, { once: true, margin: '-100px' });
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   useEffect(() => {
     if (!ref.current) return;
 
     const controls = animate(0, value, {
       duration,
-      ease: 'easeOut',
+      ease: "easeOut",
       onUpdate: (latest) => {
         if (ref.current) {
           ref.current.textContent = Math.round(latest).toLocaleString();
@@ -103,9 +109,11 @@ function Analytics() {
           FacilityService.getFacilities(),
         ]);
 
-        if (usersRes.status === 'fulfilled') setUsers(usersRes.value.data ?? []);
-        if (reportsRes.status === 'fulfilled') setReports(reportsRes.value.data ?? []);
-        if (facilitiesRes.status === 'fulfilled') {
+        if (usersRes.status === "fulfilled")
+          setUsers(usersRes.value.data ?? []);
+        if (reportsRes.status === "fulfilled")
+          setReports(reportsRes.value.data ?? []);
+        if (facilitiesRes.status === "fulfilled") {
           const facilities = facilitiesRes.value.data ?? [];
           setFacilityCount(Array.isArray(facilities) ? facilities.length : 0);
         }
@@ -119,34 +127,34 @@ function Analytics() {
   }, []);
 
   const resolvedReportCount = useMemo(
-    () => reports.filter((r) => r.status === 'resolved').length,
+    () => reports.filter((r) => r.status === "resolved").length,
     [reports],
   );
 
   const statsCards: StatsCard[] = useMemo(
     () => [
       {
-        value: isLoading ? '...' : users.length.toString(),
-        label: 'Total Users',
-        iconName: 'solar:users-group-rounded-outline',
+        value: isLoading ? "..." : users.length.toString(),
+        label: "Total Users",
+        iconName: "solar:users-group-rounded-outline",
         numericValue: users.length,
       },
       {
-        value: isLoading ? '...' : facilityCount.toString(),
-        label: 'Total Facilities',
-        iconName: 'fluent-emoji-flat:house',
+        value: isLoading ? "..." : facilityCount.toString(),
+        label: "Total Facilities",
+        iconName: "fluent-emoji-flat:house",
         numericValue: facilityCount,
       },
       {
-        value: isLoading ? '...' : reports.length.toString(),
-        label: 'Total Reports',
-        iconName: 'solar:document-text-outline',
+        value: isLoading ? "..." : reports.length.toString(),
+        label: "Total Reports",
+        iconName: "solar:document-text-outline",
         numericValue: reports.length,
       },
       {
-        value: isLoading ? '...' : resolvedReportCount.toString(),
-        label: 'Reports Handled',
-        iconName: 'oui:nav-judgements',
+        value: isLoading ? "..." : resolvedReportCount.toString(),
+        label: "Reports Handled",
+        iconName: "oui:nav-judgements",
         numericValue: resolvedReportCount,
       },
     ],
@@ -154,16 +162,23 @@ function Analytics() {
   );
 
   // Chart data
-  const { labels: monthLabels, dates: monthDates } = useMemo(() => buildMonthLabels(), []);
+  const { labels: monthLabels, dates: monthDates } = useMemo(
+    () => buildMonthLabels(),
+    [],
+  );
 
   const landlordData = useMemo(
     () =>
-      countByMonth(users, monthDates, (u) => u.userType === 'Landlord' || u.userType === 'Manager'),
+      countByMonth(
+        users,
+        monthDates,
+        (u) => u.userType === "Landlord" || u.userType === "Manager",
+      ),
     [users, monthDates],
   );
 
   const studentData = useMemo(
-    () => countByMonth(users, monthDates, (u) => u.userType === 'Student'),
+    () => countByMonth(users, monthDates, (u) => u.userType === "Student"),
     [users, monthDates],
   );
 
@@ -186,15 +201,32 @@ function Analytics() {
   const toY = (val: number) => CHART_HEIGHT - (val / maxVal) * CHART_HEIGHT;
 
   const buildPath = (data: number[]): string => {
-    if (data.length === 0) return '';
-    const segW = 100 / Math.max(data.length - 1, 1);
-    return data
-      .map((v, i) => {
-        const x = i * segW;
-        const y = toY(v);
-        return `${i === 0 ? 'M' : 'L'} ${x} ${y}`;
-      })
-      .join(' ');
+    if (data.length === 0) return "";
+    if (data.length === 1) {
+      // If only one data point, draw a flat line across
+      const y = toY(data[0]);
+      return `M 0 ${y} L 100 ${y}`;
+    }
+
+    const segW = 100 / (data.length - 1);
+    let path = `M 0 ${toY(data[0])}`;
+
+    for (let i = 1; i < data.length; i++) {
+      const prevX = (i - 1) * segW;
+      const prevY = toY(data[i - 1]);
+      const x = i * segW;
+      const y = toY(data[i]);
+
+      // Use bezier curves for smoother lines
+      const cp1x = prevX + segW * 0.4;
+      const cp1y = prevY;
+      const cp2x = x - segW * 0.4;
+      const cp2y = y;
+
+      path += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${x} ${y}`;
+    }
+
+    return path;
   };
 
   const landlordPath = buildPath(landlordData);
@@ -232,12 +264,12 @@ function Analytics() {
                     hidden: { opacity: 0, y: 20 },
                     show: { opacity: 1, y: 0 },
                   }}
-                  transition={{ duration: 0.5, ease: 'easeOut' }}
+                  transition={{ duration: 0.5, ease: "easeOut" }}
                 >
                   <div className="flex items-center justify-between">
                     <span className="font-['Outfit'] text-[40px] font-semibold text-black dark:text-[#d7e0ef]">
-                      {card.value === '...' ? (
-                        '...'
+                      {card.value === "..." ? (
+                        "..."
                       ) : (
                         <AnimatedCounter value={card.numericValue} />
                       )}
@@ -272,17 +304,8 @@ function Analytics() {
                   <div className="flex items-center gap-3">
                     <span className="h-3 w-3 rounded-full bg-[#60d394]" />
                     <span className="font-['Outfit'] text-[18px] text-black dark:text-[#d7e0ef]">
-                      Students
+                      Tenants
                     </span>
-                  </div>
-                  <div className="flex items-center gap-1.5 rounded-lg bg-white dark:bg-[#1f2022] dark:border dark:border-[#303331] px-4 py-1.5 shadow-[0px_3px_15px_0px_rgba(124,141,181,0.12)]">
-                    <span className="font-['Outfit'] text-[18px] text-black dark:text-[#d7e0ef]">
-                      Monthly
-                    </span>
-                    <Icon
-                      icon="solar:alt-arrow-down-outline"
-                      className="h-6 w-6 text-black dark:text-[#a4acba]"
-                    />
                   </div>
                 </div>
               </div>
@@ -296,7 +319,7 @@ function Analytics() {
                   {yLabels.map((label) => (
                     <span
                       key={label}
-                      className="font-['Outfit'] text-[18px] text-[#7c8db5] text-right w-9"
+                      className="font-['Outfit'] text-[18px] text-[#7c8db5] dark:text-[#a4acba] text-right w-9"
                     >
                       {label}
                     </span>
@@ -306,7 +329,7 @@ function Analytics() {
                 {/* Chart area */}
                 <div className="flex flex-1 flex-col">
                   <div
-                    className="relative w-full rounded-lg border border-dashed border-[#e0e0e0] dark:border-[#404341] bg-[#fafafa] dark:bg-[#1a1b1b]"
+                    className="relative w-full rounded-lg"
                     style={{ height: CHART_HEIGHT }}
                   >
                     {isLoading ? (
@@ -318,109 +341,53 @@ function Analytics() {
                         viewBox={`0 0 100 ${CHART_HEIGHT}`}
                         preserveAspectRatio="none"
                         className="h-full w-full"
-                        style={{ overflow: 'visible' }}
+                        style={{ overflow: "visible" }}
                       >
                         {/* Grid lines */}
                         {yLabels.map((label) => (
                           <line
-                            key={`grid-${label}`}
+                            key={`g-${label}`}
                             x1="0"
                             y1={toY(label)}
                             x2="100"
                             y2={toY(label)}
-                            stroke="#e0e0e0"
-                            strokeWidth="0.3"
-                            strokeDasharray="1,1"
+                            stroke="#E6EDFF"
+                            strokeWidth="1"
+                            className="dark:stroke-[#2a2d30]"
                           />
                         ))}
 
-                        {/* Gradient definitions */}
-                        <defs>
-                          <linearGradient id="landlordGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                            <stop offset="0%" stopColor="#4a90d9" stopOpacity="0.3" />
-                            <stop offset="100%" stopColor="#4a90d9" stopOpacity="0.05" />
-                          </linearGradient>
-                          <linearGradient id="studentGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                            <stop offset="0%" stopColor="#60d394" stopOpacity="0.3" />
-                            <stop offset="100%" stopColor="#60d394" stopOpacity="0.05" />
-                          </linearGradient>
-                        </defs>
-
-                        {/* Landlord area fill */}
-                        <motion.path
-                          d={landlordPath ? `${landlordPath} L 100,${CHART_HEIGHT} L 0,${CHART_HEIGHT} Z` : ''}
-                          fill="url(#landlordGradient)"
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          transition={{ duration: 0.8, delay: 0.2 }}
-                        />
                         {/* Landlord line */}
                         <motion.path
                           d={landlordPath}
                           fill="none"
                           stroke="#4a90d9"
-                          strokeWidth="1.5"
+                          strokeWidth="3"
                           strokeLinecap="round"
                           strokeLinejoin="round"
                           vectorEffect="non-scaling-stroke"
-                          initial={{ pathLength: 0, opacity: 0 }}
-                          animate={{ pathLength: 1, opacity: 1 }}
-                          transition={{ duration: 1.2, ease: 'easeOut' }}
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.8, ease: "easeOut" }}
                         />
-                        {/* Landlord dots */}
-                        {landlordData.map((v, i) => {
-                          const segW = 100 / Math.max(landlordData.length - 1, 1);
-                          return (
-                            <motion.circle
-                              key={`ld-${i}`}
-                              cx={i * segW}
-                              cy={toY(v)}
-                              r="2"
-                              fill="#4a90d9"
-                              initial={{ scale: 0, opacity: 0 }}
-                              animate={{ scale: 1, opacity: 1 }}
-                              transition={{ delay: 0.8 + i * 0.1, duration: 0.3 }}
-                            />
-                          );
-                        })}
 
-                        {/* Student area fill */}
-                        <motion.path
-                          d={studentPath ? `${studentPath} L 100,${CHART_HEIGHT} L 0,${CHART_HEIGHT} Z` : ''}
-                          fill="url(#studentGradient)"
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          transition={{ duration: 0.8, delay: 0.3 }}
-                        />
-                        {/* Student line */}
+                        {/* Tenant line */}
                         <motion.path
                           d={studentPath}
                           fill="none"
                           stroke="#60d394"
-                          strokeWidth="1.5"
+                          strokeWidth="3"
                           strokeLinecap="round"
                           strokeLinejoin="round"
                           vectorEffect="non-scaling-stroke"
-                          initial={{ pathLength: 0, opacity: 0 }}
-                          animate={{ pathLength: 1, opacity: 1 }}
-                          transition={{ duration: 1.2, ease: 'easeOut', delay: 0.1 }}
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{
+                            duration: 0.8,
+                            ease: "easeOut",
+                            delay: 0.15,
+                          }}
                         />
-                        {/* Student dots */}
-                        {studentData.map((v, i) => {
-                          const segW = 100 / Math.max(studentData.length - 1, 1);
-                          return (
-                            <motion.circle
-                              key={`sd-${i}`}
-                              cx={i * segW}
-                              cy={toY(v)}
-                              r="2"
-                              fill="#60d394"
-                              initial={{ scale: 0, opacity: 0 }}
-                              animate={{ scale: 1, opacity: 1 }}
-                              transition={{ delay: 0.9 + i * 0.1, duration: 0.3 }}
-                            />
-                          );
-                        })}
                       </svg>
                     )}
                   </div>
@@ -428,7 +395,10 @@ function Analytics() {
                   {/* X-axis labels */}
                   <div className="mt-3 flex justify-between px-2">
                     {monthLabels.map((m) => (
-                      <span key={m} className="font-['Outfit'] text-[18px] text-[#7c8db5]">
+                      <span
+                        key={m}
+                        className="font-['Outfit'] text-[18px] text-[#7c8db5] dark:text-[#a4acba]"
+                      >
                         {m}
                       </span>
                     ))}
