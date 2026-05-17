@@ -56,7 +56,7 @@ export const getConversation = async (
         { senderId: otherId, receiverId: userId },
       ],
     })
-      .sort({ createdAt: -1 })
+      .sort({ createdAt: 1 })
       .lean(),
   } as { user: UserType; messages: MessageType[] };
 };
