@@ -1,8 +1,9 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useRef } from 'react';
 import SideBarAdmin from '../../components/admin/SideBarAdmin';
 import AdminPageTransition from '../../components/admin/AdminPageTransition';
 import PageBackground from '../../components/general/PageBackground';
 import { Icon } from '@iconify/react';
+import { motion, useInView, animate } from 'framer-motion';
 import { UserService } from '../../service/UserService';
 import { ReportService } from '../../service/ReportService';
 import { FacilityService } from '../../service/FacilityService';
@@ -22,6 +23,7 @@ type StatsCard = {
   value: string;
   label: string;
   iconName: string;
+  numericValue: number;
 };
 
 // Build the last 7 months labels (e.g. ["Dec", "Jan", "Feb", ...])
@@ -57,6 +59,33 @@ const countByMonth = (
 };
 
 const Y_STEPS = 5;
+
+const AnimatedCounter = ({ value, duration = 1.5 }: { value: number; duration?: number }) => {
+  const ref = useRef<HTMLSpanElement>(null);
+  const isInView = useInView(ref, { once: true, margin: '-100px' });
+
+  useEffect(() => {
+    if (!ref.current) return;
+
+    const controls = animate(0, value, {
+      duration,
+      ease: 'easeOut',
+      onUpdate: (latest) => {
+        if (ref.current) {
+          ref.current.textContent = Math.round(latest).toLocaleString();
+        }
+      },
+    });
+
+    return () => controls.stop();
+  }, [value, duration]);
+
+  return (
+    <span ref={ref} className="tabular-nums">
+      0
+    </span>
+  );
+};
 
 function Analytics() {
   const [users, setUsers] = useState<UserData[]>([]);
@@ -97,24 +126,28 @@ function Analytics() {
   const statsCards: StatsCard[] = useMemo(
     () => [
       {
-        value: isLoading ? '...' : users.length.toLocaleString(),
+        value: isLoading ? '...' : users.length.toString(),
         label: 'Total Users',
         iconName: 'solar:users-group-rounded-outline',
+        numericValue: users.length,
       },
       {
-        value: isLoading ? '...' : facilityCount.toLocaleString(),
+        value: isLoading ? '...' : facilityCount.toString(),
         label: 'Total Facilities',
         iconName: 'fluent-emoji-flat:house',
+        numericValue: facilityCount,
       },
       {
-        value: isLoading ? '...' : reports.length.toLocaleString(),
+        value: isLoading ? '...' : reports.length.toString(),
         label: 'Total Reports',
         iconName: 'solar:document-text-outline',
+        numericValue: reports.length,
       },
       {
-        value: isLoading ? '...' : resolvedReportCount.toLocaleString(),
+        value: isLoading ? '...' : resolvedReportCount.toString(),
         label: 'Reports Handled',
         iconName: 'oui:nav-judgements',
+        numericValue: resolvedReportCount,
       },
     ],
     [isLoading, users, facilityCount, reports, resolvedReportCount],
@@ -179,12 +212,35 @@ function Analytics() {
             </h1>
 
             {/* Stats Cards */}
-            <div className="mt-6 flex gap-6 rounded-xl bg-white dark:bg-[#141515] dark:border dark:border-[#303331] p-5 shadow-[0px_0px_20px_0px_rgba(0,0,0,0.25)]">
+            <motion.div
+              className="mt-6 flex gap-6 rounded-xl bg-white dark:bg-[#141515] dark:border dark:border-[#303331] p-5 shadow-[0px_0px_20px_0px_rgba(0,0,0,0.25)]"
+              variants={{
+                hidden: { opacity: 0 },
+                show: {
+                  opacity: 1,
+                  transition: { staggerChildren: 0.12 },
+                },
+              }}
+              initial="hidden"
+              animate="show"
+            >
               {statsCards.map((card) => (
-                <div key={card.label} className="flex flex-1 flex-col gap-1">
+                <motion.div
+                  key={card.label}
+                  className="flex flex-1 flex-col gap-1"
+                  variants={{
+                    hidden: { opacity: 0, y: 20 },
+                    show: { opacity: 1, y: 0 },
+                  }}
+                  transition={{ duration: 0.5, ease: 'easeOut' }}
+                >
                   <div className="flex items-center justify-between">
                     <span className="font-['Outfit'] text-[40px] font-semibold text-black dark:text-[#d7e0ef]">
-                      {card.value}
+                      {card.value === '...' ? (
+                        '...'
+                      ) : (
+                        <AnimatedCounter value={card.numericValue} />
+                      )}
                     </span>
                     <div className="flex h-15 w-15 items-center justify-center rounded-xl border border-[#d0d0d0] dark:border-[#303331] bg-white dark:bg-[#1f2022] shadow-[0px_2px_10px_0px_rgba(124,141,181,0.12)]">
                       <Icon
@@ -196,9 +252,9 @@ function Analytics() {
                   <span className="font-['Outfit'] text-[24px] text-black dark:text-[#a4acba]">
                     {card.label}
                   </span>
-                </div>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
 
             {/* Line Chart */}
             <div className="mt-8 rounded-xl bg-white dark:bg-[#141515] dark:border dark:border-[#303331] p-8 shadow-[0px_0px_20px_0px_rgba(0,0,0,0.25)]">
@@ -278,50 +334,90 @@ function Analytics() {
                           />
                         ))}
 
+                        {/* Gradient definitions */}
+                        <defs>
+                          <linearGradient id="landlordGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stopColor="#4a90d9" stopOpacity="0.3" />
+                            <stop offset="100%" stopColor="#4a90d9" stopOpacity="0.05" />
+                          </linearGradient>
+                          <linearGradient id="studentGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stopColor="#60d394" stopOpacity="0.3" />
+                            <stop offset="100%" stopColor="#60d394" stopOpacity="0.05" />
+                          </linearGradient>
+                        </defs>
+
+                        {/* Landlord area fill */}
+                        <motion.path
+                          d={landlordPath ? `${landlordPath} L 100,${CHART_HEIGHT} L 0,${CHART_HEIGHT} Z` : ''}
+                          fill="url(#landlordGradient)"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ duration: 0.8, delay: 0.2 }}
+                        />
                         {/* Landlord line */}
-                        <path
+                        <motion.path
                           d={landlordPath}
                           fill="none"
                           stroke="#4a90d9"
-                          strokeWidth="0.8"
+                          strokeWidth="1.5"
                           strokeLinecap="round"
                           strokeLinejoin="round"
                           vectorEffect="non-scaling-stroke"
+                          initial={{ pathLength: 0, opacity: 0 }}
+                          animate={{ pathLength: 1, opacity: 1 }}
+                          transition={{ duration: 1.2, ease: 'easeOut' }}
                         />
                         {/* Landlord dots */}
                         {landlordData.map((v, i) => {
                           const segW = 100 / Math.max(landlordData.length - 1, 1);
                           return (
-                            <circle
+                            <motion.circle
                               key={`ld-${i}`}
                               cx={i * segW}
                               cy={toY(v)}
-                              r="1.2"
+                              r="2"
                               fill="#4a90d9"
+                              initial={{ scale: 0, opacity: 0 }}
+                              animate={{ scale: 1, opacity: 1 }}
+                              transition={{ delay: 0.8 + i * 0.1, duration: 0.3 }}
                             />
                           );
                         })}
 
+                        {/* Student area fill */}
+                        <motion.path
+                          d={studentPath ? `${studentPath} L 100,${CHART_HEIGHT} L 0,${CHART_HEIGHT} Z` : ''}
+                          fill="url(#studentGradient)"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ duration: 0.8, delay: 0.3 }}
+                        />
                         {/* Student line */}
-                        <path
+                        <motion.path
                           d={studentPath}
                           fill="none"
                           stroke="#60d394"
-                          strokeWidth="0.8"
+                          strokeWidth="1.5"
                           strokeLinecap="round"
                           strokeLinejoin="round"
                           vectorEffect="non-scaling-stroke"
+                          initial={{ pathLength: 0, opacity: 0 }}
+                          animate={{ pathLength: 1, opacity: 1 }}
+                          transition={{ duration: 1.2, ease: 'easeOut', delay: 0.1 }}
                         />
                         {/* Student dots */}
                         {studentData.map((v, i) => {
                           const segW = 100 / Math.max(studentData.length - 1, 1);
                           return (
-                            <circle
+                            <motion.circle
                               key={`sd-${i}`}
                               cx={i * segW}
                               cy={toY(v)}
-                              r="1.2"
+                              r="2"
                               fill="#60d394"
+                              initial={{ scale: 0, opacity: 0 }}
+                              animate={{ scale: 1, opacity: 1 }}
+                              transition={{ delay: 0.9 + i * 0.1, duration: 0.3 }}
                             />
                           );
                         })}
