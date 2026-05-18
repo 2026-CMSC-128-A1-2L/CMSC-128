@@ -2,6 +2,8 @@ import { useState, useMemo, useEffect } from 'react';
 import LandlordLayout from '../../../components/landlord/LandlordLayout';
 import LandlordInfoCard, { type LandlordInfo } from '../../../components/landlord/LandlordInfoCard';
 import LandlordProfileSwitch from './component/LandlordProfileSwitch';
+import { useAuthStore } from '../../../store/useAuthStore';
+import { UserService } from '../../../service/UserService';
 import VerificationProgress, {
   type VerificationStep,
 } from '../../../components/landlord/VerificationProgress';
@@ -16,16 +18,7 @@ import dorm2 from '../../../../assets/landing_listing.webp';
 import dorm3 from '../../../../assets/landing_contact.webp';
 import { Link } from 'react-router-dom';
 
-const landlord: LandlordInfo = {
-  displayName: 'Quevin Custodio',
-  email: 'qacustodio@up.edu.ph',
-  fullName: 'Quevin James A. Custodio',
-  contactNumber: '-----',
-  homeAddress: '-----',
-  role: 'Landlord',
-  employees: ['Nathaniel Cunanan', 'Lance De Jesus'],
-  verified: true,
-};
+// Module-level static landlord object removed or replaced with dynamic hook inside component
 
 type Property = {
   id: string;
@@ -164,6 +157,7 @@ const SectionHeader = ({ title, onEdit }: SectionHeaderProps) => (
 );
 
 const LandlordProfileSwitcher = () => {
+  const authUser = useAuthStore((state) => state.user);
   const [activeTab, setActiveTab] = useState<'info' | 'verification'>('info');
 
   const [uploads, setUploads] = useState<Record<string, File | undefined>>({});
@@ -192,27 +186,78 @@ const LandlordProfileSwitcher = () => {
   };
 
   // stateful variable for contacts and home address
-
-  //LIFTED DECLARATIONS FROM USER/PROFILEINFO.TSX
-  //stateful contact number variable
-  const [contactNumber, setContactNumber] = useState(landlord.contactNumber);
-
-  // stateful home variable
-  const [homeAddress, setHomeAddress] = useState(landlord.homeAddress);
+  const [contactNumber, setContactNumber] = useState('-----');
+  const [homeAddress, setHomeAddress] = useState('-----');
 
   const [isEditing, setIsEditing] = useState(false);
   const [isEditingAddress, setIsEditingAddress] = useState(false);
+
+  // Sync state values when authUser is loaded or modified
+  useEffect(() => {
+    if (authUser) {
+      setContactNumber(authUser.contact || '-----');
+      setHomeAddress(authUser.address || '-----');
+    }
+  }, [authUser]);
+
+  const dynamicLandlord = useMemo<LandlordInfo>(() => {
+    if (!authUser) {
+      return {
+        displayName: 'Quevin Custodio',
+        email: 'qacustodio@up.edu.ph',
+        fullName: 'Quevin James A. Custodio',
+        contactNumber: contactNumber,
+        homeAddress: homeAddress,
+        role: 'Landlord',
+        employees: ['Nathaniel Cunanan', 'Lance De Jesus'],
+        verified: true,
+      };
+    }
+    return {
+      displayName: [authUser.firstName, authUser.lastName].filter(Boolean).join(' ') || 'Quevin Custodio',
+      email: authUser.email || authUser.emails?.[0] || 'qacustodio@up.edu.ph',
+      fullName: [authUser.firstName, authUser.middleName, authUser.lastName].filter(Boolean).join(' ') || 'Quevin James A. Custodio',
+      contactNumber: contactNumber,
+      homeAddress: homeAddress,
+      role: 'Landlord',
+      employees: ['Nathaniel Cunanan', 'Lance De Jesus'],
+      verified: authUser.status === 'verified' || authUser.verificationStatus === 'approved',
+      photoUrl: authUser.profilePicture,
+    };
+  }, [authUser, contactNumber, homeAddress]);
+
+  const handleSaveContact = async (newVal: string) => {
+    if (!authUser) return;
+    try {
+      const updated = await UserService.updateSelf(authUser._id, { contact: newVal });
+      if (updated) {
+        useAuthStore.getState().setUser(updated);
+        setContactNumber(updated.contact || '-----');
+      }
+    } catch (err) {
+      console.error('Failed to update contact:', err);
+    }
+  };
+
+  const handleSaveAddress = async (newVal: string) => {
+    if (!authUser) return;
+    try {
+      const updated = await UserService.updateSelf(authUser._id, { address: newVal });
+      if (updated) {
+        useAuthStore.getState().setUser(updated);
+        setHomeAddress(updated.address || '-----');
+      }
+    } catch (err) {
+      console.error('Failed to update address:', err);
+    }
+  };
 
   //on change to uploads, setIsRecentSubmit(false)
   useEffect(() => {
     setIsRecentSubmit(false);
   }, [uploads]);
 
-  //on change to contact number and home address, update landlord info object
-  useEffect(() => {
-    landlord.contactNumber = contactNumber;
-    landlord.homeAddress = homeAddress;
-  }, [contactNumber, homeAddress]);
+  // removed static ref updater
   return (
     <LandlordLayout
       breadcrumbs={[
@@ -223,11 +268,11 @@ const LandlordProfileSwitcher = () => {
     >
       <div className="flex w-full flex-col gap-[12px] rounded-[16px] bg-white/70 p-[8px] pb-[32px]">
         <LandlordInfoCard
-          info={landlord}
+          info={dynamicLandlord}
           activeTab={activeTab}
           setActiveTab={setActiveTab}
-          setContactNumber={setContactNumber}
-          setHomeAddress={setHomeAddress}
+          setContactNumber={handleSaveContact}
+          setHomeAddress={handleSaveAddress}
           onEditContact={() => {
             setIsEditing(!isEditing);
           }}

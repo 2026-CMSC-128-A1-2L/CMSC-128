@@ -9,6 +9,7 @@ import TutorialIcon from "../../../../assets/help-chat.svg";
 import { managers } from "../../../data/landlordManagers";
 import { pendingApplications, type Tenant } from "../../../data/landlordTenants";
 import { FacilityService } from "../../../service/FacilityService";
+import { useAuthStore } from "../../../store/useAuthStore";
 const STATS = [
   {
     label: "Monthly Income",
@@ -57,17 +58,23 @@ const ACTIVITY = [
 
 const Avatar = ({
   className = "h-[40px] w-[40px]",
+  src,
 }: {
   className?: string;
+  src?: string | null;
 }) => (
   <span
     className={`flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#e5e7eb] text-[#9ca3af] ${className}`}
   >
-    <Icon
-      icon="solar:user-bold"
-      className="h-[60%] w-[60%]"
-      aria-hidden="true"
-    />
+    {src ? (
+      <img src={src} alt="Avatar" className="h-full w-full object-cover" />
+    ) : (
+      <Icon
+        icon="solar:user-bold"
+        className="h-[60%] w-[60%]"
+        aria-hidden="true"
+      />
+    )}
   </span>
 );
 
@@ -142,6 +149,7 @@ const getOccupiedUnits = (facility: any): number => {
 };
 
 const LandlordHomepage: FunctionComponent = () => {
+  const authUser = useAuthStore((state) => state.user);
   const navigate = useNavigate();
   const trackRef = useRef<HTMLDivElement>(null);
   const [current, setCurrent] = useState(0);
@@ -700,19 +708,21 @@ const LandlordHomepage: FunctionComponent = () => {
         {/* Right sidebar */}
         <aside className="flex w-full flex-col gap-[32px] lg:w-[280px] lg:shrink-0 lg:pt-[60px]">
           <div className="flex flex-col gap-[8px]">
-            <Avatar className="h-[74px] w-[74px]" />
+            <Avatar className="h-[74px] w-[74px]" src={authUser?.profilePicture} />
             <div className="flex items-center gap-[6px]">
               <b className="font-['Inter',sans-serif] text-[24px] leading-[32px] text-black">
-                Quevin James A. Custodio
+                {authUser ? [authUser.firstName, authUser.middleName, authUser.lastName].filter(Boolean).join(' ') : 'Quevin James A. Custodio'}
               </b>
-              <Icon
-                icon="solar:verified-check-bold"
-                className="h-[24px] w-[24px] shrink-0 text-[#096c5b]"
-                aria-hidden="true"
-              />
+              {(!authUser || authUser.status === 'verified' || authUser.verificationStatus === 'approved') && (
+                <Icon
+                  icon="solar:verified-check-bold"
+                  className="h-[24px] w-[24px] shrink-0 text-[#096c5b]"
+                  aria-hidden="true"
+                />
+              )}
             </div>
             <span className="font-['Inter',sans-serif] text-[14px] text-[#666]">
-              qcustodio@gmail.com
+              {authUser ? (authUser.email || authUser.emails?.[0]) : 'qcustodio@gmail.com'}
             </span>
           </div>
           <section className="flex flex-col gap-[12px]">
