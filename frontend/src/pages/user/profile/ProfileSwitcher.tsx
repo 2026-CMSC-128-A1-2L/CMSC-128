@@ -61,14 +61,14 @@ const CurrentApplicationsList = ({
       </div>
       <Link
         to="/applications"
-        className="rounded-2xl bg-lightcyan px-4 py-2 text-sm font-bold text-teal"
+        className="rounded-2xl bg-lightcyan px-4 py-2 text-sm font-bold text-teal dark:bg-[#1a3b33] dark:text-[#4fd1c5]"
       >
         View all
       </Link>
     </div>
-    <div className="overflow-hidden rounded-2xl border border-whitesmoke bg-white">
+    <div className="overflow-hidden rounded-2xl border border-whitesmoke bg-white dark:border-[#2a2d33] dark:bg-[#1a1b1e]">
       {applications.length === 0 ? (
-        <div className="p-8 text-center font-bold text-dimgray">
+        <div className="p-8 text-center font-bold text-dimgray dark:text-[#a4acba]">
           No dorm yet. Your applications will appear here.
         </div>
       ) : (
@@ -85,13 +85,15 @@ const CurrentApplicationsList = ({
           return (
             <div
               key={application.id ?? application._id}
-              className="flex items-center justify-between border-t border-whitesmoke px-6 py-4 first:border-t-0"
+              className="flex items-center justify-between border-t border-whitesmoke px-6 py-4 first:border-t-0 dark:border-[#2a2d33]"
             >
               <div>
-                <b>{facilityName}</b>
-                <div className="text-sm text-dimgray">{roomType}</div>
+                <b className="dark:text-[#edf6f4]">{facilityName}</b>
+                <div className="text-sm text-dimgray dark:text-[#a4acba]">
+                  {roomType}
+                </div>
               </div>
-              <b className="text-sm text-teal">
+              <b className="text-sm text-teal dark:text-[#4fd1c5]">
                 {application.status ?? "pending"}
               </b>
             </div>
@@ -238,23 +240,26 @@ const ProfileSwitcher = () => {
 
         <div className="w-full flex flex-col items-start justify-between gap-20 px-6 md:px-8">
           <div className="self-stretch flex flex-col items-start py-num-0 pr-20">
-
-
             <div className="bg-white/35  self-stretch min-h-[800px] rounded-2xl  flex flex-col items-start gap-3 text-center text-dimgray font-inter pb-10 dark:bg-transparent dark:text-[#a4acba]">
               <div
-    className="self-stretch pt-15 px-8 shrink-0 flex items-end box-border gap-2.5"
-    data-scroll-to="searchBarContainer"
-  >
-    <BreadcrumbHeader
-      routes={[
-        { name: 'Home', url: '/home' },
-        { name: 'User Profile', url: '/profile-switcher' },
-        { name: activeTab === "dorm" ? 'Current Dorm' : "Verification Status" },
-      ]}
-    />
-  </div>
+                className="self-stretch pt-15 px-8 shrink-0 flex items-end box-border gap-2.5"
+                data-scroll-to="searchBarContainer"
+              >
+                <BreadcrumbHeader
+                  routes={[
+                    { name: "Home", url: "/home" },
+                    { name: "User Profile", url: "/profile-switcher" },
+                    {
+                      name:
+                        activeTab === "dorm"
+                          ? "Current Dorm"
+                          : "Verification Status",
+                    },
+                  ]}
+                />
+              </div>
 
-  <ProfileInfo />
+              <ProfileInfo />
 
               <div className="self-stretch flex flex-col items-start gap-12">
                 <Switch activeTab={activeTab} setActiveTab={setActiveTab} />
