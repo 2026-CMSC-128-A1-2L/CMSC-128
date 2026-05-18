@@ -335,7 +335,7 @@ const LandlordHomepage: FunctionComponent = () => {
 
   return (
     <LandlordLayout activeSidebarItem="dashboard" breadcrumbs={[]}>
-      <div className="flex w-full flex-col gap-[48px] lg:flex-row lg:items-start">
+      <div className="mb-20 flex w-full flex-col gap-[48px] lg:flex-row lg:items-start">
         {/* Main column */}
         <div className="flex flex-1 flex-col gap-[48px] min-w-0">
           {/* Search */}

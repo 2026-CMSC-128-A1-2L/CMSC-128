@@ -10,6 +10,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import SideBar from "../../../components/user/SideBar";
 import DormCard from "../../../components/user/DormCard";
 import Banner from "../../../components/general/Banner";
+import Footer from "../../../components/general/Footer";
 import PageBackground from "../../../components/general/PageBackground";
 import FilterTab from "../../../components/user/Filter/FilterTab";
 import LoadingPage from "../../general/LoadingPage";
@@ -430,7 +431,7 @@ const HomePage: FunctionComponent = () => {
 
       {/* right frame */}
       <div className="relative z-10 w-full min-w-0 h-fit flex items-start pt-15 pr-20 pb-20">
-        <div className="h-fit w-full min-w-0 flex flex-col items-start gap-80">
+        <div className="h-fit w-full min-w-0 flex flex-col items-start gap-20">
           <div className="w-full min-w-0 flex flex-col items-start">
             {/* search bar */}
             <div className="relative w-full h-full flex items-center pb-6 box-border">
@@ -666,6 +667,7 @@ const HomePage: FunctionComponent = () => {
               </div>
             </div>
           </div>
+          <Footer />
         </div>
       </div>
 
