@@ -7,6 +7,12 @@ import type { DormCardData } from './useFacilities';
 const placeholderImage = 'https://placehold.co/900x430?text=No+image';
 const objectIdPattern = /^[a-f\d]{24}$/i;
 
+const toPublicMediaUrl = (value?: string) => {
+  if (!value) return undefined;
+  if (value.startsWith('http') || value.startsWith('/api/')) return value;
+  return `/api/files/public?key=${encodeURIComponent(value.replace(/^\/+/, ''))}`;
+};
+
 type FacilityDetail = GetFacilityResponse;
 type FacilityMedia = { value: string };
 type FacilityListing = {
@@ -135,7 +141,9 @@ const mapFromFacility = (
 ): FacilityDetailsData => {
   const media: FacilityMedia[] = 'media' in facility ? facility.media : [];
   const listings: FacilityListing[] = 'listings' in facility ? facility.listings : [];
-  const gallery = media.map((item: FacilityMedia) => item.value).filter(Boolean);
+  const gallery = media
+    .map((item: FacilityMedia) => toPublicMediaUrl(item.value))
+    .filter((url): url is string => Boolean(url));
   const fallbackData = fallback ? mapFromCard(fallback) : undefined;
 
   const listingPrices = listings
