@@ -1,34 +1,13 @@
 import type { FunctionComponent } from 'react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Icon } from '@iconify/react';
 import footer_logo from '../../../../assets/footer_logo.svg';
 import SignInPopUp from '../../../components/general/SignInPopUp';
-
-type UserData = {
-  emails: string[];
-  status: string;
-};
+import { useAuthStore } from '../../../store/useAuthStore';
 
 const Security: FunctionComponent = () => {
-  const [user, setUser] = useState<UserData | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { user, isLoading } = useAuthStore();
   const [showSignIn, setShowSignIn] = useState(false);
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await fetch('/api/users/me', { credentials: 'include' });
-        if (!res.ok) throw new Error('Not authenticated');
-        const json = await res.json();
-        setUser(json.data);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchUser();
-  }, []);
 
   // todo: active sessions API
 
@@ -38,7 +17,7 @@ const Security: FunctionComponent = () => {
         <b className="relative leading-8">Security Settings</b>
       </div>
 
-      {loading ? (
+      {isLoading ? (
         <div className="self-stretch flex items-center justify-center py-10 text-dimgray text-sm">
           Loading security information…
         </div>
@@ -60,10 +39,7 @@ const Security: FunctionComponent = () => {
                       className="flex items-center gap-1 text-[12px] text-teal-100 cursor-pointer bg-transparent border-none p-0 transition-all duration-150 hover:text-teal-200 hover:gap-1.5"
                     >
                       <span className="font-medium">Sign In</span>
-                      <Icon
-                        icon="solar:arrow-right-up-linear"
-                        className="w-4 relative max-h-full"
-                      />
+                      <Icon icon="solar:arrow-right-up-linear" className="w-4 relative max-h-full" />
                     </button>
                     {showSignIn && <SignInPopUp onClose={() => setShowSignIn(false)} />}
                   </div>
@@ -98,6 +74,7 @@ const Security: FunctionComponent = () => {
               <div className="self-stretch h-6 flex items-center">
                 <b className="flex-1 relative">Active Sessions</b>
               </div>
+              {/* todo: active sessions API not yet available — showing placeholder */}
               <div className="self-stretch flex flex-col items-start justify-center gap-3 text-num-12">
                 <div className="self-stretch flex flex-col items-start">
                   <div className="self-stretch h-[68px] rounded-num-16 border-whitesmoke-200 border-solid border box-border overflow-hidden shrink-0 flex flex-col items-start justify-center py-num-4 px-num-10 transition-all duration-200 hover:border-teal-100 hover:bg-azure hover:shadow-sm cursor-pointer">
@@ -158,11 +135,7 @@ const Security: FunctionComponent = () => {
               </div>
               <div className="self-stretch flex-1 rounded-num-16 border-whitesmoke-200 border-solid border overflow-hidden flex flex-col items-start justify-center py-4 px-6 gap-2.5 text-[24px] text-teal">
                 <div className="flex items-center gap-1">
-                  <img
-                    className="w-[52px] relative max-h-full object-cover"
-                    alt=""
-                    src={footer_logo}
-                  />
+                  <img className="w-[52px] relative max-h-full object-cover" alt="" src={footer_logo} />
                   <b className="relative leading-8">App Permissions</b>
                 </div>
                 <div className="self-stretch relative text-num-14 font-medium text-black text-left">
