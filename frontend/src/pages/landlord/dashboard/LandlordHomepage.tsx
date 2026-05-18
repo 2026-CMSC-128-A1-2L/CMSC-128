@@ -36,25 +36,6 @@ const VISITS = [
   { name: "Nathaniel Cunanan", email: "ncunanan@up.edu.ph" },
 ];
 
-const ACTIVITY = [
-  {
-    name: "Haira Espinocilla",
-    action: "paid rent for month of Feb",
-    time: "3d ago",
-  },
-  { name: "Riz Doroja", action: "paid rent for month of Feb", time: "1d ago" },
-  {
-    name: "Dorm Manager #2",
-    action: "collected payments in One Sapphire",
-    time: "2m ago",
-  },
-  {
-    name: "Dorm Manager #1",
-    action: "accepted ocular visits for April 9",
-    time: "1m ago",
-  },
-];
-
 const Avatar = ({
   className = "h-[40px] w-[40px]",
 }: {
@@ -72,10 +53,10 @@ const Avatar = ({
 );
 
 const PersonRow = ({ name, email }: { name: string; email: string }) => (
-  <div className="flex w-full items-center gap-[10px] rounded-[8px] border border-[#f0f0f0] px-[12px] py-[4px]">
+  <div className="flex w-full items-center gap-[10px] rounded-[8px] border border-[#f0f0f0] bg-white px-[12px] py-[12px] shadow-[0_1px_6px_rgba(0,0,0,0.04)] dark:border-[#303331] dark:bg-[#141515]">
     <Avatar />
     <div className="flex flex-col gap-[2px] overflow-hidden">
-      <b className="truncate font-['Inter',sans-serif] text-[14px] text-black">
+      <b className="truncate font-['Inter',sans-serif] text-[14px] text-black dark:text-[#edf6f4]">
         {name}
       </b>
       <span className="truncate font-['Lora',serif] text-[12px] font-semibold text-[#8a9099]">
@@ -83,6 +64,36 @@ const PersonRow = ({ name, email }: { name: string; email: string }) => (
       </span>
     </div>
   </div>
+);
+
+const DashboardSidePanel = ({
+  title,
+  to,
+  items,
+}: {
+  title: string;
+  to: string;
+  items: Array<{ name: string; email: string }>;
+}) => (
+  <section className="flex min-h-[300px] flex-col gap-[16px] overflow-hidden rounded-[16px] border border-[#f0f0f0] bg-white/80 p-[24px] shadow-[0_1px_10px_rgba(0,0,0,0.04)] dark:border-[#303331] dark:bg-[#141515]/90">
+    <Link
+      to={to}
+      className="flex items-center justify-between gap-[12px] font-['Inter',sans-serif] text-[20px] font-bold tracking-[-0.01em] text-[#096c5b] transition-opacity hover:opacity-70 dark:text-[#72cbb8]"
+    >
+      <span className="truncate">{title}</span>
+      <Icon
+        icon="radix-icons:arrow-top-right"
+        className="h-[22px] w-[22px] shrink-0"
+        aria-hidden="true"
+      />
+    </Link>
+    <div className="h-[2px] w-full rounded-full bg-[#f0f0f0] dark:bg-[#303331]" />
+    <div className="flex flex-col gap-[12px] overflow-hidden">
+      {items.map((item) => (
+        <PersonRow key={`${title}-${item.email}`} {...item} />
+      ))}
+    </div>
+  </section>
 );
 
 const CARD_WIDTH = 280;
@@ -94,6 +105,23 @@ type LandlordSearchOption = {
   to: string;
   keywords: string;
   icon: string;
+};
+
+type LandlordFacilityListing = {
+  unitCount?: number;
+  availableUnitCount?: number;
+};
+
+type LandlordFacility = {
+  id: string;
+  name: string;
+  image?: string;
+  media?: Array<{ value?: string }>;
+  listings?: LandlordFacilityListing[];
+  location?: { text?: string };
+  type?: string;
+  status?: string;
+  capacity?: number;
 };
 
 const normalizeSearchText = (value: string) =>
@@ -126,17 +154,17 @@ const optionMatchesQuery = (option: LandlordSearchOption, query: string) => {
   );
 };
 
-const getImage = (facility: any): string =>
+const getImage = (facility: LandlordFacility): string =>
   facility.image ??
   facility.media?.[0]?.value ??
   'https://placehold.co/280x120?text=No+image';
 
-const getOccupiedUnits = (facility: any): number => {
+const getOccupiedUnits = (facility: LandlordFacility): number => {
   const total = (facility.listings ?? []).reduce(
-    (sum: number, l: any) => sum + (l.unitCount ?? 0), 0,
+    (sum, listing) => sum + (listing.unitCount ?? 0), 0,
   );
   const avail = (facility.listings ?? []).reduce(
-    (sum: number, l: any) => sum + (l.availableUnitCount ?? 0), 0,
+    (sum, listing) => sum + (listing.availableUnitCount ?? 0), 0,
   );
   return total - avail;
 };
@@ -147,7 +175,7 @@ const LandlordHomepage: FunctionComponent = () => {
   const [current, setCurrent] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearchDropdownOpen, setIsSearchDropdownOpen] = useState(false);
-  const [facilities, setFacilities] = useState<any[]>([]);
+  const [facilities, setFacilities] = useState<LandlordFacility[]>([]);
   const [tenantRecords, setTenantRecords] = useState<Tenant[]>([]);
 
   useEffect(() => {
@@ -343,9 +371,9 @@ const LandlordHomepage: FunctionComponent = () => {
 
   return (
     <LandlordLayout activeSidebarItem="dashboard" breadcrumbs={[]}>
-      <div className="mb-20 flex w-full flex-col gap-[48px] lg:flex-row lg:items-start">
+      <div className="mb-20 grid w-full grid-cols-1 gap-[48px] xl:grid-cols-[minmax(0,1fr)_320px] xl:items-start">
         {/* Main column */}
-        <div className="flex flex-1 flex-col gap-[48px] min-w-0">
+        <div className="flex min-w-0 flex-col gap-[48px]">
           {/* Search */}
           <div className="relative w-full h-full flex items-center">
             <div className="w-full flex items-center transition-all duration-300 bg-[#f8f9fa] rounded-num-12 py-3 pl-3 pr-4 border border-transparent focus-within:bg-white focus-within:shadow-[0_8px_10px_rgb(0,0,0,0.06)] focus-within:transform focus-within:-translate-y-[1px] gap-2 dark:bg-[#1f2022] dark:focus-within:bg-[#202123]">
@@ -454,12 +482,12 @@ const LandlordHomepage: FunctionComponent = () => {
                 />
               </Link>
             </div>
-            <div className="grid grid-cols-1 gap-[12px] sm:grid-cols-2 xl:grid-cols-4">
+            <div className="grid grid-cols-1 gap-[16px] sm:grid-cols-2 xl:grid-cols-4">
               {STATS.map((s) => (
                 <Link
                   to="/landlord/finance"
                   key={s.label}
-                  className="flex flex-col items-center justify-center gap-[8px] rounded-[16px] border border-[#f0f0f0] bg-white p-[12px] text-center"
+                  className="flex min-h-[150px] flex-col items-center justify-center gap-[8px] rounded-[16px] border border-[#f0f0f0] bg-white p-[12px] text-center dark:border-[#303331] dark:bg-[#141515]"
                 >
                   <b className="font-['Inter',sans-serif] text-[14px] text-[#666]">
                     {s.label}
@@ -487,7 +515,7 @@ const LandlordHomepage: FunctionComponent = () => {
                   )}
                 </Link>
               ))}
-              <div className="flex flex-col items-center justify-center gap-[8px] rounded-[16px] bg-[#096c5b] p-[12px] text-center">
+              <div className="flex min-h-[150px] flex-col items-center justify-center gap-[8px] rounded-[16px] bg-[#096c5b] p-[12px] text-center shadow-[0_4px_14px_rgba(0,0,0,0.12)]">
                 <Icon
                   icon="basil:notification-on-outline"
                   className="h-[48px] w-[48px] text-[#f0f0f0]"
@@ -542,6 +570,7 @@ const LandlordHomepage: FunctionComponent = () => {
               {/* Arrows */}
               <div className="flex items-center gap-[8px]">
                 <button
+                  type="button"
                   onClick={() => scrollTo(current - 1)}
                   disabled={current === 0}
                   className="flex h-[32px] w-[32px] items-center justify-center rounded-full border border-[#f0f0f0] bg-white transition-opacity hover:opacity-70 disabled:opacity-30 cursor-pointer"
@@ -553,6 +582,7 @@ const LandlordHomepage: FunctionComponent = () => {
                   />
                 </button>
                 <button
+                  type="button"
                   onClick={() => scrollTo(current + 1)}
                   disabled={current === total - 1}
                   className="flex h-[32px] w-[32px] items-center justify-center rounded-full bg-[#e0f7f4] transition-opacity hover:opacity-70 disabled:opacity-30 cursor-pointer"
@@ -569,14 +599,14 @@ const LandlordHomepage: FunctionComponent = () => {
             {/* Scrollable track */}
             <div
               ref={trackRef}
-              className="flex gap-[16px] overflow-x-auto scroll-smooth pb-[8px] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+              className="flex gap-[16px] overflow-x-auto rounded-[16px] border border-[#f0f0f0] bg-white p-[16px] scroll-smooth shadow-[0_1px_10px_rgba(0,0,0,0.04)] [scrollbar-width:none] dark:border-[#303331] dark:bg-[#141515] [&::-webkit-scrollbar]:hidden"
             >
               {displayedBuildings.map((facility) => (
                 <Link
                   key={facility.id}
                   to={`/landlord/properties/${facility.id}`}
                   state={{ facilityStatus: facility.status, facilityCapacity: facility.capacity }}
-                  className="flex shrink-0 flex-col overflow-hidden rounded-[10px] bg-white shadow-[0px_4px_20px_rgba(0,0,0,0.15)] transition-transform hover:scale-[1.02]"
+                  className="flex shrink-0 flex-col overflow-hidden rounded-[10px] bg-white shadow-[0px_4px_18px_rgba(0,0,0,0.12)] transition-transform hover:scale-[1.02] dark:bg-[#101111]"
                   style={{ width: CARD_WIDTH }}
                 >
                   <img
@@ -586,7 +616,7 @@ const LandlordHomepage: FunctionComponent = () => {
                   />
                   <div className="flex flex-col gap-[8px] p-[12px]">
                     <div className="flex items-center justify-between gap-[8px]">
-                      <b className="truncate font-['Inter',sans-serif] text-[16px] tracking-[-0.01em] text-black">
+                      <b className="truncate font-['Inter',sans-serif] text-[16px] tracking-[-0.01em] text-black dark:text-[#edf6f4]">
                         {facility.name}
                       </b>
                       <span className="flex shrink-0 items-center gap-[4px] rounded-[5px] border border-[#096c5b] px-[8px] py-[2px]">
@@ -622,7 +652,7 @@ const LandlordHomepage: FunctionComponent = () => {
                             WebkitTextFillColor: "transparent",
                           }}
                         >
-                          —
+                          ---
                         </b>
                       </div>
                       <div className="flex items-center gap-[6px]">
@@ -640,13 +670,13 @@ const LandlordHomepage: FunctionComponent = () => {
                             WebkitTextFillColor: "transparent",
                           }}
                         >
-                          —
+                          ---
                         </b>
                       </div>
-                      <div className="transition-opacity hover:opacity-70">
+                      <div className="flex h-[28px] w-[28px] items-center justify-center rounded-full bg-[#096c5b] transition-opacity hover:opacity-70">
                         <Icon
-                          icon="solar:eye-bold"
-                          className="h-[24px] w-[24px] text-[#096c5b]"
+                          icon="solar:arrow-right-bold"
+                          className="h-[14px] w-[14px] text-white"
                           aria-hidden="true"
                         />
                       </div>
@@ -657,105 +687,35 @@ const LandlordHomepage: FunctionComponent = () => {
             </div>
           </section>
 
-          {/* Pending + Visits */}
-          <div className="grid grid-cols-1 gap-[16px] sm:grid-cols-2">
-            {[
-              {
-                title: "Pending Applications",
-                to: "/landlord/tenants/unvalidated",
-                items: PENDING,
-              },
-              {
-                title: "Scheduled Visits",
-                to: "/landlord/visits",
-                items: VISITS,
-              },
-            ].map((panel) => (
-              <section
-                key={panel.title}
-                className="flex flex-col gap-[12px] rounded-[12px] border border-[#f0f0f0] p-[24px]"
-              >
-                <Link
-                  to={panel.to}
-                  className="flex items-center gap-[8px] font-['Inter',sans-serif] text-[18px] font-bold tracking-[-0.01em] text-[#096c5b] transition-opacity hover:opacity-70"
-                >
-                  {panel.title}
-                  <Icon
-                    icon="radix-icons:arrow-top-right"
-                    className="h-[20px] w-[20px]"
-                    aria-hidden="true"
-                  />
-                </Link>
-                <div className="h-[2px] w-full rounded-full bg-[#f0f0f0]" />
-                <div className="flex flex-col gap-[12px]">
-                  {panel.items.map((item) => (
-                    <PersonRow key={item.email} {...item} />
-                  ))}
-                </div>
-              </section>
-            ))}
-          </div>
         </div>
 
         {/* Right sidebar */}
-        <aside className="flex w-full flex-col gap-[32px] lg:w-[280px] lg:shrink-0 lg:pt-[60px]">
-          <div className="flex flex-col gap-[8px]">
-            <Avatar className="h-[74px] w-[74px]" />
-            <div className="flex items-center gap-[6px]">
-              <b className="font-['Inter',sans-serif] text-[24px] leading-[32px] text-black">
-                Quevin James A. Custodio
-              </b>
-              <Icon
-                icon="solar:verified-check-bold"
-                className="h-[24px] w-[24px] shrink-0 text-[#096c5b]"
-                aria-hidden="true"
-              />
-            </div>
-            <span className="font-['Inter',sans-serif] text-[14px] text-[#666]">
-              qcustodio@gmail.com
-            </span>
-          </div>
-          <section className="flex flex-col gap-[12px]">
-            <b className="font-['Inter',sans-serif] text-[14px] text-black">
-              Activity
-            </b>
-            <div className="flex flex-col gap-[12px]">
-              {ACTIVITY.map((a) => (
-                <div
-                  key={a.name + a.time}
-                  className="flex items-center gap-[8px] rounded-[8px] border border-[#f0f0f0] px-[12px] py-[10px]"
-                >
-                  <Avatar className="h-[40px] w-[40px]" />
-                  <div className="flex flex-1 flex-col gap-[4px] overflow-hidden">
-                    <div className="flex items-center justify-between gap-[4px]">
-                      <b className="truncate font-['Inter',sans-serif] text-[14px] text-black">
-                        {a.name}
-                      </b>
-                      <span className="shrink-0 font-['Inter',sans-serif] text-[8px] font-medium text-[#8a9099]">
-                        {a.time}
-                      </span>
-                    </div>
-                    <span className="truncate font-['Lora',serif] text-[12px] font-semibold text-[#8a9099]">
-                      {a.action}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
+        <aside className="flex w-full flex-col gap-[32px] xl:pt-[52px]">
+          <DashboardSidePanel
+            title="Pending Applications"
+            to="/landlord/tenants/unvalidated"
+            items={PENDING}
+          />
+          <DashboardSidePanel
+            title="Scheduled Visits"
+            to="/landlord/visits"
+            items={VISITS}
+          />
         </aside>
       </div>
       {/* ======= FLOATING ICON ========== */}
-      <div
+      <button
+        type="button"
         className="help-button-animated z-[1000] cursor-pointer transition-all hover:scale-110 active:scale-95"
         onClick={() => setShowHelp(!showHelp)}
+        aria-label="Open dashboard help"
       >
         <img
           src={TutorialIcon}
           alt="Help"
           className="w-16 h-16 drop-shadow-lg"
         />
-      </div>
+      </button>
       <NotifyTenantsPopup
         isOpen={showNotify}
         onClose={() => setShowNotify(false)}
