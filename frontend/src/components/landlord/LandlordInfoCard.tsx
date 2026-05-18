@@ -35,11 +35,12 @@ const PLACEHOLDER = '- - - - -';
 type FieldProps = {
   label: string;
   onEdit?: () => void;
+  isEditing?: boolean;
   to?: string;
   children: ReactNode;
 };
 
-const Field = ({ label, onEdit, to, children }: FieldProps) => {
+const Field = ({ label, onEdit, isEditing, to, children }: FieldProps) => {
   const body = (
     <>
       <div className="flex items-center gap-[8px]">
@@ -54,10 +55,15 @@ const Field = ({ label, onEdit, to, children }: FieldProps) => {
               e.stopPropagation();
               onEdit();
             }}
-            aria-label={`Edit ${label.toLowerCase()}`}
-            className="flex h-[20px] w-[20px] shrink-0 cursor-pointer items-center justify-center text-[#2f3136] transition-colors hover:text-[#096c5b]"
+            aria-label={isEditing ? `Save ${label.toLowerCase()}` : `Edit ${label.toLowerCase()}`}
+            className="flex h-[20px] w-[20px] shrink-0 cursor-pointer items-center justify-center transition-colors focus:outline-none hover:opacity-80"
           >
-            <Icon icon="iconamoon:edit" className="h-[18px] w-[18px]" aria-hidden="true" />
+            <Icon
+              icon={isEditing ? 'solar:check-read-linear' : 'iconamoon:edit'}
+              className="h-[18px] w-[18px]"
+              color="#096C5B"
+              aria-hidden="true"
+            />
           </button>
         )}
       </div>
@@ -154,7 +160,11 @@ const LandlordInfoCard = ({
 
         <div className="flex flex-col gap-[16px]">
           <Field label="Name">{info.fullName}</Field>
-          <Field label="Contact number" onEdit={onEditContact}>
+          <Field
+            label="Contact number"
+            isEditing={isEditing}
+            onEdit={() => (isEditing ? handleSave() : setIsEditing(true))}
+          >
             {isEditing ? (
               <input
                 type="text"
@@ -175,12 +185,17 @@ const LandlordInfoCard = ({
                 }}
                 className="border-b border-[#096C5B] text-[14px] bg-transparent outline-none w-[200px] py-1"
                 onKeyDown={(e) => e.key === 'Enter' && handleSave()}
+                autoFocus
               />
             ) : (
               redactContact(contactNumberOnEdit)
             )}
           </Field>
-          <Field label="Home Address" onEdit={onEditHomeAddress}>
+          <Field
+            label="Home Address"
+            isEditing={isEditingAddress}
+            onEdit={() => (isEditingAddress ? handleSaveAddress() : setIsEditingAddress(true))}
+          >
             {isEditingAddress ? (
               <input
                 type="text"
@@ -192,6 +207,7 @@ const LandlordInfoCard = ({
                 }}
                 className="border-b border-[#096C5B] text-[14px] bg-transparent outline-none w-[300px] py-1 text-black"
                 onKeyDown={(e) => e.key === 'Enter' && handleSaveAddress()}
+                autoFocus
               />
             ) : (
               homeAddressOnEdit
