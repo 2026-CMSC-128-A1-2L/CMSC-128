@@ -9,6 +9,7 @@ import { userDocuments } from '../../../../components/user/user-verification/Use
 import { FileService } from '../../../../service/FileService';
 import { UserService } from '../../../../service/UserService';
 import { useAuthStore } from '../../../../store/useAuthStore';
+import { SkeletonBlock } from '../../../../components/general/Skeleton';
 
 interface UserVerifProps {
   verificationStep: number;
@@ -197,8 +198,10 @@ const UserVerif: FunctionComponent<UserVerifProps> = ({ verificationStep, onStep
       <TutorialBubble show={showHelp} onClose={() => setShowHelp(false)} />
 
       {isLoading && (
-        <div className="self-stretch px-num-32 text-left text-sm font-semibold text-slategray">
-          Loading verification status...
+        <div className="self-stretch flex flex-col gap-4 px-num-32">
+          <SkeletonBlock className="h-6 w-56" />
+          <SkeletonBlock className="h-20 w-full rounded-2xl" />
+          <SkeletonBlock className="h-20 w-full rounded-2xl" />
         </div>
       )}
 

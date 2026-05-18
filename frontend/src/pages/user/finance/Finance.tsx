@@ -9,6 +9,7 @@ import SubmitReceipt from '../../../components/user/finance/SubmitReceipt';
 import MonthlyExpensesChart from '../../../components/user/finance/MonthlyExpensesChart';
 import { useFinance } from '../../../hooks/useFinance';
 import type { BillListItem } from '../../../hooks/useFinance';
+import { SkeletonBlock } from '../../../components/general/Skeleton';
 
 const formatDate = (iso: string) =>
   new Date(iso).toLocaleDateString('en-US', {
@@ -109,8 +110,22 @@ const TenantFinancePage: FunctionComponent = () => {
 
   if (isLoading)
     return layout(
-      <div className="flex-1 flex items-center justify-center py-20">
-        <div>Loading finance data…</div>
+      <div className="flex-1 flex flex-col px-4 sm:px-6 lg:px-8 pt-8 md:pt-12 lg:pt-16 pb-10">
+        <div className="flex flex-col gap-3 mb-6">
+          <SkeletonBlock className="h-8 w-32" />
+          <div className="h-0.5 rounded-full bg-whitesmoke-200 dark:bg-[#242626]" />
+        </div>
+        <div className="mb-6 flex flex-col gap-3">
+          <SkeletonBlock className="h-7 w-64" />
+          <SkeletonBlock className="h-4 w-full max-w-xl" />
+        </div>
+        <div className="flex flex-col gap-4 lg:flex-row">
+          <SkeletonBlock className="h-[520px] flex-1 rounded-2xl" />
+          <div className="flex flex-1 flex-col gap-4">
+            <SkeletonBlock className="h-[250px] rounded-2xl" />
+            <SkeletonBlock className="h-[250px] rounded-2xl" />
+          </div>
+        </div>
       </div>,
     );
 

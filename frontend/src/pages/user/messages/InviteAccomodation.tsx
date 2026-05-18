@@ -1,9 +1,16 @@
-import { type FunctionComponent } from 'react';
-import { useLocation } from 'react-router-dom';
-import NotificationDetail from '../../../components/general/NotificationDetail';
+import { type FunctionComponent, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import PortalPopup from '../../../components/user/user-invitation/PortalPopup';
+import JoinedDormitoryPopup from '../../../components/user/user-invitation/JoinedDormitoryPopup';
+import logoLike from '../../../../assets/logo_like.svg';
 
 const InviteAccomodation: FunctionComponent = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const [isJoinedDormitoryPopupOpen, setJoinedDormitoryPopupOpen] = useState(false);
+
+  const openJoinedDormitoryPopup = () => setJoinedDormitoryPopupOpen(true);
+  const closeJoinedDormitoryPopup = () => setJoinedDormitoryPopupOpen(false);
 
   // Determine which notification data to show based on the route
   const getNotificationData = () => {

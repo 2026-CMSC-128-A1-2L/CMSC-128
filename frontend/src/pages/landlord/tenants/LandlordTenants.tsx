@@ -18,6 +18,7 @@ import {
 import { pendingApplications, type Tenant } from '../../../data/landlordTenants';
 import { FacilityService } from '../../../service/FacilityService';
 import { useDebouncedValue } from '../../../hooks/useDebouncedValue';
+import { CardGridSkeleton } from '../../../components/general/Skeleton';
 
 const LandlordTenants = () => {
   const navigate = useNavigate();
@@ -116,16 +117,7 @@ const LandlordTenants = () => {
         </section>
 
         {isLoading ? (
-          <div className="flex min-h-[320px] w-full flex-col items-center justify-center gap-[16px] rounded-[16px] border border-dashed border-[#f0f0f0] bg-white p-[32px] text-center">
-            <Icon
-              icon="eos-icons:loading"
-              className="h-[48px] w-[48px] text-[#096c5b]"
-              aria-hidden="true"
-            />
-            <p className="font-['Inter',sans-serif] text-[16px] font-bold text-[#2f3136]">
-              Loading tenants...
-            </p>
-          </div>
+          <CardGridSkeleton cards={6} cardClassName="h-[150px]" />
         ) : tenants.length === 0 ? (
           <div className="flex min-h-[320px] w-full flex-col items-center justify-center gap-[16px] rounded-[16px] border border-dashed border-[#f0f0f0] bg-white p-[32px] text-center">
             <Icon

@@ -13,6 +13,7 @@ import ConfirmReview from '../../../../components/user/Profile/ConfirmReview';
 import { FileService } from '../../../../service/FileService';
 import { ReviewService } from '../../../../service/ReviewService';
 import { useCurrentDormReviewDetails } from './useCurrentDormReviewDetails';
+import { SkeletonBlock } from '../../../../components/general/Skeleton';
 
 type ReviewDraft = {
   listingId?: string;
@@ -237,15 +238,17 @@ const RateAndReview: FunctionComponent = () => {
                   </div>
 
                   <div className="self-stretch h-[405px] flex flex-col items-center gap-[18px] shrink-0 text-darkslategray-100 font-inter">
-                    {(isLoading || error || submitError) && (
+                    {isLoading && (
+                      <div className="w-[916px] rounded-xl border border-whitesmoke-200 bg-white px-4 py-4">
+                        <SkeletonBlock className="mb-3 h-4 w-56" />
+                        <SkeletonBlock className="h-10 w-full rounded-xl" />
+                      </div>
+                    )}
+                    {(error || submitError) && (
                       <div
-                        className={`w-[916px] rounded-xl border px-4 py-3 text-center text-sm font-semibold ${
-                          error || submitError
-                            ? 'border-crimson/30 bg-crimson/5 text-crimson'
-                            : 'border-whitesmoke-200 bg-aliceblue text-dimgray'
-                        }`}
+                        className="w-[916px] rounded-xl border border-crimson/30 bg-crimson/5 px-4 py-3 text-center text-sm font-semibold text-crimson"
                       >
-                        {submitError ?? error ?? 'Loading your current dorm details...'}
+                        {submitError ?? error}
                       </div>
                     )}
                     <div className="self-stretch flex flex-col items-start">

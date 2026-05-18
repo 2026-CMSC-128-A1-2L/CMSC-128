@@ -7,6 +7,7 @@ import type { Billing } from '../types/billing';
 import type { TenantBilling } from '../../../../hooks/useFacilityFinance';
 import { BillingService } from '../../../../service/BillingService';
 import { UnitService } from '../../../../service/UnitService';
+import { TableSkeletonRows } from '../../../general/Skeleton';
 
 const TABLE_COLUMNS = [
   { label: 'Room', className: 'w-[8%]' },
@@ -300,14 +301,7 @@ const TenantBillingsTab: FunctionComponent<TenantBillingsTabProps> = ({
 
               <tbody>
                 {isLoading && (
-                  <tr>
-                    <td
-                      colSpan={TABLE_COLUMNS.length}
-                      className="py-12 text-center text-darkslategray-100 text-[13px] dark:text-[#a4acba]"
-                    >
-                      Loading billings...
-                    </td>
-                  </tr>
+                  <TableSkeletonRows columns={TABLE_COLUMNS.length} rows={6} />
                 )}
 
                 {!isLoading && filteredBillings.length === 0 && (

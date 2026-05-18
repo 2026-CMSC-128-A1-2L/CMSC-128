@@ -1,4 +1,4 @@
-import { FunctionComponent, useState, useEffect } from "react";
+import { type FunctionComponent, useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Icon } from "@iconify/react";
 import { useBuildingStore } from "./useBuildingStore";

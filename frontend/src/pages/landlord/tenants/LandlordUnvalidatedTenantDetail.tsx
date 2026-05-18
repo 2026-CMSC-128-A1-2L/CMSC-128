@@ -14,6 +14,7 @@ import type { PendingApplication, SubmittedDocument } from '../../../data/landlo
 import { ApplicationService } from '../../../service/ApplicationService';
 import { UnitService } from '../../../service/UnitService';
 import { useAuthStore } from '../../../store/useAuthStore';
+import { SkeletonBlock } from '../../../components/general/Skeleton';
 
 type RawDocument = {
   docId?: string;
@@ -275,8 +276,27 @@ const LandlordUnvalidatedTenantDetail = () => {
           { label: 'Unvalidated Applications', to: '/landlord/tenants/unvalidated' },
         ]}
       >
-        <div className="rounded-[16px] border border-[#f0f0f0] bg-white p-[32px] text-center font-['Inter',sans-serif] text-[14px] font-bold text-[#666]">
-          Loading application...
+        <div className="flex w-full flex-col gap-[24px] rounded-[16px] border border-[#f0f0f0] bg-white p-[32px] dark:border-[#303331] dark:bg-[#141515]">
+          <div className="flex flex-col gap-3">
+            <SkeletonBlock className="h-7 w-64" />
+            <SkeletonBlock className="h-4 w-80" />
+          </div>
+          <div className="grid w-full gap-x-[48px] gap-y-[24px] md:grid-cols-[200px_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)]">
+            <SkeletonBlock className="h-[200px] w-[200px] rounded-full" />
+            {['application-info-a', 'application-info-b', 'application-info-c'].map((key) => (
+              <div key={key} className="flex flex-col gap-4">
+                <SkeletonBlock className="h-4 w-24" />
+                <SkeletonBlock className="h-5 w-40" />
+                <SkeletonBlock className="h-4 w-28" />
+                <SkeletonBlock className="h-5 w-48" />
+              </div>
+            ))}
+          </div>
+          <div className="grid gap-4 md:grid-cols-3">
+            <SkeletonBlock className="h-32 rounded-xl" />
+            <SkeletonBlock className="h-32 rounded-xl" />
+            <SkeletonBlock className="h-32 rounded-xl" />
+          </div>
         </div>
       </LandlordLayout>
     );

@@ -301,8 +301,24 @@ const BuildingInfo = () => {
         activeSidebarItem="properties"
         breadcrumbs={[{ label: 'Properties', to: '/landlord/properties' }]}
       >
-        <div className="flex items-center justify-center h-64 text-gray-500">
-          Loading facility...
+        <div className="flex w-full flex-col gap-6">
+          <div className="grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(320px,0.8fr)]">
+            <div className="h-[360px] animate-pulse rounded-2xl bg-[#e8f0ef] dark:bg-[#242928]" />
+            <div className="flex flex-col gap-4 rounded-2xl border border-[#f0f0f0] bg-white p-6 dark:border-[#303331] dark:bg-[#141515]">
+              <div className="h-7 w-2/3 animate-pulse rounded-lg bg-[#e8f0ef] dark:bg-[#242928]" />
+              <div className="h-4 w-full animate-pulse rounded-lg bg-[#e8f0ef] dark:bg-[#242928]" />
+              <div className="h-4 w-3/4 animate-pulse rounded-lg bg-[#e8f0ef] dark:bg-[#242928]" />
+              <div className="grid grid-cols-2 gap-3 pt-4">
+                <div className="h-20 animate-pulse rounded-xl bg-[#e8f0ef] dark:bg-[#242928]" />
+                <div className="h-20 animate-pulse rounded-xl bg-[#e8f0ef] dark:bg-[#242928]" />
+              </div>
+            </div>
+          </div>
+          <div className="grid gap-4 md:grid-cols-3">
+            <div className="h-28 animate-pulse rounded-xl bg-[#e8f0ef] dark:bg-[#242928]" />
+            <div className="h-28 animate-pulse rounded-xl bg-[#e8f0ef] dark:bg-[#242928]" />
+            <div className="h-28 animate-pulse rounded-xl bg-[#e8f0ef] dark:bg-[#242928]" />
+          </div>
         </div>
       </LandlordLayout>
     );

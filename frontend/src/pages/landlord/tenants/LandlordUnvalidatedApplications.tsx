@@ -8,6 +8,7 @@ import UnvalidatedCardActionsPopup from '../../../components/landlord/tenants/po
 import type { PendingApplication } from '../../../data/landlordTenants';
 import { ApplicationService } from '../../../service/ApplicationService';
 import { useAuthStore } from '../../../store/useAuthStore';
+import { CardGridSkeleton } from '../../../components/general/Skeleton';
 
 type RawApplication = {
   _id?: string;
@@ -129,9 +130,7 @@ const LandlordUnvalidatedApplications = () => {
         </section>
 
         {isLoading ? (
-          <div className="flex min-h-[320px] items-center justify-center rounded-[16px] border border-[#f0f0f0] bg-white font-['Inter',sans-serif] text-[14px] font-bold text-[#666]">
-            Loading applications...
-          </div>
+          <CardGridSkeleton cards={6} cardClassName="h-[150px]" />
         ) : applications.length === 0 ? (
           <div className="flex min-h-[320px] w-full flex-col items-center justify-center gap-[16px] rounded-[16px] border border-dashed border-[#f0f0f0] bg-white p-[32px] text-center">
             <Icon

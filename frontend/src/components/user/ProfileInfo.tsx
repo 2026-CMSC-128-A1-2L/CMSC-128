@@ -6,6 +6,7 @@ import VerifiedBadge from '../../../assets/verified_badge.svg';
 import { FileService, getPublicFileUrl } from '../../service/FileService';
 import { UserService } from '../../service/UserService';
 import { useAuthStore } from '../../store/useAuthStore';
+import { SkeletonBlock } from '../general/Skeleton';
 
 type VerificationStatus = 'pending' | 'submitted' | 'rejected' | 'approved';
 type AccountStatus = 'setup' | 'unverified' | 'verified' | 'inactive' | 'disabled' | 'legacy';
@@ -262,7 +263,7 @@ const ProfileInfo = () => {
           <b className="relative">{roleLabel(user?.userType)} Profile</b>
           <div className="flex items-center justify-center gap-2.5 text-[24px] text-darkslategray-200 dark:text-[#b9eadf]">
             <b className="relative leading-8">
-              {isLoading ? 'Loading profile...' : formatName(user)}
+              {isLoading ? <SkeletonBlock className="h-8 w-56" /> : formatName(user)}
             </b>
             {isVerified && <img className="h-6 w-6 relative" alt="Verified" src={VerifiedBadge} />}
           </div>

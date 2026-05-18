@@ -6,6 +6,7 @@ import { Icon } from '@iconify/react';
 import { UserService } from '../../service/UserService';
 import { ReportService } from '../../service/ReportService';
 import { FacilityService } from '../../service/FacilityService';
+import { SkeletonBlock } from '../../components/general/Skeleton';
 
 type UserData = {
   _id: string;
@@ -74,8 +75,10 @@ function Analytics() {
           FacilityService.getFacilities(),
         ]);
 
-        if (usersRes.status === 'fulfilled') setUsers(usersRes.value.data ?? []);
-        if (reportsRes.status === 'fulfilled') setReports(reportsRes.value.data ?? []);
+        if (usersRes.status === 'fulfilled') setUsers((usersRes.value.data ?? []) as UserData[]);
+        if (reportsRes.status === 'fulfilled') {
+          setReports((reportsRes.value.data ?? []) as ReportData[]);
+        }
         if (facilitiesRes.status === 'fulfilled') {
           const facilities = facilitiesRes.value.data ?? [];
           setFacilityCount(Array.isArray(facilities) ? facilities.length : 0);
@@ -183,9 +186,13 @@ function Analytics() {
               {statsCards.map((card) => (
                 <div key={card.label} className="flex flex-1 flex-col gap-1">
                   <div className="flex items-center justify-between">
-                    <span className="font-['Outfit'] text-[40px] font-semibold text-black dark:text-[#d7e0ef]">
-                      {card.value}
-                    </span>
+                    {isLoading ? (
+                      <SkeletonBlock className="h-12 w-24" />
+                    ) : (
+                      <span className="font-['Outfit'] text-[40px] font-semibold text-black dark:text-[#d7e0ef]">
+                        {card.value}
+                      </span>
+                    )}
                     <div className="flex h-15 w-15 items-center justify-center rounded-xl border border-[#d0d0d0] dark:border-[#303331] bg-white dark:bg-[#1f2022] shadow-[0px_2px_10px_0px_rgba(124,141,181,0.12)]">
                       <Icon
                         icon={card.iconName}
@@ -254,11 +261,28 @@ function Analytics() {
                     style={{ height: CHART_HEIGHT }}
                   >
                     {isLoading ? (
-                      <p className="absolute inset-0 flex items-center justify-center font-['Outfit'] text-[16px] text-[#7c8db5] dark:text-[#a4acba]">
-                        Loading chart data...
-                      </p>
+                      <div className="absolute inset-0 flex items-end gap-4 px-8 py-7">
+                        {[
+                          { id: 'month-a', height: 62 },
+                          { id: 'month-b', height: 38 },
+                          { id: 'month-c', height: 70 },
+                          { id: 'month-d', height: 46 },
+                          { id: 'month-e', height: 82 },
+                          { id: 'month-f', height: 54 },
+                          { id: 'month-g', height: 74 },
+                        ].map(({ id, height }) => (
+                          <div key={id} className="flex flex-1 flex-col justify-end gap-3">
+                            <SkeletonBlock
+                              className="w-full rounded-t-lg"
+                              style={{ height: `${height}%` }}
+                            />
+                            <SkeletonBlock className="h-3 w-full rounded-full" />
+                          </div>
+                        ))}
+                      </div>
                     ) : (
                       <svg
+                        aria-hidden="true"
                         viewBox={`0 0 100 ${CHART_HEIGHT}`}
                         preserveAspectRatio="none"
                         className="h-full w-full"
@@ -293,7 +317,7 @@ function Analytics() {
                           const segW = 100 / Math.max(landlordData.length - 1, 1);
                           return (
                             <circle
-                              key={`ld-${i}`}
+                              key={`landlord-${monthLabels[i]}`}
                               cx={i * segW}
                               cy={toY(v)}
                               r="1.2"
@@ -317,7 +341,7 @@ function Analytics() {
                           const segW = 100 / Math.max(studentData.length - 1, 1);
                           return (
                             <circle
-                              key={`sd-${i}`}
+                              key={`student-${monthLabels[i]}`}
                               cx={i * segW}
                               cy={toY(v)}
                               r="1.2"

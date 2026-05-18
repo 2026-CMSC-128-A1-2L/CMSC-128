@@ -1,4 +1,4 @@
-import { FunctionComponent, useCallback, useState } from 'react';
+import { type FunctionComponent, useCallback, useState } from 'react';
 import { Icon } from '@iconify/react';
 import { useBuildingStore } from './useBuildingStore';
 import type {

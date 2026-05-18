@@ -7,6 +7,7 @@ import AdminPagination from '../../components/admin/AdminPagination';
 import ReportDetailModal from '../../components/admin/ReportDetailModal';
 import { ReportService } from '../../service/ReportService';
 import { useDebouncedValue } from '../../hooks/useDebouncedValue';
+import { TableSkeletonRows } from '../../components/general/Skeleton';
 
 type ReportUser = {
   _id: string;
@@ -21,8 +22,8 @@ type ReportData = {
   description: string;
   flags: string[];
   evidence: string[];
-  status: 'pending' | 'resolved' | 'dismissed';
-  __t?: 'ListingReport' | 'UserReport';
+  status: string;
+  __t?: string;
   listingId?: string;
   facilityId?: string;
   userReported?: string | ReportUser;
@@ -197,14 +198,7 @@ function Reports() {
                   </thead>
                   <tbody>
                     {isLoading ? (
-                      <tr>
-                        <td
-                          colSpan={tableHeaders.length}
-                          className="px-6 py-8 text-center font-['Poppins'] text-[#7c8db5] dark:text-[#a4acba]"
-                        >
-                          Loading reports...
-                        </td>
-                      </tr>
+                      <TableSkeletonRows columns={tableHeaders.length} rows={6} actionColumn />
                     ) : paginatedReports.length === 0 ? (
                       <tr>
                         <td

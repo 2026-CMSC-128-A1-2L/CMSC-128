@@ -11,6 +11,7 @@ import FinalizeApplication from '../../../../components/user/Profile/FinalizeApp
 import { ApplicationService } from '../../../../service/ApplicationService';
 import { FileService } from '../../../../service/FileService';
 import { UserService } from '../../../../service/UserService';
+import { SkeletonBlock } from '../../../../components/general/Skeleton';
 
 const documentRequirements = {
   id: 'official-id',
@@ -320,7 +321,11 @@ const FinalizedApplicationPage1a: FunctionComponent = () => {
 
                           <div className="flex items-center justify-center gap-2.5 text-[24px] text-darkslategray-200">
                             <b className="relative leading-8">
-                              {isProfileLoading ? 'Loading profile...' : formatName(user)}
+                              {isProfileLoading ? (
+                                <SkeletonBlock className="h-8 w-56" />
+                              ) : (
+                                formatName(user)
+                              )}
                             </b>
 
                             {isVerified && (

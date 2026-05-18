@@ -66,6 +66,7 @@ const Visits: FunctionComponent = () => {
         const mapped: VisitSlot[] = response.data.data.map((b: any) => ({
           id: b._id,
           visitorName: b.userId?.firstName ? `${b.userId.firstName} ${b.userId.lastName}` : 'Student',
+          propertyName: b.facilityId?.name ?? b.listingId?.facilityId?.name ?? 'Property',
           time: new Date(b.startDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
           status: b.status,
           dayOfWeek: new Date(b.startDate).getDay(),
@@ -181,7 +182,7 @@ const Visits: FunctionComponent = () => {
       id: v.id,
       visitorName: v.visitorName,
       dateTime: `${v.startDate.toLocaleDateString()} - ${v.time}`,
-      propertyName: v.propertyName,
+      propertyName: v.propertyName ?? 'Property',
       buildingName: 'Building',
     }));
 

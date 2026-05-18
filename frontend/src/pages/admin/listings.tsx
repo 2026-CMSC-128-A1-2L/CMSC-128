@@ -7,6 +7,7 @@ import FacilityReviewModal from '../../components/admin/FacilityReviewModal';
 import PageBackground from '../../components/general/PageBackground';
 import { FacilityService } from '../../service/FacilityService';
 import { useDebouncedValue } from '../../hooks/useDebouncedValue';
+import { TableSkeletonRows } from '../../components/general/Skeleton';
 
 type FacilityDocument = {
   docId: string;
@@ -214,14 +215,7 @@ function Listings() {
                   </thead>
                   <tbody>
                     {isLoading ? (
-                      <tr>
-                        <td
-                          colSpan={tableHeaders.length}
-                          className="px-6 py-8 text-center font-['Poppins'] text-[#7c8db5] dark:text-[#a4acba]"
-                        >
-                          Loading facilities...
-                        </td>
-                      </tr>
+                      <TableSkeletonRows columns={tableHeaders.length} rows={6} actionColumn />
                     ) : paginatedFacilities.length === 0 ? (
                       <tr>
                         <td

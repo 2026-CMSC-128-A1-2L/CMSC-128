@@ -12,6 +12,7 @@ import ApplicantReviewModal, {
 } from "../../components/admin/ApplicantReviewModal";
 import { DocumentService } from "../../service/DocumentService";
 import { UserService } from "../../service/UserService";
+import { TableSkeletonRows } from "../../components/general/Skeleton";
 
 const tableHeaders = [
   "Name",
@@ -279,14 +280,7 @@ function Applications() {
                   </thead>
                   <tbody>
                     {isLoading ? (
-                      <tr>
-                        <td
-                          colSpan={tableHeaders.length}
-                          className="px-6 py-8 text-center dark:text-[#a4acba]"
-                        >
-                          Loading applications...
-                        </td>
-                      </tr>
+                      <TableSkeletonRows columns={tableHeaders.length} rows={6} actionColumn />
                     ) : paginatedApplicants.length === 0 ? (
                       <tr>
                         <td

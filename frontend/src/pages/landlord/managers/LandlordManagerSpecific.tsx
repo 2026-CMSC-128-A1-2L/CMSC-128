@@ -5,6 +5,7 @@ import LandlordLayout from "../../../components/landlord/LandlordLayout";
 import UpdateManager from "../../../components/landlord/LandlordManagerUpdateController";
 import { FacilityService } from "../../../service/FacilityService";
 import { useAuthStore } from "../../../store/useAuthStore";
+import { SkeletonBlock } from "../../../components/general/Skeleton";
 
 const permissionLabels: Record<string, string> = {
   deleteListings: "Delete Listings",
@@ -69,10 +70,23 @@ const ViewSpecificManager = () => {
         activeSidebarItem="managers"
         breadcrumbs={[{ label: "Managers", to: "/landlord/managers" }]}
       >
-        <div className="flex w-full items-center justify-center pt-[100px]">
-          <span className="font-['Inter',sans-serif] text-[16px] text-[#666]">
-            Loading...
-          </span>
+        <div className="flex w-full flex-col gap-[24px] pt-[16px]">
+          <section className="flex w-full flex-col gap-[13px] rounded-[17px] border border-[#f0f0f0] bg-white p-[34px] dark:border-[#303331] dark:bg-[#141515]">
+            <SkeletonBlock className="h-4 w-32" />
+            <SkeletonBlock className="h-8 w-56" />
+            <SkeletonBlock className="h-4 w-72" />
+            <div className="grid w-full gap-x-[48px] gap-y-[24px] py-[4px] md:grid-cols-[200px_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)]">
+              <SkeletonBlock className="h-[120px] w-[120px] rounded-full" />
+              {['manager-info-a', 'manager-info-b', 'manager-info-c'].map((key) => (
+                <div key={key} className="flex flex-col gap-4">
+                  <SkeletonBlock className="h-4 w-24" />
+                  <SkeletonBlock className="h-5 w-40" />
+                  <SkeletonBlock className="h-4 w-28" />
+                  <SkeletonBlock className="h-5 w-36" />
+                </div>
+              ))}
+            </div>
+          </section>
         </div>
       </LandlordLayout>
     );

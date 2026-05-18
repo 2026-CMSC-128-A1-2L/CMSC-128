@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Icon } from '@iconify/react';
 import footer_logo from '../../../../assets/footer_logo.svg';
 import SignInPopUp from '../../../components/general/SignInPopUp';
+import { SettingsPanelSkeleton } from '../../../components/general/Skeleton';
 
 type UserData = {
   emails: string[];
@@ -39,9 +40,7 @@ const Security: FunctionComponent = () => {
       </div>
 
       {loading ? (
-        <div className="self-stretch flex items-center justify-center py-10 text-dimgray text-sm">
-          Loading security information…
-        </div>
+        <SettingsPanelSkeleton />
       ) : (
         <div className="self-stretch flex flex-col items-start gap-3 text-num-14">
           <div className="self-stretch overflow-hidden flex items-start py-num-10 pl-num-0 pr-num-10 gap-2">

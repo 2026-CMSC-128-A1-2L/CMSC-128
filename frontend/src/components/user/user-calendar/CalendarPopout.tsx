@@ -3,6 +3,7 @@ import axios from 'axios';
 import { type FunctionComponent, useEffect, useMemo, useState } from 'react';
 import { BookingService, type VisitSlotAvailability } from '../../../service/BookingService';
 import { UserService } from '../../../service/UserService';
+import { SkeletonBlock } from '../../general/Skeleton';
 
 type BookingUser = {
   firstName?: string;
@@ -254,39 +255,55 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
           <div className="grid gap-2">
             <label className="grid gap-1.5">
               <span className="text-num-14 font-bold text-[#666]">First name</span>
-              <input
-                value={isLoadingUser ? 'Loading...' : firstName}
-                readOnly
-                placeholder="First name"
-                className="h-9 rounded-xl bg-white border border-[#e5e5e5] px-4 text-num-14 font-medium text-black outline-none placeholder:text-[#9b9b9b]"
-              />
+              {isLoadingUser ? (
+                <SkeletonBlock className="h-9 rounded-xl" />
+              ) : (
+                <input
+                  value={firstName}
+                  readOnly
+                  placeholder="First name"
+                  className="h-9 rounded-xl bg-white border border-[#e5e5e5] px-4 text-num-14 font-medium text-black outline-none placeholder:text-[#9b9b9b]"
+                />
+              )}
             </label>
             <label className="grid gap-1.5">
               <span className="text-num-14 font-bold text-[#666]">Last name</span>
-              <input
-                value={isLoadingUser ? 'Loading...' : lastName}
-                readOnly
-                placeholder="Last name"
-                className="h-9 rounded-xl bg-white border border-[#e5e5e5] px-4 text-num-14 font-medium text-black outline-none placeholder:text-[#9b9b9b]"
-              />
+              {isLoadingUser ? (
+                <SkeletonBlock className="h-9 rounded-xl" />
+              ) : (
+                <input
+                  value={lastName}
+                  readOnly
+                  placeholder="Last name"
+                  className="h-9 rounded-xl bg-white border border-[#e5e5e5] px-4 text-num-14 font-medium text-black outline-none placeholder:text-[#9b9b9b]"
+                />
+              )}
             </label>
             <label className="grid gap-1.5">
               <span className="text-num-14 font-bold text-[#666]">Email address</span>
-              <input
-                value={isLoadingUser ? 'Loading...' : email}
-                readOnly
-                placeholder="Email addr."
-                className="h-9 rounded-xl bg-white border border-[#e5e5e5] px-4 text-num-14 font-medium text-black outline-none placeholder:text-[#9b9b9b]"
-              />
+              {isLoadingUser ? (
+                <SkeletonBlock className="h-9 rounded-xl" />
+              ) : (
+                <input
+                  value={email}
+                  readOnly
+                  placeholder="Email addr."
+                  className="h-9 rounded-xl bg-white border border-[#e5e5e5] px-4 text-num-14 font-medium text-black outline-none placeholder:text-[#9b9b9b]"
+                />
+              )}
             </label>
             <label className="grid gap-1.5">
               <span className="text-num-14 font-bold text-[#666]">Home address</span>
-              <input
-                value={isLoadingUser ? 'Loading...' : (user?.address ?? '')}
-                readOnly
-                placeholder="Home address"
-                className="h-9 rounded-xl bg-white border border-[#e5e5e5] px-4 text-num-14 font-medium text-black outline-none placeholder:text-[#9b9b9b]"
-              />
+              {isLoadingUser ? (
+                <SkeletonBlock className="h-9 rounded-xl" />
+              ) : (
+                <input
+                  value={user?.address ?? ''}
+                  readOnly
+                  placeholder="Home address"
+                  className="h-9 rounded-xl bg-white border border-[#e5e5e5] px-4 text-num-14 font-medium text-black outline-none placeholder:text-[#9b9b9b]"
+                />
+              )}
             </label>
             <label className="grid gap-1.5">
               <span className="text-num-14 font-bold text-[#666]">
@@ -390,7 +407,7 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
               >
                 <span className="truncate">
                   {isLoadingSlots
-                    ? 'Loading...'
+                    ? 'Checking slots'
                     : selectedSlot
                       ? formatTimeRange(selectedSlot)
                       : availableSlots.length > 0

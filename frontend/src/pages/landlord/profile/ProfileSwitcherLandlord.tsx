@@ -12,6 +12,8 @@ const landlord: LandlordInfo = {
   displayName: 'Quevin Custodio',
   email: 'qacustodio@up.edu.ph',
   fullName: 'Quevin James A. Custodio',
+  contactNumber: '09123456789',
+  homeAddress: 'Los Banos, Laguna',
   role: 'Landlord',
   employees: ['Nathaniel Cunanan', 'Lance De Jesus'],
   verified: false,
@@ -26,6 +28,10 @@ type ProfileSwitcherLandlordProps = {
 const ProfileSwitcherLandlord = ({ initialTab = 'user profile' }: ProfileSwitcherLandlordProps) => {
   const [activeTab, setActiveTab] = useState<ProfileTab>(initialTab);
   const [showHelp, setShowHelp] = useState(false);
+  const [contactNumber, setContactNumber] = useState(landlord.contactNumber);
+  const [homeAddress, setHomeAddress] = useState(landlord.homeAddress);
+  const [isEditing, setIsEditing] = useState(false);
+  const [isEditingAddress, setIsEditingAddress] = useState(false);
 
   const handleTabChange = (tab: ProfileTab) => {
     setActiveTab(tab);
@@ -40,7 +46,19 @@ const ProfileSwitcherLandlord = ({ initialTab = 'user profile' }: ProfileSwitche
       ]}
     >
       <div className="landlord-profile-shell flex w-full flex-col gap-[20px] rounded-[16px] bg-white/70 p-[8px] pb-[32px] dark:bg-[#101111]/92 dark:text-[#edf6f4]">
-        <LandlordInfoCard info={landlord} />
+        <LandlordInfoCard
+          info={{ ...landlord, contactNumber, homeAddress }}
+          activeTab={activeTab === 'user profile' ? 'info' : 'verification'}
+          setActiveTab={(tab) => setActiveTab(tab === 'info' ? 'user profile' : 'verification')}
+          setContactNumber={setContactNumber}
+          setHomeAddress={setHomeAddress}
+          onEditContact={() => setIsEditing((current) => !current)}
+          onEditHomeAddress={() => setIsEditingAddress((current) => !current)}
+          setIsEditing={setIsEditing}
+          isEditing={isEditing}
+          setIsEditingAddress={setIsEditingAddress}
+          isEditingAddress={isEditingAddress}
+        />
 
         <div className="h-px w-full bg-[#e5e7eb]/70 dark:bg-[#303331]" />
 

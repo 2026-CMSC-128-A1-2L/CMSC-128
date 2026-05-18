@@ -1,24 +1,28 @@
 import { useEffect, useState } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
-import { Icon } from '@iconify/react';
 import LandlordLayout from '../../../components/landlord/LandlordLayout';
 import TenantAvatar from '../../../components/landlord/tenants/TenantAvatar';
 import TenantInfoField from '../../../components/landlord/tenants/TenantInfoField';
 import TenantProfileHeader from '../../../components/landlord/tenants/TenantProfileHeader';
 import SubmittedDocumentCard from '../../../components/landlord/tenants/SubmittedDocumentCard';
-import { type PaymentStatus, type Tenant } from '../../../data/landlordTenants';
+import type { PaymentStatus, Tenant } from '../../../data/landlordTenants';
 import { FacilityService } from '../../../service/FacilityService';
+import { SkeletonBlock } from '../../../components/general/Skeleton';
 
 const BILLING_STATUS_CLASS: Record<PaymentStatus, string> = {
   paid: 'text-[#096c5b]',
   pending: 'bg-linear-to-b from-[#c29722] to-[#f6b709] bg-clip-text text-transparent',
   overdue: 'bg-linear-to-b from-[#c00f0f] to-[#e44f4f] bg-clip-text text-transparent',
+  unpaid: 'text-[#666] dark:text-[#a4acba]',
+  partially_paid: 'bg-linear-to-t from-[#ffc273] to-[#fa7900] bg-clip-text text-transparent',
 };
 
 const BILLING_STATUS_LABEL: Record<PaymentStatus, string> = {
   paid: 'Paid',
   pending: 'Pending',
   overdue: 'Overdue',
+  unpaid: 'Unpaid',
+  partially_paid: 'Partially Paid',
 };
 
 const LandlordTenantDetail = () => {
@@ -56,17 +60,26 @@ const LandlordTenantDetail = () => {
     return (
       <LandlordLayout
         activeSidebarItem="tenants"
-        breadcrumbs={[{ label: 'My Tenants', to: '/landlord/tenants' }, { label: 'Loading...' }]}
+        breadcrumbs={[{ label: 'My Tenants', to: '/landlord/tenants' }, { label: 'Tenant details' }]}
       >
-        <div className="flex min-h-[320px] w-full flex-col items-center justify-center gap-[16px] rounded-[16px] border border-dashed border-[#f0f0f0] bg-white p-[32px] text-center dark:border-[#303331] dark:bg-[#141515]">
-          <Icon
-            icon="eos-icons:loading"
-            className="h-[48px] w-[48px] text-[#096c5b]"
-            aria-hidden="true"
-          />
-          <p className="font-['Inter',sans-serif] text-[16px] font-bold text-[#2f3136] dark:text-[#d7e0ef]">
-            Loading tenant details...
-          </p>
+        <div className="flex w-full flex-col gap-[24px] rounded-[16px] border border-solid border-[#f0f0f0] bg-white p-[32px] dark:border-[#303331] dark:bg-[#141515]">
+          <div className="flex flex-col gap-3">
+            <SkeletonBlock className="h-7 w-56" />
+            <SkeletonBlock className="h-4 w-72" />
+          </div>
+          <div className="grid w-full gap-x-[48px] gap-y-[24px] md:grid-cols-[200px_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)]">
+            <SkeletonBlock className="h-[200px] w-[200px] rounded-full" />
+            {['tenant-info-a', 'tenant-info-b', 'tenant-info-c'].map((key) => (
+              <div key={key} className="flex flex-col gap-4">
+                <SkeletonBlock className="h-4 w-24" />
+                <SkeletonBlock className="h-5 w-40" />
+                <SkeletonBlock className="h-4 w-28" />
+                <SkeletonBlock className="h-5 w-48" />
+                <SkeletonBlock className="h-4 w-32" />
+                <SkeletonBlock className="h-5 w-36" />
+              </div>
+            ))}
+          </div>
         </div>
       </LandlordLayout>
     );

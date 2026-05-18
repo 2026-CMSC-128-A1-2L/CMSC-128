@@ -8,6 +8,7 @@ import RegistrationFinalize from '../components/general/RegistrationFinalize';
 import { UserService } from '../service/UserService';
 import type { OnboardSelfRequestBody } from '../interface/user';
 import ProgressBar from '../components/user/ProgressBar';
+import { SkeletonBlock } from '../components/general/Skeleton';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -141,8 +142,15 @@ const Registration: FunctionComponent = () => {
   const renderStepContent = () => {
     if (isLoadingSelf) {
       return (
-        <div className="flex min-h-[260px] items-center justify-center text-sm font-semibold text-slategray">
-          Loading your account...
+        <div className="flex min-h-[260px] flex-col gap-5 px-8 py-6">
+          <SkeletonBlock className="h-7 w-48" />
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <SkeletonBlock className="h-14 rounded-2xl" />
+            <SkeletonBlock className="h-14 rounded-2xl" />
+            <SkeletonBlock className="h-14 rounded-2xl" />
+            <SkeletonBlock className="h-14 rounded-2xl" />
+          </div>
+          <SkeletonBlock className="h-28 rounded-2xl" />
         </div>
       );
     }

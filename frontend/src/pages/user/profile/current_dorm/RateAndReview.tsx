@@ -14,6 +14,7 @@ import RateInfoContent from '../../../../components/user/ratereview/RateInfoCont
 
 import { useState } from 'react';
 import { useCurrentDormReviewDetails } from './useCurrentDormReviewDetails';
+import { SkeletonBlock } from '../../../../components/general/Skeleton';
 
 export default function RateAndReview() {
   const StepIndicatorStages = ['Information', 'Reviewing', 'Finalize'];
@@ -37,8 +38,21 @@ export default function RateAndReview() {
         />
         <div className="flex flex-col items-center max-w-[1128px] bg-white border border-whitesmoke-200 rounded-2xl overflow-hidden shadow-sm">
           {isLoading && (
-            <div className="w-full px-10 py-20 text-center font-semibold text-dimgray">
-              Loading your current dorm...
+            <div className="flex w-full flex-col gap-6 p-8">
+              <div className="flex gap-6">
+                <SkeletonBlock className="h-40 w-56 shrink-0 rounded-2xl" />
+                <div className="flex flex-1 flex-col gap-4">
+                  <SkeletonBlock className="h-7 w-2/5" />
+                  <SkeletonBlock className="h-4 w-3/4" />
+                  <SkeletonBlock className="h-4 w-1/2" />
+                  <div className="flex gap-2 pt-2">
+                    <SkeletonBlock className="h-8 w-20 rounded-full" />
+                    <SkeletonBlock className="h-8 w-24 rounded-full" />
+                    <SkeletonBlock className="h-8 w-16 rounded-full" />
+                  </div>
+                </div>
+              </div>
+              <SkeletonBlock className="h-16 w-full rounded-2xl" />
             </div>
           )}
 

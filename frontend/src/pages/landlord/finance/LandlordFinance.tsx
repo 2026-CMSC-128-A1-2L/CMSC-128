@@ -7,6 +7,7 @@ import IncomeTrendChart from '../../../components/landlord/LandlordFinance/overv
 import PropertyCard from '../../../components/landlord/LandlordFinance/overview/PropertyCard';
 import { Icon } from '@iconify/react';
 import { useLandlordFinance } from '../../../hooks/useLandlordFinance';
+import { SkeletonBlock } from '../../../components/general/Skeleton';
 
 const LandlordFinance: FunctionComponent = () => {
   const navigate = useNavigate();
@@ -47,17 +48,28 @@ const LandlordFinance: FunctionComponent = () => {
       <>
         {/* Header skeleton */}
         <div className="self-stretch flex flex-col items-start justify-center gap-3 mb-6">
-          <div className="h-8 w-32 bg-gray-100 animate-pulse rounded" />
+          <SkeletonBlock className="h-8 w-32" />
           <div className="self-stretch h-0.5 rounded-[100px] bg-whitesmoke-200 dark:bg-[#242626]" />
         </div>
         <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-[15px] mb-6">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="h-[84px] w-full rounded-[10px] bg-gray-100 animate-pulse" />
+          {['income', 'buildings', 'occupancy', 'balance', 'collection'].map((key) => (
+            <div
+              key={key}
+              className="rounded-[10px] border border-[#f0f0f0] bg-white p-4 dark:border-[#303331] dark:bg-[#141515]"
+            >
+              <SkeletonBlock className="mb-3 h-4 w-24" />
+              <SkeletonBlock className="h-7 w-32" />
+            </div>
           ))}
         </div>
         <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-          <div className="h-[280px] rounded-2xl bg-gray-100 animate-pulse" />
-          <div className="h-[280px] rounded-2xl bg-gray-100 animate-pulse" />
+          <SkeletonBlock className="h-[280px] rounded-2xl" />
+          <SkeletonBlock className="h-[280px] rounded-2xl" />
+        </div>
+        <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          {['property-a', 'property-b', 'property-c'].map((key) => (
+            <SkeletonBlock key={key} className="h-[260px] rounded-[25px]" />
+          ))}
         </div>
       </>,
     );

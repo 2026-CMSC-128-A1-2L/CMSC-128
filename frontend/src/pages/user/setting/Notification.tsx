@@ -1,6 +1,7 @@
 import { Icon } from '@iconify/react';
 import type { FunctionComponent } from 'react';
 import { useEffect, useRef, useState } from 'react';
+import { SettingsPanelSkeleton } from '../../../components/general/Skeleton';
 
 const SYSTEM_UPDATE_OPTIONS = [
   'New Login Attempts',
@@ -234,8 +235,8 @@ const Notification: FunctionComponent = () => {
 
   if (loadingUser) {
     return (
-      <div className="rounded-t-none rounded-b-num-16 border-whitesmoke-200 border-solid border flex items-center justify-center py-16 text-dimgray text-sm">
-        Loading notification preferences…
+      <div className="rounded-t-none rounded-b-num-16 border-whitesmoke-200 border-solid border flex flex-col py-6 px-8">
+        <SettingsPanelSkeleton />
       </div>
     );
   }

@@ -13,6 +13,7 @@ import SideBar from '../../../../components/user/SideBar';
 import BreadcrumbHeader from '../../../../components/general/Breadcrumb';
 import ProgressBar from '../../../../components/user/ProgressBar';
 import { useCurrentDormReviewDetails } from './useCurrentDormReviewDetails';
+import { SkeletonBlock } from '../../../../components/general/Skeleton';
 
 const RateAndReview: FunctionComponent = () => {
   const navigate = useNavigate();
@@ -183,15 +184,17 @@ const RateAndReview: FunctionComponent = () => {
                 </div>
 
                 <div className="self-stretch h-[405px] flex flex-col items-center gap-[117px] shrink-0 text-[18px] text-darkolivegreen">
-                  {(isLoading || error) && (
+                  {isLoading && (
+                    <div className="w-[735px] rounded-xl border border-whitesmoke-200 bg-white px-4 py-4">
+                      <SkeletonBlock className="mb-3 h-4 w-48" />
+                      <SkeletonBlock className="h-10 w-full rounded-xl" />
+                    </div>
+                  )}
+                  {error && (
                     <div
-                      className={`w-[735px] rounded-xl border px-4 py-3 text-center text-sm font-semibold ${
-                        error
-                          ? 'border-crimson/30 bg-crimson/5 text-crimson'
-                          : 'border-whitesmoke-200 bg-aliceblue text-dimgray'
-                      }`}
+                      className="w-[735px] rounded-xl border border-crimson/30 bg-crimson/5 px-4 py-3 text-center text-sm font-semibold text-crimson"
                     >
-                      {error ?? 'Loading your current dorm details...'}
+                      {error}
                     </div>
                   )}
                   <div className="self-stretch flex flex-col items-center justify-center py-num-12 px-num-32 gap-[37px]">

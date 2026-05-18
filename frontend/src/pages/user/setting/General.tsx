@@ -4,6 +4,7 @@ import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
 import info_icon from '../../../../assets/infoicon_icon.svg';
 import SignInPopUp from '../../../components/general/SignInPopUp';
+import { SettingsPanelSkeleton } from '../../../components/general/Skeleton';
 
 type UserData = {
   firstName: string;
@@ -81,9 +82,7 @@ const General: FunctionComponent = () => {
   return (
     <div className="self-stretch rounded-t-none rounded-b-num-16 border-whitesmoke-200 border-solid border overflow-hidden flex flex-col items-start py-6 px-num-32 gap-6 text-center text-[24px] text-black">
       {loading ? (
-        <div className="self-stretch flex items-center justify-center py-10 text-dimgray text-sm">
-          Loading account information…
-        </div>
+        <SettingsPanelSkeleton />
       ) : (
         <>
           {/* Account Information */}

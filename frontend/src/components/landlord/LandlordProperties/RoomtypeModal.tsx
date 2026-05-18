@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { SkeletonBlock } from '../../general/Skeleton';
 
 export type ApiUnit = {
   _id: string;
@@ -63,7 +64,14 @@ function RoomtypeModal({
 
         <div className="flex flex-col mx-6">
           {isLoadingUnits ? (
-            <div className="px-2 py-6 text-center text-gray-400 text-sm">Loading rooms...</div>
+            <div className="flex flex-col gap-3 px-2 py-4">
+              {['room-a', 'room-b', 'room-c', 'room-d'].map((key) => (
+                <div key={key} className="grid grid-cols-[1fr_1.2fr] items-center gap-6 py-2">
+                  <SkeletonBlock className="h-4 w-24" />
+                  <SkeletonBlock className="mx-auto h-6 w-24 rounded-full" />
+                </div>
+              ))}
+            </div>
           ) : units.length === 0 ? (
             <div className="px-2 py-6 text-center text-gray-400 text-sm">No rooms found.</div>
           ) : (

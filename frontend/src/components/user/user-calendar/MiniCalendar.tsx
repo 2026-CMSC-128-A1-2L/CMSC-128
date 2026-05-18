@@ -1,6 +1,7 @@
 import { type FunctionComponent, useEffect, useState } from 'react';
 import { Icon } from '@iconify/react';
 import { CalendarService, type CalendarEvent } from '../../../service/CalendarService';
+import { SkeletonBlock } from '../../general/Skeleton';
 
 interface MiniCalendarProps {
   currentDate: Date;
@@ -275,7 +276,10 @@ const MiniCalendar: FunctionComponent<MiniCalendarProps> = ({
       <div className="flex flex-col gap-2 cursor-pointer">
         <b className="text-num-14 font-bold text-darkslategray-100 font-inter">Upcoming Events</b>
         {loading ? (
-          <div className="text-xs text-dimgray">Loading events...</div>
+          <div className="flex flex-col gap-2">
+            <SkeletonBlock className="h-12 w-full rounded-num-8" />
+            <SkeletonBlock className="h-12 w-full rounded-num-8" />
+          </div>
         ) : upcomingEvents.length > 0 ? (
           <div className="flex flex-col gap-2">
             {upcomingEvents.map((event) => (

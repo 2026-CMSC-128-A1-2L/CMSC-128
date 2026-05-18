@@ -9,6 +9,7 @@ import adminRoutes from './routes/adminRoutes';
 import landlordRoutes from './routes/landlordRoutes';
 import { useAuthStore } from './store/useAuthStore';
 import { useEffect } from 'react';
+import { SkeletonBlock } from './components/general/Skeleton';
 
 // ... your other imports
 
@@ -55,7 +56,22 @@ function App() {
     fetchMe();
   }, [fetchMe]);
 
-  if (!isInitialized) return 'loading';
+  if (!isInitialized) {
+    return (
+      <div className="flex min-h-screen flex-col gap-8 bg-white p-8 dark:bg-[#0f1010]">
+        <SkeletonBlock className="h-14 w-48 rounded-2xl" />
+        <div className="flex flex-1 flex-col gap-6">
+          <SkeletonBlock className="h-12 w-full rounded-2xl" />
+          <SkeletonBlock className="h-[260px] w-full rounded-2xl" />
+          <div className="grid gap-4 md:grid-cols-3">
+            <SkeletonBlock className="h-40 rounded-2xl" />
+            <SkeletonBlock className="h-40 rounded-2xl" />
+            <SkeletonBlock className="h-40 rounded-2xl" />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <Router>

@@ -5,6 +5,7 @@ import Sidebar from '../../../../components/user/SideBar';
 import Footer from '../../../../components/general/Footer';
 import ProfileInfo from '../../../../components/user/ProfileInfo';
 import { ApplicationService } from '../../../../service/ApplicationService';
+import { TableSkeletonRows } from '../../../../components/general/Skeleton';
 
 type ApplicationSummary = {
   _id?: string;
@@ -131,7 +132,11 @@ const PendingApplication1a: FunctionComponent = () => {
                   </div>
 
                   {isLoading ? (
-                    <div className="px-6 py-8 text-center font-bold text-dimgray">Loading...</div>
+                    <table className="w-full">
+                      <tbody>
+                        <TableSkeletonRows columns={5} rows={4} actionColumn />
+                      </tbody>
+                    </table>
                   ) : error ? (
                     <div className="px-6 py-8 text-center font-bold text-red-500">{error}</div>
                   ) : applications.length === 0 ? (

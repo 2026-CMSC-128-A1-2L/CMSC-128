@@ -19,6 +19,7 @@ type ReportData = {
   flags: string[];
   evidence: string[];
   status: string;
+  reporterFacility?: string | null;
   createdAt?: string;
   __t?: string;
   [key: string]: unknown;

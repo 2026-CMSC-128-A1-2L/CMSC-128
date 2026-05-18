@@ -9,6 +9,7 @@ import { Icon } from "@iconify/react";
 import OverviewTab from "../../../components/landlord/LandlordFinance/overview/Overview";
 import TenantBillingsTab from "../../../components/landlord/LandlordFinance/billings/TenantBillings";
 import { useFacilityFinance } from "../../../hooks/useFacilityFinance";
+import { SkeletonBlock } from "../../../components/general/Skeleton";
 
 type TabType = "overview" | "billings";
 
@@ -51,9 +52,16 @@ const LandlordPropertyFinance: FunctionComponent = () => {
     return (
       <LandlordLayout activeSidebarItem="finance" breadcrumbs={breadcrumbs}>
         <div className="flex flex-col w-full gap-4">
-          <div className="h-8 w-48 bg-gray-100 animate-pulse rounded" />
-          <div className="h-4 w-96 bg-gray-100 animate-pulse rounded" />
-          <div className="h-[400px] bg-gray-100 animate-pulse rounded-2xl mt-4" />
+          <SkeletonBlock className="h-8 w-48" />
+          <SkeletonBlock className="h-4 w-full max-w-96" />
+          <div className="mt-4 flex flex-col gap-6 lg:flex-row">
+            <SkeletonBlock className="h-[220px] w-full rounded-2xl lg:w-[230px]" />
+            <div className="grid flex-1 grid-cols-1 gap-4 md:grid-cols-2">
+              <SkeletonBlock className="h-[190px] rounded-2xl" />
+              <SkeletonBlock className="h-[190px] rounded-2xl" />
+              <SkeletonBlock className="h-[230px] rounded-2xl md:col-span-2" />
+            </div>
+          </div>
         </div>
       </LandlordLayout>
     );

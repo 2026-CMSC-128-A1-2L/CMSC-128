@@ -8,6 +8,7 @@ import PageBackground from "../../../components/general/PageBackground";
 import { useTheme } from "../../../pages/utilities/DarkMode";
 import { useBookmarks } from "../../../hooks/useBookmarks";
 import type { BookmarkItem } from "../../../service/BookmarkService";
+import { CardGridSkeleton } from "../../../components/general/Skeleton";
 
 const currencyFormatter = new Intl.NumberFormat("en-PH", {
   style: "currency",
@@ -171,9 +172,7 @@ const BookmarksNewUsers: FunctionComponent = () => {
             </div>
 
             {isLoading ? (
-              <div className="flex-1 flex items-center justify-center py-16 text-sm font-semibold text-dimgray dark:text-[#a4acba]">
-                Loading bookmarks...
-              </div>
+              <CardGridSkeleton cards={6} cardClassName="min-h-[260px]" />
             ) : error ? (
               <div className="flex-1 flex items-center justify-center py-16 text-center text-sm font-semibold text-red-500">
                 {error}

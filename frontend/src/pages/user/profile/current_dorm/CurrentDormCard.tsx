@@ -8,6 +8,7 @@ import { ReviewService } from '../../../../service/ReviewService';
 import { ReportService } from '../../../../service/ReportService';
 import { UserService } from '../../../../service/UserService';
 import { useCurrentDormReviewDetails } from './useCurrentDormReviewDetails';
+import { SkeletonBlock } from '../../../../components/general/Skeleton';
 
 interface Roommate {
   id?: string;
@@ -263,9 +264,18 @@ export default function CurrentDormCard({
             <h3 className="text-xl font-bold mb-4 text-center">Your Roommates</h3>
 
             {isLoadingRoommates ? (
-              <p className="text-center text-sm font-semibold text-slategray">
-                Loading roommates...
-              </p>
+              <div className="flex flex-wrap justify-center gap-4">
+                {['roommate-a', 'roommate-b', 'roommate-c'].map((key) => (
+                  <div
+                    key={key}
+                    className="w-[180px] flex flex-col items-center border border-[#f0f0f0] rounded-lg p-4 dark:border-[#303331] dark:bg-[#101111]"
+                  >
+                    <SkeletonBlock className="mb-3 h-16 w-16 rounded-full" />
+                    <SkeletonBlock className="mb-2 h-4 w-24" />
+                    <SkeletonBlock className="h-3 w-20" />
+                  </div>
+                ))}
+              </div>
             ) : displayedRoommates.length > 0 ? (
               <div className="flex flex-wrap justify-center gap-4">
                 {displayedRoommates.map((roommate, index) => (

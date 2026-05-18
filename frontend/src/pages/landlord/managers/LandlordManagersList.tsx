@@ -18,6 +18,7 @@ export type Manager = Extract<Profile, { userType: "Manager" }>;
 import { FacilityService } from "../../../service/FacilityService";
 // get current user
 import { useAuthStore } from "../../../store/useAuthStore";
+import { CardGridSkeleton, SkeletonBlock } from "../../../components/general/Skeleton";
 
 const Managers = () => {
   const navigate = useNavigate();
@@ -96,7 +97,18 @@ const Managers = () => {
         </section>
 
         <div className="flex flex-col gap-[48px]">
-          {properties.map((property) => {
+          {loading ? (
+            ['property-section-a', 'property-section-b'].map((key) => (
+              <section key={key} className="flex flex-col gap-[14px] px-[10px]">
+                <SkeletonBlock className="h-6 w-48" />
+                <CardGridSkeleton
+                  cards={3}
+                  className="flex flex-wrap"
+                  cardClassName="w-[331px]"
+                />
+              </section>
+            ))
+          ) : properties.map((property) => {
             const propId = (property.id || property._id).toString();
             const propertyManagers = Array.from(
               new Map(

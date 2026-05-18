@@ -5,6 +5,7 @@ import LandlordLayout from '../../../components/landlord/LandlordLayout';
 import PropertiesCard from '../../../components/landlord/LandlordProperties/PropertiesCard';
 import { FacilityService } from '../../../service/FacilityService';
 import { api } from '../../../service/axiosInstance';
+import { SkeletonBlock } from '../../../components/general/Skeleton';
 
 import search from '../../../../assets/search_green.svg';
 import plus from '../../../../assets/green_plus.svg';
@@ -134,9 +135,26 @@ const LandlordProperties: FunctionComponent = () => {
 
         <section className="flex flex-col gap-[24px]">
           {isLoading && (
-            <div className="flex items-center justify-center h-32 text-gray-500">
-              Loading properties...
-            </div>
+            <>
+              {['property-row-a', 'property-row-b', 'property-row-c'].map((key) => (
+                <div
+                  key={key}
+                  className="flex w-full flex-col gap-4 rounded-[10px] border border-[#f0f0f0] bg-white p-4 dark:border-[#303331] dark:bg-[#141515] sm:flex-row"
+                >
+                  <SkeletonBlock className="h-[150px] w-full rounded-[10px] sm:w-[240px]" />
+                  <div className="flex flex-1 flex-col gap-4 py-2">
+                    <SkeletonBlock className="h-6 w-2/5" />
+                    <SkeletonBlock className="h-4 w-3/4" />
+                    <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+                      <SkeletonBlock className="h-14 rounded-xl" />
+                      <SkeletonBlock className="h-14 rounded-xl" />
+                      <SkeletonBlock className="h-14 rounded-xl" />
+                      <SkeletonBlock className="h-14 rounded-xl" />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </>
           )}
 
           {!isLoading && error && (
