@@ -7,8 +7,10 @@ import VerifiedBadge from '../../../../../assets/verified_badge.svg';
 import TutorialBubble from '../../../../components/landlord/TutorialsForLandlord';
 import TutorialIcon from '../../../../../assets/help-chat.svg';
 import ProgressBar from '../../../../components/user/ProgressBar';
+import { useAuthStore } from '../../../../store/useAuthStore';
 
 const LandlordVerif: FunctionComponent = () => {
+  const authUser = useAuthStore((state) => state.user);
   const [verificationStep, _setVerificationStep] = useState(2); // 0: submit, 1: reviewing, 2: finish
 
   const onArrowUpClick = useCallback(() => {
@@ -62,14 +64,14 @@ const LandlordVerif: FunctionComponent = () => {
                                 <div className="self-stretch flex flex-col items-start gap-[10.2px]">
                                   <b className="relative">Landlord Profile</b>
                                   <div className="flex items-center justify-center gap-[10.2px] text-[24.57px] text-darkslategray-200">
-                                    <b className="relative leading-[32.77px]">Quevin Custodio</b>
+                                    <b className="relative leading-[32.77px]">{authUser ? [authUser.firstName, authUser.lastName].filter(Boolean).join(' ') : 'Quevin Custodio'}</b>
                                     <img
                                       src={VerifiedBadge}
                                       alt="verified"
                                       className="w-[24.6px] h-[24.6px]"
                                     />
                                   </div>
-                                  <b className="relative text-teal">qacustodio@up.edu.ph</b>
+                                  <b className="relative text-teal">{authUser ? (authUser.email || authUser.emails?.[0]) : 'qacustodio@up.edu.ph'}</b>
                                 </div>
                               </div>
                               <div className="self-stretch overflow-hidden flex items-start justify-between py-1 px-num-32 gap-5 text-num-14">
@@ -80,7 +82,7 @@ const LandlordVerif: FunctionComponent = () => {
                                 <div className="overflow-hidden flex flex-col items-start p-num-10 gap-4">
                                   <div className="flex flex-col items-start gap-1">
                                     <b className="relative">Name</b>
-                                    <b className="relative text-black">Quevin James A. Custodio</b>
+                                    <b className="relative text-black">{authUser ? [authUser.firstName, authUser.middleName, authUser.lastName].filter(Boolean).join(' ') : 'Quevin James A. Custodio'}</b>
                                   </div>
                                   <div className="flex flex-col items-start gap-1">
                                     <div className="flex items-start gap-2">

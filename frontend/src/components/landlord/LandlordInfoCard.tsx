@@ -118,6 +118,14 @@ const LandlordInfoCard = ({
   //stateful contact number variable to be used for input field
   const [contactNumberOnEdit, setContactNumberOnEdit] = useState(info.contactNumber ?? '');
   const [homeAddressOnEdit, setHomeAddressOnEdit] = useState(info.homeAddress ?? '');
+
+  useEffect(() => {
+    setContactNumberOnEdit(info.contactNumber ?? '');
+  }, [info.contactNumber]);
+
+  useEffect(() => {
+    setHomeAddressOnEdit(info.homeAddress ?? '');
+  }, [info.homeAddress]);
   return (
     <section className="flex flex-col gap-[24px] rounded-[16px] px-[32px] pt-[32px] pb-[24px]">
       <header className="flex flex-col items-start gap-[4px]">
