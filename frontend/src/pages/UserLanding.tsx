@@ -10,6 +10,7 @@ import LandingFAQ from '../components/general/LandingFAQ';
 import { Icon } from '@iconify/react';
 import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useAuthStore } from '../store/useAuthStore';
 
 // uses IntersectionObserver API
 function useScrollReveal(threshold = 0.15) {
@@ -45,6 +46,7 @@ const reveal = (visible: boolean, extra = '') =>
   `transition-all duration-700 ease-out ${extra} ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`;
 
 const UserLanding: FunctionComponent = () => {
+  const user = useAuthStore((state) => state.user);
   const [showSignIn, setShowSignIn] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
 
@@ -113,7 +115,15 @@ const UserLanding: FunctionComponent = () => {
   }, []);
 
   const scrollToTop = () => topRef.current?.scrollIntoView({ behavior: 'smooth' });
-  const scrollToWhatIs = () => whatIsAtlasRef.current?.scrollIntoView({ behavior: 'smooth' });
+  const userDisplayName = user ? [user.firstName, user.lastName].filter(Boolean).join(' ') : '';
+  const usesLandlordDashboard = user?.userType === 'Landlord' || user?.userType === 'Manager';
+  const listingsDestination = usesLandlordDashboard ? '/landlord/dashboard' : '/home';
+  const listingsLabel = usesLandlordDashboard ? 'Go to Dashboard' : 'See All Listings';
+  const signedInDestination = usesLandlordDashboard
+    ? '/landlord-homepage'
+    : user?.userType === 'Admin'
+      ? '/admin/applications'
+      : '/profile-switcher';
 
   return (
     <div
@@ -132,14 +142,14 @@ const UserLanding: FunctionComponent = () => {
               <div className="self-stretch flex items-center gap-12 text-center text-teal-200">
                 <div className="self-stretch flex items-center justify-center py-0 px-1">
                   <b className="h-[35px] w-[141.6px] relative tracking-num--0_01 flex items-center justify-center shrink-0">
-                    <Link to="/home">See All Listings</Link>
+                    <Link to={listingsDestination}>{listingsLabel}</Link>
                   </b>
                 </div>
                 <div className="self-stretch flex items-center justify-center py-0 px-1">
                   <b className="h-[35px] w-[76px] relative tracking-num--0_01 flex items-center justify-center shrink-0">
-                    <button type="button" onClick={scrollToWhatIs} className="cursor-pointer">
+                    <Link to="/about" className="cursor-pointer">
                       About
-                    </button>
+                    </Link>
                   </b>
                 </div>
                 <div className="self-stretch flex items-center justify-center py-0 px-1 pr-16">
@@ -148,12 +158,21 @@ const UserLanding: FunctionComponent = () => {
                   </Link>
                 </div>
               </div>
-              <button type="button" onClick={() => setShowSignIn(true)}>
-                <div className="rounded-[45px] [background:linear-gradient(99.18deg,#5dc2a8_27.88%,#0c8873_88.15%)] flex items-center justify-center py-3 px-4 gap-1 text-white cursor-pointer">
-                  Sign In
-                  <Icon icon="si:arrow-right-duotone" className="w-7 h-7 relative" />
-                </div>
-              </button>
+              {user ? (
+                <Link to={signedInDestination}>
+                  <div className="rounded-[45px] [background:linear-gradient(99.18deg,#5dc2a8_27.88%,#0c8873_88.15%)] flex items-center justify-center py-3 px-4 gap-1 text-white cursor-pointer">
+                    {userDisplayName || 'My Account'}
+                    <Icon icon="si:arrow-right-duotone" className="w-7 h-7 relative" />
+                  </div>
+                </Link>
+              ) : (
+                <button type="button" onClick={() => setShowSignIn(true)}>
+                  <div className="rounded-[45px] [background:linear-gradient(99.18deg,#5dc2a8_27.88%,#0c8873_88.15%)] flex items-center justify-center py-3 px-4 gap-1 text-white cursor-pointer">
+                    Sign In
+                    <Icon icon="si:arrow-right-duotone" className="w-7 h-7 relative" />
+                  </div>
+                </button>
+              )}
               {showSignIn && <SignInPopUp onClose={() => setShowSignIn(false)} />}
             </div>
           </div>
@@ -517,9 +536,7 @@ const UserLanding: FunctionComponent = () => {
                 SUPPORT
               </b>
               <div className="w-[108.9px] h-num-28.4 relative flex items-center shrink-0 mt-[-4px]">
-                <button type="button" onClick={scrollToWhatIs} className="cursor-pointer">
-                  About
-                </button>
+                <Link to="/about">About</Link>
               </div>
               <div className="w-[108.9px] h-num-28.4 relative flex items-center shrink-0 mt-[-4px]">
                 <Link to="/contact-us">Contact us</Link>

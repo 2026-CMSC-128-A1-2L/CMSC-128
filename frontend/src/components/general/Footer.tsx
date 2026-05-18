@@ -21,12 +21,28 @@ const Footer: FunctionComponent = () => {
           </div>
           <div className="flex flex-row flex-nowrap items-start gap-x-3 sm:gap-x-6 lg:gap-x-20">
             <div className="flex flex-col items-center gap-[6px] lg:gap-2.5 shrink-0">
-              <Link to="/"><b className="block text-[9px] sm:text-[10px] lg:text-[14px] whitespace-nowrap hover:underline">About</b></Link>
-              <Link to="/contact-us"><b className="block text-[9px] sm:text-[10px] lg:text-[14px] whitespace-nowrap hover:underline">Contact Us</b></Link>
+              <Link to="/about">
+                <b className="block text-[9px] sm:text-[10px] lg:text-[14px] whitespace-nowrap hover:underline">
+                  About
+                </b>
+              </Link>
+              <Link to="/contact-us">
+                <b className="block text-[9px] sm:text-[10px] lg:text-[14px] whitespace-nowrap hover:underline">
+                  Contact Us
+                </b>
+              </Link>
             </div>
             <div className="flex flex-col items-center gap-[6px] lg:gap-2.5 shrink-0">
-              <Link to="/privacy-policy"><b className="block text-[9px] sm:text-[10px] lg:text-[14px] whitespace-nowrap hover:underline">Privacy Policy</b></Link>
-              <Link to="/terms-of-use"><b className="block text-[9px] sm:text-[10px] lg:text-[14px] whitespace-nowrap hover:underline">Terms of Use</b></Link>
+              <Link to="/privacy-policy">
+                <b className="block text-[9px] sm:text-[10px] lg:text-[14px] whitespace-nowrap hover:underline">
+                  Privacy Policy
+                </b>
+              </Link>
+              <Link to="/terms-of-use">
+                <b className="block text-[9px] sm:text-[10px] lg:text-[14px] whitespace-nowrap hover:underline">
+                  Terms of Use
+                </b>
+              </Link>
             </div>
           </div>
         </div>
