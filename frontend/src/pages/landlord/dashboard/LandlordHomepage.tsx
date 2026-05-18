@@ -188,7 +188,7 @@ const LandlordHomepage: FunctionComponent = () => {
       {
         title: "Messages",
         breadcrumb: "Messages",
-        to: "/landlord/messages",
+        to: "/direct-messages",
         keywords: "messages chat inbox conversation",
         icon: "ic:outline-mail",
       },

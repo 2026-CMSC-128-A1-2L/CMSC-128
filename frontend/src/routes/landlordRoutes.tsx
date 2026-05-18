@@ -34,10 +34,10 @@ const landlordRoutes = [
     element={<LandlordProfileSwitcher />}
   />,
   <Route key="landlord-dashboard" path="/landlord/dashboard" element={<LandlordDashboard />} />,
-  <Route key="landlord-messages" path="/landlord/messages" element={<LandlordMessages />} />,
+  <Route key="landlord-messages" path="/direct-messages" element={<LandlordMessages />} />,
   <Route
     key="landlord-messages-user"
-    path="/landlord/messages/:userId"
+    path="/direct-messages/:userId"
     element={<LandlordMessages />}
   />,
   <Route key="landlord-properties" path="/landlord/properties" element={<LandlordProperties />} />,

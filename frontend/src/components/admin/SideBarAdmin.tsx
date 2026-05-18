@@ -37,7 +37,7 @@ type SideBarAdminProps = {
   messages?: MessageItem[];
   /** Currently selected conversation id (controls the `clicked` card state). */
   activeMessageId?: string;
-  /** Called when a message card is clicked. Defaults to navigating to /admin/messages?id=<id>. */
+  /** Called when a message card is clicked. Defaults to navigating to /direct-messages/<id>. */
   onSelectMessage?: (id: string) => void;
   /** Called when the user hits Back from the messages tab view. */
   onBackFromMessages?: () => void;
@@ -79,7 +79,7 @@ const navItems: Array<{
     key: 'messages',
     label: 'Messages',
     iconName: 'solar:chat-round-dots-outline',
-    route: '/admin/messages',
+    route: '/direct-messages',
   },
   {
     key: 'announce',
@@ -189,7 +189,7 @@ const SideBarAdmin = ({
       return;
     }
     // Default: go to the full messages page with the selected conversation.
-    navigate(`/admin/messages?id=${encodeURIComponent(id)}`);
+    navigate(`/direct-messages/${encodeURIComponent(id)}`);
   };
 
   const resolveProfileMenuPlacement = useCallback(() => {

@@ -162,7 +162,7 @@ const LandlordUnvalidatedApplications = () => {
                     isOpen={openMenuId === application.id}
                     onMessage={() => {
                       setOpenMenuId(null);
-                      navigate('/landlord/messages');
+                      navigate('/direct-messages');
                     }}
                     onRequestInterview={() => setOpenMenuId(null)}
                     onRemoveRequest={() => setOpenMenuId(null)}

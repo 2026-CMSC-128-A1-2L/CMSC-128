@@ -51,7 +51,7 @@ const navItems: Array<{
     key: 'messages',
     label: 'Messages',
     icon: 'ic:outline-mail',
-    route: '/landlord/messages',
+    route: '/direct-messages',
   },
   {
     key: 'properties',

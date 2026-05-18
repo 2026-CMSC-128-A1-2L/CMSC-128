@@ -65,7 +65,7 @@ const Managers = () => {
   ) => {
     setOpenMenuId(null);
     if (action === "message") {
-      navigate("/landlord/messages");
+      navigate("/direct-messages");
       return;
     }
     if (action === "report") {
