@@ -5,7 +5,7 @@ import LandlordLayout from '../../../components/landlord/LandlordLayout';
 import LandlordManagerActionsPopover, {
   type ManagerAction,
 } from '../../../components/landlord/LandlordManagerActionsPopover';
-import ReportManager from '../../../components/landlord/LandlordManagerReportController';
+import ReportTenant from '../../../components/landlord/LandlordTenantReportController';
 import TenantsToolbar from '../../../components/landlord/tenants/TenantsToolbar';
 import TenantCard from '../../../components/landlord/tenants/TenantCard';
 import RemoveTenantPopup from '../../../components/landlord/tenants/popups/RemoveTenantPopup';
@@ -15,13 +15,22 @@ import {
   filterTenantsByName,
   tenantFiltersActive,
 } from '../../../utils/tenantListFilters';
-import { pendingApplications, type Tenant } from '../../../data/landlordTenants';
+import type { Tenant } from '../../../data/landlordTenants';
+import { ApplicationService } from '../../../service/ApplicationService';
 import { FacilityService } from '../../../service/FacilityService';
 import { useDebouncedValue } from '../../../hooks/useDebouncedValue';
 
+const getDataArray = <T,>(response: unknown): T[] => {
+  if (Array.isArray(response)) return response as T[];
+  if (response && typeof response === 'object' && 'data' in response) {
+    const data = (response as { data?: unknown }).data;
+    return Array.isArray(data) ? (data as T[]) : [];
+  }
+  return [];
+};
+
 const LandlordTenants = () => {
   const navigate = useNavigate();
-  const pendingCount = pendingApplications.length;
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [reportTarget, setReportTarget] = useState<Tenant | null>(null);
   const [removeTarget, setRemoveTarget] = useState<Tenant | null>(null);
@@ -30,6 +39,7 @@ const LandlordTenants = () => {
   const debouncedNameSearchQuery = useDebouncedValue(nameSearchQuery, 300);
   const [tenants, setTenants] = useState<Tenant[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [pendingCount, setPendingCount] = useState(0);
 
   useEffect(() => {
     const fetchTenants = async () => {
@@ -44,6 +54,24 @@ const LandlordTenants = () => {
       }
     };
     fetchTenants();
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const fetchPendingApplications = async () => {
+      try {
+        const response = await ApplicationService.getApplications({ limit: 50, status: 'pending' });
+        if (!cancelled) setPendingCount(getDataArray(response).length);
+      } catch (error) {
+        console.error('Failed to fetch pending applications:', error);
+      }
+    };
+
+    void fetchPendingApplications();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const handleTenantAction = (tenant: Tenant, action: ManagerAction) => {
@@ -95,24 +123,30 @@ const LandlordTenants = () => {
           />
           <div className="h-[2px] w-full rounded-[100px] bg-[#f0f0f0]" />
 
-          {pendingCount > 0 && (
-            <div className="flex w-full items-center gap-[8px] px-[4px] py-[10px]">
-              <Icon
-                icon="famicons:alert-outline"
-                className="h-[20px] w-[20px] text-[#c29722]"
-                aria-hidden="true"
-              />
-              <span className="font-['Inter',sans-serif] text-[14px] font-bold whitespace-nowrap text-black">
-                You have pending applications.
-              </span>
+          <div className="flex w-full items-center gap-[10px] px-[12px] py-[10px]">
+            <span
+              aria-hidden="true"
+              className={[
+                "font-['Inter',sans-serif] text-[18px] font-bold leading-none",
+                pendingCount > 0 ? 'text-[#c29722]' : 'text-[#096c5b]',
+              ].join(' ')}
+            >
+              !
+            </span>
+            <span className="font-['Inter',sans-serif] text-[14px] font-bold whitespace-nowrap text-black dark:text-[#d7e0ef]">
+              {pendingCount > 0
+                ? 'You have pending applications.'
+                : 'You do not have pending applications.'}
+            </span>
+            {pendingCount > 0 && (
               <Link
                 to="/landlord/tenants/unvalidated"
                 className="font-['Inter',sans-serif] text-[14px] font-bold whitespace-nowrap bg-linear-to-b from-[#c29722] to-[#f6b709] bg-clip-text text-transparent transition-opacity hover:opacity-80"
               >
                 See all
               </Link>
-            </div>
-          )}
+            )}
+          </div>
         </section>
 
         {isLoading ? (
@@ -157,7 +191,7 @@ const LandlordTenants = () => {
               <button
                 type="button"
                 onClick={resetAllListFilters}
-                className="rounded-[12px] bg-[#cbf6ed] px-[24px] py-[10px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] transition-opacity hover:opacity-80"
+                className="rounded-[12px] bg-[#cbf6ed] px-[24px] py-[10px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] transition-opacity hover:opacity-80 cursor-pointer"
               >
                 Reset filters
               </button>
@@ -166,7 +200,7 @@ const LandlordTenants = () => {
         ) : (
           <section
             aria-label="Tenants grid"
-            className="grid w-full grid-cols-1 gap-x-[24px] gap-y-[32px] sm:grid-cols-2 xl:grid-cols-3"
+            className="grid w-full grid-cols-[repeat(auto-fill,minmax(260px,320px))] justify-start gap-x-[24px] gap-y-[24px]"
           >
             {filteredTenants.map((tenant) => (
               <TenantCard
@@ -193,13 +227,12 @@ const LandlordTenants = () => {
         isOpen={Boolean(removeTarget)}
         onClose={() => setRemoveTarget(null)}
       />
-      <ReportManager
+      <ReportTenant
         isOpen={Boolean(reportTarget)}
         onClose={() => setReportTarget(null)}
-        manager={
+        tenant={
           reportTarget ? { displayName: reportTarget.displayName, email: reportTarget.email } : null
         }
-        type="tenant"
       />
     </LandlordLayout>
   );

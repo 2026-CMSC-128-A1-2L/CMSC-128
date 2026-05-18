@@ -12,14 +12,14 @@ const FileActionPopup = ({ isOpen, onApprove, onReject }: FileActionPopupProps) 
       <button
         type="button"
         onClick={onApprove}
-        className="text-left font-['Inter',sans-serif] text-[14px] font-medium text-black hover:text-[#096c5b]"
+        className="text-left font-['Inter',sans-serif] text-[14px] font-medium text-black hover:text-[#096c5b] cursor-pointer"
       >
         Approve
       </button>
       <button
         type="button"
         onClick={onReject}
-        className="text-left font-['Inter',sans-serif] text-[14px] font-medium text-black hover:text-[#ef4444]"
+        className="text-left font-['Inter',sans-serif] text-[14px] font-medium text-black hover:text-[#ef4444] cursor-pointer"
       >
         Reject
       </button>

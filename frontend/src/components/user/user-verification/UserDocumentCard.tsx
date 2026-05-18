@@ -74,7 +74,7 @@ const UserDocumentCard = ({
               <button
                 type="button"
                 onClick={onEdit}
-                className="hover:opacity-70 transition-opacity text-[#2f3136]"
+                className="hover:opacity-70 transition-opacity text-[#2f3136] cursor-pointer"
               >
                 <Icon icon="mdi:pencil" className="w-6 h-6" />
               </button>
@@ -83,7 +83,7 @@ const UserDocumentCard = ({
               <button
                 type="button"
                 onClick={onDelete}
-                className="hover:opacity-70 transition-opacity text-[#2f3136]"
+                className="hover:opacity-70 transition-opacity text-[#2f3136] cursor-pointer"
               >
                 <Icon icon="mdi:delete" className="w-6 h-6" />
               </button>

@@ -213,7 +213,7 @@ const TenantsToolbar: FunctionComponent<TenantsToolbarProps> = ({
                   </div>
                 </div>
 
-                <div className="flex flex-col gap-[8px]">
+                <div className="flex flex-col gap-[8px] cursor-pointer">
                   <label
                     htmlFor={`${panelId}-sort`}
                     className="font-['Inter',sans-serif] text-[12px] font-bold uppercase tracking-wide text-[#666]"
@@ -278,7 +278,7 @@ const TenantsToolbar: FunctionComponent<TenantsToolbarProps> = ({
                     onClick={() => {
                       onResetFilters();
                     }}
-                    className="self-start font-['Inter',sans-serif] text-[13px] font-semibold text-[#096c5b] underline-offset-2 hover:underline"
+                    className="self-start font-['Inter',sans-serif] text-[13px] font-semibold text-[#096c5b] underline-offset-2 hover:underline cursor-pointer"
                   >
                     Reset filters
                   </button>

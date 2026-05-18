@@ -225,21 +225,10 @@ const LandlordVerif: FunctionComponent = () => {
       </div>
       {/* ======= FLOATING ICON FOR TUTORIAL ======= */}
       <div
-        className="fixed bottom-10 right-10 z-[1000] cursor-pointer transition-all hover:scale-110 active:scale-95"
+        className="help-button-animated z-[1000] cursor-pointer transition-all hover:scale-110 active:scale-95"
         onClick={() => setShowHelp(!showHelp)}
       >
-        {/* <img src={TutorialIcon} alt="Help" className="w-16 h-16 drop-shadow-lg" /> */}
-        {/* di ko mabago kulay ng Iconify na to */}
-        {/* <Icon icon="iconoir:chat-bubble-question-solid" className="w-16 h-16 drop-shadow-lg" /> */}
-        <div
-          className="w-16 h-16 drop-shadow-lg"
-          style={{
-            background: 'linear-gradient(135deg, #096C5B, #16917C)',
-            WebkitMask:
-              "url('https://api.iconify.design/iconoir/chat-bubble-question-solid.svg') no-repeat center / contain",
-            mask: "url('https://api.iconify.design/iconoir/chat-bubble-question-solid.svg') no-repeat center / contain",
-          }}
-        />
+        <img src={TutorialIcon} alt="Help" className="w-16 h-16 drop-shadow-lg" />
       </div>
       <TutorialBubble show={showHelp} onClose={() => setShowHelp(false)} />
     </div>

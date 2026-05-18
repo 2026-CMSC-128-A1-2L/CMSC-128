@@ -19,15 +19,15 @@ const MonthlyIncomeChart: FunctionComponent<MonthlyIncomeChartProps> = ({ monthl
   const hasData = displayData.length > 0;
 
   return (
-    <div className="w-full max-w-[848px] rounded-2xl bg-white border-whitesmoke-200 border-solid border box-border flex flex-col items-center justify-center py-6 px-4 gap-2.5">
+    <div className="w-full rounded-2xl bg-white border-whitesmoke-200 border-solid border box-border flex flex-col items-center justify-center py-6 px-4 gap-2.5 dark:bg-[#101111] dark:border-[#343737]">
       {/* Header */}
       <div className="self-stretch flex flex-col sm:flex-row items-center justify-center gap-3">
-        <b className="h-6 flex-1 relative tracking-[-0.01em] flex items-center text-[16px] sm:text-[18px] text-gray font-inter">
+        <b className="h-6 flex-1 relative tracking-[-0.01em] flex items-center text-[16px] sm:text-[18px] text-gray font-inter dark:text-[#edf6f4]">
           Monthly Income
         </b>
         <button
           onClick={() => setSelectedRange((r) => (r === '12' ? '6' : '12'))}
-          className="w-[100px] rounded-lg bg-darkslategray-200 hover:bg-teal-200 transition-colors flex items-center justify-center p-2 cursor-pointer"
+          className="w-[100px] rounded-lg bg-darkslategray-200 hover:bg-teal-200 transition-colors flex items-center justify-center p-2 cursor-pointer dark:bg-[#114f43] dark:hover:bg-[#166d5d]"
         >
           <span className="tracking-[0.04em] font-semibold text-[10px] text-white whitespace-nowrap">
             {selectedRange === '12' ? '12 Months' : '6 Months'}
@@ -36,8 +36,8 @@ const MonthlyIncomeChart: FunctionComponent<MonthlyIncomeChartProps> = ({ monthl
       </div>
 
       {/* Chart */}
-      <div className="self-stretch flex flex-col items-start gap-2.5 text-center text-[8px] text-black font-lora">
-        <div className="self-stretch h-40 rounded-[10px] bg-white flex flex-col items-center pt-[26px] pb-[11px] px-3 box-border gap-1.5">
+      <div className="self-stretch flex flex-col items-start gap-2.5 text-center text-[8px] text-black font-lora dark:text-[#d7e0ef]">
+        <div className="self-stretch h-40 rounded-[10px] bg-white flex flex-col items-center pt-[26px] pb-[11px] px-3 box-border gap-1.5 dark:bg-[#101111]">
           {hasData ? (
             <>
               <div className="w-full h-[108px] flex items-end justify-around">
@@ -55,14 +55,14 @@ const MonthlyIncomeChart: FunctionComponent<MonthlyIncomeChartProps> = ({ monthl
               </div>
               <div className="w-full flex justify-around">
                 {months.map((m, i) => (
-                  <div key={`label-${m}-${i}`} className="tracking-[0.04em] font-semibold text-[8px] text-black">
+                  <div key={`label-${m}-${i}`} className="tracking-[0.04em] font-semibold text-[8px] text-black dark:text-[#d7e0ef]">
                     {m}
                   </div>
                 ))}
               </div>
             </>
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-dimgray text-sm">
+            <div className="w-full h-full flex items-center justify-center text-dimgray text-sm dark:text-[#a4acba]">
               No income data yet
             </div>
           )}
@@ -71,13 +71,13 @@ const MonthlyIncomeChart: FunctionComponent<MonthlyIncomeChartProps> = ({ monthl
         <div className="self-stretch flex flex-col sm:flex-row items-start sm:items-center justify-between py-0 px-3 gap-2">
           <div className="flex items-end gap-1">
             <div className="h-[15px] w-[15px] rounded-[5px]" style={{ backgroundColor: '#096c5b' }} />
-            <div className="h-4 tracking-[0.02em] font-semibold flex items-center text-[10px] sm:text-[12px] text-darkslategray-100">
+            <div className="h-4 tracking-[0.02em] font-semibold flex items-center text-[10px] sm:text-[12px] text-darkslategray-100 dark:text-[#d7e0ef]">
               Past Months
             </div>
           </div>
           <div className="flex items-end gap-1">
             <div className="h-[15px] w-[15px] rounded-[5px]" style={{ backgroundColor: '#024338' }} />
-            <div className="h-4 tracking-[0.02em] font-semibold flex items-center text-[10px] sm:text-[12px] text-darkslategray-100">
+            <div className="h-4 tracking-[0.02em] font-semibold flex items-center text-[10px] sm:text-[12px] text-darkslategray-100 dark:text-[#d7e0ef]">
               Current Month
             </div>
           </div>

@@ -34,9 +34,10 @@ export default function FacilityReviewModal({
   onReject,
   formatType,
 }: Props) {
-  if (!isOpen || !facility) return null;
+  if (!facility) return null;
+
   return (
-    <AdminPopupOverlay onClose={onClose}>
+    <AdminPopupOverlay onClose={onClose} isOpen={isOpen}>
       <div className="flex w-[640px] max-h-[90vh] flex-col overflow-hidden rounded-tl-[32px] bg-white dark:bg-[#141515] dark:border dark:border-[#303331]">
         <div className="w-full shrink-0 rounded-tl-[32px] bg-gradient-to-b from-[#096c5b] to-[#16917c] px-[57px] py-3">
           <div className="w-full py-8 pb-2">
@@ -149,23 +150,23 @@ export default function FacilityReviewModal({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-[12px] px-6 py-2 font-['Inter',sans-serif] text-[14px] font-semibold text-[#64748b] transition-opacity hover:opacity-80"
-          >
-            Cancel
-          </button>
-          {facility.status === 'submitted' && (
-            <>
-              <button
-                type="button"
-                onClick={onReject}
-                className="rounded-[12px] px-6 py-2 font-['Inter',sans-serif] text-[14px] font-semibold text-[#ef4444] transition-opacity hover:opacity-80"
-              >
-                Reject
-              </button>
-              <button
-                type="button"
-                onClick={onApprove}
-                className="rounded-[12px] bg-[#cbf6ed] dark:bg-[#12342e] px-6 py-2 font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] dark:text-[#72cbb8] transition-opacity hover:opacity-80"
+            className="cursor-pointer rounded-[12px] px-6 py-2 font-['Inter',sans-serif] text-[14px] font-semibold text-[#64748b] transition-opacity hover:opacity-80"
+        >
+          Cancel
+        </button>
+        {facility.status === 'submitted' && (
+          <>
+            <button
+              type="button"
+              onClick={onReject}
+              className="cursor-pointer rounded-[12px] px-6 py-2 font-['Inter',sans-serif] text-[14px] font-semibold text-[#ef4444] transition-opacity hover:opacity-80"
+            >
+              Reject
+            </button>
+            <button
+              type="button"
+              onClick={onApprove}
+              className="cursor-pointer rounded-[12px] bg-[#cbf6ed] dark:bg-[#12342e] px-6 py-2 font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] dark:text-[#72cbb8] transition-opacity hover:opacity-80"
               >
                 Approve
               </button>

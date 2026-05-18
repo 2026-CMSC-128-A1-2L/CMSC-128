@@ -7,6 +7,7 @@ import AdminPagination from '../../components/admin/AdminPagination';
 import ReportDetailModal from '../../components/admin/ReportDetailModal';
 import { ReportService } from '../../service/ReportService';
 import { useDebouncedValue } from '../../hooks/useDebouncedValue';
+import { motion, AnimatePresence } from 'framer-motion';
 
 type ReportUser = {
   _id: string;
@@ -26,6 +27,7 @@ type ReportData = {
   listingId?: string;
   facilityId?: string;
   userReported?: string | ReportUser;
+  reporterFacility?: string | null;
   createdAt?: string;
   updatedAt?: string;
 };
@@ -154,7 +156,7 @@ function Reports() {
                 <h2 className="font-['Poppins'] text-[36px] font-bold text-[#001d18] dark:text-[#d7e0ef] drop-shadow-[0px_4px_4px_rgba(0,0,0,0.1)]">
                   Reports
                 </h2>
-                <div className="flex h-9 w-75.75 items-center gap-2 rounded-full border border-[#d0d0d0] dark:border-[#303331] bg-white dark:bg-[#1f2022] px-4">
+                <div className="flex h-9 w-75.75 items-center gap-2 rounded-full border border-[#d0d0d0] dark:border-[#303331] bg-white dark:bg-[#1f2022] px-4 focus-within:border-[#024338] focus-within:ring-2 focus-within:ring-[#024338]/20 transition-all duration-200">
                   <Icon
                     icon="solar:magnifer-outline"
                     className="h-4 w-4 text-[#7c8db5] dark:text-[#a4acba]"
@@ -214,36 +216,47 @@ function Reports() {
                         </td>
                       </tr>
                     ) : (
-                      paginatedReports.map((report) => (
-                        <tr
-                          key={report._id}
-                          className="border-b border-[#f0f0f0] dark:border-[#303331] bg-white dark:bg-[#141515] transition-colors duration-200 hover:bg-[#f8fffe] dark:hover:bg-[#17201d]"
-                        >
-                          <td className="px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black dark:text-[#d7e0ef]">
-                            {getReporterName(report.userId)}
-                          </td>
-                          <td className="max-w-xs truncate px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black dark:text-[#d7e0ef]">
-                            {report.description.replace(/\[.*?\]\s*/, '').slice(0, 60)}...
-                          </td>
-                          <td className="px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black dark:text-[#d7e0ef]">
-                            {getReportType(report)}
-                          </td>
-                          <td className="px-6 py-3">{getStatusBadge(report.status)}</td>
-                          <td className="px-6 py-3">
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setSelectedReportId(report._id);
-                                setActionMessage(null);
-                                setIsModalOpen(true);
-                              }}
-                              className="cursor-pointer rounded-lg bg-[#024338] px-5 py-2 font-['Poppins'] text-[16px] font-bold text-white transition-colors duration-200 hover:bg-[#096c5b]"
-                            >
-                              View
-                            </button>
-                          </td>
-                        </tr>
-                      ))
+                      <AnimatePresence>
+                        {paginatedReports.map((report, index) => (
+                          <motion.tr
+                            key={report._id}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{
+                              opacity: 1,
+                              y: 0,
+                              transition: { delay: index * 0.05 }
+                            }}
+                            exit={{ opacity: 0, y: -20 }}
+                            className="border-b border-[#f0f0f0] dark:border-[#303331] bg-white dark:bg-[#141515] transition-colors duration-200 hover:bg-[#f8fffe] dark:hover:bg-[#17201d]"
+                          >
+                            <td className="px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black dark:text-[#d7e0ef]">
+                              {getReporterName(report.userId)}
+                            </td>
+                            <td className="max-w-xs truncate px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black dark:text-[#d7e0ef]">
+                              {report.description.replace(/\[.*?\]\s*/, '').slice(0, 60)}...
+                            </td>
+                            <td className="px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black dark:text-[#d7e0ef]">
+                              {getReportType(report)}
+                            </td>
+                            <td className="px-6 py-3">{getStatusBadge(report.status)}</td>
+                            <td className="px-6 py-3">
+                              <motion.button
+                                type="button"
+                                onClick={() => {
+                                  setSelectedReportId(report._id);
+                                  setActionMessage(null);
+                                  setIsModalOpen(true);
+                                }}
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                className="cursor-pointer rounded-lg bg-[#024338] px-5 py-2 font-['Poppins'] text-[16px] font-bold text-white transition-colors duration-200 hover:bg-[#096c5b]"
+                              >
+                                View
+                              </motion.button>
+                            </td>
+                          </motion.tr>
+                        ))}
+                      </AnimatePresence>
                     )}
                   </tbody>
                 </table>

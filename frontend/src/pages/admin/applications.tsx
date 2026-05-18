@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Icon } from "@iconify/react";
+import { motion, AnimatePresence } from "framer-motion";
 import SideBarAdmin from "../../components/admin/SideBarAdmin";
 import AdminPageTransition from "../../components/admin/AdminPageTransition";
 import PageBackground from "../../components/general/PageBackground";
@@ -9,10 +10,9 @@ import ApplicantReviewModal, {
   type VerificationDocument,
   getDisplayName,
   formatRole,
-} from '../../components/admin/ApplicantReviewModal';
-import { DocumentService } from '../../service/DocumentService';
-import { UserService } from '../../service/UserService';
-import { useDebouncedValue } from '../../hooks/useDebouncedValue';
+} from "../../components/admin/ApplicantReviewModal";
+import { DocumentService } from "../../service/DocumentService";
+import { UserService } from "../../service/UserService";
 
 const tableHeaders = [
   "Name",
@@ -32,9 +32,10 @@ const getApplicationStatusLabel = (user: VerificationApplicant) => {
 
 function Applications() {
   const [applicants, setApplicants] = useState<VerificationApplicant[]>([]);
-  const [selectedApplicantId, setSelectedApplicantId] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
-  const debouncedSearchQuery = useDebouncedValue(searchQuery, 300);
+  const [selectedApplicantId, setSelectedApplicantId] = useState<string | null>(
+    null,
+  );
+  const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [actionMessage, setActionMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -51,7 +52,7 @@ function Applications() {
     applicants.find((u) => u._id === selectedApplicantId) ?? null;
 
   const filteredApplicants = useMemo(() => {
-    const q = debouncedSearchQuery.trim().toLowerCase();
+    const q = searchQuery.trim().toLowerCase();
     if (!q) return applicants;
     return applicants.filter((u) =>
       [getDisplayName(u), u.emails?.[0], u.userType, u.address, u.contact]
@@ -60,11 +61,7 @@ function Applications() {
         .toLowerCase()
         .includes(q),
     );
-  }, [applicants, debouncedSearchQuery]);
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [debouncedSearchQuery]);
+  }, [applicants, searchQuery]);
 
   const totalPages = Math.ceil(filteredApplicants.length / itemsPerPage);
   const paginatedApplicants = useMemo(() => {
@@ -238,7 +235,7 @@ function Applications() {
                 <h2 className="font-['Poppins'] text-[36px] font-bold text-[#001d18] dark:text-[#d7e0ef] drop-shadow-[0px_4px_4px_rgba(0,0,0,0.1)]">
                   Verification Applications
                 </h2>
-                <div className="flex h-9 w-75.75 items-center gap-2 rounded-full border border-[#d0d0d0] dark:border-[#303331] bg-white dark:bg-[#1f2022] px-4">
+                <div className="flex h-9 w-75.75 items-center gap-2 rounded-full border border-[#d0d0d0] dark:border-[#303331] bg-white dark:bg-[#1f2022] px-4 focus-within:border-[#024338] focus-within:ring-2 focus-within:ring-[#024338]/20 transition-all duration-200">
                   <Icon
                     icon="solar:magnifer-outline"
                     className="h-4 w-4 text-[#7c8db5] dark:text-[#a4acba]"
@@ -246,7 +243,10 @@ function Applications() {
                   <input
                     type="text"
                     value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onChange={(e) => {
+                      setSearchQuery(e.target.value);
+                      setCurrentPage(1);
+                    }}
                     placeholder="Search"
                     className="flex-1 bg-transparent font-['Poppins'] text-sm text-black dark:text-[#d7e0ef] outline-none placeholder:text-[#7c8db5] dark:placeholder:text-[#a4acba]"
                   />
@@ -298,38 +298,49 @@ function Applications() {
                         </td>
                       </tr>
                     ) : (
-                      paginatedApplicants.map((row) => (
-                        <tr
-                          key={row._id}
-                          className="border-b border-[#f0f0f0] dark:border-[#303331] bg-white dark:bg-[#141515]"
-                        >
-                          <td className="px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black dark:text-[#d7e0ef]">
-                            {getDisplayName(row)}
-                          </td>
-                          <td className="px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black dark:text-[#d7e0ef]">
-                            {row.emails?.[0] ?? "No email"}
-                          </td>
-                          <td className="px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black dark:text-[#d7e0ef]">
-                            {formatRole(row.userType)}
-                          </td>
-                          <td className="px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black dark:text-[#d7e0ef]">
-                            {row.documents?.filter((d) => d.files.length > 0)
-                              .length ?? 0}
-                          </td>
-                          <td className="px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black dark:text-[#d7e0ef]">
-                            {getApplicationStatusLabel(row)}
-                          </td>
-                          <td className="px-6 py-3">
-                            <button
-                              type="button"
-                              onClick={() => openModal(row._id)}
-                              className="cursor-pointer rounded-lg bg-[#024338] px-5 py-2 font-['Poppins'] text-[16px] font-bold text-white"
-                            >
-                              View
-                            </button>
-                          </td>
-                        </tr>
-                      ))
+                      <AnimatePresence>
+                        {paginatedApplicants.map((row, index) => (
+                          <motion.tr
+                            key={row._id}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{
+                              opacity: 1,
+                              y: 0,
+                              transition: { delay: index * 0.05 },
+                            }}
+                            exit={{ opacity: 0, y: -20 }}
+                            className="border-b border-[#f0f0f0] dark:border-[#303331] bg-white dark:bg-[#141515]"
+                          >
+                            <td className="px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black dark:text-[#d7e0ef]">
+                              {getDisplayName(row)}
+                            </td>
+                            <td className="px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black dark:text-[#d7e0ef]">
+                              {row.emails?.[0] ?? "No email"}
+                            </td>
+                            <td className="px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black dark:text-[#d7e0ef]">
+                              {formatRole(row.userType)}
+                            </td>
+                            <td className="px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black dark:text-[#d7e0ef]">
+                              {row.documents?.filter((d) => d.files.length > 0)
+                                .length ?? 0}
+                            </td>
+                            <td className="px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black dark:text-[#d7e0ef]">
+                              {getApplicationStatusLabel(row)}
+                            </td>
+                            <td className="px-6 py-3">
+                              <motion.button
+                                type="button"
+                                onClick={() => openModal(row._id)}
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                className="cursor-pointer rounded-lg bg-[#024338] px-5 py-2 font-['Poppins'] text-[16px] font-bold text-white transition-colors duration-200 hover:bg-[#096c5b]"
+                              >
+                                View
+                              </motion.button>
+                            </td>
+                          </motion.tr>
+                        ))}
+                      </AnimatePresence>
                     )}
                   </tbody>
                 </table>

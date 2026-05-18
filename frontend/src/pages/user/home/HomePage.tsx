@@ -1,9 +1,16 @@
-﻿import { type FunctionComponent, useEffect, useRef, useState } from "react";
+import {
+  type FunctionComponent,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Icon } from "@iconify/react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import SideBar from "../../../components/user/SideBar";
 import DormCard from "../../../components/user/DormCard";
 import Banner from "../../../components/general/Banner";
+import Footer from "../../../components/general/Footer";
 import PageBackground from "../../../components/general/PageBackground";
 import FilterTab from "../../../components/user/Filter/FilterTab";
 import LoadingPage from "../../general/LoadingPage";
@@ -73,7 +80,7 @@ const NavArrows = ({
       type="button"
       onClick={() => scrollTo(current - 1)}
       disabled={current === 0}
-      className="flex h-[32px] w-[32px] items-center justify-center rounded-full border border-[#f0f0f0] bg-white transition-opacity hover:opacity-70 disabled:opacity-30"
+      className="flex h-[32px] w-[32px] items-center justify-center rounded-full border border-[#f0f0f0] bg-white transition-opacity hover:opacity-70 disabled:opacity-30 cursor-pointer"
       aria-label="Previous property"
     >
       <Icon
@@ -85,7 +92,7 @@ const NavArrows = ({
       type="button"
       onClick={() => scrollTo(current + 1)}
       disabled={current === total - 1}
-      className="flex h-[32px] w-[32px] items-center justify-center rounded-full bg-[#e0f7f4] transition-opacity hover:opacity-70 disabled:opacity-30"
+      className="flex h-[32px] w-[32px] items-center justify-center rounded-full bg-[#e0f7f4] transition-opacity hover:opacity-70 disabled:opacity-30 cursor-pointer"
       aria-label="Next property"
     >
       <Icon
@@ -192,7 +199,7 @@ const EmptyState = ({
     <button
       type="button"
       onClick={onBack}
-      className="mt-2 px-5 py-2 rounded-full bg-[#e0f7f4] text-[#096c5b] text-[0.8rem] font-semibold hover:opacity-80 transition-opacity"
+      className="mt-2 px-5 py-2 rounded-full bg-[#e0f7f4] text-[#096c5b] text-[0.8rem] font-semibold hover:opacity-80 transition-opacity cursor-pointer"
     >
       Back to home
     </button>
@@ -215,7 +222,7 @@ const ErrorState = ({
     <button
       type="button"
       onClick={onRetry}
-      className="mt-2 px-5 py-2 rounded-full bg-[#e0f7f4] text-[#096c5b] text-[0.8rem] font-semibold hover:opacity-80 transition-opacity"
+      className="mt-2 px-5 py-2 rounded-full bg-[#e0f7f4] text-[#096c5b] text-[0.8rem] font-semibold hover:opacity-80 transition-opacity cursor-pointer"
     >
       Try again
     </button>
@@ -250,7 +257,7 @@ const ApplicationGuideModal = ({ onClose }: { onClose: () => void }) => {
     <div className="fixed inset-0 z-[1100] flex items-center justify-center bg-black/35 px-5 py-8">
       <button
         type="button"
-        className="absolute inset-0 cursor-default"
+        className="absolute inset-0 cursor-pointer"
         onClick={onClose}
         aria-label="Close application guide"
       />
@@ -301,7 +308,7 @@ const ApplicationGuideModal = ({ onClose }: { onClose: () => void }) => {
         <button
           type="button"
           onClick={onClose}
-          className="mx-auto mt-auto h-[36px] w-full max-w-[318px] rounded-[5px] bg-[#4c8c7e] font-lora text-[15px] font-bold text-white shadow-[0_3px_8px_rgba(0,0,0,0.2)] transition-all hover:-translate-y-0.5 hover:bg-[#237866] active:translate-y-0"
+          className="mx-auto mt-auto h-[36px] w-full max-w-[318px] rounded-[5px] bg-[#4c8c7e] font-lora text-[15px] font-bold text-white shadow-[0_3px_8px_rgba(0,0,0,0.2)] transition-all hover:-translate-y-0.5 hover:bg-[#237866] active:translate-y-0 cursor-pointer"
         >
           Got it, thanks!
         </button>
@@ -313,7 +320,7 @@ const ApplicationGuideModal = ({ onClose }: { onClose: () => void }) => {
 // ─── HomePage ─────────────────────────────────────────────────────────────────
 
 const HomePage: FunctionComponent = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
@@ -359,9 +366,14 @@ const HomePage: FunctionComponent = () => {
 
   // Category slices — swap for real filtered endpoints later
   const pasaloDorms = filterApplied.slice(0, 10);
-  const popularDorms = filterApplied.slice(0, 10);
+  const popularDorms = [...filterApplied]
+    .sort((a, b) => parseFloat(b.rating) - parseFloat(a.rating))
+    .slice(0, 10);
   const nearDorms = filterApplied.slice(0, 10);
-  const mayLikeDorms = filterApplied.slice(0, 10);
+  const mayLikeDorms = useMemo(
+    () => [...filterApplied].sort(() => Math.random() - 0.5).slice(0, 10),
+    [filterApplied],
+  );
 
   const CATEGORY_DATA: Record<NonNullable<ViewAllCategory>, DormCardData[]> = {
     pasalo: pasaloDorms,
@@ -378,6 +390,14 @@ const HomePage: FunctionComponent = () => {
   const handleSearch = (value: string) => {
     setSearchTerm(value);
     setIsSearchDropdownOpen(value.trim().length > 0);
+    const nextParams = new URLSearchParams(searchParams);
+    if (value.trim()) {
+      nextParams.set("search", value);
+    } else {
+      nextParams.delete("search");
+    }
+    setSearchParams(nextParams, { replace: true });
+    if (value.trim().length > 0) setViewAllCategory(null);
   };
 
   const openSearchResult = (dorm: DormCardData) => {
@@ -411,7 +431,7 @@ const HomePage: FunctionComponent = () => {
 
       {/* right frame */}
       <div className="relative z-10 w-full min-w-0 h-fit flex items-start pt-15 pr-20 pb-20">
-        <div className="h-fit w-full min-w-0 flex flex-col items-start gap-80">
+        <div className="h-fit w-full min-w-0 flex flex-col items-start gap-20">
           <div className="w-full min-w-0 flex flex-col items-start">
             {/* search bar */}
             <div className="relative w-full h-full flex items-center pb-6 box-border">
@@ -444,7 +464,7 @@ const HomePage: FunctionComponent = () => {
                       handleSearch("");
                       setIsSearchDropdownOpen(false);
                     }}
-                    className="text-unselected hover:text-darkgreen"
+                    className="text-unselected hover:text-darkgreen cursor-pointer"
                   >
                     <Icon
                       icon="material-symbols:close-rounded"
@@ -524,7 +544,7 @@ const HomePage: FunctionComponent = () => {
                     <div className="fixed inset-0 z-100 flex justify-end">
                       <button
                         type="button"
-                        className="absolute inset-0 bg-preview/45 backdrop"
+                        className="absolute inset-0 bg-preview/45 backdrop cursor-pointer"
                         onClick={() => setIsFilterOpen(false)}
                         aria-label="Close filters"
                       />
@@ -551,7 +571,7 @@ const HomePage: FunctionComponent = () => {
                         <button
                           type="button"
                           onClick={() => setViewAllCategory(null)}
-                          className="flex items-center justify-center h-8 w-8 rounded-full bg-whitesmoke-100 hover:bg-lightcyan/45 transition-colors"
+                          className="flex items-center justify-center h-8 w-8 rounded-full bg-whitesmoke-100 hover:bg-lightcyan/45 transition-colors cursor-pointer"
                         >
                           <Icon
                             icon="solar:arrow-left-bold"
@@ -571,7 +591,7 @@ const HomePage: FunctionComponent = () => {
                       <button
                         type="button"
                         onClick={() => setViewAllCategory(null)}
-                        className="text-[0.75rem] text-teal-100 underline font-semibold hover:opacity-70 transition-opacity whitespace-nowrap"
+                        className="text-[0.75rem] text-teal-100 underline font-semibold hover:opacity-70 transition-opacity whitespace-nowrap cursor-pointer"
                       >
                         Back to home
                       </button>
@@ -647,12 +667,13 @@ const HomePage: FunctionComponent = () => {
               </div>
             </div>
           </div>
+          <Footer />
         </div>
       </div>
 
       <button
         type="button"
-        className="help-button-animated bottom-10 right-10 z-[1000] cursor-pointer transition-all hover:scale-110 active:scale-95"
+        className="help-button-animated z-[1000] cursor-pointer transition-all hover:scale-110 active:scale-95"
         onClick={() => setShowHelp(true)}
         aria-label="Open application guide"
       >

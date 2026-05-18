@@ -646,6 +646,95 @@ body {
   animation: dark-mode-icon-turn 520ms ease-in-out;
   transform-origin: center;
 }
+
+@keyframes help-button-float {
+  0%,
+  100% {
+    transform: translateY(0) scale(1.1);
+  }
+  50% {
+    transform: translateY(-6px) scale(1.14);
+  }
+}
+
+@keyframes help-icon-wiggle {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-7deg);
+  }
+  75% {
+    transform: rotate(7deg);
+  }
+}
+
+@keyframes help-button-pulse {
+  from {
+    opacity: 0.35;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.35);
+  }
+}
+
+.help-button-animated {
+  position: fixed;
+  right: 2.5rem;
+  bottom: 2.5rem;
+  isolation: isolate;
+  transition:
+    transform 180ms ease,
+    filter 180ms ease;
+}
+
+.help-button-animated::before {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  z-index: -1;
+  border-radius: 9999px;
+  background: rgba(9, 108, 91, 0.28);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.help-button-animated:hover,
+.help-button-animated:focus-visible {
+  animation: help-button-float 700ms ease-in-out infinite;
+  filter: drop-shadow(0 12px 18px rgba(9, 108, 91, 0.24));
+}
+
+.help-button-animated:hover::before,
+.help-button-animated:focus-visible::before {
+  animation: help-button-pulse 900ms ease-out infinite;
+}
+
+.help-button-animated:hover > img,
+.help-button-animated:hover > div,
+.help-button-animated:focus-visible > img,
+.help-button-animated:focus-visible > div {
+  animation: help-icon-wiggle 520ms ease-in-out infinite;
+  transform-origin: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .help-button-animated,
+  .help-button-animated::before,
+  .help-button-animated:hover,
+  .help-button-animated:hover::before,
+  .help-button-animated:hover > img,
+  .help-button-animated:hover > div,
+  .help-button-animated:focus-visible,
+  .help-button-animated:focus-visible::before,
+  .help-button-animated:focus-visible > img,
+  .help-button-animated:focus-visible > div {
+    animation: none;
+  }
+}
 @layer utilities {
   .dark .user-profile-shell .bg-white {
     background-color: #101111;

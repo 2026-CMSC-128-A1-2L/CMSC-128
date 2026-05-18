@@ -232,7 +232,7 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
         <button
           type="button"
           onClick={onClose}
-          className="absolute right-0 top-0 grid h-7 w-7 place-items-center rounded-full text-dimgray hover:bg-whitesmoke-100"
+          className="absolute right-0 top-0 grid h-7 w-7 place-items-center rounded-full text-dimgray hover:bg-whitesmoke-100 cursor-pointer"
           aria-label="Close booking form"
         >
           <Icon icon="material-symbols:close-rounded" className="h-5 w-5" />
@@ -309,7 +309,7 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
               <button
                 type="button"
                 onClick={() => goToMonth(-1)}
-                className="grid h-7 w-7 place-items-center rounded-full hover:bg-whitesmoke-100"
+                className="grid h-7 w-7 place-items-center rounded-full hover:bg-whitesmoke-100 cursor-pointer"
                 aria-label="Previous month"
               >
                 <Icon icon="material-symbols:chevron-left-rounded" className="h-5 w-5" />
@@ -339,7 +339,7 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
               <button
                 type="button"
                 onClick={() => goToMonth(1)}
-                className="grid h-7 w-7 place-items-center rounded-full hover:bg-whitesmoke-100"
+                className="grid h-7 w-7 place-items-center rounded-full hover:bg-whitesmoke-100 cursor-pointer"
                 aria-label="Next month"
               >
                 <Icon icon="material-symbols:chevron-right-rounded" className="h-5 w-5" />
@@ -379,7 +379,7 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
             </div>
           </div>
 
-          <div className="flex items-center justify-center gap-4 text-black">
+          <div className="flex items-center justify-center gap-4 text-black cursor-pointer">
             <Icon icon="solar:clock-circle-outline" className="h-5 w-5" />
             <div className="relative w-[150px]">
               <button
@@ -400,7 +400,7 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
                 <Icon
                   icon="material-symbols:keyboard-arrow-down-rounded"
                   className={`h-4 w-4 shrink-0 text-[#356c65] transition-transform ${isTimeMenuOpen ? 'rotate-180' : ''
-                    }`}
+                    } cursor-pointer`}
                 />
               </button>
               {isTimeMenuOpen && availableSlots.length > 0 && (
@@ -413,7 +413,7 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
                         setSelectedSlotStart(slot.startDate);
                         setTimeMenuOpen(false);
                       }}
-                      className="w-full rounded-lg px-3 py-1.5 text-left text-xs font-medium text-black hover:bg-lightcyan"
+                      className="w-full rounded-lg px-3 py-1.5 text-left text-xs font-medium text-black hover:bg-lightcyan cursor-pointer"
                     >
                       {formatTimeRange(slot)}
                     </button>
@@ -428,7 +428,7 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
       {(error || success) && (
         <p
           className={`mt-4 text-center text-xs font-semibold ${success ? 'text-teal-200' : 'text-red-500'
-            }`}
+            } cursor-pointer`}
         >
           {success ?? error}
         </p>
@@ -438,7 +438,7 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
         <button
           type="button"
           onClick={onClose}
-          className="h-8 rounded-num-16 px-5 text-base font-medium text-red-500 hover:bg-red-50"
+          className="h-8 rounded-num-16 px-5 text-base font-medium text-red-500 hover:bg-red-50 cursor-pointer"
         >
           Cancel
         </button>
@@ -446,7 +446,7 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
           type="button"
           onClick={handleBook}
           disabled={isSubmitting || isLoadingUser || isLoadingSlots}
-          className="h-9 rounded-[20px] bg-aliceblue px-7 text-base font-bold text-teal-200 disabled:cursor-not-allowed disabled:opacity-60"
+          className="h-9 rounded-[20px] bg-aliceblue px-7 text-base font-bold text-teal-200 disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
         >
           {isSubmitting ? 'Booking...' : 'Book'}
         </button>

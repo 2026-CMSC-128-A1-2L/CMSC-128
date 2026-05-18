@@ -55,7 +55,7 @@ const EmailDropdown: FunctionComponent<DropdownProps> = ({
             : 'cursor-pointer border-whitesmoke-200 hover:border-teal-100 hover:bg-azure hover:shadow-sm'
         }`}
       >
-        <span className="relative font-semibold text-teal">{selected ?? placeholder}</span>
+        <span className="relative font-semibold text-teal cursor-pointer">{selected ?? placeholder}</span>
         <Icon
           icon="tabler:chevron-down-filled"
           className="w-5 h-5 text-teal transition-transform duration-200"
@@ -122,7 +122,7 @@ const MultiSelectDropdown: FunctionComponent<MultiDropdownProps> = ({
   const label = selected.length === 0 ? 'Select updates' : selected.join(', ');
 
   return (
-    <div className="relative inline-block" ref={ref}>
+    <div className="relative inline-block cursor-pointer" ref={ref}>
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
@@ -183,7 +183,7 @@ const CheckboxRow: FunctionComponent<{
         checked
           ? 'bg-darkslategray border-darkslategray'
           : 'border-teal group-hover:border-teal-200 group-hover:bg-azure'
-      }`}
+      } cursor-pointer`}
     >
       {checked && <Icon icon="mdi:check" className="w-3 h-3 text-white" />}
     </div>

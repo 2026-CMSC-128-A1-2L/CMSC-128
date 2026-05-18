@@ -145,9 +145,10 @@ export default function ReportDetailModal({
     }
   };
 
-  if (!isOpen || !report) return null;
+  if (!report) return null;
+
   return (
-    <AdminPopupOverlay onClose={onClose}>
+    <AdminPopupOverlay onClose={onClose} isOpen={isOpen}>
       <div className="flex w-[612px] max-h-[90vh] flex-col overflow-hidden rounded-tl-[32px] bg-white dark:bg-[#141515] dark:border dark:border-[#303331]">
         <div className="w-full shrink-0 rounded-tl-[32px] bg-gradient-to-b from-[#096c5b] to-[#16917c] px-[57px] py-3">
           <div className="w-full py-8 pb-2">
@@ -179,6 +180,17 @@ export default function ReportDetailModal({
                 <p className="font-['Inter',sans-serif] text-[16px] font-bold text-[#001d18] dark:text-[#d7e0ef]">
                   {getReporterName(report.userId)}
                 </p>
+                {report.reporterFacility && (
+                  <div className="mt-1 flex items-center gap-1.5">
+                    <Icon
+                      icon="solar:buildings-bold"
+                      className="h-3.5 w-3.5 text-[#096c5b] dark:text-[#72cbb8]"
+                    />
+                    <span className="font-['Inter',sans-serif] text-[13px] font-medium text-[#096c5b] dark:text-[#72cbb8]">
+                      {report.reporterFacility}
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
           </Card>
@@ -268,23 +280,23 @@ export default function ReportDetailModal({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-[12px] px-6 py-2 font-['Inter',sans-serif] text-[14px] font-semibold text-[#64748b] transition-opacity hover:opacity-80"
-          >
-            Cancel
-          </button>
-          {report.status === 'pending' && (
-            <>
-              <button
-                type="button"
-                onClick={() => onResolve('dismissed')}
-                className="rounded-[12px] px-6 py-2 font-['Inter',sans-serif] text-[14px] font-semibold text-[#ef4444] transition-opacity hover:opacity-80"
-              >
-                Dismiss
-              </button>
-              <button
-                type="button"
-                onClick={() => onResolve('resolved')}
-                className="rounded-[12px] bg-[#cbf6ed] dark:bg-[#12342e] px-6 py-2 font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] dark:text-[#72cbb8] transition-opacity hover:opacity-80"
+            className="cursor-pointer rounded-[12px] px-6 py-2 font-['Inter',sans-serif] text-[14px] font-semibold text-[#64748b] transition-opacity hover:opacity-80"
+        >
+          Cancel
+        </button>
+        {report.status === 'pending' && (
+          <>
+            <button
+              type="button"
+              onClick={() => onResolve('dismissed')}
+              className="cursor-pointer rounded-[12px] px-6 py-2 font-['Inter',sans-serif] text-[14px] font-semibold text-[#ef4444] transition-opacity hover:opacity-80"
+            >
+              Dismiss
+            </button>
+            <button
+              type="button"
+              onClick={() => onResolve('resolved')}
+              className="cursor-pointer rounded-[12px] bg-[#cbf6ed] dark:bg-[#12342e] px-6 py-2 font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] dark:text-[#72cbb8] transition-opacity hover:opacity-80"
               >
                 Resolve
               </button>
