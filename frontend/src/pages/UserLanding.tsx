@@ -511,19 +511,7 @@ const UserLanding: FunctionComponent = () => {
 
         <div className="w-screen h-[150px] relative shrink-0 z-2 text-num-12 text-teal-100 font-poppins bg-[#001D18]">
           <img className="absolute top-0 left-0 w-screen h-[150px]" alt="" />
-          <div className="absolute top-0 left-[8.89px] w-[1420.2px] h-[150px] flex items-center justify-center gap-[146px]">
-            {/* <img className="w-[218.4px] relative max-h-full object-cover" alt="" src={atlas_text} /> */}
-            <div className="w-[127.9px] flex flex-col items-start">
-              <b className="self-stretch h-[25.3px] relative text-[16px] flex text-white items-center shrink-0">
-                PLATFORM
-              </b>
-              <div className="self-stretch h-num-28.4 relative flex items-center shrink-0 mt-[-4px]">
-                <Link to="/home">Browse Dorms</Link>
-              </div>
-              <div className="self-stretch h-num-28.4 relative flex items-center shrink-0 mt-[-4px]">
-                <Link to="/">How it works</Link>
-              </div>
-            </div>
+          <div className="absolute inset-0 w-full h-full flex items-center justify-start px-6 sm:px-12 md:px-24 lg:px-80 gap-x-12 sm:gap-x-20">
             <div className="flex flex-col items-start">
               <b className="w-[127.9px] h-[25.3px] relative text-[16px] flex text-white items-center shrink-0">
                 SUPPORT
