@@ -7,7 +7,7 @@ import { useDebouncedValue } from "../../../hooks/useDebouncedValue";
 import TutorialBubble from "../dashboard/LandlordHomepageTutorials";
 import TutorialIcon from "../../../../assets/help-chat.svg";
 import { managers } from "../../../data/landlordManagers";
-import { pendingApplications, tenants } from "../../../data/landlordTenants";
+import { pendingApplications, type Tenant } from "../../../data/landlordTenants";
 import { FacilityService } from "../../../service/FacilityService";
 const STATS = [
   {
@@ -148,12 +148,20 @@ const LandlordHomepage: FunctionComponent = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearchDropdownOpen, setIsSearchDropdownOpen] = useState(false);
   const [facilities, setFacilities] = useState<any[]>([]);
+  const [tenantRecords, setTenantRecords] = useState<Tenant[]>([]);
 
   useEffect(() => {
     let cancelled = false;
-    FacilityService.getLandlordFacilities()
-      .then((res) => { if (!cancelled) setFacilities(res.data); })
-      .catch(() => {});
+    Promise.allSettled([FacilityService.getLandlordFacilities(), FacilityService.getTenants()])
+      .then(([facilityResult, tenantResult]) => {
+        if (cancelled) return;
+        if (facilityResult.status === "fulfilled") {
+          setFacilities(facilityResult.value.data);
+        }
+        if (tenantResult.status === "fulfilled" && Array.isArray(tenantResult.value)) {
+          setTenantRecords(tenantResult.value);
+        }
+      });
     return () => { cancelled = true; };
   }, []);
   const debouncedSearchQuery = useDebouncedValue(searchQuery, 300);
@@ -272,7 +280,7 @@ const LandlordHomepage: FunctionComponent = () => {
       },
     ]);
 
-    const tenantOptions = tenants.map((tenant) => ({
+    const tenantOptions = tenantRecords.map((tenant) => ({
       title: tenant.displayName,
       breadcrumb: `My Tenants > ${tenant.displayName}`,
       to: `/landlord/tenants/${tenant.id}`,
@@ -305,7 +313,7 @@ const LandlordHomepage: FunctionComponent = () => {
       ...managerOptions,
       ...staticOptions,
     ];
-  }, [facilities]);
+  }, [facilities, tenantRecords]);
   const matchingSearchOptions = useMemo(() => {
     const query = trimmedDebouncedSearchQuery;
     if (!query) return [];
