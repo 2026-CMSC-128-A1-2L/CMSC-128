@@ -4,6 +4,7 @@ import {
   useState,
   type FormEvent,
   type FunctionComponent,
+  type MouseEvent,
 } from "react";
 import SideBar from "../../../components/user/SideBar";
 import Footer from "../../../components/general/Footer";
@@ -32,6 +33,8 @@ import { BookmarkService } from "../../../service/BookmarkService";
 import { ApplicationService } from "../../../service/ApplicationService";
 import CalendarPopout from "../../../components/user/user-calendar/CalendarPopout";
 import PortalPopup from "../../../components/general/PortalPopup";
+import NotificationToast from "../../../components/general/NotificationToast";
+import { useAuthStore } from "../../../store/useAuthStore";
 
 const currencyFormatter = new Intl.NumberFormat("en-PH", {
   style: "currency",
@@ -101,7 +104,12 @@ type UnitDetailsLocationState = {
   sourceUrl?: string;
 };
 
+type ApplicationWarning = {
+  id: number;
+};
+
 const UnitDetails: FunctionComponent = () => {
+  const user = useAuthStore((state) => state.user);
   const { facilityId } = useParams<{ facilityId: string }>();
   const location = useLocation();
   const navigate = useNavigate();
@@ -132,6 +140,9 @@ const UnitDetails: FunctionComponent = () => {
   const [bookmarkError, setBookmarkError] = useState<string | null>(null);
   const [applicationError, setApplicationError] = useState<string | null>(null);
   const [isSubmittingApplication, setIsSubmittingApplication] = useState(false);
+  const [applicationWarnings, setApplicationWarnings] = useState<
+    ApplicationWarning[]
+  >([]);
   const [showSignIn, setShowSignIn] = useState(false);
   const [isVisitPopoutOpen, setVisitPopoutOpen] = useState(false);
   const availableListings = useMemo(() => facility?.listings ?? [], [facility]);
@@ -151,11 +162,54 @@ const UnitDetails: FunctionComponent = () => {
     }
   }, [selectedListingId, availableListings, selectedRoomType]);
 
+  const showLoggedOutApplicationWarning = () => {
+    const id = Date.now() + Math.random();
+    setApplicationWarnings((warnings) => [...warnings, { id }]);
+    window.setTimeout(() => {
+      setApplicationWarnings((warnings) =>
+        warnings.filter((warning) => warning.id !== id),
+      );
+    }, 3000);
+  };
+
+  const runAuthenticatedAction = (action: () => void) => {
+    if (!user) {
+      showLoggedOutApplicationWarning();
+      return;
+    }
+
+    action();
+  };
+
+  const handleAuthenticatedLinkClick = (event: MouseEvent<HTMLAnchorElement>) => {
+    if (user) return;
+
+    event.preventDefault();
+    showLoggedOutApplicationWarning();
+  };
+
+  const applicationWarningToasts = applicationWarnings.map((warning, index) => (
+    <NotificationToast
+      key={warning.id}
+      show={true}
+      message="Please sign in to continue."
+      type="warning"
+      position="top-right"
+      stackIndex={index}
+      onClose={() =>
+        setApplicationWarnings((warnings) =>
+          warnings.filter((item) => item.id !== warning.id),
+        )
+      }
+    />
+  ));
+
   if (isLoading && !facility) return <LoadingPage />;
 
   if (error && !facility) {
     return (
       <div className="flex min-h-screen font-lora text-darkslategray-100">
+        {applicationWarningToasts}
         <div className="sticky top-0 h-screen shrink-0 z-10">
           <SideBar />
         </div>
@@ -168,7 +222,7 @@ const UnitDetails: FunctionComponent = () => {
           <p className="max-w-md text-sm text-dimgray">{error}</p>
           <button
             type="button"
-            onClick={refetch}
+            onClick={() => runAuthenticatedAction(refetch)}
             className="rounded-lg bg-darkslategray-200 px-5 py-2 text-sm font-semibold text-white cursor-pointer"
           >
             Try again
@@ -333,6 +387,12 @@ const UnitDetails: FunctionComponent = () => {
   });
 
   const handleBookmarkToggle = async () => {
+    if (!user) {
+      setBookmarkError(null);
+      showLoggedOutApplicationWarning();
+      return;
+    }
+
     if (!selectedListing) return;
 
     setIsBookmarkSaving(true);
@@ -365,6 +425,12 @@ const UnitDetails: FunctionComponent = () => {
   };
 
   const handleSubmitApplication = async () => {
+    if (!user) {
+      setApplicationError(null);
+      showLoggedOutApplicationWarning();
+      return;
+    }
+
     if (!selectedListing) {
       setApplicationError("Please choose an available room before submitting.");
       return;
@@ -399,7 +465,7 @@ const UnitDetails: FunctionComponent = () => {
     } catch (err) {
       const status = axios.isAxiosError(err) ? err.response?.status : undefined;
       if (status === 401) {
-        setShowSignIn(true);
+        showLoggedOutApplicationWarning();
         return;
       }
 
@@ -415,6 +481,11 @@ const UnitDetails: FunctionComponent = () => {
 
   const handleOpenVisitPopout = () => {
     if (!facility.allowVisit) return;
+    if (!user) {
+      showLoggedOutApplicationWarning();
+      return;
+    }
+
     setVisitPopoutOpen(true);
   };
 
@@ -422,6 +493,7 @@ const UnitDetails: FunctionComponent = () => {
     <div className="user-unit-details-shell relative flex min-h-screen bg-transparent font-inter text-darkslategray-100 dark:text-[#edf6f4]">
       <PageBackground />
       {showSignIn && <SignInPopUp onClose={() => setShowSignIn(false)} />}
+      {applicationWarningToasts}
       {isVisitPopoutOpen && (
         <PortalPopup
           overlayColor="rgba(0, 0, 0, 0.75)"
@@ -485,10 +557,12 @@ const UnitDetails: FunctionComponent = () => {
               {searchTerm && (
                 <button
                   type="button"
-                  onClick={() => {
-                    setSearchTerm("");
-                    setIsSearchDropdownOpen(false);
-                  }}
+                  onClick={() =>
+                    runAuthenticatedAction(() => {
+                      setSearchTerm("");
+                      setIsSearchDropdownOpen(false);
+                    })
+                  }
                   className="text-unselected hover:text-darkgreen cursor-pointer"
                   aria-label="Clear search"
                 >
@@ -515,7 +589,9 @@ const UnitDetails: FunctionComponent = () => {
                       key={dorm.id}
                       type="button"
                       onMouseDown={(event) => event.preventDefault()}
-                      onClick={() => openSearchResult(dorm)}
+                      onClick={() =>
+                        runAuthenticatedAction(() => openSearchResult(dorm))
+                      }
                       className="flex w-full items-center gap-3 px-3 py-2.5 text-left transition-colors hover:bg-whitesmoke-100"
                     >
                       <img
@@ -616,13 +692,15 @@ const UnitDetails: FunctionComponent = () => {
                 </div>
                 <button
                   type="button"
-                  onClick={() => {
-                    setSelectedListingId(availableListings[0]?.id ?? "");
-                    setLeaseDuration("");
-                    setIsLeaseMenuOpen(false);
-                    setMoveInDate("");
-                    setMessageToLandlord("");
-                  }}
+                  onClick={() =>
+                    runAuthenticatedAction(() => {
+                      setSelectedListingId(availableListings[0]?.id ?? "");
+                      setLeaseDuration("");
+                      setIsLeaseMenuOpen(false);
+                      setMoveInDate("");
+                      setMessageToLandlord("");
+                    })
+                  }
                   className="shadow rounded-md bg-whitesmoke-100 py-1 px-3 text-xs text-gray font-lora cursor-pointer"
                 >
                   Reset
@@ -641,7 +719,11 @@ const UnitDetails: FunctionComponent = () => {
                           <button
                             key={listing.id}
                             type="button"
-                            onClick={() => setSelectedListingId(listing.id)}
+                            onClick={() =>
+                              runAuthenticatedAction(() =>
+                                setSelectedListingId(listing.id),
+                              )
+                            }
                             className={`rounded-lg border py-2 px-3 text-center font-semibold text-xs shadow transition-colors ${
                               isSelected
                                 ? "border-darkslategray-200 bg-darkslategray-200 text-white"
@@ -673,7 +755,11 @@ const UnitDetails: FunctionComponent = () => {
                   <div className="relative" id="lease-duration-select">
                     <button
                       type="button"
-                      onClick={() => setIsLeaseMenuOpen((isOpen) => !isOpen)}
+                      onClick={() =>
+                        runAuthenticatedAction(() =>
+                          setIsLeaseMenuOpen((isOpen) => !isOpen),
+                        )
+                      }
                       className={`shadow rounded-lg border w-full flex items-center justify-between py-2.5 px-3 gap-2 text-left transition-all ${
                         isLeaseMenuOpen
                           ? "border-teal-200 bg-lightcyan/40 ring-2 ring-lightcyan"
@@ -704,10 +790,12 @@ const UnitDetails: FunctionComponent = () => {
                             <button
                               key={duration}
                               type="button"
-                              onClick={() => {
-                                setLeaseDuration(duration);
-                                setIsLeaseMenuOpen(false);
-                              }}
+                              onClick={() =>
+                                runAuthenticatedAction(() => {
+                                  setLeaseDuration(duration);
+                                  setIsLeaseMenuOpen(false);
+                                })
+                              }
                               className={`flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-xs font-semibold transition-colors ${
                                 isSelected
                                   ? "bg-darkslategray-200 text-white"
@@ -957,6 +1045,7 @@ const UnitDetails: FunctionComponent = () => {
                 <div className="flex flex-col gap-2 text-white font-poppins text-sm">
                   <Link
                     to="/direct-messages"
+                    onClick={handleAuthenticatedLinkClick}
                     className="rounded-lg bg-darkslategray-200 flex items-center justify-center gap-2 py-2 shadow"
                   >
                     <Icon
@@ -967,6 +1056,7 @@ const UnitDetails: FunctionComponent = () => {
                   </Link>
                   <button
                     type="button"
+                    onClick={() => runAuthenticatedAction(() => undefined)}
                     className="rounded-lg bg-darkslategray-200 flex items-center justify-center gap-2 py-2 shadow cursor-pointer"
                   >
                     <Icon icon="ic:outline-person" className="h-5 w-5" />
