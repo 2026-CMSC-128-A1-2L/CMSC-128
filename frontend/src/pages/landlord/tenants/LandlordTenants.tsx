@@ -166,7 +166,7 @@ const LandlordTenants = () => {
         ) : (
           <section
             aria-label="Tenants grid"
-            className="grid w-full grid-cols-1 gap-x-[24px] gap-y-[32px] sm:grid-cols-2 xl:grid-cols-3"
+            className="grid w-full grid-cols-[repeat(auto-fill,minmax(260px,320px))] justify-start gap-x-[24px] gap-y-[24px]"
           >
             {filteredTenants.map((tenant) => (
               <TenantCard
