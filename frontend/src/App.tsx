@@ -34,6 +34,7 @@ function AnimatedRoutes() {
   return (
     <Routes>
       <Route path="/" element={<LandingRoute />} />
+      <Route path="/about" element={<UserLanding />} />
 
       <Route element={<PageLayout />}>
         {userRoutes}
