@@ -144,7 +144,7 @@ const UnitDetails: FunctionComponent = () => {
         (listing) =>
           selectedRoomType != null &&
           roomButtonLabel(listing.label).toLowerCase() ===
-            roomButtonLabel(selectedRoomType).toLowerCase(),
+          roomButtonLabel(selectedRoomType).toLowerCase(),
       );
 
       setSelectedListingId((matchingListing ?? availableListings[0])?.id ?? "");
@@ -185,13 +185,13 @@ const UnitDetails: FunctionComponent = () => {
   const isSearchDebouncing = trimmedSearchTerm !== trimmedDebouncedSearchTerm;
   const matchingSearchResults = trimmedDebouncedSearchTerm
     ? recommendedDorms
-        .filter((dorm) => {
-          const roomTypes = dorm.room_types.map((room) => room.pax).join(" ");
-          return `${dorm.name} ${dorm.location} ${roomTypes}`
-            .toLowerCase()
-            .includes(trimmedDebouncedSearchTerm.toLowerCase());
-        })
-        .slice(0, 6)
+      .filter((dorm) => {
+        const roomTypes = dorm.room_types.map((room) => room.pax).join(" ");
+        return `${dorm.name} ${dorm.location} ${roomTypes}`
+          .toLowerCase()
+          .includes(trimmedDebouncedSearchTerm.toLowerCase());
+      })
+      .slice(0, 6)
     : [];
 
   const submitSearch = (event: FormEvent<HTMLFormElement>) => {
@@ -295,11 +295,11 @@ const UnitDetails: FunctionComponent = () => {
   const overallScore =
     reviewRatings.length > 0
       ? Number(
-          (
-            reviewRatings.reduce((sum, rating) => sum + rating, 0) /
-            reviewRatings.length
-          ).toFixed(1),
-        )
+        (
+          reviewRatings.reduce((sum, rating) => sum + rating, 0) /
+          reviewRatings.length
+        ).toFixed(1),
+      )
       : 0;
   const ratingRows = [5, 4, 3, 2, 1].map((star) => {
     const count = reviewRatings.filter(
@@ -316,9 +316,9 @@ const UnitDetails: FunctionComponent = () => {
     const initials = `${firstName[0] ?? "S"}${lastName[0] ?? ""}`.toUpperCase();
     const date = review.createdAt
       ? new Intl.DateTimeFormat("en-US", {
-          month: "long",
-          year: "numeric",
-        }).format(new Date(review.createdAt))
+        month: "long",
+        year: "numeric",
+      }).format(new Date(review.createdAt))
       : "Recently";
 
     return {
@@ -405,7 +405,7 @@ const UnitDetails: FunctionComponent = () => {
 
       const apiMessage = axios.isAxiosError(err)
         ? (err.response?.data as { error?: { message?: string } })?.error
-            ?.message
+          ?.message
         : undefined;
       setApplicationError(apiMessage ?? "Failed to submit your application.");
     } finally {
@@ -681,18 +681,16 @@ const UnitDetails: FunctionComponent = () => {
                       } cursor-pointer`}
                     >
                       <span
-                        className={`font-semibold text-xs ${
-                          leaseDuration ? "text-black" : "text-silver"
-                        }`}
+                        className={`font-semibold text-xs ${leaseDuration ? "text-black" : "text-silver"
+                          }`}
                       >
                         {leaseDuration || "Choose lease duration"}
                       </span>
                       <span className="grid h-7 w-7 place-items-center rounded-full bg-whitesmoke-100 text-teal-200 cursor-pointer">
                         <Icon
                           icon="mdi:chevron-down"
-                          className={`h-4 w-4 transition-transform ${
-                            isLeaseMenuOpen ? "rotate-180" : ""
-                          }`}
+                          className={`h-4 w-4 transition-transform ${isLeaseMenuOpen ? "rotate-180" : ""
+                            }`}
                         />
                       </span>
                     </button>
@@ -740,9 +738,8 @@ const UnitDetails: FunctionComponent = () => {
                       type="date"
                       value={moveInDate}
                       onChange={(event) => setMoveInDate(event.target.value)}
-                      className={`flex-1 bg-transparent outline-none font-semibold text-xs ${
-                        moveInDate ? "text-black" : "text-silver"
-                      }`}
+                      className={`flex-1 bg-transparent outline-none font-semibold text-xs ${moveInDate ? "text-black" : "text-silver"
+                        }`}
                     />
                     <Icon icon="mdi:calendar" className="h-4 w-4" />
                   </div>
@@ -972,8 +969,8 @@ const UnitDetails: FunctionComponent = () => {
                     type="button"
                     className="rounded-lg bg-darkslategray-200 flex items-center justify-center gap-2 py-2 shadow cursor-pointer"
                   >
-                    <Icon icon="ic:outline-phone" className="h-5 w-5" />
-                    <span className="font-medium">Contact Details</span>
+                    <Icon icon="ic:outline-person" className="h-5 w-5" />
+                    <span className="font-medium">View Profile</span>
                   </button>
                 </div>
               </div>
