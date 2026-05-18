@@ -1,5 +1,6 @@
 export * from './constants.js';
 
+export * from './schemas/announcement.js';
 export * from './schemas/application.js';
 export * from './schemas/billing.js';
 export * from './schemas/booking.js';

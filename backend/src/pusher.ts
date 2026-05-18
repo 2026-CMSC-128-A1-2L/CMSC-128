@@ -36,3 +36,14 @@ export const triggerNewNotification = async (
 ) => {
   await pusher.trigger(`private-user-${userId}`, 'new-notification', notification);
 };
+
+export const triggerNewAnnouncement = async (announcement: {
+  _id: string;
+  subject: string;
+  content: string;
+  targetRole: string | null;
+  createdAt: string;
+  updatedAt: string;
+}) => {
+  await pusher.trigger('announcements', 'new-announcement', announcement);
+};
