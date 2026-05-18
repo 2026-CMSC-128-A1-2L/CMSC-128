@@ -9,6 +9,7 @@ import TutorialIcon from "../../../../assets/help-chat.svg";
 import { managers } from "../../../data/landlordManagers";
 import { pendingApplications, tenants } from "../../../data/landlordTenants";
 import { FacilityService } from "../../../service/FacilityService";
+import { getPrimaryMediaUrl } from "../../../utils/media";
 const STATS = [
   {
     label: "Monthly Income",
@@ -127,8 +128,7 @@ const optionMatchesQuery = (option: LandlordSearchOption, query: string) => {
 };
 
 const getImage = (facility: any): string =>
-  facility.image ??
-  facility.media?.[0]?.value ??
+  getPrimaryMediaUrl(facility.image ?? facility.media?.[0]) ||
   'https://placehold.co/280x120?text=No+image';
 
 const getOccupiedUnits = (facility: any): number => {

@@ -72,11 +72,10 @@ const DocumentCard: FunctionComponent<DocumentCardProps> = ({
         <div className="flex items-center gap-3">
           <span className="font-bold text-black dark:text-white text-sm">{label}</span>
           <span
-            className={`text-xs font-semibold rounded-2xl px-3 py-1 ${
-              isUploaded
-                ? 'text-slate-500 bg-slate-100 dark:bg-[#303331] dark:text-[#a4acba]'
-                : 'text-red-600 bg-red-100 dark:bg-red-900/30 dark:text-red-400'
-            }`}
+            className={`text-xs font-semibold rounded-2xl px-3 py-1 ${isUploaded
+              ? 'text-slate-500 bg-slate-100 dark:bg-[#303331] dark:text-[#a4acba]'
+              : 'text-red-600 bg-red-100 dark:bg-red-900/30 dark:text-red-400'
+              }`}
           >
             {isUploaded ? 'Uploaded' : 'Missing'}
           </span>
@@ -105,13 +104,13 @@ const DocumentCard: FunctionComponent<DocumentCardProps> = ({
                 <div className="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-[#141515] rounded-lg shadow-lg border border-gray-100 dark:border-[#303331] z-10 overflow-hidden flex flex-col text-sm">
                   <button
                     onClick={handleViewExample}
-                    className="w-full text-left px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-[#1f2022] text-gray-700 dark:text-[#a4acba] transition-colors cursor-pointer"
+                    className="w-full text-left px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-[#1f2022] text-slategray dark:text-[#a4acba] transition-colors cursor-pointer"
                   >
                     View Example File
                   </button>
                   <button
                     onClick={handleDownload}
-                    className="w-full text-left px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-[#1f2022] text-gray-700 dark:text-[#a4acba] transition-colors border-t border-gray-100 dark:border-[#303331] cursor-pointer"
+                    className="w-full text-left px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-[#1f2022] text-slategray dark:text-[#a4acba] transition-colors border-t border-gray-100 dark:border-[#303331] cursor-pointer"
                   >
                     Download File
                   </button>
@@ -135,11 +134,11 @@ const DocumentCard: FunctionComponent<DocumentCardProps> = ({
             <div className="w-11 h-11 rounded-lg border border-gray-200 dark:border-[#303331] bg-gray-50 dark:bg-[#141515] flex items-center justify-center shrink-0">
               <Icon
                 icon="material-symbols:image-outline"
-                className="w-8 h-8 text-gray-500 dark:text-[#a4acba]"
+                className="w-8 h-8 text-slategray dark:text-[#a4acba]"
               />
             </div>
             <div className="flex flex-col">
-              <span className="font-semibold text-xs text-gray-800 dark:text-[#d7e0ef] truncate max-w-[200px]">
+              <span className="font-semibold text-xs text-slategray dark:text-[#d7e0ef] truncate max-w-[200px]">
                 {file.name}
               </span>
               <span className="text-xs text-gray-400 dark:text-[#6b7280] font-medium mt-0.5">

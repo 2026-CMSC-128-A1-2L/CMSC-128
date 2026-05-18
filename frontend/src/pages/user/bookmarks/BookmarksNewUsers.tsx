@@ -8,6 +8,7 @@ import PageBackground from "../../../components/general/PageBackground";
 import { useTheme } from "../../../pages/utilities/DarkMode";
 import { useBookmarks } from "../../../hooks/useBookmarks";
 import type { BookmarkItem } from "../../../service/BookmarkService";
+import FallbackImage from "../../../components/general/FallbackImage";
 
 const currencyFormatter = new Intl.NumberFormat("en-PH", {
   style: "currency",
@@ -49,8 +50,8 @@ const BookmarkCard: FunctionComponent<BookmarkCardProps> = ({
       aria-label={`View ${bookmark.facilityName ?? roomLabel}`}
     >
       <div className="relative h-32 w-full shrink-0 bg-whitesmoke-100 dark:bg-[#1a1b1b]">
-        <img
-          src={image}
+        <FallbackImage
+          media={image}
           alt={bookmark.facilityName ?? roomLabel}
           className="h-full w-full object-cover"
         />

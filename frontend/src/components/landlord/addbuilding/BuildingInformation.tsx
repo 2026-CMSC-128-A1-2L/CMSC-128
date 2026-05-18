@@ -18,6 +18,8 @@ import AddManager1 from "../LandlordManagerAddForms/LandlordManagerAdd1";
 import AddManager2 from "../LandlordManagerAddForms/LandlordManagerAdd2";
 import type { AddManagerFormValues } from "../LandlordManagerAddForms/LandlordManagerAdd1";
 import RecenterMap from "../../utilities/RecenterMap";
+import FallbackImage from "../../general/FallbackImage";
+import { getPrimaryMediaUrl } from "../../../utils/media";
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 
@@ -138,6 +140,7 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({
     register,
     handleSubmit,
     watch,
+    reset,
     formState: { errors },
   } = useForm<BuildingFormValues>({
     defaultValues: {
@@ -148,6 +151,18 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({
     },
     mode: "onChange",
   });
+
+  useEffect(() => {
+    reset({
+      name: buildingInfo.name,
+      typeOfBuilding: buildingInfo.typeOfBuilding,
+      location: buildingInfo.location,
+      about: buildingInfo.about,
+    });
+    setImages(buildingInfo.images || []);
+    setImageFiles(buildingInfo.imageFiles || []);
+    setCoordinates(buildingInfo.locationCoordinates || DEFAULT_BUILDING_COORDINATES);
+  }, [buildingInfo.id, reset]);
 
   useEffect(() => {
     const subscription = watch((values) => {
@@ -349,8 +364,8 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({
                     key={index}
                     className="relative group h-[100px] w-[100px] rounded-num-12 border-whitesmoke border-solid border-[1px] overflow-hidden bg-gray-50 shrink-0 dark:bg-[#1f2022] dark:border-[#343737]"
                   >
-                    <img
-                      src={src}
+                    <FallbackImage
+                      media={src}
                       alt={`Building preview ${index + 1}`}
                       className="w-full h-full object-cover cursor-pointer hover:opacity-90 transition-opacity"
                       onClick={() => setLightboxIndex(index)}
@@ -631,7 +646,7 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({
           open={lightboxIndex >= 0}
           index={lightboxIndex}
           close={() => setLightboxIndex(-1)}
-          slides={images.map((src) => ({ src }))}
+          slides={images.map((src) => ({ src: getPrimaryMediaUrl(src) }))}
         />
       </form>
 

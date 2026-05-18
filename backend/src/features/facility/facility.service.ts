@@ -184,9 +184,21 @@ export type CreateFacilityArguments = {
   applicationOpenDate?: Date | null;
 };
 
+const getPublicR2Url = (value: string) => {
+  if (value.startsWith('http')) return value;
+
+  const publicOrigin = process.env.R2_PUBLIC_URL;
+  if (!publicOrigin) return value;
+
+  const normalizedOrigin = publicOrigin.replace(/\/+$/, '');
+  const normalizedKey = value.replace(/^\/+/, '');
+  return `${normalizedOrigin}/${normalizedKey}`;
+};
+
 // NOTE: attributes to update are not yet finalized
 export type UpdateFacilityArguments = {
   name?: string;
+  description?: string;
   type?: string;
   location?: {
     coordinates?: {
@@ -195,6 +207,18 @@ export type UpdateFacilityArguments = {
     } | null;
     text?: string | null;
   };
+  isPrivate?: boolean;
+  allowVisit?: boolean;
+  allowTransfer?: boolean;
+  isAcceptingApplications?: boolean;
+  documents?: {
+    docId: string;
+    name: string;
+    status?: string;
+    message?: string;
+    files: string[];
+  }[];
+  mediaUrls?: string[];
   applicationCloseDate?: Date;
   applicationOpenDate?: Date;
 };
@@ -234,8 +258,8 @@ export const createFacility = async (
     allowTransfer: data.allowTransfer,
     documents: data.documents,
     media: data.mediaUrls?.map((value) => ({
-      sourceType: 'local',
-      value,
+      sourceType: 'external',
+      value: getPublicR2Url(value),
     })),
 
     applicationCloseDate: data.applicationCloseDate,
@@ -320,7 +344,19 @@ export const updateFacility = async (
     throw new AppError(422, 'Application close date should not be before application open date.');
   }
 
-  facility.set(data);
+  const { mediaUrls, ...facilityData } = data;
+
+  facility.set({
+    ...facilityData,
+    ...(mediaUrls
+      ? {
+          media: mediaUrls.map((value) => ({
+            sourceType: 'external' as const,
+            value: getPublicR2Url(value),
+          })),
+        }
+      : {}),
+  });
 
   return await facility.save();
 };
@@ -331,6 +367,10 @@ export const deleteFacility = async (facilityId: mongoose.Types.ObjectId) => {
   // throw a 404 error
   if (!facility) {
     throw new AppError(404, 'Facility not found.');
+  }
+
+  if (facility.status === 'approved') {
+    throw new AppError(400, 'Active properties cannot be deleted.');
   }
 
   // TODO: check listing count

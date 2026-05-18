@@ -86,10 +86,71 @@ type ApiFacility = {
 
 // ─── Helpers ───────────────────────────────────────────────────────────────
 
-const mediaToUrl = (media: { sourceType: string; value: string }) =>
-  media.sourceType === 'local'
-    ? `/api/files/public?key=${encodeURIComponent(media.value)}`
-    : media.value;
+const R2_PUBLIC_ORIGIN =
+  import.meta.env.VITE_R2_PUBLIC_URL ?? 'https://pub-7a3284e84ae04648a8ef605ba34cb54a.r2.dev';
+
+const addKeyCandidates = (candidates: Set<string>, key: string) => {
+  const normalizedKey = key.replace(/^\/+/, '');
+  if (!normalizedKey) return;
+
+  candidates.add(`/api/files/public?key=${encodeURIComponent(normalizedKey)}`);
+  candidates.add(`${R2_PUBLIC_ORIGIN.replace(/\/+$/, '')}/${normalizedKey}`);
+
+  if (normalizedKey.startsWith('atlas/')) {
+    const withoutAtlas = normalizedKey.replace(/^atlas\//, '');
+    candidates.add(`/api/files/public?key=${encodeURIComponent(withoutAtlas)}`);
+    candidates.add(`${R2_PUBLIC_ORIGIN.replace(/\/+$/, '')}/${withoutAtlas}`);
+  } else {
+    const withAtlas = `atlas/${normalizedKey}`;
+    candidates.add(`/api/files/public?key=${encodeURIComponent(withAtlas)}`);
+    candidates.add(`${R2_PUBLIC_ORIGIN.replace(/\/+$/, '')}/${withAtlas}`);
+  }
+};
+
+const getMediaCandidates = (media: { sourceType?: string; value: string } | string) => {
+  const value = typeof media === 'string' ? media : media.value;
+  const candidates = new Set<string>();
+
+  if (!value) return [];
+
+  if (value.startsWith('http')) {
+    candidates.add(value);
+    try {
+      const parsedUrl = new URL(value);
+      addKeyCandidates(candidates, parsedUrl.pathname);
+    } catch {
+      // Keep the original URL if parsing fails.
+    }
+  } else {
+    addKeyCandidates(candidates, value);
+  }
+
+  return [...candidates];
+};
+
+const FallbackImage = ({
+  candidates,
+  alt,
+  className,
+}: {
+  candidates: string[];
+  alt: string;
+  className: string;
+}) => {
+  const [index, setIndex] = useState(0);
+  const src = candidates[index];
+
+  if (!src) return null;
+
+  return (
+    <img
+      src={src}
+      alt={alt}
+      className={className}
+      onError={() => setIndex((current) => Math.min(current + 1, candidates.length - 1))}
+    />
+  );
+};
 
 const formatManagerName = (m: FacilityManager) =>
   [m.firstName, m.middleName, m.lastName].filter(Boolean).join(' ');
@@ -204,10 +265,11 @@ const ListingCard = ({
   listing: FacilityListing;
   onOpen: (listing: ApiListing) => void;
 }) => {
-  const image =
+  const imageCandidates =
     listing.media.length > 0
-      ? mediaToUrl(listing.media[0])
-      : 'https://placehold.co/264x144?text=No+image';
+      ? getMediaCandidates(listing.media[0])
+      : ['https://placehold.co/264x144?text=No+image'];
+  const image = imageCandidates[0];
 
   return (
     <div className="relative h-56 w-66 overflow-hidden rounded-[15.31px] border border-solid border-whitesmoke bg-white text-left text-black font-inter shadow-sm transition-shadow duration-200 hover:shadow-lg">
@@ -226,7 +288,7 @@ const ListingCard = ({
           })
         }
       >
-        <img className="h-36 w-full object-cover" src={image} alt={listing.name} />
+        <FallbackImage candidates={imageCandidates} alt={listing.name} className="h-36 w-full object-cover" />
         <div className="flex w-full flex-1 flex-col px-3 py-1.5">
           <b className="w-full truncate text-num-14 leading-5 text-black">{listing.name}</b>
           <div className="mt-1 flex w-full items-center gap-1 text-left text-num-10 font-semibold text-dimgray">
@@ -781,7 +843,7 @@ const BuildingInfo = () => {
       : facilityStatus.charAt(0).toUpperCase() + facilityStatus.slice(1)
     : '—';
 
-  const photos = facility.media.map(mediaToUrl);
+  const photos = facility.media.map(getMediaCandidates);
 
   return (
     <LandlordLayout
@@ -865,13 +927,13 @@ const BuildingInfo = () => {
             <div className="flex flex-col gap-2.5 p-2.5">
               <b>Photos</b>
               <div className="flex flex-wrap gap-2.5">
-                {photos.map((url, index) => (
+                {photos.map((candidates, index) => (
                   <div
-                    key={`${url}-${index}`}
+                    key={`${candidates[0]}-${index}`}
                     className="h-25 w-25 rounded-num-12 border-whitesmoke-200 border-solid border overflow-hidden shrink-0"
                   >
-                    <img
-                      src={url}
+                    <FallbackImage
+                      candidates={candidates}
                       alt={`${facility.name} photo ${index + 1}`}
                       className="w-full h-full object-cover"
                     />

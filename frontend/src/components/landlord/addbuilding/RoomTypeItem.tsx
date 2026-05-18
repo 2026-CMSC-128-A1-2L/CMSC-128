@@ -8,6 +8,7 @@ import type {
   TagDefinition,
   TagValue,
 } from "./useBuildingStore";
+import FallbackImage from "../../general/FallbackImage";
 
 // ─── Predefined tag catalogue ─────────────────────────────────────────────────
 // To add more tags: add an entry to the relevant category array.
@@ -244,14 +245,14 @@ const TagChip: FunctionComponent<{
       onClick={onToggle}
       className={`flex items-center gap-1.5 rounded-full border text-xs font-semibold cursor-pointer select-none transition-all ${
         selected
-          ? "border-teal-500 bg-teal-50 text-teal-800 pl-2.5 pr-1.5 py-1 dark:border-[#72cbb8] dark:bg-[#12342e] dark:text-[#72cbb8]"
-          : "border-whitesmoke bg-white text-slategray hover:border-gray-300 hover:text-gray-600 px-3 py-1 dark:bg-[#141515] dark:border-[#343737] dark:text-[#a4acba] dark:hover:border-[#45665e] dark:hover:text-[#d7e0ef]"
+          ? "border-[#00b89c] bg-[#ecfffb] text-[#006c5b] pl-2.5 pr-1.5 py-1 dark:border-[#72cbb8] dark:bg-[#12342e] dark:text-[#bff6ea]"
+          : "border-[#e5e7eb] bg-white text-[#64748b] hover:border-[#b8c3d0] hover:text-[#2f3136] px-3 py-1 dark:bg-[#141515] dark:border-[#343737] dark:text-[#a4acba] dark:hover:border-[#45665e] dark:hover:text-[#d7e0ef]"
       }`}
     >
       {selected && (
         <Icon
           icon="material-symbols:check-rounded"
-          className="w-3 h-3 text-teal-600 shrink-0"
+          className="w-3 h-3 text-[#009b84] shrink-0"
         />
       )}
       <span>{def.displayName}</span>
@@ -265,7 +266,7 @@ const TagChip: FunctionComponent<{
             e.stopPropagation();
             onToggle();
           }}
-          className="ml-0.5 text-teal-500 hover:text-red-400 transition-colors"
+          className="ml-0.5 text-[#00a990] hover:text-red-400 transition-colors"
         >
           <Icon icon="material-symbols:close-rounded" className="w-3 h-3" />
         </span>
@@ -309,14 +310,14 @@ const TagsSection: FunctionComponent<{ roomType: RoomTypeData }> = ({
       <div className="flex items-center gap-2">
         <b className="text-black dark:text-[#d7e0ef]">Tags</b>
         {selectedCount > 0 && (
-          <span className="text-xs font-semibold bg-teal-100 text-teal-800 rounded-full px-2 py-0.5">
+          <span className="text-xs font-semibold bg-[#2f9284] text-white rounded-full px-2.5 py-0.5">
             {selectedCount} selected
           </span>
         )}
       </div>
 
       {/* Category tabs */}
-      <div className="flex items-center gap-1">
+      <div className="flex flex-wrap items-center gap-2">
         {TAG_CATALOGUE.map((cat) => {
           const catSelectedCount = cat.tags.filter((t) =>
             selectedTagIds.has(t._id),
@@ -327,10 +328,10 @@ const TagsSection: FunctionComponent<{ roomType: RoomTypeData }> = ({
               key={cat.category}
               type="button"
               onClick={() => setActiveCategory(cat.category)}
-              className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors ${
+              className={`flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-semibold transition-colors ${
                 isActive
-                  ? "bg-teal-50 text-teal-800 border border-teal-200 dark:bg-[#12342e] dark:text-[#72cbb8] dark:border-[#72cbb8]"
-                  : "bg-white text-slategray border border-whitesmoke hover:border-gray-300 dark:bg-[#141515] dark:text-[#a4acba] dark:border-[#343737] dark:hover:border-[#45665e]"
+                  ? "bg-[#ecfffb] text-[#006c5b] border-[#00a990] dark:bg-[#12342e] dark:text-[#bff6ea] dark:border-[#72cbb8]"
+                  : "bg-white text-[#64748b] border-[#e5e7eb] hover:border-[#b8c3d0] hover:text-[#2f3136] dark:bg-[#141515] dark:text-[#a4acba] dark:border-[#343737] dark:hover:border-[#45665e]"
               }cursor-pointer`}
             >
               <Icon icon={cat.icon} className="w-3.5 h-3.5 cursor-pointer" />
@@ -339,8 +340,8 @@ const TagsSection: FunctionComponent<{ roomType: RoomTypeData }> = ({
                 <span
                   className={`rounded-full px-1.5 text-[10px] font-bold ${
                     isActive
-                      ? "bg-teal-200 text-teal-900"
-                      : "bg-gray-100 text-gray-500"
+                      ? "bg-[#007a68] text-white"
+                      : "bg-[#eef2f7] text-[#64748b]"
                   }`}
                 >
                   {catSelectedCount}
@@ -627,8 +628,8 @@ const RoomTypeItem: FunctionComponent<RoomTypeItemProps> = ({ roomType }) => {
       {isExpanded && (
         <div className="flex flex-col px-4 pb-8 gap-6 text-sm text-gray-500 font-inter dark:text-[#a4acba]">
           {/* Room Type + Capacity + Price */}
-          <div className="self-stretch flex items-start gap-10">
-            <div className="flex-1 flex flex-col items-start gap-3">
+          <div className="self-stretch grid grid-cols-1 gap-5 lg:grid-cols-3">
+            <div className="min-w-0 flex flex-col items-start gap-3">
               <b className="text-black dark:text-[#a4acba]">Room Type</b>
               <div className="self-stretch flex flex-col gap-1">
                 <div className="self-stretch h-12 rounded-xl bg-aliceblue border border-whitesmoke flex items-center px-4 dark:bg-[#1f2022] dark:border-[#343737]">
@@ -637,7 +638,7 @@ const RoomTypeItem: FunctionComponent<RoomTypeItemProps> = ({ roomType }) => {
                       required: "Room type is required",
                     })}
                     placeholder="e.g. Single, Double..."
-                    className="flex-1 bg-transparent text-sm text-black placeholder-slategray outline-none font-medium dark:text-[#d7e0ef] dark:placeholder-[#8c95a3]"
+                    className="min-w-0 flex-1 bg-transparent text-sm text-black placeholder-slategray outline-none font-medium dark:text-[#d7e0ef] dark:placeholder-[#8c95a3]"
                   />
                 </div>
                 {errors.roomType && (
@@ -648,7 +649,7 @@ const RoomTypeItem: FunctionComponent<RoomTypeItemProps> = ({ roomType }) => {
               </div>
             </div>
 
-            <div className="flex-1 flex flex-col items-start gap-3">
+            <div className="min-w-0 flex flex-col items-start gap-3">
               <b className="text-black dark:text-[#a4acba]">Capacity</b>
               <div className="self-stretch flex flex-col gap-1">
                 <div className="self-stretch h-12 rounded-xl bg-aliceblue border border-whitesmoke flex items-center px-4 dark:bg-[#1f2022] dark:border-[#343737]">
@@ -661,7 +662,7 @@ const RoomTypeItem: FunctionComponent<RoomTypeItemProps> = ({ roomType }) => {
                       },
                     })}
                     placeholder="e.g. 2"
-                    className="flex-1 bg-transparent text-sm text-black placeholder-slategray outline-none font-medium dark:text-[#d7e0ef] dark:placeholder-[#8c95a3]"
+                    className="min-w-0 flex-1 bg-transparent text-sm text-black placeholder-slategray outline-none font-medium dark:text-[#d7e0ef] dark:placeholder-[#8c95a3]"
                   />
                 </div>
                 {errors.capacity && (
@@ -672,7 +673,7 @@ const RoomTypeItem: FunctionComponent<RoomTypeItemProps> = ({ roomType }) => {
               </div>
             </div>
 
-            <div className="flex-1 flex flex-col items-start gap-3">
+            <div className="min-w-0 flex flex-col items-start gap-3">
               <b className="text-black dark:text-[#a4acba]">Monthly Price</b>
               <div className="self-stretch flex flex-col gap-1">
                 <div className="self-stretch h-12 rounded-xl bg-aliceblue border border-whitesmoke flex items-center px-4 dark:bg-[#1f2022] dark:border-[#343737]">
@@ -686,7 +687,7 @@ const RoomTypeItem: FunctionComponent<RoomTypeItemProps> = ({ roomType }) => {
                       },
                     })}
                     placeholder="e.g. 5000"
-                    className="flex-1 bg-transparent text-sm text-black placeholder-slategray outline-none font-medium dark:text-[#d7e0ef] dark:placeholder-[#8c95a3]"
+                    className="min-w-0 flex-1 bg-transparent text-sm text-black placeholder-slategray outline-none font-medium dark:text-[#d7e0ef] dark:placeholder-[#8c95a3]"
                   />
                 </div>
                 {errors.price && (
@@ -726,7 +727,11 @@ const RoomTypeItem: FunctionComponent<RoomTypeItemProps> = ({ roomType }) => {
                   key={`${src}-${index}`}
                   className="group relative h-[100px] w-[100px] rounded-xl border border-whitesmoke overflow-hidden dark:border-[#343737]"
                 >
-                  <img src={src} alt={`${headerLabel} preview ${index + 1}`} className="h-full w-full object-cover" />
+                  <FallbackImage
+                    media={src}
+                    alt={`${headerLabel} preview ${index + 1}`}
+                    className="h-full w-full object-cover"
+                  />
                   <button
                     type="button"
                     onClick={() => removePhoto(index)}

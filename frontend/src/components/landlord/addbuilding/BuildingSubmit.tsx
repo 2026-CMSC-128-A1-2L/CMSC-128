@@ -21,11 +21,14 @@ import { UnitService } from '../../../service/UnitService';
 import type { CreateFacilityBody } from '../../../interface/facility';
 import type { CreateListingBody } from '../../../interface/listing';
 import type { CreateUnitBody } from '../../../interface/unit';
+import FallbackImage from '../../general/FallbackImage';
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 
 interface BuildingSubmitProps {
   onPrevClick: () => void;
+  mode?: 'create' | 'edit';
+  facilityId?: string;
 }
 
 // ─── Read-only Field ──────────────────────────────────────────────────────────
@@ -120,18 +123,19 @@ const getResponseId = (response: unknown): string | null => {
 // ─── Requirement Row ──────────────────────────────────────────────────────────
 
 const RequirementRow: FunctionComponent<{ req: RequirementItem }> = ({ req }) => {
-  const isUploaded = !!req.file;
+  const isUploaded = !!req.file || !!req.fileKey;
+  const fileName = req.file?.name ?? req.fileKey?.split('/').pop() ?? '';
   return (
-    <div className="self-stretch rounded-2xl bg-aliceblue border border-whitesmoke flex items-center py-4 px-6 gap-4 dark:bg-[#141515] dark:border-[#343737]">
+    <div className="self-stretch rounded-2xl bg-white border border-[#e5e7eb] flex items-center py-4 px-6 gap-4 shadow-sm dark:bg-[#141515] dark:border-[#343737]">
       {/* Status icon */}
       <div
         className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
-          isUploaded ? 'bg-teal-100' : 'bg-red-100'
+          isUploaded ? 'bg-[#d8f5ef]' : 'bg-red-50'
         }`}
       >
         <Icon
           icon={isUploaded ? 'material-symbols:check-rounded' : 'material-symbols:close-rounded'}
-          className={`w-4 h-4 ${isUploaded ? 'text-teal-700' : 'text-red-500'}`}
+          className={`w-4 h-4 ${isUploaded ? 'text-[#096c5b]' : 'text-red-500'}`}
         />
       </div>
 
@@ -140,7 +144,7 @@ const RequirementRow: FunctionComponent<{ req: RequirementItem }> = ({ req }) =>
         <span className="text-sm font-bold text-[#2f3136] dark:text-[#d7e0ef]">{req.label}</span>
         {isUploaded ? (
           <span className="text-xs text-[#64748b] font-medium truncate">
-            {req.file!.name} · Submitted: {req.date}
+            {fileName} {req.date ? `· Submitted: ${req.date}` : ''}
           </span>
         ) : (
           <span className="text-xs italic text-[#64748b]">Not uploaded</span>
@@ -150,7 +154,7 @@ const RequirementRow: FunctionComponent<{ req: RequirementItem }> = ({ req }) =>
       {/* Badge */}
       <span
         className={`text-xs font-semibold rounded-2xl px-3 py-1 shrink-0 ${
-          isUploaded ? 'text-slate-500 bg-slate-100' : 'text-red-600 bg-red-100'
+          isUploaded ? 'text-[#096c5b] bg-[#d8f5ef]' : 'text-red-600 bg-red-50'
         }`}
       >
         {isUploaded ? 'Uploaded' : 'Missing'}
@@ -213,9 +217,9 @@ const RoomTypeBlock: FunctionComponent<{ roomType: RoomTypeData }> = ({ roomType
           <b className="text-xs text-[#5f6368]">Photos</b>
           <div className="flex items-start flex-wrap gap-2">
             {roomType.images.map((src, i) => (
-              <img
+              <FallbackImage
                 key={i}
-                src={src}
+                media={src}
                 alt={`Room type photo ${i + 1}`}
                 className="h-[80px] w-[80px] rounded-xl object-cover border border-whitesmoke"
               />
@@ -280,14 +284,22 @@ const PaymentMethodBlock: FunctionComponent<{
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 
-const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick }) => {
+const isPersistedId = (value: string) => /^[a-f\d]{24}$/i.test(value);
+
+const isExistingMediaValue = (value: string) => value.length > 0 && !value.startsWith('blob:');
+
+const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({
+  onPrevClick,
+  mode = 'create',
+  facilityId: editFacilityId,
+}) => {
   const { buildingInfo, reset } = useBuildingStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const navigate = useNavigate();
   const { payment, requirements } = buildingInfo;
 
-  const uploadedCount = requirements.filter((r) => r.file !== null).length;
+  const uploadedCount = requirements.filter((r) => r.file !== null || r.fileKey !== null).length;
   const allUploaded = uploadedCount === requirements.length;
 
   const handleSubmit = useCallback(async () => {
@@ -322,8 +334,18 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
         mediaUrls: buildingMedia.map((file) => file.key),
       };
 
-      const createdFacility = await FacilityService.createFacility(facilityPayload);
-      const facilityId = getResponseId(createdFacility);
+      const createdFacility =
+        mode === 'edit' && editFacilityId
+          ? await FacilityService.updateFacility(editFacilityId, {
+              ...facilityPayload,
+              mediaUrls: [
+                ...buildingInfo.images.filter(isExistingMediaValue),
+                ...buildingMedia.map((file) => file.key),
+              ],
+            })
+          : await FacilityService.createFacility(facilityPayload);
+      const facilityId =
+        mode === 'edit' && editFacilityId ? editFacilityId : getResponseId(createdFacility);
 
       if (!facilityId) {
         throw new Error('The facility was created but the response did not include an id.');
@@ -348,20 +370,31 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
           allowVisit: buildingInfo.allowOcularVisit,
           allowTransfer: buildingInfo.allowPasalo,
           description: roomType.about.trim() || buildingInfo.about.trim(),
-          mediaUrls: roomTypeMedia.map((file) => file.key),
+          mediaUrls:
+            mode === 'edit'
+              ? [
+                  ...roomType.images.filter(isExistingMediaValue),
+                  ...roomTypeMedia.map((file) => file.key),
+                ]
+              : roomTypeMedia.map((file) => file.key),
         };
 
-        const createdListing = await ListingService.createListing(facilityId, listingPayload);
+        const createdListing =
+          mode === 'edit' && isPersistedId(roomType.id)
+            ? await ListingService.updateListing(roomType.id, listingPayload)
+            : await ListingService.createListing(facilityId, listingPayload);
         const listingId = getResponseId(createdListing);
 
-        if (!listingId) {
+        if (!listingId && !(mode === 'edit' && isPersistedId(roomType.id))) {
           throw new Error(`The listing for ${roomType.roomType || roomType.name} was created without an id.`);
         }
 
         const rooms = roomType.rooms.length > 0 ? roomType.rooms : [null];
         for (const [index, room] of rooms.entries()) {
+          if (mode === 'edit' && isPersistedId(roomType.id) && !room) continue;
+
           const unitPayload: CreateUnitBody = {
-            listingId,
+            listingId: listingId ?? roomType.id,
             roomNumber: room?.number.trim() || `${roomType.roomType || roomType.name || 'Room'} ${index + 1}`,
             capacity,
             currentOccupancy: room?.current_occupants ?? 0,
@@ -370,7 +403,7 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
             isAvailable: room?.isAvailable ?? true,
           };
 
-          await UnitService.createUnit(listingId, unitPayload);
+          await UnitService.createUnit(listingId ?? roomType.id, unitPayload);
         }
       }
 
@@ -386,7 +419,7 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
     } finally {
       setIsSubmitting(false);
     }
-  }, [buildingInfo]);
+  }, [buildingInfo, editFacilityId, mode, navigate, reset]);
 
   return (
     <>
@@ -400,19 +433,18 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
                 className="w-5 h-5 text-teal-600 shrink-0"
               />
               <p className="text-sm font-medium text-teal-700 dark:text-[#72cbb8]">
-                Please review all information carefully before submitting. You cannot edit after
-                submission.
+                Please review all information carefully before {mode === 'edit' ? 'saving changes' : 'submitting'}.
               </p>
             </div>
 
             {/* ── Requirements ── */}
             <div className="self-stretch flex flex-col items-start py-4 px-0 gap-4">
               <div className="self-stretch flex items-center justify-between">
-                <b className="relative tracking-num--0_01">Building Requirements</b>
+                <b className="relative tracking-num--0_01 text-[#096c5b] dark:text-[#72cbb8]">Building Requirements</b>
                 {/* Upload progress badge */}
                 <span
                   className={`text-xs font-semibold rounded-full px-3 py-1 ${
-                    allUploaded ? 'bg-teal-100 text-teal-700' : 'bg-red-100 text-red-600'
+                    allUploaded ? 'bg-[#d8f5ef] text-[#096c5b]' : 'bg-red-50 text-red-600'
                   }`}
                 >
                   {uploadedCount} / {requirements.length} uploaded
@@ -460,9 +492,9 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
               {buildingInfo.images && buildingInfo.images.length > 0 ? (
                 <div className="self-stretch flex items-start flex-wrap gap-2 py-2">
                   {buildingInfo.images.map((src, index) => (
-                    <img
+                    <FallbackImage
                       key={index}
-                      src={src}
+                      media={src}
                       alt={`Building photo ${index + 1}`}
                       className="h-[100px] w-[100px] rounded-num-12 object-cover border border-whitesmoke"
                     />
@@ -534,37 +566,37 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
 
             {/* ── Building Policies ── */}
             <div className="self-stretch flex flex-col items-start py-4 px-0 gap-4">
-              <b className="relative tracking-num--0_01">Building Policies</b>
+              <b className="relative tracking-num--0_01 text-[#096c5b] dark:text-[#72cbb8]">Building Policies</b>
               <div className="self-stretch grid grid-cols-2 gap-4">
                 {/* Allow Pasalo */}
                 <div
                   className={`rounded-2xl border flex items-center py-4 px-5 gap-4 ${
                     buildingInfo.allowPasalo
-                      ? 'bg-teal-50 border-teal-200'
-                      : 'bg-aliceblue border-whitesmoke'
+                      ? 'bg-[#edf7f5] border-[#bdeee4]'
+                      : 'bg-white border-[#e5e7eb]'
                   }`}
                 >
                   <div
                     className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
-                      buildingInfo.allowPasalo ? 'bg-teal-100' : 'bg-gray-100'
+                      buildingInfo.allowPasalo ? 'bg-[#d8f5ef]' : 'bg-[#f1f5f9]'
                     }`}
                   >
                     <Icon
                       icon="material-symbols:swap-horiz-rounded"
-                      className={`w-4 h-4 ${buildingInfo.allowPasalo ? 'text-teal-700' : 'text-[#7b8794]'}`}
+                      className={`w-4 h-4 ${buildingInfo.allowPasalo ? 'text-[#096c5b]' : 'text-[#7b8794]'}`}
                     />
                   </div>
                   <div className="flex flex-col gap-0.5 flex-1">
-                    <span className="text-sm font-bold text-[#2f3136]">Allow Pasalo</span>
-                    <span className="text-xs font-medium text-[#64748b]">
+                    <span className="text-sm font-bold text-[#2f3136] dark:text-[#d7e0ef]">Allow Pasalo</span>
+                    <span className="text-xs font-medium text-[#64748b] dark:text-[#a4acba]">
                       Lease transfer allowed
                     </span>
                   </div>
                   <span
                     className={`text-xs font-semibold rounded-full px-3 py-1 shrink-0 ${
                       buildingInfo.allowPasalo
-                        ? 'bg-teal-100 text-teal-700'
-                        : 'bg-gray-100 text-[#7b8794]'
+                        ? 'bg-[#d8f5ef] text-[#096c5b]'
+                        : 'bg-[#f1f5f9] text-[#7b8794]'
                     }`}
                   >
                     {buildingInfo.allowPasalo ? 'Enabled' : 'Disabled'}
@@ -575,31 +607,31 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
                 <div
                   className={`rounded-2xl border flex items-center py-4 px-5 gap-4 ${
                     buildingInfo.allowOcularVisit
-                      ? 'bg-teal-50 border-teal-200'
-                      : 'bg-aliceblue border-whitesmoke'
+                      ? 'bg-[#edf7f5] border-[#bdeee4]'
+                      : 'bg-white border-[#e5e7eb]'
                   }`}
                 >
                   <div
                     className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
-                      buildingInfo.allowOcularVisit ? 'bg-teal-100' : 'bg-gray-100'
+                      buildingInfo.allowOcularVisit ? 'bg-[#d8f5ef]' : 'bg-[#f1f5f9]'
                     }`}
                   >
                     <Icon
                       icon="material-symbols:visibility-outline-rounded"
-                      className={`w-4 h-4 ${buildingInfo.allowOcularVisit ? 'text-teal-700' : 'text-[#7b8794]'}`}
+                      className={`w-4 h-4 ${buildingInfo.allowOcularVisit ? 'text-[#096c5b]' : 'text-[#7b8794]'}`}
                     />
                   </div>
                   <div className="flex flex-col gap-0.5 flex-1">
-                    <span className="text-sm font-bold text-[#2f3136]">Allow Ocular Visit</span>
-                    <span className="text-xs font-medium text-[#64748b]">
+                    <span className="text-sm font-bold text-[#2f3136] dark:text-[#d7e0ef]">Allow Ocular Visit</span>
+                    <span className="text-xs font-medium text-[#64748b] dark:text-[#a4acba]">
                       In-person visits allowed
                     </span>
                   </div>
                   <span
                     className={`text-xs font-semibold rounded-full px-3 py-1 shrink-0 ${
                       buildingInfo.allowOcularVisit
-                        ? 'bg-teal-100 text-teal-700'
-                        : 'bg-gray-100 text-[#7b8794]'
+                        ? 'bg-[#d8f5ef] text-[#096c5b]'
+                        : 'bg-[#f1f5f9] text-[#7b8794]'
                     }`}
                   >
                     {buildingInfo.allowOcularVisit ? 'Enabled' : 'Disabled'}
@@ -682,7 +714,9 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
             className="rounded-[45px] flex items-center justify-center py-2 px-8 gap-2.5 text-white cursor-pointer disabled:cursor-not-allowed disabled:opacity-70"
             style={{ background: isSubmitting ? '#55746e' : '#1a5c50' }}
           >
-            <b className="relative">{isSubmitting ? 'Submitting...' : 'Submit'}</b>
+            <b className="relative">
+              {isSubmitting ? (mode === 'edit' ? 'Saving...' : 'Submitting...') : mode === 'edit' ? 'Save Changes' : 'Submit'}
+            </b>
             <Icon
               icon={
                 isSubmitting

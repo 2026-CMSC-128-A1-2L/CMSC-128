@@ -262,11 +262,17 @@ export const GetFacilityResponseBodySchema = z.union([
 export const UpdateFacilityRequestBodySchema = z
   .object({
     name: z.string(),
+    description: z.string(),
     type: FacilityTypeSchema,
     location: FacilityLocationSchema,
     isAcceptingApplications: z.boolean(),
+    isPrivate: z.boolean(),
+    allowVisit: z.boolean(),
+    allowTransfer: z.boolean(),
     applicationCloseDate: DateTimeSchema,
     applicationOpenDate: DateTimeSchema,
+    mediaUrls: z.array(z.string()),
+    documents: z.array(DocumentSchema),
   })
   .partial();
 

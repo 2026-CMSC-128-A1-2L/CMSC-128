@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { FacilityService } from '../service/FacilityService';
 import type { GetFacilitiesResponse } from '../interface/facility';
+import { getPrimaryMediaUrl } from '../utils/media';
 
 // Shape that DormCard consumes
 export type DormCardData = {
@@ -84,7 +85,7 @@ function mapToCardData(facility: FacilityItem): DormCardData {
     id: facility.id as string,
     name: facility.name,
     location: facility.location.text,
-    image,
+    image: getPrimaryMediaUrl(image) || image,
     rating,
     price,
     room_types: roomTypes,
