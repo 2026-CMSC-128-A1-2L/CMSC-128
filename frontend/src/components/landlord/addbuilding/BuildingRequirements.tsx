@@ -184,7 +184,7 @@ const BuildingRequirements: FunctionComponent<BuildingRequirementsProps> = ({ on
 
   const handleFileUpload = async (id: string, uploadedFile: File) => {
     try {
-      await FileService.uploadFile(uploadedFile);
+      const uploaded = await FileService.uploadFile(uploadedFile);
 
       const formattedDate = new Intl.DateTimeFormat('en-GB', {
         day: '2-digit',
@@ -192,7 +192,7 @@ const BuildingRequirements: FunctionComponent<BuildingRequirementsProps> = ({ on
         year: 'numeric',
       }).format(new Date());
 
-      updateRequirement(id, uploadedFile, formattedDate);
+      updateRequirement(id, uploadedFile, formattedDate, uploaded.key);
     } catch (error) {
       console.error('Error uploading file:', error);
       throw error;

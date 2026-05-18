@@ -169,6 +169,17 @@ export type CreateFacilityArguments = {
     } | null;
     text?: string | null;
   };
+  isPrivate?: boolean;
+  allowVisit?: boolean;
+  allowTransfer?: boolean;
+  documents?: {
+    docId: string;
+    name: string;
+    status?: string;
+    message?: string;
+    files: string[];
+  }[];
+  mediaUrls?: string[];
   applicationCloseDate?: Date | null;
   applicationOpenDate?: Date | null;
 };
@@ -216,7 +227,16 @@ export const createFacility = async (
     name: data.name,
     description: data.description,
     type: data.type,
+    status: 'submitted',
     location: data.location,
+    isPrivate: data.isPrivate,
+    allowVisit: data.allowVisit,
+    allowTransfer: data.allowTransfer,
+    documents: data.documents,
+    media: data.mediaUrls?.map((value) => ({
+      sourceType: 'local',
+      value,
+    })),
 
     applicationCloseDate: data.applicationCloseDate,
     applicationOpenDate: data.applicationOpenDate,

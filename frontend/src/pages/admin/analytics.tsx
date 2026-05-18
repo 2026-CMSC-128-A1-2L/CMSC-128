@@ -74,8 +74,8 @@ function Analytics() {
           FacilityService.getFacilities(),
         ]);
 
-        if (usersRes.status === 'fulfilled') setUsers(usersRes.value.data ?? []);
-        if (reportsRes.status === 'fulfilled') setReports(reportsRes.value.data ?? []);
+        if (usersRes.status === 'fulfilled') setUsers((usersRes.value.data ?? []) as UserData[]);
+        if (reportsRes.status === 'fulfilled') setReports((reportsRes.value.data ?? []) as ReportData[]);
         if (facilitiesRes.status === 'fulfilled') {
           const facilities = facilitiesRes.value.data ?? [];
           setFacilityCount(Array.isArray(facilities) ? facilities.length : 0);

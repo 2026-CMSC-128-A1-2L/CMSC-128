@@ -1,6 +1,12 @@
-import { FunctionComponent, useCallback, useState } from 'react';
+import { type FunctionComponent, useCallback, useState } from 'react';
 import { Icon } from '@iconify/react';
-import { useBuildingStore } from './useBuildingStore';
+import { useNavigate } from 'react-router-dom';
+import {
+  DEFAULT_BUILDING_COORDINATES,
+  useBuildingStore,
+  type ManagerPermissions,
+  type TagValue,
+} from './useBuildingStore';
 import type {
   RoomData,
   RoomTypeData,
@@ -8,7 +14,13 @@ import type {
   PaymentMethodData,
   RequirementItem,
 } from './useBuildingStore';
-import ListingsSuccess from './ListingsSuccess';
+import { FacilityService } from '../../../service/FacilityService';
+import { FileService } from '../../../service/FileService';
+import { ListingService } from '../../../service/ListingService';
+import { UnitService } from '../../../service/UnitService';
+import type { CreateFacilityBody } from '../../../interface/facility';
+import type { CreateListingBody } from '../../../interface/listing';
+import type { CreateUnitBody } from '../../../interface/unit';
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 
@@ -20,12 +32,90 @@ interface BuildingSubmitProps {
 
 const ReadOnlyField: FunctionComponent<{ label: string; value: string }> = ({ label, value }) => (
   <div className="flex-1 flex flex-col items-start gap-3">
-    <b className="relative text-num-14 text-dimgray dark:text-[#a4acba]">{label}</b>
-    <div className="self-stretch rounded-num-12 bg-aliceblue border-whitesmoke border-solid border-[1px] flex items-center py-3 px-4 text-left text-num-14 text-slategray dark:bg-[#1f2022] dark:border-[#343737] dark:text-[#d7e0ef]">
+    <b className="relative text-num-14 text-[#5f6368] dark:text-[#a4acba]">{label}</b>
+    <div className="self-stretch rounded-num-12 bg-aliceblue border-whitesmoke border-solid border-[1px] flex items-center py-3 px-4 text-left text-num-14 text-[#64748b] dark:bg-[#1f2022] dark:border-[#343737] dark:text-[#d7e0ef]">
       <span className="font-medium leading-6">{value || '—'}</span>
     </div>
   </div>
 );
+
+type FacilityType = CreateFacilityBody['type'];
+type RoomType = CreateListingBody['roomType'];
+type ManagerApiPermissions = CreateFacilityBody['managers'][number]['permissions'];
+
+const backendFacilityTypes = new Set<FacilityType>(['on-campus', 'off-campus', 'partner housing']);
+
+const toFacilityType = (value: string): FacilityType => {
+  if (backendFacilityTypes.has(value as FacilityType)) {
+    return value as FacilityType;
+  }
+
+  if (value === 'mixed') return 'partner housing';
+  return 'off-campus';
+};
+
+const toRoomType = (value: string): RoomType => {
+  const normalized = value.trim().toLowerCase();
+
+  if (normalized.includes('single') || normalized.includes('solo') || normalized.includes('1')) {
+    return 'single';
+  }
+
+  if (normalized.includes('double') || normalized.includes('2')) {
+    return 'double';
+  }
+
+  return 'shared';
+};
+
+const toTagMap = (tags: TagValue[]): CreateListingBody['tags'] =>
+  tags.reduce<CreateListingBody['tags']>((acc, tag) => {
+    if (tag.value !== null && tag.value !== '') {
+      acc[tag.name] = tag.value;
+    }
+    return acc;
+  }, {});
+
+const toManagerPermissions = (permissions: ManagerPermissions): ManagerApiPermissions => ({
+  deleteListings: permissions.deleteListings,
+  manageListings: permissions.manageBuildings,
+  manageBillings: permissions.manageBillings,
+  manageBookings: permissions.acceptOcularVisits,
+  manageApplications: permissions.manageBuildings,
+  reportUsers: permissions.reportUsers,
+});
+
+const getPositiveNumberFromTags = (tags: TagValue[], nameParts: string[], fallback: number) => {
+  const tag = tags.find(
+    (candidate) =>
+      typeof candidate.value === 'number' &&
+      nameParts.some((part) => candidate.name.toLowerCase().includes(part)),
+  );
+
+  if (typeof tag?.value === 'number' && tag.value > 0) return tag.value;
+  return fallback;
+};
+
+const toPositiveMoney = (value: string, fallback = 1) => {
+  const amount = Number.parseFloat(value);
+  return Number.isFinite(amount) && amount > 0 ? amount : fallback;
+};
+
+const getResponseId = (response: unknown): string | null => {
+  if (!response || typeof response !== 'object') return null;
+
+  const candidate = response as {
+    id?: unknown;
+    _id?: unknown;
+    data?: {
+      id?: unknown;
+      _id?: unknown;
+    };
+  };
+
+  const id = candidate.data?.id ?? candidate.data?._id ?? candidate.id ?? candidate._id;
+  return typeof id === 'string' ? id : null;
+};
 
 // ─── Requirement Row ──────────────────────────────────────────────────────────
 
@@ -47,13 +137,13 @@ const RequirementRow: FunctionComponent<{ req: RequirementItem }> = ({ req }) =>
 
       {/* Label + filename */}
       <div className="flex-1 flex flex-col gap-0.5 min-w-0">
-        <span className="text-sm font-bold text-gray-700 dark:text-[#d7e0ef]">{req.label}</span>
+        <span className="text-sm font-bold text-[#2f3136] dark:text-[#d7e0ef]">{req.label}</span>
         {isUploaded ? (
-          <span className="text-xs text-slategray font-medium truncate">
+          <span className="text-xs text-[#64748b] font-medium truncate">
             {req.file!.name} · Submitted: {req.date}
           </span>
         ) : (
-          <span className="text-xs italic text-gray-300">Not uploaded</span>
+          <span className="text-xs italic text-[#64748b]">Not uploaded</span>
         )}
       </div>
 
@@ -75,19 +165,19 @@ const RoomRow: FunctionComponent<{ room: RoomData; index: number }> = ({ room, i
   <div className="self-stretch flex items-center gap-6">
     <div className="flex-1 flex flex-col items-center justify-center gap-2.5">
       <div className="text-sm font-medium text-black leading-6 dark:text-[#a4acba]">Room Number</div>
-      <div className="self-stretch rounded-xl bg-aliceblue border border-whitesmoke flex items-center py-2 px-4 text-sm text-slategray font-medium dark:bg-[#1f2022] dark:border-[#343737] dark:text-[#d7e0ef]">
+      <div className="self-stretch rounded-xl bg-aliceblue border border-whitesmoke flex items-center py-2 px-4 text-sm text-[#64748b] font-medium dark:bg-[#1f2022] dark:border-[#343737] dark:text-[#d7e0ef]">
         {room.number || String(index + 1)}
       </div>
     </div>
     <div className="flex-1 flex flex-col items-center justify-center gap-2.5">
       <div className="text-sm font-medium text-black leading-6 dark:text-[#a4acba]">Availability</div>
-      <div className="self-stretch rounded-xl bg-aliceblue border border-whitesmoke flex items-center py-2 px-4 text-sm text-slategray font-medium dark:bg-[#1f2022] dark:border-[#343737] dark:text-[#d7e0ef]">
+      <div className="self-stretch rounded-xl bg-aliceblue border border-whitesmoke flex items-center py-2 px-4 text-sm text-[#64748b] font-medium dark:bg-[#1f2022] dark:border-[#343737] dark:text-[#d7e0ef]">
         {room.isAvailable ? 'Open' : 'Occupied'}
       </div>
     </div>
     <div className="flex-1 flex flex-col items-center justify-center gap-2.5">
       <div className="text-sm font-medium text-black leading-6 dark:text-[#a4acba]">Current Occupants</div>
-      <div className="self-stretch rounded-xl bg-aliceblue border border-whitesmoke flex items-center py-2 px-4 text-sm text-slategray font-medium dark:bg-[#1f2022] dark:border-[#343737] dark:text-[#d7e0ef]">
+      <div className="self-stretch rounded-xl bg-aliceblue border border-whitesmoke flex items-center py-2 px-4 text-sm text-[#64748b] font-medium dark:bg-[#1f2022] dark:border-[#343737] dark:text-[#d7e0ef]">
         {room.current_occupants}
       </div>
     </div>
@@ -99,23 +189,28 @@ const RoomRow: FunctionComponent<{ room: RoomData; index: number }> = ({ room, i
 const RoomTypeBlock: FunctionComponent<{ roomType: RoomTypeData }> = ({ roomType }) => (
   <div className="w-full rounded-xl border border-whitesmoke flex flex-col overflow-hidden dark:border-[#343737]">
     <div className="flex items-center px-4 py-3 bg-gray-50 border-b border-whitesmoke dark:bg-[#141515] dark:border-[#343737]">
-      <b className="text-sm text-gray-700 dark:text-[#d7e0ef]">{roomType.roomType || roomType.name || 'Room Type'}</b>
+      <b className="text-sm text-[#2f3136] dark:text-[#d7e0ef]">{roomType.roomType || roomType.name || 'Room Type'}</b>
       {roomType.capacity && (
-        <span className="ml-3 text-xs font-medium text-slategray bg-aliceblue px-2 py-0.5 rounded-full border border-whitesmoke">
+        <span className="ml-3 text-xs font-medium text-[#64748b] bg-aliceblue px-2 py-0.5 rounded-full border border-whitesmoke">
           Capacity: {roomType.capacity}
+        </span>
+      )}
+      {roomType.price && (
+        <span className="ml-2 text-xs font-medium text-[#64748b] bg-aliceblue px-2 py-0.5 rounded-full border border-whitesmoke">
+          ₱{Number(roomType.price).toLocaleString()}/mo
         </span>
       )}
     </div>
     <div className="flex flex-col px-4 py-4 gap-5">
       {roomType.about && (
         <div className="flex flex-col gap-1">
-          <b className="text-xs text-dimgray">About</b>
-          <p className="text-sm text-slategray font-medium leading-6">{roomType.about}</p>
+          <b className="text-xs text-[#5f6368]">About</b>
+          <p className="text-sm text-[#64748b] font-medium leading-6">{roomType.about}</p>
         </div>
       )}
       {roomType.images && roomType.images.length > 0 && (
         <div className="flex flex-col gap-2">
-          <b className="text-xs text-dimgray">Photos</b>
+          <b className="text-xs text-[#5f6368]">Photos</b>
           <div className="flex items-start flex-wrap gap-2">
             {roomType.images.map((src, i) => (
               <img
@@ -130,13 +225,13 @@ const RoomTypeBlock: FunctionComponent<{ roomType: RoomTypeData }> = ({ roomType
       )}
       {roomType.rooms.length > 0 ? (
         <div className="flex flex-col gap-3">
-          <b className="text-xs text-dimgray">Rooms</b>
+          <b className="text-xs text-[#5f6368]">Rooms</b>
           {roomType.rooms.map((room, i) => (
             <RoomRow key={room.id} room={room} index={i} />
           ))}
         </div>
       ) : (
-        <p className="text-xs text-gray-300 italic">No rooms added.</p>
+        <p className="text-xs text-[#64748b] italic">No rooms added.</p>
       )}
     </div>
   </div>
@@ -150,23 +245,23 @@ const PaymentMethodBlock: FunctionComponent<{
   data: PaymentMethodData;
 }> = ({ title, accountLabel, data }) => (
   <div className="flex-1 flex flex-col gap-3">
-    <span className="text-sm font-bold text-gray-600 tracking-wide dark:text-[#a4acba]">{title}</span>
+    <span className="text-sm font-bold text-[#4f5f6f] tracking-wide dark:text-[#a4acba]">{title}</span>
     <div className="rounded-2xl bg-aliceblue border border-whitesmoke flex flex-col py-5 px-6 gap-5 dark:bg-[#141515] dark:border-[#343737]">
       <div className="flex items-start gap-8">
         <div className="flex flex-col gap-1 min-w-0">
-          <span className="text-xs font-medium text-slategray">Name</span>
-          <span className="text-sm font-bold text-gray-800 truncate">{data.name || '—'}</span>
+          <span className="text-xs font-medium text-[#64748b]">Name</span>
+          <span className="text-sm font-bold text-[#2f3136] truncate">{data.name || '—'}</span>
         </div>
         <div className="flex flex-col gap-1 min-w-0">
-          <span className="text-xs font-medium text-slategray">{accountLabel}</span>
-          <span className="text-sm font-bold text-gray-800 truncate">
+          <span className="text-xs font-medium text-[#64748b]">{accountLabel}</span>
+          <span className="text-sm font-bold text-[#2f3136] truncate">
             {data.accountNumber || '—'}
           </span>
         </div>
       </div>
       {data.qrImage ? (
         <div className="flex flex-col gap-2">
-          <span className="text-xs font-medium text-slategray">QR Code</span>
+          <span className="text-xs font-medium text-[#64748b]">QR Code</span>
           <img
             src={data.qrImage}
             alt="QR"
@@ -175,8 +270,8 @@ const PaymentMethodBlock: FunctionComponent<{
         </div>
       ) : (
         <div className="flex flex-col gap-1">
-          <span className="text-xs font-medium text-slategray">QR Code</span>
-          <span className="text-xs italic text-gray-300">No QR uploaded.</span>
+          <span className="text-xs font-medium text-[#64748b]">QR Code</span>
+          <span className="text-xs italic text-[#64748b]">No QR uploaded.</span>
         </div>
       )}
     </div>
@@ -186,33 +281,112 @@ const PaymentMethodBlock: FunctionComponent<{
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick }) => {
-  const { buildingInfo } = useBuildingStore();
-  const [showSuccess, setShowSuccess] = useState(false);
+  const { buildingInfo, reset } = useBuildingStore();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const navigate = useNavigate();
   const { payment, requirements } = buildingInfo;
 
   const uploadedCount = requirements.filter((r) => r.file !== null).length;
   const allUploaded = uploadedCount === requirements.length;
 
-  const handleSubmit = useCallback(() => {
-    // Log all data including requirements (file metadata only — File objects can't be JSON serialised)
-    const loggable = {
-      ...buildingInfo,
-      requirements: buildingInfo.requirements.map((r) => ({
-        id: r.id,
-        label: r.label,
-        fileName: r.file?.name ?? null,
-        fileSize: r.file?.size ?? null,
-        date: r.date,
-      })),
-    };
-    console.log('=== Final Building Submission ===');
-    console.log(JSON.stringify(loggable, null, 2));
-    setShowSuccess(true);
-  }, [buildingInfo]);
+  const handleSubmit = useCallback(async () => {
+    setSubmitError(null);
+    setIsSubmitting(true);
 
-  const handleContinue = useCallback(() => {
-    setShowSuccess(false);
-  }, []);
+    try {
+      const buildingMedia = await Promise.all(buildingInfo.imageFiles.map(FileService.uploadFile));
+      const facilityPayload: CreateFacilityBody = {
+        name: buildingInfo.name.trim(),
+        description: buildingInfo.about.trim(),
+        type: toFacilityType(buildingInfo.typeOfBuilding),
+        location: {
+          text: buildingInfo.location.trim(),
+          coordinates: buildingInfo.locationCoordinates ?? DEFAULT_BUILDING_COORDINATES,
+        },
+        managers: buildingInfo.managers.map((manager) => ({
+          email: manager.email,
+          permissions: toManagerPermissions(manager.checkboxes),
+        })),
+        isAcceptingApplications: true,
+        isPrivate: false,
+        allowVisit: buildingInfo.allowOcularVisit,
+        allowTransfer: buildingInfo.allowPasalo,
+        documents: buildingInfo.requirements
+          .filter((requirement) => requirement.fileKey)
+          .map((requirement) => ({
+            docId: requirement.id,
+            name: requirement.label,
+            files: [requirement.fileKey as string],
+          })),
+        mediaUrls: buildingMedia.map((file) => file.key),
+      };
+
+      const createdFacility = await FacilityService.createFacility(facilityPayload);
+      const facilityId = getResponseId(createdFacility);
+
+      if (!facilityId) {
+        throw new Error('The facility was created but the response did not include an id.');
+      }
+
+      for (const roomType of buildingInfo.roomTypes) {
+        const roomTypeMedia = await Promise.all(roomType.imageFiles.map(FileService.uploadFile));
+        const capacity = Number.parseInt(roomType.capacity, 10) || 1;
+        const monthlyPrice = getPositiveNumberFromTags(
+          roomType.tags,
+          ['price', 'rent', 'monthly', 'cost'],
+          toPositiveMoney(roomType.price),
+        );
+        const listingPayload: CreateListingBody = {
+          tags: {
+            ...toTagMap(roomType.tags),
+            monthly_price: monthlyPrice,
+          },
+          roomType: toRoomType(roomType.roomType || roomType.name),
+          capacity,
+          isPrivate: false,
+          allowVisit: buildingInfo.allowOcularVisit,
+          allowTransfer: buildingInfo.allowPasalo,
+          description: roomType.about.trim() || buildingInfo.about.trim(),
+          mediaUrls: roomTypeMedia.map((file) => file.key),
+        };
+
+        const createdListing = await ListingService.createListing(facilityId, listingPayload);
+        const listingId = getResponseId(createdListing);
+
+        if (!listingId) {
+          throw new Error(`The listing for ${roomType.roomType || roomType.name} was created without an id.`);
+        }
+
+        const rooms = roomType.rooms.length > 0 ? roomType.rooms : [null];
+        for (const [index, room] of rooms.entries()) {
+          const unitPayload: CreateUnitBody = {
+            listingId,
+            roomNumber: room?.number.trim() || `${roomType.roomType || roomType.name || 'Room'} ${index + 1}`,
+            capacity,
+            currentOccupancy: room?.current_occupants ?? 0,
+            price: monthlyPrice,
+            location: buildingInfo.location.trim(),
+            isAvailable: room?.isAvailable ?? true,
+          };
+
+          await UnitService.createUnit(listingId, unitPayload);
+        }
+      }
+
+      reset();
+      navigate(`/landlord/properties/${facilityId}`);
+    } catch (error) {
+      console.error('Failed to submit building:', error);
+      setSubmitError(
+        error instanceof Error
+          ? error.message
+          : 'We could not submit this building. Please review the details and try again.',
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [buildingInfo]);
 
   return (
     <>
@@ -263,15 +437,19 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
                   <ReadOnlyField label="Type of Building" value={buildingInfo.typeOfBuilding} />
                 </div>
                 <ReadOnlyField label="Location" value={buildingInfo.location} />
+                <ReadOnlyField
+                  label="Coordinates"
+                  value={`${buildingInfo.locationCoordinates.lat.toFixed(6)}, ${buildingInfo.locationCoordinates.long.toFixed(6)}`}
+                />
               </div>
             </div>
 
             {/* About */}
             <div className="self-stretch flex flex-col items-start py-num-10 px-0 gap-2.5 text-left">
               <b className="relative tracking-num--0_01">About</b>
-              <div className="self-stretch rounded-num-12 bg-aliceblue border-whitesmoke border-solid border-[1px] py-3 px-4 text-left text-num-14 text-slategray font-medium min-h-[120px] dark:bg-[#1f2022] dark:border-[#343737] dark:text-[#d7e0ef]">
+              <div className="self-stretch rounded-num-12 bg-aliceblue border-whitesmoke border-solid border-[1px] py-3 px-4 text-left text-num-14 text-[#64748b] font-medium min-h-[120px] dark:bg-[#1f2022] dark:border-[#343737] dark:text-[#d7e0ef]">
                 {buildingInfo.about || (
-                  <span className="italic text-gray-300">No description provided.</span>
+                  <span className="italic text-[#64748b]">No description provided.</span>
                 )}
               </div>
             </div>
@@ -291,7 +469,7 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-gray-300 italic py-2">No photos uploaded.</p>
+                <p className="text-sm text-[#64748b] italic py-2">No photos uploaded.</p>
               )}
             </div>
 
@@ -302,7 +480,7 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
                 {buildingInfo.roomTypes.length > 0 ? (
                   buildingInfo.roomTypes.map((rt) => <RoomTypeBlock key={rt.id} roomType={rt} />)
                 ) : (
-                  <p className="text-sm text-gray-300 italic">No room types added.</p>
+                  <p className="text-sm text-[#64748b] italic">No room types added.</p>
                 )}
               </div>
             </div>
@@ -311,7 +489,7 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
             <div className="self-stretch flex flex-col items-start py-4 px-0 gap-4">
               <b className="relative tracking-num--0_01">Payment Methods</b>
               {!payment.enabled ? (
-                <p className="text-sm text-gray-300 italic">Cashless payment not enabled.</p>
+                <p className="text-sm text-[#64748b] italic">Cashless payment not enabled.</p>
               ) : (
                 <div className="self-stretch flex flex-col gap-5">
                   <div className="flex items-center gap-2">
@@ -329,9 +507,9 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
                       />
                     ) : (
                       <div className="flex flex-col gap-3">
-                        <span className="text-sm font-bold text-gray-600">GCash</span>
+                        <span className="text-sm font-bold text-[#4f5f6f]">GCash</span>
                         <div className="rounded-2xl bg-aliceblue border border-whitesmoke py-5 px-6">
-                          <p className="text-sm text-gray-300 italic">Not set up.</p>
+                          <p className="text-sm text-[#64748b] italic">Not set up.</p>
                         </div>
                       </div>
                     )}
@@ -343,9 +521,9 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
                       />
                     ) : (
                       <div className="flex flex-col gap-3">
-                        <span className="text-sm font-bold text-gray-600">Bank Transfer</span>
+                        <span className="text-sm font-bold text-[#4f5f6f]">Bank Transfer</span>
                         <div className="rounded-2xl bg-aliceblue border border-whitesmoke py-5 px-6">
-                          <p className="text-sm text-gray-300 italic">Not set up.</p>
+                          <p className="text-sm text-[#64748b] italic">Not set up.</p>
                         </div>
                       </div>
                     )}
@@ -373,12 +551,12 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
                   >
                     <Icon
                       icon="material-symbols:swap-horiz-rounded"
-                      className={`w-4 h-4 ${buildingInfo.allowPasalo ? 'text-teal-700' : 'text-gray-400'}`}
+                      className={`w-4 h-4 ${buildingInfo.allowPasalo ? 'text-teal-700' : 'text-[#7b8794]'}`}
                     />
                   </div>
                   <div className="flex flex-col gap-0.5 flex-1">
-                    <span className="text-sm font-bold text-gray-700">Allow Pasalo</span>
-                    <span className="text-xs font-medium text-slategray">
+                    <span className="text-sm font-bold text-[#2f3136]">Allow Pasalo</span>
+                    <span className="text-xs font-medium text-[#64748b]">
                       Lease transfer allowed
                     </span>
                   </div>
@@ -386,7 +564,7 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
                     className={`text-xs font-semibold rounded-full px-3 py-1 shrink-0 ${
                       buildingInfo.allowPasalo
                         ? 'bg-teal-100 text-teal-700'
-                        : 'bg-gray-100 text-gray-400'
+                        : 'bg-gray-100 text-[#7b8794]'
                     }`}
                   >
                     {buildingInfo.allowPasalo ? 'Enabled' : 'Disabled'}
@@ -408,12 +586,12 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
                   >
                     <Icon
                       icon="material-symbols:visibility-outline-rounded"
-                      className={`w-4 h-4 ${buildingInfo.allowOcularVisit ? 'text-teal-700' : 'text-gray-400'}`}
+                      className={`w-4 h-4 ${buildingInfo.allowOcularVisit ? 'text-teal-700' : 'text-[#7b8794]'}`}
                     />
                   </div>
                   <div className="flex flex-col gap-0.5 flex-1">
-                    <span className="text-sm font-bold text-gray-700">Allow Ocular Visit</span>
-                    <span className="text-xs font-medium text-slategray">
+                    <span className="text-sm font-bold text-[#2f3136]">Allow Ocular Visit</span>
+                    <span className="text-xs font-medium text-[#64748b]">
                       In-person visits allowed
                     </span>
                   </div>
@@ -421,7 +599,7 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
                     className={`text-xs font-semibold rounded-full px-3 py-1 shrink-0 ${
                       buildingInfo.allowOcularVisit
                         ? 'bg-teal-100 text-teal-700'
-                        : 'bg-gray-100 text-gray-400'
+                        : 'bg-gray-100 text-[#7b8794]'
                     }`}
                   >
                     {buildingInfo.allowOcularVisit ? 'Enabled' : 'Disabled'}
@@ -447,11 +625,11 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
                             className="w-4 h-4 text-teal-700"
                           />
                         </div>
-                        <span className="text-sm font-bold text-gray-800">{m.email}</span>
+                        <span className="text-sm font-bold text-[#2f3136]">{m.email}</span>
                       </div>
                       <div className="w-full h-px bg-whitesmoke" />
                       <div className="flex flex-col gap-2">
-                        <span className="text-xs font-medium text-slategray">Permissions</span>
+                        <span className="text-xs font-medium text-[#64748b]">Permissions</span>
                         {Object.values(m.checkboxes).some(Boolean) ? (
                           <div className="flex flex-wrap gap-2">
                             {(Object.entries(m.checkboxes) as [string, boolean][])
@@ -459,7 +637,7 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
                               .map(([key]) => (
                                 <span
                                   key={key}
-                                  className="text-xs font-semibold bg-white border border-whitesmoke text-gray-600 rounded-full px-3 py-1"
+                                  className="text-xs font-semibold bg-white border border-whitesmoke text-[#4f5f6f] rounded-full px-3 py-1"
                                 >
                                   {key
                                     .replace(/([A-Z])/g, ' $1')
@@ -468,7 +646,7 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
                               ))}
                           </div>
                         ) : (
-                          <span className="text-xs italic text-gray-300">
+                          <span className="text-xs italic text-[#64748b]">
                             No permissions granted
                           </span>
                         )}
@@ -477,14 +655,20 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-gray-300 italic">No managers invited.</p>
+                <p className="text-sm text-[#64748b] italic">No managers invited.</p>
               )}
             </div>
           </div>
         </div>
 
         {/* Back / Submit */}
-        <div className="w-[903px] overflow-hidden flex items-center justify-center py-0 px-num-10 box-border gap-2.5 text-num-14 text-dimgray">
+        {submitError && (
+          <div className="w-[880px] rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-left text-sm font-medium text-red-700">
+            {submitError}
+          </div>
+        )}
+
+        <div className="w-[903px] overflow-hidden flex items-center justify-center py-0 px-num-10 box-border gap-2.5 text-num-14 text-[#5f6368]">
           <div
             className="rounded-[45px] flex items-center justify-center py-2 px-8 cursor-pointer"
             onClick={onPrevClick}
@@ -494,22 +678,23 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({ onPrevClick })
           <button
             type="button"
             onClick={handleSubmit}
-            className="rounded-[45px] flex items-center justify-center py-2 px-8 gap-2.5 text-white cursor-pointer"
-            style={{ background: '#1a5c50' }}
+            disabled={isSubmitting}
+            className="rounded-[45px] flex items-center justify-center py-2 px-8 gap-2.5 text-white cursor-pointer disabled:cursor-not-allowed disabled:opacity-70"
+            style={{ background: isSubmitting ? '#55746e' : '#1a5c50' }}
           >
-            <b className="relative">Submit</b>
-            <Icon icon="material-symbols:check-circle-outline-rounded" className="w-6 h-6" />
+            <b className="relative">{isSubmitting ? 'Submitting...' : 'Submit'}</b>
+            <Icon
+              icon={
+                isSubmitting
+                  ? 'line-md:loading-twotone-loop'
+                  : 'material-symbols:check-circle-outline-rounded'
+              }
+              className="w-6 h-6"
+            />
           </button>
         </div>
       </div>
 
-      {showSuccess && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div className="relative shadow-2xl rounded-2xl" onClick={(e) => e.stopPropagation()}>
-            <ListingsSuccess onConfirmContainerClick={handleContinue} />
-          </div>
-        </div>
-      )}
     </>
   );
 };

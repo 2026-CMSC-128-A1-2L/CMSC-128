@@ -39,6 +39,7 @@ export const createUnit = async (data: CreateUnitArguments, filters: QueryFilter
     roomNumber: data.roomNumber,
     price: data.price,
     location: data.location,
+    isAvailable: data.isAvailable,
 
     // derived from listing
     facilityId: listing.facilityId,
@@ -136,5 +137,5 @@ export const isUnitFull = async (
 // helper function to get the names instead of userIds for the currentRentals
 export const getTenantNames = {
   path: 'currentRentals',
-  populate: { path: 'userId', select: 'firstName lastName' },
+  populate: { path: 'userId', select: 'firstName middleName lastName emails' },
 };

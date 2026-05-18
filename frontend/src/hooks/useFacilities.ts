@@ -35,6 +35,7 @@ type FacilityListingSummary = {
   availableUnitCount?: number;
 };
 type FacilityListItem = FacilityItem & {
+  status?: string;
   listings?: FacilityListingSummary[];
 };
 
@@ -117,7 +118,11 @@ export function useFacilities(): UseFacilitiesReturn {
         // FacilityService.getFacilities() → { data: GetFacilitiesResponse }
         const response = await FacilityService.getFacilities();
         if (!cancelled) {
-          setFacilities(response.data.map(mapToCardData));
+          setFacilities(
+            response.data
+              .filter((facility) => (facility as FacilityListItem).status === 'approved')
+              .map(mapToCardData),
+          );
         }
       } catch (err) {
         if (!cancelled) {

@@ -1,15 +1,23 @@
-import { FunctionComponent, useEffect, useState, useRef } from "react";
+import { type FunctionComponent, useEffect, useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { Icon } from "@iconify/react";
 import Lightbox from "yet-another-react-lightbox";
+import { MapContainer, Marker, Popup, TileLayer, useMapEvents } from "react-leaflet";
+import L from "leaflet";
 import "yet-another-react-lightbox/styles.css";
+import "leaflet/dist/leaflet.css";
 
 import RoomTypeItem from "./RoomTypeItem";
 import Payments from "./Payment";
-import { useBuildingStore } from "./useBuildingStore";
+import {
+  DEFAULT_BUILDING_COORDINATES,
+  type BuildingCoordinates,
+  useBuildingStore,
+} from "./useBuildingStore";
 import AddManager1 from "../LandlordManagerAddForms/LandlordManagerAdd1";
 import AddManager2 from "../LandlordManagerAddForms/LandlordManagerAdd2";
 import type { AddManagerFormValues } from "../LandlordManagerAddForms/LandlordManagerAdd1";
+import RecenterMap from "../../utilities/RecenterMap";
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 
@@ -24,6 +32,81 @@ interface BuildingFormValues {
   location: string;
   about: string;
 }
+
+const GreenIcon = L.icon({
+  iconUrl:
+    "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png",
+  shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
+  iconSize: [30, 46],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+});
+
+const LocationClickHandler: FunctionComponent<{
+  onSelect: (coordinates: BuildingCoordinates) => void;
+}> = ({ onSelect }) => {
+  useMapEvents({
+    click(event) {
+      onSelect({
+        lat: event.latlng.lat,
+        long: event.latlng.lng,
+      });
+    },
+  });
+
+  return null;
+};
+
+const LocationPickerMap: FunctionComponent<{
+  coordinates: BuildingCoordinates;
+  locationName: string;
+  onChange: (coordinates: BuildingCoordinates) => void;
+}> = ({ coordinates, locationName, onChange }) => {
+  const position: [number, number] = [coordinates.lat, coordinates.long];
+
+  return (
+    <div className="self-stretch h-[340px] rounded-2xl overflow-hidden border border-whitesmoke bg-aliceblue shadow-sm dark:border-[#343737] dark:bg-[#1f2022]">
+      <MapContainer
+        center={position}
+        zoom={16}
+        minZoom={13}
+        maxZoom={18}
+        zoomAnimation={false}
+        markerZoomAnimation={false}
+        className="h-full w-full z-0"
+      >
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        <LocationClickHandler onSelect={onChange} />
+        <Marker
+          draggable
+          icon={GreenIcon}
+          position={position}
+          eventHandlers={{
+            dragend(event) {
+              const marker = event.target as L.Marker;
+              const nextPosition = marker.getLatLng();
+              onChange({ lat: nextPosition.lat, long: nextPosition.lng });
+            },
+          }}
+        >
+          <Popup>
+            <div className="font-inter">
+              <p className="m-0 font-bold text-teal-700">
+                {locationName.trim() || "Selected location"}
+              </p>
+              <p className="mt-1 text-xs text-slate-500">Building Location</p>
+            </div>
+          </Popup>
+        </Marker>
+        <RecenterMap lat={coordinates.lat} lng={coordinates.long} />
+      </MapContainer>
+    </div>
+  );
+};
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 
@@ -44,6 +127,10 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({
   );
   const [lastInvitedEmail, setLastInvitedEmail] = useState("");
   const [images, setImages] = useState<string[]>(buildingInfo.images || []);
+  const [imageFiles, setImageFiles] = useState<File[]>(buildingInfo.imageFiles || []);
+  const [coordinates, setCoordinates] = useState<BuildingCoordinates>(
+    buildingInfo.locationCoordinates || DEFAULT_BUILDING_COORDINATES,
+  );
   const [lightboxIndex, setLightboxIndex] = useState(-1);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -68,31 +155,43 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({
         name: values.name ?? "",
         typeOfBuilding: values.typeOfBuilding ?? "",
         location: values.location ?? "",
+        locationCoordinates: coordinates,
         about: values.about ?? "",
         images,
+        imageFiles,
       });
     });
     return () => subscription.unsubscribe();
-  }, [watch, setBuildingInfo, images]);
+  }, [watch, setBuildingInfo, images, imageFiles, coordinates]);
 
   // ─── Image handlers ───────────────────────────────────────────────────────
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      const newUrls = Array.from(e.target.files).map((f) =>
+      const files = Array.from(e.target.files);
+      const newUrls = files.map((f) =>
         URL.createObjectURL(f),
       );
       const updated = [...images, ...newUrls];
+      const updatedFiles = [...imageFiles, ...files];
       setImages(updated);
-      setBuildingInfo({ images: updated });
+      setImageFiles(updatedFiles);
+      setBuildingInfo({ images: updated, imageFiles: updatedFiles });
       if (fileInputRef.current) fileInputRef.current.value = "";
     }
   };
 
   const handleRemoveImage = (i: number) => {
     const updated = images.filter((_, idx) => idx !== i);
+    const updatedFiles = imageFiles.filter((_, idx) => idx !== i);
     setImages(updated);
-    setBuildingInfo({ images: updated });
+    setImageFiles(updatedFiles);
+    setBuildingInfo({ images: updated, imageFiles: updatedFiles });
+  };
+
+  const handleCoordinateChange = (nextCoordinates: BuildingCoordinates) => {
+    setCoordinates(nextCoordinates);
+    setBuildingInfo({ locationCoordinates: nextCoordinates });
   };
 
   // ─── Manager handlers ─────────────────────────────────────────────────────
@@ -109,6 +208,8 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({
     const fullData = {
       ...data,
       images,
+      imageFiles,
+      locationCoordinates: coordinates,
       roomTypes: buildingInfo.roomTypes,
       managers: buildingInfo.managers,
       payment: buildingInfo.payment,
@@ -146,7 +247,7 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({
                             required: "Building name is required",
                           })}
                           placeholder="Aa"
-                          className="flex-1 bg-transparent text-sm text-gray-700 placeholder-slategray outline-none font-medium leading-num-24 dark:text-[#d7e0ef] dark:placeholder-[#8c95a3]"
+                          className="flex-1 bg-transparent text-sm text-[#2f3136] placeholder-slategray outline-none font-medium leading-num-24 dark:text-[#d7e0ef] dark:placeholder-[#8c95a3]"
                         />
                       </div>
                       {errors.name && (
@@ -166,13 +267,12 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({
                           {...register("typeOfBuilding", {
                             required: "Please select a building type",
                           })}
-                          className="flex-1 bg-transparent text-sm text-gray-700 outline-none font-medium appearance-none cursor-pointer dark:text-[#d7e0ef]"
+                          className="flex-1 bg-transparent text-sm text-[#2f3136] outline-none font-medium appearance-none cursor-pointer dark:text-[#d7e0ef]"
                         >
                           <option value="">Select type</option>
-                          <option value="residential">Residential</option>
-                          <option value="commercial">Commercial</option>
-                          <option value="dormitory">Dormitory</option>
-                          <option value="mixed">Mixed Use</option>
+                          <option value="off-campus">Off-campus housing</option>
+                          <option value="on-campus">On-campus housing</option>
+                          <option value="partner housing">Partner housing</option>
                         </select>
                         <Icon
                           icon="mynaui:chevron-down"
@@ -189,14 +289,14 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({
                 </div>
                 <div className="self-stretch flex flex-col items-start gap-3">
                   <b className="relative">Location</b>
-                  <div className="self-stretch flex flex-col gap-1">
+                  <div className="self-stretch flex flex-col gap-3">
                     <div className="self-stretch rounded-num-12 bg-aliceblue border-whitesmoke border-solid border-[1px] flex items-center py-3 px-num-16 dark:bg-[#1f2022] dark:border-[#3a3d3c]">
                       <input
                         {...register("location", {
                           required: "Location is required",
                         })}
-                        placeholder="Aa"
-                        className="flex-1 bg-transparent text-sm text-gray-700 placeholder-slategray outline-none font-medium leading-num-24 dark:text-[#d7e0ef] dark:placeholder-[#8c95a3]"
+                        placeholder="e.g. UPLB Grove, Lopez Avenue"
+                        className="flex-1 bg-transparent text-sm text-[#2f3136] placeholder-slategray outline-none font-medium leading-num-24 dark:text-[#d7e0ef] dark:placeholder-[#8c95a3]"
                       />
                     </div>
                     {errors.location && (
@@ -204,6 +304,17 @@ const BuildingInformation: FunctionComponent<BuildingInformationProps> = ({
                         {errors.location.message}
                       </span>
                     )}
+                    <LocationPickerMap
+                      coordinates={coordinates}
+                      locationName={watch("location") ?? ""}
+                      onChange={handleCoordinateChange}
+                    />
+                    <div className="self-stretch flex items-center justify-between rounded-xl bg-[#f7fbfa] border border-whitesmoke px-4 py-2 text-xs font-medium text-[#34655d] dark:bg-[#12342e] dark:border-[#24463f] dark:text-[#72cbb8]">
+                      <span>Pin coordinates</span>
+                      <span>
+                        Lat {coordinates.lat.toFixed(6)} · Long {coordinates.long.toFixed(6)}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>

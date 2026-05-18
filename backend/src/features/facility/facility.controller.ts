@@ -253,7 +253,13 @@ export const routeGetFacility: RequestHandler = async (req, res, _next) => {
       const listingUnits = unitsByListingId.get(listing._id.toString()) ?? [];
       const availableUnits = listingUnits.filter((unit) => unit.isAvailable);
       const unitPrices = listingUnits.map((unit) => unit.price).filter((price) => price > 0);
-      const rent = unitPrices.length > 0 ? Math.min(...unitPrices) : 0;
+      const taggedPrice =
+        typeof tags.monthly_price === 'number'
+          ? tags.monthly_price
+          : typeof tags.monthly_price === 'string'
+            ? Number.parseFloat(tags.monthly_price)
+            : 0;
+      const rent = unitPrices.length > 0 ? Math.min(...unitPrices) : taggedPrice || 0;
 
       return {
         id: listing._id,
@@ -262,6 +268,7 @@ export const routeGetFacility: RequestHandler = async (req, res, _next) => {
             ? tags.roomLabel
             : `${listing.roomType[0].toUpperCase()}${listing.roomType.slice(1)}`,
         roomType: listing.roomType,
+        capacity: listing.capacity,
         description: listing.description ?? '',
         tags,
         cost: {

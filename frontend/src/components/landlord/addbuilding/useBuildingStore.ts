@@ -39,10 +39,17 @@ export interface RoomTypeData {
   name: string;
   roomType: string;
   capacity: string;
+  price: string;
   tags: TagValue[]; // was string[]
   about: string;
   images: string[];
+  imageFiles: File[];
   rooms: RoomData[];
+}
+
+export interface BuildingCoordinates {
+  lat: number;
+  long: number;
 }
 
 export interface ManagerPermissions {
@@ -76,6 +83,7 @@ export interface RequirementItem {
   id: string;
   label: string;
   file: File | null;
+  fileKey: string | null;
   date: string | null;
 }
 
@@ -84,8 +92,10 @@ export interface BuildingInformationData {
   name: string;
   typeOfBuilding: string;
   location: string;
+  locationCoordinates: BuildingCoordinates;
   about: string;
   images: string[];
+  imageFiles: File[];
   roomTypes: RoomTypeData[];
   managers: ManagerData[];
   payment: PaymentData;
@@ -99,7 +109,7 @@ interface BuildingStore {
 
   setBuildingInfo: (data: Partial<BuildingInformationData>) => void;
   setPayment: (data: Partial<PaymentData>) => void;
-  updateRequirement: (id: string, file: File | null, date: string | null) => void;
+  updateRequirement: (id: string, file: File | null, date: string | null, fileKey?: string | null) => void;
   reset: () => void;
 
   addRoomType: () => void;
@@ -134,9 +144,11 @@ const defaultRoomType = (): RoomTypeData => ({
   name: '',
   roomType: '',
   capacity: '',
+  price: '',
   tags: [],
   about: '',
   images: [],
+  imageFiles: [],
   rooms: [],
 });
 
@@ -147,32 +159,39 @@ const defaultPayment: PaymentData = {
 };
 
 const defaultRequirements: RequirementItem[] = [
-  { id: 'valid_id', label: 'Valid ID', file: null, date: null },
-  { id: 'business_permit', label: 'Business Permit', file: null, date: null },
-  { id: 'dti_registration', label: 'DTI Business Name Registration', file: null, date: null },
-  { id: 'bir_cert', label: 'BIR Certificate of Registration', file: null, date: null },
-  { id: 'tenancy_contract', label: 'Tenancy Contract Template', file: null, date: null },
+  { id: 'valid_id', label: 'Valid ID', file: null, fileKey: null, date: null },
+  { id: 'business_permit', label: 'Business Permit', file: null, fileKey: null, date: null },
+  { id: 'dti_registration', label: 'DTI Business Name Registration', file: null, fileKey: null, date: null },
+  { id: 'bir_cert', label: 'BIR Certificate of Registration', file: null, fileKey: null, date: null },
+  { id: 'tenancy_contract', label: 'Tenancy Contract Template', file: null, fileKey: null, date: null },
 ];
 
-const defaultState: BuildingInformationData = {
+export const DEFAULT_BUILDING_COORDINATES: BuildingCoordinates = {
+  lat: 14.1653,
+  long: 121.241,
+};
+
+const createDefaultState = (): BuildingInformationData => ({
   id: crypto.randomUUID(),
   name: '',
   typeOfBuilding: '',
   location: '',
+  locationCoordinates: DEFAULT_BUILDING_COORDINATES,
   about: '',
   images: [],
+  imageFiles: [],
   roomTypes: [{ ...defaultRoomType(), name: '2 Pax Room' }],
   managers: [],
   payment: defaultPayment,
-  requirements: defaultRequirements,
+  requirements: defaultRequirements.map((req) => ({ ...req })),
   allowPasalo: false,
   allowOcularVisit: false,
-};
+});
 
 // ─── Store ────────────────────────────────────────────────────────────────────
 
 export const useBuildingStore = create<BuildingStore>((set) => ({
-  buildingInfo: defaultState,
+  buildingInfo: createDefaultState(),
 
   setBuildingInfo: (data) =>
     set((state) => ({
@@ -188,17 +207,17 @@ export const useBuildingStore = create<BuildingStore>((set) => ({
     })),
 
   // Updates a single requirement's file and date by id
-  updateRequirement: (id, file, date) =>
+  updateRequirement: (id, file, date, fileKey = null) =>
     set((state) => ({
       buildingInfo: {
         ...state.buildingInfo,
         requirements: state.buildingInfo.requirements.map((req) =>
-          req.id === id ? { ...req, file, date } : req,
+          req.id === id ? { ...req, file, date, fileKey } : req,
         ),
       },
     })),
 
-  reset: () => set({ buildingInfo: defaultState }),
+  reset: () => set({ buildingInfo: createDefaultState() }),
 
   // ── Room Types ────────────────────────────────────────────────────────────
 

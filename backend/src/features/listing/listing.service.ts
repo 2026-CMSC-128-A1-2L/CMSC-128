@@ -26,6 +26,7 @@ export type CreateListingArguments = {
     sourceType: 'local' | 'external';
     value: string;
   }[];
+  mediaUrls?: string[];
 };
 
 // Parameters for filtering listings
@@ -117,6 +118,13 @@ export const createListing = async (
   }
 
   // There can be a race condition here.
+  const media =
+    data.media ??
+    data.mediaUrls?.map((value) => ({
+      sourceType: 'local' as const,
+      value,
+    }));
+
   const newListing = new Listing({
     landlordId: facility.landlordId,
     facilityId: data.facilityId,
@@ -126,7 +134,7 @@ export const createListing = async (
     capacity: data.capacity,
 
     description: data.description,
-    media: data.media,
+    media,
   });
   return await newListing.save();
 };

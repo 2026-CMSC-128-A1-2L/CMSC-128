@@ -1,4 +1,4 @@
-import { FunctionComponent, useState, useEffect } from "react";
+import { type FunctionComponent, useRef, useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Icon } from "@iconify/react";
 import { useBuildingStore } from "./useBuildingStore";
@@ -377,6 +377,7 @@ const TagsSection: FunctionComponent<{ roomType: RoomTypeData }> = ({
 interface RoomTypeFormValues {
   roomType: string;
   capacity: string;
+  price: string;
   about: string;
 }
 
@@ -548,6 +549,7 @@ const RoomsSection: FunctionComponent<{ roomType: RoomTypeData }> = ({
 const RoomTypeItem: FunctionComponent<RoomTypeItemProps> = ({ roomType }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const { updateRoomType, removeRoomType } = useBuildingStore();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const {
     register,
@@ -557,6 +559,7 @@ const RoomTypeItem: FunctionComponent<RoomTypeItemProps> = ({ roomType }) => {
     defaultValues: {
       roomType: roomType.roomType,
       capacity: roomType.capacity,
+      price: roomType.price,
       about: roomType.about,
     },
     mode: "onChange",
@@ -569,6 +572,7 @@ const RoomTypeItem: FunctionComponent<RoomTypeItemProps> = ({ roomType }) => {
       updateRoomType(roomType.id, {
         roomType: values.roomType ?? "",
         capacity: values.capacity ?? "",
+        price: values.price ?? "",
         about: values.about ?? "",
       });
     });
@@ -576,6 +580,26 @@ const RoomTypeItem: FunctionComponent<RoomTypeItemProps> = ({ roomType }) => {
   }, [watch, roomType.id, updateRoomType]);
 
   const headerLabel = watchedRoomType || roomType.name || "Room Type";
+  const handlePhotoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(event.target.files ?? []);
+    if (files.length === 0) return;
+
+    const nextImages = [...roomType.images, ...files.map((file) => URL.createObjectURL(file))];
+    const nextImageFiles = [...roomType.imageFiles, ...files];
+    updateRoomType(roomType.id, {
+      images: nextImages,
+      imageFiles: nextImageFiles,
+    });
+
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const removePhoto = (index: number) => {
+    updateRoomType(roomType.id, {
+      images: roomType.images.filter((_, currentIndex) => currentIndex !== index),
+      imageFiles: roomType.imageFiles.filter((_, currentIndex) => currentIndex !== index),
+    });
+  };
 
   return (
     <div className="w-full rounded-xl border border-whitesmoke overflow-hidden flex flex-col dark:border-[#343737] dark:bg-[#101111]">
@@ -602,7 +626,7 @@ const RoomTypeItem: FunctionComponent<RoomTypeItemProps> = ({ roomType }) => {
       {/* Expanded form */}
       {isExpanded && (
         <div className="flex flex-col px-4 pb-8 gap-6 text-sm text-gray-500 font-inter dark:text-[#a4acba]">
-          {/* Room Type + Capacity */}
+          {/* Room Type + Capacity + Price */}
           <div className="self-stretch flex items-start gap-10">
             <div className="flex-1 flex flex-col items-start gap-3">
               <b className="text-black dark:text-[#a4acba]">Room Type</b>
@@ -647,6 +671,31 @@ const RoomTypeItem: FunctionComponent<RoomTypeItemProps> = ({ roomType }) => {
                 )}
               </div>
             </div>
+
+            <div className="flex-1 flex flex-col items-start gap-3">
+              <b className="text-black dark:text-[#a4acba]">Monthly Price</b>
+              <div className="self-stretch flex flex-col gap-1">
+                <div className="self-stretch h-12 rounded-xl bg-aliceblue border border-whitesmoke flex items-center px-4 dark:bg-[#1f2022] dark:border-[#343737]">
+                  <span className="mr-2 text-sm font-bold text-slategray dark:text-[#8c95a3]">₱</span>
+                  <input
+                    {...register("price", {
+                      required: "Monthly price is required",
+                      pattern: {
+                        value: /^[0-9]+(\.[0-9]{1,2})?$/,
+                        message: "Enter a valid amount",
+                      },
+                    })}
+                    placeholder="e.g. 5000"
+                    className="flex-1 bg-transparent text-sm text-black placeholder-slategray outline-none font-medium dark:text-[#d7e0ef] dark:placeholder-[#8c95a3]"
+                  />
+                </div>
+                {errors.price && (
+                  <span className="text-xs text-red-500">
+                    {errors.price.message}
+                  </span>
+                )}
+              </div>
+            </div>
           </div>
 
           {/* Tags */}
@@ -672,12 +721,40 @@ const RoomTypeItem: FunctionComponent<RoomTypeItemProps> = ({ roomType }) => {
           <div className="self-stretch flex flex-col items-start gap-1">
             <b className="text-black dark:text-[#72cbb8]">Add Photos</b>
             <div className="flex items-start flex-wrap gap-2 py-2">
-              <div className="h-[100px] w-[100px] rounded-xl border border-whitesmoke overflow-hidden flex items-center justify-center cursor-pointer hover:bg-gray-50 transition-colors dark:border-[#343737] dark:hover:bg-[#1f2022]">
+              {roomType.images.map((src, index) => (
+                <div
+                  key={`${src}-${index}`}
+                  className="group relative h-[100px] w-[100px] rounded-xl border border-whitesmoke overflow-hidden dark:border-[#343737]"
+                >
+                  <img src={src} alt={`${headerLabel} preview ${index + 1}`} className="h-full w-full object-cover" />
+                  <button
+                    type="button"
+                    onClick={() => removePhoto(index)}
+                    className="absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-white/85 text-red-500 opacity-0 shadow-sm transition-opacity group-hover:opacity-100"
+                    aria-label="Remove room type photo"
+                  >
+                    <Icon icon="material-symbols:close-rounded" className="h-4 w-4" />
+                  </button>
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="h-[100px] w-[100px] rounded-xl border border-whitesmoke overflow-hidden flex items-center justify-center cursor-pointer hover:bg-gray-50 transition-colors dark:border-[#343737] dark:hover:bg-[#1f2022]"
+              >
                 <Icon
                   icon="material-symbols:add-photo-alternate-outline"
                   className="w-8 h-8 text-black dark:text-[#72cbb8]"
                 />
-              </div>
+              </button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                multiple
+                className="hidden"
+                onChange={handlePhotoChange}
+              />
             </div>
           </div>
 

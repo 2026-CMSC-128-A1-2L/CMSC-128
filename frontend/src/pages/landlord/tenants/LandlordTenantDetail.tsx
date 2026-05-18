@@ -13,12 +13,16 @@ const BILLING_STATUS_CLASS: Record<PaymentStatus, string> = {
   paid: 'text-[#096c5b]',
   pending: 'bg-linear-to-b from-[#c29722] to-[#f6b709] bg-clip-text text-transparent',
   overdue: 'bg-linear-to-b from-[#c00f0f] to-[#e44f4f] bg-clip-text text-transparent',
+  unpaid: 'text-[#c00f0f]',
+  partially_paid: 'text-[#c29722]',
 };
 
 const BILLING_STATUS_LABEL: Record<PaymentStatus, string> = {
   paid: 'Paid',
   pending: 'Pending',
   overdue: 'Overdue',
+  unpaid: 'Unpaid',
+  partially_paid: 'Partially paid',
 };
 
 const LandlordTenantDetail = () => {

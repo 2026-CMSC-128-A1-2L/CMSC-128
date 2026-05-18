@@ -123,6 +123,7 @@ export const UserFacilityDetailedSchema = BaseUserFacilitySchema.extend({
         estimatedUtilities: z.number(),
         securityDeposit: z.number(),
       }),
+      capacity: z.int(),
       unitCount: z.int(),
       availableUnitCount: z.int(),
       media: z.array(
@@ -211,12 +212,17 @@ export const CreateFacilityRequestBodySchema = z.object({
 
   // Not accepting applications as default
   isAcceptingApplications: z.boolean().default(false),
+  isPrivate: z.boolean().optional(),
+  allowVisit: z.boolean().optional(),
+  allowTransfer: z.boolean().optional(),
   applicationCloseDate: DateTimeSchema.optional(),
   applicationOpenDate: DateTimeSchema.optional(),
+  mediaUrls: z.array(z.string()).optional(),
 
   // Documents are not required to be uploaded on creation, verification
   // happens after Listing creation, but verification of facility documents
   // is shared across different listings.
+  documents: z.array(DocumentSchema).optional(),
 });
 export const CreateFacilityResponseBodySchema = z.object({ id: ObjectIdSchema });
 
