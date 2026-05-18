@@ -106,6 +106,8 @@ type UnitDetailsLocationState = {
 
 type ApplicationWarning = {
   id: number;
+  message?: string;
+  type?: "warning" | "success" | "info" | "error";
 };
 
 const UnitDetails: FunctionComponent = () => {
@@ -172,6 +174,19 @@ const UnitDetails: FunctionComponent = () => {
     }, 3000);
   };
 
+  const showSuccessToast = (message: string) => {
+    const id = Date.now() + Math.random();
+    setApplicationWarnings((warnings) => [
+      ...warnings,
+      { id, message, type: "success" },
+    ]);
+    window.setTimeout(() => {
+      setApplicationWarnings((warnings) =>
+        warnings.filter((warning) => warning.id !== id),
+      );
+    }, 3000);
+  };
+
   const runAuthenticatedAction = (action: () => void) => {
     if (!user) {
       showLoggedOutApplicationWarning();
@@ -192,8 +207,8 @@ const UnitDetails: FunctionComponent = () => {
     <NotificationToast
       key={warning.id}
       show={true}
-      message="Please sign in to continue."
-      type="warning"
+      message={warning.message ?? "Please sign in to continue."}
+      type={warning.type ?? "warning"}
       position="top-right"
       stackIndex={index}
       onClose={() =>
@@ -401,8 +416,10 @@ const UnitDetails: FunctionComponent = () => {
     try {
       if (isSelectedListingBookmarked) {
         await removeBookmark(selectedListing.id);
+        showSuccessToast("Removed from bookmarks");
       } else {
         await BookmarkService.addBookmark(selectedListing.id);
+        showSuccessToast("Added to bookmarks");
         refetchBookmarks();
       }
     } catch (err) {
