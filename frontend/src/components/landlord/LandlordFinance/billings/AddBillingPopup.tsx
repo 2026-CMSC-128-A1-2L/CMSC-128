@@ -36,7 +36,7 @@ interface ValidationErrors {
 }
 
 interface AddBillingPopupPropsExtended extends AddBillingPopupProps {
-  availableUnitOptions?: { value: string; label: string }[];
+  availableUnitOptions?: { value: string; label: string; price?: number }[];
 }
 
 const AddBillingPopup: FunctionComponent<AddBillingPopupPropsExtended> = ({
@@ -93,6 +93,15 @@ const AddBillingPopup: FunctionComponent<AddBillingPopupPropsExtended> = ({
         return '';
       default:
         return '';
+    }
+  };
+
+  const handleUnitChange = (unitId: string) => {
+    setSelectedUnitId(unitId);
+    const selectedUnit = availableUnitOptions.find((option) => option.value === unitId);
+    if (selectedUnit?.price && selectedUnit.price > 0) {
+      setRent(String(selectedUnit.price));
+      setErrors((prev) => ({ ...prev, rent: '' }));
     }
   };
 
@@ -157,7 +166,7 @@ const AddBillingPopup: FunctionComponent<AddBillingPopupPropsExtended> = ({
         <div className="px-[30px] sm:px-[60px] py-[30px]">
           <RoomDropdown
             value={selectedUnitId}
-            onChange={setSelectedUnitId}
+            onChange={handleUnitChange}
             options={availableUnitOptions}
             placeholder="Select Room"
             label="Room"

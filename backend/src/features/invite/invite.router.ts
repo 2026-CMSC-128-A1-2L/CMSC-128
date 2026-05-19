@@ -2,6 +2,7 @@ import { Router } from 'express';
 import {
   routeGetInvites,
   routeInviteManager,
+  routeInviteStudent,
   routeAcceptInvite,
   routeDeclineInvite,
   routeGetInviteById,
@@ -32,6 +33,9 @@ router.get('/', isLoggedIn, inviteFilter, routeGetInvites);
 // Invites a manager to a facility by a landlord.
 // ============================================================================
 router.post('/', isLoggedIn, isLandlord, routeInviteManager);
+
+// Invite a student to join an existing unit as a legacy tenant.
+router.post('/student', isLoggedIn, isLandlord, routeInviteStudent);
 
 // ============================================================================
 // POST /api/invites/:inviteId/accept

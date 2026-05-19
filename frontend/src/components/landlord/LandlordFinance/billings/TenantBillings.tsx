@@ -147,7 +147,7 @@ const TenantBillingsTab: FunctionComponent<TenantBillingsTabProps> = ({
   const [isMonthDropdownOpen, setIsMonthDropdownOpen] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState(getAvailableMonths()[0]);
   const [isSaving, setIsSaving] = useState(false);
-  const [allUnitOptions, setAllUnitOptions] = useState<{ value: string; label: string }[]>([]);
+  const [allUnitOptions, setAllUnitOptions] = useState<{ value: string; label: string; price?: number }[]>([]);
   const [localRentalMap, setLocalRentalMap] = useState<Map<string, string>>(new Map());
 
   const availableMonths = getAvailableMonths();
@@ -162,7 +162,7 @@ const TenantBillingsTab: FunctionComponent<TenantBillingsTabProps> = ({
         );
         const unitResults = await Promise.all(unitPromises);
 
-        const units: { value: string; label: string }[] = [];
+        const units: { value: string; label: string; price?: number }[] = [];
         const rentalMapFromUnits = new Map<string, string>();
 
         unitResults.forEach((res: any) => {
@@ -182,6 +182,7 @@ const TenantBillingsTab: FunctionComponent<TenantBillingsTabProps> = ({
             units.push({
               value: unitId,
               label: u.roomNumber ?? u.name ?? unitId,
+              price: typeof u.price === 'number' ? u.price : undefined,
             });
           });
         });

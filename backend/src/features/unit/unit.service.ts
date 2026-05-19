@@ -39,6 +39,7 @@ export const createUnit = async (data: CreateUnitArguments, filters: QueryFilter
     roomNumber: data.roomNumber,
     price: data.price,
     location: data.location,
+    isAvailable: data.isAvailable,
 
     // derived from listing
     facilityId: listing.facilityId,

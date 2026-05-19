@@ -22,7 +22,7 @@ export type CalendarPopoutType = {
   facilityName: string;
   facilityAddress: string;
   onClose: () => void;
-  onBooked?: () => void;
+  onBooked?: (message: string) => void;
 };
 
 const formatDateInput = (date: Date) => {
@@ -210,7 +210,10 @@ const CalendarPopout: FunctionComponent<CalendarPopoutType> = ({
         endDate: selectedSlot.endDate as unknown as Date,
         message: message.trim() || undefined,
       });
-      onBooked?.();
+      const successMessage =
+        'You successfully booked an ocular visit. Wait for the landlord approval before your visit is confirmed.';
+      setSuccess(successMessage);
+      onBooked?.(successMessage);
       setTimeout(onClose, 900);
     } catch (err) {
       setError(getApiErrorMessage(err, 'Could not book this visit.'));

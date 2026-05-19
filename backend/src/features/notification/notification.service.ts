@@ -27,7 +27,7 @@ export const getNotifications = async (
   userId: mongoose.Types.ObjectId,
   filter: QueryFilter<NotificationType>,
 ) => {
-  return await Notification.find(combineFilters(filter, { userId }), { createdAt: -1 });
+  return await Notification.find(combineFilters(filter, { userId })).sort({ createdAt: -1 });
 };
 
 export const getNotification = async (

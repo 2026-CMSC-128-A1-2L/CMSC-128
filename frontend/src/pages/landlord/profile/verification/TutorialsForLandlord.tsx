@@ -1,4 +1,4 @@
-import { type FunctionComponent, useState } from 'react';
+import { type FunctionComponent, useState, useEffect } from 'react';
 import { Icon } from '@iconify/react';
 
 interface TutorialBubbleProps {
@@ -8,65 +8,87 @@ interface TutorialBubbleProps {
 
 const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose }) => {
   const [step, setStep] = useState(1);
+  const [bubblePos, setBubblePos] = useState({ top: 0, left: 0 });
 
   const helpContent = [
     {
       title: 'Submit Documents',
       text: 'Upload any official government ID. Your name, photo, and address must be clear.',
-      position: { top: 560, left: 520 },
+      targetId: 'progress-step-submit',
       total: 3,
       currentStep: 1,
     },
     {
       title: 'Submit Documents',
       text: 'Upload a clear copy of your business permit. This document is typically issued by the Business...',
-      position: { top: 560, left: 520 },
+      targetId: 'progress-step-submit',
       total: 3,
       currentStep: 2,
     },
     {
       title: 'Submit Documents',
       text: 'Permits and Licensing Office (BPLO) at the City or Municipal Hall where your property is registered.',
-      position: { top: 560, left: 520 },
+      targetId: 'progress-step-submit',
       total: 3,
       currentStep: 3,
     },
     {
       title: 'Reviewing Documents',
       text: 'Once submitted, the admin will validate your submissions.',
-      position: { top: 560, left: 840 },
+      targetId: 'progress-step-reviewing',
       total: 2,
       currentStep: 1,
     },
     {
       title: 'Reviewing Documents',
       text: 'Reviewing your documents may take up to 48 to 72 hours.',
-      position: { top: 560, left: 840 },
+      targetId: 'progress-step-reviewing',
       total: 2,
       currentStep: 2,
     },
     {
       title: 'Finalized Documents',
       text: 'Once the admin has reviewed and approved of your documents, your account is now secured!',
-      position: { top: 560, left: 1120 },
+      targetId: 'progress-step-finish',
       total: 3,
       currentStep: 1,
     },
     {
       title: 'Finalized Documents',
       text: 'As a verified user, you can now list, manage, and settle your properties for the students who will be...',
-      position: { top: 560, left: 1120 },
+      targetId: 'progress-step-finish',
       total: 3,
       currentStep: 2,
     },
     {
       title: 'Finalized Documents',
       text: 'staying here at UPLB. If you have more questions you may visit <here> or contact our admins.',
-      position: { top: 560, left: 1120 },
+      targetId: 'progress-step-finish',
       total: 3,
       currentStep: 3,
     },
   ];
+
+  useEffect(() => {
+    if (!show) return;
+
+    const updatePosition = () => {
+      const currentContent = helpContent[step - 1];
+      const target = document.getElementById(currentContent.targetId);
+
+      if (target) {
+        const rect = target.getBoundingClientRect();
+        setBubblePos({
+          top: rect.bottom + 8,
+          left: rect.left + rect.width / 2 - 116,
+        });
+      }
+    };
+
+    updatePosition();
+    window.addEventListener('resize', updatePosition);
+    return () => window.removeEventListener('resize', updatePosition);
+  }, [show, step]);
 
   if (!show) return null;
 
@@ -74,8 +96,8 @@ const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose 
   const totalSteps = helpContent.length;
   const isLastStep = step === totalSteps;
   const bubbleStyle = {
-    top: `clamp(76px, ${current.position.top}px, calc(100vh - 220px))`,
-    left: `clamp(88px, ${current.position.left}px, calc(100vw - 300px))`,
+    top: `${bubblePos.top}px`,
+    left: `${bubblePos.left}px`,
   };
 
   const handleNext = () => {
@@ -105,7 +127,6 @@ const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose 
 
         <div className="w-[232px] rounded-2xl bg-aliceblue shadow-xl border border-whitesmoke-200 flex flex-col items-start overflow-hidden">
           <div className="self-stretch flex flex-col items-start py-4 px-4 gap-3">
-            {/* Header */}
             <div className="self-stretch flex items-center justify-between">
               <b className="text-[14px] font-inter text-black">{current.title}</b>
               <div
@@ -116,13 +137,11 @@ const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose 
               </div>
             </div>
 
-            {/* Description */}
             <div className="self-stretch text-[12px] font-medium leading-[1.4] font-lora text-black tracking-wide text-left">
               {current.text}
             </div>
 
             <div className="self-stretch flex items-center justify-between mt-1">
-              {/* Step counter */}
               <div className="text-[12px] font-semibold font-lora text-darkslategray tracking-wide">
                 {current.currentStep}/{current.total}
               </div>

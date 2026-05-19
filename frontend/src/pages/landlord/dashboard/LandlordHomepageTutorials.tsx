@@ -1,4 +1,4 @@
-import { type FunctionComponent, useState } from 'react';
+import { type FunctionComponent, useState, useEffect, useRef } from 'react';
 import { Icon } from '@iconify/react';
 
 interface TutorialBubbleProps {
@@ -8,93 +8,117 @@ interface TutorialBubbleProps {
 
 const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose }) => {
   const [step, setStep] = useState(1);
+  const [bubblePos, setBubblePos] = useState({ top: 0, left: 0 });
+  const bubbleRef = useRef<HTMLDivElement>(null);
 
   const helpContent = [
     {
       title: 'Statistics',
-      text: 'You can monitor your property’s performance in real-time!',
-      position: { top: 158, left: 440 },
+      text: 'You can monitor your property\'s performance in real-time!',
+      targetId: 'dashboard-stats-heading',
       total: 4,
       currentStep: 1,
     },
     {
       title: 'Statistics',
       text: 'This section provides a quick summary of your monthly revenue, total tenant count, and...',
-      position: { top: 158, left: 440 },
+      targetId: 'dashboard-stats-heading',
       total: 4,
       currentStep: 2,
     },
     {
       title: 'Statistics',
       text: 'any overdue payments that require your attention. You may send reminders to your tenants...',
-      position: { top: 158, left: 440 },
+      targetId: 'dashboard-stats-heading',
       total: 4,
       currentStep: 3,
     },
     {
       title: 'Statistics',
       text: 'regarding overdue rent or upcoming dues with a single click!',
-      position: { top: 158, left: 440 },
+      targetId: 'dashboard-stats-heading',
       total: 4,
       currentStep: 4,
     },
     {
       title: 'Current Properties',
       text: 'This section shows all of your registered properties!',
-      position: { top: 388, left: 520 },
+      targetId: 'dashboard-properties-heading',
       total: 4,
       currentStep: 1,
     },
     {
       title: 'Current Properties',
       text: 'Each card shows your current occupancy rate to help identify which units have vacancies.',
-      position: { top: 388, left: 520 },
+      targetId: 'dashboard-properties-heading',
       total: 4,
       currentStep: 2,
     },
     {
       title: 'Current Properties',
       text: 'You may also track your earnings and any pending dues for each property.',
-      position: { top: 388, left: 520 },
+      targetId: 'dashboard-properties-heading',
       total: 4,
       currentStep: 3,
     },
     {
       title: 'Current Properties',
       text: 'Click on the arrow icon to manage room assignments, update rules, or edit property photos.',
-      position: { top: 388, left: 520 },
+      targetId: 'dashboard-properties-heading',
       total: 4,
       currentStep: 4,
     },
     {
       title: 'Pending Applications',
       text: 'You can have an overview of your current tenant applications here. To view more details...',
-      position: { top: 622, left: 430 },
+      targetId: 'dashboard-pending-heading',
       total: 2,
       currentStep: 1,
     },
     {
       title: 'Pending Applications',
-      text: 'click “View All” to be redirected to all of your pending applications under “My Tenants” tab.',
-      position: { top: 622, left: 430 },
+      text: 'click "View All" to be redirected to all of your pending applications under "My Tenants" tab.',
+      targetId: 'dashboard-pending-heading',
       total: 2,
       currentStep: 2,
     },
     {
       title: 'Scheduled Visits',
       text: 'You can have an overview of scheduled visits from potential tenants. To view more details...',
-      position: { top: 622, left: 880 },
+      targetId: 'dashboard-visits-heading',
       total: 2,
       currentStep: 1,
     },
     {
       title: 'Scheduled Visits',
-      text: 'click “View All” to be redirected to your calendar. You may accept or decline visits from tenants.',
-      position: { top: 622, left: 880 },
+      text: 'click "View All" to be redirected to your calendar. You may accept or decline visits from tenants.',
+      targetId: 'dashboard-visits-heading',
       total: 2,
       currentStep: 2,
     },
   ];
+
+  useEffect(() => {
+    if (!show) return;
+
+    const updatePosition = () => {
+      const currentContent = helpContent[step - 1];
+      const target = document.getElementById(currentContent.targetId);
+
+      if (target && bubbleRef.current) {
+        const rect = target.getBoundingClientRect();
+        const bubbleHeight = bubbleRef.current.offsetHeight;
+        setBubblePos({
+          top: rect.top + rect.height / 2 - bubbleHeight / 2,
+          left: rect.right - 10,
+        });
+      }
+    };
+
+    updatePosition();
+    window.addEventListener('resize', updatePosition);
+    return () => window.removeEventListener('resize', updatePosition);
+  }, [show, step]);
 
   if (!show) return null;
 
@@ -102,8 +126,8 @@ const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose 
   const totalSteps = helpContent.length;
   const isLastStep = step === totalSteps;
   const bubbleStyle = {
-    top: `clamp(76px, ${current.position.top}px, calc(100vh - 220px))`,
-    left: `clamp(88px, ${current.position.left}px, calc(100vw - 300px))`,
+    top: `${bubblePos.top}px`,
+    left: `${bubblePos.left}px`,
   };
 
   const handleNext = () => {
@@ -121,6 +145,7 @@ const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose 
 
   return (
     <div
+      ref={bubbleRef}
       className="fixed z-[999] flex flex-col items-start animate-in fade-in zoom-in duration-200 transition-all"
       style={bubbleStyle}
     >
@@ -132,7 +157,6 @@ const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose 
 
         <div className="w-[232px] rounded-2xl bg-aliceblue shadow-xl border border-whitesmoke-200 flex flex-col items-start overflow-hidden dark:bg-[#141515] dark:border-[#303331] dark:shadow-none">
           <div className="self-stretch flex flex-col items-start py-4 px-4 gap-3">
-            {/* header*/}
             <div className="self-stretch flex items-center justify-between">
               <b className="text-[14px] font-inter text-black dark:text-[#edf6f4]">{current.title}</b>
               <div
@@ -146,13 +170,11 @@ const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose 
               </div>
             </div>
 
-            {/* description */}
             <div className="self-stretch text-[12px] font-medium leading-[1.4] font-lora text-black tracking-wide text-left dark:text-[#d7e0ef]">
               {current.text}
             </div>
 
             <div className="self-stretch flex items-center justify-between mt-1">
-              {/* step counter */}
               <div className="text-[12px] font-semibold font-lora text-darkslategray tracking-wide dark:text-[#72cbb8]">
                 {current.currentStep}/{current.total}
               </div>
@@ -167,7 +189,6 @@ const TutorialBubble: FunctionComponent<TutorialBubbleProps> = ({ show, onClose 
                   </button>
                 )}
 
-                {/* for commit purposes, ignore pls hahaha */}
                 <button
                   onClick={handleNext}
                   className="w-[54px] rounded-lg bg-[#d0dbe3] py-1 text-[12px] text-[#2f3136] font-semibold font-lora text-center cursor-pointer hover:brightness-95 transition-all dark:bg-[#124f43] dark:text-[#edf6f4]"

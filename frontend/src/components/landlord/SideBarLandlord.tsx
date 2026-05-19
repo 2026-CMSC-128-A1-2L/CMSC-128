@@ -451,7 +451,10 @@ const SideBarLandlord = ({
               </span>
               {!collapsed && (
                 <span className="flex flex-col items-start justify-center gap-[4px] overflow-hidden">
-                  <span className="font-['Inter',sans-serif] text-[14px] font-bold leading-normal whitespace-nowrap text-[#096c5b] dark:text-[#72cbb8]">
+                  <span 
+                    title={user.name}
+                    className="font-['Inter',sans-serif] text-[14px] font-bold leading-normal truncate max-w-[100px] block text-[#096c5b] dark:text-[#72cbb8]"
+                  >
                     {user.name}
                   </span>
                   {user.verified ? (
