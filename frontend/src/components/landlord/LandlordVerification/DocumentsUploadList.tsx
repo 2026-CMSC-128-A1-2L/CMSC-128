@@ -4,11 +4,19 @@ import type { DocumentSlot } from './DocumentsData';
 interface DocumentsUploadListProps {
   documents: DocumentSlot[];
   uploads: Record<string, File | undefined>;
+  statuses?: Record<string, DocumentStatus>;
+  fileNames?: Record<string, string>;
   onFileSelected: (id: string, file: File) => void;
 }
 
-const DocumentsUploadList = ({ documents, uploads, onFileSelected }: DocumentsUploadListProps) => {
-  const getStatus = (id: string): DocumentStatus => (uploads[id] ? 'uploaded' : 'missing');
+const DocumentsUploadList = ({
+  documents,
+  uploads,
+  statuses = {},
+  fileNames = {},
+  onFileSelected,
+}: DocumentsUploadListProps) => {
+  const getStatus = (id: string): DocumentStatus => uploads[id] ? 'uploaded' : (statuses[id] ?? 'missing');
 
   return (
     <>
@@ -19,7 +27,7 @@ const DocumentsUploadList = ({ documents, uploads, onFileSelected }: DocumentsUp
             acceptedHint={doc.acceptedHint}
             accept={doc.accept}
             status={getStatus(doc.id)}
-            fileName={uploads[doc.id]?.name}
+            fileName={uploads[doc.id]?.name ?? fileNames[doc.id]}
             onFileSelected={(file) => onFileSelected(doc.id, file)}
           />
         </div>

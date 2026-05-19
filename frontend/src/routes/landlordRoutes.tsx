@@ -19,6 +19,7 @@ import LandlordProfileSwitcher from '../pages/landlord/profile/ProfileSwitcherLa
 import { Route } from 'react-router-dom';
 import LandlordPropertyFinance from '../pages/landlord/finance/LandlordPropertyFinance';
 import EditBuilding from '../pages/landlord/properties/EditBuilding';
+import BuildingStudentPreview from '../pages/landlord/properties/BuildingStudentPreview';
 
 const landlordRoutes = [
   <Route key="landlord-home" path="/landlord-homepage" element={<LandlordHomepage />} />,
@@ -56,6 +57,11 @@ const landlordRoutes = [
     key="landlord-properties-building-info"
     path="/landlord/properties/:id"
     element={<BuildingInfo />}
+  />,
+  <Route
+    key="landlord-properties-building-student-preview"
+    path="/landlord/properties/:id/student-preview"
+    element={<BuildingStudentPreview />}
   />,
   <Route key="landlord-managers" path="/landlord/managers" element={<LandlordManagers />} />,
   <Route key="landlord-tenants" path="/landlord/tenants" element={<LandlordTenants />} />,

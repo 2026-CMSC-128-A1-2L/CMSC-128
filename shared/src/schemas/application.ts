@@ -4,6 +4,7 @@ import { DateTimeSchema, ObjectIdSchema, PaginationRequestSchema, QuerySchema } 
 // POST /api/applications
 export const CreateApplicationBodySchema = z.object({
   listingId: ObjectIdSchema,
+  transferId: ObjectIdSchema.optional(),
   leaseDuration: z.enum(['6-months', '12-months']),
   moveInDate: DateTimeSchema,
   message: z.string().nullish(),

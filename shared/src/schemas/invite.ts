@@ -12,3 +12,9 @@ export const CreateInviteManagerBodySchema = z.object({
   // permissions to grant upon acceptance
   permissions: ManagerPermissionSchema,
 });
+
+export const CreateInviteStudentBodySchema = z.object({
+  facilityId: ObjectIdSchema,
+  unitId: ObjectIdSchema,
+  email: z.email(),
+});

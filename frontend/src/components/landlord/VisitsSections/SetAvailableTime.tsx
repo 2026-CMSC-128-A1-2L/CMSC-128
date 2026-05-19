@@ -88,8 +88,8 @@ const SetAvailableTime: FunctionComponent<SetAvailableTimeProps> = ({ onClose, o
     }
   }, [availability, onClose, onSave]);
   return (
-    <div className="relative rounded-2xl bg-white dark:bg-[#141515] w-[900px] overflow-hidden flex flex-col items-start py-8 px-12 box-border gap-2.5 text-center text-[24px] text-teal dark:text-[#72cbb8] font-inter">
-      <div className="self-stretch overflow-hidden flex flex-col items-start p-num-10 gap-2.5">
+    <div className="relative rounded-2xl bg-white dark:bg-[#141515] md:w-[700px] lg:w-[900px] overflow-hidden flex flex-col items-start py-6 px-4 sm:py-8 sm:px-8 lg:px-12 box-border gap-2.5 text-center text-[24px] text-teal dark:text-[#72cbb8] font-inter">
+      <div className="self-stretch overflow-hidden flex flex-col md:items-start items-center p-num-10 gap-2.5">
         <b className="relative leading-8">General Availability</b>
         <b className="relative text-num-14 text-darkslategray dark:text-[#a4acba]">{`Set your available times for scheduled visits `}</b>
       </div>

@@ -13,6 +13,7 @@ export * from './schemas/invite.js';
 export * from './schemas/listing.js';
 export * from './schemas/notification.js';
 export * from './schemas/profile.js';
+export * from './schemas/removalRequest.js';
 export * from './schemas/rental.js';
 export * from './schemas/report.js';
 export * from './schemas/review.js';

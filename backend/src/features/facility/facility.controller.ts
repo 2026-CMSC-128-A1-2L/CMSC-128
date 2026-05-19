@@ -55,6 +55,7 @@ const getFacilityListingSummaries = async (facilityIds: mongoose.Types.ObjectId[
       name: string;
       roomType: string;
       rent: number;
+      capacity: number;
       unitCount: number;
       availableUnitCount: number;
     }[]
@@ -66,7 +67,13 @@ const getFacilityListingSummaries = async (facilityIds: mongoose.Types.ObjectId[
     const listingUnits = unitsByListingId.get(listing._id.toString()) ?? [];
     const availableUnits = listingUnits.filter((unit) => unit.isAvailable);
     const unitPrices = listingUnits.map((unit) => unit.price).filter((price) => price > 0);
-    const rent = unitPrices.length > 0 ? Math.min(...unitPrices) : 0;
+    const taggedPrice =
+      typeof tags.monthly_price === 'number'
+        ? tags.monthly_price
+        : typeof tags.monthly_price === 'string'
+          ? Number.parseFloat(tags.monthly_price)
+          : 0;
+    const rent = unitPrices.length > 0 ? Math.min(...unitPrices) : taggedPrice || 0;
     const facilityId = listing.facilityId.toString();
     const summaries = summariesByFacilityId.get(facilityId) ?? [];
 
@@ -78,6 +85,7 @@ const getFacilityListingSummaries = async (facilityIds: mongoose.Types.ObjectId[
           : fallbackRoomTypeLabel(listing.roomType),
       roomType: listing.roomType,
       rent,
+      capacity: listing.capacity,
       unitCount: listingUnits.length,
       availableUnitCount: availableUnits.length,
     });
@@ -135,6 +143,7 @@ export const routeGetFacilities: RequestHandler = async (_req, res) => {
         const listingSummaries = listingSummariesByFacilityId.get(_id.toString()) ?? [];
         const reviewRatings = reviewRatingsByFacilityId.get(_id.toString()) ?? [];
         const prices = listingSummaries.map((listing) => listing.rent).filter((price) => price > 0);
+        const capacity = listingSummaries.reduce((sum, listing) => sum + listing.capacity, 0);
         const firstImage = media?.[0]?.value;
         const facilityRatingValues = [qualityAvg, comfortAvg, environmentAvg].filter(
           (rating): rating is number => typeof rating === 'number' && Number.isFinite(rating),
@@ -143,6 +152,7 @@ export const routeGetFacilities: RequestHandler = async (_req, res) => {
 
         return {
           ...rest,
+          capacity,
           id: _id.toString(),
           averageRating:
             ratingValues.length > 0
@@ -161,6 +171,7 @@ export const routeGetFacilities: RequestHandler = async (_req, res) => {
               min: listing.rent,
               max: listing.rent,
             },
+            capacity: listing.capacity,
             unitCount: listing.unitCount,
             availableUnitCount: listing.availableUnitCount,
           })),
@@ -253,7 +264,13 @@ export const routeGetFacility: RequestHandler = async (req, res, _next) => {
       const listingUnits = unitsByListingId.get(listing._id.toString()) ?? [];
       const availableUnits = listingUnits.filter((unit) => unit.isAvailable);
       const unitPrices = listingUnits.map((unit) => unit.price).filter((price) => price > 0);
-      const rent = unitPrices.length > 0 ? Math.min(...unitPrices) : 0;
+      const taggedPrice =
+        typeof tags.monthly_price === 'number'
+          ? tags.monthly_price
+          : typeof tags.monthly_price === 'string'
+            ? Number.parseFloat(tags.monthly_price)
+            : 0;
+      const rent = unitPrices.length > 0 ? Math.min(...unitPrices) : taggedPrice || 0;
 
       return {
         id: listing._id,
@@ -262,6 +279,7 @@ export const routeGetFacility: RequestHandler = async (req, res, _next) => {
             ? tags.roomLabel
             : `${listing.roomType[0].toUpperCase()}${listing.roomType.slice(1)}`,
         roomType: listing.roomType,
+        capacity: listing.capacity,
         description: listing.description ?? '',
         tags,
         cost: {

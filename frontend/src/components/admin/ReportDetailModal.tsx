@@ -19,6 +19,7 @@ type ReportData = {
   flags: string[];
   evidence: string[];
   status: string;
+  reporterFacility?: string | null;
   createdAt?: string;
   __t?: string;
   [key: string]: unknown;
@@ -30,7 +31,7 @@ type Props = {
   onClose: () => void;
   onResolve: (status: 'resolved' | 'dismissed') => void;
   getReporterName: (userId: string | ReportUser) => string;
-  getReportType: (report: ReportData) => string;
+  getReportType: (report: any) => string;
 };
 
 const SS: Record<string, string> = {
@@ -145,9 +146,10 @@ export default function ReportDetailModal({
     }
   };
 
-  if (!isOpen || !report) return null;
+  if (!report) return null;
+
   return (
-    <AdminPopupOverlay onClose={onClose}>
+    <AdminPopupOverlay onClose={onClose} isOpen={isOpen}>
       <div className="flex w-[612px] max-h-[90vh] flex-col overflow-hidden rounded-tl-[32px] bg-white dark:bg-[#141515] dark:border dark:border-[#303331]">
         <div className="w-full shrink-0 rounded-tl-[32px] bg-gradient-to-b from-[#096c5b] to-[#16917c] px-[57px] py-3">
           <div className="w-full py-8 pb-2">

@@ -1,7 +1,6 @@
 import BookmarksNewUsers from '../pages/user/bookmarks/BookmarksNewUsers';
 import UnitDetails from '../pages/user/home/UnitDetails';
 import DmsLanding from '../pages/user/messages/DmsLanding';
-import Filter from '../components/user/Filter/FilterTab';
 import HomePage from '../pages/user/home/HomePage';
 import Finance from '../pages/user/finance/Finance';
 import ContactUs from '../pages/user/info/ContactUs';

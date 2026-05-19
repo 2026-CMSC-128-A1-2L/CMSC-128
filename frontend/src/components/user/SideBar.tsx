@@ -1,14 +1,15 @@
-﻿import { useCallback, useEffect, useRef, useState, type MouseEventHandler } from 'react';
+import { useCallback, useEffect, useRef, useState, type MouseEventHandler } from 'react';
 import { createPortal } from 'react-dom';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import AtlasLogoText from '../../../assets/logo_atlas_text.svg?react';
-import AtlasLogoMin from '../../../assets/atlas logo (for white bg).png';
+import AtlasLogoMin from '../../../assets/footer_logo.svg?react';
 import SideBarButton, { type SideBarButtonState } from './SideBarButton';
 import { useAuthStore } from '../../store/useAuthStore';
 import UserMenuPopup from './UserMenuPopup';
 import SignInPopUp from '../general/SignInPopUp';
 import { useTheme } from '../../pages/utilities/DarkMode';
+import { useUnreadCommunicationCount } from '../../hooks/useUnreadCommunicationCount';
 
 export type SideBarItemKey =
   | 'home'
@@ -99,6 +100,7 @@ const SideBar = ({
   const profileMenuRef = useRef<HTMLDivElement>(null);
   const { isDark, toggle } = useTheme();
   const { user, logout } = useAuthStore();
+  const unreadCommunicationCount = useUnreadCommunicationCount();
 
   const username = user ? `${user.firstName} ${user.lastName}` : null;
 
@@ -257,11 +259,17 @@ const SideBar = ({
         </button>
 
         <div className="flex items-center justify-center px-4 w-full">
-          {collapsed ? (
-            <img src={AtlasLogoMin} className="w-7 h-7" aria-label="Atlas" />
-          ) : (
-            <AtlasLogoText className="w-32 h-auto fill-[#2d3748] dark:fill-[#d7e0ef]" />
-          )}
+          <Link
+            to="/about"
+            className="flex items-center justify-center cursor-pointer transition-opacity hover:opacity-80"
+            aria-label="About Atlas"
+          >
+            {collapsed ? (
+              <AtlasLogoMin className="w-7 h-7 fill-[#2d3748] dark:fill-[#d7e0ef]" aria-label="Atlas" />
+            ) : (
+              <AtlasLogoText className="w-32 h-auto fill-[#2d3748] dark:fill-[#d7e0ef]" />
+            )}
+          </Link>
         </div>
 
         {/* Search section is currently disabled */}
@@ -356,13 +364,25 @@ const SideBar = ({
                       icon={state === 'clicked' ? item.iconFill : item.iconOut}
                       className="w-7 h-7"
                     />
+                    {item.key === 'messages' && unreadCommunicationCount > 0 && (
+                      <span className="absolute right-4 top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#d94141] px-1.5 text-[10px] font-bold leading-none text-white shadow-sm">
+                        {unreadCommunicationCount > 99 ? '99+' : unreadCommunicationCount}
+                      </span>
+                    )}
                   </div>
                 ) : (
-                  <SideBarButton
-                    icon={state === 'clicked' ? item.iconFill : item.iconOut}
-                    label={item.label}
-                    state={state}
-                  />
+                  <div className="relative">
+                    <SideBarButton
+                      icon={state === 'clicked' ? item.iconFill : item.iconOut}
+                      label={item.label}
+                      state={state}
+                    />
+                    {item.key === 'messages' && unreadCommunicationCount > 0 && (
+                      <span className="absolute right-5 top-1/2 flex h-5 min-w-5 -translate-y-1/2 items-center justify-center rounded-full bg-[#d94141] px-1.5 text-[10px] font-bold leading-none text-white shadow-sm">
+                        {unreadCommunicationCount > 99 ? '99+' : unreadCommunicationCount}
+                      </span>
+                    )}
+                  </div>
                 )}
               </Link>
             );
@@ -433,7 +453,31 @@ const SideBar = ({
                     {username ?? 'Sign In'}
                   </b>
 
-                  {!user && (
+                  {user ? (
+                    <span className="flex items-center gap-[4px]">
+                      {user.status === 'verified' ? (
+                        <>
+                          <span className="bg-gradient-to-b from-[#5dc2a8] to-[#0c8873] bg-clip-text font-inter text-[10px] font-bold leading-normal whitespace-nowrap text-transparent">
+                            Verified
+                          </span>
+                          <Icon
+                            icon="material-symbols:verified"
+                            className="h-[10px] w-[10px] text-[#0c8873] dark:text-[#72cbb8]"
+                          />
+                        </>
+                      ) : (
+                        <>
+                          <span className="bg-gradient-to-b from-[#e0a825] to-[#c48a1a] bg-clip-text font-inter text-[10px] font-bold leading-normal whitespace-nowrap text-transparent">
+                            Unverified
+                          </span>
+                          <Icon
+                            icon="material-symbols:warning-rounded"
+                            className="h-[10px] w-[10px] text-[#c48a1a] dark:text-[#e0a825]"
+                          />
+                        </>
+                      )}
+                    </span>
+                  ) : (
                     <span className="text-[10px] text-[#9ca3af] font-bold dark:text-[#a4acba]">
                       to continue
                     </span>

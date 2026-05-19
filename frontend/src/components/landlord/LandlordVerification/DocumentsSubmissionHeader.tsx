@@ -5,6 +5,7 @@ interface DocumentsSubmissionHeaderProps {
   uploadedCount: number;
   totalCount: number;
   canSubmit: boolean;
+  isSubmitting?: boolean;
   statefulVerificationStep: VerificationStep;
   onSubmit: () => void;
 }
@@ -13,9 +14,17 @@ const DocumentsSubmissionHeader = ({
   uploadedCount,
   totalCount,
   canSubmit,
+  isSubmitting = false,
   statefulVerificationStep,
   onSubmit,
 }: DocumentsSubmissionHeaderProps) => {
+  const buttonLabel =
+    isSubmitting
+      ? 'Sending...'
+      : statefulVerificationStep === 'reviewing'
+        ? 'Resubmit'
+        : 'Submit';
+
   return (
     <div className="flex w-full items-center gap-[24px] px-[32px]">
       <div className="flex flex-1 items-center">
@@ -35,27 +44,17 @@ const DocumentsSubmissionHeader = ({
       </div>
       <button
         type="button"
-        disabled={!canSubmit}
+        disabled={!canSubmit || isSubmitting}
         onClick={onSubmit}
         className={[
           'flex h-[32px] w-[96px] items-center justify-center rounded-[16px] px-[12px]',
           'font-["Inter",sans-serif] text-[14px] font-bold transition-colors duration-200',
-          canSubmit
+          canSubmit && !isSubmitting
             ? 'cursor-pointer bg-[#096c5b] text-white hover:bg-[#075a4c]'
             : 'cursor-not-allowed bg-[#f1f5f9] text-[#64748b]',
         ].join(' ')}
       >
-        {/* conditionally renders button content based on verification step */}
-        {(() => {
-          switch (statefulVerificationStep) {
-            case 'submit':
-              return <>Submit</>;
-            case 'reviewing':
-              return <>Resubmit</>;
-            default:
-              return <>Submit</>;
-          }
-        })()}
+        {buttonLabel}
       </button>
     </div>
   );

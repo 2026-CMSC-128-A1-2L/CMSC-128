@@ -7,6 +7,7 @@ import { NotificationService } from '../../service/NotificationService';
 
 const ROLES = ['All', 'Student', 'Landlord', 'Manager'] as const;
 type Role = (typeof ROLES)[number];
+import { motion } from 'framer-motion';
 
 function Announcement() {
   const [subject, setSubject] = useState('');
@@ -117,12 +118,16 @@ function Announcement() {
 
               {/* Submit */}
               <div className="flex justify-center">
-                <button
+                <motion.button
                   type="button"
                   disabled={loading || !subject.trim() || !message.trim()}
                   onClick={handleSubmit}
-                  className="flex cursor-pointer items-center gap-2 rounded-full bg-[#024338] px-6 py-2 transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="flex cursor-pointer items-center gap-2 rounded-full bg-[#024338] px-6 py-2"
                 >
+                  <Icon icon="iconamoon:arrow-right-2-thin" className="h-5 w-5 text-white" />
+                  <span className="font-['Lora'] text-base font-medium text-white">Submit</span>
                   {loading ? (
                     <span className="font-['Lora'] text-base font-medium text-white">Sending...</span>
                   ) : (
@@ -131,7 +136,7 @@ function Announcement() {
                       <span className="font-['Lora'] text-base font-medium text-white">Submit</span>
                     </>
                   )}
-                </button>
+                </motion.button>
               </div>
             </div>
           </div>

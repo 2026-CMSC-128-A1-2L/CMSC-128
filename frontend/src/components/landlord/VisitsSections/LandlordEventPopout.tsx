@@ -5,6 +5,8 @@ export type VisitSlot = {
   id: string;
   time: string;
   visitorName: string;
+  status?: string;
+  propertyName?: string;
   backgroundColor?: string;
   dayOfWeek: number;
   startDate: Date;

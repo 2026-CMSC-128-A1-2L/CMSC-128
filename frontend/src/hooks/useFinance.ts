@@ -54,6 +54,7 @@ const EMPTY_DASHBOARD: UserBillingDashboard = {
 type UseFinanceReturn = {
     dashboard: UserBillingDashboard | null;
     userId?: string;
+    facilityId?: string;
     isLoading: boolean;
     error: string | null;
     hasAccommodation: boolean;
@@ -62,6 +63,7 @@ type UseFinanceReturn = {
 
 export function useFinance(): UseFinanceReturn {
     const [dashboard, setDashboard] = useState<UserBillingDashboard | null>(null);
+    const [facilityId, setFacilityId] = useState<string | undefined>(undefined);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [hasAccommodation, setHasAccommodation] = useState(false);
@@ -97,6 +99,9 @@ export function useFinance(): UseFinanceReturn {
                 if (!cancelled) {
                     setDashboard(response.data as UserBillingDashboard);
                     setHasAccommodation(true);
+                    // Try to extract facilityId from the dashboard response if present
+                    const raw = response.data as any;
+                    setFacilityId(raw?.facilityId ?? raw?.facility?._id ?? raw?.facility ?? undefined);
                 }
             } catch (err) {
                 if (!cancelled) {
@@ -112,9 +117,16 @@ export function useFinance(): UseFinanceReturn {
                                 : null;
 
                             let facilityDetails = EMPTY_DASHBOARD.facilityDetails;
+                            let resolvedFacilityId: string | undefined;
+
                             if (activeRental?.facilityId) {
+                                resolvedFacilityId =
+                                    typeof activeRental.facilityId === 'object'
+                                        ? activeRental.facilityId._id ?? activeRental.facilityId
+                                        : activeRental.facilityId;
+
                                 try {
-                                    const facilityResponse = await FacilityService.getFacility(activeRental.facilityId);
+                                    const facilityResponse = await FacilityService.getFacility(resolvedFacilityId!);
                                     const f = facilityResponse.data;
                                     facilityDetails = {
                                         name: f?.name ?? '',
@@ -127,12 +139,14 @@ export function useFinance(): UseFinanceReturn {
 
                             if (!cancelled) {
                                 setDashboard({ ...EMPTY_DASHBOARD, facilityDetails });
+                                setFacilityId(resolvedFacilityId);
                                 setHasAccommodation(!!activeRental);
                                 setError(null);
                             }
                         } catch {
                             if (!cancelled) {
                                 setDashboard(EMPTY_DASHBOARD);
+                                setFacilityId(undefined);
                                 setHasAccommodation(false);
                                 setError(null);
                             }
@@ -141,6 +155,7 @@ export function useFinance(): UseFinanceReturn {
                         const message = axiosMessage ?? (err instanceof Error ? err.message : 'Failed to load finance data.');
                         setError(message);
                         setDashboard(null);
+                        setFacilityId(undefined);
                         setHasAccommodation(false);
                     }
                 }
@@ -154,5 +169,5 @@ export function useFinance(): UseFinanceReturn {
         return () => { cancelled = true; };
     }, [isInitialized, userId, fetchCount]);
 
-    return { dashboard, userId, isLoading, error, hasAccommodation, refetch };
+    return { dashboard, userId, facilityId, isLoading, error, hasAccommodation, refetch };
 }

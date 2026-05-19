@@ -4,6 +4,7 @@ import Announcement from '../pages/admin/announcement';
 import Applications from '../pages/admin/applications';
 import Listings from '../pages/admin/listings';
 import Messages from '../pages/admin/messages';
+import RemovalRequests from '../pages/admin/removalRequests';
 import { Route } from 'react-router-dom';
 
 const adminRoutes = [

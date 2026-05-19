@@ -29,7 +29,9 @@ export const routeGetMessages: RequestHandler = async (req, res) => {
         text: convo.latestMessage.text,
       },
       createdAt: convo.latestMessage.createdAt,
-      readAt: convo.latestMessage.receiverSeenAt,
+      readAt: convo.latestMessage.senderId.equals(req.user?._id)
+        ? convo.latestMessage.senderSeenAt
+        : convo.latestMessage.receiverSeenAt,
     })),
   };
 
@@ -59,7 +61,12 @@ export const routeGetUserMessages: RequestHandler = async (req, res) => {
       userId: msg.senderId,
       text: msg.text,
     })),
-    readAt: messages.length > 0 ? messages[messages.length - 1].receiverSeenAt : undefined,
+    readAt:
+      messages.length > 0
+        ? messages[messages.length - 1].senderId.equals(userId)
+          ? messages[messages.length - 1].senderSeenAt
+          : messages[messages.length - 1].receiverSeenAt
+        : undefined,
   };
 
   res.status(200).json({ data: response });

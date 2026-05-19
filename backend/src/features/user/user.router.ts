@@ -151,7 +151,8 @@ router.use(
 // POST /api/users/:userId/report
 //
 // - Students can report managers or landlords.
-// - Landlords and managers can report tenants.
+// - Landlords can report tenants or managers.
+// - Managers can report tenants.
 // Role enforcement is handled in the service.
 // ============================================================================
 router.post('/:userId/report', isVerifiedCheck, routeReportUser);
