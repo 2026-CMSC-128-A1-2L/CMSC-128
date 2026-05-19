@@ -257,11 +257,17 @@ const SideBar = ({
         </button>
 
         <div className="flex items-center justify-center px-4 w-full">
-          {collapsed ? (
-            <AtlasLogoMin className="w-7 h-7 fill-[#2d3748] dark:fill-[#d7e0ef]" aria-label="Atlas" />
-          ) : (
-            <AtlasLogoText className="w-32 h-auto fill-[#2d3748] dark:fill-[#d7e0ef]" />
-          )}
+          <Link
+            to="/about"
+            className="flex items-center justify-center cursor-pointer transition-opacity hover:opacity-80"
+            aria-label="About Atlas"
+          >
+            {collapsed ? (
+              <AtlasLogoMin className="w-7 h-7 fill-[#2d3748] dark:fill-[#d7e0ef]" aria-label="Atlas" />
+            ) : (
+              <AtlasLogoText className="w-32 h-auto fill-[#2d3748] dark:fill-[#d7e0ef]" />
+            )}
+          </Link>
         </div>
 
         {/* Search section is currently disabled */}

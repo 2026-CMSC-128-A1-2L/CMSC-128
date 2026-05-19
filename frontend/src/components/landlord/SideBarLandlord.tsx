@@ -258,15 +258,15 @@ const SideBarLandlord = ({
         {/* Logo */}
         <div className="flex h-[40px] items-center justify-center overflow-hidden">
           <Link
-            to="/landlord/dashboard"
+            to="/about"
             className="flex h-[40px] items-center justify-center overflow-hidden cursor-pointer hover:opacity-80 transition-opacity"
+            aria-label="About Atlas"
           >
             {collapsed ? (
               <AtlasLogoMin className="h-[28px] w-[28px] fill-[#2d3748] dark:fill-[#d7e0ef]" aria-label="Atlas Home" />
             ) : (
               <AtlasLogo
                 className="h-full w-[128px] fill-[#2d3748] dark:fill-[#d7e0ef]"
-                aria-label="Atlas Home"
               />
             )}
           </Link>
