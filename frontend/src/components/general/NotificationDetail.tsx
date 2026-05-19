@@ -10,6 +10,8 @@ interface NotificationDetailProps {
   message: string;
   onCancel?: () => void;
   onAccept?: () => void;
+  acceptLabel?: string;
+  cancelLabel?: string;
   showButtons?: boolean;
 }
 
@@ -22,6 +24,8 @@ const NotificationDetail: FunctionComponent<NotificationDetailProps> = ({
   message,
   onCancel,
   onAccept,
+  cancelLabel = 'Cancel',
+  acceptLabel = 'Accept',
   showButtons = true,
 }) => {
   return (
@@ -72,13 +76,13 @@ const NotificationDetail: FunctionComponent<NotificationDetailProps> = ({
               onClick={onCancel}
               className="px-10 py-3 rounded-2xl font-bold text-crimson hover:bg-crimson/5 transition-colors active:scale-95 cursor-pointer"
             >
-              Cancel
+              {cancelLabel}
             </button>
             <button
               onClick={onAccept}
               className="px-10 py-3 rounded-2xl bg-lightcyan text-teal-200 font-bold hover:bg-lightcyan/80 transition-colors active:scale-95 shadow-sm cursor-pointer"
             >
-              Accept
+              {acceptLabel}
             </button>
           </div>
         )}

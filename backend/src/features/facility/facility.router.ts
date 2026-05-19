@@ -93,7 +93,7 @@ router.get('/:facilityId', routeGetFacility);
 // Edits a facility.
 //
 // manager with manageListings permission only
-router.patch('/:facilityId', directManagerFilter('manageListings'), routeUpdateFacility);
+router.patch('/:facilityId', directManagerFilter('manageBuildings'), routeUpdateFacility);
 
 // DELETE /api/facilities/:facilityId
 //
@@ -122,7 +122,7 @@ router.patch('/:facilityId/managers/:managerId', isLandlord, routeUpdateManagerP
 // POST /api/facilities/:facilityId/listings
 //
 // Manager with manageListings permission or landlord
-router.post('/:facilityId/listings', directManagerFilter('manageListings'), routeCreateListing); // TODO: fix implementation, use parameter
+router.post('/:facilityId/listings', directManagerFilter('manageBuildings'), routeCreateListing); // TODO: fix implementation, use parameter
 
 // GET /api/facilities/:facilityId/reviews
 // Input:
@@ -161,7 +161,7 @@ router.post('/:facilityId/reject', isSuperAdmin, routeRejectFacility);
 // ============================================================================
 router.get(
   '/:facilityId/bookings',
-  directManagerFilter('manageListings'),
+  directManagerFilter('manageBuildings'),
   routeGetVisitBookingsByFacility,
 );
 export default router;

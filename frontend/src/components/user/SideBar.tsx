@@ -449,7 +449,10 @@ const SideBar = ({
 
               {!collapsed && (
                 <div className="flex flex-col items-start gap-1 overflow-hidden">
-                  <b className="text-[14px] text-[#2d3748] dark:text-[#d7e0ef]">
+                  <b 
+                    title={username ?? undefined}
+                    className="text-[14px] text-[#2d3748] dark:text-[#d7e0ef] truncate max-w-[110px] block"
+                  >
                     {username ?? 'Sign In'}
                   </b>
 
