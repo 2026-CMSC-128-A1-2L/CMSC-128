@@ -12,6 +12,7 @@ export const getApp = (envOverride: Record<string, string>) => {
   app.set('trust proxy', 1);
   const allowedOrigins = [
     'http://localhost:5173',
+    'http://localhost:5001',
     process.env.FRONTEND_URL,
     process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined,
   ].filter(Boolean) as string[];
@@ -19,7 +20,7 @@ export const getApp = (envOverride: Record<string, string>) => {
   app.use(
     cors({
       origin: (origin, callback) => {
-        if (!origin || allowedOrigins.includes(origin)) {
+        if (!origin || allowedOrigins.includes(origin) || (origin && origin.endsWith('.vercel.app'))) {
           callback(null, true);
           return;
         }
