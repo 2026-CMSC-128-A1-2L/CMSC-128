@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import CurrentDormInfoCard from '../../../../components/CurrentDormInfoCard';
 import StepIndicator from '../../../../components/StepIndicator';
-import DormitoryImg from '../../../../../assets/image.png';
+import DormitoryImg from '../../../../../assets/image.webp';
 import SideBar from '../../../../components/user/SideBar';
 import BreadcrumbHeader from '../../../../components/general/Breadcrumb';
 import ReasonContent from '../../../../components/user/lease-transfer/ReasonContent';
