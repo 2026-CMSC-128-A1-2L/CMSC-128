@@ -141,7 +141,7 @@ const RequirementRow: FunctionComponent<{ req: RequirementItem }> = ({ req }) =>
 
       {/* Label + filename */}
       <div className="flex-1 flex flex-col gap-0.5 min-w-0">
-        <span className="text-sm font-bold text-[#2f3136] dark:text-[#d7e0ef]">{req.label}</span>
+        <span className="text-sm font-bold text-[#1f2937] dark:text-[#d7e0ef]">{req.label}</span>
         {isUploaded ? (
           <span className="text-xs text-[#64748b] font-medium truncate">
             {fileName} {req.date ? `· Submitted: ${req.date}` : ''}
@@ -193,7 +193,7 @@ const RoomRow: FunctionComponent<{ room: RoomData; index: number }> = ({ room, i
 const RoomTypeBlock: FunctionComponent<{ roomType: RoomTypeData }> = ({ roomType }) => (
   <div className="w-full rounded-xl border border-whitesmoke flex flex-col overflow-hidden dark:border-[#343737]">
     <div className="flex items-center px-4 py-3 bg-gray-50 border-b border-whitesmoke dark:bg-[#141515] dark:border-[#343737]">
-      <b className="text-sm text-[#2f3136] dark:text-[#d7e0ef]">{roomType.roomType || roomType.name || 'Room Type'}</b>
+      <b className="text-sm text-[#1f2937] dark:text-[#d7e0ef]">{roomType.roomType || roomType.name || 'Room Type'}</b>
       {roomType.capacity && (
         <span className="ml-3 text-xs font-medium text-[#64748b] bg-aliceblue px-2 py-0.5 rounded-full border border-whitesmoke">
           Capacity: {roomType.capacity}
@@ -249,16 +249,16 @@ const PaymentMethodBlock: FunctionComponent<{
   data: PaymentMethodData;
 }> = ({ title, accountLabel, data }) => (
   <div className="flex-1 flex flex-col gap-3">
-    <span className="text-sm font-bold text-[#4f5f6f] tracking-wide dark:text-[#a4acba]">{title}</span>
+    <span className="text-sm font-bold text-[#334155] tracking-wide dark:text-[#a4acba]">{title}</span>
     <div className="rounded-2xl bg-aliceblue border border-whitesmoke flex flex-col py-5 px-6 gap-5 dark:bg-[#141515] dark:border-[#343737]">
       <div className="flex items-start gap-8">
         <div className="flex flex-col gap-1 min-w-0">
-          <span className="text-xs font-medium text-[#64748b]">Name</span>
-          <span className="text-sm font-bold text-[#2f3136] truncate">{data.name || '—'}</span>
+          <span className="text-xs font-medium text-slategray">Name</span>
+          <span className="text-sm font-bold text-[#1f2937] truncate dark:text-[#d7e0ef]">{data.name || '—'}</span>
         </div>
         <div className="flex flex-col gap-1 min-w-0">
-          <span className="text-xs font-medium text-[#64748b]">{accountLabel}</span>
-          <span className="text-sm font-bold text-[#2f3136] truncate">
+          <span className="text-xs font-medium text-slategray">{accountLabel}</span>
+          <span className="text-sm font-bold text-[#1f2937] truncate dark:text-[#d7e0ef]">
             {data.accountNumber || '—'}
           </span>
         </div>
@@ -539,7 +539,7 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({
                       />
                     ) : (
                       <div className="flex flex-col gap-3">
-                        <span className="text-sm font-bold text-[#4f5f6f]">GCash</span>
+                        <span className="text-sm font-bold text-[#334155] dark:text-[#a4acba]">GCash</span>
                         <div className="rounded-2xl bg-aliceblue border border-whitesmoke py-5 px-6">
                           <p className="text-sm text-[#64748b] italic">Not set up.</p>
                         </div>
@@ -553,7 +553,7 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({
                       />
                     ) : (
                       <div className="flex flex-col gap-3">
-                        <span className="text-sm font-bold text-[#4f5f6f]">Bank Transfer</span>
+                        <span className="text-sm font-bold text-[#334155] dark:text-[#a4acba]">Bank Transfer</span>
                         <div className="rounded-2xl bg-aliceblue border border-whitesmoke py-5 px-6">
                           <p className="text-sm text-[#64748b] italic">Not set up.</p>
                         </div>
@@ -587,8 +587,8 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({
                     />
                   </div>
                   <div className="flex flex-col gap-0.5 flex-1">
-                    <span className="text-sm font-bold text-[#2f3136] dark:text-[#d7e0ef]">Allow Pasalo</span>
-                    <span className="text-xs font-medium text-[#64748b] dark:text-[#a4acba]">
+                    <span className="text-sm font-bold text-[#1f2937] dark:text-[#d7e0ef]">Allow Pasalo</span>
+                    <span className="text-xs font-medium text-slategray">
                       Lease transfer allowed
                     </span>
                   </div>
@@ -622,8 +622,8 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({
                     />
                   </div>
                   <div className="flex flex-col gap-0.5 flex-1">
-                    <span className="text-sm font-bold text-[#2f3136] dark:text-[#d7e0ef]">Allow Ocular Visit</span>
-                    <span className="text-xs font-medium text-[#64748b] dark:text-[#a4acba]">
+                    <span className="text-sm font-bold text-[#1f2937] dark:text-[#d7e0ef]">Allow Ocular Visit</span>
+                    <span className="text-xs font-medium text-slategray">
                       In-person visits allowed
                     </span>
                   </div>
@@ -657,7 +657,7 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({
                             className="w-4 h-4 text-teal-700"
                           />
                         </div>
-                        <span className="text-sm font-bold text-[#2f3136]">{m.email}</span>
+                        <span className="text-sm font-bold text-[#1f2937] dark:text-[#d7e0ef]">{m.email}</span>
                       </div>
                       <div className="w-full h-px bg-whitesmoke" />
                       <div className="flex flex-col gap-2">
@@ -669,7 +669,7 @@ const BuildingSubmit: FunctionComponent<BuildingSubmitProps> = ({
                               .map(([key]) => (
                                 <span
                                   key={key}
-                                  className="text-xs font-semibold bg-white border border-whitesmoke text-[#4f5f6f] rounded-full px-3 py-1"
+                                  className="text-xs font-semibold bg-white border border-whitesmoke text-[#334155] rounded-full px-3 py-1 dark:bg-[#141515] dark:border-[#343737] dark:text-[#a4acba]"
                                 >
                                   {key
                                     .replace(/([A-Z])/g, ' $1')
