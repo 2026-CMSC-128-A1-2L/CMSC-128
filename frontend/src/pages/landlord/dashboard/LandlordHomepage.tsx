@@ -12,6 +12,7 @@ import { ApplicationService } from "../../../service/ApplicationService";
 import { api } from "../../../service/axiosInstance";
 import { FacilityService } from "../../../service/FacilityService";
 import { useAuthStore } from "../../../store/useAuthStore";
+import { getPrimaryMediaUrl } from "../../../utils/media";
 const Avatar = ({
   className = "h-[40px] w-[40px]",
 }: {
@@ -224,9 +225,9 @@ const mapVisitRequest = (booking: RawBooking): VisitRequest => {
     booking.facilityId?.name ?? booking.listingId?.facilityId?.name ?? "Visit request";
   const dateTime = startDate
     ? `${startDate.toLocaleDateString()} - ${startDate.toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      })}`
+      hour: "2-digit",
+      minute: "2-digit",
+    })}`
     : "Pending schedule";
 
   return {
