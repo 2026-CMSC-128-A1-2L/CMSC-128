@@ -34,7 +34,7 @@ export type UpdateBillingArguments = {
 };
 
 export type submitBillingPaymentArguments = {
-  paymentMethod: 'gcash' | 'bank_transfer';
+  paymentMethod: 'gcash' | 'bank_transfer' | 'cash';
   file: string;
 };
 
@@ -502,6 +502,11 @@ export const getUserBillings = async (
               dueDate: 1,
               totalAmount: 1,
               paymentStatus: 1,
+              receiptCount: {
+                $size: {
+                  $ifNull: ['$documents', []],
+                },
+              },
             },
           },
         ],

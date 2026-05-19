@@ -22,6 +22,8 @@ export type BillListItem = {
     dueDate: string;
     totalAmount: number;
     paymentStatus: 'unpaid' | 'paid' | 'overdue' | 'partially_paid';
+    receiptCount?: number;
+    documents?: unknown[];
 };
 
 export type FacilityDetails = {
