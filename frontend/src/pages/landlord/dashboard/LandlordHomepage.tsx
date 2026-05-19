@@ -659,9 +659,9 @@ const LandlordHomepage: FunctionComponent = () => {
           </div>
 
           {/* Statistics */}
-          <section className="flex flex-col gap-[16px]">
+          <section id="dashboard-stats" className="flex flex-col gap-[16px]">
             <div className="flex items-center gap-[16px]">
-              <h2 className="font-['Inter',sans-serif] text-[24px] font-bold text-black">
+                <h2 id="dashboard-stats-heading" className="font-['Inter',sans-serif] text-[24px] font-bold text-black">
                 Statistics
               </h2>
               <Link
@@ -743,10 +743,10 @@ const LandlordHomepage: FunctionComponent = () => {
           </section>
 
           {/* Properties carousel */}
-          <section className="flex flex-col gap-[12px]">
+          <section id="dashboard-properties" className="flex flex-col gap-[12px]">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-[16px]">
-                <h2 className="font-['Inter',sans-serif] text-[24px] font-bold text-black">
+                <h2 id="dashboard-properties-heading" className="font-['Inter',sans-serif] text-[24px] font-bold text-black">
                   Your Current Properties
                 </h2>
                 <Link
@@ -885,6 +885,8 @@ const LandlordHomepage: FunctionComponent = () => {
               {
                 title: "Pending Applications",
                 to: "/landlord/tenants/unvalidated",
+                
+                headingId: "dashboard-pending-heading",
                 items: dashboardApplications.map((application) => ({
                   id: application.id,
                   name: application.displayName,
@@ -898,6 +900,8 @@ const LandlordHomepage: FunctionComponent = () => {
               {
                 title: "Visit Requests",
                 to: "/landlord/visits",
+              
+                headingId: "dashboard-visits-heading",
                 items: visitRequests.map((visit) => ({
                   id: visit.id,
                   name: visit.name,
@@ -917,7 +921,7 @@ const LandlordHomepage: FunctionComponent = () => {
                   to={panel.to}
                   className="flex items-center gap-[8px] font-['Inter',sans-serif] text-[18px] font-bold tracking-[-0.01em] text-[#096c5b] transition-opacity hover:opacity-70"
                 >
-                  {panel.title}
+                  <span id={panel.headingId}>{panel.title}</span>
                   <Icon
                     icon="radix-icons:arrow-top-right"
                     className="h-[20px] w-[20px]"
