@@ -101,7 +101,7 @@ const DocumentCard: FunctionComponent<DocumentCardProps> = ({
                 />
               </button>
               {isMenuOpen && (
-                <div className="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-[#141515] rounded-lg shadow-lg border border-gray-100 dark:border-[#303331] z-10 overflow-hidden flex flex-col text-sm">
+                <div className="absolute right-0 top-full mt-2 w-48 overflow-hidden rounded-lg border border-[#d7d7d7] bg-white text-sm shadow-lg dark:border-[#303331] dark:bg-[#141515] z-10 flex flex-col">
                   <button
                     onClick={handleViewExample}
                     className="w-full text-left px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-[#1f2022] text-slategray dark:text-[#a4acba] transition-colors cursor-pointer"
@@ -116,7 +116,7 @@ const DocumentCard: FunctionComponent<DocumentCardProps> = ({
                   </button>
                   <button
                     onClick={handleRemove}
-                    className="w-full text-left px-4 py-2.5 hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400 transition-colors border-t border-gray-100 dark:border-[#303331] font-medium cursor-pointer"
+                    className="w-full cursor-pointer border-t border-[#d7d7d7] px-4 py-2.5 text-left font-medium !text-red-600 transition-colors hover:bg-red-50 dark:border-[#303331] dark:!text-red-400 dark:hover:bg-red-900/20"
                   >
                     Remove File
                   </button>
@@ -204,7 +204,9 @@ const BuildingRequirements: FunctionComponent<BuildingRequirementsProps> = ({ on
 
   return (
     <div className="flex-1 flex flex-col gap-3">
-      <h2 className="text-sm font-bold text-black dark:text-[#72cbb8] mb-1">Building Requirements</h2>
+      <h2 className="text-sm font-bold text-black dark:text-[#72cbb8] mb-1">
+        Building Requirements
+      </h2>
 
       {documents.map((doc) => (
         <DocumentCard

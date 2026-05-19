@@ -1,75 +1,58 @@
 import type { FunctionComponent, CSSProperties } from 'react';
-import { useEffect, useState } from 'react';
 import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
 import info_icon from '../../../../assets/infoicon_icon.svg';
 import SignInPopUp from '../../../components/general/SignInPopUp';
-
-type UserData = {
-  firstName: string;
-  middleName?: string | null;
-  lastName: string;
-  userType?: string;
-  emails: string[];
-  verificationStatus: 'pending' | 'submitted' | 'rejected' | 'approved';
-  status: string;
-  createdAt: string;
-};
+import { useState } from 'react';
+import { useAuthStore } from '../../../store/useAuthStore';
+import { UserService } from '../../../service/UserService';
+import DeleteAccountPopup from '../../../components/general/DeleteAccountPopup';
 
 const General: FunctionComponent = () => {
-  const [user, setUser] = useState<UserData | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { user, isLoading } = useAuthStore();
   const [showSignIn, setShowSignIn] = useState(false);
+  const [showDeletePopup, setShowDeletePopup] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await fetch('/api/users/me', { credentials: 'include' });
-        if (!res.ok) throw new Error('Failed to fetch user');
-        const json = await res.json();
-        setUser(json.data);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchUser();
-  }, []);
-
-  // todo: download personal data API
-  // todo: account deletion API
+  const handleDeleteConfirm = async () => {
+    await UserService.deleteSelf();
+    useAuthStore.getState().logout();
+    navigate('/');
+  };
 
   const fullName = user
-    ? [user.firstName, user.middleName, user.lastName].filter(Boolean).join(' ')
+    ? [user.firstName, user.lastName].filter(Boolean).join(' ')
     : '—';
 
-  const createdAt = user
-    ? new Date(user.createdAt).toLocaleDateString('en-US', {
+  const createdAt = user && 'createdAt' in user
+    ? new Date((user as any).createdAt).toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',
         day: 'numeric',
       })
     : '—';
 
-  const isVerified = user?.verificationStatus === 'approved';
+  const verificationStatus = user && 'verificationStatus' in user
+    ? (user as any).verificationStatus as string
+    : undefined;
+
+  const isVerified = verificationStatus === 'approved';
 
   const verificationLabel = !user
     ? 'Signed Out'
-    : user.verificationStatus === 'approved'
+    : verificationStatus === 'approved'
       ? 'Verified'
-      : user.verificationStatus === 'submitted'
+      : verificationStatus === 'submitted'
         ? 'Pending Review'
-        : user.verificationStatus === 'rejected'
+        : verificationStatus === 'rejected'
           ? 'Rejected'
           : 'Unverified';
 
   const verificationStyle: CSSProperties = !user
     ? { color: '#bdbdbd' }
-    : user.verificationStatus === 'approved'
+    : verificationStatus === 'approved'
       ? { color: '#096c5b' }
-      : user.verificationStatus === 'submitted'
+      : verificationStatus === 'submitted'
         ? { color: '#ca8a04' }
         : {
             background: 'linear-gradient(180deg, #c00f0f, #e44f4f)',
@@ -80,7 +63,7 @@ const General: FunctionComponent = () => {
 
   return (
     <div className="self-stretch rounded-t-none rounded-b-num-16 border-whitesmoke-200 border-solid border overflow-hidden flex flex-col items-start py-6 px-num-32 gap-6 text-center text-[24px] text-black">
-      {loading ? (
+      {isLoading ? (
         <div className="self-stretch flex items-center justify-center py-10 text-dimgray text-sm">
           Loading account information…
         </div>
@@ -136,7 +119,7 @@ const General: FunctionComponent = () => {
                       ) : (
                         !isVerified && (
                           <button
-                            onClick={() => navigate('/profile-switcher')} // todo: change route to actual verification page when route finalized
+                            onClick={() => navigate('/profile-switcher')}
                             className="flex items-center gap-1 text-[12px] cursor-pointer bg-transparent border-none p-0 transition-all duration-150 hover:gap-1.5 group"
                           >
                             <span className="relative font-medium text-teal-100">Get Verified</span>
@@ -199,7 +182,10 @@ const General: FunctionComponent = () => {
                   <div className="self-stretch flex flex-col items-start gap-3">
                     <b className="relative">Personal Data</b>
                     <div className="self-stretch flex flex-col items-start py-num-0 px-2 text-teal-200">
-                      <button className="h-8 rounded-num-16 bg-aliceblue border-solid border border-whitesmoke-200 flex items-center justify-center py-num-0 px-4 box-border cursor-pointer transition-all duration-200 hover:bg-azure hover:border-teal-100 hover:shadow-sm">
+                      <button
+                        disabled
+                        className="h-8 rounded-num-16 bg-aliceblue border-solid border border-whitesmoke-200 flex items-center justify-center py-num-0 px-4 box-border opacity-50 cursor-not-allowed"
+                      >
                         <b className="relative">Download Personal Data</b>
                       </button>
                     </div>
@@ -223,7 +209,13 @@ const General: FunctionComponent = () => {
                   <div className="self-stretch flex flex-col items-start gap-3">
                     <b className="relative">Account Deletion</b>
                     <div className="self-stretch flex flex-col items-start py-num-0 px-2">
-                      <button className="h-8 rounded-num-16 bg-aliceblue flex items-center justify-center py-num-0 px-3 box-border cursor-pointer border-none transition-all duration-200 hover:bg-red-50 hover:shadow-sm">
+                      <button
+                        onClick={() => setShowDeletePopup(true)}
+                        disabled={!user}
+                        className={`h-8 rounded-num-16 bg-aliceblue flex items-center justify-center py-num-0 px-3 box-border border-none transition-all duration-200 hover:bg-red-50 hover:shadow-sm ${
+                          !user ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+                        }`}
+                      >
                         <b
                           className="relative"
                           style={{
@@ -254,6 +246,14 @@ const General: FunctionComponent = () => {
           </div>
         </>
       )}
+
+      {/* Delete Account Popup */}
+      <DeleteAccountPopup
+        isOpen={showDeletePopup}
+        onClose={() => setShowDeletePopup(false)}
+        onConfirm={handleDeleteConfirm}
+        userName={fullName !== '—' ? fullName : undefined}
+      />
     </div>
   );
 };

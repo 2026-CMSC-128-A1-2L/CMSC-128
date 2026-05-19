@@ -4,6 +4,7 @@ import {
   useState,
   type FormEvent,
   type FunctionComponent,
+  type MouseEvent,
 } from "react";
 import SideBar from "../../../components/user/SideBar";
 import Footer from "../../../components/general/Footer";
@@ -22,7 +23,13 @@ import LocationDetails from "../../../components/user/unitdetails/LocationDetail
 import ReviewDetails from "../../../components/user/unitdetails/ReviewDetails";
 import PropertyTab from "../../../components/user/unitdetails/PropertyTab";
 import DormCard from "../../../components/user/DormCard";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import {
+  Link,
+  useLocation,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 import LoadingPage from "../../general/LoadingPage";
 import { useFacilities, type DormCardData } from "../../../hooks/useFacilities";
 import { useDebouncedValue } from "../../../hooks/useDebouncedValue";
@@ -30,8 +37,11 @@ import { useFacilityDetails } from "../../../hooks/useFacilityDetails";
 import { useBookmarks } from "../../../hooks/useBookmarks";
 import { BookmarkService } from "../../../service/BookmarkService";
 import { ApplicationService } from "../../../service/ApplicationService";
+import { TransferService } from "../../../service/TransferService";
 import CalendarPopout from "../../../components/user/user-calendar/CalendarPopout";
 import PortalPopup from "../../../components/general/PortalPopup";
+import NotificationToast from "../../../components/general/NotificationToast";
+import { useAuthStore } from "../../../store/useAuthStore";
 
 const currencyFormatter = new Intl.NumberFormat("en-PH", {
   style: "currency",
@@ -54,6 +64,10 @@ const leaseDurationValues: Record<string, "6-months" | "12-months"> = {
   "1 sem": "6-months",
   "2 sem": "12-months",
   "1 year": "12-months",
+};
+const leaseDurationLabels: Record<"6-months" | "12-months", string> = {
+  "6-months": "1 sem",
+  "12-months": "1 year",
 };
 const amenityTagIcons: Record<string, string> = {
   hasWifi: "material-symbols:wifi",
@@ -97,14 +111,28 @@ const formatTagValue = (value: string | number | boolean) => {
 type UnitDetailsLocationState = {
   dorm?: DormCardData;
   selectedRoomType?: string;
+  isPasalo?: boolean;
+  transferId?: string;
+  pasaloUnitId?: string;
+  pasaloListingId?: string;
+  pasaloMoveInDate?: string;
+  pasaloLeaseDuration?: "6-months" | "12-months";
   sourceLabel?: string;
   sourceUrl?: string;
 };
 
+type ApplicationWarning = {
+  id: number;
+  message?: string;
+  type?: "warning" | "success" | "info" | "error";
+};
+
 const UnitDetails: FunctionComponent = () => {
+  const user = useAuthStore((state) => state.user);
   const { facilityId } = useParams<{ facilityId: string }>();
   const location = useLocation();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const routeState = location.state as UnitDetailsLocationState | null;
   const selectedDorm = routeState?.dorm;
   const selectedRoomType = routeState?.selectedRoomType;
@@ -132,9 +160,27 @@ const UnitDetails: FunctionComponent = () => {
   const [bookmarkError, setBookmarkError] = useState<string | null>(null);
   const [applicationError, setApplicationError] = useState<string | null>(null);
   const [isSubmittingApplication, setIsSubmittingApplication] = useState(false);
+  const [applicationWarnings, setApplicationWarnings] = useState<
+    ApplicationWarning[]
+  >([]);
   const [showSignIn, setShowSignIn] = useState(false);
   const [isVisitPopoutOpen, setVisitPopoutOpen] = useState(false);
+  const [pasaloDetails, setPasaloDetails] = useState<{
+    transferId: string;
+    unitId?: string;
+    listingId?: string;
+    moveInDate?: string;
+    leaseDuration?: "6-months" | "12-months";
+  } | null>(null);
   const availableListings = useMemo(() => facility?.listings ?? [], [facility]);
+  const transferId =
+    routeState?.transferId ??
+    selectedDorm?.transferId ??
+    searchParams.get("transferId") ??
+    "";
+  const isPasaloApplication = Boolean(
+    routeState?.isPasalo || selectedDorm?.isPasalo || transferId,
+  );
 
   useEffect(() => {
     if (
@@ -144,18 +190,128 @@ const UnitDetails: FunctionComponent = () => {
         (listing) =>
           selectedRoomType != null &&
           roomButtonLabel(listing.label).toLowerCase() ===
-            roomButtonLabel(selectedRoomType).toLowerCase(),
+          roomButtonLabel(selectedRoomType).toLowerCase(),
       );
 
       setSelectedListingId((matchingListing ?? availableListings[0])?.id ?? "");
     }
   }, [selectedListingId, availableListings, selectedRoomType]);
 
+  useEffect(() => {
+    if (!isPasaloApplication || !transferId) {
+      setPasaloDetails(null);
+      return;
+    }
+
+    const stateDetails = {
+      transferId,
+      unitId: routeState?.pasaloUnitId ?? selectedDorm?.pasaloUnitId,
+      listingId: routeState?.pasaloListingId ?? selectedDorm?.pasaloListingId,
+      moveInDate: routeState?.pasaloMoveInDate ?? selectedDorm?.pasaloMoveInDate,
+      leaseDuration: routeState?.pasaloLeaseDuration ?? selectedDorm?.pasaloLeaseDuration,
+    };
+
+    setPasaloDetails(stateDetails);
+
+    let cancelled = false;
+    TransferService.getPasaloTransfer(transferId)
+      .then((response) => {
+        if (cancelled) return;
+        const transfer = response.data ?? response;
+        const unit = transfer.unitId;
+        setPasaloDetails({
+          transferId,
+          unitId: unit?._id ?? unit?.id ?? stateDetails.unitId,
+          listingId: unit?.listingId?._id ?? unit?.listingId?.id ?? stateDetails.listingId,
+          moveInDate: transfer.pasaloMoveInDate ?? stateDetails.moveInDate,
+          leaseDuration: transfer.pasaloLeaseDuration ?? stateDetails.leaseDuration,
+        });
+      })
+      .catch(() => {
+        if (!cancelled) setPasaloDetails(stateDetails);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isPasaloApplication, routeState, selectedDorm, transferId]);
+
+  useEffect(() => {
+    if (!pasaloDetails) return;
+
+    if (pasaloDetails.listingId) {
+      setSelectedListingId(pasaloDetails.listingId);
+    }
+    if (pasaloDetails.leaseDuration) {
+      setLeaseDuration(leaseDurationLabels[pasaloDetails.leaseDuration]);
+      setIsLeaseMenuOpen(false);
+    }
+    if (pasaloDetails.moveInDate) {
+      setMoveInDate(pasaloDetails.moveInDate);
+    }
+  }, [pasaloDetails]);
+
+  const showLoggedOutApplicationWarning = () => {
+    const id = Date.now() + Math.random();
+    setApplicationWarnings((warnings) => [...warnings, { id }]);
+    window.setTimeout(() => {
+      setApplicationWarnings((warnings) =>
+        warnings.filter((warning) => warning.id !== id),
+      );
+    }, 3000);
+  };
+
+  const showSuccessToast = (message: string) => {
+    const id = Date.now() + Math.random();
+    setApplicationWarnings((warnings) => [
+      ...warnings,
+      { id, message, type: "success" },
+    ]);
+    window.setTimeout(() => {
+      setApplicationWarnings((warnings) =>
+        warnings.filter((warning) => warning.id !== id),
+      );
+    }, 3000);
+  };
+
+  const runAuthenticatedAction = (action: () => void) => {
+    if (!user) {
+      showLoggedOutApplicationWarning();
+      return;
+    }
+
+    action();
+  };
+
+  const handleAuthenticatedLinkClick = (event: MouseEvent<HTMLAnchorElement>) => {
+    if (user) return;
+
+    event.preventDefault();
+    showLoggedOutApplicationWarning();
+  };
+
+  const applicationWarningToasts = applicationWarnings.map((warning, index) => (
+    <NotificationToast
+      key={warning.id}
+      show={true}
+      message={warning.message ?? "Please sign in to continue."}
+      type={warning.type ?? "warning"}
+      position="top-right"
+      stackIndex={index}
+      onClose={() =>
+        setApplicationWarnings((warnings) =>
+          warnings.filter((item) => item.id !== warning.id),
+        )
+      }
+    />
+  ));
+
   if (isLoading && !facility) return <LoadingPage />;
 
   if (error && !facility) {
     return (
       <div className="flex min-h-screen font-lora text-darkslategray-100">
+        {applicationWarningToasts}
         <div className="sticky top-0 h-screen shrink-0 z-10">
           <SideBar />
         </div>
@@ -168,7 +324,7 @@ const UnitDetails: FunctionComponent = () => {
           <p className="max-w-md text-sm text-dimgray">{error}</p>
           <button
             type="button"
-            onClick={refetch}
+            onClick={() => runAuthenticatedAction(refetch)}
             className="rounded-lg bg-darkslategray-200 px-5 py-2 text-sm font-semibold text-white cursor-pointer"
           >
             Try again
@@ -185,13 +341,13 @@ const UnitDetails: FunctionComponent = () => {
   const isSearchDebouncing = trimmedSearchTerm !== trimmedDebouncedSearchTerm;
   const matchingSearchResults = trimmedDebouncedSearchTerm
     ? recommendedDorms
-        .filter((dorm) => {
-          const roomTypes = dorm.room_types.map((room) => room.pax).join(" ");
-          return `${dorm.name} ${dorm.location} ${roomTypes}`
-            .toLowerCase()
-            .includes(trimmedDebouncedSearchTerm.toLowerCase());
-        })
-        .slice(0, 6)
+      .filter((dorm) => {
+        const roomTypes = dorm.room_types.map((room) => room.pax).join(" ");
+        return `${dorm.name} ${dorm.location} ${roomTypes}`
+          .toLowerCase()
+          .includes(trimmedDebouncedSearchTerm.toLowerCase());
+      })
+      .slice(0, 6)
     : [];
 
   const submitSearch = (event: FormEvent<HTMLFormElement>) => {
@@ -217,6 +373,8 @@ const UnitDetails: FunctionComponent = () => {
   const selectedListing =
     availableListings.find((listing) => listing.id === selectedListingId) ??
     availableListings[0];
+  const applicationListings =
+    isPasaloApplication && selectedListing ? [selectedListing] : availableListings;
   const isSelectedListingBookmarked = bookmarks.some(
     (bookmark) => bookmark.listingId === selectedListing?.id,
   );
@@ -295,11 +453,11 @@ const UnitDetails: FunctionComponent = () => {
   const overallScore =
     reviewRatings.length > 0
       ? Number(
-          (
-            reviewRatings.reduce((sum, rating) => sum + rating, 0) /
-            reviewRatings.length
-          ).toFixed(1),
-        )
+        (
+          reviewRatings.reduce((sum, rating) => sum + rating, 0) /
+          reviewRatings.length
+        ).toFixed(1),
+      )
       : 0;
   const ratingRows = [5, 4, 3, 2, 1].map((star) => {
     const count = reviewRatings.filter(
@@ -316,9 +474,9 @@ const UnitDetails: FunctionComponent = () => {
     const initials = `${firstName[0] ?? "S"}${lastName[0] ?? ""}`.toUpperCase();
     const date = review.createdAt
       ? new Intl.DateTimeFormat("en-US", {
-          month: "long",
-          year: "numeric",
-        }).format(new Date(review.createdAt))
+        month: "long",
+        year: "numeric",
+      }).format(new Date(review.createdAt))
       : "Recently";
 
     return {
@@ -333,6 +491,12 @@ const UnitDetails: FunctionComponent = () => {
   });
 
   const handleBookmarkToggle = async () => {
+    if (!user) {
+      setBookmarkError(null);
+      showLoggedOutApplicationWarning();
+      return;
+    }
+
     if (!selectedListing) return;
 
     setIsBookmarkSaving(true);
@@ -341,8 +505,10 @@ const UnitDetails: FunctionComponent = () => {
     try {
       if (isSelectedListingBookmarked) {
         await removeBookmark(selectedListing.id);
+        showSuccessToast("Removed from bookmarks");
       } else {
         await BookmarkService.addBookmark(selectedListing.id);
+        showSuccessToast("Added to bookmarks");
         refetchBookmarks();
       }
     } catch (err) {
@@ -365,6 +531,12 @@ const UnitDetails: FunctionComponent = () => {
   };
 
   const handleSubmitApplication = async () => {
+    if (!user) {
+      setApplicationError(null);
+      showLoggedOutApplicationWarning();
+      return;
+    }
+
     if (!selectedListing) {
       setApplicationError("Please choose an available room before submitting.");
       return;
@@ -391,6 +563,7 @@ const UnitDetails: FunctionComponent = () => {
       const moveIn = new Date(`${moveInDate}T00:00:00.000Z`);
       await ApplicationService.createApplication({
         listingId: selectedListing.id,
+        transferId: pasaloDetails?.transferId,
         leaseDuration: leaseDurationValues[leaseDuration],
         moveInDate: moveIn,
         message: messageToLandlord.trim() || null,
@@ -399,13 +572,13 @@ const UnitDetails: FunctionComponent = () => {
     } catch (err) {
       const status = axios.isAxiosError(err) ? err.response?.status : undefined;
       if (status === 401) {
-        setShowSignIn(true);
+        showLoggedOutApplicationWarning();
         return;
       }
 
       const apiMessage = axios.isAxiosError(err)
         ? (err.response?.data as { error?: { message?: string } })?.error
-            ?.message
+          ?.message
         : undefined;
       setApplicationError(apiMessage ?? "Failed to submit your application.");
     } finally {
@@ -415,6 +588,11 @@ const UnitDetails: FunctionComponent = () => {
 
   const handleOpenVisitPopout = () => {
     if (!facility.allowVisit) return;
+    if (!user) {
+      showLoggedOutApplicationWarning();
+      return;
+    }
+
     setVisitPopoutOpen(true);
   };
 
@@ -422,6 +600,7 @@ const UnitDetails: FunctionComponent = () => {
     <div className="user-unit-details-shell relative flex min-h-screen bg-transparent font-inter text-darkslategray-100 dark:text-[#edf6f4]">
       <PageBackground />
       {showSignIn && <SignInPopUp onClose={() => setShowSignIn(false)} />}
+      {applicationWarningToasts}
       {isVisitPopoutOpen && (
         <PortalPopup
           overlayColor="rgba(0, 0, 0, 0.75)"
@@ -485,10 +664,12 @@ const UnitDetails: FunctionComponent = () => {
               {searchTerm && (
                 <button
                   type="button"
-                  onClick={() => {
-                    setSearchTerm("");
-                    setIsSearchDropdownOpen(false);
-                  }}
+                  onClick={() =>
+                    runAuthenticatedAction(() => {
+                      setSearchTerm("");
+                      setIsSearchDropdownOpen(false);
+                    })
+                  }
                   className="text-unselected hover:text-darkgreen cursor-pointer"
                   aria-label="Clear search"
                 >
@@ -515,7 +696,9 @@ const UnitDetails: FunctionComponent = () => {
                       key={dorm.id}
                       type="button"
                       onMouseDown={(event) => event.preventDefault()}
-                      onClick={() => openSearchResult(dorm)}
+                      onClick={() =>
+                        runAuthenticatedAction(() => openSearchResult(dorm))
+                      }
                       className="flex w-full items-center gap-3 px-3 py-2.5 text-left transition-colors hover:bg-whitesmoke-100"
                     >
                       <img
@@ -616,13 +799,21 @@ const UnitDetails: FunctionComponent = () => {
                 </div>
                 <button
                   type="button"
-                  onClick={() => {
-                    setSelectedListingId(availableListings[0]?.id ?? "");
-                    setLeaseDuration("");
-                    setIsLeaseMenuOpen(false);
-                    setMoveInDate("");
-                    setMessageToLandlord("");
-                  }}
+                  onClick={() =>
+                    runAuthenticatedAction(() => {
+                      setSelectedListingId(
+                        pasaloDetails?.listingId ?? availableListings[0]?.id ?? "",
+                      );
+                      setLeaseDuration(
+                        pasaloDetails?.leaseDuration
+                          ? leaseDurationLabels[pasaloDetails.leaseDuration]
+                          : "",
+                      );
+                      setIsLeaseMenuOpen(false);
+                      setMoveInDate(pasaloDetails?.moveInDate ?? "");
+                      setMessageToLandlord("");
+                    })
+                  }
                   className="shadow rounded-md bg-whitesmoke-100 py-1 px-3 text-xs text-gray font-lora cursor-pointer"
                 >
                   Reset
@@ -630,23 +821,34 @@ const UnitDetails: FunctionComponent = () => {
               </div>
 
               <div className="w-full flex flex-col gap-4 text-gray font-lora text-xs">
+                {isPasaloApplication && (
+                  <div className="rounded-lg border border-[#cbf6ed] bg-[#f1fffb] px-3 py-2 text-[11px] font-semibold leading-4 text-[#096c5b]">
+                    This is a Pasalo listing. Room type, lease duration, and move-in date are
+                    matched to the approved transfer request.
+                  </div>
+                )}
                 <div className="flex flex-col gap-1.5">
                   <div className="font-medium">Rooms Available</div>
                   <div className="grid grid-cols-1 gap-2 text-black sm:grid-cols-2 xl:grid-cols-1">
-                    {availableListings.length > 0 ? (
-                      availableListings.map((listing) => {
+                    {applicationListings.length > 0 ? (
+                      applicationListings.map((listing) => {
                         const isSelected = selectedListing?.id === listing.id;
 
                         return (
                           <button
                             key={listing.id}
                             type="button"
-                            onClick={() => setSelectedListingId(listing.id)}
+                            disabled={isPasaloApplication}
+                            onClick={() =>
+                              runAuthenticatedAction(() =>
+                                setSelectedListingId(listing.id),
+                              )
+                            }
                             className={`rounded-lg border py-2 px-3 text-center font-semibold text-xs shadow transition-colors ${
                               isSelected
                                 ? "border-darkslategray-200 bg-darkslategray-200 text-white"
                                 : "border-transparent bg-white text-black hover:bg-lightcyan"
-                            } cursor-pointer`}
+                            } ${isPasaloApplication ? "cursor-not-allowed opacity-80" : "cursor-pointer"}`}
                           >
                             {roomButtonLabel(listing.label)}
                           </button>
@@ -673,26 +875,29 @@ const UnitDetails: FunctionComponent = () => {
                   <div className="relative" id="lease-duration-select">
                     <button
                       type="button"
-                      onClick={() => setIsLeaseMenuOpen((isOpen) => !isOpen)}
+                      disabled={isPasaloApplication}
+                      onClick={() =>
+                        runAuthenticatedAction(() =>
+                          setIsLeaseMenuOpen((isOpen) => !isOpen),
+                        )
+                      }
                       className={`shadow rounded-lg border w-full flex items-center justify-between py-2.5 px-3 gap-2 text-left transition-all ${
                         isLeaseMenuOpen
                           ? "border-teal-200 bg-lightcyan/40 ring-2 ring-lightcyan"
                           : "border-transparent bg-white hover:bg-lightcyan/20"
-                      } cursor-pointer`}
+                      } ${isPasaloApplication ? "cursor-not-allowed opacity-80" : "cursor-pointer"}`}
                     >
                       <span
-                        className={`font-semibold text-xs ${
-                          leaseDuration ? "text-black" : "text-silver"
-                        }`}
+                        className={`font-semibold text-xs ${leaseDuration ? "text-black" : "text-silver"
+                          }`}
                       >
                         {leaseDuration || "Choose lease duration"}
                       </span>
                       <span className="grid h-7 w-7 place-items-center rounded-full bg-whitesmoke-100 text-teal-200 cursor-pointer">
                         <Icon
                           icon="mdi:chevron-down"
-                          className={`h-4 w-4 transition-transform ${
-                            isLeaseMenuOpen ? "rotate-180" : ""
-                          }`}
+                          className={`h-4 w-4 transition-transform ${isLeaseMenuOpen ? "rotate-180" : ""
+                            }`}
                         />
                       </span>
                     </button>
@@ -706,10 +911,12 @@ const UnitDetails: FunctionComponent = () => {
                             <button
                               key={duration}
                               type="button"
-                              onClick={() => {
-                                setLeaseDuration(duration);
-                                setIsLeaseMenuOpen(false);
-                              }}
+                              onClick={() =>
+                                runAuthenticatedAction(() => {
+                                  setLeaseDuration(duration);
+                                  setIsLeaseMenuOpen(false);
+                                })
+                              }
                               className={`flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-xs font-semibold transition-colors ${
                                 isSelected
                                   ? "bg-darkslategray-200 text-white"
@@ -739,10 +946,10 @@ const UnitDetails: FunctionComponent = () => {
                       id="move-in-date"
                       type="date"
                       value={moveInDate}
+                      disabled={isPasaloApplication}
                       onChange={(event) => setMoveInDate(event.target.value)}
-                      className={`flex-1 bg-transparent outline-none font-semibold text-xs ${
-                        moveInDate ? "text-black" : "text-silver"
-                      }`}
+                      className={`flex-1 bg-transparent outline-none font-semibold text-xs ${moveInDate ? "text-black" : "text-silver"
+                        } ${isPasaloApplication ? "cursor-not-allowed" : ""}`}
                     />
                     <Icon icon="mdi:calendar" className="h-4 w-4" />
                   </div>
@@ -960,6 +1167,7 @@ const UnitDetails: FunctionComponent = () => {
                 <div className="flex flex-col gap-2 text-white font-poppins text-sm">
                   <Link
                     to="/direct-messages"
+                    onClick={handleAuthenticatedLinkClick}
                     className="rounded-lg bg-darkslategray-200 flex items-center justify-center gap-2 py-2 shadow"
                   >
                     <Icon
@@ -970,10 +1178,11 @@ const UnitDetails: FunctionComponent = () => {
                   </Link>
                   <button
                     type="button"
+                    onClick={() => runAuthenticatedAction(() => undefined)}
                     className="rounded-lg bg-darkslategray-200 flex items-center justify-center gap-2 py-2 shadow cursor-pointer"
                   >
-                    <Icon icon="ic:outline-phone" className="h-5 w-5" />
-                    <span className="font-medium">Contact Details</span>
+                    <Icon icon="ic:outline-person" className="h-5 w-5" />
+                    <span className="font-medium">View Profile</span>
                   </button>
                 </div>
               </div>

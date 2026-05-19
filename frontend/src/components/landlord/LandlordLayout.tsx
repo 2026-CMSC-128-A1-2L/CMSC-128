@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import PageBackground from '../general/PageBackground';
 import RightArrow from '../../../assets/iconamoon_arrow-right-2.svg';
 import SideBarLandlord, { type SideBarLandlordItemKey } from './SideBarLandlord';
-import LandlordFooter from './LandlordFooter';
+import Footer from '../general/Footer';
 
 export type BreadcrumbItem = {
   label: string;
@@ -32,7 +32,7 @@ const LandlordLayout = ({ activeSidebarItem, breadcrumbs = [], children }: Landl
         <SideBarLandlord
           activeItem={activeSidebarItem}
           onProfileClick={() => navigate('/landlord/profile/switcher')}
-          onAddListing={() => navigate('/landlord/properties/new')}
+          onAddListing={() => navigate('/landlord/add-building')}
         />
 
         <div className="flex min-w-0 flex-1 flex-col overflow-hidden pl-[68px] md:pl-0">
@@ -82,7 +82,7 @@ const LandlordLayout = ({ activeSidebarItem, breadcrumbs = [], children }: Landl
           </main>
 
           <div className="relative z-10 shrink-0">
-            <LandlordFooter />
+            <Footer />
           </div>
         </div>
       </div>

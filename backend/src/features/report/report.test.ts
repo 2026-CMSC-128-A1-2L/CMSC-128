@@ -227,8 +227,9 @@ describe('Reports API', () => {
   // POST /api/users/:userId/report
   //
   // Creates a user report. Any verified user can file one, but role constraints
-  // apply: students may only report managers or landlords; landlords and managers
-  // may only report students. Self-reporting is always blocked (400).
+  // apply: students may only report managers or landlords; landlords may report
+  // students or managers; managers may only report students. Self-reporting is
+  // always blocked (400).
   // A second pending report against the same target is blocked until resolved.
   // ============================================================================
   describe('POST /api/users/:userId/report', () => {
@@ -278,6 +279,17 @@ describe('Reports API', () => {
           .send({
             description: 'Tenant is causing trouble.',
             flags: ['Disruptive Behavior'],
+          });
+        expect(response).statusToBe(201);
+      });
+
+      // Landlords can also report managers assigned to their properties.
+      it('should allow a landlord to report a manager', async () => {
+        const response = await landlordAgent
+          .post(`/api/users/${manager._id.toString()}/report`)
+          .send({
+            description: 'Manager is not doing their job.',
+            flags: ['Negligence in Duties'],
           });
         expect(response).statusToBe(201);
       });
@@ -365,13 +377,15 @@ describe('Reports API', () => {
         expect(response).statusToBe(403);
       });
 
-      // Landlords/managers may only report students — reporting a manager (not a
-      // student) violates the role constraint and returns 403.
-      it('should return 403 when a landlord tries to report a manager', async () => {
+      // Landlords cannot report other landlords.
+      it('should return 403 when a landlord tries to report another landlord', async () => {
+        const otherLandlord = await (
+          await import('../../test/factories.js')
+        ).buildLandlord.create();
         const response = await landlordAgent
-          .post(`/api/users/${manager._id.toString()}/report`)
+          .post(`/api/users/${otherLandlord._id.toString()}/report`)
           .send({
-            description: 'Reporting a manager.',
+            description: 'Reporting a landlord.',
             flags: ['Negligence in Duties'],
           });
         expect(response).statusToBe(403);

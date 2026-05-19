@@ -1,4 +1,4 @@
-import type { FunctionComponent } from "react";
+import { useState, type FunctionComponent } from "react";
 import { Icon } from "@iconify/react";
 import { Link } from "react-router-dom";
 
@@ -9,6 +9,7 @@ import { useTheme } from "../../../pages/utilities/DarkMode";
 import { useBookmarks } from "../../../hooks/useBookmarks";
 import type { BookmarkItem } from "../../../service/BookmarkService";
 import FallbackImage from "../../../components/general/FallbackImage";
+import NotificationToast from "../../../components/general/NotificationToast";
 
 const currencyFormatter = new Intl.NumberFormat("en-PH", {
   style: "currency",
@@ -131,6 +132,9 @@ const BookmarkCard: FunctionComponent<BookmarkCardProps> = ({
 
 const BookmarksNewUsers: FunctionComponent = () => {
   const { toggle } = useTheme();
+  const [warnings, setWarnings] = useState<
+    { id: number; message: string; type: "warning" | "success" }[]
+  >([]);
   const { bookmarks, isLoading, error, refetch, removeBookmark } = useBookmarks(
     {
       sortBy: "date",
@@ -138,9 +142,37 @@ const BookmarksNewUsers: FunctionComponent = () => {
     },
   );
 
+  const showSuccessToast = (message: string) => {
+    const id = Date.now() + Math.random();
+    setWarnings((prev) => [...prev, { id, message, type: "success" }]);
+    window.setTimeout(() => {
+      setWarnings((prev) => prev.filter((w) => w.id !== id));
+    }, 3000);
+  };
+
+  const handleRemoveBookmark = async (listingId: string) => {
+    try {
+      await removeBookmark(listingId);
+      showSuccessToast("Removed from bookmarks");
+    } catch (err) {
+      // Ignore or handle
+    }
+  };
+
   return (
     <div className="relative flex min-h-screen font-inter text-black dark:bg-[#0f1010] dark:text-[#edf6f4]">
       <PageBackground />
+      {warnings.map((w, index) => (
+        <NotificationToast
+          key={w.id}
+          show={true}
+          message={w.message}
+          type={w.type}
+          position="top-right"
+          stackIndex={index}
+          onClose={() => setWarnings((prev) => prev.filter((item) => item.id !== w.id))}
+        />
+      ))}
       <div className="sticky top-0 h-screen shrink-0 z-10">
         <SideBar onToggleDarkMode={toggle} />
       </div>
@@ -185,7 +217,7 @@ const BookmarksNewUsers: FunctionComponent = () => {
                   <BookmarkCard
                     key={bookmark.bookmarkId}
                     bookmark={bookmark}
-                    onRemove={removeBookmark}
+                    onRemove={handleRemoveBookmark}
                   />
                 ))}
               </div>

@@ -28,10 +28,10 @@ const defaultSteps: Array<ProgressStep<VerificationStep>> = [
 type StepState = 'completed' | 'active' | 'upcoming';
 
 const getCircleClasses = (state: StepState): string => {
-  if (state === 'completed') return 'bg-teal text-white dark:bg-teal-600';
+  if (state === 'completed') return 'bg-teal text-white dark:bg-[#2e8677]';
   if (state === 'active')
-    return 'bg-darkslategray text-white dark:bg-[#72cbb8] dark:text-[#101111]';
-  return 'bg-silver-100 text-transparent dark:bg-[#303331]';
+    return 'bg-darkslategray text-white dark:bg-[#0f6c5b] dark:text-[#0f1010]';
+  return 'bg-silver-100 text-transparent dark:bg-[#c8d8d6]';
 };
 
 const ProgressBar = <Key extends string = VerificationStep>({
@@ -55,8 +55,8 @@ const ProgressBar = <Key extends string = VerificationStep>({
     <div className="relative flex h-[22px] w-[22px] items-center justify-center">
       {state === 'active' && (
         <>
-          <div className="absolute inset-0 rounded-full bg-darkslategray/30 animate-ripple" />
-          <div className="absolute inset-0 rounded-full bg-darkslategray/30 animate-ripple [animation-delay:1000ms]" />
+          <div className="absolute inset-0 rounded-full bg-darkslategray/30 animate-ripple dark:bg-[#0f6c5b]/20" />
+          <div className="absolute inset-0 rounded-full bg-darkslategray/30 animate-ripple [animation-delay:1000ms] dark:bg-[#0f6c5b]/20" />
         </>
       )}
       <span
@@ -73,7 +73,7 @@ const ProgressBar = <Key extends string = VerificationStep>({
   );
 
   const renderLabel = (label: string) => (
-    <span className="font-['Inter',sans-serif] text-[14px] font-semibold whitespace-nowrap text-[#024338] dark:text-[#72cbb8]">
+    <span className="font-['Inter',sans-serif] text-[14px] font-semibold whitespace-nowrap text-[#024338] dark:text-[#9ed5c9]">
       {label}
     </span>
   );
@@ -93,7 +93,7 @@ const ProgressBar = <Key extends string = VerificationStep>({
                 {!isLast && (
                   <div
                     className={[
-                      'my-[10px] w-[6px] min-h-[100px] flex-1 overflow-hidden rounded-full bg-[#b5c8c5] dark:bg-[#303331]',
+                      'my-[10px] w-[6px] min-h-[100px] flex-1 overflow-hidden rounded-full bg-[#b5c8c5] dark:bg-[#4c5b59]',
                       connectorClassName,
                     ].join(' ')}
                   >
@@ -101,9 +101,9 @@ const ProgressBar = <Key extends string = VerificationStep>({
                       className={[
                         'w-full rounded-full transition-all duration-300',
                         idx < currentIdx
-                          ? 'h-full bg-[#096c5b] dark:bg-teal-600'
+                          ? 'h-full bg-[#096c5b] dark:bg-[#2e8677]'
                           : idx === currentIdx
-                            ? 'h-1/2 bg-linear-to-b from-[rgba(2,67,56,0.8)] to-[#b5c8c5] dark:from-[#72cbb8] dark:to-[#303331]'
+                            ? 'h-1/2 bg-linear-to-b from-[rgba(2,67,56,0.8)] to-[#b5c8c5] dark:from-[#88b5ad] dark:to-[#c8d8d6]'
                             : 'h-0',
                       ].join(' ')}
                     />
@@ -135,7 +135,7 @@ const ProgressBar = <Key extends string = VerificationStep>({
             {!isLast && (
               <div
                 className={[
-                  'mx-[12px] mt-[8px] h-[6px] flex-1 overflow-hidden rounded-full bg-[#b5c8c5] dark:bg-[#303331]',
+                  'mx-[12px] mt-[8px] h-[6px] flex-1 overflow-hidden rounded-full bg-[#b5c8c5] dark:bg-[#4c5b59]',
                   connectorClassName,
                 ].join(' ')}
               >
@@ -143,9 +143,9 @@ const ProgressBar = <Key extends string = VerificationStep>({
                   className={[
                     'h-full rounded-full transition-all duration-300',
                     idx < currentIdx
-                      ? 'w-full bg-[#096c5b] dark:bg-teal-600'
+                      ? 'w-full bg-[#096c5b] dark:bg-[#2e8677]'
                       : idx === currentIdx
-                        ? 'w-1/2 bg-linear-to-r from-[rgba(2,67,56,0.8)] to-[#b5c8c5] dark:from-[#72cbb8] dark:to-[#303331]'
+                        ? 'w-1/2 bg-linear-to-r from-[rgba(2,67,56,0.8)] to-[#b5c8c5] dark:from-[#88b5ad] dark:to-[#c8d8d6]'
                         : 'w-0',
                   ].join(' ')}
                 />

@@ -191,8 +191,8 @@ export const getRentalsByUser = async (
   filters: QueryFilter<RentalType>,
 ) => {
   const rentals = await Rental.find(combineFilters(filters, { userId }))
-    .populate('facilityId', 'name location media')
-    .populate('unitId', 'roomNumber location listingId');
+    .populate('facilityId', 'name location media allowTransfer')
+    .populate('unitId', 'roomNumber location listingId price');
 
   if (!rentals.length) {
     const rentalsNoFilter = await Rental.find({ userId });

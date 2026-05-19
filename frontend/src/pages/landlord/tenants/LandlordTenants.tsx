@@ -15,13 +15,23 @@ import {
   filterTenantsByName,
   tenantFiltersActive,
 } from '../../../utils/tenantListFilters';
-import { pendingApplications, type Tenant } from '../../../data/landlordTenants';
+import type { Tenant } from '../../../data/landlordTenants';
+import { ApplicationService } from '../../../service/ApplicationService';
 import { FacilityService } from '../../../service/FacilityService';
+import { TransferService } from '../../../service/TransferService';
 import { useDebouncedValue } from '../../../hooks/useDebouncedValue';
+
+const getDataArray = <T,>(response: unknown): T[] => {
+  if (Array.isArray(response)) return response as T[];
+  if (response && typeof response === 'object' && 'data' in response) {
+    const data = (response as { data?: unknown }).data;
+    return Array.isArray(data) ? (data as T[]) : [];
+  }
+  return [];
+};
 
 const LandlordTenants = () => {
   const navigate = useNavigate();
-  const pendingCount = pendingApplications.length;
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [reportTarget, setReportTarget] = useState<Tenant | null>(null);
   const [removeTarget, setRemoveTarget] = useState<Tenant | null>(null);
@@ -30,6 +40,8 @@ const LandlordTenants = () => {
   const debouncedNameSearchQuery = useDebouncedValue(nameSearchQuery, 300);
   const [tenants, setTenants] = useState<Tenant[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [pendingCount, setPendingCount] = useState(0);
+  const [pendingTransferCount, setPendingTransferCount] = useState(0);
 
   useEffect(() => {
     const fetchTenants = async () => {
@@ -44,6 +56,30 @@ const LandlordTenants = () => {
       }
     };
     fetchTenants();
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const fetchPendingReviews = async () => {
+      try {
+        const [applicationsResponse, transfersResponse] = await Promise.all([
+          ApplicationService.getApplications({ limit: 50, status: 'pending' }),
+          TransferService.getManagedTransferRequests({ status: 'pending' }),
+        ]);
+        if (!cancelled) {
+          setPendingCount(getDataArray(applicationsResponse).length);
+          setPendingTransferCount(getDataArray(transfersResponse).length);
+        }
+      } catch (error) {
+        console.error('Failed to fetch pending tenant reviews:', error);
+      }
+    };
+
+    void fetchPendingReviews();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const handleTenantAction = (tenant: Tenant, action: ManagerAction) => {
@@ -77,6 +113,19 @@ const LandlordTenants = () => {
 
   const hasActiveListFilters =
     tenantFiltersActive(filters) || debouncedNameSearchQuery.trim().length > 0;
+  const pendingReviewCount = pendingCount + pendingTransferCount;
+  const pendingReviewMessage =
+    pendingTransferCount > 0 && pendingCount > 0
+      ? `You have ${pendingCount} pending application${
+          pendingCount === 1 ? '' : 's'
+        } and ${pendingTransferCount} Pasalo request${pendingTransferCount === 1 ? '' : 's'}.`
+      : pendingTransferCount > 0
+        ? `You have ${pendingTransferCount} pending Pasalo request${
+            pendingTransferCount === 1 ? '' : 's'
+          }.`
+        : pendingCount > 0
+          ? `You have ${pendingCount} pending application${pendingCount === 1 ? '' : 's'}.`
+          : 'You do not have pending applications or Pasalo requests.';
 
   return (
     <LandlordLayout activeSidebarItem="tenants" breadcrumbs={[{ label: 'My Tenants' }]}>
@@ -95,24 +144,28 @@ const LandlordTenants = () => {
           />
           <div className="h-[2px] w-full rounded-[100px] bg-[#f0f0f0]" />
 
-          {pendingCount > 0 && (
-            <div className="flex w-full items-center gap-[8px] px-[4px] py-[10px]">
-              <Icon
-                icon="famicons:alert-outline"
-                className="h-[20px] w-[20px] text-[#c29722]"
-                aria-hidden="true"
-              />
-              <span className="font-['Inter',sans-serif] text-[14px] font-bold whitespace-nowrap text-black">
-                You have pending applications.
-              </span>
+          <div className="flex w-full items-center gap-[10px] px-[12px] py-[10px]">
+            <span
+              aria-hidden="true"
+              className={[
+                "font-['Inter',sans-serif] text-[18px] font-bold leading-none",
+                pendingReviewCount > 0 ? 'text-[#c29722]' : 'text-[#096c5b]',
+              ].join(' ')}
+            >
+              !
+            </span>
+            <span className="font-['Inter',sans-serif] text-[14px] font-bold whitespace-nowrap text-black dark:text-[#d7e0ef]">
+              {pendingReviewMessage}
+            </span>
+            {pendingReviewCount > 0 && (
               <Link
                 to="/landlord/tenants/unvalidated"
                 className="font-['Inter',sans-serif] text-[14px] font-bold whitespace-nowrap bg-linear-to-b from-[#c29722] to-[#f6b709] bg-clip-text text-transparent transition-opacity hover:opacity-80"
               >
                 See all
               </Link>
-            </div>
-          )}
+            )}
+          </div>
         </section>
 
         {isLoading ? (
@@ -166,7 +219,7 @@ const LandlordTenants = () => {
         ) : (
           <section
             aria-label="Tenants grid"
-            className="grid w-full grid-cols-1 gap-x-[24px] gap-y-[32px] sm:grid-cols-2 xl:grid-cols-3"
+            className="grid w-full grid-cols-[repeat(auto-fill,minmax(260px,320px))] justify-start gap-x-[24px] gap-y-[24px]"
           >
             {filteredTenants.map((tenant) => (
               <TenantCard
@@ -190,6 +243,9 @@ const LandlordTenants = () => {
       </div>
       <RemoveTenantPopup
         targetName={removeTarget?.displayName ?? null}
+        targetId={removeTarget?.id}
+        targetEmail={removeTarget?.email ?? undefined}
+        targetFacility={removeTarget?.dormName ?? undefined}
         isOpen={Boolean(removeTarget)}
         onClose={() => setRemoveTarget(null)}
       />
@@ -197,7 +253,13 @@ const LandlordTenants = () => {
         isOpen={Boolean(reportTarget)}
         onClose={() => setReportTarget(null)}
         tenant={
-          reportTarget ? { displayName: reportTarget.displayName, email: reportTarget.email } : null
+          reportTarget
+            ? {
+                id: reportTarget.userId ?? reportTarget.id,
+                displayName: reportTarget.displayName,
+                email: reportTarget.email,
+              }
+            : null
         }
       />
     </LandlordLayout>

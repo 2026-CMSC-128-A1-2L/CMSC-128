@@ -3,20 +3,22 @@ import { Icon } from '@iconify/react';
 import BillingRow from './BillingRow';
 import AddBillingPopup from './AddBillingPopup';
 import EditBillingPopup from './EditBillingPopup';
+import ReceiptViewerPopup, { type ReceiptDocument } from './ReceiptViewerPopup';
 import type { Billing } from '../types/billing';
 import type { TenantBilling } from '../../../../hooks/useFacilityFinance';
 import { BillingService } from '../../../../service/BillingService';
 import { UnitService } from '../../../../service/UnitService';
 
 const TABLE_COLUMNS = [
-  { label: 'Room', className: 'w-[8%]' },
-  { label: 'Tenant Name', className: 'w-[22%]' },
-  { label: 'Rent', className: 'w-[10%]' },
-  { label: 'Utilities', className: 'w-[10%]' },
-  { label: 'Misc.', className: 'w-[10%]' },
-  { label: 'Total Due', className: 'w-[10%]' },
-  { label: 'Amount Paid', className: 'w-[10%]' },
-  { label: 'Status', className: 'w-[18%]' },
+  { label: 'Room', className: 'w-[7%]' },
+  { label: 'Tenant Name', className: 'w-[18%]' },
+  { label: 'Rent', className: 'w-[9%]' },
+  { label: 'Utilities', className: 'w-[9%]' },
+  { label: 'Misc.', className: 'w-[9%]' },
+  { label: 'Total Due', className: 'w-[9%]' },
+  { label: 'Amount Paid', className: 'w-[9%]' },
+  { label: 'Receipt', className: 'w-[8%]' },
+  { label: 'Status', className: 'w-[14%]' },
 ];
 
 const MONTH_NAMES = [
@@ -60,6 +62,59 @@ const toRowBilling = (b: TenantBilling): Billing => ({
   updatedAt: b.updatedAt,
 });
 
+/**
+ * Normalise whatever shape `billing.documents` comes in as
+ * into a flat array of ReceiptDocument objects.
+ *
+ * The backend can return:
+ *   - A raw string file key            → { file: key }
+ *   - An object { file, paymentMethod, submittedAt, … }
+ *   - An object { key, … }             → treat key as file
+ */
+const normaliseDocuments = (documents: any[]): ReceiptDocument[] => {
+  if (!Array.isArray(documents)) return [];
+
+  const result: ReceiptDocument[] = [];
+
+  for (const d of documents) {
+    if (!d) continue;
+
+    // bare string key
+    if (typeof d === 'string') {
+      if (d) result.push({ file: d });
+      continue;
+    }
+
+    // Confirmed backend shape: { files: string[], message, status, ... }
+    // files[] is an array of file key strings
+    if (Array.isArray(d.files)) {
+      for (const fileKey of d.files) {
+        if (fileKey) {
+          result.push({
+            file: fileKey,
+            paymentMethod: d.message?.match(/payment method:\s*(\S+)/i)?.[1] ?? undefined,
+            submittedAt: d.submittedAt ?? d.createdAt ?? undefined,
+          });
+        }
+      }
+      continue;
+    }
+
+    // Fallback: single-file object shapes
+    const fileKey: string =
+      d.file ?? d.key ?? d.fileKey ?? d.fileId ?? d.path ?? d.url ?? '';
+    if (fileKey) {
+      result.push({
+        file: fileKey,
+        paymentMethod: d.paymentMethod ?? d.method ?? undefined,
+        submittedAt: d.submittedAt ?? d.createdAt ?? undefined,
+      });
+    }
+  }
+
+  return result;
+};
+
 interface TenantBillingsTabProps {
   facilityId: string;
   billings: TenantBilling[];
@@ -80,8 +135,15 @@ const TenantBillingsTab: FunctionComponent<TenantBillingsTabProps> = ({
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
   const [isAddPopupOpen, setIsAddPopupOpen] = useState(false);
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
+  const [isReceiptPopupOpen, setIsReceiptPopupOpen] = useState(false);
   const [selectedBilling, setSelectedBilling] = useState<Billing | null>(null);
   const [selectedBillingMeta, setSelectedBillingMeta] = useState<{ roomNumber: string; tenantName: string } | null>(null);
+  const [receiptBilling, setReceiptBilling] = useState<{
+    billing: Billing;
+    roomNumber: string | number;
+    tenantName: string;
+    documents: ReceiptDocument[];
+  } | null>(null);
   const [isMonthDropdownOpen, setIsMonthDropdownOpen] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState(getAvailableMonths()[0]);
   const [isSaving, setIsSaving] = useState(false);
@@ -111,7 +173,6 @@ const TenantBillingsTab: FunctionComponent<TenantBillingsTabProps> = ({
 
           arr.forEach((u: any) => {
             const unitId = u._id ?? u.id;
-            // Find first active rental on this unit
             const activeRental = (u.currentRentals ?? []).find(
               (r: any) => r.status === 'active'
             );
@@ -161,6 +222,32 @@ const TenantBillingsTab: FunctionComponent<TenantBillingsTabProps> = ({
     setSelectedBilling(billing);
     setSelectedBillingMeta({ roomNumber, tenantName });
     setIsEditPopupOpen(true);
+  };
+
+  const handleReceiptClick = async (billing: Billing, roomNumber: string | number, tenantName: string) => {
+    try {
+      // Use getBillingDetail which correctly flattens documents[].files[] into ReceiptDocument[]
+      const detail = await BillingService.getBillingDetail(billing._id);
+      setReceiptBilling({ billing, roomNumber, tenantName, documents: detail.documents });
+    } catch {
+      // Fall back to normalising cached documents
+      const docs = normaliseDocuments(billing.documents ?? []);
+      setReceiptBilling({ billing, roomNumber, tenantName, documents: docs });
+    }
+    setIsReceiptPopupOpen(true);
+  };
+
+  const handleVerifyReceipt = async (billingId: string, approved: boolean) => {
+    try {
+      await BillingService.updateBilling(billingId, {
+        paymentStatus: approved ? 'paid' : 'unpaid',
+      } as any);
+      await onRefresh();
+      setIsReceiptPopupOpen(false);
+      setReceiptBilling(null);
+    } catch (err) {
+      console.error('Failed to verify billing payment:', err);
+    }
   };
 
   const handleSaveEdit = async (updatedBilling: Billing) => {
@@ -285,7 +372,7 @@ const TenantBillingsTab: FunctionComponent<TenantBillingsTabProps> = ({
         {/* Table */}
         <div className="w-full rounded-[12.75px] bg-white border-whitesmoke-200 border-solid border-2 box-border overflow-hidden dark:bg-[#101111] dark:border-[#343737]">
           <div className="w-full overflow-x-auto overflow-y-auto max-h-[600px]">
-            <table className="w-full border-collapse" style={{ minWidth: '700px' }}>
+            <table className="w-full border-collapse" style={{ minWidth: '780px' }}>
               <thead className="sticky top-0 z-10">
                 <tr className="bg-darkslategray-200 rounded-t-[12.75px] dark:bg-[#114f43]">
                   {TABLE_COLUMNS.map(({ label, className }) => (
@@ -330,6 +417,7 @@ const TenantBillingsTab: FunctionComponent<TenantBillingsTabProps> = ({
                     tenantName={billing.tenantName}
                     onStatusChange={handleStatusChange}
                     onEditClick={(b) => handleEditClick(b, billing.roomNumber, billing.tenantName)}
+                    onReceiptClick={handleReceiptClick}
                     isOpen={openDropdownId === billing._id}
                     onToggle={(id) => setOpenDropdownId(openDropdownId === id ? null : id)}
                   />
@@ -362,6 +450,21 @@ const TenantBillingsTab: FunctionComponent<TenantBillingsTabProps> = ({
         roomNumber={selectedBillingMeta?.roomNumber}
         tenantName={selectedBillingMeta?.tenantName}
         onSave={handleSaveEdit}
+      />
+
+      {/* Receipt Viewer */}
+      <ReceiptViewerPopup
+        isOpen={isReceiptPopupOpen}
+        onClose={() => {
+          setIsReceiptPopupOpen(false);
+          setReceiptBilling(null);
+        }}
+        documents={receiptBilling?.documents ?? []}
+        tenantName={receiptBilling?.tenantName}
+        roomNumber={receiptBilling?.roomNumber}
+        totalAmount={receiptBilling?.billing.totalAmount}
+        billingId={receiptBilling?.billing._id ?? ''}
+        onVerify={handleVerifyReceipt}
       />
     </>
   );

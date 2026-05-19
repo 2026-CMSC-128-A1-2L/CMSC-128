@@ -877,7 +877,7 @@ const BuildingInfo = () => {
             <Button text="Edit Details" onClick={() => navigate(`/landlord/properties/edit/${id}`)}>
               <Icon icon="iconamoon:edit" className="w-5 h-5" />
             </Button>
-            <Button text="View As Student" onClick={() => {}}>
+            <Button text="View As Student" onClick={() => navigate(`/landlord/properties/${id}/student-preview`)}>
               <Icon icon="iconamoon:eye-light" className="w-5 h-5" />
             </Button>
           </div>

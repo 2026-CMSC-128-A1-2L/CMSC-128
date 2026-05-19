@@ -63,6 +63,43 @@ export const BillingService = {
     return response.data;
   },
 
+  async getBillingDetail(billingId: string): Promise<{
+    tenantName: string;
+    documents: { file: string; paymentMethod?: string; submittedAt?: string }[];
+  }> {
+    const res = await api.get(`/api/billings/${billingId}`);
+    const b = res.data?.data ?? res.data ?? res;
+
+    const documents: { file: string; paymentMethod?: string; submittedAt?: string }[] = [];
+    for (const doc of b.documents ?? []) {
+      const files: string[] = Array.isArray(doc.files) ? doc.files : [];
+      for (const fileKey of files) {
+        if (fileKey) {
+          documents.push({
+            file: fileKey,
+            paymentMethod: doc.message?.match(/payment method:\s*(\S+)/i)?.[1] ?? undefined,
+            submittedAt: doc.createdAt ?? undefined,
+          });
+        }
+      }
+    }
+
+    let tenantName = b.tenantName ?? '';
+    if (!tenantName && b.userId && typeof b.userId === 'object') {
+      tenantName = `${b.userId.firstName ?? ''} ${b.userId.lastName ?? ''}`.trim();
+    }
+    if (!tenantName && b.rentalId && typeof b.rentalId === 'object') {
+      const rUser = b.rentalId.userId;
+      if (rUser && typeof rUser === 'object') {
+        tenantName = `${rUser.firstName ?? ''} ${rUser.lastName ?? ''}`.trim();
+      } else if (b.rentalId.tenantName) {
+        tenantName = b.rentalId.tenantName;
+      }
+    }
+
+    return { tenantName, documents };
+  },
+
   async updateBilling(billingId: string, body: UpdateBillingRequestBody) {
     const response = await api.patch(`/api/billings/${billingId}`, body);
     return response.data;
@@ -119,24 +156,18 @@ export const BillingService = {
           else if (res.data && Array.isArray(res.data)) billings = res.data;
           else if (Array.isArray(res)) billings = res;
 
-          const activeRentals: any[] = (unit.currentRentals ?? []).filter(
-            (r: any) => r.status === 'active',
-          );
-
-          const stampedRentalId = activeRentals[0]?._id ?? null;
-          const stampedTenantName = activeRentals
-            .map((r: any) => {
-              const u = r.userId;
-              return typeof u === 'object' ? `${u.firstName ?? ''} ${u.lastName ?? ''}`.trim() : '';
-            })
-            .filter(Boolean)
-            .join(', ');
+          const activeRental = Array.isArray(unit.currentRentals)
+            ? unit.currentRentals.find((r: any) => r.status === 'active') ?? unit.currentRentals[0]
+            : null;
+          const unitTenantName =
+            activeRental?.userId && typeof activeRental.userId === 'object'
+              ? `${activeRental.userId.firstName ?? ''} ${activeRental.userId.lastName ?? ''}`.trim()
+              : '';
 
           return billings.map((b: any) => ({
             ...b,
             roomNumber: b.roomNumber || unit.roomNumber || '',
-            _stampedRentalId: stampedRentalId,
-            _stampedTenantName: stampedTenantName,
+            tenantName: b.tenantName || unitTenantName,
           }));
         } catch (err) {
           console.warn(`Failed to fetch billings for unit ${unitId}:`, err);
@@ -155,9 +186,9 @@ export const BillingService = {
       const listings: any[] = facility.listings || [];
       const listingIds = listings.map((l: any) => l.id).filter(Boolean);
       const billings = await this.getAllBillingsForListings(listingIds);
-      billings.forEach((b: any) => {
+      for (const b of billings) {
         b.facilityId = b.facilityId ?? facilityId;
-      });
+      }
       return billings;
     } catch (err) {
       console.error('Failed to fetch all billings for facility:', err);
@@ -172,7 +203,6 @@ export const BillingService = {
       });
 
       const url = window.URL.createObjectURL(new Blob([response.data]));
-
       const link = document.createElement('a');
       link.href = url;
 
@@ -186,8 +216,6 @@ export const BillingService = {
       link.setAttribute('download', fileName);
       document.body.appendChild(link);
       link.click();
-
-      // Clean up
       link.remove();
       window.URL.revokeObjectURL(url);
 

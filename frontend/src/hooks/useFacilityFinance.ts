@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { BillingService } from '../service/BillingService';
 import { FacilityService } from '../service/FacilityService';
 
@@ -65,15 +65,63 @@ type UseFacilityFinanceReturn = {
   facilityListings: { id: string }[];
 };
 
-const MONTH_LABELS = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+const MONTH_LABELS = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
 
-const mapBilling = (b: any, facilityId: string): TenantBilling => {
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+/**
+ * Build a userId → fullName map from the raw tenants list returned by the API.
+ * Handles all known shapes: { _id, name }, { _id, firstName, lastName },
+ * { userId: { _id, firstName, lastName } }.
+ */
+function buildUserMap(tenantsRaw: any): Map<string, string> {
+  const userMap = new Map<string, string>();
+  const list: any[] = Array.isArray(tenantsRaw) ? tenantsRaw : (tenantsRaw as any)?.data ?? [];
+
+  for (const t of list) {
+    const uid = t._id ?? t.userId?._id ?? t.userId;
+    if (!uid) continue;
+
+    const name =
+      t.name ??
+      (t.firstName || t.lastName
+        ? `${t.firstName ?? ''} ${t.lastName ?? ''}`.trim()
+        : t.userId && typeof t.userId === 'object'
+          ? `${t.userId.firstName ?? ''} ${t.userId.lastName ?? ''}`.trim()
+          : '');
+
+    if (name) userMap.set(String(uid), name);
+  }
+
+  return userMap;
+}
+
+/** Map a raw billing API object to a typed TenantBilling. */
+function mapBilling(b: any, facilityId: string, userMap: Map<string, string>): TenantBilling {
   const unitObj = b.unitId && typeof b.unitId === 'object' ? b.unitId : null;
   const unitId = unitObj?._id ?? b.unitId ?? '';
 
-  let tenantName = b.tenantName || b._stampedTenantName || '';
+  // Resolve tenant name — try every populated shape before falling back to userMap.
+  let tenantName = b.tenantName ?? '';
+
   if (!tenantName && b.userId && typeof b.userId === 'object') {
-    tenantName = `${b.userId.firstName || ''} ${b.userId.lastName || ''}`.trim();
+    tenantName = `${b.userId.firstName ?? ''} ${b.userId.lastName ?? ''}`.trim();
+  }
+
+  if (!tenantName && b.rentalId && typeof b.rentalId === 'object') {
+    const rUser = b.rentalId.userId;
+    if (rUser && typeof rUser === 'object') {
+      tenantName = `${rUser.firstName ?? ''} ${rUser.lastName ?? ''}`.trim();
+    } else if (b.rentalId.tenantName) {
+      tenantName = b.rentalId.tenantName;
+    }
+  }
+
+  if (!tenantName) {
+    const userIdStr = typeof b.userId === 'string' ? b.userId : (b.userId?._id ?? '');
+    if (userIdStr) tenantName = userMap.get(userIdStr) ?? '';
   }
 
   const breakdown: { name: string; amount: number }[] =
@@ -84,13 +132,17 @@ const mapBilling = (b: any, facilityId: string): TenantBilling => {
   return {
     _id: b._id ?? b.id,
     unitId,
-    rentalId: b.rentalId?._id ?? b.rentalId ?? b._stampedRentalId ?? null,
-    roomNumber: b.roomNumber || unitObj?.roomNumber || '',
+    rentalId: b.rentalId?._id ?? b.rentalId ?? null,
+    roomNumber: b.roomNumber ?? unitObj?.roomNumber ?? '',
     tenantName: tenantName || 'Unknown Tenant',
     profilePicture: b.profilePicture ?? null,
     dueDate: b.dueDate ?? null,
     paymentStatus: b.paymentStatus ?? b.status ?? 'unpaid',
-    totalAmount: breakdown.reduce((sum, item) => sum + (item.amount || 0), 0) || b.totalAmount || b.amount || 0,
+    totalAmount:
+      breakdown.reduce((sum, item) => sum + (item.amount || 0), 0) ||
+      b.totalAmount ||
+      b.amount ||
+      0,
     paidAmount: b.paidAmount ?? null,
     breakdown,
     facilityId: b.facilityId?._id ?? b.facilityId ?? facilityId,
@@ -100,21 +152,44 @@ const mapBilling = (b: any, facilityId: string): TenantBilling => {
     createdAt: b.createdAt ?? '',
     updatedAt: b.updatedAt ?? '',
   };
-};
+}
 
-// Derive computed state from mapped billings
-const deriveFromBillings = (
+async function resolveTenantNames(billings: TenantBilling[]): Promise<TenantBilling[]> {
+  const unknownBillings = billings.filter((b) => b.tenantName === 'Unknown Tenant');
+  if (unknownBillings.length === 0) return billings;
+
+  const nameMap = new Map<string, string>();
+
+  await Promise.allSettled(
+    unknownBillings.map(async (b) => {
+      try {
+        const detail = await BillingService.getBillingDetail(b._id);
+        if (detail.tenantName) nameMap.set(b._id, detail.tenantName);
+      } catch {
+        // silently skip — leave as 'Unknown Tenant'
+      }
+    }),
+  );
+
+  if (nameMap.size === 0) return billings;
+
+  return billings.map((b) =>
+    nameMap.has(b._id) ? { ...b, tenantName: nameMap.get(b._id)! } : b,
+  );
+}
+
+function deriveFromBillings(
   mappedBillings: TenantBilling[],
   nowYear: number,
   nowMonth: number,
-) => {
-  // Rental map
+) {
+  // unitId -> rentalId
   const rentalMap = new Map<string, string>();
   for (const b of mappedBillings) {
     if (b.rentalId) rentalMap.set(b.unitId, b.rentalId);
   }
 
-  // Monthly income chart
+  // Monthly income chart (up to and including current month)
   const byMonth = new Map<string, number>();
   for (const b of mappedBillings) {
     if (!b.dueDate) continue;
@@ -131,20 +206,20 @@ const deriveFromBillings = (
       const [year, monthIndex] = key.split('-').map(Number);
       return { month: MONTH_LABELS[monthIndex], monthIndex, year, totalIncome };
     })
-    .sort((a, b) => a.year !== b.year ? a.year - b.year : a.monthIndex - b.monthIndex);
+    .sort((a, b) => (a.year !== b.year ? a.year - b.year : a.monthIndex - b.monthIndex));
 
-  // Income breakdown (paid only)
+  // Income breakdown (paid billings only)
   const paidBillings = mappedBillings.filter((b) => b.paymentStatus === 'paid');
   const breakdownMap = new Map<string, number>();
   for (const b of paidBillings) {
     for (const item of b.breakdown) {
-      breakdownMap.set(item.name, (breakdownMap.get(item.name) || 0) + (item.amount || 0));
+      breakdownMap.set(item.name, (breakdownMap.get(item.name) ?? 0) + (item.amount || 0));
     }
   }
 
-  const rent = breakdownMap.get('Rent') || 0;
-  const utilities = breakdownMap.get('Utilities') || 0;
-  const misc = breakdownMap.get('Misc. Fees') || 0;
+  const rent = breakdownMap.get('Rent') ?? 0;
+  const utilities = breakdownMap.get('Utilities') ?? 0;
+  const misc = breakdownMap.get('Misc. Fees') ?? 0;
   const breakdownTotal = rent + utilities + misc;
   const divisor = breakdownTotal || 1;
 
@@ -155,7 +230,6 @@ const deriveFromBillings = (
     total: breakdownTotal,
   };
 
-  // Collection rate
   const totalPaidIncome = paidBillings.reduce((sum, b) => sum + b.totalAmount, 0);
   const totalOutstanding = mappedBillings
     .filter((b) => b.paymentStatus !== 'paid')
@@ -166,7 +240,7 @@ const deriveFromBillings = (
       : Math.round((totalPaidIncome / (totalPaidIncome + totalOutstanding)) * 100);
 
   return { rentalMap, monthlyIncome, incomeBreakdown, totalPaidIncome, collectionRate };
-};
+}
 
 export function useFacilityFinance(facilityId: string | undefined): UseFacilityFinanceReturn {
   const [facilityInfo, setFacilityInfo] = useState<FacilityInfo | null>(null);
@@ -182,9 +256,12 @@ export function useFacilityFinance(facilityId: string | undefined): UseFacilityF
   const [billingsFetchCount, setBillingsFetchCount] = useState(0);
   const [facilityListings, setFacilityListings] = useState<{ id: string }[]>([]);
 
+  const userMapRef = useRef<Map<string, string>>(new Map());
+
   const refetch = useCallback(() => setFetchCount((n) => n + 1), []);
   const refetchBillings = useCallback(() => setBillingsFetchCount((n) => n + 1), []);
 
+  // Full load: facility info + billings + tenants
   useEffect(() => {
     if (!facilityId) return;
     let cancelled = false;
@@ -195,12 +272,16 @@ export function useFacilityFinance(facilityId: string | undefined): UseFacilityF
       setError(null);
 
       try {
-        const [facilityRes, allBillings] = await Promise.all([
+        const [facilityRes, allBillings, tenantsRaw] = await Promise.all([
           FacilityService.getFacility(facilityId),
           BillingService.getAllBillingsForFacility(facilityId),
+          FacilityService.getTenants().catch(() => []),
         ]);
 
         if (cancelled) return;
+
+        const userMap = buildUserMap(tenantsRaw);
+        userMapRef.current = userMap;
 
         const facility = facilityRes.data ?? facilityRes;
         const listings: any[] = facility.listings ?? [];
@@ -214,10 +295,15 @@ export function useFacilityFinance(facilityId: string | undefined): UseFacilityF
 
         const totalUnits = listings.reduce((sum: number, l: any) => sum + (l.unitCount || 0), 0);
         const occupiedUnits = listings.reduce(
-          (sum: number, l: any) => sum + ((l.unitCount || 0) - (l.availableUnitCount || 0)), 0
+          (sum: number, l: any) => sum + ((l.unitCount || 0) - (l.availableUnitCount || 0)),
+          0,
         );
 
-        const mappedBillings = allBillings.map((b: any) => mapBilling(b, facilityId));
+        const mappedBillings = await resolveTenantNames(
+          allBillings.map((b: any) => mapBilling(b, facilityId, userMap)),
+        );
+        if (cancelled) return;
+
         setBillings(mappedBillings);
 
         const now = new Date();
@@ -238,7 +324,7 @@ export function useFacilityFinance(facilityId: string | undefined): UseFacilityF
         if (!cancelled) {
           setError(
             (err as any)?.response?.data?.message ??
-            (err instanceof Error ? err.message : 'Failed to load facility data.')
+              (err instanceof Error ? err.message : 'Failed to load facility data.'),
           );
         }
       } finally {
@@ -250,7 +336,9 @@ export function useFacilityFinance(facilityId: string | undefined): UseFacilityF
     };
 
     load();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [facilityId, fetchCount]);
 
   useEffect(() => {
@@ -263,17 +351,25 @@ export function useFacilityFinance(facilityId: string | undefined): UseFacilityF
         const allBillings = await BillingService.getAllBillingsForFacility(facilityId);
         if (cancelled) return;
 
-        const mappedBillings = allBillings.map((b: any) => mapBilling(b, facilityId));
+        // FIX A: pass the cached userMap instead of nothing.
+        const mappedBillings = await resolveTenantNames(
+          allBillings.map((b: any) => mapBilling(b, facilityId, userMapRef.current)),
+        );
+        if (cancelled) return;
+
         setBillings(mappedBillings);
 
         const now = new Date();
-        const { rentalMap, incomeBreakdown, totalPaidIncome, collectionRate } =
-          deriveFromBillings(mappedBillings, now.getFullYear(), now.getMonth());
+        const { rentalMap, incomeBreakdown, totalPaidIncome, collectionRate } = deriveFromBillings(
+          mappedBillings,
+          now.getFullYear(),
+          now.getMonth(),
+        );
 
         setUnitRentalMap(rentalMap);
         setIncomeBreakdown(incomeBreakdown);
         setOverview((prev) =>
-          prev ? { ...prev, totalIncome: totalPaidIncome, collectionRate } : null
+          prev ? { ...prev, totalIncome: totalPaidIncome, collectionRate } : null,
         );
       } catch (err) {
         if (!cancelled) {
@@ -286,7 +382,9 @@ export function useFacilityFinance(facilityId: string | undefined): UseFacilityF
     };
 
     load();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [facilityId, billingsFetchCount]);
 
   return {

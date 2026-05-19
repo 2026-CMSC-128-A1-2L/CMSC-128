@@ -32,6 +32,12 @@ type DormCardProps = {
   price: { min: number; max: number };
   location: string;
   image: string;
+  isPasalo?: boolean;
+  transferId?: string;
+  pasaloUnitId?: string;
+  pasaloListingId?: string;
+  pasaloMoveInDate?: string;
+  pasaloLeaseDuration?: '6-months' | '12-months';
   sourceLabel?: string;
   sourceUrl?: string;
   room_types: {
@@ -50,6 +56,12 @@ const DormCard: FunctionComponent<DormCardProps> = ({
   price,
   location,
   image,
+  isPasalo,
+  transferId,
+  pasaloUnitId,
+  pasaloListingId,
+  pasaloMoveInDate,
+  pasaloLeaseDuration,
   sourceLabel,
   sourceUrl,
   room_types,
@@ -71,7 +83,8 @@ const DormCard: FunctionComponent<DormCardProps> = ({
   }, []);
 
   const navigateToDetails = (selectedRoomType?: string) => {
-    navigate(`/facilities/${id}`, {
+    const transferQuery = isPasalo && transferId ? `?transferId=${encodeURIComponent(transferId)}` : '';
+    navigate(`/facilities/${id}${transferQuery}`, {
       state: {
         dorm: {
           id,
@@ -80,9 +93,21 @@ const DormCard: FunctionComponent<DormCardProps> = ({
           price,
           location,
           image,
+          isPasalo,
+          transferId,
+          pasaloUnitId,
+          pasaloListingId,
+          pasaloMoveInDate,
+          pasaloLeaseDuration,
           room_types,
         },
         selectedRoomType,
+        isPasalo,
+        transferId,
+        pasaloUnitId,
+        pasaloListingId,
+        pasaloMoveInDate,
+        pasaloLeaseDuration,
         sourceLabel,
         sourceUrl,
       },

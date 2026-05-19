@@ -162,10 +162,10 @@ const ApplicantReviewModal = ({
     }
   };
 
-  if (!isOpen || !applicant) return null;
+  if (!applicant) return null;
 
   return (
-    <AdminPopupOverlay onClose={onClose}>
+    <AdminPopupOverlay onClose={onClose} isOpen={isOpen}>
       <div className="flex w-[640px] max-h-[90vh] flex-col overflow-hidden rounded-tl-[32px] bg-white dark:bg-[#141515] dark:border dark:border-[#303331]">
         {/* Teal Gradient Header */}
         <div className="w-full shrink-0 rounded-tl-[32px] bg-gradient-to-b from-[#096c5b] to-[#16917c] px-[57px] py-3">
