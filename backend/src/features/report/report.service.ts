@@ -132,7 +132,8 @@ export const reportUser = async (data: CreateUserReportArgs) => {
     throw new AppError(400, 'You cannot report yourself.');
   }
 
-  // Students can only report managers; landlords and managers can only report tenants
+  // Students can report managers/landlords, landlords can report managers/tenants,
+  // and managers can report tenants.
   if (
     data.reporterType === 'Student' &&
     targetUser.userType !== 'Manager' &&
@@ -142,9 +143,14 @@ export const reportUser = async (data: CreateUserReportArgs) => {
   }
 
   if (
-    (data.reporterType === 'Landlord' || data.reporterType === 'Manager') &&
-    targetUser.userType !== 'Student'
+    data.reporterType === 'Landlord' &&
+    targetUser.userType !== 'Student' &&
+    targetUser.userType !== 'Manager'
   ) {
+    throw new AppError(403, 'Landlords can only report tenants or managers.');
+  }
+
+  if (data.reporterType === 'Manager' && targetUser.userType !== 'Student') {
     throw new AppError(403, 'You can only report tenants.');
   }
 

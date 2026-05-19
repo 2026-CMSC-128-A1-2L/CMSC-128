@@ -11,6 +11,27 @@ import type {
 
 import { UserService } from './UserService';
 
+export type LandlordMonthlyIncome = {
+  total: number;
+  totalTenants: number;
+  byFacility: {
+    facilityId: string;
+    facilityName: string;
+    expectedMonthlyIncome: number;
+    tenantCount: number;
+  }[];
+};
+
+export type LandlordOverdueTenants = {
+  overdueTenants: unknown[];
+  overdueCount: number;
+  byFacility: {
+    facilityId: string;
+    facilityName: string;
+    overdueCount: number;
+  }[];
+};
+
 export const FacilityService = {
   async getFacilities() {
     try {
@@ -106,9 +127,12 @@ export const FacilityService = {
 
   async getMonthlyIncome() {
     try {
-      const response = await api.get<{ data: number }>(`/api/facilities/landlord/monthly-income`, {
-        // headers
-      });
+      const response = await api.get<{ data: LandlordMonthlyIncome }>(
+        `/api/facilities/landlord/monthly-income`,
+        {
+          // headers
+        },
+      );
       return response.data;
     } catch (error) {
       console.error('Failed to fetch monthly income:', error);
@@ -118,7 +142,7 @@ export const FacilityService = {
 
   async getOverdueTenants() {
     try {
-      const response = await api.get<{ data: unknown }>(
+      const response = await api.get<{ data: LandlordOverdueTenants }>(
         `/api/facilities/landlord/overdue-tenants`,
         {
           // headers

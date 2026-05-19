@@ -5,8 +5,10 @@ import LandlordManagerReportCategory, {
 } from './LandlordManagerReportForms/LandlordManagerReportCategory';
 import LandlordManagerReportConfirm from './LandlordManagerReportForms/LandlordManagerReportConfirm';
 import LandlordManagerReportSuccess from './LandlordManagerReportForms/LandlordManagerReportSuccess';
+import { ReportService } from '../../service/ReportService';
 
 type Tenant = {
+  id: string;
   displayName: string;
   email: string;
 };
@@ -111,19 +113,29 @@ const TENANT_REPORT_CATEGORIES: ReportCategory[] = [
   },
 ];
 
-const LandlordTenantReportController: FunctionComponent<Props> = ({
-  isOpen,
-  onClose,
-  tenant,
-}) => {
+const getErrorMessage = (error: unknown) => {
+  if (error && typeof error === 'object' && 'response' in error) {
+    const response = (error as { response?: { data?: { message?: unknown; error?: unknown } } })
+      .response;
+    const message = response?.data?.message ?? response?.data?.error;
+    if (typeof message === 'string') return message;
+  }
+  return 'Could not submit your report. Please try again.';
+};
+
+const LandlordTenantReportController: FunctionComponent<Props> = ({ isOpen, onClose, tenant }) => {
   // step 0..3 = categories; 4 = confirm; 5 = success
   const [step, setStep] = useState(0);
   const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [loading, setLoading] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isOpen) return;
     setStep(0);
     setSelected(new Set());
+    setLoading(false);
+    setSubmitError(null);
   }, [isOpen]);
 
   const totalCategorySteps = TENANT_REPORT_CATEGORIES.length;
@@ -146,32 +158,52 @@ const LandlordTenantReportController: FunctionComponent<Props> = ({
     setSelected((prev) => {
       const next = new Set(prev);
       if (allChecked) {
-        category.items.forEach((item) => next.delete(item.key));
+        category.items.forEach((item) => {
+          next.delete(item.key);
+        });
       } else {
-        category.items.forEach((item) => next.add(item.key));
+        category.items.forEach((item) => {
+          next.add(item.key);
+        });
       }
       return next;
     });
   };
 
-  const handleSubmit = () => {
-    const selectedItems = TENANT_REPORT_CATEGORIES.flatMap((c) =>
-      c.items.filter((i) => selected.has(i.key)).map((i) => ({ category: c.key, ...i })),
+  const handleSubmit = async () => {
+    const tenantId = tenant?.id;
+    if (!tenantId) {
+      setSubmitError('Tenant account could not be found.');
+      return;
+    }
+
+    const selectedFlags = TENANT_REPORT_CATEGORIES.flatMap((category) =>
+      category.items.filter((item) => selected.has(item.key)).map((item) => item.title),
     );
+    const reportFlags = selectedFlags.length > 0 ? selectedFlags : ['General Misconduct'];
+    const description = `Reported for: ${reportFlags.join(', ')}`.slice(0, 200);
 
-    console.log('=== Tenant Report Submitted ===');
-    console.log({
-      tenant: tenant?.email,
-      reports: selectedItems,
-    });
+    setLoading(true);
+    setSubmitError(null);
 
-    setStep(totalCategorySteps + 1);
+    try {
+      await ReportService.reportUser(tenantId, {
+        description,
+        flags: reportFlags,
+        evidence: [],
+      });
+      setStep(totalCategorySteps + 1);
+    } catch (error) {
+      setSubmitError(getErrorMessage(error));
+    } finally {
+      setLoading(false);
+    }
   };
 
   const currentCategory = useMemo<ReportCategory | null>(() => {
     if (step < 0 || step >= totalCategorySteps) return null;
     return TENANT_REPORT_CATEGORIES[step];
-  }, [step, totalCategorySteps]);
+  }, [step]);
 
   if (!isOpen || !tenant) return null;
 
@@ -181,7 +213,11 @@ const LandlordTenantReportController: FunctionComponent<Props> = ({
       placement="Centered"
       onOutsideClick={handleClose}
     >
-      <div key={step} className="animate-fade-in" style={{ animationDuration: '180ms' }}>
+      <div
+        key={step}
+        className={`animate-fade-in ${loading ? 'pointer-events-none opacity-60' : ''}`}
+        style={{ animationDuration: '180ms' }}
+      >
         {currentCategory && (
           <LandlordManagerReportCategory
             managerName={tenant.displayName}
@@ -203,13 +239,13 @@ const LandlordTenantReportController: FunctionComponent<Props> = ({
           <LandlordManagerReportConfirm
             onBack={() => setStep((s) => s - 1)}
             onSubmit={handleSubmit}
+            isSubmitting={loading}
+            errorMessage={submitError}
             type="tenant"
           />
         )}
 
-        {step === totalCategorySteps + 1 && (
-          <LandlordManagerReportSuccess onClose={handleClose} />
-        )}
+        {step === totalCategorySteps + 1 && <LandlordManagerReportSuccess onClose={handleClose} />}
       </div>
     </PortalPopup>
   );
