@@ -17,7 +17,7 @@ const TRANSFER_REASON_CATEGORIES = [
   'other',
 ] as const;
 
-const TRANSFER_STATUS = ['pending', 'approved', 'rejected', 'cancelled'] as const;
+const TRANSFER_STATUS = ['pending', 'approved', 'rejected', 'cancelled', 'completed'] as const;
 
 const DEPOSIT_HANDLING = ['refunded', 'transferred', 'forfeited'] as const;
 

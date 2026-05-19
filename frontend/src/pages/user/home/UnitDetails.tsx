@@ -23,7 +23,13 @@ import LocationDetails from "../../../components/user/unitdetails/LocationDetail
 import ReviewDetails from "../../../components/user/unitdetails/ReviewDetails";
 import PropertyTab from "../../../components/user/unitdetails/PropertyTab";
 import DormCard from "../../../components/user/DormCard";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import {
+  Link,
+  useLocation,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 import LoadingPage from "../../general/LoadingPage";
 import { useFacilities, type DormCardData } from "../../../hooks/useFacilities";
 import { useDebouncedValue } from "../../../hooks/useDebouncedValue";
@@ -31,6 +37,7 @@ import { useFacilityDetails } from "../../../hooks/useFacilityDetails";
 import { useBookmarks } from "../../../hooks/useBookmarks";
 import { BookmarkService } from "../../../service/BookmarkService";
 import { ApplicationService } from "../../../service/ApplicationService";
+import { TransferService } from "../../../service/TransferService";
 import CalendarPopout from "../../../components/user/user-calendar/CalendarPopout";
 import PortalPopup from "../../../components/general/PortalPopup";
 import NotificationToast from "../../../components/general/NotificationToast";
@@ -57,6 +64,10 @@ const leaseDurationValues: Record<string, "6-months" | "12-months"> = {
   "1 sem": "6-months",
   "2 sem": "12-months",
   "1 year": "12-months",
+};
+const leaseDurationLabels: Record<"6-months" | "12-months", string> = {
+  "6-months": "1 sem",
+  "12-months": "1 year",
 };
 const amenityTagIcons: Record<string, string> = {
   hasWifi: "material-symbols:wifi",
@@ -100,6 +111,12 @@ const formatTagValue = (value: string | number | boolean) => {
 type UnitDetailsLocationState = {
   dorm?: DormCardData;
   selectedRoomType?: string;
+  isPasalo?: boolean;
+  transferId?: string;
+  pasaloUnitId?: string;
+  pasaloListingId?: string;
+  pasaloMoveInDate?: string;
+  pasaloLeaseDuration?: "6-months" | "12-months";
   sourceLabel?: string;
   sourceUrl?: string;
 };
@@ -113,6 +130,7 @@ const UnitDetails: FunctionComponent = () => {
   const { facilityId } = useParams<{ facilityId: string }>();
   const location = useLocation();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const routeState = location.state as UnitDetailsLocationState | null;
   const selectedDorm = routeState?.dorm;
   const selectedRoomType = routeState?.selectedRoomType;
@@ -145,7 +163,22 @@ const UnitDetails: FunctionComponent = () => {
   >([]);
   const [showSignIn, setShowSignIn] = useState(false);
   const [isVisitPopoutOpen, setVisitPopoutOpen] = useState(false);
+  const [pasaloDetails, setPasaloDetails] = useState<{
+    transferId: string;
+    unitId?: string;
+    listingId?: string;
+    moveInDate?: string;
+    leaseDuration?: "6-months" | "12-months";
+  } | null>(null);
   const availableListings = useMemo(() => facility?.listings ?? [], [facility]);
+  const transferId =
+    routeState?.transferId ??
+    selectedDorm?.transferId ??
+    searchParams.get("transferId") ??
+    "";
+  const isPasaloApplication = Boolean(
+    routeState?.isPasalo || selectedDorm?.isPasalo || transferId,
+  );
 
   useEffect(() => {
     if (
@@ -161,6 +194,60 @@ const UnitDetails: FunctionComponent = () => {
       setSelectedListingId((matchingListing ?? availableListings[0])?.id ?? "");
     }
   }, [selectedListingId, availableListings, selectedRoomType]);
+
+  useEffect(() => {
+    if (!isPasaloApplication || !transferId) {
+      setPasaloDetails(null);
+      return;
+    }
+
+    const stateDetails = {
+      transferId,
+      unitId: routeState?.pasaloUnitId ?? selectedDorm?.pasaloUnitId,
+      listingId: routeState?.pasaloListingId ?? selectedDorm?.pasaloListingId,
+      moveInDate: routeState?.pasaloMoveInDate ?? selectedDorm?.pasaloMoveInDate,
+      leaseDuration: routeState?.pasaloLeaseDuration ?? selectedDorm?.pasaloLeaseDuration,
+    };
+
+    setPasaloDetails(stateDetails);
+
+    let cancelled = false;
+    TransferService.getPasaloTransfer(transferId)
+      .then((response) => {
+        if (cancelled) return;
+        const transfer = response.data ?? response;
+        const unit = transfer.unitId;
+        setPasaloDetails({
+          transferId,
+          unitId: unit?._id ?? unit?.id ?? stateDetails.unitId,
+          listingId: unit?.listingId?._id ?? unit?.listingId?.id ?? stateDetails.listingId,
+          moveInDate: transfer.pasaloMoveInDate ?? stateDetails.moveInDate,
+          leaseDuration: transfer.pasaloLeaseDuration ?? stateDetails.leaseDuration,
+        });
+      })
+      .catch(() => {
+        if (!cancelled) setPasaloDetails(stateDetails);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isPasaloApplication, routeState, selectedDorm, transferId]);
+
+  useEffect(() => {
+    if (!pasaloDetails) return;
+
+    if (pasaloDetails.listingId) {
+      setSelectedListingId(pasaloDetails.listingId);
+    }
+    if (pasaloDetails.leaseDuration) {
+      setLeaseDuration(leaseDurationLabels[pasaloDetails.leaseDuration]);
+      setIsLeaseMenuOpen(false);
+    }
+    if (pasaloDetails.moveInDate) {
+      setMoveInDate(pasaloDetails.moveInDate);
+    }
+  }, [pasaloDetails]);
 
   const showLoggedOutApplicationWarning = () => {
     const id = Date.now() + Math.random();
@@ -271,6 +358,8 @@ const UnitDetails: FunctionComponent = () => {
   const selectedListing =
     availableListings.find((listing) => listing.id === selectedListingId) ??
     availableListings[0];
+  const applicationListings =
+    isPasaloApplication && selectedListing ? [selectedListing] : availableListings;
   const isSelectedListingBookmarked = bookmarks.some(
     (bookmark) => bookmark.listingId === selectedListing?.id,
   );
@@ -457,6 +546,7 @@ const UnitDetails: FunctionComponent = () => {
       const moveIn = new Date(`${moveInDate}T00:00:00.000Z`);
       await ApplicationService.createApplication({
         listingId: selectedListing.id,
+        transferId: pasaloDetails?.transferId,
         leaseDuration: leaseDurationValues[leaseDuration],
         moveInDate: moveIn,
         message: messageToLandlord.trim() || null,
@@ -694,10 +784,16 @@ const UnitDetails: FunctionComponent = () => {
                   type="button"
                   onClick={() =>
                     runAuthenticatedAction(() => {
-                      setSelectedListingId(availableListings[0]?.id ?? "");
-                      setLeaseDuration("");
+                      setSelectedListingId(
+                        pasaloDetails?.listingId ?? availableListings[0]?.id ?? "",
+                      );
+                      setLeaseDuration(
+                        pasaloDetails?.leaseDuration
+                          ? leaseDurationLabels[pasaloDetails.leaseDuration]
+                          : "",
+                      );
                       setIsLeaseMenuOpen(false);
-                      setMoveInDate("");
+                      setMoveInDate(pasaloDetails?.moveInDate ?? "");
                       setMessageToLandlord("");
                     })
                   }
@@ -708,17 +804,24 @@ const UnitDetails: FunctionComponent = () => {
               </div>
 
               <div className="w-full flex flex-col gap-4 text-gray font-lora text-xs">
+                {isPasaloApplication && (
+                  <div className="rounded-lg border border-[#cbf6ed] bg-[#f1fffb] px-3 py-2 text-[11px] font-semibold leading-4 text-[#096c5b]">
+                    This is a Pasalo listing. Room type, lease duration, and move-in date are
+                    matched to the approved transfer request.
+                  </div>
+                )}
                 <div className="flex flex-col gap-1.5">
                   <div className="font-medium">Rooms Available</div>
                   <div className="grid grid-cols-1 gap-2 text-black sm:grid-cols-2 xl:grid-cols-1">
-                    {availableListings.length > 0 ? (
-                      availableListings.map((listing) => {
+                    {applicationListings.length > 0 ? (
+                      applicationListings.map((listing) => {
                         const isSelected = selectedListing?.id === listing.id;
 
                         return (
                           <button
                             key={listing.id}
                             type="button"
+                            disabled={isPasaloApplication}
                             onClick={() =>
                               runAuthenticatedAction(() =>
                                 setSelectedListingId(listing.id),
@@ -728,7 +831,7 @@ const UnitDetails: FunctionComponent = () => {
                               isSelected
                                 ? "border-darkslategray-200 bg-darkslategray-200 text-white"
                                 : "border-transparent bg-white text-black hover:bg-lightcyan"
-                            } cursor-pointer`}
+                            } ${isPasaloApplication ? "cursor-not-allowed opacity-80" : "cursor-pointer"}`}
                           >
                             {roomButtonLabel(listing.label)}
                           </button>
@@ -755,6 +858,7 @@ const UnitDetails: FunctionComponent = () => {
                   <div className="relative" id="lease-duration-select">
                     <button
                       type="button"
+                      disabled={isPasaloApplication}
                       onClick={() =>
                         runAuthenticatedAction(() =>
                           setIsLeaseMenuOpen((isOpen) => !isOpen),
@@ -764,7 +868,7 @@ const UnitDetails: FunctionComponent = () => {
                         isLeaseMenuOpen
                           ? "border-teal-200 bg-lightcyan/40 ring-2 ring-lightcyan"
                           : "border-transparent bg-white hover:bg-lightcyan/20"
-                      } cursor-pointer`}
+                      } ${isPasaloApplication ? "cursor-not-allowed opacity-80" : "cursor-pointer"}`}
                     >
                       <span
                         className={`font-semibold text-xs ${leaseDuration ? "text-black" : "text-silver"
@@ -825,9 +929,10 @@ const UnitDetails: FunctionComponent = () => {
                       id="move-in-date"
                       type="date"
                       value={moveInDate}
+                      disabled={isPasaloApplication}
                       onChange={(event) => setMoveInDate(event.target.value)}
                       className={`flex-1 bg-transparent outline-none font-semibold text-xs ${moveInDate ? "text-black" : "text-silver"
-                        }`}
+                        } ${isPasaloApplication ? "cursor-not-allowed" : ""}`}
                     />
                     <Icon icon="mdi:calendar" className="h-4 w-4" />
                   </div>

@@ -18,6 +18,7 @@ import {
 import type { Tenant } from '../../../data/landlordTenants';
 import { ApplicationService } from '../../../service/ApplicationService';
 import { FacilityService } from '../../../service/FacilityService';
+import { TransferService } from '../../../service/TransferService';
 import { useDebouncedValue } from '../../../hooks/useDebouncedValue';
 
 const getDataArray = <T,>(response: unknown): T[] => {
@@ -40,6 +41,7 @@ const LandlordTenants = () => {
   const [tenants, setTenants] = useState<Tenant[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [pendingCount, setPendingCount] = useState(0);
+  const [pendingTransferCount, setPendingTransferCount] = useState(0);
 
   useEffect(() => {
     const fetchTenants = async () => {
@@ -59,16 +61,22 @@ const LandlordTenants = () => {
   useEffect(() => {
     let cancelled = false;
 
-    const fetchPendingApplications = async () => {
+    const fetchPendingReviews = async () => {
       try {
-        const response = await ApplicationService.getApplications({ limit: 50, status: 'pending' });
-        if (!cancelled) setPendingCount(getDataArray(response).length);
+        const [applicationsResponse, transfersResponse] = await Promise.all([
+          ApplicationService.getApplications({ limit: 50, status: 'pending' }),
+          TransferService.getManagedTransferRequests({ status: 'pending' }),
+        ]);
+        if (!cancelled) {
+          setPendingCount(getDataArray(applicationsResponse).length);
+          setPendingTransferCount(getDataArray(transfersResponse).length);
+        }
       } catch (error) {
-        console.error('Failed to fetch pending applications:', error);
+        console.error('Failed to fetch pending tenant reviews:', error);
       }
     };
 
-    void fetchPendingApplications();
+    void fetchPendingReviews();
     return () => {
       cancelled = true;
     };
@@ -105,6 +113,19 @@ const LandlordTenants = () => {
 
   const hasActiveListFilters =
     tenantFiltersActive(filters) || debouncedNameSearchQuery.trim().length > 0;
+  const pendingReviewCount = pendingCount + pendingTransferCount;
+  const pendingReviewMessage =
+    pendingTransferCount > 0 && pendingCount > 0
+      ? `You have ${pendingCount} pending application${
+          pendingCount === 1 ? '' : 's'
+        } and ${pendingTransferCount} Pasalo request${pendingTransferCount === 1 ? '' : 's'}.`
+      : pendingTransferCount > 0
+        ? `You have ${pendingTransferCount} pending Pasalo request${
+            pendingTransferCount === 1 ? '' : 's'
+          }.`
+        : pendingCount > 0
+          ? `You have ${pendingCount} pending application${pendingCount === 1 ? '' : 's'}.`
+          : 'You do not have pending applications or Pasalo requests.';
 
   return (
     <LandlordLayout activeSidebarItem="tenants" breadcrumbs={[{ label: 'My Tenants' }]}>
@@ -128,17 +149,15 @@ const LandlordTenants = () => {
               aria-hidden="true"
               className={[
                 "font-['Inter',sans-serif] text-[18px] font-bold leading-none",
-                pendingCount > 0 ? 'text-[#c29722]' : 'text-[#096c5b]',
+                pendingReviewCount > 0 ? 'text-[#c29722]' : 'text-[#096c5b]',
               ].join(' ')}
             >
               !
             </span>
             <span className="font-['Inter',sans-serif] text-[14px] font-bold whitespace-nowrap text-black dark:text-[#d7e0ef]">
-              {pendingCount > 0
-                ? 'You have pending applications.'
-                : 'You do not have pending applications.'}
+              {pendingReviewMessage}
             </span>
-            {pendingCount > 0 && (
+            {pendingReviewCount > 0 && (
               <Link
                 to="/landlord/tenants/unvalidated"
                 className="font-['Inter',sans-serif] text-[14px] font-bold whitespace-nowrap bg-linear-to-b from-[#c29722] to-[#f6b709] bg-clip-text text-transparent transition-opacity hover:opacity-80"
