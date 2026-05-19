@@ -48,10 +48,10 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser((id, done) => {
-  User.findOne({ _id: id, status: { $ne: 'disabled' } })
+  User.findById(id)
     .lean()
     .then((user) => {
-      if (!user) {
+      if (!user || user.status === 'disabled') {
         done('User not found');
       } else {
         done(null, user as Express.User);

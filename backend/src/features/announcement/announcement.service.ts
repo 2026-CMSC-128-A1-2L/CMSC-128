@@ -30,7 +30,7 @@ export const createAnnouncement = async (params: CreateAnnouncementParams) => {
 };
 
 export const getAnnouncements = async (userId: mongoose.Types.ObjectId, userType: string) => {
-  const roleFilter: { targetRole?: { $in: (string | null)[] } | null } = {};
+  const roleFilter: Record<string, unknown> = {};
 
   if (userType === 'Admin') {
     roleFilter.targetRole = null;
