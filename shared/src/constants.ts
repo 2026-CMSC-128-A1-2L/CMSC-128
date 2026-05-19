@@ -11,11 +11,11 @@ export const APPLICATION_STATUS = [
   'finalized',
 ] as const;
 export const MANAGER_PERMISSIONS = [
+  'deleteBuildings',
   'deleteListings',
-  'manageListings',
+  'manageBuildings',
   'manageBillings',
-  'manageBookings',
-  'manageApplications',
+  'acceptOcularVisits',
   'reportUsers',
 ] as const;
 export const USER_STATUS = [

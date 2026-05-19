@@ -82,8 +82,14 @@ const DmsPage: FunctionComponent<DmsPageProps> = ({ basePath }) => {
       setActiveConversation(id);
     } else {
       const notif = notifications.find((n) => n._id === id);
-      if (notif && notif.status === 'unread') {
-        readNotification(id);
+      if (notif) {
+        if (notif.status === 'unread') {
+          readNotification(id);
+        }
+        const inviteMatch = notif.content?.match(/\[INVITE:(.+?)\]/);
+        if (inviteMatch) {
+          navigate(`/direct-messages/dorm-invitation?token=${inviteMatch[1]}`, { replace: true });
+        }
       }
     }
   };
@@ -101,7 +107,7 @@ const DmsPage: FunctionComponent<DmsPageProps> = ({ basePath }) => {
   const sidebarNotifications = notifications.map((n) => ({
     id: n._id,
     title: n.subject,
-    body: n.content,
+    body: (n.content ?? '').replace(/^\[INVITE:.+?\]/, ''),
     time: new Date(n.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     icon: 'iconamoon:notification',
     unread: n.status === 'unread',

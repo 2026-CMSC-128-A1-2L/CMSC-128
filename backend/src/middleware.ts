@@ -129,10 +129,10 @@ const facilityManagerFilter =
     };
 
 export const deleteListingsFilter = facilityManagerFilter('deleteListings');
-export const manageListingsFilter = facilityManagerFilter('manageListings');
-export const manageApplicationsFilter = facilityManagerFilter('manageApplications');
+export const manageListingsFilter = facilityManagerFilter('manageBuildings');
+export const manageApplicationsFilter = facilityManagerFilter('manageBuildings');
 export const manageBillingsFilter = facilityManagerFilter('manageBillings');
-export const manageBookingsFilter = facilityManagerFilter('manageBookings');
+export const manageBookingsFilter = facilityManagerFilter('manageBuildings');
 export const reportUsersFilter = facilityManagerFilter('reportUsers');
 export const managerFilter = facilityManagerFilter(null);
 

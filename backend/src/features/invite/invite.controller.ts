@@ -1,6 +1,7 @@
 import type { RequestHandler } from 'express';
 import { CreateInviteManagerBodySchema } from 'shared';
 import { sendNotification } from '../notification/notification.service.js';
+import { User } from '../user/user.model.js';
 import {
   inviteManager,
   acceptInvite,
@@ -25,6 +26,16 @@ export const routeInviteManager: RequestHandler = async (req, res, _next) => {
   const landlordId = req.user._id;
   const { facilityId, email, permissions } = CreateInviteManagerBodySchema.parse(req.body);
   const invite = await inviteManager(landlordId, facilityId, email, permissions);
+
+  const manager = await User.findOne({ emails: email });
+  if (manager) {
+    await sendNotification(
+      manager._id,
+      'Manager Invitation',
+      `[INVITE:${invite.token}]You have been invited to manage a facility. Check your invites to accept or decline.`,
+    );
+  }
+
   res.status(201).json({ data: invite });
 };
 
