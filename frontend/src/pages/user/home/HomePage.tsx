@@ -357,19 +357,19 @@ const HomePage: FunctionComponent = () => {
   // Apply filter criteria to backend data
   // TODO: extend with rating, distance, and tags once available in DormCardData
   const filterApplied = facilities.filter((dorm) => {
-  const priceOk =
-    dorm.price.min >= filterCriteria.minPrice &&
-    dorm.price.max <= filterCriteria.maxPrice;
+    const priceOk =
+      dorm.price.min >= filterCriteria.minPrice &&
+      dorm.price.max <= filterCriteria.maxPrice;
 
-  const distanceOk = dorm.coordinates
-    ? haversineKm(
+    const distanceOk = dorm.coordinates
+      ? haversineKm(
         UPLB.lat, UPLB.lng,
         dorm.coordinates.lat, dorm.coordinates.long,
       ) <= filterCriteria.distance
-    : true; // gracefully exclude-less if coords are missing
+      : true; // gracefully exclude-less if coords are missing
 
-  return priceOk && distanceOk;
-});
+    return priceOk && distanceOk;
+  });
   const [pasaloDorms, setPasaloDorms] = useState<DormCardData[]>([]);
 
   useEffect(() => {
@@ -388,24 +388,20 @@ const HomePage: FunctionComponent = () => {
 
   // Apply filter criteria to backend data
   // TODO: extend with rating, distance, and tags once available in DormCardData
-  const filterApplied = facilities.filter(
-    (dorm) =>
-      dorm.price.min >= filterCriteria.minPrice &&
-      dorm.price.max <= filterCriteria.maxPrice,
-  );
+
 
   const trimmedSearchTerm = searchTerm.trim();
   const trimmedDebouncedSearchTerm = debouncedSearchTerm.trim();
   const isSearchDebouncing = trimmedSearchTerm !== trimmedDebouncedSearchTerm;
   const matchingSearchResults = trimmedDebouncedSearchTerm
     ? facilities
-        .filter((dorm) => {
-          const roomTypes = dorm.room_types.map((room) => room.pax).join(" ");
-          return `${dorm.name} ${dorm.location} ${roomTypes}`
-            .toLowerCase()
-            .includes(trimmedDebouncedSearchTerm.toLowerCase());
-        })
-        .slice(0, 6)
+      .filter((dorm) => {
+        const roomTypes = dorm.room_types.map((room) => room.pax).join(" ");
+        return `${dorm.name} ${dorm.location} ${roomTypes}`
+          .toLowerCase()
+          .includes(trimmedDebouncedSearchTerm.toLowerCase());
+      })
+      .slice(0, 6)
     : [];
 
   // Category slices — swap for real filtered endpoints later
