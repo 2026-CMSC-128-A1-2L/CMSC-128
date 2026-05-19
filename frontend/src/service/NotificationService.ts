@@ -1,6 +1,10 @@
 import type z from 'zod';
-import type { GetNotificationQuerySchema } from 'shared';
-import type { GetNotificationsResponse } from '../interface/notification';
+import type {
+  GetNotificationQuerySchema,
+  GetNotificationsResponseBodySchema,
+  SendAnnouncementSchema,
+} from 'shared';
+import type { GetNotificationsResponse, AnnouncementResponse } from '../interface/notification';
 import { api } from './axiosInstance';
 
 export const NotificationService = {
@@ -34,6 +38,36 @@ export const NotificationService = {
       return response.data;
     } catch (error) {
       console.error('Failed to mark notification as read:', error);
+      throw error;
+    }
+  },
+
+  async sendAnnouncement(data: z.infer<typeof SendAnnouncementSchema>) {
+    try {
+      const response = await api.post('/api/announcements', data);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to send announcement:', error);
+      throw error;
+    }
+  },
+
+  async getAnnouncements(): Promise<{ data: AnnouncementResponse[] }> {
+    try {
+      const response = await api.get<{ data: AnnouncementResponse[] }>('/api/announcements');
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch announcements:', error);
+      throw error;
+    }
+  },
+
+  async readAnnouncement(announcementId: string) {
+    try {
+      const response = await api.post(`/api/announcements/${announcementId}/read`, {});
+      return response.data;
+    } catch (error) {
+      console.error('Failed to mark announcement as read:', error);
       throw error;
     }
   },

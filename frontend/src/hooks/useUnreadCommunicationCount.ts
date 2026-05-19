@@ -39,9 +39,11 @@ export const useUnreadCommunicationCount = () => {
   if (!userId) return 0;
 
   const unreadMessages = conversations.filter((conversation) => !conversation.readAt).length;
-  const unreadNotifications = notifications.filter(
-    (notification) => notification.status === 'unread',
-  ).length;
+  const unreadNotificationIds = new Set(
+    notifications
+      .filter((notification) => notification.status === 'unread')
+      .map((notification) => notification._id),
+  );
 
-  return unreadMessages + unreadNotifications;
+  return unreadMessages + unreadNotificationIds.size;
 };
