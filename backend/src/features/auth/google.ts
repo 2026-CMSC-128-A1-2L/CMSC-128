@@ -17,7 +17,10 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: '/api/auth/google/callback',
+      callbackURL: process.env.BACKEND_URL
+        ? `${process.env.BACKEND_URL.replace(/\/$/, '')}/api/auth/google/callback`
+        : '/api/auth/google/callback',
+      proxy: true,
     },
     (accessToken, refreshToken, profile, done) => {
       if (!profile.emails || profile.emails.length === 0 || !profile.name) {
