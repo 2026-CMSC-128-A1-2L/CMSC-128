@@ -224,6 +224,9 @@ const LandlordTenants = () => {
       </div>
       <RemoveTenantPopup
         targetName={removeTarget?.displayName ?? null}
+        targetId={removeTarget?.id}
+        targetEmail={removeTarget?.email ?? undefined}
+        targetFacility={removeTarget?.dormName ?? undefined}
         isOpen={Boolean(removeTarget)}
         onClose={() => setRemoveTarget(null)}
       />

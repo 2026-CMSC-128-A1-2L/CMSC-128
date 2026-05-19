@@ -16,7 +16,8 @@ export type SideBarAdminItemKey =
   | 'listings'
   | 'analytics'
   | 'messages'
-  | 'announce';
+  | 'announce'
+  | 'removalRequests';
 
 type AdminInfo = {
   name: string;
@@ -69,6 +70,12 @@ const navItems: Array<{
     label: 'Listings',
     iconName: 'roentgen:apartments-4-story',
     route: '/admin/listings',
+  },
+  {
+    key: 'removalRequests',
+    label: 'Removals',
+    iconName: 'solar:user-cross-bold',
+    route: '/admin/removal-requests',
   },
   {
     key: 'analytics',

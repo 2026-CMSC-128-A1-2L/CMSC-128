@@ -4,6 +4,7 @@ import Announcement from '../pages/admin/announcement';
 import Applications from '../pages/admin/applications';
 import Listings from '../pages/admin/listings';
 import Messages from '../pages/admin/messages';
+import RemovalRequests from '../pages/admin/removalRequests';
 import { Route } from 'react-router-dom';
 
 const adminRoutes = [
@@ -13,6 +14,7 @@ const adminRoutes = [
   <Route key="applications" path="/admin/applications" element={<Applications />} />,
   <Route key="listings" path="/admin/listings" element={<Listings />} />,
   <Route key="messages" path="/admin/messages" element={<Messages />} />,
+  <Route key="removalRequests" path="/admin/removal-requests" element={<RemovalRequests />} />,
 ];
 
 export default adminRoutes;
