@@ -197,19 +197,19 @@ const UserVerif: FunctionComponent<UserVerifProps> = ({ verificationStep, onStep
       <TutorialBubble show={showHelp} onClose={() => setShowHelp(false)} />
 
       {isLoading && (
-        <div className="self-stretch px-num-32 text-left text-sm font-semibold text-slategray">
+        <div className="self-stretch px-num-32 text-left text-sm font-semibold text-slategray dark:text-[#a4acba]">
           Loading verification status...
         </div>
       )}
 
       {error && (
-        <div className="mx-num-32 rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-left text-sm font-semibold text-red-700">
+        <div className="mx-num-32 rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-left text-sm font-semibold text-red-700 dark:border-[#532626] dark:bg-[#1d1010] dark:text-[#e44f4f]">
           {error}
         </div>
       )}
 
       {successMessage && (
-        <div className="mx-num-32 rounded-xl border border-emerald-100 bg-emerald-50 px-4 py-3 text-left text-sm font-semibold text-emerald-700">
+        <div className="mx-num-32 rounded-xl border border-emerald-100 bg-emerald-50 px-4 py-3 text-left text-sm font-semibold text-emerald-700 dark:border-[#1f5145] dark:bg-[#10201d] dark:text-[#5dc2a8]">
           {successMessage}
         </div>
       )}
@@ -235,7 +235,7 @@ const UserVerif: FunctionComponent<UserVerifProps> = ({ verificationStep, onStep
       {/* ======= FLOATING ICON FOR TUTORIAL ======= */}
       <button
         type="button"
-        className="help-button-animated bottom-10 right-10 z-1000 cursor-pointer transition-all hover:scale-110 active:scale-95"
+        className="help-button-animated z-1000 cursor-pointer transition-all hover:scale-110 active:scale-95"
         onClick={() => setShowHelp(!showHelp)}
       >
         <img src={TutorialIcon} alt="Help" className="w-16 h-16 drop-shadow-lg" />

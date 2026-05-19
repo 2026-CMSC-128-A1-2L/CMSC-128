@@ -41,7 +41,7 @@ const ReportOption = ({
             checked ? 'bg-[#096c5b] text-white' : 'bg-[#f2f2f2] text-transparent',
           ].join(' ')}
         >
-          <Icon icon="material-symbols:check-rounded" className="h-[18px] w-[18px]" />
+          <Icon icon="material-symbols:check-rounded" className="h-[18px] w-[18px] cursor-pointer" />
         </button>
       </div>
 

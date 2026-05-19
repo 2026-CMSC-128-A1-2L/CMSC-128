@@ -45,7 +45,7 @@ const ApproveDocumentPopup = ({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-[12px] px-[24px] py-[8px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#ef4444] transition-opacity hover:opacity-80"
+            className="rounded-[12px] px-[24px] py-[8px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#ef4444] transition-opacity hover:opacity-80 cursor-pointer"
           >
             Cancel
           </button>
@@ -55,7 +55,7 @@ const ApproveDocumentPopup = ({
               onConfirm();
               onClose();
             }}
-            className="rounded-[12px] bg-[#cbf6ed] px-[24px] py-[8px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] transition-opacity hover:opacity-80"
+            className="rounded-[12px] bg-[#cbf6ed] px-[24px] py-[8px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] transition-opacity hover:opacity-80 cursor-pointer"
           >
             Confirm approval
           </button>

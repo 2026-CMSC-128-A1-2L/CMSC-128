@@ -44,14 +44,14 @@ const LandlordManagerRemoveConfirm: FunctionComponent<Props> = ({
           <button
             type="button"
             onClick={onCancel}
-            className="rounded-[12px] px-[24px] py-[12px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#666] transition-opacity hover:opacity-70"
+            className="rounded-[12px] px-[24px] py-[12px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#666] transition-opacity hover:opacity-70 cursor-pointer"
           >
             Cancel
           </button>
           <button
             type="button"
             onClick={onConfirm}
-            className="rounded-[12px] bg-[#fef2f2] px-[24px] py-[12px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#dc2626] transition-opacity hover:opacity-80"
+            className="rounded-[12px] bg-[#fef2f2] px-[24px] py-[12px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#dc2626] transition-opacity hover:opacity-80 cursor-pointer"
           >
             Remove
           </button>

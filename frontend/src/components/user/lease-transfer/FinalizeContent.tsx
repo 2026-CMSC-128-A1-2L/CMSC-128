@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, type Dispatch, type SetStateAction } from 'react';
 import { useNavigate } from 'react-router-dom';
 import InfoIcon from '../../../../assets/infoicon_icon.svg';
 import FinalizeDisplayLines from './FinalizeDisplayLines';
@@ -9,7 +9,7 @@ import ConfirmTransfer2 from '../Profile/ConfirmTransfer2';
 // 1. Updated the interface to accept the state payloads from previous steps
 interface FinalizeContentProps {
   leaseTransferStages: number;
-  setLeaseTransferStages: any;
+  setLeaseTransferStages: Dispatch<SetStateAction<number>>;
   DormitoryName: string;
   RoomNumber: string;
   formData: {
@@ -22,6 +22,9 @@ interface FinalizeContentProps {
     depositHandling: string;
     advanceRentStatus: string;
   };
+  isSubmitting?: boolean;
+  submitError?: string;
+  onSubmit?: () => Promise<boolean>;
 }
 
 export default function FinalizeContent(props: FinalizeContentProps) {
@@ -31,7 +34,10 @@ export default function FinalizeContent(props: FinalizeContentProps) {
     DormitoryName, 
     RoomNumber,
     formData,
-    financialsDocsData 
+    financialsDocsData,
+    isSubmitting = false,
+    submitError = '',
+    onSubmit,
   } = props;
   
   const Property = `${DormitoryName} - ${RoomNumber}`;
@@ -39,9 +45,13 @@ export default function FinalizeContent(props: FinalizeContentProps) {
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [showSuccessPopup2, setShowSuccessPopup2] = useState(false);
 
-  const onUserProfileTextClick = useCallback(() => {
+  const onUserProfileTextClick = useCallback(async () => {
+    if (onSubmit) {
+      const didSubmit = await onSubmit();
+      if (!didSubmit) return;
+    }
     setShowSuccessPopup(true);
-  }, []);
+  }, [onSubmit]);
 
   const closePopup = () => {
     setShowSuccessPopup(false);
@@ -163,11 +173,17 @@ export default function FinalizeContent(props: FinalizeContentProps) {
                 }}
                 noBorder={true}
               />
+              {submitError && (
+                <p className="mt-3 text-center text-[12px] font-bold text-red-500">
+                  {submitError}
+                </p>
+              )}
             </div>
           </div>
         </div>
         <div className="flex gap-10 font-inter font-bold py-20 justify-center">
           <button
+            type="button"
             className="px-4 py-1 cursor-pointer text-crimson rounded-full hover:bg-red-50 transition-colors"
             onClick={() => {
               setLeaseTransferStages(leaseTransferStages - 1);
@@ -176,13 +192,14 @@ export default function FinalizeContent(props: FinalizeContentProps) {
             Go Back
           </button>
           <button
+            type="button"
             className={`px-4 py-1 rounded-full bg-[#f1f5f9] transition-all
-              ${isAgreed ? 'text-[#096c5b] hover:bg-[#e2e8f0] cursor-pointer' : 'text-[#cfcfcf] cursor-not-allowed'}
+              ${isAgreed && !isSubmitting ? 'text-[#096c5b] hover:bg-[#e2e8f0] cursor-pointer' : 'text-[#cfcfcf] cursor-not-allowed'}
             `}
             onClick={onUserProfileTextClick}
-            disabled={!isAgreed}
+            disabled={!isAgreed || isSubmitting}
           >
-            Finalize
+            {isSubmitting ? 'Submitting...' : 'Finalize'}
           </button>
         </div>
       </div>

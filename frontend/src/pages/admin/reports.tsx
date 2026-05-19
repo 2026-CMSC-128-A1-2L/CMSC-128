@@ -2,10 +2,13 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Icon } from '@iconify/react';
 import SideBarAdmin from '../../components/admin/SideBarAdmin';
 import AdminPageTransition from '../../components/admin/AdminPageTransition';
-import PageBackground from '../../components/general/PageBackground';
 import AdminPagination from '../../components/admin/AdminPagination';
 import ReportDetailModal from '../../components/admin/ReportDetailModal';
+import AdminFilterBar from '../../components/admin/AdminFilterBar';
+import PageBackground from '../../components/general/PageBackground';
 import { ReportService } from '../../service/ReportService';
+import { useDebouncedValue } from '../../hooks/useDebouncedValue';
+import { motion, AnimatePresence } from 'framer-motion';
 
 type ReportUser = {
   _id: string;
@@ -25,6 +28,7 @@ type ReportData = {
   listingId?: string;
   facilityId?: string;
   userReported?: string | ReportUser;
+  reporterFacility?: string | null;
   createdAt?: string;
   updatedAt?: string;
 };
@@ -66,6 +70,7 @@ function Reports() {
   const [reports, setReports] = useState<ReportData[]>([]);
   const [selectedReportId, setSelectedReportId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const debouncedSearchQuery = useDebouncedValue(searchQuery, 300);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [actionMessage, setActionMessage] = useState<string | null>(null);
@@ -73,19 +78,39 @@ function Reports() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const itemsPerPage = 10;
 
+  const [reportTypeFilter, setReportTypeFilter] = useState<string[]>([]);
+  const [reportStatusFilter, setReportStatusFilter] = useState<string[]>([]);
+
   const selectedReport = reports.find((r) => r._id === selectedReportId) ?? null;
 
   const filteredReports = useMemo(() => {
-    const q = searchQuery.trim().toLowerCase();
-    if (!q) return reports;
-    return reports.filter((r) =>
-      [getReporterName(r.userId), r.description, getReportType(r), r.status]
-        .filter(Boolean)
-        .join(' ')
-        .toLowerCase()
-        .includes(q),
-    );
-  }, [reports, searchQuery]);
+    let result = reports;
+
+    if (reportTypeFilter.length > 0) {
+      result = result.filter((r) => reportTypeFilter.includes(getReportType(r).toLowerCase()));
+    }
+
+    if (reportStatusFilter.length > 0) {
+      result = result.filter((r) => reportStatusFilter.includes(r.status));
+    }
+
+    const q = debouncedSearchQuery.trim().toLowerCase();
+    if (q) {
+      result = result.filter((r) =>
+        [getReporterName(r.userId), r.description, getReportType(r), r.status]
+          .filter(Boolean)
+          .join(' ')
+          .toLowerCase()
+          .includes(q),
+      );
+    }
+
+    return result;
+  }, [reports, debouncedSearchQuery, reportTypeFilter, reportStatusFilter]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [debouncedSearchQuery]);
 
   const totalPages = Math.ceil(filteredReports.length / itemsPerPage);
   const paginatedReports = useMemo(() => {
@@ -144,25 +169,56 @@ function Reports() {
               Dashboard
             </h1>
             <div className="mt-6 rounded-xl bg-white dark:bg-[#141515] p-6 shadow-sm border border-transparent dark:border-[#303331]">
-              <div className="mb-4 flex items-center justify-between">
+              <div className="mb-4 flex items-center justify-between flex-wrap gap-3">
                 <h2 className="font-['Poppins'] text-[36px] font-bold text-[#001d18] dark:text-[#d7e0ef] drop-shadow-[0px_4px_4px_rgba(0,0,0,0.1)]">
                   Reports
                 </h2>
-                <div className="flex h-9 w-75.75 items-center gap-2 rounded-full border border-[#d0d0d0] dark:border-[#303331] bg-white dark:bg-[#1f2022] px-4">
-                  <Icon
-                    icon="solar:magnifer-outline"
-                    className="h-4 w-4 text-[#7c8db5] dark:text-[#a4acba]"
+                <div className="flex items-center gap-3">
+                  <AdminFilterBar
+                    groups={[
+                      {
+                        id: 'reportType',
+                        label: 'Type',
+                        options: [
+                          { key: 'listing', label: 'Listing' },
+                          { key: 'user', label: 'User' },
+                          { key: 'general', label: 'General' },
+                        ],
+                        selected: reportTypeFilter,
+                        onChange: (keys) => {
+                          setReportTypeFilter(keys);
+                          setCurrentPage(1);
+                        },
+                      },
+                      {
+                        id: 'reportStatus',
+                        label: 'Status',
+                        options: [
+                          { key: 'pending', label: 'Pending' },
+                          { key: 'resolved', label: 'Resolved' },
+                          { key: 'dismissed', label: 'Dismissed' },
+                        ],
+                        selected: reportStatusFilter,
+                        onChange: (keys) => {
+                          setReportStatusFilter(keys);
+                          setCurrentPage(1);
+                        },
+                      },
+                    ]}
                   />
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => {
-                      setSearchQuery(e.target.value);
-                      setCurrentPage(1);
-                    }}
-                    placeholder="Search"
-                    className="flex-1 bg-transparent font-['Poppins'] text-sm text-black dark:text-[#d7e0ef] outline-none placeholder:text-[#7c8db5] dark:placeholder:text-[#a4acba]"
-                  />
+                  <div className="flex h-9 w-60 items-center gap-2 rounded-full border border-[#d0d0d0] dark:border-[#303331] bg-white dark:bg-[#1f2022] px-4 focus-within:border-[#024338] focus-within:ring-2 focus-within:ring-[#024338]/20 transition-all duration-200">
+                    <Icon
+                      icon="solar:magnifer-outline"
+                      className="h-4 w-4 text-[#7c8db5] dark:text-[#a4acba]"
+                    />
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Search"
+                      className="flex-1 bg-transparent font-['Poppins'] text-sm text-black dark:text-[#d7e0ef] outline-none placeholder:text-[#7c8db5] dark:placeholder:text-[#a4acba]"
+                    />
+                  </div>
                 </div>
               </div>
 
@@ -211,36 +267,47 @@ function Reports() {
                         </td>
                       </tr>
                     ) : (
-                      paginatedReports.map((report) => (
-                        <tr
-                          key={report._id}
-                          className="border-b border-[#f0f0f0] dark:border-[#303331] bg-white dark:bg-[#141515] transition-colors duration-200 hover:bg-[#f8fffe] dark:hover:bg-[#17201d]"
-                        >
-                          <td className="px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black dark:text-[#d7e0ef]">
-                            {getReporterName(report.userId)}
-                          </td>
-                          <td className="max-w-xs truncate px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black dark:text-[#d7e0ef]">
-                            {report.description.replace(/\[.*?\]\s*/, '').slice(0, 60)}...
-                          </td>
-                          <td className="px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black dark:text-[#d7e0ef]">
-                            {getReportType(report)}
-                          </td>
-                          <td className="px-6 py-3">{getStatusBadge(report.status)}</td>
-                          <td className="px-6 py-3">
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setSelectedReportId(report._id);
-                                setActionMessage(null);
-                                setIsModalOpen(true);
-                              }}
-                              className="cursor-pointer rounded-lg bg-[#024338] px-5 py-2 font-['Poppins'] text-[16px] font-bold text-white transition-colors duration-200 hover:bg-[#096c5b]"
-                            >
-                              View
-                            </button>
-                          </td>
-                        </tr>
-                      ))
+                      <AnimatePresence>
+                        {paginatedReports.map((report, index) => (
+                          <motion.tr
+                            key={report._id}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{
+                              opacity: 1,
+                              y: 0,
+                              transition: { delay: index * 0.05 },
+                            }}
+                            exit={{ opacity: 0, y: -20 }}
+                            className="border-b border-[#f0f0f0] dark:border-[#303331] bg-white dark:bg-[#141515] transition-colors duration-200 hover:bg-[#f8fffe] dark:hover:bg-[#17201d]"
+                          >
+                            <td className="px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black dark:text-[#d7e0ef]">
+                              {getReporterName(report.userId)}
+                            </td>
+                            <td className="max-w-xs truncate px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black dark:text-[#d7e0ef]">
+                              {report.description.replace(/\[.*?\]\s*/, '').slice(0, 60)}...
+                            </td>
+                            <td className="px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black dark:text-[#d7e0ef]">
+                              {getReportType(report)}
+                            </td>
+                            <td className="px-6 py-3">{getStatusBadge(report.status)}</td>
+                            <td className="px-6 py-3">
+                              <motion.button
+                                type="button"
+                                onClick={() => {
+                                  setSelectedReportId(report._id);
+                                  setActionMessage(null);
+                                  setIsModalOpen(true);
+                                }}
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                className="cursor-pointer rounded-lg bg-[#024338] px-5 py-2 font-['Poppins'] text-[16px] font-bold text-white transition-colors duration-200 hover:bg-[#096c5b]"
+                              >
+                                View
+                              </motion.button>
+                            </td>
+                          </motion.tr>
+                        ))}
+                      </AnimatePresence>
                     )}
                   </tbody>
                 </table>

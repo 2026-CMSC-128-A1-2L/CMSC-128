@@ -18,6 +18,7 @@ export type ApplicationType = {
   message?: string | null;
   documents: DocumentType[];
   unitId?: mongoose.Types.ObjectId | null;
+  isPasalo?: boolean;
 };
 
 const applicationFormSchema = new mongoose.Schema<ApplicationType>(
@@ -41,6 +42,7 @@ const applicationFormSchema = new mongoose.Schema<ApplicationType>(
 
     // Room the student is assigned to
     unitId: { type: mongoose.Schema.Types.ObjectId, ref: 'Unit' },
+    isPasalo: { type: Boolean, default: false },
   },
   { timestamps: true },
 );

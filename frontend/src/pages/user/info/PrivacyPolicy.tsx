@@ -148,7 +148,7 @@ const PrivacyPolicy: FunctionComponent = () => {
   }, []);
 
   return (
-    <div className="privacy-policy-shell relative min-h-screen overflow-x-hidden bg-white font-inter text-black dark:bg-[#0f1010] dark:text-[#edf6f4]">
+    <div className="privacy-policy-shell relative min-h-screen overflow-x-hidden bg-transparent font-inter text-black dark:text-[#edf6f4]">
       <PageBackground />
 
       <div className="relative z-10 flex min-h-screen">
@@ -175,7 +175,7 @@ const PrivacyPolicy: FunctionComponent = () => {
                 <button
                   type="button"
                   onClick={() => navigate(-1)}
-                  className="flex items-center gap-2 text-num-14 font-extrabold text-darkslategray-200 transition-colors hover:text-teal-200 dark:text-[#edf6f4] dark:hover:text-[#72cbb8]"
+                  className="flex items-center gap-2 text-num-14 font-extrabold text-darkslategray-200 transition-colors hover:text-teal-200 dark:text-[#edf6f4] dark:hover:text-[#72cbb8] cursor-pointer"
                 >
                   <Icon icon="material-symbols:arrow-back-rounded" className="h-5 w-5" />
                   Back
@@ -559,7 +559,7 @@ const PrivacyPolicy: FunctionComponent = () => {
                           activeSectionId === section.id
                             ? 'border-teal-200 text-teal-200 dark:border-[#72cbb8] dark:text-[#72cbb8]'
                             : 'border-transparent hover:text-teal-200 dark:hover:text-[#72cbb8]'
-                        }`}
+                        } cursor-pointer`}
                       >
                         {section.title}
                       </button>
@@ -584,7 +584,7 @@ const PrivacyPolicy: FunctionComponent = () => {
         type="button"
         onClick={scrollToTop}
         aria-label="Scroll to top"
-        className="fixed bottom-10 right-10 z-20 flex h-14 w-14 items-center justify-center rounded-full bg-teal-200 text-white shadow-lg hover:-translate-y-1 hover:bg-darkslategray-200 dark:bg-[#2f9b86] dark:hover:bg-[#155444]"
+        className="fixed bottom-10 right-10 z-20 flex h-14 w-14 items-center justify-center rounded-full bg-teal-200 text-white shadow-lg hover:-translate-y-1 hover:bg-darkslategray-200 dark:bg-[#2f9b86] dark:hover:bg-[#155444] cursor-pointer"
         style={{
           transition: 'opacity 0.25s ease, transform 0.25s ease, background-color 0.2s',
           opacity: showScrollTop ? 1 : 0,

@@ -42,7 +42,7 @@ const OverviewTab: FunctionComponent<OverviewTabProps> = ({ overview, monthlyInc
   }
 
   return (
-    <div className="flex flex-col items-start gap-5 text-left text-[18px] text-gray font-inter w-full">
+    <div className="flex flex-col items-start gap-5 text-left text-[18px] text-gray font-inter w-full dark:text-[#d7e0ef]">
       <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[15px]">
         {statCards.map((card) => (
           <StatCard key={card.label} {...card} />

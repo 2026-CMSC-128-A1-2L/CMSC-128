@@ -10,6 +10,7 @@ import LandingFAQ from '../components/general/LandingFAQ';
 import { Icon } from '@iconify/react';
 import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useAuthStore } from '../store/useAuthStore';
 
 // uses IntersectionObserver API
 function useScrollReveal(threshold = 0.15) {
@@ -45,6 +46,7 @@ const reveal = (visible: boolean, extra = '') =>
   `transition-all duration-700 ease-out ${extra} ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`;
 
 const UserLanding: FunctionComponent = () => {
+  const user = useAuthStore((state) => state.user);
   const [showSignIn, setShowSignIn] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
 
@@ -113,7 +115,15 @@ const UserLanding: FunctionComponent = () => {
   }, []);
 
   const scrollToTop = () => topRef.current?.scrollIntoView({ behavior: 'smooth' });
-  const scrollToWhatIs = () => whatIsAtlasRef.current?.scrollIntoView({ behavior: 'smooth' });
+  const userDisplayName = user ? [user.firstName, user.lastName].filter(Boolean).join(' ') : '';
+  const usesLandlordDashboard = user?.userType === 'Landlord' || user?.userType === 'Manager';
+  const listingsDestination = usesLandlordDashboard ? '/landlord/dashboard' : '/home';
+  const listingsLabel = usesLandlordDashboard ? 'Go to Dashboard' : 'See All Listings';
+  const signedInDestination = usesLandlordDashboard
+    ? '/landlord-homepage'
+    : user?.userType === 'Admin'
+      ? '/admin/applications'
+      : '/profile-switcher';
 
   return (
     <div
@@ -131,15 +141,15 @@ const UserLanding: FunctionComponent = () => {
               </div>
               <div className="self-stretch flex items-center gap-12 text-center text-teal-200">
                 <div className="self-stretch flex items-center justify-center py-0 px-1">
-                  <b className="h-[35px] w-[141.6px] relative tracking-num--0_01 flex items-center justify-center shrink-0">
-                    <Link to="/home">See All Listings</Link>
+                  <b className="h-[35px] w-fit relative tracking-num--0_01 flex items-center justify-center shrink-0">
+                    <Link to={listingsDestination}>{listingsLabel}</Link>
                   </b>
                 </div>
                 <div className="self-stretch flex items-center justify-center py-0 px-1">
                   <b className="h-[35px] w-[76px] relative tracking-num--0_01 flex items-center justify-center shrink-0">
-                    <button type="button" onClick={scrollToWhatIs} className="cursor-pointer">
+                    <Link to="/about" className="cursor-pointer">
                       About
-                    </button>
+                    </Link>
                   </b>
                 </div>
                 <div className="self-stretch flex items-center justify-center py-0 px-1 pr-16">
@@ -148,12 +158,21 @@ const UserLanding: FunctionComponent = () => {
                   </Link>
                 </div>
               </div>
-              <button type="button" onClick={() => setShowSignIn(true)}>
-                <div className="rounded-[45px] [background:linear-gradient(99.18deg,#5dc2a8_27.88%,#0c8873_88.15%)] flex items-center justify-center py-3 px-4 gap-1 text-white cursor-pointer">
-                  Sign In
-                  <Icon icon="si:arrow-right-duotone" className="w-7 h-7 relative" />
-                </div>
-              </button>
+              {user ? (
+                <Link to={signedInDestination}>
+                  <div className="rounded-[45px] [background:linear-gradient(99.18deg,#5dc2a8_27.88%,#0c8873_88.15%)] flex items-center justify-center py-3 px-4 gap-1 text-white cursor-pointer">
+                    {userDisplayName || 'My Account'}
+                    <Icon icon="si:arrow-right-duotone" className="w-7 h-7 relative" />
+                  </div>
+                </Link>
+              ) : (
+                <button type="button" onClick={() => setShowSignIn(true)}>
+                  <div className="rounded-[45px] [background:linear-gradient(99.18deg,#5dc2a8_27.88%,#0c8873_88.15%)] flex items-center justify-center py-3 px-4 gap-1 text-white cursor-pointer">
+                    Sign In
+                    <Icon icon="si:arrow-right-duotone" className="w-7 h-7 relative" />
+                  </div>
+                </button>
+              )}
               {showSignIn && <SignInPopUp onClose={() => setShowSignIn(false)} />}
             </div>
           </div>
@@ -182,10 +201,12 @@ const UserLanding: FunctionComponent = () => {
                 <b className="relative tracking-num--0_01 text-white">Hassle-Free</b>
               </div>
               <div className="self-stretch flex flex-col items-end py-16 px-0 z-4 shrink-0 text-[160px] font-buhun-retro-two-free">
-                <div className="w-[577px] relative tracking-[0.04em] text-transparent bg-clip-text! [background:linear-gradient(180deg,#5dc2a8_27.88%,#0c8873_84.13%)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] flex items-center justify-center">
+                <div
+                  className="w-[577px] relative tracking-[0.04em] text-transparent bg-clip-text! [background:linear-gradient(180deg,#5dc2a8_27.88%,#0c8873_84.13%)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] flex items-center justify-center"
+                  style={{ fontFamily: 'MyFont, sans-serif' }}
+                >
                   ATLAS
-                </div>
-                <div className="relative text-[40px] font-semibold font-lora text-transparent bg-clip-text! [background:linear-gradient(180deg,#5dc2a8_27.88%,#0c8873_84.13%)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] text-right">
+                </div>                <div className="relative text-[40px] font-semibold font-lora text-transparent bg-clip-text! [background:linear-gradient(180deg,#5dc2a8_27.88%,#0c8873_84.13%)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] text-right">
                   Accommodation Tracking <br />
                   and Lodging Allocation System
                 </div>
@@ -204,7 +225,7 @@ const UserLanding: FunctionComponent = () => {
             <div ref={whatIsAtlasRef} />
             <div
               ref={whatIsReveal.ref}
-              className={`self-stretch bg-white flex items-center py-16 px-20 gap-3 ${reveal(whatIsReveal.isVisible)}`}
+              className={`self-stretch bg-white flex items-center py-16 px-20 gap-3 ${reveal(whatIsReveal.isVisible)} cursor-pointer`}
             >
               <div className="flex-1 flex flex-col items-start gap-3">
                 <b className="self-stretch relative">What is ATLAS?</b>
@@ -487,7 +508,7 @@ const UserLanding: FunctionComponent = () => {
                         >
                           <Icon
                             icon="lucide:plus"
-                            className={`h-[26px] w-[26px] transition-transform duration-300 ${isOpen ? 'rotate-45 text-teal-200' : ''}`}
+                            className={`h-[26px] w-[26px] transition-transform duration-300 ${isOpen ? 'rotate-45 text-teal-200' : ''} cursor-pointer`}
                           />
                         </button>
                       </div>
@@ -511,27 +532,13 @@ const UserLanding: FunctionComponent = () => {
 
         <div className="w-screen h-[150px] relative shrink-0 z-2 text-num-12 text-teal-100 font-poppins bg-[#001D18]">
           <img className="absolute top-0 left-0 w-screen h-[150px]" alt="" />
-          <div className="absolute top-0 left-[8.89px] w-[1420.2px] h-[150px] flex items-center justify-center gap-[146px]">
-            {/* <img className="w-[218.4px] relative max-h-full object-cover" alt="" src={atlas_text} /> */}
-            <div className="w-[127.9px] flex flex-col items-start">
-              <b className="self-stretch h-[25.3px] relative text-[16px] flex text-white items-center shrink-0">
-                PLATFORM
-              </b>
-              <div className="self-stretch h-num-28.4 relative flex items-center shrink-0 mt-[-4px]">
-                <Link to="/home">Browse Dorms</Link>
-              </div>
-              <div className="self-stretch h-num-28.4 relative flex items-center shrink-0 mt-[-4px]">
-                <Link to="/">How it works</Link>
-              </div>
-            </div>
+          <div className="absolute inset-0 w-full h-full flex items-center justify-start px-6 sm:px-12 md:px-24 lg:px-80 gap-x-12 sm:gap-x-20">
             <div className="flex flex-col items-start">
               <b className="w-[127.9px] h-[25.3px] relative text-[16px] flex text-white items-center shrink-0">
                 SUPPORT
               </b>
               <div className="w-[108.9px] h-num-28.4 relative flex items-center shrink-0 mt-[-4px]">
-                <button type="button" onClick={scrollToWhatIs} className="cursor-pointer">
-                  About
-                </button>
+                <Link to="/about">About</Link>
               </div>
               <div className="w-[108.9px] h-num-28.4 relative flex items-center shrink-0 mt-[-4px]">
                 <Link to="/contact-us">Contact us</Link>
@@ -556,10 +563,10 @@ const UserLanding: FunctionComponent = () => {
       <button
         type="button"
         onClick={scrollToTop}
-        className={`fixed bottom-8 right-8 z-50 bg-[#0c8873] text-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg transition-all duration-300 hover:scale-110 ${showScrollTop ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}
+        className={`fixed bottom-8 right-8 z-50 bg-[#0c8873] text-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg transition-all duration-300 hover:scale-110 ${showScrollTop ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'} cursor-pointer`}
         aria-label="Scroll to top"
       >
-        <Icon icon="lucide:arrow-up" className="w-5 h-5" />
+        <Icon icon="lucide:arrow-up" className="w-5 h-5 cursor-pointer" />
       </button>
     </div>
   );

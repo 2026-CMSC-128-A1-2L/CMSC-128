@@ -83,7 +83,7 @@ const ChatDetail: FunctionComponent<ChatDetailProps> = ({
               placeholder="Aa"
               className="flex-1 bg-transparent border-none outline-none px-6 py-2 text-num-14 font-medium text-darkslategray dark:text-[#edf6f4]"
             />
-            <button className="w-10 h-10 rounded-full bg-teal/10 flex items-center justify-center text-teal hover:bg-teal hover:text-white transition-all">
+            <button className="w-10 h-10 rounded-full bg-teal/10 flex items-center justify-center text-teal hover:bg-teal hover:text-white transition-all cursor-pointer">
               <svg className="w-6 h-6 fill-current" viewBox="0 0 24 24">
                 <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
               </svg>

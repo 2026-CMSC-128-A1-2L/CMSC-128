@@ -51,7 +51,7 @@ const MessageCard = ({
         getContainerClasses(state),
       ].join(' ')}
     >
-      <div className="flex items-start gap-[12px]">
+      <div className="flex items-start gap-[12px] cursor-pointer">
         <Icon
           icon="material-symbols:mail-outline-sharp"
           className={[

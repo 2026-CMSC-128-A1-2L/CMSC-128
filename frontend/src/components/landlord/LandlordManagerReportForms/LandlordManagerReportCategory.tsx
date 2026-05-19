@@ -21,6 +21,7 @@ type Props = {
   isLastCategory: boolean;
   onToggle: (itemKey: string) => void;
   onToggleAll: () => void;
+  onCancel: () => void;
   onBack: () => void;
   onNext: () => void;
   type?: 'manager' | 'tenant';
@@ -199,7 +200,7 @@ const LandlordManagerReportCategory: FunctionComponent<Props> = ({
           <button
             type="button"
             onClick={onCancel}
-            className="rounded-[12px] px-[24px] py-[8px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#ef4444] dark:text-red-400 transition-opacity hover:opacity-70"
+            className="rounded-[12px] px-[24px] py-[8px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#ef4444] dark:text-red-400 transition-opacity hover:opacity-70 cursor-pointer"
           >
             Cancel
           </button>
@@ -207,7 +208,7 @@ const LandlordManagerReportCategory: FunctionComponent<Props> = ({
           <button
             type="button"
             onClick={onBack}
-            className="rounded-[12px] px-[24px] py-[8px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#666] dark:text-[#a4acba] transition-opacity hover:opacity-70"
+            className="rounded-[12px] px-[24px] py-[8px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#666] dark:text-[#a4acba] transition-opacity hover:opacity-70 cursor-pointer"
           >
             Back
           </button>
@@ -215,7 +216,7 @@ const LandlordManagerReportCategory: FunctionComponent<Props> = ({
         <button
           type="button"
           onClick={onNext}
-          className="rounded-[12px] bg-[#cbf6ed] dark:bg-[#12342e] px-[24px] py-[8px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] dark:text-[#72cbb8] transition-opacity hover:opacity-80"
+          className="rounded-[12px] bg-[#cbf6ed] dark:bg-[#12342e] px-[24px] py-[8px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] dark:text-[#72cbb8] transition-opacity hover:opacity-80 cursor-pointer"
         >
           {isLastCategory ? 'Continue' : 'Next'}
         </button>

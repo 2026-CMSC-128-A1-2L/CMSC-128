@@ -11,6 +11,12 @@ export type DormCardData = {
   location: string;
   coordinates?: { lat: number; long: number };
   image: string;
+  isPasalo?: boolean;
+  transferId?: string;
+  pasaloUnitId?: string;
+  pasaloListingId?: string;
+  pasaloMoveInDate?: string;
+  pasaloLeaseDuration?: '6-months' | '12-months';
   room_types: {
     id?: string;
     pax: string;

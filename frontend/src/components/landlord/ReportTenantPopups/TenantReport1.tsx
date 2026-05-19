@@ -105,7 +105,7 @@ const ReportTenant1: FunctionComponent = () => {
                         selectedViolations.length === VIOLATIONS.length
                           ? 'bg-teal'
                           : 'bg-whitesmoke-100'
-                      }`}
+                      } cursor-pointer`}
                     />
                     {selectedViolations.length === VIOLATIONS.length && <CheckIcon />}
                   </div>

@@ -2,20 +2,24 @@ import { useState, type FunctionComponent } from 'react';
 
 type Props = {
   onBack: () => void;
-  onSubmit: () => void;
+  onSubmit: () => void | Promise<void>;
+  isSubmitting?: boolean;
+  errorMessage?: string | null;
   type?: 'manager' | 'tenant';
 };
 
 const LandlordManagerReportConfirm: FunctionComponent<Props> = ({
   onBack,
   onSubmit,
+  isSubmitting = false,
+  errorMessage,
   type = 'manager',
 }) => {
   const [acknowledged, setAcknowledged] = useState(false);
 
   const handleSubmit = () => {
-    if (!acknowledged) return;
-    onSubmit();
+    if (!acknowledged || isSubmitting) return;
+    void onSubmit();
   };
 
   return (
@@ -73,7 +77,7 @@ const LandlordManagerReportConfirm: FunctionComponent<Props> = ({
               </svg>
             )}
           </button>
-          <p className="flex-1 text-center font-['Inter',sans-serif] text-[14px] font-medium leading-[25px] text-black dark:text-[#d7e0ef]">
+          <p className="flex-1 text-center font-['Inter',sans-serif] text-[14px] font-medium leading-[25px] text-black dark:text-[#d7e0ef] cursor-pointer">
             I declare that all information and reports submitted are{' '}
             <span className="font-bold text-[#096c5b] dark:text-[#72cbb8]">truthful</span>,{' '}
             <span className="font-bold text-[#096c5b] dark:text-[#72cbb8]">complete</span>, and{' '}
@@ -82,6 +86,11 @@ const LandlordManagerReportConfirm: FunctionComponent<Props> = ({
             consequences in accordance with applicable rules and regulations.
           </p>
         </div>
+        {errorMessage && (
+          <div className="w-full rounded-[12px] border border-red-100 bg-red-50 px-[16px] py-[12px] text-center font-['Inter',sans-serif] text-[13px] font-bold text-red-700">
+            {errorMessage}
+          </div>
+        )}
       </div>
 
       {/* Footer */}
@@ -89,20 +98,20 @@ const LandlordManagerReportConfirm: FunctionComponent<Props> = ({
         <button
           type="button"
           onClick={onBack}
-          className="rounded-[12px] px-[24px] py-[8px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#ef4444] dark:text-red-400 transition-opacity hover:opacity-70"
+          className="rounded-[12px] px-[24px] py-[8px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#ef4444] dark:text-red-400 transition-opacity hover:opacity-70 cursor-pointer"
         >
           Cancel
         </button>
         <button
           type="button"
           onClick={handleSubmit}
-          disabled={!acknowledged}
+          disabled={!acknowledged || isSubmitting}
           className={[
             'rounded-[12px] bg-[#cbf6ed] dark:bg-[#12342e] px-[24px] py-[8px] font-["Inter",sans-serif] text-[14px] font-semibold text-[#096c5b] dark:text-[#72cbb8] transition-opacity',
-            acknowledged ? 'hover:opacity-80' : 'cursor-not-allowed opacity-50',
+            acknowledged && !isSubmitting ? 'hover:opacity-80' : 'cursor-not-allowed opacity-50',
           ].join(' ')}
         >
-          Submit
+          {isSubmitting ? 'Submitting...' : 'Submit'}
         </button>
       </div>
     </div>

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import { Icon } from '@iconify/react';
+import { Navigate, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import LandlordLayout from '../../../components/landlord/LandlordLayout';
 import TenantAvatar from '../../../components/landlord/tenants/TenantAvatar';
 import TenantInfoField from '../../../components/landlord/tenants/TenantInfoField';
@@ -12,6 +13,7 @@ import FileActionPopup from '../../../components/landlord/tenants/popups/FileAct
 import RejectDocumentPopup from '../../../components/landlord/tenants/popups/RejectDocumentPopup';
 import type { PendingApplication, SubmittedDocument } from '../../../data/landlordTenants';
 import { ApplicationService } from '../../../service/ApplicationService';
+import { TransferService } from '../../../service/TransferService';
 import { UnitService } from '../../../service/UnitService';
 import { useAuthStore } from '../../../store/useAuthStore';
 
@@ -30,6 +32,8 @@ type RawApplication = {
     firstName?: string;
     middleName?: string;
     lastName?: string;
+    studentNumber?: string;
+    degreeProgram?: string;
     emails?: string[];
     email?: string;
     contact?: string;
@@ -43,11 +47,43 @@ type RawApplication = {
   documents?: RawDocument[];
 };
 
+type RawTransfer = {
+  _id?: string;
+  id?: string;
+  status?: 'pending' | 'approved' | 'rejected' | 'cancelled' | 'completed';
+  createdAt?: string;
+  reasonCategory?: string;
+  intendedTransferDate?: string;
+  description?: string;
+  transferFee?: number;
+  depositHandling?: string;
+  advanceRentStatus?: string;
+  userId?: RawApplication['userId'];
+  unitId?: {
+    _id?: string;
+    id?: string;
+    roomNumber?: string;
+    price?: number;
+    facilityId?: { name?: string };
+    listingId?: { roomType?: string };
+  };
+  documents?: RawDocument[];
+};
+
 type RawUnit = {
   _id?: string;
   id?: string;
   roomNumber?: string;
   isAvailable?: boolean;
+  capacity?: number;
+  currentRentals?: Array<{
+    userId?: {
+      firstName?: string;
+      lastName?: string;
+      studentNumber?: string;
+      degreeProgram?: string;
+    };
+  }>;
 };
 
 type AssignmentMode = 'manual' | 'matching';
@@ -101,6 +137,101 @@ const getListingId = (application: RawApplication) => {
   return application.listingId?._id ?? application.listingId?.id ?? '';
 };
 
+const getUnitId = (unit?: RawUnit) => unit?._id ?? unit?.id ?? '';
+
+const getStudentYear = (studentNumber?: string) => {
+  const digits = studentNumber?.replace(/\D/g, '') ?? '';
+  return digits.length >= 4 ? digits.slice(0, 4) : '';
+};
+
+const normalizeCourse = (degreeProgram?: string) => degreeProgram?.trim().toLowerCase() ?? '';
+
+const getTenantProfiles = (unit: RawUnit) =>
+  unit.currentRentals?.map((rental) => rental.userId).filter(Boolean) ?? [];
+
+const hasOpenCapacity = (unit: RawUnit) => {
+  if (unit.isAvailable === false) return false;
+  if (!unit.capacity) return true;
+  return (unit.currentRentals?.length ?? 0) < unit.capacity;
+};
+
+const isEmptyUnit = (unit: RawUnit) => (unit.currentRentals?.length ?? 0) === 0;
+
+const getMatchedUnit = (
+  units: RawUnit[],
+  applicant: RawApplication['userId'],
+  selectedOptions: Record<MatchingOptionKey, boolean>,
+) => {
+  const availableUnits = units.filter(hasOpenCapacity);
+  if (availableUnits.length === 0) return undefined;
+
+  const applicantYear = getStudentYear(applicant?.studentNumber);
+  const applicantCourse = normalizeCourse(applicant?.degreeProgram);
+
+  const findByYear = () =>
+    applicantYear
+      ? availableUnits.find((unit) =>
+          getTenantProfiles(unit).some(
+            (tenant) => getStudentYear(tenant?.studentNumber) === applicantYear,
+          ),
+        )
+      : undefined;
+
+  const findByCourse = () =>
+    applicantCourse
+      ? availableUnits.find((unit) =>
+          getTenantProfiles(unit).some(
+            (tenant) => normalizeCourse(tenant?.degreeProgram) === applicantCourse,
+          ),
+        )
+      : undefined;
+
+  const findEmpty = () => availableUnits.find(isEmptyUnit);
+  const findRandom = () => availableUnits[Math.floor(Math.random() * availableUnits.length)];
+
+  if (selectedOptions.autoMatching) {
+    const scoredUnits = availableUnits
+      .map((unit, index) => {
+        const tenants = getTenantProfiles(unit);
+        const hasSameYear =
+          Boolean(applicantYear) &&
+          tenants.some((tenant) => getStudentYear(tenant?.studentNumber) === applicantYear);
+        const hasSameCourse =
+          Boolean(applicantCourse) &&
+          tenants.some((tenant) => normalizeCourse(tenant?.degreeProgram) === applicantCourse);
+        const tenantCount = tenants.length;
+
+        return {
+          unit,
+          index,
+          score: (hasSameYear ? 4 : 0) + (hasSameCourse ? 4 : 0) + (tenantCount === 0 ? 1 : 0),
+        };
+      })
+      .sort((a, b) => b.score - a.score || a.index - b.index);
+
+    if (scoredUnits[0]?.score > 0) return scoredUnits[0].unit;
+  }
+
+  if (selectedOptions.yearBatch) {
+    const yearUnit = findByYear();
+    if (yearUnit) return yearUnit;
+  }
+
+  if (selectedOptions.degreeProgram) {
+    const courseUnit = findByCourse();
+    if (courseUnit) return courseUnit;
+  }
+
+  if (selectedOptions.emptyRoom) {
+    const emptyUnit = findEmpty();
+    if (emptyUnit) return emptyUnit;
+  }
+
+  if (selectedOptions.random) return findRandom();
+
+  return availableUnits[0];
+};
+
 const formatName = (user?: RawApplication['userId']) =>
   [user?.firstName, user?.middleName, user?.lastName].filter(Boolean).join(' ') || 'Applicant';
 
@@ -149,12 +280,63 @@ const mapApplication = (application: RawApplication): PendingApplication => {
   };
 };
 
+const formatValue = (value?: string) => {
+  if (!value) return 'Not provided';
+  return value
+    .split('-')
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(' ');
+};
+
+const mapTransfer = (transfer: RawTransfer): PendingApplication => {
+  const displayName = formatName(transfer.userId);
+  const documents: SubmittedDocument[] =
+    transfer.documents?.flatMap((document) =>
+      (document.files ?? []).map((fileId, index) => ({
+        id: `${document.docId ?? document.name}-${index}`,
+        title: document.name ?? document.docId ?? 'Document',
+        fileName: fileId,
+        submittedAt: 'Submitted',
+        kind:
+          fileId.toLowerCase().endsWith('.png') || fileId.toLowerCase().endsWith('.jpg')
+            ? 'image'
+            : 'pdf',
+      })),
+    ) ?? [];
+
+  return {
+    id: transfer.id ?? transfer._id ?? '',
+    fullName: displayName.toUpperCase(),
+    displayName,
+    email: transfer.userId?.email ?? transfer.userId?.emails?.[0] ?? 'No email provided',
+    contactNumber: transfer.userId?.contact ?? 'Not provided',
+    homeAddress: transfer.userId?.address ?? 'Not provided',
+    photoUrl: transfer.userId?.profilePicture,
+    dormName: transfer.unitId?.facilityId?.name ?? 'Pasalo request',
+    unit: transfer.unitId?.roomNumber ?? transfer.unitId?.listingId?.roomType ?? 'Transfer unit',
+    baseRentFee:
+      typeof transfer.unitId?.price === 'number' ? transfer.unitId.price.toLocaleString() : 'TBA',
+    contractDuration: transfer.intendedTransferDate
+      ? `Transfer by ${new Date(transfer.intendedTransferDate).toLocaleDateString()}`
+      : 'Pasalo transfer',
+    monthlyDueDate: `Fee: ${typeof transfer.transferFee === 'number' ? transfer.transferFee.toLocaleString() : 'TBA'}`,
+    modeOfPayment: `Deposit: ${formatValue(transfer.depositHandling)}`,
+    submittedOn: transfer.createdAt ? new Date(transfer.createdAt).toLocaleDateString() : 'Recently',
+    reviewedByManager: true,
+    studentCategory: 'Pasalo Request',
+    documents,
+  };
+};
+
 const LandlordUnvalidatedTenantDetail = () => {
   const { tenantId } = useParams<{ tenantId: string }>();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { user } = useAuthStore();
   const isLandlord = user?.userType === 'Landlord';
+  const isTransferRequest = searchParams.get('type') === 'transfer';
   const [rawApplication, setRawApplication] = useState<RawApplication | null>(null);
+  const [rawTransfer, setRawTransfer] = useState<RawTransfer | null>(null);
   const [application, setApplication] = useState<PendingApplication | null>(null);
   const [availableUnits, setAvailableUnits] = useState<RawUnit[]>([]);
   const [selectedUnitId, setSelectedUnitId] = useState('');
@@ -181,6 +363,19 @@ const LandlordUnvalidatedTenantDetail = () => {
     const loadApplication = async () => {
       setIsLoading(true);
       try {
+        if (isTransferRequest) {
+          const response = await TransferService.getManagedTransferRequest(tenantId);
+          const loadedTransfer = (response.data ?? response) as RawTransfer;
+          if (cancelled) return;
+
+          setRawTransfer(loadedTransfer);
+          setRawApplication(null);
+          setApplication(mapTransfer(loadedTransfer));
+          setAvailableUnits([]);
+          setSelectedUnitId(loadedTransfer.unitId?._id ?? loadedTransfer.unitId?.id ?? '');
+          return;
+        }
+
         const response = await ApplicationService.getApplication(tenantId);
         const loadedApplication = (response.data ?? response) as RawApplication;
         if (cancelled) return;
@@ -191,6 +386,7 @@ const LandlordUnvalidatedTenantDetail = () => {
         }
 
         setRawApplication(loadedApplication);
+        setRawTransfer(null);
         setApplication(mapApplication(loadedApplication));
 
         const listingId = getListingId(loadedApplication);
@@ -201,7 +397,7 @@ const LandlordUnvalidatedTenantDetail = () => {
             (unit) => unit.isAvailable !== false,
           );
           setAvailableUnits(units);
-          setSelectedUnitId(units[0]?._id ?? units[0]?.id ?? '');
+          setSelectedUnitId(getUnitId(units[0]));
         }
       } finally {
         if (!cancelled) setIsLoading(false);
@@ -212,7 +408,7 @@ const LandlordUnvalidatedTenantDetail = () => {
     return () => {
       cancelled = true;
     };
-  }, [tenantId, isLandlord, navigate]);
+  }, [tenantId, isLandlord, isTransferRequest, navigate]);
 
   useEffect(() => {
     if (!application) return;
@@ -229,18 +425,26 @@ const LandlordUnvalidatedTenantDetail = () => {
   const hasDocuments = Boolean(application && application.documents.length > 0);
   const isInitialScreening = rawApplication?.status === 'pending';
   const isFinalReview = rawApplication?.status === 'finalized';
+  const isPasaloReview = Boolean(rawTransfer);
 
   const allDocumentsApproved = useMemo(() => {
     if (!application) return true;
-    if (rawApplication?.status === 'finalized' && application.documents.length === 0) return false;
+    if ((rawApplication?.status === 'finalized' || isPasaloReview) && application.documents.length === 0)
+      return false;
     return application.documents.every((d) => docReview[d.id] === 'approved');
-  }, [application, docReview, rawApplication?.status]);
+  }, [application, docReview, isPasaloReview, rawApplication?.status]);
 
-  const fallbackUnitId = availableUnits[0]?._id ?? availableUnits[0]?.id ?? '';
+  const matchedUnit = useMemo(
+    () => getMatchedUnit(availableUnits, rawApplication?.userId, selectedMatchingOptions),
+    [availableUnits, rawApplication?.userId, selectedMatchingOptions],
+  );
+  const matchedUnitId = getUnitId(matchedUnit);
+  const fallbackUnitId = getUnitId(availableUnits.find(hasOpenCapacity) ?? availableUnits[0]);
   const unitIdForApproval =
     assignmentMode === 'manual'
       ? selectedUnitId
-      : selectedUnitId ||
+      : matchedUnitId ||
+        selectedUnitId ||
         fallbackUnitId ||
         rawApplication?.unitId?._id ||
         rawApplication?.unitId?.id ||
@@ -249,13 +453,29 @@ const LandlordUnvalidatedTenantDetail = () => {
 
   const handleRejectApplication = () => {
     if (!tenantId) return;
+    if (isPasaloReview) {
+      void TransferService.rejectTransferRequest(tenantId).finally(() =>
+        navigate('/landlord/tenants/unvalidated'),
+      );
+      return;
+    }
+
     void ApplicationService.rejectApplication(tenantId).finally(() =>
       navigate('/landlord/tenants/unvalidated'),
     );
   };
 
   const handleApproveApplication = () => {
-    if (!tenantId || !rawApplication) return;
+    if (!tenantId) return;
+    if (isPasaloReview) {
+      if (!isLandlord || !allDocumentsApproved) return;
+      void TransferService.approveTransferRequest(tenantId).finally(() =>
+        navigate('/landlord/tenants/unvalidated'),
+      );
+      return;
+    }
+
+    if (!rawApplication) return;
     if (rawApplication.status === 'finalized' && !isLandlord) return;
     if (rawApplication.status === 'finalized' && !allDocumentsApproved) return;
     if (rawApplication.status === 'pending' && !unitIdForApproval) return;
@@ -337,7 +557,11 @@ const LandlordUnvalidatedTenantDetail = () => {
                 id="submitted-documents-heading"
                 className="font-['Inter',sans-serif] text-[24px] font-bold leading-[32px] whitespace-nowrap text-[#2f3136]"
               >
-                {isInitialScreening ? 'Initial Screening' : 'Submitted Documents'}
+                {isInitialScreening
+                  ? 'Initial Screening'
+                  : isPasaloReview
+                    ? 'Pasalo Request'
+                    : 'Submitted Documents'}
               </h2>
               <span className="font-['Inter',sans-serif] text-[14px] font-medium whitespace-nowrap text-[#666]">
                 ({application.studentCategory})
@@ -396,7 +620,9 @@ const LandlordUnvalidatedTenantDetail = () => {
                             type="button"
                             onClick={() => {
                               setAssignmentMode('matching');
-                              setSelectedUnitId((current) => current || fallbackUnitId);
+                              setSelectedUnitId(
+                                (current) => current || matchedUnitId || fallbackUnitId,
+                              );
                             }}
                             className={[
                               'rounded-[10px] px-[14px] py-[8px] transition-colors',
@@ -411,22 +637,29 @@ const LandlordUnvalidatedTenantDetail = () => {
                       </div>
 
                       {assignmentMode === 'manual' ? (
-                        <div className="flex flex-col gap-[8px]">
-                          <select
-                            value={selectedUnitId}
-                            onChange={(event) => setSelectedUnitId(event.target.value)}
-                            className="min-h-[46px] rounded-[12px] border border-[#e2e8f0] px-[14px] py-[10px] text-[14px] font-bold text-[#2f3136] outline-none transition-colors focus:border-[#096c5b]"
-                          >
-                            {availableUnits.length === 0 ? (
-                              <option value="">No available units</option>
-                            ) : (
-                              availableUnits.map((unit) => (
-                                <option key={unit._id ?? unit.id} value={unit._id ?? unit.id}>
-                                  {unit.roomNumber ?? 'Available unit'}
-                                </option>
-                              ))
-                            )}
-                          </select>
+                        <div className="flex flex-col gap-[8px] cursor-pointer">
+                          <div className="relative flex min-h-[46px] items-center rounded-[12px] border border-solid border-[#f0f0f0] bg-white px-[14px] transition-colors focus-within:border-[#096c5b] focus-within:ring-2 focus-within:ring-[#096c5b]/20">
+                            <select
+                              value={selectedUnitId}
+                              onChange={(event) => setSelectedUnitId(event.target.value)}
+                              className="w-full cursor-pointer appearance-none bg-transparent py-[10px] pr-[36px] font-['Inter',sans-serif] text-[14px] font-medium text-[#2f3136] outline-none"
+                            >
+                              {availableUnits.length === 0 ? (
+                                <option value="">No available units</option>
+                              ) : (
+                                availableUnits.map((unit) => (
+                                  <option key={getUnitId(unit)} value={getUnitId(unit)}>
+                                    {unit.roomNumber ?? 'Available unit'}
+                                  </option>
+                                ))
+                              )}
+                            </select>
+                            <Icon
+                              icon="mdi-light:chevron-down"
+                              className="pointer-events-none absolute right-[12px] top-1/2 h-[22px] w-[22px] -translate-y-1/2 text-[#666]"
+                              aria-hidden
+                            />
+                          </div>
                           <p className="text-[12px] font-medium leading-[18px] text-[#64748b]">
                             Choose the room/unit before approving this initial screening.
                           </p>
@@ -460,14 +693,75 @@ const LandlordUnvalidatedTenantDetail = () => {
                             </label>
                           ))}
                           <p className="text-[12px] font-medium leading-[18px] text-[#64748b]">
-                            Matching approval will use the next available unit while keeping these
-                            preferences visible for the assignment decision.
+                            {matchedUnit
+                              ? `Matching approval will assign this applicant to ${
+                                  matchedUnit.roomNumber ?? 'the selected available unit'
+                                }.`
+                              : 'No available unit matches the selected assignment rules.'}
                           </p>
                         </div>
                       )}
                     </div>
                   </div>
                 </div>
+              </>
+            ) : isPasaloReview ? (
+              <>
+                <div className="flex min-h-[160px] flex-col justify-center gap-[14px] rounded-[16px] border border-solid border-[#f0f0f0] bg-[#fbfbfb] p-[24px] font-['Inter',sans-serif]">
+                  <p className="text-[16px] font-bold text-[#2f3136]">
+                    Review this tenant&apos;s Pasalo request.
+                  </p>
+                  <p className="max-w-[620px] text-[14px] font-medium leading-[22px] text-[#666]">
+                    Approving this request will publish the unit in the Pasalo section. The
+                    outgoing tenant keeps the rental until a verified student applies and is
+                    approved for this unit.
+                  </p>
+                  {rawTransfer?.description && (
+                    <p className="max-w-[620px] rounded-[12px] bg-white px-[16px] py-[12px] text-[14px] font-medium leading-[22px] text-[#2f3136]">
+                      {rawTransfer.description}
+                    </p>
+                  )}
+                </div>
+
+                {hasDocuments ? (
+                  <div className="flex flex-col gap-[12px]">
+                    {application.documents.map((document) => (
+                      <SubmittedDocumentCard
+                        key={document.id}
+                        document={document}
+                        reviewStatus={docReview[document.id] ?? 'pending'}
+                        onMoreOptions={(doc) =>
+                          setOpenFileMenuId((prev) => (prev === doc.id ? null : doc.id))
+                        }
+                        actionMenu={
+                          <FileActionPopup
+                            isOpen={openFileMenuId === document.id}
+                            onApprove={() => {
+                              setOpenFileMenuId(null);
+                              setApproveTarget(document);
+                            }}
+                            onReject={() => {
+                              setOpenFileMenuId(null);
+                              setRejectTarget(document);
+                            }}
+                          />
+                        }
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="flex min-h-[120px] items-center justify-center rounded-[16px] border border-solid border-[#f0f0f0] bg-[#fbfbfb] p-[24px]">
+                    <p className="font-['Inter',sans-serif] text-[14px] font-bold text-[#666]">
+                      Tenant has not submitted transfer documents yet.
+                    </p>
+                  </div>
+                )}
+
+                {!allDocumentsApproved && (
+                  <p className="px-[12px] text-center font-['Inter',sans-serif] text-[13px] font-medium text-[#64748b]">
+                    Every document must be approved before approving this Pasalo request.
+                  </p>
+                )}
               </>
             ) : !hasDocuments ? (
               <div className="flex min-h-[220px] items-center justify-center rounded-[16px] border border-solid border-[#f0f0f0] bg-[#fbfbfb] p-[24px]">
@@ -541,7 +835,11 @@ const LandlordUnvalidatedTenantDetail = () => {
                       : 'cursor-not-allowed bg-[#e8ecf1] text-[#94a3b8]',
                   ].join(' ')}
                 >
-                  {isInitialScreening ? 'Approve Initial Screening' : 'Final Approve'}
+                  {isInitialScreening
+                    ? 'Approve Initial Screening'
+                    : isPasaloReview
+                      ? 'Approve Pasalo Request'
+                      : 'Final Approve'}
                 </button>
               </div>
             </div>

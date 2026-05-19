@@ -314,7 +314,7 @@ const RateAndReview: FunctionComponent = () => {
                           isFormInvalid
                             ? 'bg-gray-400 opacity-50'
                             : 'bg-darkslategray-200 group-hover:brightness-125'
-                        }`}
+                        } cursor-pointer`}
                       />
                       <div className="absolute h-[101.25%] w-[100.28%] top-[0%] left-[0%] font-medium flex items-center justify-center text-[14px]">
                         Submit

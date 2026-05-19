@@ -1,8 +1,9 @@
-import type { RequestHandler } from 'express';
-import { File } from './file.model.js';
-import assert from 'node:assert';
-import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
-import { Readable } from 'node:stream';
+import type { RequestHandler } from "express";
+import { File } from "./file.model.js";
+import assert from "node:assert";
+import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { Readable } from "node:stream";
 
 type R2UploadedFile = Express.Multer.File & {
   key: string;
@@ -10,18 +11,18 @@ type R2UploadedFile = Express.Multer.File & {
 };
 
 const s3 = new S3Client({
-  region: 'auto',
+  region: "auto",
   endpoint: process.env.R2_ENDPOINT,
   credentials: {
-    accessKeyId: process.env.R2_ACCESS_KEY ?? '',
-    secretAccessKey: process.env.R2_SECRET ?? '',
+    accessKeyId: process.env.R2_ACCESS_KEY ?? "",
+    secretAccessKey: process.env.R2_SECRET ?? "",
   },
 });
 
 const getFallbackKeys = (key: string) => {
-  const normalizedKey = key.replace(/^\/+/, '');
-  const fallbackKey = normalizedKey.startsWith('atlas/')
-    ? normalizedKey.replace(/^atlas\//, '')
+  const normalizedKey = key.replace(/^\/+/, "");
+  const fallbackKey = normalizedKey.startsWith("atlas/")
+    ? normalizedKey.replace(/^atlas\//, "")
     : `atlas/${normalizedKey}`;
 
   return [...new Set([normalizedKey, fallbackKey])];
@@ -34,7 +35,7 @@ export const routeUploadFile: RequestHandler = async (req, res) => {
   }
 
   // Already checked in middleware, should exist at this point.
-  assert.ok(req.user, 'User should exist/have an account.');
+  assert.ok(req.user, "User should exist/have an account.");
 
   const uploadedFile = req.file as R2UploadedFile;
 
@@ -50,10 +51,40 @@ export const routeUploadFile: RequestHandler = async (req, res) => {
   res.json(await newFile.save());
 };
 
+export const routeDownloadFile: RequestHandler = async (req, res, next) => {
+  const filePath = req.query.path as string;
+  if (!filePath) {
+    res.status(400).json({ error: "File path is required" });
+    return;
+  }
+
+  const file = await File.findOne({ key: filePath });
+  if (!file) {
+    res.status(404).json({ error: "File not found" });
+    return;
+  }
+
+  try {
+    const command = new GetObjectCommand({
+      Bucket: process.env.R2_BUCKET_NAME,
+      Key: filePath,
+      ResponseContentDisposition: `attachment; filename="${file.filename}"`,
+    });
+    const signedUrl = await getSignedUrl(s3, command, { expiresIn: 3600 });
+    res.json({
+      url: signedUrl,
+      filename: file.filename,
+      mimeType: file.mimeType,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const routeGetPublicFile: RequestHandler = async (req, res) => {
-  const key = typeof req.query.key === 'string' ? req.query.key : undefined;
+  const key = typeof req.query.key === "string" ? req.query.key : undefined;
   if (!key) {
-    res.status(400).send({ error: { message: 'File key is required.' } });
+    res.status(400).send({ error: { message: "File key is required." } });
     return;
   }
 
@@ -74,15 +105,18 @@ export const routeGetPublicFile: RequestHandler = async (req, res) => {
       }
 
       if (object.ContentType) res.type(object.ContentType);
-      if (object.ContentLength) res.setHeader('Content-Length', object.ContentLength.toString());
-      res.setHeader('Cache-Control', 'public, max-age=86400');
+      if (object.ContentLength)
+        res.setHeader("Content-Length", object.ContentLength.toString());
+      res.setHeader("Cache-Control", "public, max-age=86400");
 
       if (object.Body instanceof Readable) {
         object.Body.pipe(res);
         return;
       }
 
-      const body = object.Body as { transformToByteArray?: () => Promise<Uint8Array> };
+      const body = object.Body as {
+        transformToByteArray?: () => Promise<Uint8Array>;
+      };
       const bytes = await body.transformToByteArray?.();
       if (bytes) {
         res.send(Buffer.from(bytes));
@@ -96,6 +130,6 @@ export const routeGetPublicFile: RequestHandler = async (req, res) => {
     }
   }
 
-  console.error('Failed to fetch R2 file:', lastError);
+  console.error("Failed to fetch R2 file:", lastError);
   res.sendStatus(404);
 };

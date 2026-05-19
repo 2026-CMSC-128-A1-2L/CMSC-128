@@ -43,7 +43,7 @@ const getPaymentStatusDisplay = (status: string): { text: string; gradient: stri
 };
 
 const TenantFinancePage: FunctionComponent = () => {
-  const { dashboard, userId, isLoading, error, hasAccommodation, refetch } = useFinance();
+  const { dashboard, userId, facilityId, isLoading, error, hasAccommodation, refetch } = useFinance();
   const navigate = useNavigate();
 
   const [isSubmitReceiptOpen, setIsSubmitReceiptOpen] = useState(false);
@@ -136,7 +136,7 @@ const TenantFinancePage: FunctionComponent = () => {
         </div>
         <button
           onClick={() => navigate('/home')}
-          className="flex items-center gap-2 px-6 py-3 rounded-xl bg-lightcyan-100 text-teal font-semibold hover:opacity-90 transition-opacity dark:bg-[#0d3a32] dark:text-[#72cbb8]"
+          className="flex items-center gap-2 px-6 py-3 rounded-xl bg-lightcyan-100 text-teal font-semibold hover:opacity-90 transition-opacity dark:bg-[#0d3a32] dark:text-[#72cbb8] cursor-pointer"
         >
           <Icon icon="mdi-light:home" className="w-5 h-5" />
           Browse Listings
@@ -165,7 +165,7 @@ const TenantFinancePage: FunctionComponent = () => {
           </div>
           <button
             onClick={() => navigate('/home')}
-            className="flex items-center gap-2 px-6 py-3 rounded-xl bg-lightcyan-100 text-teal font-semibold hover:opacity-90 transition-opacity dark:bg-[#0d3a32] dark:text-[#72cbb8]"
+            className="flex items-center gap-2 px-6 py-3 rounded-xl bg-lightcyan-100 text-teal font-semibold hover:opacity-90 transition-opacity dark:bg-[#0d3a32] dark:text-[#72cbb8] cursor-pointer"
           >
             <Icon icon="mdi-light:home" className="w-5 h-5" />
             Browse Listings
@@ -180,7 +180,7 @@ const TenantFinancePage: FunctionComponent = () => {
         <p className="text-crimson font-semibold">{error}</p>
         <button
           onClick={refetch}
-          className="px-4 py-2 rounded-xl bg-lightcyan-100 text-teal font-semibold hover:opacity-90"
+          className="px-4 py-2 rounded-xl bg-lightcyan-100 text-teal font-semibold hover:opacity-90 cursor-pointer"
         >
           Retry
         </button>
@@ -287,7 +287,7 @@ const TenantFinancePage: FunctionComponent = () => {
                   <div className="flex-1 rounded-2xl bg-white border border-whitesmoke-200 p-3 md:p-4 flex flex-col gap-2.5 dark:bg-[#101111] dark:border-[#303331] dark:text-[#72cbb8]">
                     <b className="text-sm md:text-base">Payment Status</b>
                     <b
-                      className={`text-xl md:text-2xl leading-8 bg-clip-text text-transparent ${paymentStatus.gradient}`}
+                      className={`text-xl md:text-2xl leading-8 bg-clip-text text-transparent ${paymentStatus.gradient} cursor-pointer`}
                     >
                       {paymentStatus.text}
                     </b>
@@ -331,7 +331,7 @@ const TenantFinancePage: FunctionComponent = () => {
                         </div>
                         <button
                           onClick={() => handlePayNow(bill)}
-                          className="w-full sm:w-[90px] rounded-xl bg-lightcyan-100 py-2.5 px-3 text-teal font-semibold hover:opacity-90 transition-opacity whitespace-nowrap text-center dark:bg-[#0d3a32] dark:text-[#72cbb8]"
+                          className="w-full sm:w-[90px] rounded-xl bg-lightcyan-100 py-2.5 px-3 text-teal font-semibold hover:opacity-90 transition-opacity whitespace-nowrap text-center dark:bg-[#0d3a32] dark:text-[#72cbb8] cursor-pointer"
                         >
                           Pay Now
                         </button>
@@ -379,6 +379,7 @@ const TenantFinancePage: FunctionComponent = () => {
           isOpen={isSubmitReceiptOpen}
           onClose={handleCloseSubmitReceipt}
           billingId={selectedBill._id}
+          facilityId={facilityId}
           dueDate={formatDate(selectedBill.dueDate)}
           dueAmount={selectedBill.totalAmount}
           onSubmit={handleSubmitReceipt}
