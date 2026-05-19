@@ -30,17 +30,16 @@ export const createAnnouncement = async (params: CreateAnnouncementParams) => {
 };
 
 export const getAnnouncements = async (userId: mongoose.Types.ObjectId, userType: string) => {
-  const roleFilter: { targetRole?: { $in: (string | null)[] } | null } = {};
-
+  const roleFilter: Record<string, unknown> = {};
   if (userType === 'Admin') {
     roleFilter.targetRole = null;
   } else {
-    roleFilter.targetRole = { $in: [userType, null] };
+    roleFilter.targetRole = { $in: [userType, null] as any };
   }
 
-  const announcements = (await Announcement.find(roleFilter)
+  const announcements = await Announcement.find(roleFilter)
     .sort({ createdAt: -1 })
-    .lean()) as (AnnouncementType & { _id: mongoose.Types.ObjectId })[];
+    .lean();
 
   if (announcements.length === 0) return [];
 

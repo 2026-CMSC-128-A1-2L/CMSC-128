@@ -42,10 +42,14 @@ const InviteAccomodation: FunctionComponent = () => {
   }, [token]);
 
   const handleAccept = async () => {
-    if (!token) return;
+    if (!token || !invite) return;
     setActionLoading(true);
     try {
-      await InviteService.acceptInvite(token);
+      if (invite.inviteType === 'student') {
+        await InviteService.acceptStudentInvite(token);
+      } else {
+        await InviteService.acceptInvite(token);
+      }
       setShowSuccess(true);
       setTimeout(() => navigate('/direct-messages'), 2000);
     } catch {
@@ -56,10 +60,14 @@ const InviteAccomodation: FunctionComponent = () => {
   };
 
   const handleDecline = async () => {
-    if (!token) return;
+    if (!token || !invite) return;
     setActionLoading(true);
     try {
-      await InviteService.declineInvite(token);
+      if (invite.inviteType === 'student') {
+        await InviteService.declineStudentInvite(token);
+      } else {
+        await InviteService.declineInvite(token);
+      }
       navigate('/direct-messages');
     } catch {
       setError('Failed to decline the invite. Please try again.');
@@ -107,22 +115,29 @@ const InviteAccomodation: FunctionComponent = () => {
     ? new Date(invite.dateInvited).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     : '';
 
+  const isStudent = invite?.inviteType === 'student';
+  const isManager = invite?.inviteType === 'manager';
+
   return (
     <>
       <div className="w-full h-full flex flex-col items-start py-8 sm:py-16 px-4 sm:px-8 box-border text-num-24 text-gray-200 font-inter relative overflow-hidden bg-transparent">
         <NotificationDetail
-          title="Manager Invitation"
+          title={isStudent ? 'Dorm Invitation' : 'Manager Invitation'}
           subtitle="System"
           date={dateStr}
           time={timeStr}
           headline={
-            invite?.inviteType === 'manager'
+            isManager
               ? 'You have been invited to manage a facility.'
-              : 'You received an invitation.'
+              : isStudent
+                ? 'You have been invited to join a facility.'
+                : 'You received an invitation.'
           }
           message={
             invite?.facilityId?.name
-              ? `You've been invited to manage ${invite.facilityId.name}. Respond to accept or decline this invitation.`
+              ? isManager
+                ? `You've been invited to manage ${invite.facilityId.name}. Respond to accept or decline this invitation.`
+                : `You've been invited to join ${invite.facilityId.name}. Respond to accept or decline this invitation.`
               : 'Respond to accept or decline this invitation.'
           }
           showButtons={!isExpired}
@@ -147,7 +162,9 @@ const InviteAccomodation: FunctionComponent = () => {
           Invite accepted!
         </b>
         <p className="text-num-14 text-dimgray dark:text-[#a4acba]">
-          You are now a manager of this facility.
+          {isStudent
+            ? 'You are now a tenant of this facility.'
+            : 'You are now a manager of this facility.'}
         </p>
       </div>
     </div>

@@ -4,12 +4,12 @@ import { sendNotification } from '../notification/notification.service.js';
 import { User } from '../user/user.model.js';
 import {
   inviteManager,
+  inviteStudent,
   acceptInvite,
   declineInvite,
   acceptStudentInvite,
   declineStudentInvite,
   getInvites,
-  inviteStudent,
 } from './invite.service.js';
 import { AppError } from '../../error.js';
 import { Invite } from './invite.model.js';
@@ -40,11 +40,22 @@ export const routeInviteManager: RequestHandler = async (req, res, _next) => {
   res.status(201).json({ data: invite });
 };
 
+// landlord sends an invite to a student by email
 export const routeInviteStudent: RequestHandler = async (req, res, _next) => {
   assert.ok(req.user);
   const landlordId = req.user._id;
   const { facilityId, unitId, email } = CreateInviteStudentBodySchema.parse(req.body);
   const invite = await inviteStudent(landlordId, facilityId, unitId, email);
+
+  const student = await User.findOne({ emails: email });
+  if (student) {
+    await sendNotification(
+      student._id,
+      'Dorm Invitation',
+      `[INVITE:${invite.token}]You have been invited to join a facility. Check your invites to accept or decline.`,
+    );
+  }
+
   res.status(201).json({ data: invite });
 };
 

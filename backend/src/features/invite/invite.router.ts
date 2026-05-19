@@ -38,6 +38,13 @@ router.post('/', isLoggedIn, isLandlord, routeInviteManager);
 router.post('/student', isLoggedIn, isLandlord, routeInviteStudent);
 
 // ============================================================================
+// POST /api/invites/student
+//
+// Invites a student to a facility unit by a landlord.
+// ============================================================================
+router.post('/student', isLoggedIn, isLandlord, routeInviteStudent);
+
+// ============================================================================
 // POST /api/invites/:inviteId/accept
 //
 // Accepts the invitation to manage a facility.
