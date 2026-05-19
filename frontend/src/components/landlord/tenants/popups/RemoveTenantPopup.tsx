@@ -2,16 +2,20 @@ import { useMemo, useState } from 'react';
 import { Icon } from '@iconify/react';
 import PopupOverlay from './PopupOverlay';
 import ReportOption from './ReportOption';
+import { RemovalRequestService } from '../../../../service/RemovalRequestService';
 
 type RemoveFlowStep = 'select' | 'confirm' | 'success';
 
 type RemoveTenantPopupProps = {
   targetName: string | null;
+  targetId?: string;
+  targetEmail?: string;
+  targetFacility?: string;
   isOpen: boolean;
   onClose: () => void;
 };
 
-const RemoveTenantPopup = ({ targetName, isOpen, onClose }: RemoveTenantPopupProps) => {
+const RemoveTenantPopup = ({ targetName, targetId, targetEmail, targetFacility, isOpen, onClose }: RemoveTenantPopupProps) => {
   const [step, setStep] = useState<RemoveFlowStep>('select');
   const [checked, setChecked] = useState({
     backedOut: true,
@@ -19,16 +23,45 @@ const RemoveTenantPopup = ({ targetName, isOpen, onClose }: RemoveTenantPopupPro
     other: false,
   });
   const [otherReason, setOtherReason] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const reset = () => {
     setStep('select');
     setChecked({ backedOut: true, noDocuments: true, other: false });
     setOtherReason('');
+    setIsSubmitting(false);
+    setSubmitError(null);
   };
 
   const closeAll = () => {
     reset();
     onClose();
+  };
+
+  const handleSubmit = async () => {
+    if (!targetName || !targetEmail || !targetFacility) return;
+    setIsSubmitting(true);
+    setSubmitError(null);
+    try {
+      await RemovalRequestService.createRequest({
+        tenantId: targetId,
+        tenantDisplayName: targetName,
+        tenantEmail: targetEmail,
+        facilityName: targetFacility,
+        reasons: {
+          backedOut: checked.backedOut,
+          noDocuments: checked.noDocuments,
+          other: checked.other,
+          otherReason: checked.other ? otherReason : undefined,
+        },
+      });
+      setStep('success');
+    } catch {
+      setSubmitError('Failed to submit removal request. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const allSelected = useMemo(
@@ -160,21 +193,29 @@ const RemoveTenantPopup = ({ targetName, isOpen, onClose }: RemoveTenantPopupPro
             )}
 
             {/* Footer buttons — inline with scroll */}
-            <div className="flex items-center justify-center gap-[16px] pt-[8px] pb-[42px]">
-              <button
-                type="button"
-                onClick={closeAll}
-                className="rounded-[12px] px-[24px] py-[8px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#ef4444] cursor-pointer"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={() => setStep((prev) => (prev === 'select' ? 'confirm' : 'success'))}
-                className="rounded-[12px] bg-[#cbf6ed] px-[24px] py-[8px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] cursor-pointer"
-              >
-                {step === 'select' ? 'Next' : 'Submit'}
-              </button>
+            <div className="flex flex-col items-center gap-[12px] pt-[8px] pb-[42px]">
+              {submitError && (
+                <p className="font-['Inter',sans-serif] text-[13px] font-semibold text-[#ef4444]">
+                  {submitError}
+                </p>
+              )}
+              <div className="flex items-center justify-center gap-[16px]">
+                <button
+                  type="button"
+                  onClick={closeAll}
+                  className="rounded-[12px] px-[24px] py-[8px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#ef4444] cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={() => step === 'select' ? setStep('confirm') : handleSubmit()}
+                  disabled={isSubmitting}
+                  className="rounded-[12px] bg-[#cbf6ed] px-[24px] py-[8px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] cursor-pointer disabled:opacity-50"
+                >
+                  {isSubmitting ? 'Submitting...' : step === 'select' ? 'Next' : 'Submit'}
+                </button>
+              </div>
             </div>
           </div>
         </div>

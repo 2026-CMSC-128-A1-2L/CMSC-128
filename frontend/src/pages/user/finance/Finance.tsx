@@ -43,7 +43,7 @@ const getPaymentStatusDisplay = (status: string): { text: string; gradient: stri
 };
 
 const TenantFinancePage: FunctionComponent = () => {
-  const { dashboard, userId, isLoading, error, hasAccommodation, refetch } = useFinance();
+  const { dashboard, userId, facilityId, isLoading, error, hasAccommodation, refetch } = useFinance();
   const navigate = useNavigate();
 
   const [isSubmitReceiptOpen, setIsSubmitReceiptOpen] = useState(false);
@@ -379,6 +379,7 @@ const TenantFinancePage: FunctionComponent = () => {
           isOpen={isSubmitReceiptOpen}
           onClose={handleCloseSubmitReceipt}
           billingId={selectedBill._id}
+          facilityId={facilityId}
           dueDate={formatDate(selectedBill.dueDate)}
           dueAmount={selectedBill.totalAmount}
           onSubmit={handleSubmitReceipt}

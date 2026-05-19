@@ -74,26 +74,45 @@ const toRowBilling = (b: TenantBilling): Billing => ({
 const normaliseDocuments = (documents: any[]): ReceiptDocument[] => {
   if (!Array.isArray(documents)) return [];
 
-  return documents
-    .map((d): ReceiptDocument | null => {
-      if (!d) return null;
+  const result: ReceiptDocument[] = [];
 
-      // bare string key
-      if (typeof d === 'string') {
-        return d ? { file: d } : null;
+  for (const d of documents) {
+    if (!d) continue;
+
+    // bare string key
+    if (typeof d === 'string') {
+      if (d) result.push({ file: d });
+      continue;
+    }
+
+    // Confirmed backend shape: { files: string[], message, status, ... }
+    // files[] is an array of file key strings
+    if (Array.isArray(d.files)) {
+      for (const fileKey of d.files) {
+        if (fileKey) {
+          result.push({
+            file: fileKey,
+            paymentMethod: d.message?.match(/payment method:\s*(\S+)/i)?.[1] ?? undefined,
+            submittedAt: d.submittedAt ?? d.createdAt ?? undefined,
+          });
+        }
       }
+      continue;
+    }
 
-      // object shapes
-      const fileKey: string = d.file ?? d.key ?? d.fileKey ?? '';
-      if (!fileKey) return null;
-
-      return {
+    // Fallback: single-file object shapes
+    const fileKey: string =
+      d.file ?? d.key ?? d.fileKey ?? d.fileId ?? d.path ?? d.url ?? '';
+    if (fileKey) {
+      result.push({
         file: fileKey,
         paymentMethod: d.paymentMethod ?? d.method ?? undefined,
         submittedAt: d.submittedAt ?? d.createdAt ?? undefined,
-      };
-    })
-    .filter((d): d is ReceiptDocument => d !== null);
+      });
+    }
+  }
+
+  return result;
 };
 
 interface TenantBillingsTabProps {
@@ -204,9 +223,16 @@ const TenantBillingsTab: FunctionComponent<TenantBillingsTabProps> = ({
     setIsEditPopupOpen(true);
   };
 
-  const handleReceiptClick = (billing: Billing, roomNumber: string | number, tenantName: string) => {
-    const docs = normaliseDocuments(billing.documents ?? []);
-    setReceiptBilling({ billing, roomNumber, tenantName, documents: docs });
+  const handleReceiptClick = async (billing: Billing, roomNumber: string | number, tenantName: string) => {
+    try {
+      // Use getBillingDetail which correctly flattens documents[].files[] into ReceiptDocument[]
+      const detail = await BillingService.getBillingDetail(billing._id);
+      setReceiptBilling({ billing, roomNumber, tenantName, documents: detail.documents });
+    } catch {
+      // Fall back to normalising cached documents
+      const docs = normaliseDocuments(billing.documents ?? []);
+      setReceiptBilling({ billing, roomNumber, tenantName, documents: docs });
+    }
     setIsReceiptPopupOpen(true);
   };
 
