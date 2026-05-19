@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import { Announcement, AnnouncementRead, type AnnouncementType } from './announcement.model.js';
 import { triggerNewAnnouncement } from '../../pusher.js';
+import type { UserTypeType } from 'shared';
 
 type CreateAnnouncementParams = {
   subject: string;
@@ -29,8 +30,8 @@ export const createAnnouncement = async (params: CreateAnnouncementParams) => {
   return announcement;
 };
 
-export const getAnnouncements = async (userId: mongoose.Types.ObjectId, userType: string) => {
-  const roleFilter: { targetRole?: { $in: (string | null)[] } | null } = {};
+export const getAnnouncements = async (userId: mongoose.Types.ObjectId, userType: UserTypeType) => {
+  const roleFilter: { targetRole?: { $in: (UserTypeType | null)[] } | null } = {};
 
   if (userType === 'Admin') {
     roleFilter.targetRole = null;

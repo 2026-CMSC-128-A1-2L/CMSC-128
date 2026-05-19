@@ -101,7 +101,7 @@ const notifyVisitBookingRecipients = async (
   ]);
 
   for (const manager of facility.managers) {
-    if (manager.permissions.manageBookings) {
+    if (manager.permissions.acceptOcularVisits) {
       recipients.set(manager.userId.toString(), manager.userId);
     }
   }
