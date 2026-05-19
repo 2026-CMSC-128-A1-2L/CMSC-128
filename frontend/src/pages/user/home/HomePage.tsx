@@ -633,13 +633,15 @@ const HomePage: FunctionComponent = () => {
                 ) : (
                   /* Default home view */
                   <>
-                    <CarouselSection
-                      title="Pasalo Units"
-                      items={pasaloDorms}
-                      category="pasalo"
-                      onViewAll={handleViewAll}
-                      infoIcon
-                    />
+                    {pasaloDorms.length > 0 && (
+                      <CarouselSection
+                        title="Pasalo Units"
+                        items={pasaloDorms}
+                        category="pasalo"
+                        onViewAll={handleViewAll}
+                        infoIcon
+                      />
+                    )}
                     <CarouselSection
                       title="Popular Listings"
                       items={popularDorms}
