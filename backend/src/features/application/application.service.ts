@@ -100,7 +100,7 @@ export const getApplications = async (
   )
     .populate(
       'userId',
-      'firstName middleName lastName emails email contact address studentNumber profilePicture',
+      'firstName middleName lastName emails email contact address studentNumber degreeProgram profilePicture',
     )
     .populate('facilityId', 'name location media')
     .populate('listingId', 'roomType capacity tags')
@@ -120,7 +120,7 @@ export const getApplicationById = async (
     .findById(applicationId)
     .populate(
       'userId',
-      'firstName middleName lastName emails email contact address studentNumber profilePicture',
+      'firstName middleName lastName emails email contact address studentNumber degreeProgram profilePicture',
     )
     .populate('facilityId', 'name location media')
     .populate('listingId', 'roomType capacity tags')

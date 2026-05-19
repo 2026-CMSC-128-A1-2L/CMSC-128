@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { Icon } from '@iconify/react';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import LandlordLayout from '../../../components/landlord/LandlordLayout';
 import TenantAvatar from '../../../components/landlord/tenants/TenantAvatar';
@@ -30,6 +31,8 @@ type RawApplication = {
     firstName?: string;
     middleName?: string;
     lastName?: string;
+    studentNumber?: string;
+    degreeProgram?: string;
     emails?: string[];
     email?: string;
     contact?: string;
@@ -48,6 +51,15 @@ type RawUnit = {
   id?: string;
   roomNumber?: string;
   isAvailable?: boolean;
+  capacity?: number;
+  currentRentals?: Array<{
+    userId?: {
+      firstName?: string;
+      lastName?: string;
+      studentNumber?: string;
+      degreeProgram?: string;
+    };
+  }>;
 };
 
 type AssignmentMode = 'manual' | 'matching';
@@ -99,6 +111,101 @@ const getDataArray = <T,>(response: unknown): T[] => {
 const getListingId = (application: RawApplication) => {
   if (typeof application.listingId === 'string') return application.listingId;
   return application.listingId?._id ?? application.listingId?.id ?? '';
+};
+
+const getUnitId = (unit?: RawUnit) => unit?._id ?? unit?.id ?? '';
+
+const getStudentYear = (studentNumber?: string) => {
+  const digits = studentNumber?.replace(/\D/g, '') ?? '';
+  return digits.length >= 4 ? digits.slice(0, 4) : '';
+};
+
+const normalizeCourse = (degreeProgram?: string) => degreeProgram?.trim().toLowerCase() ?? '';
+
+const getTenantProfiles = (unit: RawUnit) =>
+  unit.currentRentals?.map((rental) => rental.userId).filter(Boolean) ?? [];
+
+const hasOpenCapacity = (unit: RawUnit) => {
+  if (unit.isAvailable === false) return false;
+  if (!unit.capacity) return true;
+  return (unit.currentRentals?.length ?? 0) < unit.capacity;
+};
+
+const isEmptyUnit = (unit: RawUnit) => (unit.currentRentals?.length ?? 0) === 0;
+
+const getMatchedUnit = (
+  units: RawUnit[],
+  applicant: RawApplication['userId'],
+  selectedOptions: Record<MatchingOptionKey, boolean>,
+) => {
+  const availableUnits = units.filter(hasOpenCapacity);
+  if (availableUnits.length === 0) return undefined;
+
+  const applicantYear = getStudentYear(applicant?.studentNumber);
+  const applicantCourse = normalizeCourse(applicant?.degreeProgram);
+
+  const findByYear = () =>
+    applicantYear
+      ? availableUnits.find((unit) =>
+          getTenantProfiles(unit).some(
+            (tenant) => getStudentYear(tenant?.studentNumber) === applicantYear,
+          ),
+        )
+      : undefined;
+
+  const findByCourse = () =>
+    applicantCourse
+      ? availableUnits.find((unit) =>
+          getTenantProfiles(unit).some(
+            (tenant) => normalizeCourse(tenant?.degreeProgram) === applicantCourse,
+          ),
+        )
+      : undefined;
+
+  const findEmpty = () => availableUnits.find(isEmptyUnit);
+  const findRandom = () => availableUnits[Math.floor(Math.random() * availableUnits.length)];
+
+  if (selectedOptions.autoMatching) {
+    const scoredUnits = availableUnits
+      .map((unit, index) => {
+        const tenants = getTenantProfiles(unit);
+        const hasSameYear =
+          Boolean(applicantYear) &&
+          tenants.some((tenant) => getStudentYear(tenant?.studentNumber) === applicantYear);
+        const hasSameCourse =
+          Boolean(applicantCourse) &&
+          tenants.some((tenant) => normalizeCourse(tenant?.degreeProgram) === applicantCourse);
+        const tenantCount = tenants.length;
+
+        return {
+          unit,
+          index,
+          score: (hasSameYear ? 4 : 0) + (hasSameCourse ? 4 : 0) + (tenantCount === 0 ? 1 : 0),
+        };
+      })
+      .sort((a, b) => b.score - a.score || a.index - b.index);
+
+    if (scoredUnits[0]?.score > 0) return scoredUnits[0].unit;
+  }
+
+  if (selectedOptions.yearBatch) {
+    const yearUnit = findByYear();
+    if (yearUnit) return yearUnit;
+  }
+
+  if (selectedOptions.degreeProgram) {
+    const courseUnit = findByCourse();
+    if (courseUnit) return courseUnit;
+  }
+
+  if (selectedOptions.emptyRoom) {
+    const emptyUnit = findEmpty();
+    if (emptyUnit) return emptyUnit;
+  }
+
+  if (selectedOptions.random) return findRandom();
+
+  return availableUnits[0];
 };
 
 const formatName = (user?: RawApplication['userId']) =>
@@ -201,7 +308,7 @@ const LandlordUnvalidatedTenantDetail = () => {
             (unit) => unit.isAvailable !== false,
           );
           setAvailableUnits(units);
-          setSelectedUnitId(units[0]?._id ?? units[0]?.id ?? '');
+          setSelectedUnitId(getUnitId(units[0]));
         }
       } finally {
         if (!cancelled) setIsLoading(false);
@@ -236,11 +343,17 @@ const LandlordUnvalidatedTenantDetail = () => {
     return application.documents.every((d) => docReview[d.id] === 'approved');
   }, [application, docReview, rawApplication?.status]);
 
-  const fallbackUnitId = availableUnits[0]?._id ?? availableUnits[0]?.id ?? '';
+  const matchedUnit = useMemo(
+    () => getMatchedUnit(availableUnits, rawApplication?.userId, selectedMatchingOptions),
+    [availableUnits, rawApplication?.userId, selectedMatchingOptions],
+  );
+  const matchedUnitId = getUnitId(matchedUnit);
+  const fallbackUnitId = getUnitId(availableUnits.find(hasOpenCapacity) ?? availableUnits[0]);
   const unitIdForApproval =
     assignmentMode === 'manual'
       ? selectedUnitId
-      : selectedUnitId ||
+      : matchedUnitId ||
+        selectedUnitId ||
         fallbackUnitId ||
         rawApplication?.unitId?._id ||
         rawApplication?.unitId?.id ||
@@ -396,7 +509,9 @@ const LandlordUnvalidatedTenantDetail = () => {
                             type="button"
                             onClick={() => {
                               setAssignmentMode('matching');
-                              setSelectedUnitId((current) => current || fallbackUnitId);
+                              setSelectedUnitId(
+                                (current) => current || matchedUnitId || fallbackUnitId,
+                              );
                             }}
                             className={[
                               'rounded-[10px] px-[14px] py-[8px] transition-colors',
@@ -412,21 +527,28 @@ const LandlordUnvalidatedTenantDetail = () => {
 
                       {assignmentMode === 'manual' ? (
                         <div className="flex flex-col gap-[8px] cursor-pointer">
-                          <select
-                            value={selectedUnitId}
-                            onChange={(event) => setSelectedUnitId(event.target.value)}
-                            className="min-h-[46px] rounded-[12px] border border-[#e2e8f0] px-[14px] py-[10px] text-[14px] font-bold text-[#2f3136] outline-none transition-colors focus:border-[#096c5b]"
-                          >
-                            {availableUnits.length === 0 ? (
-                              <option value="">No available units</option>
-                            ) : (
-                              availableUnits.map((unit) => (
-                                <option key={unit._id ?? unit.id} value={unit._id ?? unit.id}>
-                                  {unit.roomNumber ?? 'Available unit'}
-                                </option>
-                              ))
-                            )}
-                          </select>
+                          <div className="relative flex min-h-[46px] items-center rounded-[12px] border border-solid border-[#f0f0f0] bg-white px-[14px] transition-colors focus-within:border-[#096c5b] focus-within:ring-2 focus-within:ring-[#096c5b]/20">
+                            <select
+                              value={selectedUnitId}
+                              onChange={(event) => setSelectedUnitId(event.target.value)}
+                              className="w-full cursor-pointer appearance-none bg-transparent py-[10px] pr-[36px] font-['Inter',sans-serif] text-[14px] font-medium text-[#2f3136] outline-none"
+                            >
+                              {availableUnits.length === 0 ? (
+                                <option value="">No available units</option>
+                              ) : (
+                                availableUnits.map((unit) => (
+                                  <option key={getUnitId(unit)} value={getUnitId(unit)}>
+                                    {unit.roomNumber ?? 'Available unit'}
+                                  </option>
+                                ))
+                              )}
+                            </select>
+                            <Icon
+                              icon="mdi-light:chevron-down"
+                              className="pointer-events-none absolute right-[12px] top-1/2 h-[22px] w-[22px] -translate-y-1/2 text-[#666]"
+                              aria-hidden
+                            />
+                          </div>
                           <p className="text-[12px] font-medium leading-[18px] text-[#64748b]">
                             Choose the room/unit before approving this initial screening.
                           </p>
@@ -460,8 +582,11 @@ const LandlordUnvalidatedTenantDetail = () => {
                             </label>
                           ))}
                           <p className="text-[12px] font-medium leading-[18px] text-[#64748b]">
-                            Matching approval will use the next available unit while keeping these
-                            preferences visible for the assignment decision.
+                            {matchedUnit
+                              ? `Matching approval will assign this applicant to ${
+                                  matchedUnit.roomNumber ?? 'the selected available unit'
+                                }.`
+                              : 'No available unit matches the selected assignment rules.'}
                           </p>
                         </div>
                       )}
