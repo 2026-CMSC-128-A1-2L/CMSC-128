@@ -37,6 +37,7 @@ import { useFacilityDetails } from "../../../hooks/useFacilityDetails";
 import { useBookmarks } from "../../../hooks/useBookmarks";
 import { BookmarkService } from "../../../service/BookmarkService";
 import { ApplicationService } from "../../../service/ApplicationService";
+import { RentalService } from "../../../service/RentalService";
 import { TransferService } from "../../../service/TransferService";
 import CalendarPopout from "../../../components/user/user-calendar/CalendarPopout";
 import PortalPopup from "../../../components/general/PortalPopup";
@@ -127,6 +128,22 @@ type ApplicationWarning = {
   type?: "warning" | "success" | "info" | "error";
 };
 
+const getDataArray = (response: unknown): unknown[] => {
+  if (Array.isArray(response)) return response;
+  if (response && typeof response === "object" && "data" in response) {
+    const data = (response as { data?: unknown }).data;
+    if (Array.isArray(data)) return data;
+  }
+  return [];
+};
+
+const hasCurrentRental = (rentals: unknown[]) =>
+  rentals.some((rental) => {
+    if (!rental || typeof rental !== "object") return false;
+    const status = String((rental as { status?: unknown }).status ?? "");
+    return status === "active" || status === "inactive";
+  });
+
 const UnitDetails: FunctionComponent = () => {
   const user = useAuthStore((state) => state.user);
   const { facilityId } = useParams<{ facilityId: string }>();
@@ -160,6 +177,8 @@ const UnitDetails: FunctionComponent = () => {
   const [bookmarkError, setBookmarkError] = useState<string | null>(null);
   const [applicationError, setApplicationError] = useState<string | null>(null);
   const [isSubmittingApplication, setIsSubmittingApplication] = useState(false);
+  const [hasCurrentDorm, setHasCurrentDorm] = useState(false);
+  const [isCheckingCurrentDorm, setIsCheckingCurrentDorm] = useState(false);
   const [applicationWarnings, setApplicationWarnings] = useState<
     ApplicationWarning[]
   >([]);
@@ -250,6 +269,33 @@ const UnitDetails: FunctionComponent = () => {
       setMoveInDate(pasaloDetails.moveInDate);
     }
   }, [pasaloDetails]);
+
+  useEffect(() => {
+    if (!user) {
+      setHasCurrentDorm(false);
+      setIsCheckingCurrentDorm(false);
+      return;
+    }
+
+    let cancelled = false;
+    setIsCheckingCurrentDorm(true);
+
+    RentalService.getMyRentals()
+      .then((response) => {
+        if (cancelled) return;
+        setHasCurrentDorm(hasCurrentRental(getDataArray(response)));
+      })
+      .catch(() => {
+        if (!cancelled) setHasCurrentDorm(false);
+      })
+      .finally(() => {
+        if (!cancelled) setIsCheckingCurrentDorm(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [user]);
 
   const showLoggedOutApplicationWarning = () => {
     const id = Date.now() + Math.random();
@@ -542,6 +588,13 @@ const UnitDetails: FunctionComponent = () => {
       return;
     }
 
+    if (hasCurrentDorm) {
+      setApplicationError(
+        "You already have a current dorm, so you cannot send another application.",
+      );
+      return;
+    }
+
     if (!objectIdPattern.test(selectedListing.id)) {
       setApplicationError(
         "Room details are still loading. Please try again in a moment.",
@@ -596,6 +649,13 @@ const UnitDetails: FunctionComponent = () => {
     setVisitPopoutOpen(true);
   };
 
+  const applicationSubmitLabel = hasCurrentDorm
+    ? "Already Has Dorm"
+    : isCheckingCurrentDorm
+      ? "Checking..."
+      : isSubmittingApplication
+        ? "Submitting..."
+        : "Submit Application";
   return (
     <div className="user-unit-details-shell relative flex min-h-screen bg-transparent font-inter text-darkslategray-100 dark:text-[#edf6f4]">
       <PageBackground />
@@ -615,6 +675,7 @@ const UnitDetails: FunctionComponent = () => {
           />
         </PortalPopup>
       )}
+
       {/* Sidebar */}
       <div className="sticky top-0 h-screen shrink-0 z-20 font-inter">
         <SideBar />
@@ -623,6 +684,7 @@ const UnitDetails: FunctionComponent = () => {
       {/* Main */}
       <div className="relative z-10 flex flex-1 flex-col min-w-0 overflow-y-auto">
         <div className="flex-1 flex flex-col px-4 sm:px-8 lg:px-20 pt-8 lg:pt-16 pb-0 gap-6">
+
           {/* Breadcrumb */}
           <div
             className="flex items-center gap-1.5 text-sm font-semibold flex-wrap"
@@ -636,6 +698,7 @@ const UnitDetails: FunctionComponent = () => {
               ]}
             />
           </div>
+
           {/* Search */}
           <form
             onSubmit={submitSearch}
@@ -732,10 +795,12 @@ const UnitDetails: FunctionComponent = () => {
             )}
           </form>
 
-          {/* Top section: image + apply card */}
-          <div className="flex flex-col xl:flex-row gap-6 font-inter text-black">
-            {/* Left: image + info */}
+          {/* ── UNIFIED LAYOUT: single xl:flex-row wrapper ── */}
+          <div className="flex flex-col xl:flex-row gap-6 font-inter text-black xl:items-start">
+
+            {/* ── LEFT COLUMN: image + info + tabs ── */}
             <div className="flex-1 min-w-0 flex flex-col gap-6">
+
               <ImageCarousel images={facility.gallery} />
 
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-2">
@@ -759,11 +824,10 @@ const UnitDetails: FunctionComponent = () => {
                     type="button"
                     onClick={handleBookmarkToggle}
                     disabled={!selectedListing || isBookmarkSaving}
-                    className={`rounded border border-teal-200 py-2 px-6 transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${
-                      isSelectedListingBookmarked
-                        ? "bg-lightcyan text-darkslategray-200"
-                        : "hover:bg-lightcyan"
-                    } cursor-pointer`}
+                    className={`rounded border border-teal-200 py-2 px-6 transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${isSelectedListingBookmarked
+                      ? "bg-lightcyan text-darkslategray-200"
+                      : "hover:bg-lightcyan"
+                      } cursor-pointer`}
                   >
                     {isBookmarkSaving
                       ? "SAVING"
@@ -773,6 +837,7 @@ const UnitDetails: FunctionComponent = () => {
                   </button>
                 </div>
               </div>
+
               {bookmarkError && (
                 <div className="px-2 text-xs font-semibold text-red-500 cursor-pointer">
                   {bookmarkError}
@@ -788,331 +853,295 @@ const UnitDetails: FunctionComponent = () => {
                 <b className="text-2xl leading-8">{selectedPriceLabel}</b>
                 <span className="text-lg text-teal-100"> / month</span>
               </div>
-            </div>
-
-            {/* Right: Apply card */}
-            <div className="w-full xl:w-[280px] shrink-0 bg-white border border-whitesmoke-300 rounded-xl flex flex-col items-center p-5 gap-5 text-sm font-inter">
-              <div className="w-full flex items-center justify-between text-xl">
-                <div className="flex items-center gap-2">
-                  <Icon icon="ri:grid-fill" className="h-5 w-5" />
-                  <b>Apply</b>
-                </div>
-                <button
-                  type="button"
-                  onClick={() =>
-                    runAuthenticatedAction(() => {
-                      setSelectedListingId(
-                        pasaloDetails?.listingId ?? availableListings[0]?.id ?? "",
-                      );
-                      setLeaseDuration(
-                        pasaloDetails?.leaseDuration
-                          ? leaseDurationLabels[pasaloDetails.leaseDuration]
-                          : "",
-                      );
-                      setIsLeaseMenuOpen(false);
-                      setMoveInDate(pasaloDetails?.moveInDate ?? "");
-                      setMessageToLandlord("");
-                    })
-                  }
-                  className="shadow rounded-md bg-whitesmoke-100 py-1 px-3 text-xs text-gray font-lora cursor-pointer"
-                >
-                  Reset
-                </button>
-              </div>
-
-              <div className="w-full flex flex-col gap-4 text-gray font-lora text-xs">
-                {isPasaloApplication && (
-                  <div className="rounded-lg border border-[#cbf6ed] bg-[#f1fffb] px-3 py-2 text-[11px] font-semibold leading-4 text-[#096c5b]">
-                    This is a Pasalo listing. Room type, lease duration, and move-in date are
-                    matched to the approved transfer request.
-                  </div>
-                )}
-                <div className="flex flex-col gap-1.5">
-                  <div className="font-medium">Rooms Available</div>
-                  <div className="grid grid-cols-1 gap-2 text-black sm:grid-cols-2 xl:grid-cols-1">
-                    {applicationListings.length > 0 ? (
-                      applicationListings.map((listing) => {
-                        const isSelected = selectedListing?.id === listing.id;
-
-                        return (
-                          <button
-                            key={listing.id}
-                            type="button"
-                            disabled={isPasaloApplication}
-                            onClick={() =>
-                              runAuthenticatedAction(() =>
-                                setSelectedListingId(listing.id),
-                              )
-                            }
-                            className={`rounded-lg border py-2 px-3 text-center font-semibold text-xs shadow transition-colors ${
-                              isSelected
-                                ? "border-darkslategray-200 bg-darkslategray-200 text-white"
-                                : "border-transparent bg-white text-black hover:bg-lightcyan"
-                            } ${isPasaloApplication ? "cursor-not-allowed opacity-80" : "cursor-pointer"}`}
-                          >
-                            {roomButtonLabel(listing.label)}
-                          </button>
-                        );
-                      })
-                    ) : (
-                      <button
-                        type="button"
-                        disabled
-                        className="rounded-lg bg-white py-2 px-3 text-center font-semibold text-xs shadow text-silver cursor-pointer"
-                      >
-                        TBA
-                      </button>
-                    )}
-                  </div>
-                </div>
-                <div className="flex flex-col gap-1.5">
-                  <label
-                    className="font-medium"
-                    htmlFor="lease-duration-select"
-                  >
-                    Lease Duration
-                  </label>
-                  <div className="relative" id="lease-duration-select">
-                    <button
-                      type="button"
-                      disabled={isPasaloApplication}
-                      onClick={() =>
-                        runAuthenticatedAction(() =>
-                          setIsLeaseMenuOpen((isOpen) => !isOpen),
-                        )
-                      }
-                      className={`shadow rounded-lg border w-full flex items-center justify-between py-2.5 px-3 gap-2 text-left transition-all ${
-                        isLeaseMenuOpen
-                          ? "border-teal-200 bg-lightcyan/40 ring-2 ring-lightcyan"
-                          : "border-transparent bg-white hover:bg-lightcyan/20"
-                      } ${isPasaloApplication ? "cursor-not-allowed opacity-80" : "cursor-pointer"}`}
-                    >
-                      <span
-                        className={`font-semibold text-xs ${leaseDuration ? "text-black" : "text-silver"
-                          }`}
-                      >
-                        {leaseDuration || "Choose lease duration"}
-                      </span>
-                      <span className="grid h-7 w-7 place-items-center rounded-full bg-whitesmoke-100 text-teal-200 cursor-pointer">
-                        <Icon
-                          icon="mdi:chevron-down"
-                          className={`h-4 w-4 transition-transform ${isLeaseMenuOpen ? "rotate-180" : ""
-                            }`}
-                        />
-                      </span>
-                    </button>
-
-                    {isLeaseMenuOpen && (
-                      <div className="absolute z-20 mt-2 w-full overflow-hidden rounded-lg border border-lightcyan bg-white p-1 shadow-[0_12px_24px_rgba(0,0,0,0.14)]">
-                        {leaseDurations.map((duration) => {
-                          const isSelected = leaseDuration === duration;
-
-                          return (
-                            <button
-                              key={duration}
-                              type="button"
-                              onClick={() =>
-                                runAuthenticatedAction(() => {
-                                  setLeaseDuration(duration);
-                                  setIsLeaseMenuOpen(false);
-                                })
-                              }
-                              className={`flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-xs font-semibold transition-colors ${
-                                isSelected
-                                  ? "bg-darkslategray-200 text-white"
-                                  : "text-gray hover:bg-lightcyan"
-                              } cursor-pointer`}
-                            >
-                              <span>{duration}</span>
-                              {isSelected && (
-                                <Icon
-                                  icon="material-symbols:check-rounded"
-                                  className="h-4 w-4 cursor-pointer"
-                                />
-                              )}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <div className="flex flex-col gap-1.5">
-                  <label className="font-medium" htmlFor="move-in-date">
-                    Preferred Move-in Date
-                  </label>
-                  <div className="shadow rounded-lg bg-white flex items-center py-2 px-3 gap-2 text-silver">
-                    <input
-                      id="move-in-date"
-                      type="date"
-                      value={moveInDate}
-                      disabled={isPasaloApplication}
-                      onChange={(event) => setMoveInDate(event.target.value)}
-                      className={`flex-1 bg-transparent outline-none font-semibold text-xs ${moveInDate ? "text-black" : "text-silver"
-                        } ${isPasaloApplication ? "cursor-not-allowed" : ""}`}
-                    />
-                    <Icon icon="mdi:calendar" className="h-4 w-4" />
-                  </div>
-                </div>
-                <div className="flex flex-col gap-1.5">
-                  <label className="font-medium" htmlFor="landlord-message">
-                    Message to Landlord{" "}
-                    <span className="text-silver">(optional)</span>
-                  </label>
-                  <textarea
-                    id="landlord-message"
-                    value={messageToLandlord}
-                    onChange={(event) =>
-                      setMessageToLandlord(event.target.value)
-                    }
-                    placeholder="Introduce yourself or ask a question.."
-                    className="shadow rounded-lg bg-white py-2 px-3 h-20 resize-none text-black placeholder:text-silver font-semibold text-xs outline-none"
-                  />
-                </div>
-
-                {/* Cost summary */}
-                <div className="shadow rounded-lg bg-whitesmoke-200 flex flex-col p-3 gap-1 text-dimgray font-poppins text-xs">
-                  {[
-                    [
-                      "Monthly Rent",
-                      primaryRent > 0
-                        ? currencyFormatter.format(primaryRent)
-                        : "TBA",
-                    ],
-                    [
-                      "Est. Utilities",
-                      estimatedUtilities > 0
-                        ? currencyFormatter.format(estimatedUtilities)
-                        : "TBA",
-                    ],
-                    [
-                      "Security Deposit",
-                      securityDeposit > 0
-                        ? currencyFormatter.format(securityDeposit)
-                        : "TBA",
-                    ],
-                  ].map(([l, v]) => (
-                    <div key={l} className="flex justify-between">
-                      <span>{l}</span>
-                      <span>{v}</span>
-                    </div>
-                  ))}
-                  <div className="h-px bg-gray-200 my-1" />
-                  <div className="flex justify-between font-bold text-gray">
-                    <span>Est. Move-in Cost</span>
-                    <span>
-                      {moveInCost > 0
-                        ? currencyFormatter.format(moveInCost)
-                        : "TBA"}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="w-full flex flex-col gap-2 font-poppins text-white">
-                {applicationError && (
-                  <p className="text-xs font-semibold text-red-500 font-lora text-center">
-                    {applicationError}
-                  </p>
-                )}
-                <button
-                  type="button"
-                  onClick={handleSubmitApplication}
-                  disabled={isSubmittingApplication}
-                  className="w-full rounded-lg bg-darkslategray-200 flex items-center justify-center gap-2 py-3 px-4 disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
-                >
-                  <span className="font-medium text-sm">
-                    {isSubmittingApplication
-                      ? "Submitting..."
-                      : "Submit Application"}
-                  </span>
-                  <Icon icon="formkit:arrowright" className="h-5 w-5" />
-                </button>
-                <p className="text-xs text-dimgray font-lora text-center">
-                  Landlord will respond within 24–48 hrs.
-                  <br />
-                  Your info is kept private until approved.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Tags + tabs + sidebar */}
-          <div className="flex flex-col xl:flex-row gap-6 text-sm font-lora text-darkslategray-200">
-            {/* Left: tags + tabs */}
-            <div className="flex-1 min-w-0 flex flex-col gap-6">
-              {/* Tags */}
-              <div className="flex flex-wrap gap-2 text-xs text-center text-teal-200">
-                {detailTags.map((label, index) => (
-                  <div
-                    key={label}
-                    className={`rounded-lg border border-teal-200 py-2 px-4 font-medium ${index === 0 ? "bg-lightcyan" : ""} cursor-pointer`}
-                  >
-                    {label}
-                  </div>
-                ))}
-                {selectedListingTags.map(({ name, label, value }) => (
-                  <div
-                    key={`${name}-${String(value)}`}
-                    className="rounded-lg border border-teal-200 py-2 px-4 font-medium"
-                  >
-                    {`${label}: ${formatTagValue(value)}`}
-                  </div>
-                ))}
-              </div>
 
               {/* Tabs */}
-              <PropertyTabs>
-                <PropertyTab
-                  text="ABOUT"
-                  element={
-                    <AboutDetails
-                      description={[
-                        facility.description,
-                        selectedListing?.description,
-                      ]
-                        .filter(Boolean)
-                        .join("\n\n")}
-                      details={aboutDetails}
-                      included={included}
-                    />
-                  }
-                />
-                <PropertyTab
-                  text="AMENITIES"
-                  element={<AmenetiesDetails amenities={amenities} />}
-                />
-                <PropertyTab
-                  text="RULES"
-                  element={<RulesDetails rules={rules} />}
-                />
-                <PropertyTab
-                  text="LOCATION"
-                  element={
-                    <LocationDetails
-                      latitude={facility.coordinates?.lat}
-                      longitude={facility.coordinates?.long}
-                      name={facility.name}
-                      address={facility.location}
-                    />
-                  }
-                />
-                <PropertyTab
-                  text="REVIEWS"
-                  element={
-                    <ReviewDetails
-                      overallScore={overallScore}
-                      totalReviews={reviews.length}
-                      rows={ratingRows}
-                      reviews={reviews}
-                    />
-                  }
-                />
-              </PropertyTabs>
+              <div className="flex flex-col gap-6 text-sm font-lora text-darkslategray-200">
+                <PropertyTabs>
+                  <PropertyTab
+                    text="ABOUT"
+                    element={
+                      <AboutDetails
+                        description={[
+                          facility.description,
+                          selectedListing?.description,
+                        ]
+                          .filter(Boolean)
+                          .join("\n\n")}
+                        details={aboutDetails}
+                        included={included}
+                      />
+                    }
+                  />
+                  <PropertyTab
+                    text="AMENITIES"
+                    element={<AmenetiesDetails amenities={amenities} />}
+                  />
+                  <PropertyTab
+                    text="RULES"
+                    element={<RulesDetails rules={rules} />}
+                  />
+                  <PropertyTab
+                    text="LOCATION"
+                    element={
+                      <LocationDetails
+                        latitude={facility.coordinates?.lat}
+                        longitude={facility.coordinates?.long}
+                        name={facility.name}
+                        address={facility.location}
+                      />
+                    }
+                  />
+                  <PropertyTab
+                    text="REVIEWS"
+                    element={
+                      <ReviewDetails
+                        overallScore={overallScore}
+                        totalReviews={reviews.length}
+                        rows={ratingRows}
+                        reviews={reviews}
+                      />
+                    }
+                  />
+                </PropertyTabs>
+              </div>
             </div>
 
-            {/* Right: landlord card + similar */}
+            {/* ── RIGHT COLUMN: Apply card + Landlord card + Similar ── */}
             <div className="w-full xl:w-[280px] shrink-0 flex flex-col gap-5 font-inter text-black">
+
+              {/* Apply card */}
+              <div className="bg-white border border-whitesmoke-300 rounded-xl flex flex-col items-center p-5 gap-5 text-sm font-inter">
+                <div className="w-full flex items-center justify-between text-xl">
+                  <div className="flex items-center gap-2">
+                    <Icon icon="ri:grid-fill" className="h-5 w-5" />
+                    <b>Apply</b>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      runAuthenticatedAction(() => {
+                        setSelectedListingId(
+                          pasaloDetails?.listingId ?? availableListings[0]?.id ?? "",
+                        );
+                        setLeaseDuration(
+                          pasaloDetails?.leaseDuration
+                            ? leaseDurationLabels[pasaloDetails.leaseDuration]
+                            : "",
+                        );
+                        setIsLeaseMenuOpen(false);
+                        setMoveInDate(pasaloDetails?.moveInDate ?? "");
+                        setMessageToLandlord("");
+                      })
+                    }
+                    className="shadow rounded-md bg-whitesmoke-100 py-1 px-3 text-xs text-gray font-lora cursor-pointer"
+                  >
+                    Reset
+                  </button>
+                </div>
+
+                <div className="w-full flex flex-col gap-4 text-gray font-lora text-xs">
+                  {isPasaloApplication && (
+                    <div className="rounded-lg border border-[#cbf6ed] bg-[#f1fffb] px-3 py-2 text-[11px] font-semibold leading-4 text-[#096c5b]">
+                      This is a Pasalo listing. Room type, lease duration, and move-in date are
+                      matched to the approved transfer request.
+                    </div>
+                  )}
+                  {hasCurrentDorm && (
+                    <div className="rounded-lg border border-[#ffd7d7] bg-[#fff6f6] px-3 py-2 text-[11px] font-semibold leading-4 text-[#9b1c1c]">
+                      You already have a current dorm. New applications are disabled.
+                    </div>
+                  )}
+
+                  <div className="flex flex-col gap-1.5">
+                    <div className="font-medium">Rooms Available</div>
+                    <div className="grid grid-cols-1 gap-2 text-black sm:grid-cols-2 xl:grid-cols-1">
+                      {applicationListings.length > 0 ? (
+                        applicationListings.map((listing) => {
+                          const isSelected = selectedListing?.id === listing.id;
+                          return (
+                            <button
+                              key={listing.id}
+                              type="button"
+                              disabled={isPasaloApplication}
+                              onClick={() =>
+                                runAuthenticatedAction(() =>
+                                  setSelectedListingId(listing.id),
+                                )
+                              }
+                              className={`rounded-lg border py-2 px-3 text-center font-semibold text-xs shadow transition-colors ${isSelected
+                                ? "border-darkslategray-200 bg-darkslategray-200 text-white"
+                                : "border-transparent bg-white text-black hover:bg-lightcyan"
+                                } ${isPasaloApplication ? "cursor-not-allowed opacity-80" : "cursor-pointer"}`}
+                            >
+                              {roomButtonLabel(listing.label)}
+                            </button>
+                          );
+                        })
+                      ) : (
+                        <button
+                          type="button"
+                          disabled
+                          className="rounded-lg bg-white py-2 px-3 text-center font-semibold text-xs shadow text-silver cursor-pointer"
+                        >
+                          TBA
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-1.5">
+                    <label className="font-medium" htmlFor="lease-duration-select">
+                      Lease Duration
+                    </label>
+                    <div className="relative" id="lease-duration-select">
+                      <button
+                        type="button"
+                        disabled={isPasaloApplication}
+                        onClick={() =>
+                          runAuthenticatedAction(() =>
+                            setIsLeaseMenuOpen((isOpen) => !isOpen),
+                          )
+                        }
+                        className={`shadow rounded-lg border w-full flex items-center justify-between py-2.5 px-3 gap-2 text-left transition-all ${isLeaseMenuOpen
+                          ? "border-teal-200 bg-lightcyan/40 ring-2 ring-lightcyan"
+                          : "border-transparent bg-white hover:bg-lightcyan/20"
+                          } ${isPasaloApplication ? "cursor-not-allowed opacity-80" : "cursor-pointer"}`}
+                      >
+                        <span
+                          className={`font-semibold text-xs ${leaseDuration ? "text-black" : "text-silver"
+                            }`}
+                        >
+                          {leaseDuration || "Choose lease duration"}
+                        </span>
+                        <span className="grid h-7 w-7 place-items-center rounded-full bg-whitesmoke-100 text-teal-200 cursor-pointer">
+                          <Icon
+                            icon="mdi:chevron-down"
+                            className={`h-4 w-4 transition-transform ${isLeaseMenuOpen ? "rotate-180" : ""
+                              }`}
+                          />
+                        </span>
+                      </button>
+
+                      {isLeaseMenuOpen && (
+                        <div className="absolute z-20 mt-2 w-full overflow-hidden rounded-lg border border-lightcyan bg-white p-1 shadow-[0_12px_24px_rgba(0,0,0,0.14)]">
+                          {leaseDurations.map((duration) => {
+                            const isSelected = leaseDuration === duration;
+                            return (
+                              <button
+                                key={duration}
+                                type="button"
+                                onClick={() =>
+                                  runAuthenticatedAction(() => {
+                                    setLeaseDuration(duration);
+                                    setIsLeaseMenuOpen(false);
+                                  })
+                                }
+                                className={`flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-xs font-semibold transition-colors ${isSelected
+                                  ? "bg-darkslategray-200 text-white"
+                                  : "text-gray hover:bg-lightcyan"
+                                  } cursor-pointer`}
+                              >
+                                <span>{duration}</span>
+                                {isSelected && (
+                                  <Icon
+                                    icon="material-symbols:check-rounded"
+                                    className="h-4 w-4 cursor-pointer"
+                                  />
+                                )}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-1.5">
+                    <label className="font-medium" htmlFor="move-in-date">
+                      Preferred Move-in Date
+                    </label>
+                    <div className="shadow rounded-lg bg-white flex items-center py-2 px-3 gap-2 text-silver">
+                      <input
+                        id="move-in-date"
+                        type="date"
+                        value={moveInDate}
+                        disabled={isPasaloApplication}
+                        onChange={(event) => setMoveInDate(event.target.value)}
+                        className={`flex-1 bg-transparent outline-none font-semibold text-xs ${moveInDate ? "text-black" : "text-silver"
+                          } ${isPasaloApplication ? "cursor-not-allowed" : ""}`}
+                      />
+                      <Icon icon="mdi:calendar" className="h-4 w-4" />
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-1.5">
+                    <label className="font-medium" htmlFor="landlord-message">
+                      Message to Landlord{" "}
+                      <span className="text-silver">(optional)</span>
+                    </label>
+                    <textarea
+                      id="landlord-message"
+                      value={messageToLandlord}
+                      onChange={(event) => setMessageToLandlord(event.target.value)}
+                      placeholder="Introduce yourself or ask a question.."
+                      className="shadow rounded-lg bg-white py-2 px-3 h-20 resize-none text-black placeholder:text-silver font-semibold text-xs outline-none"
+                    />
+                  </div>
+
+                  {/* Cost summary */}
+                  <div className="shadow rounded-lg bg-whitesmoke-200 flex flex-col p-3 gap-1 text-dimgray font-poppins text-xs">
+                    {[
+                      [
+                        "Monthly Rent",
+                        primaryRent > 0 ? currencyFormatter.format(primaryRent) : "TBA",
+                      ],
+                      [
+                        "Est. Utilities",
+                        estimatedUtilities > 0 ? currencyFormatter.format(estimatedUtilities) : "TBA",
+                      ],
+                      [
+                        "Security Deposit",
+                        securityDeposit > 0 ? currencyFormatter.format(securityDeposit) : "TBA",
+                      ],
+                    ].map(([l, v]) => (
+                      <div key={l} className="flex justify-between">
+                        <span>{l}</span>
+                        <span>{v}</span>
+                      </div>
+                    ))}
+                    <div className="h-px bg-gray-200 my-1" />
+                    <div className="flex justify-between font-bold text-gray">
+                      <span>Est. Move-in Cost</span>
+                      <span>
+                        {moveInCost > 0 ? currencyFormatter.format(moveInCost) : "TBA"}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="w-full flex flex-col gap-2 font-poppins text-white">
+                  {applicationError && (
+                    <p className="text-xs font-semibold text-red-500 font-lora text-center">
+                      {applicationError}
+                    </p>
+                  )}
+                  <button
+                    type="button"
+                    onClick={handleSubmitApplication}
+                    disabled={isSubmittingApplication || isCheckingCurrentDorm || hasCurrentDorm}
+                    className="w-full rounded-lg bg-darkslategray-200 flex items-center justify-center gap-2 py-3 px-4 disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
+                  >
+                    <span className="font-medium text-sm">{applicationSubmitLabel}</span>
+                    <Icon icon="formkit:arrowright" className="h-5 w-5" />
+                  </button>
+                  <p className="text-xs text-dimgray font-lora text-center">
+                    Landlord will respond within 24–48 hrs.
+                    <br />
+                    Your info is kept private until approved.
+                  </p>
+                </div>
+              </div>
+
               {/* Landlord card */}
               <div className="rounded-lg shadow bg-white flex flex-col p-4 gap-4">
                 <div className="flex items-center gap-2 text-xl">
@@ -1146,9 +1175,7 @@ const UnitDetails: FunctionComponent = () => {
                 <div className="flex gap-2 text-teal-100 text-sm">
                   {[
                     [
-                      String(
-                        facility.landlord?.numUnits ?? availableListings.length,
-                      ),
+                      String(facility.landlord?.numUnits ?? availableListings.length),
                       "Active Units",
                     ],
                     [landlordSince, "Since"],
@@ -1170,10 +1197,7 @@ const UnitDetails: FunctionComponent = () => {
                     onClick={handleAuthenticatedLinkClick}
                     className="rounded-lg bg-darkslategray-200 flex items-center justify-center gap-2 py-2 shadow"
                   >
-                    <Icon
-                      icon="material-symbols:mail-outline"
-                      className="h-5 w-5"
-                    />
+                    <Icon icon="material-symbols:mail-outline" className="h-5 w-5" />
                     <span className="font-medium">Send Message</span>
                   </Link>
                   <button
@@ -1186,32 +1210,32 @@ const UnitDetails: FunctionComponent = () => {
                   </button>
                 </div>
               </div>
+
               {/* You may also like */}
-              <div className="h-full w-full overflow-x-auto flex py-1 box-border gap-3">
-                {/* Layout Wrapper: 
-      'flex-wrap' allows cards to wrap to the next line.
-      'gap-6' matches your original spacing.
-  */}
-                <div className="flex flex-wrap gap-6 justify-center w-full">
-                  {recommendedDorms
-                    .filter((dorm) => dorm.id !== facility.id)
-                    .slice(0, 2)
-                    .map((dorm) => (
-                      <DormCard
-                        key={dorm.id}
-                        id={dorm.id}
-                        name={dorm.name}
-                        rating={dorm.rating}
-                        price={dorm.price}
-                        location={dorm.location}
-                        image={dorm.image}
-                        room_types={dorm.room_types}
-                      />
-                    ))}
-                </div>
-              </div>{" "}
+              <div className="flex flex-wrap gap-6 justify-center w-full py-1">
+                {recommendedDorms
+                  .filter((dorm) => dorm.id !== facility.id)
+                  .slice(0, 2)
+                  .map((dorm) => (
+                    <DormCard
+                      key={dorm.id}
+                      id={dorm.id}
+                      name={dorm.name}
+                      rating={dorm.rating}
+                      price={dorm.price}
+                      location={dorm.location}
+                      image={dorm.image}
+                      room_types={dorm.room_types}
+                    />
+                  ))}
+              </div>
+
             </div>
+            {/* ── END RIGHT COLUMN ── */}
+
           </div>
+          {/* ── END UNIFIED LAYOUT ── */}
+
         </div>
 
         {/* Footer */}
