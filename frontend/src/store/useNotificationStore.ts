@@ -1,8 +1,8 @@
-import { create } from "zustand";
-import { NotificationService } from "../service/NotificationService";
-import { pusherClient } from "../service/pusherInstance";
-import { useAuthStore } from "./useAuthStore";
-import type { StoreNotification } from "../interface/notification";
+import { create } from 'zustand';
+import { NotificationService } from '../service/NotificationService';
+import { pusherClient } from '../service/pusherInstance';
+import { useAuthStore } from './useAuthStore';
+import type { StoreNotification } from '../interface/notification';
 
 type NotificationState = {
   notifications: StoreNotification[];
@@ -17,10 +17,8 @@ type NotificationState = {
 const sortByDate = (a: StoreNotification, b: StoreNotification) =>
   new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
 
-const mergeAndSort = (
-  notifs: StoreNotification[],
-  announcements: StoreNotification[],
-) => dedupeNotifications([...notifs, ...announcements]).sort(sortByDate);
+const mergeAndSort = (notifs: StoreNotification[], announcements: StoreNotification[]) =>
+  dedupeNotifications([...notifs, ...announcements]).sort(sortByDate);
 
 const dedupeNotifications = (items: StoreNotification[]) => {
   const byId = new Map<string, StoreNotification>();
@@ -30,6 +28,20 @@ const dedupeNotifications = (items: StoreNotification[]) => {
   }
 
   return [...byId.values()];
+};
+
+type NotificationPayload = Partial<StoreNotification> & {
+  id?: string;
+  text?: string;
+  readAt?: string | Date | null;
+};
+
+type AnnouncementPayload = {
+  _id: string;
+  subject: string;
+  content: string;
+  createdAt: string;
+  targetRole?: string;
 };
 
 export const useNotificationStore = create<NotificationState>((set, get) => ({
@@ -42,15 +54,14 @@ export const useNotificationStore = create<NotificationState>((set, get) => ({
     if (!myId) return;
 
     const notifResponse = await NotificationService.getNotifications({
-      limit: 50,
       status: undefined,
     });
 
-    const notifs: StoreNotification[] = notifResponse.data.map((n: any) => ({
-      _id: n._id ?? n.id,
-      subject: n.subject ?? "",
-      content: n.content ?? n.text ?? "",
-      status: n.status ?? (n.readAt ? "read" : "unread"),
+    const notifs: StoreNotification[] = notifResponse.data.map((n: NotificationPayload) => ({
+      _id: n._id ?? n.id ?? '',
+      subject: n.subject ?? '',
+      content: n.content ?? n.text ?? '',
+      status: n.status ?? (n.readAt ? 'read' : 'unread'),
       createdAt: n.createdAt ?? new Date().toISOString(),
     }));
 
@@ -59,7 +70,7 @@ export const useNotificationStore = create<NotificationState>((set, get) => ({
       _id: a._id,
       subject: a.subject,
       content: a.content,
-      status: a.isRead ? "read" : "unread",
+      status: a.isRead ? 'read' : 'unread',
       createdAt: a.createdAt,
       _isAnnouncement: true,
     }));
@@ -80,7 +91,7 @@ export const useNotificationStore = create<NotificationState>((set, get) => ({
 
     set((s) => ({
       notifications: s.notifications.map((n) =>
-        n._id === notificationId ? { ...n, status: "read" } : n,
+        n._id === notificationId ? { ...n, status: 'read' } : n,
       ),
     }));
   },
@@ -91,27 +102,27 @@ export const useNotificationStore = create<NotificationState>((set, get) => ({
     if (get()._channel) return;
 
     const channel = pusherClient.subscribe(`private-user-${myId}`);
-    channel.bind("new-notification", (notif: any) => {
+    channel.bind('new-notification', (notif: NotificationPayload) => {
       const item: StoreNotification = {
-        _id: notif._id,
-        subject: notif.subject,
-        content: notif.content,
-        status: notif.status ?? "unread",
-        createdAt: notif.createdAt,
+        _id: notif._id ?? notif.id ?? '',
+        subject: notif.subject ?? '',
+        content: notif.content ?? notif.text ?? '',
+        status: notif.status ?? 'unread',
+        createdAt: notif.createdAt ?? new Date().toISOString(),
       };
       set((s) => ({
         notifications: dedupeNotifications([item, ...s.notifications]).sort(sortByDate),
       }));
     });
 
-    const annChannel = pusherClient.subscribe("announcements");
-    annChannel.bind("new-announcement", (ann: any) => {
+    const annChannel = pusherClient.subscribe('announcements');
+    annChannel.bind('new-announcement', (ann: AnnouncementPayload) => {
       const myUserType = useAuthStore.getState().user?.userType;
       if (
         ann.targetRole &&
         myUserType &&
         ann.targetRole !== myUserType &&
-        ann.targetRole !== "All"
+        ann.targetRole !== 'All'
       ) {
         return;
       }
@@ -119,7 +130,7 @@ export const useNotificationStore = create<NotificationState>((set, get) => ({
         _id: ann._id,
         subject: ann.subject,
         content: ann.content,
-        status: "unread",
+        status: 'unread',
         createdAt: ann.createdAt,
         _isAnnouncement: true,
       };

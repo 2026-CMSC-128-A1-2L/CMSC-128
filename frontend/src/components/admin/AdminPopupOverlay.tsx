@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, type Variants } from "framer-motion";
 
 type AdminPopupOverlayProps = {
   onClose: () => void;
@@ -7,12 +7,12 @@ type AdminPopupOverlayProps = {
   isOpen: boolean;
 };
 
-const backdropVariants = {
+const backdropVariants: Variants = {
   hidden: { opacity: 0 },
   visible: { opacity: 1 },
 };
 
-const modalVariants = {
+const modalVariants: Variants = {
   hidden: {
     opacity: 0,
     scale: 0.9,
