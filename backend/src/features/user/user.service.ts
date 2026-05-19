@@ -1,4 +1,4 @@
-import type mongoose from 'mongoose';
+import mongoose from 'mongoose';
 import type { ClientSession, QueryFilter } from 'mongoose';
 import { Student, User } from './user.model.js';
 import { AppError } from '../../error.js';
@@ -79,25 +79,24 @@ export const getUserById = async (userId: mongoose.Types.ObjectId) => {
 
 export const deleteUser = async (userId: mongoose.Types.ObjectId) => {
   const user = await User.findOneAndUpdate(
-    // can only disabled accounts that are not disabled.
     { _id: userId, status: { $ne: 'disabled' } },
     {
       $set: {
         status: 'disabled',
         'auth.google': [],
-        email: `disabled:${userId.toString()}`,
-        emails: [],
-        documents: [],
-      },
-      $unset: {
-        address: '',
-        contact: '',
-        profilePicture: '',
       },
     },
     { returnDocument: 'after' },
   ).lean();
   if (!user) throw new AppError(404, 'User not found.');
+
+  const db = mongoose.connection.db;
+  if (db) {
+    await db.collection('sessions').deleteMany({
+      'session.passport.user': userId.toHexString(),
+    });
+  }
+
   return user;
 };
 

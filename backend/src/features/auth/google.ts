@@ -48,7 +48,7 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser((id, done) => {
-  User.findById(id)
+  User.findOne({ _id: id, status: { $ne: 'disabled' } })
     .lean()
     .then((user) => {
       if (!user) {
