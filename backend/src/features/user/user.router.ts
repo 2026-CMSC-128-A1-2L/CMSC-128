@@ -59,12 +59,9 @@ router.patch('/me', isLoggedIn, routeUpdateSelf);
 // ============================================================================
 // DELETE /api/users/me
 //
-// The user should not be able to log-in and have all sessions invalidated.
-// If the user tries to log-in again, they go through the whole register flow
-// again.
-//
-//  TODO: invalidate all sessions
-//
+// Sets the user's status to disabled and clears auth.google so they cannot
+// log in again. All active sessions are invalidated.
+// If the user tries to log in again, they go through the whole register flow.
 // ============================================================================
 router.delete('/me', isLoggedIn, routeDeleteSelf);
 
@@ -127,12 +124,9 @@ router.get('/:userId', isSuperAdmin, routeGetUser);
 // ============================================================================
 // DELETE /api/users/:userId
 //
-// The user should not be able to log-in and have all sessions invalidated.
-// If the user tries to log-in again, they go through the whole register flow
-// again.
-//
-//  TODO: invalidate all sessions
-//
+// Sets the user's status to disabled and clears auth.google so they cannot
+// log in again. All active sessions are invalidated.
+// If the user tries to log in again, they go through the whole register flow.
 // ============================================================================
 router.delete('/:userId', isSuperAdmin, routeDeleteUser);
 
