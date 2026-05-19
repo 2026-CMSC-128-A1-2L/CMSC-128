@@ -20,7 +20,17 @@ const sortByDate = (a: StoreNotification, b: StoreNotification) =>
 const mergeAndSort = (
   notifs: StoreNotification[],
   announcements: StoreNotification[],
-) => [...notifs, ...announcements].sort(sortByDate);
+) => dedupeNotifications([...notifs, ...announcements]).sort(sortByDate);
+
+const dedupeNotifications = (items: StoreNotification[]) => {
+  const byId = new Map<string, StoreNotification>();
+
+  for (const item of items) {
+    byId.set(item._id, item);
+  }
+
+  return [...byId.values()];
+};
 
 export const useNotificationStore = create<NotificationState>((set, get) => ({
   notifications: [],
@@ -32,6 +42,7 @@ export const useNotificationStore = create<NotificationState>((set, get) => ({
     if (!myId) return;
 
     const notifResponse = await NotificationService.getNotifications({
+      limit: 50,
       status: undefined,
     });
 
@@ -89,7 +100,7 @@ export const useNotificationStore = create<NotificationState>((set, get) => ({
         createdAt: notif.createdAt,
       };
       set((s) => ({
-        notifications: [item, ...s.notifications].sort(sortByDate),
+        notifications: dedupeNotifications([item, ...s.notifications]).sort(sortByDate),
       }));
     });
 
@@ -113,7 +124,7 @@ export const useNotificationStore = create<NotificationState>((set, get) => ({
         _isAnnouncement: true,
       };
       set((s) => ({
-        notifications: [item, ...s.notifications].sort(sortByDate),
+        notifications: dedupeNotifications([item, ...s.notifications]).sort(sortByDate),
       }));
     });
 

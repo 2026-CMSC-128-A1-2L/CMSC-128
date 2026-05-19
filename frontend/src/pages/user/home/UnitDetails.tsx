@@ -675,6 +675,7 @@ const UnitDetails: FunctionComponent = () => {
             facilityName={facility.name}
             facilityAddress={facility.location}
             onClose={() => setVisitPopoutOpen(false)}
+            onBooked={showSuccessToast}
           />
         </PortalPopup>
       )}
