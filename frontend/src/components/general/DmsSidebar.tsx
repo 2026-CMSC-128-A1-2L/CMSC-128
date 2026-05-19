@@ -5,29 +5,28 @@ import { useNavigate } from 'react-router-dom';
 import { useDebouncedValue } from '../../hooks/useDebouncedValue';
 
 interface NotificationItem {
-  id: number;
+  id: string;
   title: string;
-  unread: boolean;
-  // ... other properties are handled in the parent, but we need these for rendering
+  unread?: boolean;
 }
 
 interface DMItem {
-  id: number;
+  id: string;
   title: string;
-  body: string;
-  time: string;
-  icon: string;
-  unread: boolean;
+  body?: string;
+  time?: string;
+  icon?: string;
+  unread?: boolean;
   unreadCount?: number;
-  archived: boolean;
+  archived?: boolean;
 }
 
 interface DmsSidebarProps {
-  notifications: any[];
+  notifications: NotificationItem[];
   directMessages: DMItem[];
-  selectedItem: { type: 'notification' | 'dm'; id: number } | null;
-  onItemSelect: (type: 'notification' | 'dm', id: number) => void;
-  setNotifications: Dispatch<SetStateAction<any[]>>;
+  selectedItem: { type: 'notification' | 'dm'; id: string } | null;
+  onItemSelect: (type: 'notification' | 'dm', id: string) => void;
+  setNotifications: Dispatch<SetStateAction<NotificationItem[]>>;
   setDirectMessages: Dispatch<SetStateAction<DMItem[]>>;
 }
 
@@ -106,8 +105,8 @@ const DmsSidebar: FunctionComponent<DmsSidebarProps> = ({
               <Message
                 key={notif.id}
                 title={notif.title}
-                body={notif.body || notif.headline}
-                time={notif.time}
+                body={''}
+                time={''}
                 icon="iconamoon:notification"
                 unread={notif.unread}
                 onClick={() => onItemSelect('notification', notif.id)}
@@ -117,6 +116,7 @@ const DmsSidebar: FunctionComponent<DmsSidebarProps> = ({
           </div>
 
           <button
+            type="button"
             className="w-full mt-1 flex items-center justify-center gap-1 group cursor-pointer"
             onClick={() => setShowAllNotifications(!showAllNotifications)}
           >
@@ -145,6 +145,7 @@ const DmsSidebar: FunctionComponent<DmsSidebarProps> = ({
           {/* Filter Pills */}
           <div className="w-full flex items-start gap-2 pl-2">
             <button
+              type="button"
               className={`h-fit rounded-full flex items-center justify-center py-1.5 px-5 transition-all active:scale-95 ${
                 dmFilter === 'all'
                   ? 'bg-teal text-white shadow-md shadow-teal/20 dark:bg-[#0d3a32] dark:text-[#d7e0ef] dark:shadow-none'
@@ -155,6 +156,7 @@ const DmsSidebar: FunctionComponent<DmsSidebarProps> = ({
               <b className="relative text-num-12 font-inter cursor-pointer">All</b>
             </button>
             <button
+              type="button"
               className={`h-fit rounded-full flex items-center justify-center py-1.5 px-5 transition-all active:scale-95 ${
                 dmFilter === 'unread'
                   ? 'bg-teal text-white shadow-md shadow-teal/20 dark:bg-[#0d3a32] dark:text-[#d7e0ef] dark:shadow-none'
@@ -220,6 +222,7 @@ const DmsSidebar: FunctionComponent<DmsSidebarProps> = ({
             </div>
 
             <button
+              type="button"
               className="w-full flex items-center justify-center gap-1 text-center group mt-1 cursor-pointer"
               onClick={() => setShowAllArchive(!showAllArchive)}
             >

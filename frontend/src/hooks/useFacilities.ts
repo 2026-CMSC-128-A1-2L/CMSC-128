@@ -10,6 +10,7 @@ export type DormCardData = {
   rating: string;
   price: { min: number; max: number };
   location: string;
+  coordinates?: { lat: number; long: number };
   image: string;
   isPasalo?: boolean;
   transferId?: string;
@@ -92,6 +93,7 @@ function mapToCardData(facility: FacilityItem): DormCardData {
     name: facility.name,
     location: facility.location.text,
     image: getPrimaryMediaUrl(image) || image,
+    coordinates: facility.location.coordinates ?? undefined, 
     rating,
     price,
     room_types: roomTypes,

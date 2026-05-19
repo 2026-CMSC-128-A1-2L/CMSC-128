@@ -1,12 +1,12 @@
 import { type FunctionComponent, useCallback } from 'react';
 import SideBar from '../../../../components/user/SideBar';
 import ProgressBar from '../../../../components/user/ProgressBar';
-import AtlasLogo from '../../assets/atlas logo (for white bg).png';
+import AtlasLogo from '../../assets/footer_logo.svg?react';
 import Icon from '../../assets/icon.svg';
 import IconAMoonArrowRight2 from '../../assets/iconamoon_arrow-right-2.svg';
 import IconAMoonEye from '../../assets/iconamoon_eye.svg';
 import Icons8 from '../../assets/icons8_upload-2.svg';
-import Image from '../../assets/image.png';
+import Image from '../../assets/image.webp';
 import Qlementine from '../../assets/qlementine-icons_menu-dots-16.svg';
 
 const ReportReviewFinal: FunctionComponent = () => {
@@ -208,11 +208,7 @@ const ReportReviewFinal: FunctionComponent = () => {
                   <div className="flex-1 flex items-center gap-20">
                     <div className="flex items-center gap-4">
                       <div className="flex items-center gap-2">
-                        <img
-                          className="w-12 relative max-h-full object-cover"
-                          alt=""
-                          src={AtlasLogo}
-                        />
+                        <AtlasLogo className="w-12 fill-[#2d3748]" />
                         <div className="flex items-center gap-3">
                           <div className="flex items-center gap-1">
                             <img className="h-5 w-5 relative" alt="" />

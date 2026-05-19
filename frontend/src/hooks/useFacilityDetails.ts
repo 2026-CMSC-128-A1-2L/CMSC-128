@@ -85,6 +85,7 @@ export type FacilityDetailsData = {
     price: number;
   }[];
   landlord?: {
+    id: string;
     name: string;
     profilePicture?: string;
     contact?: string;
@@ -184,6 +185,7 @@ const mapFromFacility = (
   const landlord =
     'landlord' in facility
       ? {
+          id: toStringId(facility.landlord.id, ''),
           name: [
             facility.landlord.firstName,
             facility.landlord.middleName,

@@ -3,11 +3,12 @@ import { createPortal } from 'react-dom';
 import { Link, useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import AtlasLogo from '../../../assets/logo_atlas_text.svg?react';
-import AtlasLogoMin from '../../../assets/atlas logo (for white bg).png';
+import AtlasLogoMin from '../../../assets/footer_logo.svg?react';
 import SideBarLandlordButton from './SideBarLandlordButton';
 import { useTheme } from '../../pages/utilities/DarkMode';
 import { useAuthStore } from '../../store/useAuthStore';
 import UserMenuPopup from '../user/UserMenuPopup';
+import { useUnreadCommunicationCount } from '../../hooks/useUnreadCommunicationCount';
 
 export type SideBarLandlordItemKey =
   | 'dashboard'
@@ -51,7 +52,7 @@ const navItems: Array<{
     key: 'messages',
     label: 'Messages',
     icon: 'ic:outline-mail',
-    route: '/landlord/messages',
+    route: '/direct-messages',
   },
   {
     key: 'properties',
@@ -117,6 +118,7 @@ const SideBarLandlord = ({
 
   const authUser = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
+  const unreadCommunicationCount = useUnreadCommunicationCount();
 
   const user = {
     name: authUser ? `${authUser.firstName} ${authUser.lastName}` : 'User',
@@ -258,15 +260,15 @@ const SideBarLandlord = ({
         {/* Logo */}
         <div className="flex h-[40px] items-center justify-center overflow-hidden">
           <Link
-            to="/landlord/dashboard"
+            to="/about"
             className="flex h-[40px] items-center justify-center overflow-hidden cursor-pointer hover:opacity-80 transition-opacity"
+            aria-label="About Atlas"
           >
             {collapsed ? (
-              <img className="h-[28px] w-[28px]" src={AtlasLogoMin} alt="Atlas Home" />
+              <AtlasLogoMin className="h-[28px] w-[28px] fill-[#2d3748] dark:fill-[#d7e0ef]" aria-label="Atlas Home" />
             ) : (
               <AtlasLogo
                 className="h-full w-[128px] fill-[#2d3748] dark:fill-[#d7e0ef]"
-                aria-label="Atlas Home"
               />
             )}
           </Link>
@@ -347,14 +349,26 @@ const SideBarLandlord = ({
                       ].join(' ')}
                     >
                       <Icon icon={item.icon} className="h-[20px] w-[20px] cursor-pointer" />
+                      {item.key === 'messages' && unreadCommunicationCount > 0 && (
+                        <span className="absolute right-[18px] top-[6px] flex h-5 min-w-5 items-center justify-center rounded-full bg-[#d94141] px-1.5 text-[10px] font-bold leading-none text-white shadow-sm">
+                          {unreadCommunicationCount > 99 ? '99+' : unreadCommunicationCount}
+                        </span>
+                      )}
                     </button>
                   ) : (
-                    <SideBarLandlordButton
-                      icon={item.icon}
-                      label={item.label}
-                      state={state}
-                      onClick={() => handleItemClick(item)}
-                    />
+                    <div className="relative">
+                      <SideBarLandlordButton
+                        icon={item.icon}
+                        label={item.label}
+                        state={state}
+                        onClick={() => handleItemClick(item)}
+                      />
+                      {item.key === 'messages' && unreadCommunicationCount > 0 && (
+                        <span className="absolute right-[18px] top-1/2 flex h-5 min-w-5 -translate-y-1/2 items-center justify-center rounded-full bg-[#d94141] px-1.5 text-[10px] font-bold leading-none text-white shadow-sm">
+                          {unreadCommunicationCount > 99 ? '99+' : unreadCommunicationCount}
+                        </span>
+                      )}
+                    </div>
                   )}
                 </div>
               );

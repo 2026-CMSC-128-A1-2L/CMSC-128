@@ -4,6 +4,7 @@ import { User, UserType } from '../user/user.model.js';
 import { AppError } from '../../error.js';
 import { UserTypeType } from 'shared';
 import { getManagedFacilities } from '../facility/facility.service.js';
+import { triggerNewMessage } from '../../pusher.js';
 
 export type ConversationAggregateResult = {
   _id: mongoose.Types.ObjectId;
@@ -47,6 +48,15 @@ export const getConversation = async (
   const otherUser = await User.findById(otherId).lean();
   if (!otherUser) throw new AppError(404, 'User not found!');
 
+  await Message.updateMany(
+    {
+      senderId: otherId,
+      receiverId: userId,
+      receiverSeenAt: null,
+    },
+    { $set: { receiverSeenAt: new Date() } },
+  );
+
   return {
     user: otherUser,
     messages: await Message.find({
@@ -55,7 +65,7 @@ export const getConversation = async (
         { senderId: otherId, receiverId: userId },
       ],
     })
-      .sort({ createdAt: -1 })
+      .sort({ createdAt: 1 })
       .lean(),
   } as { user: UserType; messages: MessageType[] };
 };
@@ -72,7 +82,11 @@ export const sendMessage = async (
   if (userType === 'Student' && otherUser.userType === 'Student')
     throw new AppError(403, 'Students cannot message other students.');
 
-  if (['Manager', 'Landlord'].includes(userType) && ['Manager', 'Landlord'].includes(userType)) {
+  console.log(userType, otherUser.userType);
+  if (
+    ['Manager', 'Landlord'].includes(userType) &&
+    ['Manager', 'Landlord'].includes(otherUser.userType!)
+  ) {
     // there should be an intersection in what they manage for them to be able to message each other
     const selfFacilities = new Set((await getManagedFacilities(userId)).map((x) => x.toString()));
     const otherFacilities = new Set((await getManagedFacilities(otherId)).map((x) => x.toString()));
@@ -87,6 +101,14 @@ export const sendMessage = async (
     receiverId: otherId,
     text: text,
     senderSeenAt: new Date(),
+  });
+
+  await triggerNewMessage(userId.toString(), otherId.toString(), {
+    _id: newMessage._id.toString(),
+    senderId: newMessage.senderId.toString(),
+    receiverId: newMessage.receiverId.toString(),
+    text: newMessage.text,
+    createdAt: newMessage.createdAt,
   });
 
   return newMessage;

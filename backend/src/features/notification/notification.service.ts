@@ -2,6 +2,7 @@ import type mongoose from 'mongoose';
 import type { QueryFilter } from 'mongoose';
 import { combineFilters } from '../../middleware.js';
 import { Notification, NotificationType } from './notification.model.js';
+import { triggerNewNotification } from '../../pusher.js';
 
 export const sendNotification = async (
   userId: mongoose.Types.ObjectId,
@@ -9,7 +10,17 @@ export const sendNotification = async (
   content: string,
 ) => {
   const notification = new Notification({ userId, subject, content });
-  return await notification.save();
+  const saved = await notification.save();
+
+  await triggerNewNotification(userId.toString(), {
+    _id: saved._id.toString(),
+    subject: saved.subject,
+    content: saved.content,
+    status: saved.status,
+    createdAt: saved.createdAt,
+  });
+
+  return saved;
 };
 
 export const getNotifications = async (

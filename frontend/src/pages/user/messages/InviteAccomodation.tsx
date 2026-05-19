@@ -120,7 +120,7 @@ const InviteAccomodation: FunctionComponent = () => {
                         if (window.history.length > 2) {
                           navigate(-2);
                         } else {
-                          navigate('/landlord/messages');
+                          navigate('/direct-messages');
                         }
                       }}
                     >

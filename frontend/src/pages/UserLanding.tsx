@@ -2,7 +2,6 @@ import type { FunctionComponent } from 'react';
 import landing_image from '../../assets/landing_building.webp';
 import AtlasCurious from '../../assets/logo_curious.svg?react';
 import AtlasText from '../../assets/logo_atlas_text.svg?react';
-import map from '../../assets/map.svg';
 import AutoImageSwitcher from '../components/general/AutoImageSwitcher';
 import SignInPopUp from '../components/general/SignInPopUp';
 import LandingFAQ from '../components/general/LandingFAQ';
@@ -141,7 +140,7 @@ const UserLanding: FunctionComponent = () => {
               </div>
               <div className="self-stretch flex items-center gap-12 text-center text-teal-200">
                 <div className="self-stretch flex items-center justify-center py-0 px-1">
-                  <b className="h-[35px] w-[141.6px] relative tracking-num--0_01 flex items-center justify-center shrink-0">
+                  <b className="h-[35px] w-fit relative tracking-num--0_01 flex items-center justify-center shrink-0">
                     <Link to={listingsDestination}>{listingsLabel}</Link>
                   </b>
                 </div>
@@ -178,19 +177,10 @@ const UserLanding: FunctionComponent = () => {
           </div>
 
           {/* Hero content */}
-          <div className="self-stretch h-[1149px] overflow-hidden shrink-0 flex flex-col items-start justify-center p-2.5 box-border text-center text-[32px] text-gray-800">
+          <div className="self-stretch h-[1149px] overflow-hidden shrink-0 flex flex-col items-start justify-center box-border text-center text-[32px] text-gray-800">
             <div className="self-stretch flex-1 flex items-center justify-end pt-[140px] px-20 pb-20 relative isolate gap-[140px]">
               <img
-                className="h-[916px] w-[1127.2px] absolute !!m-[0 important] top-[304px] left-[872px] object-contain z-0 shrink-0"
-                alt=""
-                src={map}
-              />
-              <img
-                className="h-[1638.9px] w-[1335.8px] absolute !!m-[0 important] top-[75.46px] left-[-200.13px] filter-[blur(10px)] object-contain z-1 shrink-0"
-                alt=""
-              />
-              <img
-                className="h-[800px] w-[1190px] absolute !!m-[0 important] top-[259px] left-[-20px] object-cover z-2 shrink-0"
+                className="w-full absolute !!m-[0 important] top-[259px] left-0 z-2"
                 alt=""
                 src={landing_image}
               />
@@ -201,9 +191,12 @@ const UserLanding: FunctionComponent = () => {
                 <b className="relative tracking-num--0_01 text-white">Hassle-Free</b>
               </div>
               <div className="self-stretch flex flex-col items-end py-16 px-0 z-4 shrink-0 text-[160px] font-buhun-retro-two-free">
-                <div className="w-[577px] relative tracking-[0.04em] text-transparent bg-clip-text! [background:linear-gradient(180deg,#5dc2a8_27.88%,#0c8873_84.13%)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] flex items-center justify-center">
+                <div
+                  className="w-[577px] relative tracking-[0.04em] text-transparent bg-clip-text! [background:linear-gradient(180deg,#5dc2a8_27.88%,#0c8873_84.13%)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] flex items-center justify-center"
+                  style={{ fontFamily: 'MyFont, sans-serif' }}
+                >
                   ATLAS
-                </div>
+                </div>{' '}
                 <div className="relative text-[40px] font-semibold font-lora text-transparent bg-clip-text! [background:linear-gradient(180deg,#5dc2a8_27.88%,#0c8873_84.13%)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] text-right">
                   Accommodation Tracking <br />
                   and Lodging Allocation System

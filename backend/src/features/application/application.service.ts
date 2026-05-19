@@ -36,6 +36,14 @@ export type GetApplicationsArguments = NullablePartial<{
   limit: number;
 };
 
+const hasCurrentDorm = async (userId: mongoose.Types.ObjectId) =>
+  Boolean(
+    await Rental.exists({
+      userId,
+      status: { $in: ['active', 'inactive'] },
+    }),
+  );
+
 export const createApplication = async (
   userId: mongoose.Types.ObjectId,
   listingId: mongoose.Types.ObjectId,
@@ -46,6 +54,10 @@ export const createApplication = async (
     message?: string | null;
   },
 ) => {
+  if (await hasCurrentDorm(userId)) {
+    throw new AppError(422, 'You already have a current dorm.');
+  }
+
   const listing = await Listing.findById(listingId).select('facilityId');
   if (!listing) throw new AppError(404, 'Listing not found.');
   let pasaloUnitId: mongoose.Types.ObjectId | undefined;
@@ -261,6 +273,10 @@ export const approveInitialApplication = async (
   if (application.status !== 'pending')
     throw new AppError(422, `Applications that are '${application.status}' cannot be approved.`);
 
+  if (await hasCurrentDorm(application.userId)) {
+    throw new AppError(422, 'Student already has a current dorm.');
+  }
+
   const assignedUnit = await Unit.findOne({ _id: unitId, listingId: application.listingId });
   if (!assignedUnit) {
     throw new AppError(422, 'Unit does not belong to this listing.');
@@ -399,6 +415,10 @@ export const finalizeApplication = async (
   // The only legal states for initial acceptance is from `approved`
   if (application.status !== 'waitlisted')
     throw new AppError(422, `Applications that are '${application.status}' cannot be finalized.`);
+
+  if (await hasCurrentDorm(application.userId)) {
+    throw new AppError(422, 'You already have a current dorm.');
+  }
 
   application.status = 'finalized';
   const { subject, content } = statusMessages[application.status];
