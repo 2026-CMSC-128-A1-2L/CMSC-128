@@ -50,6 +50,15 @@ export const createRental = async (
 
   if (!unit) throw new AppError(404, 'Unit not found.');
 
+  const currentRental = await Rental.exists({
+    userId: data.userId,
+    status: { $in: ['active', 'inactive'] },
+  }).session(options.session ?? null);
+
+  if (currentRental) {
+    throw new AppError(422, 'Student already has a current dorm.');
+  }
+
   if (unit.currentRentals.length >= unit.capacity) {
     throw new AppError(400, 'Unit is already at full capacity.');
   }
@@ -153,16 +162,14 @@ export const getRentalsByUnitId = async (
 ) => {
   const rentals = await Rental.find(combineFilters(filters, { unitId })).populate(
     'userId',
-    'firstName middleName lastName profilePicture',
+    'firstName middleName lastName profilePicture emails',
   );
 
   if (!rentals.length) {
     const rentalsNoFilter = await Rental.find({ unitId });
 
-    if (rentalsNoFilter) {
+    if (rentalsNoFilter.length) {
       throw new AppError(403, "You don't have permission to view these rentals.");
-    } else {
-      throw new AppError(404, 'Rentals not found.');
     }
   }
 
@@ -193,16 +200,14 @@ export const getRentalsByUser = async (
   filters: QueryFilter<RentalType>,
 ) => {
   const rentals = await Rental.find(combineFilters(filters, { userId }))
-    .populate('facilityId', 'name location media')
-    .populate('unitId', 'roomNumber location listingId');
+    .populate('facilityId', 'name location media allowTransfer')
+    .populate('unitId', 'roomNumber location listingId price');
 
   if (!rentals.length) {
     const rentalsNoFilter = await Rental.find({ userId });
 
-    if (rentalsNoFilter) {
+    if (rentalsNoFilter.length) {
       throw new AppError(403, "You don't have permission to view these rentals.");
-    } else {
-      throw new AppError(404, 'Rentals not found.');
     }
   }
 

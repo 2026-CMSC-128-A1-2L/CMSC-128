@@ -61,7 +61,9 @@ const DmsSidebar: FunctionComponent<DmsSidebarProps> = ({
 
   const totalUnreadCount = activeDMs.filter((dm) => dm.unread).length;
 
-  const unreadNotifCount = notifications.filter((n) => n.unread).length;
+  const unreadNotifCount = new Set(
+    notifications.filter((n) => n.unread).map((n) => n.id),
+  ).size;
 
   const displayedArchivedDMs = showAllArchive ? archivedDMs : [];
 

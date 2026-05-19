@@ -1,5 +1,5 @@
 import type { RequestHandler } from 'express';
-import { CreateInviteManagerBodySchema } from 'shared';
+import { CreateInviteManagerBodySchema, CreateInviteStudentBodySchema } from 'shared';
 import { sendNotification } from '../notification/notification.service.js';
 import {
   inviteManager,
@@ -8,6 +8,7 @@ import {
   acceptStudentInvite,
   declineStudentInvite,
   getInvites,
+  inviteStudent,
 } from './invite.service.js';
 import { AppError } from '../../error.js';
 import { Invite } from './invite.model.js';
@@ -25,6 +26,14 @@ export const routeInviteManager: RequestHandler = async (req, res, _next) => {
   const landlordId = req.user._id;
   const { facilityId, email, permissions } = CreateInviteManagerBodySchema.parse(req.body);
   const invite = await inviteManager(landlordId, facilityId, email, permissions);
+  res.status(201).json({ data: invite });
+};
+
+export const routeInviteStudent: RequestHandler = async (req, res, _next) => {
+  assert.ok(req.user);
+  const landlordId = req.user._id;
+  const { facilityId, unitId, email } = CreateInviteStudentBodySchema.parse(req.body);
+  const invite = await inviteStudent(landlordId, facilityId, unitId, email);
   res.status(201).json({ data: invite });
 };
 

@@ -86,7 +86,7 @@ const PendingApplication1a: FunctionComponent = () => {
   }, []);
 
   return (
-    <div className="w-full min-h-screen flex flex-col text-left text-num-14 text-darkslategray-100 font-lora">
+    <div className="w-full min-h-screen flex flex-col text-left text-num-14 text-darkslategray-100 font-lora dark:text-[#edf6f4]">
       <div className="flex w-full max-w-[1440px] items-start">
         <div className="sticky top-0 hidden h-screen w-[200px] shrink-0 md:block">
           <Sidebar />
@@ -102,26 +102,26 @@ const PendingApplication1a: FunctionComponent = () => {
               </div>
             </div>
 
-            <section className="rounded-2xl bg-white/45 pb-10 text-center text-dimgray font-inter">
+            <section className="rounded-2xl bg-white/45 pb-10 text-center text-dimgray font-inter dark:bg-transparent dark:text-[#a4acba]">
               <ProfileInfo />
 
-              <div className="flex flex-col items-start gap-6 px-8 text-darkslategray-100">
+              <div className="flex flex-col items-start gap-6 px-8 text-darkslategray-100 dark:text-[#edf6f4]">
                 <div className="flex w-full items-center justify-between gap-4">
                   <div className="flex items-center gap-6">
                     <b className="text-num-18">Your Applications</b>
-                    <b className="text-num-18 text-dimgray">
+                    <b className="text-num-18 text-dimgray dark:text-[#a4acba]">
                       {applications.length} out of 5 Dorm Applications
                     </b>
                   </div>
                   <Link
                     to="/home"
-                    className="rounded-2xl bg-lightcyan px-4 py-2 text-sm font-bold text-teal"
+                    className="rounded-2xl bg-lightcyan px-4 py-2 text-sm font-bold text-teal dark:bg-[#1a3b33] dark:text-[#4fd1c5]"
                   >
                     Browse Listings
                   </Link>
                 </div>
 
-                <div className="w-full overflow-hidden rounded-2xl border border-whitesmoke bg-white text-sm">
+                <div className="w-full overflow-hidden rounded-2xl border border-whitesmoke bg-white text-sm dark:border-[#2a2d33] dark:bg-[#1a1b1e]">
                   <div className="grid grid-cols-[64px_1.2fr_1.4fr_160px_180px] bg-darkslategray-200 px-6 py-4 text-white">
                     <b>No.</b>
                     <b>Listing</b>
@@ -131,39 +131,52 @@ const PendingApplication1a: FunctionComponent = () => {
                   </div>
 
                   {isLoading ? (
-                    <div className="px-6 py-8 text-center font-bold text-dimgray">Loading...</div>
+                    <div className="px-6 py-8 text-center font-bold text-dimgray dark:text-[#a4acba]">
+                      Loading...
+                    </div>
                   ) : error ? (
-                    <div className="px-6 py-8 text-center font-bold text-red-500">{error}</div>
+                    <div className="px-6 py-8 text-center font-bold text-red-500">
+                      {error}
+                    </div>
                   ) : applications.length === 0 ? (
-                    <div className="px-6 py-8 text-center font-bold text-teal">
+                    <div className="px-6 py-8 text-center font-bold text-teal dark:text-[#4fd1c5]">
                       You have no current dorm applications.
                     </div>
                   ) : (
                     applications.map((application, index) => {
                       const applicationId = getApplicationId(application);
-                      const canFinalize = application.status === 'waitlisted';
+                      const canFinalize = application.status === "waitlisted";
 
                       return (
                         <div
                           key={applicationId || index}
-                          className="grid grid-cols-[64px_1.2fr_1.4fr_160px_180px] items-center gap-2 border-t border-whitesmoke px-6 py-4 text-left text-black"
+                          className="grid grid-cols-[64px_1.2fr_1.4fr_160px_180px] items-center gap-2 border-t border-whitesmoke px-6 py-4 text-left text-black first:border-t-0 dark:border-[#2a2d33] dark:text-[#edf6f4]"
                         >
                           <span>{index + 1}</span>
                           <div className="flex flex-col">
                             <b>{getFacilityName(application)}</b>
-                            <span className="text-xs text-dimgray">{getRoomType(application)}</span>
+                            <span className="text-xs text-dimgray dark:text-[#a4acba]">
+                              {getRoomType(application)}
+                            </span>
                           </div>
-                          <span className="text-dimgray">{getAddress(application)}</span>
-                          <b className="text-teal">
-                            {statusLabel[application.status ?? 'pending'] ?? application.status}
+                          <span className="text-dimgray dark:text-[#a4acba]">
+                            {getAddress(application)}
+                          </span>
+                          <b className="text-teal dark:text-[#4fd1c5]">
+                            {statusLabel[application.status ?? "pending"] ??
+                              application.status}
                           </b>
                           <button
                             type="button"
                             disabled={!canFinalize}
-                            onClick={() => navigate(`/finappli?applicationId=${applicationId}`)}
-                            className="rounded-2xl bg-lightcyan px-4 py-2 text-sm font-bold text-teal disabled:cursor-not-allowed disabled:bg-aliceblue disabled:text-slategray"
+                            onClick={() =>
+                              navigate(
+                                `/finappli?applicationId=${applicationId}`,
+                              )
+                            }
+                            className="rounded-2xl bg-lightcyan px-4 py-2 text-sm font-bold text-teal disabled:cursor-not-allowed disabled:bg-aliceblue disabled:text-slategray dark:bg-[#1a3b33] dark:text-[#4fd1c5] dark:disabled:bg-[#1a1e23] dark:disabled:text-[#5a6778]"
                           >
-                            {canFinalize ? 'Finalize' : 'View Status'}
+                            {canFinalize ? "Finalize" : "View Status"}
                           </button>
                         </div>
                       );

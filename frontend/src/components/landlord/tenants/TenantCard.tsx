@@ -77,20 +77,20 @@ const TenantCard = ({
   };
 
   return (
-    <div className="group flex w-full flex-col gap-[10px] rounded-[16px] border border-solid border-[#f0f0f0] bg-white p-[12px] shadow-none transition-shadow duration-200 hover:shadow-[0_4px_12px_0_rgba(0,0,0,0.08)] focus-within:ring-2 focus-within:ring-[#096c5b]/40">
-      <div className="flex w-full items-center gap-[10px] px-[16px] py-[10px]">
+    <div className="group flex w-full flex-col gap-[6px] rounded-[14px] border border-solid border-[#f0f0f0] bg-white p-[10px] shadow-none transition-shadow duration-200 hover:shadow-[0_4px_12px_0_rgba(0,0,0,0.08)] focus-within:ring-2 focus-within:ring-[#096c5b]/40">
+      <div className="flex w-full items-center gap-[8px] px-[10px] py-[8px]">
         <Link
           to={to}
           className="flex min-w-0 flex-1 items-center gap-[10px] outline-none focus-visible:ring-2 focus-visible:ring-[#096c5b]/40 focus-visible:ring-offset-2"
           aria-label={`View tenant ${tenant.displayName}`}
         >
-          <TenantAvatar photoUrl={tenant.photoUrl} name={tenant.displayName} size={72} />
+          <TenantAvatar photoUrl={tenant.photoUrl} name={tenant.displayName} size={56} />
 
-          <div className="flex min-w-0 flex-1 flex-col justify-center gap-[8px] px-[4px] py-[8px]">
-            <p className="truncate font-['Inter',sans-serif] text-[18px] font-bold tracking-[-0.18px] text-black">
+          <div className="flex min-w-0 flex-1 flex-col justify-center gap-[6px] px-[2px] py-[4px]">
+            <p className="truncate font-['Inter',sans-serif] text-[16px] font-bold text-black">
               {tenant.displayName}
             </p>
-            <div className="flex flex-col gap-[4px] font-['Inter',sans-serif] text-[14px] font-medium text-[#666]">
+            <div className="flex flex-col gap-[2px] font-['Inter',sans-serif] text-[13px] font-medium text-[#666]">
               <span className="truncate">{tenant.unit}</span>
               <span className="truncate">{tenant.contactNumber}</span>
             </div>
@@ -118,30 +118,30 @@ const TenantCard = ({
 
       <Link
         to={to}
-        className="flex w-full items-center gap-[4px] p-[16px] outline-none focus-visible:ring-2 focus-visible:ring-[#096c5b]/40 focus-visible:ring-offset-2"
+        className="flex w-full items-center gap-[4px] p-[12px] outline-none focus-visible:ring-2 focus-visible:ring-[#096c5b]/40 focus-visible:ring-offset-2"
         aria-label={`View billing for ${tenant.displayName}`}
       >
         <div className="flex flex-1 flex-col gap-[4px]">
           <span
             className={[
-              "font-['Inter',sans-serif] text-[18px] font-bold tracking-[-0.18px]",
+              "font-['Inter',sans-serif] text-[16px] font-bold",
               status.textClass,
             ].join(' ')}
           >
             {status.label}
           </span>
-          <span className="font-['Inter',sans-serif] text-[14px] font-medium text-[#666]">
+          <span className="truncate font-['Inter',sans-serif] text-[13px] font-medium text-[#666]">
             {tenant.latestBillingItem}
           </span>
         </div>
         <span
           aria-hidden="true"
           className={[
-            'flex h-[32px] w-[32px] shrink-0 items-center justify-center',
+            'flex h-[28px] w-[28px] shrink-0 items-center justify-center',
             status.iconClass,
           ].join(' ')}
         >
-          <Icon icon={status.icon} className="h-[32px] w-[32px]" />
+          <Icon icon={status.icon} className="h-[28px] w-[28px]" />
         </span>
       </Link>
     </div>

@@ -1,4 +1,5 @@
 type VisitRequestCardProps = {
+  id?: string;
   visitorName: string;
   dateTime: string;
   propertyName: string;

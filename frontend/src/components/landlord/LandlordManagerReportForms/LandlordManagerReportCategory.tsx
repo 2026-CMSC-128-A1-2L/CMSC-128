@@ -21,6 +21,7 @@ type Props = {
   isLastCategory: boolean;
   onToggle: (itemKey: string) => void;
   onToggleAll: () => void;
+  onCancel?: () => void;
   onBack: () => void;
   onNext: () => void;
   type?: 'manager' | 'tenant';

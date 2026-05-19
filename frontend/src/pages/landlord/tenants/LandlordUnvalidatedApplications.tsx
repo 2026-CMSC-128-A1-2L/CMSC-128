@@ -7,6 +7,7 @@ import UnvalidatedTenantCard from '../../../components/landlord/tenants/Unvalida
 import UnvalidatedCardActionsPopup from '../../../components/landlord/tenants/popups/UnvalidatedCardActionsPopup';
 import type { PendingApplication } from '../../../data/landlordTenants';
 import { ApplicationService } from '../../../service/ApplicationService';
+import { TransferService } from '../../../service/TransferService';
 import { useAuthStore } from '../../../store/useAuthStore';
 
 type RawApplication = {
@@ -28,6 +29,24 @@ type RawApplication = {
   listingId?: { roomType?: string };
   unitId?: { roomNumber?: string; price?: number };
   leaseDuration?: string;
+  documents?: unknown[];
+};
+
+type RawTransfer = {
+  _id?: string;
+  id?: string;
+  status?: string;
+  createdAt?: string;
+  reasonCategory?: string;
+  intendedTransferDate?: string;
+  transferFee?: number;
+  userId?: RawApplication['userId'];
+  unitId?: {
+    roomNumber?: string;
+    price?: number;
+    facilityId?: { name?: string };
+    listingId?: { roomType?: string };
+  };
   documents?: unknown[];
 };
 
@@ -71,6 +90,34 @@ const mapApplication = (application: RawApplication): PendingApplication => {
   };
 };
 
+const mapTransfer = (transfer: RawTransfer): PendingApplication => {
+  const displayName = formatName(transfer.userId);
+  const submittedDate = transfer.createdAt ? new Date(transfer.createdAt) : undefined;
+
+  return {
+    id: transfer.id ?? transfer._id ?? '',
+    fullName: displayName.toUpperCase(),
+    displayName,
+    email: transfer.userId?.email ?? transfer.userId?.emails?.[0] ?? 'No email provided',
+    contactNumber: transfer.userId?.contact ?? 'Not provided',
+    homeAddress: transfer.userId?.address ?? 'Not provided',
+    photoUrl: transfer.userId?.profilePicture,
+    dormName: transfer.unitId?.facilityId?.name ?? 'Pasalo request',
+    unit: transfer.unitId?.roomNumber ?? transfer.unitId?.listingId?.roomType ?? 'Transfer unit',
+    baseRentFee:
+      typeof transfer.unitId?.price === 'number' ? transfer.unitId.price.toLocaleString() : 'TBA',
+    contractDuration: transfer.intendedTransferDate
+      ? `Transfer by ${new Date(transfer.intendedTransferDate).toLocaleDateString()}`
+      : 'Pasalo transfer',
+    monthlyDueDate: 'To be set',
+    modeOfPayment: 'To be set',
+    submittedOn: submittedDate ? submittedDate.toLocaleDateString() : 'Recently',
+    reviewedByManager: true,
+    studentCategory: 'Pasalo Request',
+    documents: [],
+  };
+};
+
 const LandlordUnvalidatedApplications = () => {
   const navigate = useNavigate();
   const { user } = useAuthStore();
@@ -91,12 +138,18 @@ const LandlordUnvalidatedApplications = () => {
           requests.push(ApplicationService.getApplications({ limit: 50, status: 'finalized' }));
         }
 
-        const responses = await Promise.all(requests);
+        const [applicationResponses, transferResponse] = await Promise.all([
+          Promise.all(requests),
+          TransferService.getManagedTransferRequests({ status: 'pending' }),
+        ]);
         if (!cancelled) {
+          const transferRequests = getDataArray<RawTransfer>(transferResponse).map(mapTransfer);
+
           setApplications(
-            responses
+            applicationResponses
               .flatMap((response) => getDataArray<RawApplication>(response))
-              .map(mapApplication),
+              .map(mapApplication)
+              .concat(transferRequests),
           );
         }
       } finally {
@@ -155,7 +208,9 @@ const LandlordUnvalidatedApplications = () => {
               <UnvalidatedTenantCard
                 key={application.id}
                 application={application}
-                detailTo={`/landlord/tenants/unvalidated/${application.id}`}
+                detailTo={`/landlord/tenants/unvalidated/${application.id}${
+                  application.studentCategory === 'Pasalo Request' ? '?type=transfer' : ''
+                }`}
                 onMoreOptions={(app) => setOpenMenuId((prev) => (prev === app.id ? null : app.id))}
                 actionMenu={
                   <UnvalidatedCardActionsPopup

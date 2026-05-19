@@ -1,65 +1,18 @@
-import { type FunctionComponent, useMemo, useRef, useState } from "react";
+import { type FunctionComponent, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Icon } from "@iconify/react";
 import LandlordLayout from "../../../components/landlord/LandlordLayout";
 import NotifyTenantsPopup from "../../../components/landlord/NotifyTenantsPopup";
 import { useDebouncedValue } from "../../../hooks/useDebouncedValue";
-import sapphire1 from "../../../../assets/sapphire1.jpg";
-import sapphire2 from "../../../../assets/sapphire2.jpg";
-import sapphire3 from "../../../../assets/sapphire3.png";
-
 import TutorialBubble from "../dashboard/LandlordHomepageTutorials";
 import TutorialIcon from "../../../../assets/help-chat.svg";
 import { managers } from "../../../data/landlordManagers";
-import { pendingApplications, tenants } from "../../../data/landlordTenants";
-const STATS = [
-  {
-    label: "Monthly Income",
-    value: "Php 138,600",
-    sub: "Feb 2026",
-    subColor: "text-[#666]",
-  },
-  {
-    label: "Number of Tenants",
-    value: "28",
-    sub: "2 ongoing lease transfers",
-    subGradient: true,
-  },
-  { label: "Overdue Rent", value: "1", sub: "Tenant", subColor: "text-[#666]" },
-];
-
-import { BUILDINGS } from "../../../data/buildings";
-
-const PENDING = [
-  { name: "Daphne Dayne", email: "dcanape@up.edu.ph" },
-  { name: "Nathaniel Cunanan", email: "ncunanan@up.edu.ph" },
-  { name: "Lance Chrysler De Jesus", email: "lvdejesus1@up.edu.ph" },
-];
-
-const VISITS = [
-  { name: "Daphne Dayne", email: "dcanape@up.edu.ph" },
-  { name: "Nathaniel Cunanan", email: "ncunanan@up.edu.ph" },
-];
-
-const ACTIVITY = [
-  {
-    name: "Haira Espinocilla",
-    action: "paid rent for month of Feb",
-    time: "3d ago",
-  },
-  { name: "Riz Doroja", action: "paid rent for month of Feb", time: "1d ago" },
-  {
-    name: "Dorm Manager #2",
-    action: "collected payments in One Sapphire",
-    time: "2m ago",
-  },
-  {
-    name: "Dorm Manager #1",
-    action: "accepted ocular visits for April 9",
-    time: "1m ago",
-  },
-];
-
+import type { PendingApplication, Tenant } from "../../../data/landlordTenants";
+import { ApplicationService } from "../../../service/ApplicationService";
+import { api } from "../../../service/axiosInstance";
+import { FacilityService } from "../../../service/FacilityService";
+import { useAuthStore } from "../../../store/useAuthStore";
+import { getPrimaryMediaUrl } from "../../../utils/media";
 const Avatar = ({
   className = "h-[40px] w-[40px]",
 }: {
@@ -76,16 +29,29 @@ const Avatar = ({
   </span>
 );
 
-const PersonRow = ({ name, email }: { name: string; email: string }) => (
-  <div className="flex w-full items-center gap-[10px] rounded-[8px] border border-[#f0f0f0] px-[12px] py-[4px]">
+const PersonRow = ({
+  name,
+  email,
+  meta,
+}: {
+  name: string;
+  email: string;
+  meta?: string;
+}) => (
+  <div className="flex w-full items-center gap-[10px] rounded-[8px] border border-[#f0f0f0] px-[12px] py-[8px]">
     <Avatar />
-    <div className="flex flex-col gap-[2px] overflow-hidden">
+    <div className="flex min-w-0 flex-col gap-[2px] overflow-hidden">
       <b className="truncate font-['Inter',sans-serif] text-[14px] text-black">
         {name}
       </b>
       <span className="truncate font-['Lora',serif] text-[12px] font-semibold text-[#8a9099]">
         {email}
       </span>
+      {meta && (
+        <span className="truncate font-['Inter',sans-serif] text-[11px] font-semibold text-[#096c5b]">
+          {meta}
+        </span>
+      )}
     </div>
   </div>
 );
@@ -131,12 +97,270 @@ const optionMatchesQuery = (option: LandlordSearchOption, query: string) => {
   );
 };
 
+const getImage = (facility: any): string =>
+  getPrimaryMediaUrl(facility.image ?? facility.media?.[0]) ||
+  'https://placehold.co/280x120?text=No+image';
+
+const getOccupiedUnits = (facility: any): number => {
+  const total = (facility.listings ?? []).reduce(
+    (sum: number, l: any) => sum + (l.unitCount ?? 0), 0,
+  );
+  const avail = (facility.listings ?? []).reduce(
+    (sum: number, l: any) => sum + (l.availableUnitCount ?? 0), 0,
+  );
+  return total - avail;
+};
+
+type RawApplication = {
+  _id?: string;
+  id?: string;
+  status?: string;
+  createdAt?: string;
+  userId?: {
+    firstName?: string;
+    middleName?: string;
+    lastName?: string;
+    emails?: string[];
+    email?: string;
+    contact?: string;
+    address?: string;
+    profilePicture?: string;
+  };
+  facilityId?: { name?: string };
+  listingId?: { roomType?: string };
+  unitId?: { roomNumber?: string; price?: number };
+  leaseDuration?: string;
+};
+
+type VisitRequest = {
+  id: string;
+  name: string;
+  email: string;
+  meta: string;
+};
+
+type RawBooking = {
+  _id?: string;
+  id?: string;
+  status?: string;
+  startDate?: string;
+  userId?: {
+    firstName?: string;
+    lastName?: string;
+    emails?: string[];
+    email?: string;
+  };
+  facilityId?: { name?: string };
+  listingId?: { facilityId?: { name?: string } };
+};
+
+type DashboardStats = {
+  monthlyIncome: number;
+  tenantCount: number;
+  overdueCount: number;
+};
+
+const MONTH_LABELS = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+
+const getDataArray = <T,>(response: unknown): T[] => {
+  if (Array.isArray(response)) return response as T[];
+  if (response && typeof response === "object" && "data" in response) {
+    const data = (response as { data?: unknown }).data;
+    return Array.isArray(data) ? (data as T[]) : [];
+  }
+  return [];
+};
+
+const formatApplicantName = (user?: RawApplication["userId"]) =>
+  [user?.firstName, user?.middleName, user?.lastName].filter(Boolean).join(" ") || "Applicant";
+
+const mapApplication = (application: RawApplication): PendingApplication => {
+  const displayName = formatApplicantName(application.userId);
+  const submittedDate = application.createdAt ? new Date(application.createdAt) : undefined;
+
+  return {
+    id: application.id ?? application._id ?? "",
+    fullName: displayName.toUpperCase(),
+    displayName,
+    email: application.userId?.email ?? application.userId?.emails?.[0] ?? "No email provided",
+    contactNumber: application.userId?.contact ?? "Not provided",
+    homeAddress: application.userId?.address ?? "Not provided",
+    photoUrl: application.userId?.profilePicture,
+    dormName: application.facilityId?.name ?? "Dorm application",
+    unit: application.unitId?.roomNumber ?? application.listingId?.roomType ?? "Pending unit",
+    baseRentFee:
+      typeof application.unitId?.price === "number"
+        ? application.unitId.price.toLocaleString()
+        : "TBA",
+    contractDuration: application.leaseDuration ?? "Not provided",
+    monthlyDueDate: "To be set",
+    modeOfPayment: "To be set",
+    submittedOn: submittedDate ? submittedDate.toLocaleDateString() : "Recently",
+    reviewedByManager: application.status === "finalized",
+    studentCategory: "Student",
+    documents: [],
+  };
+};
+
+const mapVisitRequest = (booking: RawBooking): VisitRequest => {
+  const startDate = booking.startDate ? new Date(booking.startDate) : null;
+  const visitorName = booking.userId?.firstName
+    ? `${booking.userId.firstName} ${booking.userId.lastName ?? ""}`.trim()
+    : "Student";
+  const email = booking.userId?.email ?? booking.userId?.emails?.[0] ?? "No email provided";
+  const propertyName =
+    booking.facilityId?.name ?? booking.listingId?.facilityId?.name ?? "Visit request";
+  const dateTime = startDate
+    ? `${startDate.toLocaleDateString()} - ${startDate.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    })}`
+    : "Pending schedule";
+
+  return {
+    id: booking.id ?? booking._id ?? "",
+    name: visitorName,
+    email,
+    meta: `${propertyName} - ${dateTime}`,
+  };
+};
+
+const formatPeso = (amount: number) =>
+  `Php ${amount.toLocaleString("en-PH", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  })}`;
+
 const LandlordHomepage: FunctionComponent = () => {
   const navigate = useNavigate();
+  const { user } = useAuthStore();
+  const isLandlord = user?.userType === "Landlord";
   const trackRef = useRef<HTMLDivElement>(null);
   const [current, setCurrent] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearchDropdownOpen, setIsSearchDropdownOpen] = useState(false);
+  const [facilities, setFacilities] = useState<any[]>([]);
+  const [tenantRecords, setTenantRecords] = useState<Tenant[]>([]);
+  const [dashboardApplications, setDashboardApplications] = useState<PendingApplication[]>([]);
+  const [visitRequests, setVisitRequests] = useState<VisitRequest[]>([]);
+  const [isApplicationsLoading, setApplicationsLoading] = useState(true);
+  const [isVisitsLoading, setVisitsLoading] = useState(true);
+  const [stats, setStats] = useState<DashboardStats>({
+    monthlyIncome: 0,
+    tenantCount: 0,
+    overdueCount: 0,
+  });
+  const [isStatsLoading, setStatsLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    setStatsLoading(true);
+    Promise.allSettled([
+      FacilityService.getLandlordFacilities(),
+      FacilityService.getTenants(),
+      FacilityService.getMonthlyIncome(),
+      FacilityService.getOverdueTenants(),
+    ])
+      .then(([facilityResult, tenantResult, monthlyIncomeResult, overdueResult]) => {
+        if (cancelled) return;
+        if (facilityResult.status === "fulfilled") {
+          setFacilities(facilityResult.value.data);
+        }
+        if (tenantResult.status === "fulfilled" && Array.isArray(tenantResult.value)) {
+          setTenantRecords(tenantResult.value);
+        }
+        setStats({
+          monthlyIncome:
+            monthlyIncomeResult.status === "fulfilled" ? monthlyIncomeResult.value.data.total : 0,
+          tenantCount:
+            monthlyIncomeResult.status === "fulfilled"
+              ? monthlyIncomeResult.value.data.totalTenants
+              : tenantResult.status === "fulfilled" && Array.isArray(tenantResult.value)
+                ? tenantResult.value.length
+                : 0,
+          overdueCount: overdueResult.status === "fulfilled" ? overdueResult.value.data.overdueCount : 0,
+        });
+      })
+      .finally(() => {
+        if (!cancelled) setStatsLoading(false);
+      });
+    return () => { cancelled = true; };
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadApplications = async () => {
+      setApplicationsLoading(true);
+
+      try {
+        const requests = [ApplicationService.getApplications({ limit: 50, status: "pending" })];
+        if (isLandlord) {
+          requests.push(ApplicationService.getApplications({ limit: 50, status: "finalized" }));
+        }
+
+        const responses = await Promise.all(requests);
+        if (!cancelled) {
+          setDashboardApplications(
+            responses
+              .flatMap((response) => getDataArray<RawApplication>(response))
+              .map(mapApplication),
+          );
+        }
+      } catch (error) {
+        console.error("Failed to fetch dashboard applications:", error);
+      } finally {
+        if (!cancelled) setApplicationsLoading(false);
+      }
+    };
+
+    void loadApplications();
+    return () => {
+      cancelled = true;
+    };
+  }, [isLandlord]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadVisitRequests = async () => {
+      setVisitsLoading(true);
+
+      try {
+        const response = await api.get("/api/bookings");
+        if (!cancelled) {
+          setVisitRequests(
+            getDataArray<RawBooking>(response.data)
+              .filter((booking) => booking.status === "pending")
+              .map(mapVisitRequest),
+          );
+        }
+      } catch (error) {
+        console.error("Failed to fetch dashboard visit requests:", error);
+      } finally {
+        if (!cancelled) setVisitsLoading(false);
+      }
+    };
+
+    void loadVisitRequests();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   const debouncedSearchQuery = useDebouncedValue(searchQuery, 300);
   const trimmedSearchQuery = searchQuery.trim();
   const trimmedDebouncedSearchQuery = debouncedSearchQuery.trim();
@@ -236,24 +460,24 @@ const LandlordHomepage: FunctionComponent = () => {
       },
     ];
 
-    const buildingOptions = BUILDINGS.flatMap((building) => [
+    const buildingOptions = facilities.flatMap((facility) => [
       {
-        title: building.name,
-        breadcrumb: `Properties > ${building.name}`,
-        to: building.url,
-        keywords: `${building.name} ${building.address} ${building.buildingType} property building rooms units`,
+        title: facility.name,
+        breadcrumb: `Properties > ${facility.name}`,
+        to: `/landlord/properties/${facility.id}`,
+        keywords: `${facility.name} ${facility.location?.text ?? ''} ${facility.type ?? ''} property building rooms units`,
         icon: "fluent:pen-16-regular",
       },
       {
-        title: building.name,
-        breadcrumb: `Finance > ${building.name}`,
-        to: `/landlord/finance/property/${building.id}`,
-        keywords: `${building.name} ${building.address} ${building.buildingType} finance income rent billing collection occupancy`,
+        title: facility.name,
+        breadcrumb: `Finance > ${facility.name}`,
+        to: `/landlord/finance/property/${facility.id}`,
+        keywords: `${facility.name} ${facility.location?.text ?? ''} ${facility.type ?? ''} finance income rent billing collection occupancy`,
         icon: "solar:card-outline",
       },
     ]);
 
-    const tenantOptions = tenants.map((tenant) => ({
+    const tenantOptions = tenantRecords.map((tenant) => ({
       title: tenant.displayName,
       breadcrumb: `My Tenants > ${tenant.displayName}`,
       to: `/landlord/tenants/${tenant.id}`,
@@ -261,7 +485,7 @@ const LandlordHomepage: FunctionComponent = () => {
       icon: "tabler:user-search",
     }));
 
-    const pendingApplicationOptions = pendingApplications.map(
+    const pendingApplicationOptions = dashboardApplications.map(
       (application) => ({
         title: application.displayName,
         breadcrumb: `My Tenants > Pending Applications > ${application.displayName}`,
@@ -286,14 +510,14 @@ const LandlordHomepage: FunctionComponent = () => {
       ...managerOptions,
       ...staticOptions,
     ];
-  }, []);
+  }, [dashboardApplications, facilities, tenantRecords]);
   const matchingSearchOptions = useMemo(() => {
     const query = trimmedDebouncedSearchQuery;
     if (!query) return [];
 
     return searchOptions.filter((option) => optionMatchesQuery(option, query));
   }, [searchOptions, trimmedDebouncedSearchQuery]);
-  const displayedBuildings = BUILDINGS;
+  const displayedBuildings = facilities;
   const total = displayedBuildings.length;
   const [showNotify, setShowNotify] = useState(false);
 
@@ -314,11 +538,36 @@ const LandlordHomepage: FunctionComponent = () => {
     navigate(option.to);
   };
 
+  const currentMonthLabel = MONTH_LABELS[new Date().getMonth()];
+  const statsCards = [
+    {
+      label: "Monthly Income",
+      value: isStatsLoading ? "—" : formatPeso(stats.monthlyIncome),
+      sub: currentMonthLabel,
+      subColor: "text-[#666]",
+      to: "/landlord/finance",
+    },
+    {
+      label: "Number of Tenants",
+      value: isStatsLoading ? "—" : stats.tenantCount.toString(),
+      sub: stats.tenantCount === 1 ? "Active tenant" : "Active tenants",
+      subGradient: true,
+      to: "/landlord/tenants",
+    },
+    {
+      label: "Overdue Rent",
+      value: isStatsLoading ? "—" : stats.overdueCount.toString(),
+      sub: stats.overdueCount === 1 ? "Tenant" : "Tenants",
+      subColor: "text-[#666]",
+      to: "/landlord/finance",
+    },
+  ];
+
   return (
     <LandlordLayout activeSidebarItem="dashboard" breadcrumbs={[]}>
-      <div className="flex w-full flex-col gap-[48px] lg:flex-row lg:items-start">
+      <div className="mb-20 flex w-full flex-col gap-[48px]">
         {/* Main column */}
-        <div className="flex flex-1 flex-col gap-[48px] min-w-0">
+        <div className="flex w-full min-w-0 flex-col gap-[48px]">
           {/* Search */}
           <div className="relative w-full h-full flex items-center">
             <div className="w-full flex items-center transition-all duration-300 bg-[#f8f9fa] rounded-num-12 py-3 pl-3 pr-4 border border-transparent focus-within:bg-white focus-within:shadow-[0_8px_10px_rgb(0,0,0,0.06)] focus-within:transform focus-within:-translate-y-[1px] gap-2 dark:bg-[#1f2022] dark:focus-within:bg-[#202123]">
@@ -428,9 +677,9 @@ const LandlordHomepage: FunctionComponent = () => {
               </Link>
             </div>
             <div className="grid grid-cols-1 gap-[12px] sm:grid-cols-2 xl:grid-cols-4">
-              {STATS.map((s) => (
+              {statsCards.map((s) => (
                 <Link
-                  to="/landlord/finance"
+                  to={s.to}
                   key={s.label}
                   className="flex flex-col items-center justify-center gap-[8px] rounded-[16px] border border-[#f0f0f0] bg-white p-[12px] text-center"
                 >
@@ -544,27 +793,28 @@ const LandlordHomepage: FunctionComponent = () => {
               ref={trackRef}
               className="flex gap-[16px] overflow-x-auto scroll-smooth pb-[8px] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             >
-              {displayedBuildings.map((b) => (
+              {displayedBuildings.map((facility) => (
                 <Link
-                  key={b.name}
-                  to={`/landlord/properties/${b.id}`} // Dynamic Route
+                  key={facility.id}
+                  to={`/landlord/properties/${facility.id}`}
+                  state={{ facilityStatus: facility.status, facilityCapacity: facility.capacity }}
                   className="flex shrink-0 flex-col overflow-hidden rounded-[10px] bg-white shadow-[0px_4px_20px_rgba(0,0,0,0.15)] transition-transform hover:scale-[1.02]"
                   style={{ width: CARD_WIDTH }}
                 >
                   <img
-                    src={b.img}
-                    alt={b.name}
+                    src={getImage(facility)}
+                    alt={facility.name}
                     className="h-[120px] w-full object-cover"
                   />
                   <div className="flex flex-col gap-[8px] p-[12px]">
                     <div className="flex items-center justify-between gap-[8px]">
                       <b className="truncate font-['Inter',sans-serif] text-[16px] tracking-[-0.01em] text-black">
-                        {b.name}
+                        {facility.name}
                       </b>
                       <span className="flex shrink-0 items-center gap-[4px] rounded-[5px] border border-[#096c5b] px-[8px] py-[2px]">
                         <span className="h-[6px] w-[6px] rounded-full bg-[#096c5b]" />
                         <span className="font-['Poppins',sans-serif] text-[12px] text-[#096c5b]">
-                          Active
+                          {facility.status === 'approved' ? 'Active' : 'Inactive'}
                         </span>
                       </span>
                     </div>
@@ -575,7 +825,7 @@ const LandlordHomepage: FunctionComponent = () => {
                         aria-hidden="true"
                       />
                       <b className="font-['Poppins',sans-serif] text-[14px] tracking-[-0.01em] text-[#666]">
-                        {b.occupiedUnits}
+                        {getOccupiedUnits(facility)}
                       </b>
                     </div>
                     <div className="flex items-center justify-between">
@@ -594,7 +844,7 @@ const LandlordHomepage: FunctionComponent = () => {
                             WebkitTextFillColor: "transparent",
                           }}
                         >
-                          {b.income}
+                          —
                         </b>
                       </div>
                       <div className="flex items-center gap-[6px]">
@@ -612,10 +862,9 @@ const LandlordHomepage: FunctionComponent = () => {
                             WebkitTextFillColor: "transparent",
                           }}
                         >
-                          {b.outstanding}
+                          —
                         </b>
                       </div>
-                      {/* Changed eye icon from Link to simple Icon since parent is now a Link */}
                       <div className="transition-opacity hover:opacity-70">
                         <Icon
                           icon="solar:eye-bold"
@@ -636,14 +885,32 @@ const LandlordHomepage: FunctionComponent = () => {
               {
                 title: "Pending Applications",
                 to: "/landlord/tenants/unvalidated",
-                items: PENDING,
+                
                 headingId: "dashboard-pending-heading",
+                items: dashboardApplications.map((application) => ({
+                  id: application.id,
+                  name: application.displayName,
+                  email: application.email,
+                  meta: `${application.dormName} - ${application.unit}`,
+                  to: `/landlord/tenants/unvalidated/${application.id}`,
+                })),
+                isLoading: isApplicationsLoading,
+                emptyMessage: "No pending applications",
               },
               {
-                title: "Scheduled Visits",
+                title: "Visit Requests",
                 to: "/landlord/visits",
-                items: VISITS,
+              
                 headingId: "dashboard-visits-heading",
+                items: visitRequests.map((visit) => ({
+                  id: visit.id,
+                  name: visit.name,
+                  email: visit.email,
+                  meta: visit.meta,
+                  to: "/landlord/visits",
+                })),
+                isLoading: isVisitsLoading,
+                emptyMessage: "No visit requests",
               },
             ].map((panel) => (
               <section
@@ -663,62 +930,30 @@ const LandlordHomepage: FunctionComponent = () => {
                 </Link>
                 <div className="h-[2px] w-full rounded-full bg-[#f0f0f0]" />
                 <div className="flex flex-col gap-[12px]">
-                  {panel.items.map((item) => (
-                    <PersonRow key={item.email} {...item} />
-                  ))}
+                  {panel.isLoading ? (
+                    <div className="flex min-h-[128px] items-center justify-center rounded-[8px] border border-dashed border-[#f0f0f0] font-['Inter',sans-serif] text-[13px] font-bold text-[#8a9099]">
+                      Loading...
+                    </div>
+                  ) : panel.items.length === 0 ? (
+                    <div className="flex min-h-[128px] items-center justify-center rounded-[8px] border border-dashed border-[#f0f0f0] px-[12px] text-center font-['Inter',sans-serif] text-[13px] font-bold text-[#8a9099]">
+                      {panel.emptyMessage}
+                    </div>
+                  ) : (
+                    panel.items.slice(0, 4).map((item) => (
+                      <Link
+                        key={item.id || item.email}
+                        to={item.to}
+                        className="block transition-opacity hover:opacity-80"
+                      >
+                        <PersonRow name={item.name} email={item.email} meta={item.meta} />
+                      </Link>
+                    ))
+                  )}
                 </div>
               </section>
             ))}
           </div>
         </div>
-
-        {/* Right sidebar */}
-        <aside className="flex w-full flex-col gap-[32px] lg:w-[280px] lg:shrink-0 lg:pt-[60px]">
-          <div className="flex flex-col gap-[8px]">
-            <Avatar className="h-[74px] w-[74px]" />
-            <div className="flex items-center gap-[6px]">
-              <b className="font-['Inter',sans-serif] text-[24px] leading-[32px] text-black">
-                Quevin James A. Custodio
-              </b>
-              <Icon
-                icon="solar:verified-check-bold"
-                className="h-[24px] w-[24px] shrink-0 text-[#096c5b]"
-                aria-hidden="true"
-              />
-            </div>
-            <span className="font-['Inter',sans-serif] text-[14px] text-[#666]">
-              qcustodio@gmail.com
-            </span>
-          </div>
-          <section className="flex flex-col gap-[12px]">
-            <b className="font-['Inter',sans-serif] text-[14px] text-black">
-              Activity
-            </b>
-            <div className="flex flex-col gap-[12px]">
-              {ACTIVITY.map((a) => (
-                <div
-                  key={a.name + a.time}
-                  className="flex items-center gap-[8px] rounded-[8px] border border-[#f0f0f0] px-[12px] py-[10px]"
-                >
-                  <Avatar className="h-[40px] w-[40px]" />
-                  <div className="flex flex-1 flex-col gap-[4px] overflow-hidden">
-                    <div className="flex items-center justify-between gap-[4px]">
-                      <b className="truncate font-['Inter',sans-serif] text-[14px] text-black">
-                        {a.name}
-                      </b>
-                      <span className="shrink-0 font-['Inter',sans-serif] text-[8px] font-medium text-[#8a9099]">
-                        {a.time}
-                      </span>
-                    </div>
-                    <span className="truncate font-['Lora',serif] text-[12px] font-semibold text-[#8a9099]">
-                      {a.action}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
-        </aside>
       </div>
       {/* ======= FLOATING ICON ========== */}
       <div

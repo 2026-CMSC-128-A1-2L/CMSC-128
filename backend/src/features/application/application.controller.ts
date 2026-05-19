@@ -30,6 +30,7 @@ export const routeCreateApplication: RequestHandler = async (req, res, _next) =>
   assert.ok(req.user);
   const params = CreateApplicationBodySchema.parse(req.body);
   const newApplication = await createApplication(req.user._id, params.listingId, {
+    transferId: params.transferId,
     leaseDuration: params.leaseDuration,
     moveInDate: params.moveInDate,
     message: params.message,

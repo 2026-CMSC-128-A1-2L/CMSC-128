@@ -1,4 +1,4 @@
-import { useEffect, useRef, type FunctionComponent } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type FunctionComponent } from 'react';
 import { Icon } from '@iconify/react';
 
 export type ManagerAction = 'message' | 'report' | 'remove';
@@ -29,6 +29,29 @@ const LandlordManagerActionsPopover: FunctionComponent<Props> = ({
   subjectName,
 }) => {
   const ref = useRef<HTMLDivElement>(null);
+  const [placement, setPlacement] = useState<'right' | 'left' | 'below'>('right');
+
+  useLayoutEffect(() => {
+    if (!open) return;
+
+    const anchor = ref.current?.parentElement;
+    if (!anchor) return;
+
+    const anchorRect = anchor.getBoundingClientRect();
+    const menuWidth = 156;
+    const gap = 8;
+    const pagePadding = 16;
+    const fitsRight = anchorRect.right + gap + menuWidth <= window.innerWidth - pagePadding;
+    const fitsLeft = anchorRect.left - gap - menuWidth >= pagePadding;
+
+    if (fitsRight) {
+      setPlacement('right');
+    } else if (fitsLeft) {
+      setPlacement('left');
+    } else {
+      setPlacement('below');
+    }
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;
@@ -54,13 +77,22 @@ const LandlordManagerActionsPopover: FunctionComponent<Props> = ({
 
   if (!open) return null;
 
+  const placementClass = {
+    right: 'left-full top-1/2 ml-[8px] -translate-y-1/2 origin-left',
+    left: 'right-full top-1/2 mr-[8px] -translate-y-1/2 origin-right',
+    below: 'right-0 top-[calc(100%+8px)] origin-top-right',
+  }[placement];
+
   return (
     <div
       ref={ref}
       role="menu"
       aria-label={`Actions for ${subjectName}`}
       onClick={(e) => e.stopPropagation()}
-      className="absolute left-full top-1/2 z-30 ml-[8px] flex w-[156px] -translate-y-1/2 flex-col gap-[2px] rounded-[10px] border border-solid border-[#f0f0f0] dark:border-[#303331] bg-white dark:bg-[#141515] px-[6px] py-[6px] shadow-[0_8px_24px_rgba(0,0,0,0.12)] origin-left animate-fade-in"
+      className={[
+        'absolute z-30 flex w-[156px] flex-col gap-[2px] rounded-[10px] border border-solid border-[#f0f0f0] bg-white px-[6px] py-[6px] shadow-[0_8px_24px_rgba(0,0,0,0.12)] animate-fade-in dark:border-[#303331] dark:bg-[#141515]',
+        placementClass,
+      ].join(' ')}
       style={{ animationDuration: '150ms' }}
     >
       {items.map((item) => (

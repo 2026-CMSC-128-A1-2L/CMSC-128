@@ -1,4 +1,4 @@
-import type { CreateInviteManagerBody } from '../interface/invite';
+import type { CreateInviteManagerBody, CreateInviteStudentBody } from '../interface/invite';
 import { api } from './axiosInstance';
 
 export const InviteService = {
@@ -18,6 +18,16 @@ export const InviteService = {
       return response.data;
     } catch (error) {
       console.error('Error inviting manager:', error);
+      throw error;
+    }
+  },
+
+  async inviteStudent(body: CreateInviteStudentBody) {
+    try {
+      const response = await api.post('/api/invites/student', body);
+      return response.data;
+    } catch (error) {
+      console.error('Error inviting student:', error);
       throw error;
     }
   },

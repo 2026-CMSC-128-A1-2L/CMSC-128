@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { FacilityService } from '../service/FacilityService';
 import type { GetFacilitiesResponse } from '../interface/facility';
+import { getPrimaryMediaUrl } from '../utils/media';
 
 // Shape that DormCard consumes
 export type DormCardData = {
@@ -9,7 +10,14 @@ export type DormCardData = {
   rating: string;
   price: { min: number; max: number };
   location: string;
+  coordinates?: { lat: number; long: number };
   image: string;
+  isPasalo?: boolean;
+  transferId?: string;
+  pasaloUnitId?: string;
+  pasaloListingId?: string;
+  pasaloMoveInDate?: string;
+  pasaloLeaseDuration?: '6-months' | '12-months';
   room_types: {
     id?: string;
     pax: string;
@@ -35,6 +43,7 @@ type FacilityListingSummary = {
   availableUnitCount?: number;
 };
 type FacilityListItem = FacilityItem & {
+  status?: string;
   listings?: FacilityListingSummary[];
 };
 
@@ -83,7 +92,8 @@ function mapToCardData(facility: FacilityItem): DormCardData {
     id: facility.id as string,
     name: facility.name,
     location: facility.location.text,
-    image,
+    image: getPrimaryMediaUrl(image) || image,
+    coordinates: facility.location.coordinates ?? undefined, 
     rating,
     price,
     room_types: roomTypes,
@@ -117,7 +127,11 @@ export function useFacilities(): UseFacilitiesReturn {
         // FacilityService.getFacilities() → { data: GetFacilitiesResponse }
         const response = await FacilityService.getFacilities();
         if (!cancelled) {
-          setFacilities(response.data.map(mapToCardData));
+          setFacilities(
+            response.data
+              .filter((facility) => (facility as FacilityListItem).status === 'approved')
+              .map(mapToCardData),
+          );
         }
       } catch (err) {
         if (!cancelled) {

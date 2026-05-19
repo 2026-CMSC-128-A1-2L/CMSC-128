@@ -1,6 +1,7 @@
 import { Icon } from '@iconify/react';
 import type { FunctionComponent } from 'react';
 import { useEffect, useRef, useState } from 'react';
+import { useAuthStore } from '../../../store/useAuthStore';
 
 const SYSTEM_UPDATE_OPTIONS = [
   'New Login Attempts',
@@ -75,10 +76,7 @@ const EmailDropdown: FunctionComponent<DropdownProps> = ({
                 <button
                   key={opt}
                   type="button"
-                  onClick={() => {
-                    onSelect(opt);
-                    setOpen(false);
-                  }}
+                  onClick={() => { onSelect(opt); setOpen(false); }}
                   className={`w-full text-left px-4 py-2 text-sm font-semibold cursor-pointer border-none bg-transparent transition-all duration-150 hover:bg-azure hover:text-teal hover:pl-5 ${
                     selected === opt ? 'text-teal bg-azure' : 'text-black'
                   }`}
@@ -100,11 +98,7 @@ type MultiDropdownProps = {
   onChange: (val: string[]) => void;
 };
 
-const MultiSelectDropdown: FunctionComponent<MultiDropdownProps> = ({
-  options,
-  selected,
-  onChange,
-}) => {
+const MultiSelectDropdown: FunctionComponent<MultiDropdownProps> = ({ options, selected, onChange }) => {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -155,9 +149,7 @@ const MultiSelectDropdown: FunctionComponent<MultiDropdownProps> = ({
                     backgroundColor: selected.includes(opt) ? '#024338' : 'transparent',
                   }}
                 >
-                  {selected.includes(opt) && (
-                    <Icon icon="mdi:check" className="w-3 h-3 text-white" />
-                  )}
+                  {selected.includes(opt) && <Icon icon="mdi:check" className="w-3 h-3 text-white" />}
                 </div>
                 <span className={selected.includes(opt) ? 'text-teal' : 'text-black'}>{opt}</span>
               </button>
@@ -169,11 +161,9 @@ const MultiSelectDropdown: FunctionComponent<MultiDropdownProps> = ({
   );
 };
 
-const CheckboxRow: FunctionComponent<{
-  checked: boolean;
-  onToggle: () => void;
-  label: string;
-}> = ({ checked, onToggle, label }) => (
+const CheckboxRow: FunctionComponent<{ checked: boolean; onToggle: () => void; label: string }> = ({
+  checked, onToggle, label,
+}) => (
   <button
     type="button"
     onClick={onToggle}
@@ -192,11 +182,11 @@ const CheckboxRow: FunctionComponent<{
   </button>
 );
 
-const LandlordNotification: FunctionComponent = () => {
-  const [emails, setEmails] = useState<string[]>([]);
-  const [loadingUser, setLoadingUser] = useState(true);
+const Notification: FunctionComponent = () => {
+  const { user, isLoading } = useAuthStore();
+  const emails = user?.emails ?? [];
 
-  // System notification prefs
+  // System notification prefs — no API yet, local state only
   const [systemEmail, setSystemEmail] = useState<string | null>(null);
   const [systemSms, setSystemSms] = useState(false);
   const [systemUpdates, setSystemUpdates] = useState<string[]>([
@@ -204,36 +194,23 @@ const LandlordNotification: FunctionComponent = () => {
     'Verification Updates',
   ]);
 
-  // Listing notification prefs
+  // Listing notification prefs — no API yet, local state only
   const [listingEmail, setListingEmail] = useState<string | null>(null);
   const [listingSms, setListingSms] = useState(false);
   const [listingUpdates, setListingUpdates] = useState<string[]>([
-    'New Rental Applications',
+    'Application Approval',
     'Direct Messages',
   ]);
 
+  // Seed defaults once emails are available
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await fetch('/api/users/me', { credentials: 'include' });
-        if (!res.ok) throw new Error('Not authenticated');
-        const json = await res.json();
-        const userEmails: string[] = json.data?.emails ?? [];
-        setEmails(userEmails);
-        if (userEmails.length > 0) {
-          setSystemEmail(userEmails[0]);
-          setListingEmail(userEmails[0]);
-        }
-      } catch (err) {
-        console.error('Failed to fetch user', err);
-      } finally {
-        setLoadingUser(false);
-      }
-    };
-    fetchUser();
-  }, []);
+    if (emails.length > 0) {
+      setSystemEmail((prev) => prev ?? emails[0]);
+      setListingEmail((prev) => prev ?? emails[0]);
+    }
+  }, [emails]);
 
-  if (loadingUser) {
+  if (isLoading) {
     return (
       <div className="rounded-t-none rounded-b-num-16 border-whitesmoke-200 border-solid border flex items-center justify-center py-16 text-dimgray text-sm">
         Loading notification preferences…
@@ -248,7 +225,6 @@ const LandlordNotification: FunctionComponent = () => {
         <b className="text-[1.5rem] leading-8">System Notifications</b>
 
         <div className="self-stretch flex flex-col items-start gap-6">
-          {/* Default email */}
           <div className="self-stretch flex flex-col items-start gap-3">
             <div className="self-stretch flex flex-col items-start gap-2">
               <b className="relative text-num-14">Default System Notifications Email</b>
@@ -267,21 +243,17 @@ const LandlordNotification: FunctionComponent = () => {
                 disabled={emails.length === 0}
               />
               {emails.length === 0 && (
-                <span className="text-num-12 text-dimgray mt-1">
-                  No emails linked to your account yet.
-                </span>
+                <span className="text-num-12 text-dimgray mt-1">No emails linked to your account yet.</span>
               )}
             </div>
           </div>
 
-          {/* SMS */}
           <CheckboxRow
             checked={systemSms}
             onToggle={() => setSystemSms((v) => !v)}
             label="Receive SMS updates on your saved mobile number"
           />
 
-          {/* Customize updates */}
           <div className="self-stretch flex flex-col items-start gap-3">
             <div className="self-stretch flex flex-col items-start gap-2">
               <b className="relative text-num-14">Customize Updates</b>
@@ -308,15 +280,14 @@ const LandlordNotification: FunctionComponent = () => {
         <b className="text-[1.5rem] leading-8">Listing Notifications</b>
 
         <div className="self-stretch flex flex-col items-start gap-6 text-left text-num-14">
-          {/* Default email */}
           <div className="self-stretch flex flex-col items-start gap-3">
             <div className="self-stretch flex flex-col items-start gap-2 text-center">
               <b className="relative">Default Listings Notifications Email</b>
               <div className="self-stretch relative leading-6 font-medium text-darkslategray-100 text-left">
-                Decide where you want to receive your listing updates. Listing notifications include
-                new rental applications, booking requests from students, payment submissions,
-                overdue billing alerts, and tenant move-out notices. You can only choose emails
-                already linked to your ATLAS account.
+                Decide where you want to receive your listing/dorm updates. Listing notifications
+                include direct messages from landlord/dorm manager, rent fee reminders, your
+                bookmarked listings that are posted as pasalo units, and ocular visit reminders. You
+                can only choose emails already linked to your ATLAS account.
               </div>
             </div>
             <div className="self-stretch flex flex-col items-start py-2.5 px-0 text-teal">
@@ -328,14 +299,11 @@ const LandlordNotification: FunctionComponent = () => {
                 disabled={emails.length === 0}
               />
               {emails.length === 0 && (
-                <span className="text-num-12 text-dimgray mt-1">
-                  No emails linked to your account yet.
-                </span>
+                <span className="text-num-12 text-dimgray mt-1">No emails linked to your account yet.</span>
               )}
             </div>
           </div>
 
-          {/* SMS */}
           <CheckboxRow
             checked={listingSms}
             onToggle={() => setListingSms((v) => !v)}
@@ -346,7 +314,7 @@ const LandlordNotification: FunctionComponent = () => {
             <div className="self-stretch flex flex-col items-start gap-2">
               <b className="relative">Customize Updates</b>
               <div className="self-stretch relative leading-6 font-medium text-darkslategray-100 text-left">
-                Choose which updates you'll receive related to your listings and tenants.
+                Choose which updates you'll receive related to the listings.
               </div>
             </div>
             <div className="self-stretch flex flex-col items-start py-2.5 px-0 text-left text-teal">
@@ -363,4 +331,4 @@ const LandlordNotification: FunctionComponent = () => {
   );
 };
 
-export default LandlordNotification;
+export default Notification;

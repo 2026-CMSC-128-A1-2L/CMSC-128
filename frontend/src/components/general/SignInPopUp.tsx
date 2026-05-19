@@ -1,6 +1,5 @@
 import { type FunctionComponent, useEffect } from 'react';
-import logo from '../../../assets/footer_logo.svg';
-import darkLogo from '../../../assets/logo-dark-mode.png';
+import AtlasIcon from '../../../assets/footer_logo.svg?react';
 import { Link } from 'react-router-dom';
 
 interface SignInPopUpProps {
@@ -45,8 +44,7 @@ const SignInPopUp: FunctionComponent<SignInPopUpProps> = ({ isOpen = true, onClo
         </button>
 
         <div className="flex flex-col items-center justify-center">
-          <img src={logo} className="w-20 h-20 dark:hidden" alt="ATLAS Logo" />
-          <img src={darkLogo} className="hidden w-20 h-20 dark:block" alt="ATLAS Logo" />
+          <AtlasIcon className="w-20 h-20 fill-[#2d3748] dark:fill-white" />
         </div>
 
         <div className="self-stretch flex flex-col items-center justify-center text-teal text-center">

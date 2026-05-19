@@ -1,5 +1,5 @@
 import type { FunctionComponent } from 'react';
-import atlasLogo from '../../../assets/admin/atlas_worded_logo.svg';
+import AtlasLogo from '../../../assets/logo_atlas_text.svg?react';
 import profileAvatar from '../../../assets/admin/empty_profile_icon.svg';
 
 const NavBarAdmin: FunctionComponent = () => {
@@ -7,11 +7,7 @@ const NavBarAdmin: FunctionComponent = () => {
     <header className="relative left-1/2 right-1/2 w-screen -translate-x-1/2 bg-[#001d18] shadow-[0_4px_10px_rgba(0,0,0,0.35)]">
       <div className="flex h-[106px] w-full items-center justify-between px-[90px]">
         <div className="flex h-[74px] w-[185px] shrink-0 items-center">
-          <img
-            src={atlasLogo}
-            alt="Atlas logo"
-            className="h-[74px] w-[185px] object-contain object-left"
-          />
+          <AtlasLogo className="h-full w-full fill-white" aria-label="Atlas" />
         </div>
 
         <div className="flex items-center gap-[12px]">

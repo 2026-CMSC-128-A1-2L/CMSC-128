@@ -1,5 +1,5 @@
 import { Icon } from '@iconify/react';
-import placeholder from '../../../../../assets/one_sapphire_place.png';
+import placeholder from '../../../../../assets/one_sapphire_place.webp';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import DefaultAvatar from '../../../../../assets/default_avatar.svg';
@@ -21,6 +21,7 @@ interface CurrentDormCardProps {
   unitNumber?: string;
   contractDuration?: string;
   leaseEndDate?: string;
+  allowTransfer?: boolean;
   verified?: true;
   roommates?: Roommate[];
 }
@@ -66,6 +67,7 @@ export default function CurrentDormCard({
   unitNumber = 'Room 31',
   contractDuration = '1 Year',
   leaseEndDate = 'May 18, 2026',
+  allowTransfer = false,
   verified = true,
   roommates,
   // default values for props, can be overridden when using the component
@@ -493,15 +495,21 @@ export default function CurrentDormCard({
               <p className="text-2xl font-bold  text-[#024338]">Pasalo Unit</p>
 
               <p className="text-[14px] text-slategray">
-                {' '}
-                Proceed to transfer your lease to someone else.
+                {allowTransfer
+                  ? 'Proceed to transfer your lease to someone else.'
+                  : 'Pasalo is not available for this property.'}
               </p>
 
               <button
                 type="button"
-                className="px-4 py-1 cursor-pointer text-[#096c5b] bg-[#f1f5f9] rounded-full dark:bg-[#0d3a32] dark:text-[#72cbb8]"
+                disabled={!allowTransfer}
+                className={`px-4 py-1 rounded-full ${
+                  allowTransfer
+                    ? 'cursor-pointer text-[#096c5b] bg-[#f1f5f9] dark:bg-[#0d3a32] dark:text-[#72cbb8]'
+                    : 'cursor-not-allowed text-gray-100 bg-[#f1f5f9] opacity-60 dark:bg-[#202123] dark:text-[#a4acba]'
+                }`}
                 onClick={() => {
-                  navigate('/lease-transfer');
+                  if (allowTransfer) navigate('/lease-transfer');
                 }}
               >
                 Proceed
