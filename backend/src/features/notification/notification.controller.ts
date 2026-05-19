@@ -16,12 +16,12 @@ const buildNotificationQuery = (args: z.infer<typeof NotificationFilterSchema>) 
       query.status = 'unread';
     } else if (args.status == 'read') {
       query.status = 'read';
-      query.updateAt = {
+      query.updatedAt = {
         $gt: sevenDaysAgo,
       };
     } else if (args.status == 'archived') {
       query.status = 'read';
-      query.updateAt = {
+      query.updatedAt = {
         $lte: sevenDaysAgo,
       };
     }
@@ -30,7 +30,7 @@ const buildNotificationQuery = (args: z.infer<typeof NotificationFilterSchema>) 
       { status: 'unread' },
       {
         status: 'read',
-        updateAt: {
+        updatedAt: {
           $gt: sevenDaysAgo,
         },
       },

@@ -1,13 +1,18 @@
 import { type FunctionComponent, useEffect, useState } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useLocation, useSearchParams, useNavigate } from 'react-router-dom';
 import NotificationDetail from '../../../components/general/NotificationDetail';
 import { InviteService } from '../../../service/InviteService';
 import { Icon } from '@iconify/react';
+import logoLike from '../../../../assets/logo_like.svg';
+import JoinedDormitoryPopup from '../../../components/user/user-invitation/JoinedDormitoryPopup';
+import PortalPopup from '../../../components/user/user-invitation/PortalPopup';
 
 const InviteAccomodation: FunctionComponent = () => {
-  const [searchParams] = useSearchParams();
+  const location = useLocation();
   const navigate = useNavigate();
-  const token = searchParams.get('token');
+  const [isJoinedDormitoryPopupOpen, setJoinedDormitoryPopupOpen] = useState(false);
+  const openJoinedDormitoryPopup = () => setJoinedDormitoryPopupOpen(true);
+  const closeJoinedDormitoryPopup = () => setJoinedDormitoryPopupOpen(false);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

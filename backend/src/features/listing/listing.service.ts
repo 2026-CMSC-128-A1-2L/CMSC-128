@@ -26,6 +26,7 @@ export type CreateListingArguments = {
     sourceType: 'local' | 'external';
     value: string;
   }[];
+  mediaUrls?: string[];
 };
 
 // Parameters for filtering listings
@@ -59,6 +60,7 @@ type UpdateListingArguments = Partial<{
     sourceType: 'local' | 'external';
     value: string;
   }[];
+  mediaUrls?: string[];
 }>;
 
 const typeMap = {
@@ -66,6 +68,17 @@ const typeMap = {
   boolean: 'boolean',
   string: 'enum',
 } as const;
+
+const getPublicR2Url = (value: string) => {
+  if (value.startsWith('http')) return value;
+
+  const publicOrigin = process.env.R2_PUBLIC_URL;
+  if (!publicOrigin) return value;
+
+  const normalizedOrigin = publicOrigin.replace(/\/+$/, '');
+  const normalizedKey = value.replace(/^\/+/, '');
+  return `${normalizedOrigin}/${normalizedKey}`;
+};
 
 const verifyTags = async (tagMap: Record<string, string | number | boolean>) => {
   const namesToFind = [...Object.keys(tagMap)];
@@ -117,6 +130,13 @@ export const createListing = async (
   }
 
   // There can be a race condition here.
+  const media =
+    data.media ??
+    data.mediaUrls?.map((value) => ({
+      sourceType: 'external' as const,
+      value: getPublicR2Url(value),
+    }));
+
   const newListing = new Listing({
     landlordId: facility.landlordId,
     facilityId: data.facilityId,
@@ -126,7 +146,7 @@ export const createListing = async (
     capacity: data.capacity,
 
     description: data.description,
-    media: data.media,
+    media,
   });
   return await newListing.save();
 };
@@ -199,9 +219,22 @@ export const updateListing = async (
   data: UpdateListingArguments,
   filters: QueryFilter<ListingType>,
 ) => {
+  const { mediaUrls, ...listingData } = data;
   return await Listing.findOneAndUpdate(
     combineFilters(filters, { _id: listingId }),
-    { $set: data },
+    {
+      $set: {
+        ...listingData,
+        ...(mediaUrls
+          ? {
+              media: mediaUrls.map((value) => ({
+                sourceType: 'external' as const,
+                value: getPublicR2Url(value),
+              })),
+            }
+          : {}),
+      },
+    },
     { returnDocument: 'after' },
   );
 };

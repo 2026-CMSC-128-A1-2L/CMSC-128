@@ -13,6 +13,7 @@ import fileRouter from './features/file/file.router.js';
 import inviteRouter from './features/invite/invite.router.js';
 import listingRouter from './features/listing/listing.router.js';
 import messageRouter from './features/message/message.router.js';
+import announcementRouter from './features/announcement/announcement.router.js';
 import notificationRouter from './features/notification/notification.router.js';
 import pusherRouter from './features/pusher/pusher.router.js';
 import profileRouter from './features/profile/profile.router.js';
@@ -52,6 +53,7 @@ router.use('/transfers', transferRouter);
 router.use('/units', unitRouter);
 router.use('/users', userRouter);
 
+router.use('/announcements', announcementRouter);
 router.use('/auth', authRouter);
 router.use('/calendar', calendarRouter);
 

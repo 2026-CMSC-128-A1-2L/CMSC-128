@@ -19,6 +19,7 @@ type ReportData = {
   flags: string[];
   evidence: string[];
   status: string;
+  reporterFacility?: string | null;
   createdAt?: string;
   __t?: string;
   [key: string]: unknown;
@@ -30,7 +31,7 @@ type Props = {
   onClose: () => void;
   onResolve: (status: 'resolved' | 'dismissed') => void;
   getReporterName: (userId: string | ReportUser) => string;
-  getReportType: (report: ReportData) => string;
+  getReportType: (report: any) => string;
 };
 
 const SS: Record<string, string> = {

@@ -26,10 +26,10 @@ export const inviteManager = async (
     session.startTransaction();
 
     // make sure the facility exists and belongs to this landlord
-    const facility = await HousingFacility.findOne({ _id: facilityId, landlordId }).session(
+    const facilityExists = await HousingFacility.exists({ _id: facilityId, landlordId }).session(
       session,
     );
-    if (!facility) throw new AppError(404, 'Facility not found.');
+    if (!facilityExists) throw new AppError(404, 'Facility not found.');
 
     // check if the email exists and does not belong to a manager account
     const existingUser = await getUserByEmail(email, session);
@@ -158,6 +158,11 @@ export const inviteStudent = async (
   const session = await mongoose.startSession();
   try {
     session.startTransaction();
+    const facilityExists = await HousingFacility.exists({ _id: facilityId, landlordId }).session(
+      session,
+    );
+    if (!facilityExists) throw new AppError(404, 'Facility not found.');
+
     const unit = await Unit.findOne({ _id: unitId, facilityId }).session(session);
     if (!unit) throw new AppError(404, 'Unit not found');
 
