@@ -12,9 +12,13 @@ import z from 'zod';
 import { DateTimeSchema, ObjectIdSchema } from 'shared';
 import { combineFilters } from '../../middleware.js';
 import { isUnitFull } from '../unit/unit.service.js';
+import { Unit } from '../unit/unit.model.js';
 import { Listing } from '../listing/listing.model.js';
 import { File } from '../file/file.model.js';
 import { createRental } from '../rental/rental.service.js';
+import { TransferRequest } from '../transfer/transfer.model.js';
+import { Rental } from '../rental/rental.model.js';
+import { Billing } from '../billing/billing.model.js';
 
 export type GetApplicationsArguments = NullablePartial<{
   userId: mongoose.Types.ObjectId;
@@ -36,6 +40,7 @@ export const createApplication = async (
   userId: mongoose.Types.ObjectId,
   listingId: mongoose.Types.ObjectId,
   data: {
+    transferId?: mongoose.Types.ObjectId;
     leaseDuration: '6-months' | '12-months';
     moveInDate: Date;
     message?: string | null;
@@ -43,6 +48,31 @@ export const createApplication = async (
 ) => {
   const listing = await Listing.findById(listingId).select('facilityId');
   if (!listing) throw new AppError(404, 'Listing not found.');
+  let pasaloUnitId: mongoose.Types.ObjectId | undefined;
+  if (data.transferId) {
+    const approvedTransfer = await TransferRequest.findOne({
+      _id: data.transferId,
+      status: 'approved',
+    });
+    if (!approvedTransfer) throw new AppError(404, 'Pasalo transfer not found.');
+
+    const transferUnit = await Unit.findOne({
+      _id: approvedTransfer.unitId,
+      listingId,
+    }).select('_id');
+    if (!transferUnit) {
+      throw new AppError(422, 'Pasalo transfer does not belong to this listing.');
+    }
+    pasaloUnitId = transferUnit._id;
+  }
+
+  const listingUnits = await Unit.find({ listingId }).select('_id');
+  const hasApprovedTransfer = Boolean(
+    await TransferRequest.exists({
+      status: 'approved',
+      unitId: { $in: listingUnits.map((unit) => unit._id) },
+    }),
+  );
 
   const newApplication = new ApplicationForm({
     userId,
@@ -51,6 +81,8 @@ export const createApplication = async (
     leaseDuration: data.leaseDuration,
     moveInDate: data.moveInDate,
     preferredMoveInDate: data.moveInDate,
+    isPasalo: hasApprovedTransfer,
+    unitId: pasaloUnitId,
     message: data.message,
     documents: [
       { docId: 'official-id', name: 'Official University ID', status: 'pending', files: [] },
@@ -229,8 +261,48 @@ export const approveInitialApplication = async (
   if (application.status !== 'pending')
     throw new AppError(422, `Applications that are '${application.status}' cannot be approved.`);
 
-  if (await isUnitFull(unitId, { listingId: application.listingId }))
+  const assignedUnit = await Unit.findOne({ _id: unitId, listingId: application.listingId });
+  if (!assignedUnit) {
+    throw new AppError(422, 'Unit does not belong to this listing.');
+  }
+
+  const approvedTransfer = await TransferRequest.findOne({
+    unitId,
+    status: 'approved',
+  });
+
+  if (!approvedTransfer && (await isUnitFull(unitId, { listingId: application.listingId })))
     throw new AppError(422, 'Unit is already full.');
+
+  if (approvedTransfer) {
+    const oldRental = await Rental.findOne({
+      userId: approvedTransfer.userId,
+      unitId,
+      status: { $in: ['active', 'inactive'] },
+    });
+    if (!oldRental) {
+      throw new AppError(404, 'Outgoing tenant rental not found.');
+    }
+
+    oldRental.userId = application.userId;
+    oldRental.applicationId = application._id;
+    await oldRental.save();
+    await Billing.updateMany({ rentalId: oldRental._id }, { $set: { userId: application.userId } });
+
+    approvedTransfer.status = 'completed';
+    await approvedTransfer.save();
+
+    application.status = 'approved';
+    application.unitId = unitId;
+    const { subject, content } = statusMessages[application.status];
+    await sendNotification(application.userId, subject, content);
+    await sendNotification(
+      approvedTransfer.userId,
+      'Pasalo Transfer Completed',
+      'Your lease has been transferred to the approved applicant.',
+    );
+    return await application.save();
+  }
 
   application.status = 'waitlisted';
   application.unitId = unitId;
