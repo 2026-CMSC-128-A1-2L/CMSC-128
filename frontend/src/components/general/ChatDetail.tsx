@@ -70,10 +70,7 @@ const ChatDetail: FunctionComponent<ChatDetailProps> = ({
     }
   };
 
-  const typingText =
-    typingUsers.length > 0
-      ? `${typingUsers.join(', ')} ${typingUsers.length === 1 ? 'is' : 'are'} typing...`
-      : null;
+  const typingText = typingUsers.length > 0 ? `${title} is typing...` : null;
 
   return (
     <div className="w-full h-full flex flex-col font-inter relative">
