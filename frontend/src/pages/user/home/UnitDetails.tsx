@@ -125,7 +125,7 @@ type UnitDetailsLocationState = {
 type ApplicationWarning = {
   id: number;
   message?: string;
-  type?: "warning" | "success" | "info" | "error";
+  type?: "warning" | "success";
 };
 
 const getDataArray = (response: unknown): unknown[] => {

@@ -80,11 +80,11 @@ const toTagMap = (tags: TagValue[]): CreateListingBody['tags'] =>
   }, {});
 
 const toManagerPermissions = (permissions: ManagerPermissions): ManagerApiPermissions => ({
+  deleteBuildings: permissions.deleteBuildings ?? false,
   deleteListings: permissions.deleteListings,
-  manageListings: permissions.manageBuildings,
+  manageBuildings: permissions.manageBuildings,
   manageBillings: permissions.manageBillings,
-  manageBookings: permissions.acceptOcularVisits,
-  manageApplications: permissions.manageBuildings,
+  acceptOcularVisits: permissions.acceptOcularVisits,
   reportUsers: permissions.reportUsers,
 });
 

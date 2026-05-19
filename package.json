@@ -15,11 +15,11 @@
     "shared"
   ],
   "scripts": {
-    "build": "npm run build -w shared && npm run build -w frontend",
+    "build": "node init && npm run build -w shared && npm run build -w frontend",
     "lint": "npm run lint -ws --if-present",
     "format": "npm run format -ws --if-present",
     "fix": "npm run fix -ws --if-present",
-    "dev": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm run dev\"",
+    "dev": "node init && concurrently \"cd backend && npm run dev\" \"cd frontend && npm run dev\"",
     "lock": "node secure.js encrypt",
     "unlock": "node secure.js decrypt"
   },

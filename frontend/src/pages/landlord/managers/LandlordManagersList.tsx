@@ -154,12 +154,12 @@ const Managers = () => {
                       managerUser?._id ?? managerUser?.id,
                     );
                     const managerEmails = (managerUser.emails ?? []).map(
-                      (email) => email.toLowerCase(),
+                      (email: string) => email.toLowerCase(),
                     );
 
                     return (
                       managerId !== currentUserId &&
-                      !managerEmails.some((email) =>
+                      !managerEmails.some((email: string) =>
                         currentUserEmails.has(email),
                       )
                     );

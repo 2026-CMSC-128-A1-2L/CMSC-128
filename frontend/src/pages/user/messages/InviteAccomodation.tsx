@@ -1,22 +1,26 @@
 import { type FunctionComponent, useEffect, useState } from 'react';
-import { useLocation, useSearchParams, useNavigate } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import NotificationDetail from '../../../components/general/NotificationDetail';
 import { InviteService } from '../../../service/InviteService';
 import { Icon } from '@iconify/react';
-import logoLike from '../../../../assets/logo_like.svg';
-import JoinedDormitoryPopup from '../../../components/user/user-invitation/JoinedDormitoryPopup';
-import PortalPopup from '../../../components/user/user-invitation/PortalPopup';
+
+type InviteDetails = {
+  status: 'pending' | 'accepted' | 'declined';
+  inviteType?: 'manager' | 'student';
+  dateInvited?: string | Date;
+  facilityId?: {
+    name?: string;
+  };
+};
 
 const InviteAccomodation: FunctionComponent = () => {
-  const location = useLocation();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const [isJoinedDormitoryPopupOpen, setJoinedDormitoryPopupOpen] = useState(false);
-  const openJoinedDormitoryPopup = () => setJoinedDormitoryPopupOpen(true);
-  const closeJoinedDormitoryPopup = () => setJoinedDormitoryPopupOpen(false);
+  const token = searchParams.get('token');
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [invite, setInvite] = useState<any>(null);
+  const [invite, setInvite] = useState<InviteDetails | null>(null);
   const [actionLoading, setActionLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
@@ -32,7 +36,9 @@ const InviteAccomodation: FunctionComponent = () => {
         const response = await InviteService.getInvite(token);
         setInvite(response.data);
       } catch {
-        setError('Could not load invite details. The invite may have expired or already been responded to.');
+        setError(
+          'Could not load invite details. The invite may have expired or already been responded to.',
+        );
       } finally {
         setLoading(false);
       }
@@ -90,6 +96,7 @@ const InviteAccomodation: FunctionComponent = () => {
       <div className="w-full h-full flex flex-col items-center justify-center gap-4 bg-transparent">
         <p className="font-['Inter'] text-num-18 text-crimson dark:text-[#e44f4f]">{error}</p>
         <button
+          type="button"
           onClick={() => navigate('/direct-messages')}
           className="rounded-xl bg-lightcyan px-6 py-2 font-['Inter'] text-num-14 font-semibold text-teal-200 cursor-pointer hover:opacity-80 transition-opacity dark:bg-[#12342e] dark:text-[#72cbb8]"
         >
@@ -140,7 +147,7 @@ const InviteAccomodation: FunctionComponent = () => {
                 : `You've been invited to join ${invite.facilityId.name}. Respond to accept or decline this invitation.`
               : 'Respond to accept or decline this invitation.'
           }
-          showButtons={!isExpired}
+          showButtons={!isExpired && !actionLoading}
           onAccept={handleAccept}
           onCancel={handleDecline}
           cancelLabel="Decline"

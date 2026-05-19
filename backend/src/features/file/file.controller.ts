@@ -70,7 +70,7 @@ export const routeDownloadFile: RequestHandler = async (req, res, next) => {
       Key: filePath,
       ResponseContentDisposition: `attachment; filename="${file.filename}"`,
     });
-    const signedUrl = await getSignedUrl(s3, command, { expiresIn: 3600 });
+    const signedUrl = await getSignedUrl(s3 as never, command, { expiresIn: 3600 });
     res.json({
       url: signedUrl,
       filename: file.filename,

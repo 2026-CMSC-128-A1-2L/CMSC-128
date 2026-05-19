@@ -150,14 +150,13 @@ const seedSubmittedFacilities = async () => {
       managers: [
         {
           userId: landlord._id,
-          permissions: {
-            manageListings: true,
-            manageApplications: true,
-            manageBillings: true,
-            manageBookings: true,
-            deleteListings: false,
-            reportUsers: false,
-          },
+            permissions: {
+              manageBuildings: true,
+              manageBillings: true,
+              deleteBuildings: true,
+              deleteListings: true,
+              reportUsers: false,
+            },
         },
       ],
       location: { text: `Street ${i}, Los Baños, Laguna` },

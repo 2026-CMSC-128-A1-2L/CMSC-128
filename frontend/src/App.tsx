@@ -10,8 +10,6 @@ import landlordRoutes from './routes/landlordRoutes';
 import { useAuthStore } from './store/useAuthStore';
 import { useEffect } from 'react';
 
-// ... your other imports
-
 const getSignedInDestination = (user: ReturnType<typeof useAuthStore.getState>['user']) => {
   if (!user) return '/';
   if (user.status === 'setup') return '/registration';
@@ -34,7 +32,6 @@ function AnimatedRoutes() {
   return (
     <Routes>
       <Route path="/" element={<LandingRoute />} />
-      <Route path="/about" element={<UserLanding />} />
 
       <Route element={<PageLayout />}>
         {userRoutes}

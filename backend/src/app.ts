@@ -9,10 +9,24 @@ const MongoDBStore = conn(session);
 export const getApp = (envOverride: Record<string, string>) => {
   process.env = { ...process.env, ...envOverride };
   const app = express();
+  app.set('trust proxy', 1);
+  const allowedOrigins = [
+    'http://localhost:5173',
+    'http://localhost:5001',
+    process.env.FRONTEND_URL,
+    process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined,
+  ].filter(Boolean) as string[];
 
   app.use(
     cors({
-      origin: 'http://localhost:5173',
+      origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin) || (origin && origin.endsWith('.vercel.app'))) {
+          callback(null, true);
+          return;
+        }
+
+        callback(new Error(`Origin ${origin} is not allowed by CORS`));
+      },
       credentials: true,
     }),
   );
@@ -51,6 +65,10 @@ export const getApp = (envOverride: Record<string, string>) => {
       resave: false,
       saveUninitialized: false,
       store: store,
+      cookie: {
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+        secure: process.env.NODE_ENV === 'production',
+      },
     }),
   );
 

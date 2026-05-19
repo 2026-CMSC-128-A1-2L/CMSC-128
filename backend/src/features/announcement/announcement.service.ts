@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import { Announcement, AnnouncementRead, type AnnouncementType } from './announcement.model.js';
 import { triggerNewAnnouncement } from '../../pusher.js';
+import type { UserTypeType } from 'shared';
 
 type CreateAnnouncementParams = {
   subject: string;

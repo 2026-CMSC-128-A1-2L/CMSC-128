@@ -33,7 +33,7 @@ export const currentTenantManagerFilter: RequestHandler<
 
   const newFilter = {
     managers: {
-      $elemMatch: { userId, 'permissions.manageListings': true },
+      $elemMatch: { userId, 'permissions.manageBuildings': true },
     },
   };
   const listingFilter = { listingId: { $in: await Listing.find(newFilter).distinct('_id') } };
@@ -68,7 +68,7 @@ export const currentTenantManagerRentalFilter: RequestHandler<
   const managerCriteria: QueryFilter<{
     userId: typeof req.user._id;
     permissions: ManagerPermissionType;
-  }> = { userId: req.user._id, 'permissions.manageListings': true };
+  }> = { userId: req.user._id, 'permissions.manageBuildings': true };
 
   const facilityFilter =
     req.user.userType === 'Landlord'
