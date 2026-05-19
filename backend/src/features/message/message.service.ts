@@ -48,6 +48,15 @@ export const getConversation = async (
   const otherUser = await User.findById(otherId).lean();
   if (!otherUser) throw new AppError(404, 'User not found!');
 
+  await Message.updateMany(
+    {
+      senderId: otherId,
+      receiverId: userId,
+      receiverSeenAt: null,
+    },
+    { $set: { receiverSeenAt: new Date() } },
+  );
+
   return {
     user: otherUser,
     messages: await Message.find({

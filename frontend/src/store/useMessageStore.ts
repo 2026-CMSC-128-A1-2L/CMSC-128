@@ -77,13 +77,15 @@ export const useMessageStore = create<MessageState>((set, get) => ({
     };
 
     const myId = getMyId();
-    const messages: ChatMessage[] = data.messages.map((m, i) => ({
-      _id: `msg-${i}`,
-      senderId: m.userId,
-      receiverId: m.userId === otherUserId ? (myId ?? '') : otherUserId,
-      text: m.text,
-      createdAt: new Date().toISOString(),
-    }));
+    const messages: ChatMessage[] = data.messages.map(
+      (m: { userId: string; text: string }, i: number) => ({
+        _id: `msg-${i}`,
+        senderId: m.userId,
+        receiverId: m.userId === otherUserId ? (myId ?? '') : otherUserId,
+        text: m.text,
+        createdAt: new Date().toISOString(),
+      }),
+    );
 
     let chatChannel = null;
     if (myId) {
@@ -118,6 +120,14 @@ export const useMessageStore = create<MessageState>((set, get) => ({
       _chatChannel: chatChannel,
       typingUsers: [],
     });
+
+    set((s) => ({
+      conversations: s.conversations.map((conversation) =>
+        conversation.user.id === otherUserId
+          ? { ...conversation, readAt: data.readAt ?? new Date().toISOString() }
+          : conversation,
+      ),
+    }));
   },
 
   sendMessage: async (otherUserId: string, text: string) => {
@@ -135,6 +145,7 @@ export const useMessageStore = create<MessageState>((set, get) => ({
   subscribeToPusher: () => {
     const myId = getMyId();
     if (!myId) return;
+    if (get()._userChannel) return;
 
     const userChannel = pusherClient.subscribe(`private-user-${myId}`);
     userChannel.bind('new-message', async (msg: ChatMessage) => {

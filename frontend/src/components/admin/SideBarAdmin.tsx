@@ -8,6 +8,7 @@ import SideBarAdminButton from './SideBarAdminButton';
 import SideBarAdminMessagesView, { type MessageItem } from './SideBarAdminMessagesView';
 import { useTheme } from '../../pages/utilities/DarkMode';
 import { useAuthStore } from '../../store/useAuthStore';
+import { useUnreadCommunicationCount } from '../../hooks/useUnreadCommunicationCount';
 
 export type SideBarAdminView = 'nav' | 'messages_tab';
 export type SideBarAdminItemKey =
@@ -159,6 +160,7 @@ const SideBarAdmin = ({
   const navigate = useNavigate();
   const { isDark, toggle } = useTheme();
   const { user, logout } = useAuthStore();
+  const unreadCommunicationCount = useUnreadCommunicationCount();
 
   const adminName = user ? `${user.firstName} ${user.lastName}`.trim() : admin.name;
   const adminRole = user?.userType || admin.role;
@@ -301,7 +303,7 @@ const SideBarAdmin = ({
               return (
                 <div
                   key={item.key}
-                  className="duration-200 hover:bg-[#F0FAF6] dark:hover:bg-[#17201d]"
+                  className="relative duration-200 hover:bg-[#F0FAF6] dark:hover:bg-[#17201d]"
                 >
                   <SideBarAdminButton
                     icon={item.iconName}
@@ -309,6 +311,11 @@ const SideBarAdmin = ({
                     state={state}
                     onClick={() => handleNavItemClick(item)}
                   />
+                  {item.key === 'messages' && unreadCommunicationCount > 0 && (
+                    <span className="absolute right-[18px] top-1/2 flex h-5 min-w-5 -translate-y-1/2 items-center justify-center rounded-full bg-[#d94141] px-1.5 text-[10px] font-bold leading-none text-white shadow-sm">
+                      {unreadCommunicationCount > 99 ? '99+' : unreadCommunicationCount}
+                    </span>
+                  )}
                 </div>
               );
             })}

@@ -25,7 +25,7 @@ export const useNotificationStore = create<NotificationState>((set, get) => ({
   _channel: null,
 
   fetchNotifications: async () => {
-    const { data } = await NotificationService.getNotifications({ status: undefined });
+    const { data } = await NotificationService.getNotifications({ limit: 50 });
     set({ notifications: data });
   },
 
@@ -41,6 +41,7 @@ export const useNotificationStore = create<NotificationState>((set, get) => ({
   subscribeToPusher: () => {
     const myId = useAuthStore.getState().user?._id;
     if (!myId) return;
+    if (get()._channel) return;
 
     const channel = pusherClient.subscribe(`private-user-${myId}`);
     channel.bind('new-notification', (notif: Notification) => {
