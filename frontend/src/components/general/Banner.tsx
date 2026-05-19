@@ -1,11 +1,12 @@
-import type { FunctionComponent } from 'react';
-import { useEffect, useRef, useState } from 'react';
-import { Icon } from '@iconify/react';
-import pic1 from '../../../assets/promotion-1.jpg';
-import pic2 from '../../../assets/promotion-2.jpg';
-import pic3 from '../../../assets/accent.svg';
+import type { FunctionComponent } from "react";
+import { useEffect, useRef, useState } from "react";
+import { Icon } from "@iconify/react";
+import pic1 from "../../../assets/promotion-1.jpg";
+import pic2 from "../../../assets/promotion-2.jpg";
+import pic3 from "../../../assets/accent.svg";
 
-const ORIGINAL_HEIGHT = 384; // h-96
+const DESIGN_WIDTH = 1992; // 7 w-66 cards + 6 gap-6 spaces
+const DESIGN_HEIGHT = 680;
 
 const Banner: FunctionComponent = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -16,11 +17,7 @@ const Banner: FunctionComponent = () => {
     if (!el) return;
 
     const observer = new ResizeObserver(([entry]) => {
-      const containerW = entry.contentRect.width;
-      // The banner was designed for ~900px+ wide content areas
-      const designW = 1000;
-      const s = Math.min(1, containerW / designW);
-      setScale(s);
+      setScale(Math.min(1, entry.contentRect.width / DESIGN_WIDTH));
     });
 
     observer.observe(el);
@@ -30,70 +27,80 @@ const Banner: FunctionComponent = () => {
   return (
     <div
       ref={containerRef}
-      className="w-full overflow-hidden text-darkslategray font-inter"
-      style={{ height: ORIGINAL_HEIGHT * scale }}
+      className="w-full max-w-[1992px] overflow-hidden rounded-num-12 text-darkslategray font-inter"
+      style={{ height: DESIGN_HEIGHT * scale }}
     >
       <div
+        className="relative overflow-hidden rounded-num-12 bg-teal-200/25"
         style={{
-          transformOrigin: 'top left',
+          width: DESIGN_WIDTH,
+          height: DESIGN_HEIGHT,
           transform: `scale(${scale})`,
-          width: `${100 / scale}%`,
+          transformOrigin: "top left",
         }}
       >
-        {/* Original banner — completely unchanged */}
-        <div className="w-full h-96 rounded-num-12 bg-teal-200/25 flex flex-row items-center py-20 px-20 gap-30 relative">
-          <img
-            className="absolute top-1/2 left-40 opacity-75 -translate-y-1/2 -translate-x-1/4 w-140 h-140"
-            src={pic3}
-            alt="background accent"
-          />
+        <img
+          className="absolute left-[28px] top-[-92px] h-[780px] w-[1080px] object-contain opacity-75"
+          src={pic3}
+          alt="background accent"
+        />
 
-          {/* left frame */}
-          <div className="w-full flex-1 relative h-100 z-10">
-            <img
-              className="absolute top-30 -left-5 w-120 -rotate-5 rounded-num-12 shadow-lg z-10"
-              src={pic2}
-              alt="promotion-2"
-            />
-            <img
-              className="absolute top-15 left-15 w-120 rotate-4 shadow-[0px_10px_30px_rgba(0,0,0,0.2)] rounded-num-12 z-20 object-contain"
-              src={pic1}
-              alt="promotion-1"
-            />
+        <img
+          className="absolute left-[82px] top-[242px] z-10 w-[560px] -rotate-5 rounded-num-12 shadow-lg"
+          src={pic2}
+          alt="promotion-2"
+        />
+        <img
+          className="absolute left-[292px] top-[86px] z-20 w-[720px] rotate-4 rounded-num-12 object-contain shadow-[0px_10px_30px_rgba(0,0,0,0.2)]"
+          src={pic1}
+          alt="promotion-1"
+        />
+
+        <div className="absolute left-[1160px] top-[132px] z-30 flex w-[700px] flex-col gap-[34px]">
+          <div className="flex flex-col gap-[12px]">
+            <b className="text-[44px] leading-[1.08] text-darkslategray">
+              Built for students, by students.
+            </b>
+            <b className="text-[34px] leading-[1.22] text-teal">
+              Discover a community-backed way to find your next home in Los
+              Ba&ntilde;os with transparency and ease.
+            </b>
           </div>
 
-          {/* right frame */}
-          <div className="w-[45%] shrink-0 flex flex-col pl-10 items-center gap-4">
-            <div className="flex flex-col gap-1">
-              <div className="w-full relative flex items-center text-left text-num-32 text-darkslategray font-inter">
-                <b className="flex-1 relative">{`Built for students, by students. `}</b>
+          <div className="flex flex-col items-center gap-[34px]">
+            <div className="flex items-center justify-center gap-[58px] text-teal-100 font-lora">
+              <div className="flex w-[120px] flex-col items-center gap-[14px]">
+                <Icon icon="ic:twotone-search" className="h-[54px] w-[54px]" />
+                <span className="text-[28px] font-bold">Search</span>
               </div>
-              <b className="w-full relative text-[1.125rem] inline-block font-inter text-teal text-left">
-                {`Discover a community-backed way to find your next home in Los Baños with transparency and ease. `}
-              </b>
-            </div>
-            <div className="w-full flex flex-col items-center gap-4">
-              <div className="flex items-center justify-center gap-6 text-teal-100 font-lora">
-                <div className="flex flex-col items-center gap-2">
-                  <Icon icon="ic:twotone-search" className="h-8 w-8" />
-                  <span className="text-num-14 font-bold">Search</span>
-                </div>
-                <Icon icon="gg:arrow-right" className="h-6 w-6 opacity-40" />
-                <div className="flex flex-col items-center gap-2">
-                  <Icon icon="boxicons:calendar" className="h-8 w-8" />
-                  <span className="text-num-14 font-bold">Book</span>
-                </div>
-                <Icon icon="gg:arrow-right" className="h-6 w-6 opacity-40" />
-                <div className="flex flex-col items-center gap-2">
-                  <Icon icon="solar:home-linear" className="h-8 w-8" />
-                  <span className="text-num-14 font-bold">Move In</span>
-                </div>
+              <Icon
+                icon="gg:arrow-right"
+                className="h-[34px] w-[34px] opacity-40"
+              />
+              <div className="flex w-[120px] flex-col items-center gap-[14px]">
+                <Icon icon="boxicons:calendar" className="h-[54px] w-[54px]" />
+                <span className="text-[28px] font-bold">Book</span>
               </div>
-              <button className="rounded-[45px] [background:linear-gradient(99.18deg,#5dc2a8_27.88%,#0c8873_88.15%)] hover:brightness-110 transition-all flex items-center justify-center py-4 px-6 gap-2 text-white shadow-lg">
-                <b className="text-[1.2rem]">Find my spot!</b>
-                <Icon icon="si:arrow-right-duotone" className="h-6 w-6" />
-              </button>
+              <Icon
+                icon="gg:arrow-right"
+                className="h-[34px] w-[34px] opacity-40"
+              />
+              <div className="flex w-[120px] flex-col items-center gap-[14px]">
+                <Icon icon="solar:home-linear" className="h-[54px] w-[54px]" />
+                <span className="text-[28px] font-bold">Move In</span>
+              </div>
             </div>
+
+            <button
+              type="button"
+              className="flex h-[102px] w-[420px] items-center justify-center gap-[24px] rounded-[60px] [background:linear-gradient(99.18deg,#5dc2a8_27.88%,#0c8873_88.15%)] text-white shadow-lg transition-all hover:brightness-110"
+            >
+              <b className="text-[36px]">Find my spot!</b>
+              <Icon
+                icon="si:arrow-right-duotone"
+                className="h-[36px] w-[36px]"
+              />
+            </button>
           </div>
         </div>
       </div>

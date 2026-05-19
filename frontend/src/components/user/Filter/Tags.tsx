@@ -2,6 +2,7 @@ import { Icon } from '@iconify/react';
 import { useState } from 'react';
 import radio from '../../../../assets/radio.svg';
 import radio_check from '../../../../assets/radio_check.svg';
+import { useDebouncedValue } from '../../../hooks/useDebouncedValue';
 
 interface Props {
   selected: string[];
@@ -10,6 +11,7 @@ interface Props {
 
 const Tags = ({ selected, onChange }: Props) => {
   const [searchTerm, setSearchTerm] = useState('');
+  const debouncedSearchTerm = useDebouncedValue(searchTerm, 250);
   const [isExpanded, setIsExpanded] = useState(false);
 
   const allTags = [
@@ -30,10 +32,10 @@ const Tags = ({ selected, onChange }: Props) => {
   ];
 
   const filteredTags = allTags.filter((tag) =>
-    tag.toLowerCase().includes(searchTerm.toLowerCase()),
+    tag.toLowerCase().includes(debouncedSearchTerm.toLowerCase()),
   );
 
-  const displayTags = searchTerm || isExpanded ? filteredTags : filteredTags.slice(0, 6);
+  const displayTags = debouncedSearchTerm || isExpanded ? filteredTags : filteredTags.slice(0, 6);
 
   const toggleTag = (tag: string) => {
     if (selected.includes(tag)) {
@@ -49,13 +51,13 @@ const Tags = ({ selected, onChange }: Props) => {
       <div className="relative">
         <Icon
           icon="mynaui:search"
-          className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+          className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-[#a4acba]"
         />
         <input
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           placeholder="Search tags (e.g. Study Lounge, Gym)"
-          className="w-full bg-unavailable_action rounded-2xl py-3 pl-10 pr-4 border-none text-medium text-num-14 focus:outline-none"
+          className="w-full bg-unavailable_action rounded-2xl py-3 pl-10 pr-4 border-none text-medium text-num-14 focus:outline-none dark:bg-[#242526] dark:text-[#d7e0ef] dark:placeholder:text-[#a4acba]"
         />
       </div>
 
@@ -64,7 +66,9 @@ const Tags = ({ selected, onChange }: Props) => {
           <label
             key={tag}
             className={`flex items-center gap-2 px-4 py-2 rounded-num-12 border cursor-pointer transition-all border-solid ${
-              selected.includes(tag) ? 'border-teal text-teal' : 'border-whitesmoke text-unselected'
+              selected.includes(tag)
+                ? 'border-teal text-teal dark:border-[#72cbb8] dark:text-[#72cbb8]'
+                : 'border-whitesmoke text-unselected dark:border-[#303331] dark:text-[#a4acba] dark:hover:border-[#54a594]'
             }`}
           >
             <input
@@ -80,7 +84,7 @@ const Tags = ({ selected, onChange }: Props) => {
       </div>
 
       {/* show more/less*/}
-      {!searchTerm && filteredTags.length > 6 && (
+      {!debouncedSearchTerm && filteredTags.length > 6 && (
         <button
           onClick={() => setIsExpanded(!isExpanded)}
           className="text-slategray font-bold text-left text-num-12 hover:text-teal transition-colors border-none bg-transparent cursor-pointer"

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import placeholderImage from '../../../../../assets/one_sapphire_place.png';
+import placeholderImage from '../../../../../assets/one_sapphire_place.webp';
 import { ApplicationService } from '../../../../service/ApplicationService';
 import { FacilityService } from '../../../../service/FacilityService';
 import { UserService } from '../../../../service/UserService';
@@ -46,6 +46,7 @@ type Person = {
 export type CurrentDormReviewDetails = {
   facilityId?: string;
   listingId?: string;
+  unitId?: string;
   dormitoryName: string;
   dormitoryAddress: string;
   dormitoryImage: string;
@@ -156,10 +157,12 @@ const mapDetails = (
   source: CurrentDormSource,
   facility?: FacilityResponse,
 ): CurrentDormReviewDetails => {
-  const listingId = getId(source.listingId);
+  const unit = source.unitId;
+  const listingId =
+    getId(source.listingId) ??
+    (unit && typeof unit === 'object' ? getId(unit.listingId as EntityRef) : undefined);
   const listingFromFacility = facility?.listings?.find((listing) => getId(listing) === listingId);
   const listing = source.listingId;
-  const unit = source.unitId;
   const roomType =
     getRoomLabel(listing) !== 'Selected Room'
       ? getRoomLabel(listing)
@@ -168,6 +171,7 @@ const mapDetails = (
   return {
     facilityId: getId(source.facilityId) ?? getId(facility),
     listingId,
+    unitId: getId(unit),
     dormitoryName:
       (source.facilityId &&
         typeof source.facilityId === 'object' &&

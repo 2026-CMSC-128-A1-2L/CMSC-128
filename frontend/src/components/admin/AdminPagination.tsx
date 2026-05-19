@@ -26,7 +26,7 @@ const AdminPagination = ({
           type="button"
           onClick={() => onPageChange(Math.max(1, currentPage - 1))}
           disabled={currentPage === 1}
-          className="rounded-lg border border-[#e5e7eb] dark:border-[#303331] px-3 py-1 font-['Poppins'] text-sm font-medium text-black dark:text-[#d7e0ef] disabled:opacity-50"
+          className="cursor-pointer rounded-lg border border-[#e5e7eb] dark:border-[#303331] px-3 py-1 font-['Poppins'] text-sm font-medium text-black dark:text-[#d7e0ef] disabled:opacity-50 disabled:cursor-default"
         >
           Previous
         </button>
@@ -34,7 +34,7 @@ const AdminPagination = ({
           type="button"
           onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
           disabled={currentPage === totalPages}
-          className="rounded-lg border border-[#e5e7eb] dark:border-[#303331] px-3 py-1 font-['Poppins'] text-sm font-medium text-black dark:text-[#d7e0ef] disabled:opacity-50"
+          className="cursor-pointer rounded-lg border border-[#e5e7eb] dark:border-[#303331] px-3 py-1 font-['Poppins'] text-sm font-medium text-black dark:text-[#d7e0ef] disabled:opacity-50 disabled:cursor-default"
         >
           Next
         </button>

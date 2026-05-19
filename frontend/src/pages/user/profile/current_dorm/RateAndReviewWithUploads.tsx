@@ -364,7 +364,7 @@ const RateAndReview: FunctionComponent = () => {
                       onClick={onUserProfileTextClick}
                       disabled={isSubmitting}
                     >
-                      <b className="relative">{isSubmitting ? 'Submitting...' : 'Proceed'}</b>
+                      <b className="relative cursor-pointer">{isSubmitting ? 'Submitting...' : 'Proceed'}</b>
                     </button>
                   </div>
                 </div>

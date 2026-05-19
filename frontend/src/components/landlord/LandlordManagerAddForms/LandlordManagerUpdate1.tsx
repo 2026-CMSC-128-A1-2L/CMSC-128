@@ -177,7 +177,7 @@ const UpdateManager1: FunctionComponent<Props> = ({ onCancel, onSave }) => {
         <div className="flex items-center gap-4 text-num-14 text-crimson font-inter">
           <div className="rounded-num-12 flex items-center justify-center py-2 px-6">
             <button
-              className="relative font-semibold inline-block max-w-[269.11px]"
+              className="relative font-semibold inline-block max-w-[269.11px] cursor-pointer"
               onClick={onCancel}
             >
               Cancel
@@ -185,7 +185,7 @@ const UpdateManager1: FunctionComponent<Props> = ({ onCancel, onSave }) => {
           </div>
           <div className="rounded-num-12 bg-lightcyan overflow-hidden flex items-center justify-center py-2 px-6 text-teal">
             <button
-              className="relative font-semibold inline-block max-w-[269.11px]"
+              className="relative font-semibold inline-block max-w-[269.11px] cursor-pointer"
               onClick={onSave}
             >
               Save

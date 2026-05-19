@@ -9,6 +9,7 @@
     "start": "cross-env NODE_ENV=development tsx src/server.ts",
     "seed:facility-listings": "tsx src/scripts/seedFacilityListings.ts",
     "seed:admin-data": "tsx src/scripts/seedAdminData.ts",
+    "seed:reports-test": "tsx src/scripts/seedReportsForTesting.ts",
     "lint": "biome check .",
     "fix": "biome lint --write .",
     "format": "biome format --write .",
@@ -39,6 +40,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1038.0",
+    "@aws-sdk/s3-request-presigner": "^3.1047.0",
     "connect-mongodb-session": "^5.0.0",
     "cors": "^2.8.6",
     "dotenv": "^17.3.1",

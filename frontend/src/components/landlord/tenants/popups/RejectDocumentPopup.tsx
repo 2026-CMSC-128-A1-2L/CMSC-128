@@ -80,7 +80,7 @@ const RejectDocumentPopup = ({
                       allSelected ? 'bg-[#096c5b] text-white' : 'bg-[#f2f2f2] text-transparent',
                     ].join(' ')}
                   >
-                    <Icon icon="material-symbols:check-rounded" className="h-[18px] w-[18px]" />
+                    <Icon icon="material-symbols:check-rounded" className="h-[18px] w-[18px] cursor-pointer" />
                   </button>
                 </div>
               </div>
@@ -113,7 +113,7 @@ const RejectDocumentPopup = ({
           <button
             type="button"
             onClick={closeAll}
-            className="rounded-[12px] px-[24px] py-[8px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#ef4444]"
+            className="rounded-[12px] px-[24px] py-[8px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#ef4444] cursor-pointer"
           >
             Cancel
           </button>
@@ -123,7 +123,7 @@ const RejectDocumentPopup = ({
               onConfirm();
               closeAll();
             }}
-            className="rounded-[12px] bg-[#cbf6ed] px-[24px] py-[8px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b]"
+            className="rounded-[12px] bg-[#cbf6ed] px-[24px] py-[8px] font-['Inter',sans-serif] text-[14px] font-semibold text-[#096c5b] cursor-pointer"
           >
             Confirm Rejection
           </button>

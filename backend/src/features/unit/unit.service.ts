@@ -136,5 +136,5 @@ export const isUnitFull = async (
 // helper function to get the names instead of userIds for the currentRentals
 export const getTenantNames = {
   path: 'currentRentals',
-  populate: { path: 'userId', select: 'firstName lastName' },
+  populate: { path: 'userId', select: 'firstName lastName studentNumber degreeProgram' },
 };

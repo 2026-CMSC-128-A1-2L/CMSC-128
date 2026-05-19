@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useRef, useState, type MouseEventHandler } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
+import { motion, AnimatePresence } from 'framer-motion';
 import AtlasLogo from '../../../assets/logo_atlas_text.svg?react';
-import AtlasLogoDark from '../../../assets/admin/atlas_worded_logo.svg?react';
 import SideBarAdminButton from './SideBarAdminButton';
 import SideBarAdminMessagesView, { type MessageItem } from './SideBarAdminMessagesView';
 import { useTheme } from '../../pages/utilities/DarkMode';
@@ -15,7 +15,8 @@ export type SideBarAdminItemKey =
   | 'listings'
   | 'analytics'
   | 'messages'
-  | 'announce';
+  | 'announce'
+  | 'removalRequests';
 
 type AdminInfo = {
   name: string;
@@ -68,6 +69,12 @@ const navItems: Array<{
     label: 'Listings',
     iconName: 'roentgen:apartments-4-story',
     route: '/admin/listings',
+  },
+  {
+    key: 'removalRequests',
+    label: 'Removals',
+    iconName: 'solar:user-cross-bold',
+    route: '/admin/removal-requests',
   },
   {
     key: 'analytics',
@@ -274,11 +281,10 @@ const SideBarAdmin = ({
       ) : (
         <div className="flex min-h-screen w-full flex-col items-center gap-[32px] pt-[24px] pb-[30px]">
           <div className="flex h-[60px] w-[128px] items-center justify-center overflow-hidden">
-            {isDark ? (
-              <AtlasLogoDark className="h-full w-full" aria-label="Atlas" />
-            ) : (
-              <AtlasLogo className="h-full w-full" aria-label="Atlas" />
-            )}
+            <AtlasLogo
+              className={`h-full w-full ${isDark ? 'fill-white' : ''}`}
+              aria-label="Atlas"
+            />
           </div>
 
           <nav className="flex w-full flex-col gap-[12px]">
@@ -342,24 +348,30 @@ const SideBarAdmin = ({
             </div>
 
             <div ref={profileMenuRef} className="relative w-full">
-              {isProfileMenuOpen && (
-                <div
-                  className={[
-                    'absolute left-[20px] z-30 flex h-[41px] w-[171px] flex-col gap-[7px] rounded-[9px] border border-solid border-[#f0f0f0] bg-[#f7f7f7] px-[11px] py-[9px] shadow-[0_4px_18px_rgba(0,0,0,0.1)] dark:border-[#303331] dark:bg-[#141515] dark:shadow-[0_8px_24px_rgba(0,0,0,0.35)]',
-                    profileMenuPlacement === 'bottom'
-                      ? 'top-full mt-[8px]'
-                      : 'bottom-full mb-[8px]',
-                  ].join(' ')}
-                >
-                  <button
-                    type="button"
-                    onClick={handleSignOutClick}
-                    className="h-[21px] w-full cursor-pointer rounded-[9px] border border-solid border-[#f0f0f0] bg-white bg-gradient-to-b from-[#c00f0f] to-[#e44f4f] bg-clip-text text-center font-['Inter',sans-serif] text-[11px] font-medium text-transparent transition-colors duration-150 hover:bg-[#f9f9f9] dark:border-[#303331] dark:bg-[#101111] dark:hover:bg-[#202221]"
+              <AnimatePresence>
+                {isProfileMenuOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95, y: -5 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95, y: -5 }}
+                    transition={{ duration: 0.15, ease: 'easeOut' }}
+                    className={[
+                      'absolute left-[20px] z-30 flex h-[41px] w-[171px] flex-col gap-[7px] rounded-[9px] border border-solid border-[#f0f0f0] bg-[#f7f7f7] px-[11px] py-[9px] shadow-[0_4px_18px_rgba(0,0,0,0.1)] dark:border-[#303331] dark:bg-[#141515] dark:shadow-[0_8px_24px_rgba(0,0,0,0.35)]',
+                      profileMenuPlacement === 'bottom'
+                        ? 'top-full mt-[8px]'
+                        : 'bottom-full mb-[8px]',
+                    ].join(' ')}
                   >
-                    Log Out
-                  </button>
-                </div>
-              )}
+                    <button
+                      type="button"
+                      onClick={handleSignOutClick}
+                      className="h-[21px] w-full cursor-pointer rounded-[9px] border border-solid border-[#f0f0f0] bg-white bg-gradient-to-b from-[#c00f0f] to-[#e44f4f] bg-clip-text text-center font-['Inter',sans-serif] text-[11px] font-medium text-transparent transition-colors duration-150 hover:bg-[#f9f9f9] dark:border-[#303331] dark:bg-[#101111] dark:hover:bg-[#202221]"
+                    >
+                      Log Out
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
               <button
                 type="button"

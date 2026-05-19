@@ -4,8 +4,11 @@ import SideBarAdmin from '../../components/admin/SideBarAdmin';
 import AdminPageTransition from '../../components/admin/AdminPageTransition';
 import AdminPagination from '../../components/admin/AdminPagination';
 import FacilityReviewModal from '../../components/admin/FacilityReviewModal';
+import AdminFilterBar from '../../components/admin/AdminFilterBar';
 import PageBackground from '../../components/general/PageBackground';
 import { FacilityService } from '../../service/FacilityService';
+import { useDebouncedValue } from '../../hooks/useDebouncedValue';
+import { motion, AnimatePresence } from 'framer-motion';
 
 type FacilityDocument = {
   docId: string;
@@ -67,6 +70,7 @@ function Listings() {
   const [facilities, setFacilities] = useState<FacilityForReview[]>([]);
   const [selectedFacilityId, setSelectedFacilityId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const debouncedSearchQuery = useDebouncedValue(searchQuery, 300);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [actionMessage, setActionMessage] = useState<string | null>(null);
@@ -74,19 +78,39 @@ function Listings() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const itemsPerPage = 10;
 
+  const [typeFilter, setTypeFilter] = useState<string[]>([]);
+  const [statusFilter, setStatusFilter] = useState<string[]>([]);
+
   const selectedFacility = facilities.find((f) => (f._id ?? f.id) === selectedFacilityId) ?? null;
 
   const filteredFacilities = useMemo(() => {
-    const q = searchQuery.trim().toLowerCase();
-    if (!q) return facilities;
-    return facilities.filter((f) =>
-      [f.name, f.location.text, f.type, f.description]
-        .filter(Boolean)
-        .join(' ')
-        .toLowerCase()
-        .includes(q),
-    );
-  }, [facilities, searchQuery]);
+    let result = facilities;
+
+    if (typeFilter.length > 0) {
+      result = result.filter((f) => typeFilter.includes(f.type));
+    }
+
+    if (statusFilter.length > 0) {
+      result = result.filter((f) => statusFilter.includes(f.status));
+    }
+
+    const q = debouncedSearchQuery.trim().toLowerCase();
+    if (q) {
+      result = result.filter((f) =>
+        [f.name, f.location.text, f.type, f.description]
+          .filter(Boolean)
+          .join(' ')
+          .toLowerCase()
+          .includes(q),
+      );
+    }
+
+    return result;
+  }, [facilities, debouncedSearchQuery, typeFilter, statusFilter]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [debouncedSearchQuery]);
 
   const totalPages = Math.ceil(filteredFacilities.length / itemsPerPage);
   const paginatedFacilities = useMemo(() => {
@@ -100,10 +124,9 @@ function Listings() {
     try {
       const response = await FacilityService.getFacilities();
       const all = (response.data ?? []) as FacilityForReview[];
-      const submitted = all.filter((f) => f.status === 'submitted');
-      setFacilities(submitted);
+      setFacilities(all);
       setSelectedFacilityId((cur) =>
-        cur && submitted.some((f) => (f._id ?? f.id) === cur) ? cur : (submitted[0]?._id ?? null),
+        cur && all.some((f) => (f._id ?? f.id) === cur) ? cur : (all[0]?._id ?? null),
       );
     } catch {
       setError('Could not load facilities.');
@@ -162,25 +185,57 @@ function Listings() {
               Dashboard
             </h1>
             <div className="mt-6 rounded-xl bg-white dark:bg-[#141515] p-6 shadow-sm border border-transparent dark:border-[#303331]">
-              <div className="mb-4 flex items-center justify-between">
+              <div className="mb-4 flex items-center justify-between flex-wrap gap-3">
                 <h2 className="font-['Poppins'] text-[36px] font-bold text-[#001d18] dark:text-[#d7e0ef] drop-shadow-[0px_4px_4px_rgba(0,0,0,0.1)]">
-                  Listings for Review
+                  Listings
                 </h2>
-                <div className="flex h-9 w-75.75 items-center gap-2 rounded-full border border-[#d0d0d0] dark:border-[#303331] bg-white dark:bg-[#1f2022] px-4">
-                  <Icon
-                    icon="solar:magnifer-outline"
-                    className="h-4 w-4 text-[#7c8db5] dark:text-[#a4acba]"
+                <div className="flex items-center gap-3">
+                  <AdminFilterBar
+                    groups={[
+                      {
+                        id: 'type',
+                        label: 'Type',
+                        options: [
+                          { key: 'on-campus', label: 'On-Campus' },
+                          { key: 'off-campus', label: 'Off-Campus' },
+                          { key: 'partner housing', label: 'Partner' },
+                        ],
+                        selected: typeFilter,
+                        onChange: (keys) => {
+                          setTypeFilter(keys);
+                          setCurrentPage(1);
+                        },
+                      },
+                      {
+                        id: 'status',
+                        label: 'Status',
+                        options: [
+                          { key: 'submitted', label: 'For Review' },
+                          { key: 'pending', label: 'Pending' },
+                          { key: 'approved', label: 'Approved' },
+                          { key: 'rejected', label: 'Rejected' },
+                        ],
+                        selected: statusFilter,
+                        onChange: (keys) => {
+                          setStatusFilter(keys);
+                          setCurrentPage(1);
+                        },
+                      },
+                    ]}
                   />
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => {
-                      setSearchQuery(e.target.value);
-                      setCurrentPage(1);
-                    }}
-                    placeholder="Search"
-                    className="flex-1 bg-transparent font-['Poppins'] text-sm text-black dark:text-[#d7e0ef] outline-none placeholder:text-[#7c8db5] dark:placeholder:text-[#a4acba]"
-                  />
+                  <div className="flex h-9 w-60 items-center gap-2 rounded-full border border-[#d0d0d0] dark:border-[#303331] bg-white dark:bg-[#1f2022] px-4 focus-within:border-[#024338] focus-within:ring-2 focus-within:ring-[#024338]/20 transition-all duration-200">
+                    <Icon
+                      icon="solar:magnifer-outline"
+                      className="h-4 w-4 text-[#7c8db5] dark:text-[#a4acba]"
+                    />
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Search"
+                      className="flex-1 bg-transparent font-['Poppins'] text-sm text-black dark:text-[#d7e0ef] outline-none placeholder:text-[#7c8db5] dark:placeholder:text-[#a4acba]"
+                    />
+                  </div>
                 </div>
               </div>
 
@@ -225,43 +280,54 @@ function Listings() {
                           colSpan={tableHeaders.length}
                           className="px-6 py-8 text-center font-['Poppins'] text-[#7c8db5] dark:text-[#a4acba]"
                         >
-                          No facilities pending review.
+                          No facilities found.
                         </td>
                       </tr>
                     ) : (
-                      paginatedFacilities.map((facility) => (
-                        <tr
-                          key={facility._id ?? facility.id}
-                          className="border-b border-[#f0f0f0] dark:border-[#303331] bg-white dark:bg-[#141515] transition-colors duration-200 hover:bg-[#f8fffe] dark:hover:bg-[#17201d]"
-                        >
-                          <td className="px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black dark:text-[#d7e0ef]">
-                            {facility.name}
-                          </td>
-                          <td className="px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black dark:text-[#d7e0ef]">
-                            {formatFacilityType(facility.type)}
-                          </td>
-                          <td className="max-w-xs truncate px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black dark:text-[#d7e0ef]">
-                            {facility.location.text}
-                          </td>
-                          <td className="px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black dark:text-[#d7e0ef]">
-                            {facility.capacity}
-                          </td>
-                          <td className="px-6 py-3">{getStatusBadge(facility.status)}</td>
-                          <td className="px-6 py-3">
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setSelectedFacilityId(facility._id ?? facility.id ?? null);
-                                setActionMessage(null);
-                                setIsModalOpen(true);
-                              }}
-                              className="cursor-pointer rounded-lg bg-[#024338] px-5 py-2 font-['Poppins'] text-[16px] font-bold text-white transition-colors duration-200 hover:bg-[#096c5b]"
-                            >
-                              View
-                            </button>
-                          </td>
-                        </tr>
-                      ))
+                      <AnimatePresence>
+                        {paginatedFacilities.map((facility, index) => (
+                          <motion.tr
+                            key={facility._id ?? facility.id}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{
+                              opacity: 1,
+                              y: 0,
+                              transition: { delay: index * 0.05 },
+                            }}
+                            exit={{ opacity: 0, y: -20 }}
+                            className="border-b border-[#f0f0f0] dark:border-[#303331] bg-white dark:bg-[#141515] transition-colors duration-200 hover:bg-[#f8fffe] dark:hover:bg-[#17201d]"
+                          >
+                            <td className="px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black dark:text-[#d7e0ef]">
+                              {facility.name}
+                            </td>
+                            <td className="px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black dark:text-[#d7e0ef]">
+                              {formatFacilityType(facility.type)}
+                            </td>
+                            <td className="max-w-xs truncate px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black dark:text-[#d7e0ef]">
+                              {facility.location.text}
+                            </td>
+                            <td className="px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black dark:text-[#d7e0ef]">
+                              {facility.capacity}
+                            </td>
+                            <td className="px-6 py-3">{getStatusBadge(facility.status)}</td>
+                            <td className="px-6 py-3">
+                              <motion.button
+                                type="button"
+                                onClick={() => {
+                                  setSelectedFacilityId(facility._id ?? facility.id ?? null);
+                                  setActionMessage(null);
+                                  setIsModalOpen(true);
+                                }}
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                className="cursor-pointer rounded-lg bg-[#024338] px-5 py-2 font-['Poppins'] text-[16px] font-bold text-white transition-colors duration-200 hover:bg-[#096c5b]"
+                              >
+                                View
+                              </motion.button>
+                            </td>
+                          </motion.tr>
+                        ))}
+                      </AnimatePresence>
                     )}
                   </tbody>
                 </table>

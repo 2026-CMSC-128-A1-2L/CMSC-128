@@ -8,8 +8,10 @@ import NotificationDetail from '../../../components/general/NotificationDetail';
 import ChatDetail from '../../../components/general/ChatDetail';
 import BgUpper from '../../../../assets/bg-upper.svg?react';
 import BgLower from '../../../../assets/bg-lower.svg?react';
+import { useAuthStore } from '../../../store/useAuthStore';
 
 const DmsLanding: FunctionComponent = () => {
+  const authUser = useAuthStore((state) => state.user);
   const [showHelp, setShowHelp] = useState(false);
   const [selectedItem, setSelectedItem] = useState<{
     type: 'notification' | 'dm';
@@ -215,7 +217,7 @@ const DmsLanding: FunctionComponent = () => {
   };
 
   return (
-    <div className="user-messages-shell w-full h-screen flex items-start font-inter overflow-hidden relative bg-white text-[#2d3748] dark:bg-[#0f1010] dark:text-[#d7e0ef]">
+    <div className="user-messages-shell w-full h-screen flex items-start font-inter overflow-hidden relative bg-transparent text-[#2d3748] dark:text-[#d7e0ef]">
       {/* Background Accents (Restricted to non-navbar area) */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div className="opacity-50 dark:opacity-100">
@@ -239,12 +241,18 @@ const DmsLanding: FunctionComponent = () => {
 
       {/* Main Content Area */}
       <div className="flex-1 h-full flex flex-col items-center justify-center relative overflow-y-auto overflow-x-hidden z-10 bg-transparent">
-        {renderContent()}
+        {!authUser ? (
+          <div className="flex-1 flex items-center justify-center py-16 text-center text-sm font-semibold text-red-500">
+            Please sign in to view your messages.
+          </div>
+        ) : (
+          renderContent()
+        )}
       </div>
 
       {/* ======= FLOATING ICON ========== */}
       <div
-        className="help-button-animated bottom-32 right-10 z-[1000] cursor-pointer transition-all hover:scale-110 active:scale-95"
+        className="help-button-animated z-[1000] cursor-pointer transition-all hover:scale-110 active:scale-95"
         onClick={() => setShowHelp(!showHelp)}
       >
         <img src={TutorialIcon} alt="Help" className="w-16 h-16 drop-shadow-lg" />

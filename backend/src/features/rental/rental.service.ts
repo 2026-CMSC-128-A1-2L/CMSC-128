@@ -50,6 +50,15 @@ export const createRental = async (
 
   if (!unit) throw new AppError(404, 'Unit not found.');
 
+  const currentRental = await Rental.exists({
+    userId: data.userId,
+    status: { $in: ['active', 'inactive'] },
+  }).session(options.session ?? null);
+
+  if (currentRental) {
+    throw new AppError(422, 'Student already has a current dorm.');
+  }
+
   if (unit.currentRentals.length >= unit.capacity) {
     throw new AppError(400, 'Unit is already at full capacity.');
   }
@@ -151,7 +160,10 @@ export const getRentalsByUnitId = async (
   unitId: mongoose.Types.ObjectId,
   filters: QueryFilter<RentalType>,
 ) => {
-  const rentals = await Rental.find(combineFilters(filters, { unitId }));
+  const rentals = await Rental.find(combineFilters(filters, { unitId })).populate(
+    'userId',
+    'firstName middleName lastName profilePicture',
+  );
 
   if (!rentals.length) {
     const rentalsNoFilter = await Rental.find({ unitId });
@@ -189,15 +201,15 @@ export const getRentalsByUser = async (
   userId: mongoose.Types.ObjectId,
   filters: QueryFilter<RentalType>,
 ) => {
-  const rentals = await Rental.find(combineFilters(filters, { userId }));
+  const rentals = await Rental.find(combineFilters(filters, { userId }))
+    .populate('facilityId', 'name location media allowTransfer')
+    .populate('unitId', 'roomNumber location listingId price');
 
   if (!rentals.length) {
     const rentalsNoFilter = await Rental.find({ userId });
 
-    if (rentalsNoFilter) {
+    if (rentalsNoFilter.length) {
       throw new AppError(403, "You don't have permission to view these rentals.");
-    } else {
-      throw new AppError(404, 'Rentals not found.');
     }
   }
 

@@ -13,6 +13,12 @@ export type DormCardData = {
   image: string;
   propertyType: string;                  // ← new
   isAcceptingApplications: boolean;      // ← new
+  isPasalo?: boolean;
+  transferId?: string;
+  pasaloUnitId?: string;
+  pasaloListingId?: string;
+  pasaloMoveInDate?: string;
+  pasaloLeaseDuration?: '6-months' | '12-months';
   room_types: {
     id?: string;
     pax: string;

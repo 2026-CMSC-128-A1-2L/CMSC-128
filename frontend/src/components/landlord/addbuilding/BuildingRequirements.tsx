@@ -66,7 +66,7 @@ const DocumentCard: FunctionComponent<DocumentCardProps> = ({
   };
 
   return (
-    <div className="w-full rounded-2xl bg-white/75 dark:bg-[#1f2022] px-8 py-4 flex flex-col gap-5 shadow-sm">
+    <div className="w-full rounded-2xl bg-white/75 dark:bg-[#141515] dark:border dark:border-[#343737] px-8 py-4 flex flex-col gap-5 shadow-sm dark:shadow-none">
       {/* Header row */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -86,7 +86,7 @@ const DocumentCard: FunctionComponent<DocumentCardProps> = ({
           <div className="flex items-center gap-3">
             <button
               onClick={() => setIsLightboxOpen(true)}
-              className="hover:opacity-70 transition-opacity"
+              className="hover:opacity-70 transition-opacity cursor-pointer"
               title="View File"
             >
               <Icon icon="iconamoon:eye" className="w-5 h-5 text-[#096C5B] dark:text-[#72cbb8]" />
@@ -94,7 +94,7 @@ const DocumentCard: FunctionComponent<DocumentCardProps> = ({
             <div className="relative" ref={menuRef}>
               <button
                 onClick={() => setIsMenuOpen((prev) => !prev)}
-                className="hover:opacity-70 transition-opacity flex items-center"
+                className="hover:opacity-70 transition-opacity flex items-center cursor-pointer"
               >
                 <Icon
                   icon="qlementine-icons:menu-dots-16"
@@ -102,22 +102,22 @@ const DocumentCard: FunctionComponent<DocumentCardProps> = ({
                 />
               </button>
               {isMenuOpen && (
-                <div className="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-[#141515] rounded-lg shadow-lg border border-gray-100 dark:border-[#303331] z-10 overflow-hidden flex flex-col text-sm">
+                <div className="absolute right-0 top-full mt-2 w-48 overflow-hidden rounded-lg border border-[#d7d7d7] bg-white text-sm shadow-lg dark:border-[#303331] dark:bg-[#141515] z-10 flex flex-col">
                   <button
                     onClick={handleViewExample}
-                    className="w-full text-left px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-[#1f2022] text-gray-700 dark:text-[#a4acba] transition-colors"
+                    className="w-full cursor-pointer px-4 py-2.5 text-left !text-[#263238] transition-colors hover:bg-[#f5f7f7] dark:!text-[#d7e0ef] dark:hover:bg-[#1f2022]"
                   >
                     View Example File
                   </button>
                   <button
                     onClick={handleDownload}
-                    className="w-full text-left px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-[#1f2022] text-gray-700 dark:text-[#a4acba] transition-colors border-t border-gray-100 dark:border-[#303331]"
+                    className="w-full cursor-pointer border-t border-[#d7d7d7] px-4 py-2.5 text-left !text-[#263238] transition-colors hover:bg-[#f5f7f7] dark:border-[#303331] dark:!text-[#d7e0ef] dark:hover:bg-[#1f2022]"
                   >
                     Download File
                   </button>
                   <button
                     onClick={handleRemove}
-                    className="w-full text-left px-4 py-2.5 hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400 transition-colors border-t border-gray-100 dark:border-[#303331] font-medium"
+                    className="w-full cursor-pointer border-t border-[#d7d7d7] px-4 py-2.5 text-left font-medium !text-red-600 transition-colors hover:bg-red-50 dark:border-[#303331] dark:!text-red-400 dark:hover:bg-red-900/20"
                   >
                     Remove File
                   </button>
@@ -135,11 +135,11 @@ const DocumentCard: FunctionComponent<DocumentCardProps> = ({
             <div className="w-11 h-11 rounded-lg border border-gray-200 dark:border-[#303331] bg-gray-50 dark:bg-[#141515] flex items-center justify-center shrink-0">
               <Icon
                 icon="material-symbols:image-outline"
-                className="w-8 h-8 text-gray-500 dark:text-[#a4acba]"
+                className="w-8 h-8 text-[#64748b] dark:text-[#a4acba]"
               />
             </div>
             <div className="flex flex-col">
-              <span className="font-semibold text-xs text-gray-800 dark:text-[#d7e0ef] truncate max-w-[200px]">
+              <span className="font-semibold text-xs text-[#1f2937] dark:text-[#d7e0ef] truncate max-w-[200px]">
                 {file.name}
               </span>
               <span className="text-xs text-gray-400 dark:text-[#6b7280] font-medium mt-0.5">
@@ -205,7 +205,9 @@ const BuildingRequirements: FunctionComponent<BuildingRequirementsProps> = ({ on
 
   return (
     <div className="flex-1 flex flex-col gap-3">
-      <h2 className="text-sm font-bold text-black dark:text-white mb-1">Building Requirements</h2>
+      <h2 className="text-sm font-bold text-black dark:text-[#72cbb8] mb-1">
+        Building Requirements
+      </h2>
 
       {documents.map((doc) => (
         <DocumentCard
@@ -219,7 +221,7 @@ const BuildingRequirements: FunctionComponent<BuildingRequirementsProps> = ({ on
       <div className="flex justify-center mt-5">
         <button
           onClick={onNextClick}
-          className="flex items-center gap-2 px-8 py-3 rounded-full font-bold text-white text-sm transition-opacity hover:opacity-90"
+          className="flex items-center gap-2 px-8 py-3 rounded-full font-bold text-white text-sm transition-opacity hover:opacity-90 cursor-pointer"
           style={{ background: '#1a5c50' }}
         >
           Next

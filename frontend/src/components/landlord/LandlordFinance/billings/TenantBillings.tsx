@@ -3,20 +3,22 @@ import { Icon } from '@iconify/react';
 import BillingRow from './BillingRow';
 import AddBillingPopup from './AddBillingPopup';
 import EditBillingPopup from './EditBillingPopup';
+import ReceiptViewerPopup, { type ReceiptDocument } from './ReceiptViewerPopup';
 import type { Billing } from '../types/billing';
 import type { TenantBilling } from '../../../../hooks/useFacilityFinance';
 import { BillingService } from '../../../../service/BillingService';
 import { UnitService } from '../../../../service/UnitService';
 
 const TABLE_COLUMNS = [
-  { label: 'Room', className: 'w-[8%]' },
-  { label: 'Tenant Name', className: 'w-[22%]' },
-  { label: 'Rent', className: 'w-[10%]' },
-  { label: 'Utilities', className: 'w-[10%]' },
-  { label: 'Misc.', className: 'w-[10%]' },
-  { label: 'Total Due', className: 'w-[10%]' },
-  { label: 'Amount Paid', className: 'w-[10%]' },
-  { label: 'Status', className: 'w-[18%]' },
+  { label: 'Room', className: 'w-[7%]' },
+  { label: 'Tenant Name', className: 'w-[18%]' },
+  { label: 'Rent', className: 'w-[9%]' },
+  { label: 'Utilities', className: 'w-[9%]' },
+  { label: 'Misc.', className: 'w-[9%]' },
+  { label: 'Total Due', className: 'w-[9%]' },
+  { label: 'Amount Paid', className: 'w-[9%]' },
+  { label: 'Receipt', className: 'w-[8%]' },
+  { label: 'Status', className: 'w-[14%]' },
 ];
 
 const MONTH_NAMES = [
@@ -60,6 +62,59 @@ const toRowBilling = (b: TenantBilling): Billing => ({
   updatedAt: b.updatedAt,
 });
 
+/**
+ * Normalise whatever shape `billing.documents` comes in as
+ * into a flat array of ReceiptDocument objects.
+ *
+ * The backend can return:
+ *   - A raw string file key            → { file: key }
+ *   - An object { file, paymentMethod, submittedAt, … }
+ *   - An object { key, … }             → treat key as file
+ */
+const normaliseDocuments = (documents: any[]): ReceiptDocument[] => {
+  if (!Array.isArray(documents)) return [];
+
+  const result: ReceiptDocument[] = [];
+
+  for (const d of documents) {
+    if (!d) continue;
+
+    // bare string key
+    if (typeof d === 'string') {
+      if (d) result.push({ file: d });
+      continue;
+    }
+
+    // Confirmed backend shape: { files: string[], message, status, ... }
+    // files[] is an array of file key strings
+    if (Array.isArray(d.files)) {
+      for (const fileKey of d.files) {
+        if (fileKey) {
+          result.push({
+            file: fileKey,
+            paymentMethod: d.message?.match(/payment method:\s*(\S+)/i)?.[1] ?? undefined,
+            submittedAt: d.submittedAt ?? d.createdAt ?? undefined,
+          });
+        }
+      }
+      continue;
+    }
+
+    // Fallback: single-file object shapes
+    const fileKey: string =
+      d.file ?? d.key ?? d.fileKey ?? d.fileId ?? d.path ?? d.url ?? '';
+    if (fileKey) {
+      result.push({
+        file: fileKey,
+        paymentMethod: d.paymentMethod ?? d.method ?? undefined,
+        submittedAt: d.submittedAt ?? d.createdAt ?? undefined,
+      });
+    }
+  }
+
+  return result;
+};
+
 interface TenantBillingsTabProps {
   facilityId: string;
   billings: TenantBilling[];
@@ -80,8 +135,15 @@ const TenantBillingsTab: FunctionComponent<TenantBillingsTabProps> = ({
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
   const [isAddPopupOpen, setIsAddPopupOpen] = useState(false);
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
+  const [isReceiptPopupOpen, setIsReceiptPopupOpen] = useState(false);
   const [selectedBilling, setSelectedBilling] = useState<Billing | null>(null);
   const [selectedBillingMeta, setSelectedBillingMeta] = useState<{ roomNumber: string; tenantName: string } | null>(null);
+  const [receiptBilling, setReceiptBilling] = useState<{
+    billing: Billing;
+    roomNumber: string | number;
+    tenantName: string;
+    documents: ReceiptDocument[];
+  } | null>(null);
   const [isMonthDropdownOpen, setIsMonthDropdownOpen] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState(getAvailableMonths()[0]);
   const [isSaving, setIsSaving] = useState(false);
@@ -111,7 +173,6 @@ const TenantBillingsTab: FunctionComponent<TenantBillingsTabProps> = ({
 
           arr.forEach((u: any) => {
             const unitId = u._id ?? u.id;
-            // Find first active rental on this unit
             const activeRental = (u.currentRentals ?? []).find(
               (r: any) => r.status === 'active'
             );
@@ -160,6 +221,32 @@ const TenantBillingsTab: FunctionComponent<TenantBillingsTabProps> = ({
     setSelectedBilling(billing);
     setSelectedBillingMeta({ roomNumber, tenantName });
     setIsEditPopupOpen(true);
+  };
+
+  const handleReceiptClick = async (billing: Billing, roomNumber: string | number, tenantName: string) => {
+    try {
+      // Use getBillingDetail which correctly flattens documents[].files[] into ReceiptDocument[]
+      const detail = await BillingService.getBillingDetail(billing._id);
+      setReceiptBilling({ billing, roomNumber, tenantName, documents: detail.documents });
+    } catch {
+      // Fall back to normalising cached documents
+      const docs = normaliseDocuments(billing.documents ?? []);
+      setReceiptBilling({ billing, roomNumber, tenantName, documents: docs });
+    }
+    setIsReceiptPopupOpen(true);
+  };
+
+  const handleVerifyReceipt = async (billingId: string, approved: boolean) => {
+    try {
+      await BillingService.updateBilling(billingId, {
+        paymentStatus: approved ? 'paid' : 'unpaid',
+      } as any);
+      await onRefresh();
+      setIsReceiptPopupOpen(false);
+      setReceiptBilling(null);
+    } catch (err) {
+      console.error('Failed to verify billing payment:', err);
+    }
   };
 
   const handleSaveEdit = async (updatedBilling: Billing) => {
@@ -227,13 +314,13 @@ const TenantBillingsTab: FunctionComponent<TenantBillingsTabProps> = ({
       <div className="flex flex-col items-end gap-4 text-left text-[18px] font-inter w-full">
         {/* Header row */}
         <div className="self-stretch flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-5 shrink-0">
-          <b className="h-6 w-full sm:w-auto relative tracking-[-0.01em] flex items-center shrink-0 text-gray text-[20px] sm:text-[24px]">
+          <b className="h-6 w-full sm:w-auto relative tracking-[-0.01em] flex items-center shrink-0 text-gray text-[20px] sm:text-[24px] dark:text-[#edf6f4]">
             Tenant Billing Status
           </b>
           <div className="flex items-center gap-3 text-[10px] text-teal flex-wrap">
             <div
               onClick={() => setIsAddPopupOpen(true)}
-              className="rounded-[10px] bg-lightcyan flex items-center py-2 px-4 sm:px-6 gap-2 sm:gap-3 shrink-0 cursor-pointer hover:opacity-90 transition-opacity"
+              className="rounded-[10px] bg-lightcyan flex items-center py-2 px-4 sm:px-6 gap-2 sm:gap-3 shrink-0 cursor-pointer hover:opacity-90 transition-opacity dark:bg-[#12342e] dark:text-[#72cbb8]"
             >
               <Icon icon="mdi:plus" className="h-3 w-3" />
               <b className="h-[17px] flex items-center shrink-0 text-[12px]">Add Billing</b>
@@ -242,7 +329,7 @@ const TenantBillingsTab: FunctionComponent<TenantBillingsTabProps> = ({
             <div className="relative">
               <div
                 onClick={() => setIsMonthDropdownOpen(!isMonthDropdownOpen)}
-                className="h-8 w-[130px] shadow-[0px_4px_20px_rgba(0,0,0,0.15)] rounded-[10px] bg-darkslategray-200 flex items-center justify-between px-3 cursor-pointer hover:opacity-90 transition-opacity"
+                className="h-8 w-[130px] shadow-[0px_4px_20px_rgba(0,0,0,0.15)] rounded-[10px] bg-darkslategray-200 flex items-center justify-between px-3 cursor-pointer hover:opacity-90 transition-opacity dark:bg-[#114f43]"
               >
                 <b className="text-white text-[12px] truncate">{selectedMonth.displayName}</b>
                 <Icon
@@ -257,7 +344,7 @@ const TenantBillingsTab: FunctionComponent<TenantBillingsTabProps> = ({
                     className="fixed inset-0 z-10"
                     onClick={() => setIsMonthDropdownOpen(false)}
                   />
-                  <div className="absolute top-full right-0 mt-1 w-[150px] z-20 bg-white border border-whitesmoke-200 rounded-lg shadow-lg overflow-hidden">
+                  <div className="absolute top-full right-0 mt-1 w-[150px] z-20 bg-white border border-whitesmoke-200 rounded-lg shadow-lg overflow-hidden dark:bg-[#141515] dark:border-[#343737]">
                     {availableMonths.map((month, index) => (
                       <div
                         key={`${month.month}-${month.year}`}
@@ -267,9 +354,9 @@ const TenantBillingsTab: FunctionComponent<TenantBillingsTabProps> = ({
                         }}
                         className={`w-full px-3 py-2 text-[12px] font-semibold text-center cursor-pointer transition-colors font-inter ${
                           selectedMonth.displayName === month.displayName
-                            ? 'bg-darkslategray-200 text-white'
-                            : 'text-darkslategray-100 hover:bg-whitesmoke-100'
-                        } ${index !== availableMonths.length - 1 ? 'border-b border-whitesmoke-200' : ''}`}
+                            ? 'bg-darkslategray-200 text-white dark:bg-[#114f43]'
+                            : 'text-darkslategray-100 hover:bg-whitesmoke-100 dark:text-[#d7e0ef] dark:hover:bg-[#1b1d1d]'
+                        } ${index !== availableMonths.length - 1 ? 'border-b border-whitesmoke-200 dark:border-[#343737]' : ''}`}
                       >
                         {month.displayName}
                       </div>
@@ -282,11 +369,11 @@ const TenantBillingsTab: FunctionComponent<TenantBillingsTabProps> = ({
         </div>
 
         {/* Table */}
-        <div className="w-full rounded-[12.75px] bg-white border-whitesmoke-200 border-solid border-2 box-border overflow-hidden">
+        <div className="w-full rounded-[12.75px] bg-white border-whitesmoke-200 border-solid border-2 box-border overflow-hidden dark:bg-[#101111] dark:border-[#343737]">
           <div className="w-full overflow-x-auto overflow-y-auto max-h-[600px]">
-            <table className="w-full border-collapse" style={{ minWidth: '700px' }}>
+            <table className="w-full border-collapse" style={{ minWidth: '780px' }}>
               <thead className="sticky top-0 z-10">
-                <tr className="bg-darkslategray-200 rounded-t-[12.75px]">
+                <tr className="bg-darkslategray-200 rounded-t-[12.75px] dark:bg-[#114f43]">
                   {TABLE_COLUMNS.map(({ label, className }) => (
                     <th
                       key={label}
@@ -303,7 +390,7 @@ const TenantBillingsTab: FunctionComponent<TenantBillingsTabProps> = ({
                   <tr>
                     <td
                       colSpan={TABLE_COLUMNS.length}
-                      className="py-12 text-center text-darkslategray-100 text-[13px]"
+                      className="py-12 text-center text-darkslategray-100 text-[13px] dark:text-[#a4acba]"
                     >
                       Loading billings...
                     </td>
@@ -314,7 +401,7 @@ const TenantBillingsTab: FunctionComponent<TenantBillingsTabProps> = ({
                   <tr>
                     <td
                       colSpan={TABLE_COLUMNS.length}
-                      className="py-12 text-center text-darkslategray-100 text-[13px]"
+                      className="py-12 text-center text-darkslategray-100 text-[13px] dark:text-[#a4acba]"
                     >
                       No billings found for {selectedMonth.displayName}
                     </td>
@@ -329,6 +416,7 @@ const TenantBillingsTab: FunctionComponent<TenantBillingsTabProps> = ({
                     tenantName={billing.tenantName}
                     onStatusChange={handleStatusChange}
                     onEditClick={(b) => handleEditClick(b, billing.roomNumber, billing.tenantName)}
+                    onReceiptClick={handleReceiptClick}
                     isOpen={openDropdownId === billing._id}
                     onToggle={(id) => setOpenDropdownId(openDropdownId === id ? null : id)}
                   />
@@ -361,6 +449,21 @@ const TenantBillingsTab: FunctionComponent<TenantBillingsTabProps> = ({
         roomNumber={selectedBillingMeta?.roomNumber}
         tenantName={selectedBillingMeta?.tenantName}
         onSave={handleSaveEdit}
+      />
+
+      {/* Receipt Viewer */}
+      <ReceiptViewerPopup
+        isOpen={isReceiptPopupOpen}
+        onClose={() => {
+          setIsReceiptPopupOpen(false);
+          setReceiptBilling(null);
+        }}
+        documents={receiptBilling?.documents ?? []}
+        tenantName={receiptBilling?.tenantName}
+        roomNumber={receiptBilling?.roomNumber}
+        totalAmount={receiptBilling?.billing.totalAmount}
+        billingId={receiptBilling?.billing._id ?? ''}
+        onVerify={handleVerifyReceipt}
       />
     </>
   );

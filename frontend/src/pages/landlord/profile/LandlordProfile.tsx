@@ -1,11 +1,9 @@
-import { useState, type ReactNode } from 'react';
+import { useState, useEffect, type ReactNode } from 'react';
 import { Icon } from '@iconify/react';
-import dorm1 from '../../../../assets/landing_contact.webp';
-import dorm2 from '../../../../assets/landing_listing.webp';
-import dorm3 from '../../../../assets/landing_contact.webp';
 import { useNavigate } from 'react-router-dom';
 import LandlordProfileSwitch from './component/LandlordProfileSwitch';
 import { Link } from 'react-router-dom';
+import { FacilityService } from '../../../service/FacilityService';
 
 type Property = {
   id: string;
@@ -14,30 +12,6 @@ type Property = {
   rating: number;
   image: string;
 };
-
-const properties: Property[] = [
-  {
-    id: '1',
-    name: 'Tri-AD Hall Dormitory',
-    location: 'Umali Subdivision, Los Baños',
-    rating: 4.3,
-    image: dorm1,
-  },
-  {
-    id: '2',
-    name: 'Two Sapphire Place',
-    location: 'Umali Subdivision, Los Baños',
-    rating: 3.7,
-    image: dorm2,
-  },
-  {
-    id: '3',
-    name: "Women's Dormitory",
-    location: 'Inside UPLB',
-    rating: 3.7,
-    image: dorm3,
-  },
-];
 
 type AvailabilityItemProps = {
   icon: string;
@@ -152,6 +126,29 @@ const SectionHeader = ({ title, onEdit }: SectionHeaderProps) => (
 
 const LandlordProfile = () => {
   const navigate = useNavigate();
+  const [properties, setProperties] = useState<Property[]>([]);
+
+  useEffect(() => {
+    let cancelled = false;
+    FacilityService.getLandlordFacilities()
+      .then((res) => {
+        if (cancelled) return;
+        setProperties(
+          res.data.map((f: any) => ({
+            id: f.id,
+            name: f.name,
+            location: f.location?.text ?? '',
+            rating: f.averageRating ?? 0,
+            image:
+              f.image ??
+              f.media?.[0]?.value ??
+              'https://placehold.co/400x300?text=No+image',
+          })),
+        );
+      })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, []);
 
   // contact number editing state
   const [isEditing, setIsEditing] = useState(false);

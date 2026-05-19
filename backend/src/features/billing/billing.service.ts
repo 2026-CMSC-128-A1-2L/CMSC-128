@@ -15,7 +15,7 @@ export type CreateBillingArguments = {
   dueDate: Date;
 
   paymentMethod: {
-    method: 'gcash' | 'bank_transfer';
+    method: 'gcash' | 'bank_transfer' | 'cash';
     qr: DocumentType[];
   }[];
 

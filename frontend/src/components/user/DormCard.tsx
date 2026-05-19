@@ -31,6 +31,12 @@ type DormCardProps = {
   price: { min: number; max: number };
   location: string;
   image: string;
+  isPasalo?: boolean;
+  transferId?: string;
+  pasaloUnitId?: string;
+  pasaloListingId?: string;
+  pasaloMoveInDate?: string;
+  pasaloLeaseDuration?: '6-months' | '12-months';
   sourceLabel?: string;
   sourceUrl?: string;
   room_types: {
@@ -49,6 +55,12 @@ const DormCard: FunctionComponent<DormCardProps> = ({
   price,
   location,
   image,
+  isPasalo,
+  transferId,
+  pasaloUnitId,
+  pasaloListingId,
+  pasaloMoveInDate,
+  pasaloLeaseDuration,
   sourceLabel,
   sourceUrl,
   room_types,
@@ -70,7 +82,8 @@ const DormCard: FunctionComponent<DormCardProps> = ({
   }, []);
 
   const navigateToDetails = (selectedRoomType?: string) => {
-    navigate(`/facilities/${id}`, {
+    const transferQuery = isPasalo && transferId ? `?transferId=${encodeURIComponent(transferId)}` : '';
+    navigate(`/facilities/${id}${transferQuery}`, {
       state: {
         dorm: {
           id,
@@ -79,9 +92,21 @@ const DormCard: FunctionComponent<DormCardProps> = ({
           price,
           location,
           image,
+          isPasalo,
+          transferId,
+          pasaloUnitId,
+          pasaloListingId,
+          pasaloMoveInDate,
+          pasaloLeaseDuration,
           room_types,
         },
         selectedRoomType,
+        isPasalo,
+        transferId,
+        pasaloUnitId,
+        pasaloListingId,
+        pasaloMoveInDate,
+        pasaloLeaseDuration,
         sourceLabel,
         sourceUrl,
       },
@@ -171,7 +196,7 @@ const DormCard: FunctionComponent<DormCardProps> = ({
                           : 'text-black hover:bg-lightcyan dark:text-[#d7e0ef] dark:hover:bg-[#1f3a34]'
                       }`}
                     >
-                      <span className="font-bold">{room.pax}</span>
+                      <span className="font-bold cursor-pointer">{room.pax}</span>
                       <span
                         className={
                           isFull
@@ -239,7 +264,7 @@ const DormCard: FunctionComponent<DormCardProps> = ({
                   type="button"
                   data-card-interactive="true"
                   onClick={handleToggleExpand}
-                  className="hover:scale-125 transition-transform flex items-center justify-center p-1"
+                  className="hover:scale-125 transition-transform flex items-center justify-center p-1 cursor-pointer"
                   aria-label={isExpanded ? 'Collapse' : 'Expand'}
                 >
                   <Icon

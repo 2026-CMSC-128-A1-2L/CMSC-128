@@ -194,7 +194,7 @@ const Filter: FunctionComponent<FilterCriteriaProps> = ({
               step={PRICE_LIMITS.step}
               value={minPrice}
               onChange={handleMinChange}
-              className={`absolute w-full pointer-events-none appearance-none bg-transparent ${activeThumb === 'min' ? 'z-40' : 'z-30'} ${thumbStyles}`}
+              className={`absolute w-full pointer-events-none appearance-none bg-transparent ${activeThumb === 'min' ? 'z-40' : 'z-30'} ${thumbStyles} cursor-pointer`}
             />
             <input
               type="range"

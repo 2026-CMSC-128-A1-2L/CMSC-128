@@ -1,9 +1,9 @@
-﻿import { useCallback, useEffect, useRef, useState, type MouseEventHandler } from 'react';
+import { useCallback, useEffect, useRef, useState, type MouseEventHandler } from 'react';
 import { createPortal } from 'react-dom';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import AtlasLogoText from '../../../assets/logo_atlas_text.svg?react';
-import AtlasLogoMin from '../../../assets/atlas logo (for white bg).png';
+import AtlasLogoMin from '../../../assets/footer_logo.svg?react';
 import SideBarButton, { type SideBarButtonState } from './SideBarButton';
 import { useAuthStore } from '../../store/useAuthStore';
 import UserMenuPopup from './UserMenuPopup';
@@ -244,7 +244,7 @@ const SideBar = ({
           type="button"
           onClick={() => setCollapsed((current) => !current)}
           aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-          className="absolute -right-3 top-6 z-50 flex h-6 w-6 items-center justify-center rounded-full border border-[#f0f0f0] bg-white shadow-sm text-[#666] hover:text-teal-600 transition-colors dark:border-[#303331] dark:bg-[#1f2022] dark:text-[#d7e0ef] dark:hover:text-[#72cbb8]"
+          className="absolute -right-3 top-6 z-50 flex h-6 w-6 items-center justify-center rounded-full border border-[#f0f0f0] bg-white shadow-sm text-[#666] hover:text-teal-600 transition-colors dark:border-[#303331] dark:bg-[#1f2022] dark:text-[#d7e0ef] dark:hover:text-[#72cbb8] cursor-pointer"
         >
           <Icon
             icon={
@@ -257,11 +257,17 @@ const SideBar = ({
         </button>
 
         <div className="flex items-center justify-center px-4 w-full">
-          {collapsed ? (
-            <img src={AtlasLogoMin} className="w-7 h-7" aria-label="Atlas" />
-          ) : (
-            <AtlasLogoText className="w-32 h-auto fill-[#2d3748] dark:fill-[#d7e0ef]" />
-          )}
+          <Link
+            to="/about"
+            className="flex items-center justify-center cursor-pointer transition-opacity hover:opacity-80"
+            aria-label="About Atlas"
+          >
+            {collapsed ? (
+              <AtlasLogoMin className="w-7 h-7 fill-[#2d3748] dark:fill-[#d7e0ef]" aria-label="Atlas" />
+            ) : (
+              <AtlasLogoText className="w-32 h-auto fill-[#2d3748] dark:fill-[#d7e0ef]" />
+            )}
+          </Link>
         </div>
 
         {/* Search section is currently disabled */}
@@ -272,7 +278,7 @@ const SideBar = ({
                 type="button"
                 onClick={() => setCollapsed(false)}
                 aria-label="Search"
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-[#f5f5f5] hover:bg-gray-200 transition-colors dark:bg-[#242526] dark:text-[#aeb6c6] dark:hover:bg-[#2d302f]"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-[#f5f5f5] hover:bg-gray-200 transition-colors dark:bg-[#242526] dark:text-[#aeb6c6] dark:hover:bg-[#2d302f] cursor-pointer"
               >
                 <Icon icon="ic:outline-search" className="w-5 h-5" />
               </button>
@@ -295,7 +301,7 @@ const SideBar = ({
                 <button
                   type="button"
                   onClick={() => setSearchQuery("")}
-                  className="mr-1 text-[#9ca3af] hover:text-[#2d3748] transition-colors dark:hover:text-white"
+                  className="mr-1 text-[#9ca3af] hover:text-[#2d3748] transition-colors dark:hover:text-white cursor-pointer"
                 >
                   <Icon
                     icon="material-symbols:close-rounded"
@@ -305,7 +311,7 @@ const SideBar = ({
               )}
               <button
                 type="button"
-                className="shrink-0 hover:scale-110 transition-transform"
+                className="shrink-0 hover:scale-110 transition-transform cursor-pointer"
                 onClick={() => console.log("Searching for:", searchQuery)}
               >
                 <Icon icon="ic:outline-search" className="w-5 h-5" />
@@ -379,7 +385,7 @@ const SideBar = ({
               collapsed ? 'justify-center h-11' : 'gap-6 pr-5',
             ].join(' ')}
           >
-            {!collapsed && <span className="h-11 w-2 shrink-0 rounded-sm bg-transparent" />}
+            {!collapsed && <span className="h-11 w-2 shrink-0 rounded-sm bg-transparent cursor-pointer" />}
 
             <span className="flex items-center gap-4 rounded-xl px-1">
               <Icon
@@ -418,7 +424,7 @@ const SideBar = ({
                 <img
                   src={user.profilePicture}
                   alt=""
-                  className="w-7 h-7 rounded-full object-cover shrink-0"
+                  className="w-7 h-7 rounded-full object-cover shrink-0 cursor-pointer"
                 />
               ) : (
                 <Icon
@@ -433,7 +439,31 @@ const SideBar = ({
                     {username ?? 'Sign In'}
                   </b>
 
-                  {!user && (
+                  {user ? (
+                    <span className="flex items-center gap-[4px]">
+                      {user.status === 'verified' ? (
+                        <>
+                          <span className="bg-gradient-to-b from-[#5dc2a8] to-[#0c8873] bg-clip-text font-inter text-[10px] font-bold leading-normal whitespace-nowrap text-transparent">
+                            Verified
+                          </span>
+                          <Icon
+                            icon="material-symbols:verified"
+                            className="h-[10px] w-[10px] text-[#0c8873] dark:text-[#72cbb8]"
+                          />
+                        </>
+                      ) : (
+                        <>
+                          <span className="bg-gradient-to-b from-[#e0a825] to-[#c48a1a] bg-clip-text font-inter text-[10px] font-bold leading-normal whitespace-nowrap text-transparent">
+                            Unverified
+                          </span>
+                          <Icon
+                            icon="material-symbols:warning-rounded"
+                            className="h-[10px] w-[10px] text-[#c48a1a] dark:text-[#e0a825]"
+                          />
+                        </>
+                      )}
+                    </span>
+                  ) : (
                     <span className="text-[10px] text-[#9ca3af] font-bold dark:text-[#a4acba]">
                       to continue
                     </span>

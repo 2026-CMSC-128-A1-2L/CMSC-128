@@ -572,13 +572,14 @@ export const getTenantsByLandlord = async (landlordId: mongoose.Types.ObjectId) 
     return {
       id: rental._id,
       userId: user?._id,
+      facilityId: rental.facilityId,
       fullName: user ? `${user.lastName}, ${user.firstName}`.toUpperCase() : 'UNKNOWN',
       displayName: user ? `${user.firstName} ${user.lastName}` : 'Unknown',
       email: user?.emails?.[0] ?? '',
       contactNumber: user?.contact ?? 'N/A',
       homeAddress: user?.address ?? 'N/A',
       photoUrl: user?.profilePicture,
-      unit: unit?.name ?? 'Unknown Unit',
+      unit: unit?.roomNumber ?? 'Unknown Unit',
       dormName: facilityName,
       baseRentFee: unit?.price?.toString() ?? '0',
       contractDuration:

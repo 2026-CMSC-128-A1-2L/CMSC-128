@@ -1,5 +1,5 @@
 import { type FunctionComponent, useEffect } from 'react';
-import logo from '../../../assets/footer_logo.svg';
+import AtlasIcon from '../../../assets/footer_logo.svg?react';
 import { Link } from 'react-router-dom';
 
 interface SignInPopUpProps {
@@ -29,27 +29,27 @@ const SignInPopUp: FunctionComponent<SignInPopUpProps> = ({ isOpen = true, onClo
   return (
     <div className="fixed inset-0 z-[2147483647] flex items-center justify-center p-4">
       <div
-        className="absolute inset-0 z-[2147483646] bg-black/50 backdrop-blur-sm"
+        className="absolute inset-0 z-[2147483646] bg-black/50 backdrop-blur-sm dark:bg-black/70 dark:backdrop-blur-md"
         onClick={onClose}
       />
 
-      <div className="relative z-[2147483647] w-full max-w-[500px] shadow-2xl rounded-num-16 bg-white overflow-hidden flex flex-col items-center justify-center py-12 px-6 md:px-12 gap-6 text-left text-num-18 text-dimgray font-inter animate-fade-in border-num-4">
+      <div className="relative z-[2147483647] w-full max-w-[500px] shadow-2xl rounded-num-16 bg-white overflow-hidden flex flex-col items-center justify-center py-12 px-6 md:px-12 gap-6 text-left text-num-18 text-dimgray font-inter animate-fade-in border-num-4 dark:bg-[#141515] dark:text-[#a4acba] dark:shadow-none dark:border dark:border-[#1f2022]">
         <button
           type="button"
           onClick={onClose}
           aria-label="Close sign in popup"
-          className="absolute right-5 top-5 z-[2147483647] flex h-8 w-8 items-center justify-center rounded-full text-gray-500 hover:bg-gray-100 hover:text-gray-800 transition-colors"
+          className="absolute right-5 top-5 z-[2147483647] flex h-8 w-8 items-center justify-center rounded-full text-gray-500 hover:bg-gray-100 hover:text-gray-800 transition-colors dark:text-[#a4acba] dark:hover:bg-[#202123] dark:hover:text-[#edf6f4] cursor-pointer"
         >
           ×
         </button>
 
         <div className="flex flex-col items-center justify-center">
-          <img src={logo} className="w-20 h-20" alt="ATLAS Logo" />
+          <AtlasIcon className="w-20 h-20 fill-[#2d3748] dark:fill-white" />
         </div>
 
         <div className="self-stretch flex flex-col items-center justify-center text-teal text-center">
           <b className="relative leading-8 text-num-24">
-            <span className="text-gray">Built for</span>
+            <span className="text-gray dark:text-[#edf6f4]">Built for</span>
             <span>{` `}</span>
             <span className="bg-linear-to-b from-[#5dc2a8] to-[#0c8873] bg-clip-text text-transparent">
               students
@@ -58,7 +58,7 @@ const SignInPopUp: FunctionComponent<SignInPopUpProps> = ({ isOpen = true, onClo
           </b>
 
           <b className="relative text-num-36 font-lora">
-            <span className="text-gray">by</span>
+            <span className="text-gray dark:text-[#edf6f4]">by</span>
             <span>{` `}</span>
             <span className="bg-linear-to-b from-[#5dc2a8] to-[#0c8873] bg-clip-text text-transparent">
               students
@@ -70,7 +70,7 @@ const SignInPopUp: FunctionComponent<SignInPopUpProps> = ({ isOpen = true, onClo
         <div className="self-stretch p-2.5">
           <a
             href="/api/auth/google"
-            className="self-stretch rounded-num-12 bg-aliceblue border-whitesmoke-300 border-solid border flex items-center justify-center py-3 px-4 gap-3 cursor-pointer hover:bg-lightcyan transition-colors"
+            className="self-stretch rounded-num-12 bg-aliceblue border-whitesmoke-300 border-solid border flex items-center justify-center py-3 px-4 gap-3 cursor-pointer hover:bg-lightcyan transition-colors dark:bg-[#202123] dark:border-[#303331] dark:hover:bg-[#26302e]"
           >
             <img
               className="h-6 w-6 relative"
@@ -78,21 +78,21 @@ const SignInPopUp: FunctionComponent<SignInPopUpProps> = ({ isOpen = true, onClo
               src="https://www.svgrepo.com/show/475656/google-color.svg"
             />
 
-            <b className="relative tracking-num--0_01 text-gray">Sign in with Google</b>
+            <b className="relative tracking-num--0_01 text-gray dark:text-[#edf6f4]">Sign in with Google</b>
           </a>
         </div>
 
         <div className="text-center text-num-12">
-          <p className="m-0 leading-6 font-medium text-gray-100">
+          <p className="m-0 leading-6 font-medium text-gray-100 dark:text-[#a4acba]">
             Signing up for an ATLAS account means you agree to the
           </p>
 
           <div className="flex items-center justify-center gap-1 text-teal-200">
             <span className="font-semibold cursor-pointer underline">
-              <Link to="/terms-of-use">Privacy Policy</Link>
+              <Link to="/privacy-policy">Privacy Policy</Link>
             </span>
 
-            <span className="text-dimgray">and</span>
+            <span className="text-dimgray dark:text-[#a4acba]">and</span>
 
             <span className="font-semibold cursor-pointer underline">
               <Link to="/terms-of-use">Terms of Service.</Link>
