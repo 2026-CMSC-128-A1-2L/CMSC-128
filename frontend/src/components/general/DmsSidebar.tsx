@@ -59,7 +59,9 @@ const DmsSidebar: FunctionComponent<DmsSidebarProps> = ({
     return true;
   });
 
-  const totalUnreadCount = activeDMs.reduce((acc, dm) => acc + (dm.unreadCount || 0), 0);
+  const totalUnreadCount = activeDMs.filter((dm) => dm.unread).length;
+
+  const unreadNotifCount = notifications.filter((n) => n.unread).length;
 
   const displayedArchivedDMs = showAllArchive ? archivedDMs : [];
 
@@ -96,7 +98,7 @@ const DmsSidebar: FunctionComponent<DmsSidebarProps> = ({
               Notifications
             </b>
             <span className="bg-teal/10 text-teal text-[10px] font-bold px-2 py-0.5 rounded-full dark:bg-[#102c27] dark:text-[#72cbb8]">
-              New
+              {unreadNotifCount > 0 ? unreadNotifCount : 'New'}
             </span>
           </div>
 
