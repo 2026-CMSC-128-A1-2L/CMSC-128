@@ -234,7 +234,13 @@ const LandlordTenants = () => {
         isOpen={Boolean(reportTarget)}
         onClose={() => setReportTarget(null)}
         tenant={
-          reportTarget ? { displayName: reportTarget.displayName, email: reportTarget.email } : null
+          reportTarget
+            ? {
+                id: reportTarget.userId ?? reportTarget.id,
+                displayName: reportTarget.displayName,
+                email: reportTarget.email,
+              }
+            : null
         }
       />
     </LandlordLayout>

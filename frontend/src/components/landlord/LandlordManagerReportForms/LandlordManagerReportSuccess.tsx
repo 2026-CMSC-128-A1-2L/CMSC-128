@@ -3,6 +3,7 @@ import { Icon } from '@iconify/react';
 
 type Props = {
   onClose: () => void;
+  type?: 'manager' | 'tenant';
 };
 
 const LandlordManagerReportSuccess: FunctionComponent<Props> = ({ onClose }) => {

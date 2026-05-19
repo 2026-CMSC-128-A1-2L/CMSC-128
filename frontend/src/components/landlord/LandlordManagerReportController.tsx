@@ -9,7 +9,7 @@ import { ReportService } from "../../service/ReportService";
 
 type Manager = {
   id?: string;
-  _id?: any;
+  _id?: { $oid?: string } | string;
   displayName?: string;
   email?: string;
   emails?: string[];
@@ -99,6 +99,22 @@ const REPORT_CATEGORIES: ReportCategory[] = [
   },
 ];
 
+const getErrorMessage = (error: unknown) => {
+  if (error && typeof error === "object" && "response" in error) {
+    const response = (error as { response?: { data?: { message?: unknown; error?: unknown } } })
+      .response;
+    const message = response?.data?.message ?? response?.data?.error;
+    if (typeof message === "string") return message;
+  }
+  return "Could not submit your report. Please try again.";
+};
+
+const getManagerId = (manager: Manager | null) => {
+  if (!manager?._id) return manager?.id;
+  if (typeof manager._id === "string") return manager.id || manager._id;
+  return manager.id || manager._id.$oid;
+};
+
 const ReportManagerModal: FunctionComponent<Props> = ({
   isOpen,
   onClose,
@@ -109,12 +125,14 @@ const ReportManagerModal: FunctionComponent<Props> = ({
   const [step, setStep] = useState(0);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isOpen) return;
     setStep(0);
     setSelected(new Set());
     setLoading(false);
+    setSubmitError(null);
   }, [isOpen]);
 
   const totalCategorySteps = REPORT_CATEGORIES.length;
@@ -137,23 +155,28 @@ const ReportManagerModal: FunctionComponent<Props> = ({
     setSelected((prev) => {
       const next = new Set(prev);
       if (allChecked) {
-        category.items.forEach((item) => next.delete(item.key));
+        category.items.forEach((item) => {
+          next.delete(item.key);
+        });
       } else {
-        category.items.forEach((item) => next.add(item.key));
+        category.items.forEach((item) => {
+          next.add(item.key);
+        });
       }
       return next;
     });
   };
 
   const handleSubmit = async () => {
-    const managerId = manager?.id || (manager?._id?.$oid || manager?._id);
+    const managerId = getManagerId(manager);
 
     if (!managerId) {
-      console.error("Cannot report: Manager ID is missing");
+      setSubmitError("Manager account could not be found.");
       return;
     }
 
     setLoading(true);
+    setSubmitError(null);
 
     // Extract human-readable titles from the selected categories
     const selectedFlags = REPORT_CATEGORIES.flatMap((c) =>
@@ -175,7 +198,7 @@ const ReportManagerModal: FunctionComponent<Props> = ({
       });
       setStep(totalCategorySteps + 1);
     } catch (error) {
-      console.error("Error submitting report:", error);
+      setSubmitError(getErrorMessage(error));
     } finally {
       setLoading(false);
     }
@@ -184,12 +207,12 @@ const ReportManagerModal: FunctionComponent<Props> = ({
   const currentCategory = useMemo<ReportCategory | null>(() => {
     if (step < 0 || step >= totalCategorySteps) return null;
     return REPORT_CATEGORIES[step];
-  }, [step, totalCategorySteps]);
+  }, [step]);
 
   if (!isOpen || !manager) return null;
 
   const managerEmail =
-    manager.email || (manager.emails && manager.emails[0]) || "N/A";
+    manager.email || manager.emails?.[0] || "N/A";
   const managerName =
     manager.displayName ||
     `${manager.firstName || ""} ${manager.lastName || ""}`.trim() ||
@@ -227,6 +250,8 @@ const ReportManagerModal: FunctionComponent<Props> = ({
           <LandlordManagerReportConfirm
             onBack={() => setStep((s) => Math.max(0, s - 1))}
             onSubmit={handleSubmit}
+            isSubmitting={loading}
+            errorMessage={submitError}
             type={type}
           />
         )}
