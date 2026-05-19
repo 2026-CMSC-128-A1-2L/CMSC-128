@@ -9,3 +9,4 @@ build
 .agent/
 .agent
 .trae/
+config.bat
