@@ -1,7 +1,16 @@
 import { Router } from 'express';
-import { isVerifiedStudent, manageListingsFilter, selfFilter } from '../../middleware.js';
+import {
+  isVerifiedStudent,
+  manageApplicationsFilter,
+  manageListingsFilter,
+  selfFilter,
+} from '../../middleware.js';
 import {
   routeGetTransferRequests,
+  routeGetApprovedPasaloListings,
+  routeGetApprovedPasaloTransfer,
+  routeGetManagedTransferRequest,
+  routeGetManagedTransferRequests,
   routeCreateTransferRequest,
   routeApproveTransferRequest,
   routeRejectTransferRequest,
@@ -9,6 +18,11 @@ import {
 } from './transfer.controller.js';
 
 const router = Router();
+
+router.get('/pasalo', routeGetApprovedPasaloListings);
+router.get('/pasalo/:transferId', routeGetApprovedPasaloTransfer);
+router.get('/managed', manageApplicationsFilter, routeGetManagedTransferRequests);
+router.get('/managed/:transferId', manageApplicationsFilter, routeGetManagedTransferRequest);
 
 // Lease Transfers
 // GET /api/transfers

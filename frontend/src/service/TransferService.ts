@@ -12,6 +12,46 @@ export const TransferService = {
     }
   },
 
+  async getManagedTransferRequests(params: { status?: string } = {}) {
+    try {
+      const response = await api.get('/api/transfers/managed', { params });
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching managed transfer requests:', error);
+      throw error;
+    }
+  },
+
+  async getManagedTransferRequest(transferId: string) {
+    try {
+      const response = await api.get(`/api/transfers/managed/${transferId}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching managed transfer request:', error);
+      throw error;
+    }
+  },
+
+  async getPasaloListings() {
+    try {
+      const response = await api.get('/api/transfers/pasalo');
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching pasalo listings:', error);
+      throw error;
+    }
+  },
+
+  async getPasaloTransfer(transferId: string) {
+    try {
+      const response = await api.get(`/api/transfers/pasalo/${transferId}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching pasalo transfer:', error);
+      throw error;
+    }
+  },
+
   async createTransferRequest(body: CreateTransferBody) {
     try {
       const response = await api.post('/api/transfers', body);
