@@ -1,9 +1,10 @@
-import { type FunctionComponent, useState } from 'react';
+import { type FunctionComponent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import SideBar from '../../../components/user/SideBar';
 import Footer from '../../../components/general/Footer';
 import PageBackground from '../../../components/general/PageBackground';
+import NotificationToast from '../../../components/general/NotificationToast';
 import DownloadBillings from '../../../components/user/finance/DownloadBillings';
 import SubmitReceipt from '../../../components/user/finance/SubmitReceipt';
 import MonthlyExpensesChart from '../../../components/user/finance/MonthlyExpensesChart';
@@ -48,8 +49,38 @@ const TenantFinancePage: FunctionComponent = () => {
 
   const [isSubmitReceiptOpen, setIsSubmitReceiptOpen] = useState(false);
   const [selectedBill, setSelectedBill] = useState<BillListItem | null>(null);
+  const [paymentToast, setPaymentToast] = useState<{
+    show: boolean;
+    message: string;
+    type: 'success' | 'warning';
+  }>({ show: false, message: '', type: 'success' });
+
+  useEffect(() => {
+    if (!paymentToast.show) return;
+
+    const timeoutId = window.setTimeout(() => {
+      setPaymentToast((current) => ({ ...current, show: false }));
+    }, 3000);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [paymentToast.show]);
+
+  const hasSubmittedReceipt = (bill: BillListItem) =>
+    (bill.receiptCount ?? bill.documents?.length ?? 0) > 0;
+
+  const isReceiptLocked = (bill: BillListItem) =>
+    hasSubmittedReceipt(bill) && bill.paymentStatus === 'paid';
 
   const handlePayNow = (bill: BillListItem) => {
+    if (isReceiptLocked(bill)) {
+      setPaymentToast({
+        show: true,
+        message: 'You already submitted a receipt for this paid billing.',
+        type: 'warning',
+      });
+      return;
+    }
+
     setSelectedBill(bill);
     setIsSubmitReceiptOpen(true);
   };
@@ -67,6 +98,11 @@ const TenantFinancePage: FunctionComponent = () => {
   }) => {
     console.log('Receipt submitted for billing:', selectedBill?._id, data);
     handleCloseSubmitReceipt();
+    setPaymentToast({
+      show: true,
+      message: 'Successfully sent receipt to landlord.',
+      type: 'success',
+    });
     refetch();
   };
 
@@ -135,6 +171,7 @@ const TenantFinancePage: FunctionComponent = () => {
           </div>
         </div>
         <button
+          type="button"
           onClick={() => navigate('/home')}
           className="flex items-center gap-2 px-6 py-3 rounded-xl bg-lightcyan-100 text-teal font-semibold hover:opacity-90 transition-opacity dark:bg-[#0d3a32] dark:text-[#72cbb8] cursor-pointer"
         >
@@ -164,6 +201,7 @@ const TenantFinancePage: FunctionComponent = () => {
             </div>
           </div>
           <button
+            type="button"
             onClick={() => navigate('/home')}
             className="flex items-center gap-2 px-6 py-3 rounded-xl bg-lightcyan-100 text-teal font-semibold hover:opacity-90 transition-opacity dark:bg-[#0d3a32] dark:text-[#72cbb8] cursor-pointer"
           >
@@ -179,6 +217,7 @@ const TenantFinancePage: FunctionComponent = () => {
       <div className="flex-1 flex flex-col items-center justify-center py-20 gap-4">
         <p className="text-crimson font-semibold">{error}</p>
         <button
+          type="button"
           onClick={refetch}
           className="px-4 py-2 rounded-xl bg-lightcyan-100 text-teal font-semibold hover:opacity-90 cursor-pointer"
         >
@@ -306,37 +345,48 @@ const TenantFinancePage: FunctionComponent = () => {
                   {unpaidPayments.length === 0 ? (
                     <p className="text-dimgray text-center py-4">No upcoming payments 🎉</p>
                   ) : (
-                    unpaidPayments.map((bill, idx) => (
-                      <div
-                        key={bill._id}
-                        className="rounded-lg border border-whitesmoke-200 flex flex-col sm:flex-row items-start sm:items-center justify-between py-3 px-3 gap-3 transition-all duration-200 hover:shadow-md dark:bg-[#101111] dark:border-[#303331] dark:hover:bg-[#141515]"
-                      >
-                        <div className="flex items-center gap-2.5">
-                          <div
-                            className={`h-5 w-5 rounded-[4px] shrink-0 ${
-                              idx === 0
-                                ? 'bg-gradient-to-b from-[#024338] to-[#096c5b]'
-                                : 'bg-gradient-to-b from-[#c29722] to-[#f6b709]'
-                            }`}
-                          />
-                          <div className="flex flex-col gap-1">
-                            <div className="font-semibold">
-                              {formatDate(bill.dueDate)}
-                              {idx === 0 ? ' (Current)' : ''}
-                            </div>
-                            <div className="text-[11px] font-semibold font-lora text-dimgray">
-                              Php {bill.totalAmount.toFixed(2)}
+                    unpaidPayments.map((bill, idx) => {
+                      const receiptSubmitted = hasSubmittedReceipt(bill);
+                      const receiptLocked = isReceiptLocked(bill);
+
+                      return (
+                        <div
+                          key={bill._id}
+                          className="rounded-lg border border-whitesmoke-200 flex flex-col sm:flex-row items-start sm:items-center justify-between py-3 px-3 gap-3 transition-all duration-200 hover:shadow-md dark:bg-[#101111] dark:border-[#303331] dark:hover:bg-[#141515]"
+                        >
+                          <div className="flex items-center gap-2.5">
+                            <div
+                              className={`h-5 w-5 rounded-[4px] shrink-0 ${
+                                idx === 0
+                                  ? 'bg-gradient-to-b from-[#024338] to-[#096c5b]'
+                                  : 'bg-gradient-to-b from-[#c29722] to-[#f6b709]'
+                              }`}
+                            />
+                            <div className="flex flex-col gap-1">
+                              <div className="font-semibold">
+                                {formatDate(bill.dueDate)}
+                                {idx === 0 ? ' (Current)' : ''}
+                              </div>
+                              <div className="text-[11px] font-semibold font-lora text-dimgray">
+                                Php {bill.totalAmount.toFixed(2)}
+                              </div>
                             </div>
                           </div>
+                          <button
+                            type="button"
+                            onClick={() => handlePayNow(bill)}
+                            aria-disabled={receiptLocked}
+                            className={`w-full sm:w-[90px] rounded-xl py-2.5 px-3 font-semibold transition-opacity whitespace-nowrap text-center dark:bg-[#0d3a32] dark:text-[#72cbb8] ${
+                              receiptLocked
+                                ? 'bg-gray-100 text-dimgray opacity-60 cursor-not-allowed dark:bg-[#242626]'
+                                : 'bg-lightcyan-100 text-teal hover:opacity-90 cursor-pointer'
+                            }`}
+                          >
+                            {receiptLocked ? 'Submitted' : receiptSubmitted ? 'Resubmit' : 'Pay Now'}
+                          </button>
                         </div>
-                        <button
-                          onClick={() => handlePayNow(bill)}
-                          className="w-full sm:w-[90px] rounded-xl bg-lightcyan-100 py-2.5 px-3 text-teal font-semibold hover:opacity-90 transition-opacity whitespace-nowrap text-center dark:bg-[#0d3a32] dark:text-[#72cbb8] cursor-pointer"
-                        >
-                          Pay Now
-                        </button>
-                      </div>
-                    ))
+                      );
+                    })
                   )}
                 </div>
               </div>
@@ -372,6 +422,14 @@ const TenantFinancePage: FunctionComponent = () => {
           <Footer />
         </>,
       )}
+
+      <NotificationToast
+        show={paymentToast.show}
+        message={paymentToast.message}
+        type={paymentToast.type}
+        position="top-center"
+        onClose={() => setPaymentToast((current) => ({ ...current, show: false }))}
+      />
 
       {/* Submit Receipt modal */}
       {selectedBill && (
