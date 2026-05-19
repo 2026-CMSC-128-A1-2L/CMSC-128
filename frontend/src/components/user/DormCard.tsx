@@ -10,6 +10,7 @@ import {
 import { createPortal } from 'react-dom';
 import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
+import FallbackImage from '../general/FallbackImage';
 
 // Shared formatter — created once at module level, not per render
 const currencyFormatter = new Intl.NumberFormat('en-PH', {
@@ -234,7 +235,7 @@ const DormCard: FunctionComponent<DormCardProps> = ({
         }`}
       >
         <div className="relative z-10 flex h-full w-full flex-col items-start overflow-hidden rounded-[15.31px] border border-solid border-whitesmoke bg-white shadow-sm transition-shadow hover:shadow-lg dark:border-[#303331] dark:bg-[#101111] dark:shadow-none dark:hover:border-[#45665e]">
-          <img className="w-66 h-30 object-cover" src={image} alt={name} />
+          <FallbackImage media={image} alt={name} className="w-66 h-30 object-cover" />
 
           <div className="w-full flex flex-col py-2 px-3 gap-2">
             <div className="w-full flex flex-col items-start gap-0">

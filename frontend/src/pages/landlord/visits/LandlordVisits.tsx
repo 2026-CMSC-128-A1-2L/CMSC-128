@@ -181,7 +181,7 @@ const Visits: FunctionComponent = () => {
       id: v.id,
       visitorName: v.visitorName,
       dateTime: `${v.startDate.toLocaleDateString()} - ${v.time}`,
-      propertyName: v.propertyName,
+      propertyName: v.propertyName ?? 'Property',
       buildingName: 'Building',
     }));
 

@@ -162,16 +162,14 @@ export const getRentalsByUnitId = async (
 ) => {
   const rentals = await Rental.find(combineFilters(filters, { unitId })).populate(
     'userId',
-    'firstName middleName lastName profilePicture',
+    'firstName middleName lastName profilePicture emails',
   );
 
   if (!rentals.length) {
     const rentalsNoFilter = await Rental.find({ unitId });
 
-    if (rentalsNoFilter) {
+    if (rentalsNoFilter.length) {
       throw new AppError(403, "You don't have permission to view these rentals.");
-    } else {
-      throw new AppError(404, 'Rentals not found.');
     }
   }
 

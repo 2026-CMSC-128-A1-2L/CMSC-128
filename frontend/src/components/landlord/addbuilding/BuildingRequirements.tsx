@@ -72,11 +72,10 @@ const DocumentCard: FunctionComponent<DocumentCardProps> = ({
         <div className="flex items-center gap-3">
           <span className="font-bold text-black dark:text-white text-sm">{label}</span>
           <span
-            className={`text-xs font-semibold rounded-2xl px-3 py-1 ${
-              isUploaded
-                ? 'text-slate-500 bg-slate-100 dark:bg-[#303331] dark:text-[#a4acba]'
-                : 'text-red-600 bg-red-100 dark:bg-red-900/30 dark:text-red-400'
-            }`}
+            className={`text-xs font-semibold rounded-2xl px-3 py-1 ${isUploaded
+              ? 'text-slate-500 bg-slate-100 dark:bg-[#303331] dark:text-[#a4acba]'
+              : 'text-red-600 bg-red-100 dark:bg-red-900/30 dark:text-red-400'
+              }`}
           >
             {isUploaded ? 'Uploaded' : 'Missing'}
           </span>
@@ -105,13 +104,13 @@ const DocumentCard: FunctionComponent<DocumentCardProps> = ({
                 <div className="absolute right-0 top-full mt-2 w-48 overflow-hidden rounded-lg border border-[#d7d7d7] bg-white text-sm shadow-lg dark:border-[#303331] dark:bg-[#141515] z-10 flex flex-col">
                   <button
                     onClick={handleViewExample}
-                    className="w-full cursor-pointer px-4 py-2.5 text-left !text-[#263238] transition-colors hover:bg-[#f5f7f7] dark:!text-[#d7e0ef] dark:hover:bg-[#1f2022]"
+                    className="w-full text-left px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-[#1f2022] text-slategray dark:text-[#a4acba] transition-colors cursor-pointer"
                   >
                     View Example File
                   </button>
                   <button
                     onClick={handleDownload}
-                    className="w-full cursor-pointer border-t border-[#d7d7d7] px-4 py-2.5 text-left !text-[#263238] transition-colors hover:bg-[#f5f7f7] dark:border-[#303331] dark:!text-[#d7e0ef] dark:hover:bg-[#1f2022]"
+                    className="w-full text-left px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-[#1f2022] text-slategray dark:text-[#a4acba] transition-colors border-t border-gray-100 dark:border-[#303331] cursor-pointer"
                   >
                     Download File
                   </button>
@@ -184,7 +183,7 @@ const BuildingRequirements: FunctionComponent<BuildingRequirementsProps> = ({ on
 
   const handleFileUpload = async (id: string, uploadedFile: File) => {
     try {
-      await FileService.uploadFile(uploadedFile);
+      const uploaded = await FileService.uploadFile(uploadedFile);
 
       const formattedDate = new Intl.DateTimeFormat('en-GB', {
         day: '2-digit',
@@ -192,7 +191,7 @@ const BuildingRequirements: FunctionComponent<BuildingRequirementsProps> = ({ on
         year: 'numeric',
       }).format(new Date());
 
-      updateRequirement(id, uploadedFile, formattedDate);
+      updateRequirement(id, uploadedFile, formattedDate, uploaded.key);
     } catch (error) {
       console.error('Error uploading file:', error);
       throw error;

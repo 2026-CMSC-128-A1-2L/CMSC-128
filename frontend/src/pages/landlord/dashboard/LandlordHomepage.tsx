@@ -12,6 +12,7 @@ import { ApplicationService } from "../../../service/ApplicationService";
 import { api } from "../../../service/axiosInstance";
 import { FacilityService } from "../../../service/FacilityService";
 import { useAuthStore } from "../../../store/useAuthStore";
+import { getPrimaryMediaUrl } from "../../../utils/media";
 const Avatar = ({
   className = "h-[40px] w-[40px]",
 }: {
@@ -97,8 +98,7 @@ const optionMatchesQuery = (option: LandlordSearchOption, query: string) => {
 };
 
 const getImage = (facility: any): string =>
-  facility.image ??
-  facility.media?.[0]?.value ??
+  getPrimaryMediaUrl(facility.image ?? facility.media?.[0]) ||
   'https://placehold.co/280x120?text=No+image';
 
 const getOccupiedUnits = (facility: any): number => {
@@ -225,9 +225,9 @@ const mapVisitRequest = (booking: RawBooking): VisitRequest => {
     booking.facilityId?.name ?? booking.listingId?.facilityId?.name ?? "Visit request";
   const dateTime = startDate
     ? `${startDate.toLocaleDateString()} - ${startDate.toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      })}`
+      hour: "2-digit",
+      minute: "2-digit",
+    })}`
     : "Pending schedule";
 
   return {
