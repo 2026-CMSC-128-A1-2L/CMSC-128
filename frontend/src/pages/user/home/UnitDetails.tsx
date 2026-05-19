@@ -37,6 +37,7 @@ import { useFacilityDetails } from "../../../hooks/useFacilityDetails";
 import { useBookmarks } from "../../../hooks/useBookmarks";
 import { BookmarkService } from "../../../service/BookmarkService";
 import { ApplicationService } from "../../../service/ApplicationService";
+import { RentalService } from "../../../service/RentalService";
 import { TransferService } from "../../../service/TransferService";
 import CalendarPopout from "../../../components/user/user-calendar/CalendarPopout";
 import PortalPopup from "../../../components/general/PortalPopup";
@@ -125,6 +126,22 @@ type ApplicationWarning = {
   id: number;
 };
 
+const getDataArray = (response: unknown): unknown[] => {
+  if (Array.isArray(response)) return response;
+  if (response && typeof response === "object" && "data" in response) {
+    const data = (response as { data?: unknown }).data;
+    if (Array.isArray(data)) return data;
+  }
+  return [];
+};
+
+const hasCurrentRental = (rentals: unknown[]) =>
+  rentals.some((rental) => {
+    if (!rental || typeof rental !== "object") return false;
+    const status = String((rental as { status?: unknown }).status ?? "");
+    return status === "active" || status === "inactive";
+  });
+
 const UnitDetails: FunctionComponent = () => {
   const user = useAuthStore((state) => state.user);
   const { facilityId } = useParams<{ facilityId: string }>();
@@ -158,6 +175,8 @@ const UnitDetails: FunctionComponent = () => {
   const [bookmarkError, setBookmarkError] = useState<string | null>(null);
   const [applicationError, setApplicationError] = useState<string | null>(null);
   const [isSubmittingApplication, setIsSubmittingApplication] = useState(false);
+  const [hasCurrentDorm, setHasCurrentDorm] = useState(false);
+  const [isCheckingCurrentDorm, setIsCheckingCurrentDorm] = useState(false);
   const [applicationWarnings, setApplicationWarnings] = useState<
     ApplicationWarning[]
   >([]);
@@ -248,6 +267,33 @@ const UnitDetails: FunctionComponent = () => {
       setMoveInDate(pasaloDetails.moveInDate);
     }
   }, [pasaloDetails]);
+
+  useEffect(() => {
+    if (!user) {
+      setHasCurrentDorm(false);
+      setIsCheckingCurrentDorm(false);
+      return;
+    }
+
+    let cancelled = false;
+    setIsCheckingCurrentDorm(true);
+
+    RentalService.getMyRentals()
+      .then((response) => {
+        if (cancelled) return;
+        setHasCurrentDorm(hasCurrentRental(getDataArray(response)));
+      })
+      .catch(() => {
+        if (!cancelled) setHasCurrentDorm(false);
+      })
+      .finally(() => {
+        if (!cancelled) setIsCheckingCurrentDorm(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [user]);
 
   const showLoggedOutApplicationWarning = () => {
     const id = Date.now() + Math.random();
@@ -525,6 +571,13 @@ const UnitDetails: FunctionComponent = () => {
       return;
     }
 
+    if (hasCurrentDorm) {
+      setApplicationError(
+        "You already have a current dorm, so you cannot send another application.",
+      );
+      return;
+    }
+
     if (!objectIdPattern.test(selectedListing.id)) {
       setApplicationError(
         "Room details are still loading. Please try again in a moment.",
@@ -578,6 +631,14 @@ const UnitDetails: FunctionComponent = () => {
 
     setVisitPopoutOpen(true);
   };
+
+  const applicationSubmitLabel = hasCurrentDorm
+    ? "Already Has Dorm"
+    : isCheckingCurrentDorm
+      ? "Checking..."
+      : isSubmittingApplication
+        ? "Submitting..."
+        : "Submit Application";
 
   return (
     <div className="user-unit-details-shell relative flex min-h-screen bg-transparent font-inter text-darkslategray-100 dark:text-[#edf6f4]">
@@ -716,7 +777,7 @@ const UnitDetails: FunctionComponent = () => {
           </form>
 
           {/* Top section: image + apply card */}
-          <div className="flex flex-col xl:flex-row gap-6 font-inter text-black">
+          <div className="flex flex-col xl:flex-row gap-6 font-inter text-black xl:items-start">
             {/* Left: image + info */}
             <div className="flex-1 min-w-0 flex flex-col gap-6">
               <ImageCarousel images={facility.gallery} />
@@ -742,11 +803,10 @@ const UnitDetails: FunctionComponent = () => {
                     type="button"
                     onClick={handleBookmarkToggle}
                     disabled={!selectedListing || isBookmarkSaving}
-                    className={`rounded border border-teal-200 py-2 px-6 transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${
-                      isSelectedListingBookmarked
-                        ? "bg-lightcyan text-darkslategray-200"
-                        : "hover:bg-lightcyan"
-                    } cursor-pointer`}
+                    className={`rounded border border-teal-200 py-2 px-6 transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${isSelectedListingBookmarked
+                      ? "bg-lightcyan text-darkslategray-200"
+                      : "hover:bg-lightcyan"
+                      } cursor-pointer`}
                   >
                     {isBookmarkSaving
                       ? "SAVING"
@@ -810,6 +870,11 @@ const UnitDetails: FunctionComponent = () => {
                     matched to the approved transfer request.
                   </div>
                 )}
+                {hasCurrentDorm && (
+                  <div className="rounded-lg border border-[#ffd7d7] bg-[#fff6f6] px-3 py-2 text-[11px] font-semibold leading-4 text-[#9b1c1c]">
+                    You already have a current dorm. New applications are disabled.
+                  </div>
+                )}
                 <div className="flex flex-col gap-1.5">
                   <div className="font-medium">Rooms Available</div>
                   <div className="grid grid-cols-1 gap-2 text-black sm:grid-cols-2 xl:grid-cols-1">
@@ -827,11 +892,10 @@ const UnitDetails: FunctionComponent = () => {
                                 setSelectedListingId(listing.id),
                               )
                             }
-                            className={`rounded-lg border py-2 px-3 text-center font-semibold text-xs shadow transition-colors ${
-                              isSelected
-                                ? "border-darkslategray-200 bg-darkslategray-200 text-white"
-                                : "border-transparent bg-white text-black hover:bg-lightcyan"
-                            } ${isPasaloApplication ? "cursor-not-allowed opacity-80" : "cursor-pointer"}`}
+                            className={`rounded-lg border py-2 px-3 text-center font-semibold text-xs shadow transition-colors ${isSelected
+                              ? "border-darkslategray-200 bg-darkslategray-200 text-white"
+                              : "border-transparent bg-white text-black hover:bg-lightcyan"
+                              } ${isPasaloApplication ? "cursor-not-allowed opacity-80" : "cursor-pointer"}`}
                           >
                             {roomButtonLabel(listing.label)}
                           </button>
@@ -864,11 +928,10 @@ const UnitDetails: FunctionComponent = () => {
                           setIsLeaseMenuOpen((isOpen) => !isOpen),
                         )
                       }
-                      className={`shadow rounded-lg border w-full flex items-center justify-between py-2.5 px-3 gap-2 text-left transition-all ${
-                        isLeaseMenuOpen
-                          ? "border-teal-200 bg-lightcyan/40 ring-2 ring-lightcyan"
-                          : "border-transparent bg-white hover:bg-lightcyan/20"
-                      } ${isPasaloApplication ? "cursor-not-allowed opacity-80" : "cursor-pointer"}`}
+                      className={`shadow rounded-lg border w-full flex items-center justify-between py-2.5 px-3 gap-2 text-left transition-all ${isLeaseMenuOpen
+                        ? "border-teal-200 bg-lightcyan/40 ring-2 ring-lightcyan"
+                        : "border-transparent bg-white hover:bg-lightcyan/20"
+                        } ${isPasaloApplication ? "cursor-not-allowed opacity-80" : "cursor-pointer"}`}
                     >
                       <span
                         className={`font-semibold text-xs ${leaseDuration ? "text-black" : "text-silver"
@@ -900,11 +963,10 @@ const UnitDetails: FunctionComponent = () => {
                                   setIsLeaseMenuOpen(false);
                                 })
                               }
-                              className={`flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-xs font-semibold transition-colors ${
-                                isSelected
-                                  ? "bg-darkslategray-200 text-white"
-                                  : "text-gray hover:bg-lightcyan"
-                              } cursor-pointer`}
+                              className={`flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-xs font-semibold transition-colors ${isSelected
+                                ? "bg-darkslategray-200 text-white"
+                                : "text-gray hover:bg-lightcyan"
+                                } cursor-pointer`}
                             >
                               <span>{duration}</span>
                               {isSelected && (
@@ -1001,14 +1063,10 @@ const UnitDetails: FunctionComponent = () => {
                 <button
                   type="button"
                   onClick={handleSubmitApplication}
-                  disabled={isSubmittingApplication}
+                  disabled={isSubmittingApplication || isCheckingCurrentDorm || hasCurrentDorm}
                   className="w-full rounded-lg bg-darkslategray-200 flex items-center justify-center gap-2 py-3 px-4 disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
                 >
-                  <span className="font-medium text-sm">
-                    {isSubmittingApplication
-                      ? "Submitting..."
-                      : "Submit Application"}
-                  </span>
+                  <span className="font-medium text-sm">{applicationSubmitLabel}</span>
                   <Icon icon="formkit:arrowright" className="h-5 w-5" />
                 </button>
                 <p className="text-xs text-dimgray font-lora text-center">
@@ -1021,28 +1079,9 @@ const UnitDetails: FunctionComponent = () => {
           </div>
 
           {/* Tags + tabs + sidebar */}
-          <div className="flex flex-col xl:flex-row gap-6 text-sm font-lora text-darkslategray-200">
+          <div className="flex flex-col xl:flex-row gap-6 font-inter text-black xl:items-start">
             {/* Left: tags + tabs */}
             <div className="flex-1 min-w-0 flex flex-col gap-6">
-              {/* Tags */}
-              <div className="flex flex-wrap gap-2 text-xs text-center text-teal-200">
-                {detailTags.map((label, index) => (
-                  <div
-                    key={label}
-                    className={`rounded-lg border border-teal-200 py-2 px-4 font-medium ${index === 0 ? "bg-lightcyan" : ""} cursor-pointer`}
-                  >
-                    {label}
-                  </div>
-                ))}
-                {selectedListingTags.map(({ name, label, value }) => (
-                  <div
-                    key={`${name}-${String(value)}`}
-                    className="rounded-lg border border-teal-200 py-2 px-4 font-medium"
-                  >
-                    {`${label}: ${formatTagValue(value)}`}
-                  </div>
-                ))}
-              </div>
 
               {/* Tabs */}
               <PropertyTabs>
