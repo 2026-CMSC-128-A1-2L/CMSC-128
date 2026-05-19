@@ -8,8 +8,10 @@ import NotificationDetail from '../../../components/general/NotificationDetail';
 import ChatDetail from '../../../components/general/ChatDetail';
 import BgUpper from '../../../../assets/bg-upper.svg?react';
 import BgLower from '../../../../assets/bg-lower.svg?react';
+import { useAuthStore } from '../../../store/useAuthStore';
 
 const DmsLanding: FunctionComponent = () => {
+  const authUser = useAuthStore((state) => state.user);
   const [showHelp, setShowHelp] = useState(false);
   const [selectedItem, setSelectedItem] = useState<{
     type: 'notification' | 'dm';
@@ -239,7 +241,13 @@ const DmsLanding: FunctionComponent = () => {
 
       {/* Main Content Area */}
       <div className="flex-1 h-full flex flex-col items-center justify-center relative overflow-y-auto overflow-x-hidden z-10 bg-transparent">
-        {renderContent()}
+        {!authUser ? (
+          <div className="flex-1 flex items-center justify-center py-16 text-center text-sm font-semibold text-red-500">
+            Please sign in to view your messages.
+          </div>
+        ) : (
+          renderContent()
+        )}
       </div>
 
       {/* ======= FLOATING ICON ========== */}

@@ -5,6 +5,7 @@ import SideBarAdmin from '../../components/admin/SideBarAdmin';
 import AdminPageTransition from '../../components/admin/AdminPageTransition';
 import PageBackground from '../../components/general/PageBackground';
 import type { MessageItem } from '../../components/admin/SideBarAdminMessagesView';
+import { useAuthStore } from '../../store/useAuthStore';
 
 type ChatMessage = {
   id: string;
@@ -97,6 +98,7 @@ const getConversation = (id: string | null | undefined): Conversation | null => 
 };
 
 function Messages() {
+  const authUser = useAuthStore((state) => state.user);
   const [searchParams, setSearchParams] = useSearchParams();
   const selectedId = searchParams.get('id');
   const conversation = useMemo(() => getConversation(selectedId), [selectedId]);
@@ -122,7 +124,11 @@ function Messages() {
           {/* Main body: chat thread */}
           <div className="flex flex-1 overflow-y-auto items-start justify-center bg-transparent px-[32px] py-[24px]">
             <div className="flex h-[calc(100vh-48px)] min-h-[600px] w-full max-w-[1036px] flex-col overflow-hidden rounded-[12px] border border-solid border-[#F0F0F0] dark:border-[#303331] bg-white dark:bg-[#141515] shadow-[0px_2px_20px_0px_rgba(0,0,0,0.06)]">
-              {conversation ? (
+              {!authUser ? (
+                <div className="flex flex-1 items-center justify-center py-16 text-center text-sm font-semibold text-red-500 bg-white dark:bg-[#141515]">
+                  Please sign in to view your messages.
+                </div>
+              ) : conversation ? (
                 <>
                   {/* Conversation header */}
                   <div className="flex items-center gap-[13px] border-b border-solid border-[#F0F0F0] dark:border-[#303331] px-[18px] py-[10px]">
