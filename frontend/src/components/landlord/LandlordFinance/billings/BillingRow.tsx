@@ -75,13 +75,18 @@ const BillingRow: FunctionComponent<BillingRowProps> = ({
     billing.breakdown.find((b) => b.name === "Misc. Fees")?.amount || 0;
   const paidAmount = billing.paidAmount || 0;
 
-  // Count submitted receipt documents
+  // Count submitted receipt files.
+  // Backend shape: documents[].files[] — each document entry has a files array of key strings.
   const receiptCount = Array.isArray(billing.documents)
-    ? billing.documents.filter((d: any) => {
-        // documents can be objects with a `file` key, or bare strings (file keys)
-        const key = typeof d === 'string' ? d : d?.file ?? d?.key ?? '';
-        return !!key;
-      }).length
+    ? billing.documents.reduce((total: number, d: any) => {
+        if (!d) return total;
+        if (typeof d === 'string') return d ? total + 1 : total;
+        // Primary shape: { files: string[] }
+        if (Array.isArray(d.files)) return total + d.files.filter(Boolean).length;
+        // Fallback single-file shapes
+        const key = d.file ?? d.key ?? d.fileKey ?? d.fileId ?? d.path ?? d.url ?? '';
+        return key ? total + 1 : total;
+      }, 0)
     : 0;
 
   const hasReceipts = receiptCount > 0;
@@ -181,7 +186,7 @@ const BillingRow: FunctionComponent<BillingRowProps> = ({
         </div>
       </td>
 
-      {/* Status — stopPropagation so clicking doesn't open the edit popup */}
+      {/* Status */}
       <td className={tdBase} onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-center">
           <button

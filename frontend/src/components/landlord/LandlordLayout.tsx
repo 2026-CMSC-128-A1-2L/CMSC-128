@@ -32,7 +32,7 @@ const LandlordLayout = ({ activeSidebarItem, breadcrumbs = [], children }: Landl
         <SideBarLandlord
           activeItem={activeSidebarItem}
           onProfileClick={() => navigate('/landlord/profile/switcher')}
-          onAddListing={() => navigate('/landlord/properties/new')}
+          onAddListing={() => navigate('/landlord/add-building')}
         />
 
         <div className="flex min-w-0 flex-1 flex-col overflow-hidden pl-[68px] md:pl-0">

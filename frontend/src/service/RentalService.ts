@@ -52,6 +52,16 @@ export const RentalService = {
     }
   },
 
+  async getMyRentals() {
+    try {
+      const response = await api.get('/api/users/me/rentals');
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching my rentals:', error);
+      throw error;
+    }
+  },
+
   async updateRental(rentalId: string, body: UpdateRentalBody) {
     try {
       const response = await api.patch(`/api/rentals/${rentalId}`, body);

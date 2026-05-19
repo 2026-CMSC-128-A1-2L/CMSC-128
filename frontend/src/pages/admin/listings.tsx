@@ -1,18 +1,19 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { Icon } from "@iconify/react";
-import SideBarAdmin from "../../components/admin/SideBarAdmin";
-import AdminPageTransition from "../../components/admin/AdminPageTransition";
-import AdminPagination from "../../components/admin/AdminPagination";
-import FacilityReviewModal from "../../components/admin/FacilityReviewModal";
-import PageBackground from "../../components/general/PageBackground";
-import { FacilityService } from "../../service/FacilityService";
-import { useDebouncedValue } from "../../hooks/useDebouncedValue";
-import { motion, AnimatePresence } from "framer-motion";
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Icon } from '@iconify/react';
+import SideBarAdmin from '../../components/admin/SideBarAdmin';
+import AdminPageTransition from '../../components/admin/AdminPageTransition';
+import AdminPagination from '../../components/admin/AdminPagination';
+import FacilityReviewModal from '../../components/admin/FacilityReviewModal';
+import AdminFilterBar from '../../components/admin/AdminFilterBar';
+import PageBackground from '../../components/general/PageBackground';
+import { FacilityService } from '../../service/FacilityService';
+import { useDebouncedValue } from '../../hooks/useDebouncedValue';
+import { motion, AnimatePresence } from 'framer-motion';
 
 type FacilityDocument = {
   docId: string;
   name: string;
-  status: "accepted" | "rejected" | "pending";
+  status: 'accepted' | 'rejected' | 'pending';
   message?: string;
   files: string[];
 };
@@ -20,12 +21,10 @@ type FacilityForReview = {
   _id: string;
   id?: string;
   name: string;
-  landlordId:
-    | string
-    | { _id: string; firstName: string; middleName?: string; lastName: string };
+  landlordId: string | { _id: string; firstName: string; middleName?: string; lastName: string };
   location: { text: string; coordinates?: { lat: number; long: number } };
   type: string;
-  status: "pending" | "approved" | "rejected" | "submitted";
+  status: 'pending' | 'approved' | 'rejected' | 'submitted';
   capacity: number;
   description: string;
   documents?: FacilityDocument[];
@@ -34,27 +33,20 @@ type FacilityForReview = {
   updatedAt?: string;
 };
 
-const tableHeaders = [
-  "Facility Name",
-  "Type",
-  "Location",
-  "Capacity",
-  "Status",
-  "Details",
-];
+const tableHeaders = ['Facility Name', 'Type', 'Location', 'Capacity', 'Status', 'Details'];
 
 const getStatusBadge = (status: string) => {
   const styles: Record<string, string> = {
-    pending: "bg-gray-50 text-gray-500 border-gray-200",
-    submitted: "bg-amber-50 text-amber-700 border-amber-200",
-    approved: "bg-emerald-50 text-emerald-700 border-emerald-200",
-    rejected: "bg-red-50 text-red-700 border-red-200",
+    pending: 'bg-gray-50 text-gray-500 border-gray-200',
+    submitted: 'bg-amber-50 text-amber-700 border-amber-200',
+    approved: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+    rejected: 'bg-red-50 text-red-700 border-red-200',
   };
   const labels: Record<string, string> = {
-    pending: "Pending",
-    submitted: "For Review",
-    approved: "Approved",
-    rejected: "Rejected",
+    pending: 'Pending',
+    submitted: 'For Review',
+    approved: 'Approved',
+    rejected: 'Rejected',
   };
   return (
     <span
@@ -67,19 +59,17 @@ const getStatusBadge = (status: string) => {
 
 const formatFacilityType = (type: string) => {
   const labels: Record<string, string> = {
-    "on-campus": "On-Campus",
-    "off-campus": "Off-Campus",
-    "partner housing": "Partner Housing",
+    'on-campus': 'On-Campus',
+    'off-campus': 'Off-Campus',
+    'partner housing': 'Partner Housing',
   };
   return labels[type] ?? type;
 };
 
 function Listings() {
   const [facilities, setFacilities] = useState<FacilityForReview[]>([]);
-  const [selectedFacilityId, setSelectedFacilityId] = useState<string | null>(
-    null,
-  );
-  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedFacilityId, setSelectedFacilityId] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
   const debouncedSearchQuery = useDebouncedValue(searchQuery, 300);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -88,20 +78,35 @@ function Listings() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const itemsPerPage = 10;
 
-  const selectedFacility =
-    facilities.find((f) => (f._id ?? f.id) === selectedFacilityId) ?? null;
+  const [typeFilter, setTypeFilter] = useState<string[]>([]);
+  const [statusFilter, setStatusFilter] = useState<string[]>([]);
+
+  const selectedFacility = facilities.find((f) => (f._id ?? f.id) === selectedFacilityId) ?? null;
 
   const filteredFacilities = useMemo(() => {
+    let result = facilities;
+
+    if (typeFilter.length > 0) {
+      result = result.filter((f) => typeFilter.includes(f.type));
+    }
+
+    if (statusFilter.length > 0) {
+      result = result.filter((f) => statusFilter.includes(f.status));
+    }
+
     const q = debouncedSearchQuery.trim().toLowerCase();
-    if (!q) return facilities;
-    return facilities.filter((f) =>
-      [f.name, f.location.text, f.type, f.description]
-        .filter(Boolean)
-        .join(" ")
-        .toLowerCase()
-        .includes(q),
-    );
-  }, [facilities, debouncedSearchQuery]);
+    if (q) {
+      result = result.filter((f) =>
+        [f.name, f.location.text, f.type, f.description]
+          .filter(Boolean)
+          .join(' ')
+          .toLowerCase()
+          .includes(q),
+      );
+    }
+
+    return result;
+  }, [facilities, debouncedSearchQuery, typeFilter, statusFilter]);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -119,15 +124,12 @@ function Listings() {
     try {
       const response = await FacilityService.getFacilities();
       const all = (response.data ?? []) as FacilityForReview[];
-      const submitted = all.filter((f) => f.status === "submitted");
-      setFacilities(submitted);
+      setFacilities(all);
       setSelectedFacilityId((cur) =>
-        cur && submitted.some((f) => (f._id ?? f.id) === cur)
-          ? cur
-          : (submitted[0]?._id ?? null),
+        cur && all.some((f) => (f._id ?? f.id) === cur) ? cur : (all[0]?._id ?? null),
       );
     } catch {
-      setError("Could not load facilities.");
+      setError('Could not load facilities.');
     } finally {
       setIsLoading(false);
     }
@@ -153,7 +155,7 @@ function Listings() {
       closeModal();
       await loadFacilities();
     } catch {
-      setError("Could not approve this facility.");
+      setError('Could not approve this facility.');
     }
   };
 
@@ -168,7 +170,7 @@ function Listings() {
       closeModal();
       await loadFacilities();
     } catch {
-      setError("Could not reject this facility.");
+      setError('Could not reject this facility.');
     }
   };
 
@@ -183,22 +185,57 @@ function Listings() {
               Dashboard
             </h1>
             <div className="mt-6 rounded-xl bg-white dark:bg-[#141515] p-6 shadow-sm border border-transparent dark:border-[#303331]">
-              <div className="mb-4 flex items-center justify-between">
+              <div className="mb-4 flex items-center justify-between flex-wrap gap-3">
                 <h2 className="font-['Poppins'] text-[36px] font-bold text-[#001d18] dark:text-[#d7e0ef] drop-shadow-[0px_4px_4px_rgba(0,0,0,0.1)]">
-                  Listings for Review
+                  Listings
                 </h2>
-                <div className="flex h-9 w-75.75 items-center gap-2 rounded-full border border-[#d0d0d0] dark:border-[#303331] bg-white dark:bg-[#1f2022] px-4 focus-within:border-[#024338] focus-within:ring-2 focus-within:ring-[#024338]/20 transition-all duration-200">
-                  <Icon
-                    icon="solar:magnifer-outline"
-                    className="h-4 w-4 text-[#7c8db5] dark:text-[#a4acba]"
+                <div className="flex items-center gap-3">
+                  <AdminFilterBar
+                    groups={[
+                      {
+                        id: 'type',
+                        label: 'Type',
+                        options: [
+                          { key: 'on-campus', label: 'On-Campus' },
+                          { key: 'off-campus', label: 'Off-Campus' },
+                          { key: 'partner housing', label: 'Partner' },
+                        ],
+                        selected: typeFilter,
+                        onChange: (keys) => {
+                          setTypeFilter(keys);
+                          setCurrentPage(1);
+                        },
+                      },
+                      {
+                        id: 'status',
+                        label: 'Status',
+                        options: [
+                          { key: 'submitted', label: 'For Review' },
+                          { key: 'pending', label: 'Pending' },
+                          { key: 'approved', label: 'Approved' },
+                          { key: 'rejected', label: 'Rejected' },
+                        ],
+                        selected: statusFilter,
+                        onChange: (keys) => {
+                          setStatusFilter(keys);
+                          setCurrentPage(1);
+                        },
+                      },
+                    ]}
                   />
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search"
-                    className="flex-1 bg-transparent font-['Poppins'] text-sm text-black dark:text-[#d7e0ef] outline-none placeholder:text-[#7c8db5] dark:placeholder:text-[#a4acba]"
-                  />
+                  <div className="flex h-9 w-60 items-center gap-2 rounded-full border border-[#d0d0d0] dark:border-[#303331] bg-white dark:bg-[#1f2022] px-4 focus-within:border-[#024338] focus-within:ring-2 focus-within:ring-[#024338]/20 transition-all duration-200">
+                    <Icon
+                      icon="solar:magnifer-outline"
+                      className="h-4 w-4 text-[#7c8db5] dark:text-[#a4acba]"
+                    />
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Search"
+                      className="flex-1 bg-transparent font-['Poppins'] text-sm text-black dark:text-[#d7e0ef] outline-none placeholder:text-[#7c8db5] dark:placeholder:text-[#a4acba]"
+                    />
+                  </div>
                 </div>
               </div>
 
@@ -243,7 +280,7 @@ function Listings() {
                           colSpan={tableHeaders.length}
                           className="px-6 py-8 text-center font-['Poppins'] text-[#7c8db5] dark:text-[#a4acba]"
                         >
-                          No facilities pending review.
+                          No facilities found.
                         </td>
                       </tr>
                     ) : (
@@ -272,16 +309,12 @@ function Listings() {
                             <td className="px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black dark:text-[#d7e0ef]">
                               {facility.capacity}
                             </td>
-                            <td className="px-6 py-3">
-                              {getStatusBadge(facility.status)}
-                            </td>
+                            <td className="px-6 py-3">{getStatusBadge(facility.status)}</td>
                             <td className="px-6 py-3">
                               <motion.button
                                 type="button"
                                 onClick={() => {
-                                  setSelectedFacilityId(
-                                    facility._id ?? facility.id ?? null,
-                                  );
+                                  setSelectedFacilityId(facility._id ?? facility.id ?? null);
                                   setActionMessage(null);
                                   setIsModalOpen(true);
                                 }}

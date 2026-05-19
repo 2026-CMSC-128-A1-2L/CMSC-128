@@ -15,6 +15,7 @@ import PageBackground from "../../../components/general/PageBackground";
 import FilterTab from "../../../components/user/Filter/FilterTab";
 import LoadingPage from "../../general/LoadingPage";
 import { useFacilities, type DormCardData } from "../../../hooks/useFacilities";
+import { TransferService } from "../../../service/TransferService";
 import { useDebouncedValue } from "../../../hooks/useDebouncedValue";
 import TutorialIcon from "../../../../assets/help-chat.svg";
 
@@ -341,6 +342,21 @@ const HomePage: FunctionComponent = () => {
 
   // Real data from the backend
   const { facilities, isLoading, error, refetch } = useFacilities();
+  const [pasaloDorms, setPasaloDorms] = useState<DormCardData[]>([]);
+
+  useEffect(() => {
+    let cancelled = false;
+    TransferService.getPasaloListings()
+      .then((response) => {
+        if (!cancelled) setPasaloDorms(response.data ?? []);
+      })
+      .catch(() => {
+        if (!cancelled) setPasaloDorms([]);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   // Apply filter criteria to backend data
   // TODO: extend with rating, distance, and tags once available in DormCardData
@@ -365,7 +381,6 @@ const HomePage: FunctionComponent = () => {
     : [];
 
   // Category slices — swap for real filtered endpoints later
-  const pasaloDorms = filterApplied.slice(0, 10);
   const popularDorms = [...filterApplied]
     .sort((a, b) => parseFloat(b.rating) - parseFloat(a.rating))
     .slice(0, 10);

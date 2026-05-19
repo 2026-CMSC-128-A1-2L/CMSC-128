@@ -1,4 +1,4 @@
-import { FunctionComponent, useState, useEffect } from "react";
+import { type FunctionComponent, useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Icon } from "@iconify/react";
 import { useBuildingStore } from "./useBuildingStore";
@@ -245,7 +245,7 @@ const TagChip: FunctionComponent<{
       className={`flex items-center gap-1.5 rounded-full border text-xs font-semibold cursor-pointer select-none transition-all ${
         selected
           ? "border-teal-500 bg-teal-50 text-teal-800 pl-2.5 pr-1.5 py-1 dark:border-[#72cbb8] dark:bg-[#12342e] dark:text-[#72cbb8]"
-          : "border-whitesmoke bg-white text-slategray hover:border-gray-300 hover:text-gray-600 px-3 py-1 dark:bg-[#141515] dark:border-[#343737] dark:text-[#a4acba] dark:hover:border-[#45665e] dark:hover:text-[#d7e0ef]"
+          : "border-whitesmoke bg-white text-slategray hover:border-gray-300 hover:text-[#334155] px-3 py-1 dark:bg-[#141515] dark:border-[#343737] dark:text-[#a4acba] dark:hover:border-[#45665e] dark:hover:text-[#d7e0ef]"
       }`}
     >
       {selected && (
@@ -309,7 +309,7 @@ const TagsSection: FunctionComponent<{ roomType: RoomTypeData }> = ({
       <div className="flex items-center gap-2">
         <b className="text-black dark:text-[#d7e0ef]">Tags</b>
         {selectedCount > 0 && (
-          <span className="text-xs font-semibold bg-teal-100 text-teal-800 rounded-full px-2 py-0.5">
+          <span className="text-xs font-semibold bg-[#d9f7ef] text-[#064e3b] rounded-full px-2 py-0.5 dark:bg-[#0f3b34] dark:text-[#d7fff5]">
             {selectedCount} selected
           </span>
         )}
@@ -339,8 +339,8 @@ const TagsSection: FunctionComponent<{ roomType: RoomTypeData }> = ({
                 <span
                   className={`rounded-full px-1.5 text-[10px] font-bold ${
                     isActive
-                      ? "bg-teal-200 text-teal-900"
-                      : "bg-gray-100 text-gray-500"
+                      ? "bg-[#024338] text-white dark:bg-[#72cbb8] dark:text-[#06241f]"
+                      : "bg-[#e2e8f0] text-[#1f2937] dark:bg-[#303331] dark:text-[#edf6f4]"
                   }`}
                 >
                   {catSelectedCount}
@@ -601,7 +601,7 @@ const RoomTypeItem: FunctionComponent<RoomTypeItemProps> = ({ roomType }) => {
 
       {/* Expanded form */}
       {isExpanded && (
-        <div className="flex flex-col px-4 pb-8 gap-6 text-sm text-gray-500 font-inter dark:text-[#a4acba]">
+        <div className="flex flex-col px-4 pb-8 gap-6 text-sm text-[#64748b] font-inter dark:text-[#a4acba]">
           {/* Room Type + Capacity */}
           <div className="self-stretch flex items-start gap-10">
             <div className="flex-1 flex flex-col items-start gap-3">

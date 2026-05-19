@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Icon } from "@iconify/react";
 import LandlordLayout from "../../../components/landlord/LandlordLayout";
@@ -8,16 +8,53 @@ import RemoveManager from "../../../components/landlord/LandlordManagerRemoveCon
 import LandlordManagerActionsPopover, {
   type ManagerAction,
 } from "../../../components/landlord/LandlordManagerActionsPopover";
+import { FacilityService } from "../../../service/FacilityService";
+import { useAuthStore } from "../../../store/useAuthStore";
 
 // manager extraction workaround
 import type { ProfileSchema } from "shared";
 import type z from "zod";
 type Profile = z.infer<typeof ProfileSchema>;
 export type Manager = Extract<Profile, { userType: "Manager" }>;
-// get facilities
-import { FacilityService } from "../../../service/FacilityService";
-// get current user
-import { useAuthStore } from "../../../store/useAuthStore";
+type AuthUser = NonNullable<ReturnType<typeof useAuthStore.getState>["user"]> & {
+  _id?: string;
+  id?: string;
+};
+
+type FacilityManagerUser = Partial<Manager> & {
+  _id?: unknown;
+  id?: string;
+  emails?: string[];
+};
+
+type FacilityManagerAssignment = {
+  userId?: FacilityManagerUser;
+};
+
+type LandlordProperty = {
+  id?: string;
+  _id?: unknown;
+  name?: string;
+  landlordId?: unknown;
+  managers?: FacilityManagerAssignment[];
+};
+
+const hasManagerUser = (
+  assignment: FacilityManagerAssignment,
+): assignment is FacilityManagerAssignment & { userId: FacilityManagerUser } =>
+  Boolean(assignment.userId);
+
+const getRecordId = (value: unknown): string | undefined => {
+  if (typeof value === "string") return value;
+  if (!value || typeof value !== "object") return undefined;
+
+  const record = value as { $oid?: unknown; _id?: unknown; id?: unknown };
+  return (
+    getRecordId(record.$oid) ??
+    getRecordId(record._id) ??
+    getRecordId(record.id)
+  );
+};
 
 const Managers = () => {
   const navigate = useNavigate();
@@ -30,19 +67,23 @@ const Managers = () => {
     facilityId: string;
   } | null>(null);
   //
-  const [properties, setProperties] = useState<any[]>([]);
+  const [properties, setProperties] = useState<LandlordProperty[]>([]);
   const [loading, setLoading] = useState(true);
   //
   const { user } = useAuthStore();
+  const currentUser = user as AuthUser | null;
+  const currentUserId =
+    currentUser?._id?.toString() || currentUser?.id?.toString();
+  const currentUserEmails = new Set(
+    (currentUser?.emails ?? []).map((email) => email.toLowerCase()),
+  );
 
-  const fetchFacilitiesData = async () => {
+  const fetchFacilitiesData = useCallback(async () => {
     try {
       const response = await FacilityService.getFacilities();
-      const landlordFacilities = response.data.filter((f: any) => {
-        const fLandlordId = (f.landlordId?._id || f.landlordId)?.toString();
-        const myId =
-          (user as any)._id?.toString() || (user as any).id?.toString();
-        return fLandlordId === myId;
+      const landlordFacilities = response.data.filter((f: LandlordProperty) => {
+        const fLandlordId = getRecordId(f.landlordId);
+        return fLandlordId === currentUserId;
       });
       setProperties(landlordFacilities);
     } catch (error) {
@@ -50,13 +91,13 @@ const Managers = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [currentUserId]);
 
   // TODO: add bauble for zero facilities owned
   useEffect(() => {
     if (!user) return;
     fetchFacilitiesData();
-  }, [user]);
+  }, [fetchFacilitiesData, user]);
 
   const handleAction = (
     manager: Manager,
@@ -96,15 +137,36 @@ const Managers = () => {
         </section>
 
         <div className="flex flex-col gap-[48px]">
+          {loading && (
+            <p className="font-['Inter',sans-serif] text-[14px] text-[#666]">
+              Loading managers...
+            </p>
+          )}
           {properties.map((property) => {
-            const propId = (property.id || property._id).toString();
+            const propId = getRecordId(property.id ?? property._id) ?? "";
             const propertyManagers = Array.from(
               new Map(
                 (property.managers || [])
-                  .filter((m: any) => m.userId)
-                  .map((m: any) => {
+                  .filter(hasManagerUser)
+                  .filter((m) => {
+                    const managerUser = m.userId;
+                    const managerId = getRecordId(
+                      managerUser?._id ?? managerUser?.id,
+                    );
+                    const managerEmails = (managerUser.emails ?? []).map(
+                      (email) => email.toLowerCase(),
+                    );
+
+                    return (
+                      managerId !== currentUserId &&
+                      !managerEmails.some((email) =>
+                        currentUserEmails.has(email),
+                      )
+                    );
+                  })
+                  .map((m) => {
                     const u = m.userId;
-                    const id = (u._id?.$oid || u._id || u.id).toString();
+                    const id = getRecordId(u?._id ?? u?.id) ?? "";
                     return [
                       id,
                       {
@@ -129,6 +191,7 @@ const Managers = () => {
                     {property.name}
                   </span>
                   <button
+                    type="button"
                     onClick={() => {
                       setAddManagerFacilityId(propId);
                       setAddManagerOpen(true);
@@ -156,12 +219,15 @@ const Managers = () => {
                       return (
                         <div
                           key={cardKey}
-                          onClick={() =>
-                            navigate(`/landlord/managers/${manager.id}`)
-                          }
-                          className="flex w-[331px] cursor-pointer items-center justify-between rounded-[8px] px-[16px] py-[10px] transition-colors hover:bg-[#f9f9f9] dark:hover:bg-[#1f2022]"
+                          className="flex w-[331px] items-center justify-between rounded-[8px] px-[16px] py-[10px] transition-colors hover:bg-[#f9f9f9] dark:hover:bg-[#1f2022]"
                         >
-                          <div className="flex items-center gap-[10px]">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              navigate(`/landlord/managers/${manager.id}`)
+                            }
+                            className="flex min-w-0 flex-1 items-center gap-[10px] text-left cursor-pointer"
+                          >
                             <span className="flex h-[48px] w-[48px] shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#e5e7eb] text-[#9ca3af] dark:bg-[#242526] dark:text-[#a4acba]">
                               {manager.profilePicture ? (
                                 <img
@@ -177,17 +243,18 @@ const Managers = () => {
                                 />
                               )}
                             </span>
-                            <div className="flex flex-col gap-[2px]">
+                            <div className="flex min-w-0 flex-col gap-[2px]">
                               <span className="font-['Inter',sans-serif] text-[16px] font-bold tracking-[-0.01em] text-black dark:text-[#d7e0ef]">
                                 {`${manager.firstName} ${manager.lastName}`}
                               </span>
-                              <span className="font-['Inter',sans-serif] text-[14px] text-[#666] dark:text-[#a4acba]">
+                              <span className="truncate font-['Inter',sans-serif] text-[14px] text-[#666] dark:text-[#a4acba]">
                                 {manager.emails?.[0]}
                               </span>
                             </div>
-                          </div>
+                          </button>
                           <div className="relative">
                             <button
+                              type="button"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 setOpenMenuId(menuOpen ? null : cardKey);

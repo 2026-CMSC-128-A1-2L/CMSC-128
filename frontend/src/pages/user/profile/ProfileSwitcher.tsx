@@ -13,7 +13,7 @@ import { UserService } from '../../../service/UserService';
 
 type RentalSummary = {
   status?: string;
-  facilityId?: string | { name?: string };
+  facilityId?: string | { name?: string; media?: { value?: string }[]; allowTransfer?: boolean };
   unitId?: string | { roomNumber?: string };
   expectedMoveInDate?: string;
   expectedMoveOutDate?: string;
@@ -38,6 +38,7 @@ type CurrentDormDetails = {
   unitNumber?: string;
   contractDuration?: string;
   leaseEndDate?: string;
+  allowTransfer?: boolean;
 };
 
 const getDataArray = <T,>(response: unknown): T[] => {
@@ -166,42 +167,14 @@ const formatDate = (date?: string | Date | null) => {
   });
 };
 
-const getLeaseEndDate = (moveInDate?: string, leaseDuration?: '6-months' | '12-months') => {
-  if (!moveInDate || !leaseDuration) return undefined;
-  const parsedDate = new Date(moveInDate);
-  if (Number.isNaN(parsedDate.getTime())) return undefined;
-  parsedDate.setMonth(parsedDate.getMonth() + (leaseDuration === '6-months' ? 6 : 12));
-  return formatDate(parsedDate);
-};
-
-const getContractDurationLabel = (leaseDuration?: string) => {
-  if (leaseDuration === '6-months') return '6 Months';
-  if (leaseDuration === '12-months') return '1 Year';
-  return undefined;
-};
-
-const getApprovedDormDetails = (application: ApplicationSummary): CurrentDormDetails => ({
-  propertyImageSrc:
-    typeof application.facilityId === 'object'
-      ? application.facilityId.media?.[0]?.value
-      : undefined,
-  propertyName:
-    typeof application.facilityId === 'object' ? application.facilityId.name : 'Approved Dorm',
-  unitNumber:
-    typeof application.unitId === 'object'
-      ? application.unitId.roomNumber
-      : typeof application.listingId === 'object'
-        ? application.listingId.roomType
-        : 'Assigned Unit',
-  contractDuration: getContractDurationLabel(application.leaseDuration),
-  leaseEndDate: getLeaseEndDate(application.moveInDate, application.leaseDuration),
-});
-
 const getRentalDormDetails = (rental: RentalSummary): CurrentDormDetails => ({
+  propertyImageSrc:
+    typeof rental.facilityId === 'object' ? rental.facilityId.media?.[0]?.value : undefined,
   propertyName: typeof rental.facilityId === 'object' ? rental.facilityId.name : 'Current Dorm',
   unitNumber: typeof rental.unitId === 'object' ? rental.unitId.roomNumber : 'Assigned Unit',
   contractDuration: 'Current Lease',
   leaseEndDate: formatDate(rental.actualMoveOutDate ?? rental.expectedMoveOutDate),
+  allowTransfer: typeof rental.facilityId === 'object' ? rental.facilityId.allowTransfer : false,
 });
 
 const ProfileSwitcher = () => {
@@ -232,14 +205,10 @@ const ProfileSwitcher = () => {
 
       if (applicationsResponse.status === 'fulfilled') {
         const fetchedApplications = getDataArray<ApplicationSummary>(applicationsResponse.value);
-        const approvedApplication = fetchedApplications.find(
-          (application) => application.status === 'approved',
-        );
 
         setApplications(
           fetchedApplications.filter((application) => application.status !== 'approved'),
         );
-        if (approvedApplication) setCurrentDorm(getApprovedDormDetails(approvedApplication));
       }
     };
 
@@ -289,6 +258,7 @@ const ProfileSwitcher = () => {
                         unitNumber={currentDorm.unitNumber}
                         contractDuration={currentDorm.contractDuration}
                         leaseEndDate={currentDorm.leaseEndDate}
+                        allowTransfer={currentDorm.allowTransfer}
                         verified={verified}
                       />
                     ) : (

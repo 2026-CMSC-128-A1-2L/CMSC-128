@@ -142,6 +142,14 @@ const SideBarLandlord = ({
     onItemClick ? onItemClick(item.key) : navigate(item.route);
   };
 
+  const handleAddListingClick: MouseEventHandler<HTMLButtonElement> = (event) => {
+    if (onAddListing) {
+      onAddListing(event);
+      return;
+    }
+    navigate('/landlord/add-building');
+  };
+
   const updateProfileMenuPosition = useCallback(() => {
     const profileButton = profileButtonRef.current;
     if (!profileButton) return;
@@ -270,7 +278,7 @@ const SideBarLandlord = ({
             {collapsed ? (
               <button
                 type="button"
-                onClick={onAddListing}
+                onClick={handleAddListingClick}
                 aria-label="Add new listing"
                 className="flex h-[36px] w-[36px] items-center justify-center rounded-full bg-[#096c5b] text-white transition-colors hover:bg-[#075a4c] dark:bg-[#12342e] dark:text-[#72cbb8] dark:hover:bg-[#1f3a34] cursor-pointer"
               >
@@ -279,7 +287,7 @@ const SideBarLandlord = ({
             ) : (
               <button
                 type="button"
-                onClick={onAddListing}
+                onClick={handleAddListingClick}
                 className="flex w-full cursor-pointer items-center overflow-hidden rounded-[100px] bg-[#f0f0f0] pl-[17px] pr-[12px] transition-colors duration-200 ease-in-out hover:bg-[#e6e6e6] dark:bg-[#242526] dark:hover:bg-[#2d302f]"
               >
                 <span className="flex flex-1 items-start overflow-hidden py-[10px]">

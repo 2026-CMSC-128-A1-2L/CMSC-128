@@ -13,6 +13,7 @@ export type SubmittedDocument = {
 
 export type Tenant = {
   id: string;
+  userId?: string;
   fullName: string;
   displayName: string;
   email: string;

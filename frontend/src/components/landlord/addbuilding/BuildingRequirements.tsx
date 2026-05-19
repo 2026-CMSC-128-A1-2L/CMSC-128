@@ -135,11 +135,11 @@ const DocumentCard: FunctionComponent<DocumentCardProps> = ({
             <div className="w-11 h-11 rounded-lg border border-gray-200 dark:border-[#303331] bg-gray-50 dark:bg-[#141515] flex items-center justify-center shrink-0">
               <Icon
                 icon="material-symbols:image-outline"
-                className="w-8 h-8 text-gray-500 dark:text-[#a4acba]"
+                className="w-8 h-8 text-[#64748b] dark:text-[#a4acba]"
               />
             </div>
             <div className="flex flex-col">
-              <span className="font-semibold text-xs text-gray-800 dark:text-[#d7e0ef] truncate max-w-[200px]">
+              <span className="font-semibold text-xs text-[#1f2937] dark:text-[#d7e0ef] truncate max-w-[200px]">
                 {file.name}
               </span>
               <span className="text-xs text-gray-400 dark:text-[#6b7280] font-medium mt-0.5">
