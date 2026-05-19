@@ -68,7 +68,6 @@ const Filter: FunctionComponent<FilterCriteriaProps> = ({
 
   const handleApply = () => {
     setFilterCriteria({ minPrice, maxPrice, pax, propertyType, selectedEssentials, distance });
-    console.log('Applied Filter Criteria:', { minPrice, maxPrice, pax, propertyType, selectedEssentials, distance });
     onClose();
   };
 
