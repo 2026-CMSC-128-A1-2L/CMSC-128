@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import AtlasLogo from '../../../assets/logo_atlas_text.svg?react';
-import AtlasLogoDark from '../../../assets/admin/atlas_worded_logo.svg?react';
 import SideBarAdminButton from './SideBarAdminButton';
 import SideBarAdminMessagesView, { type MessageItem } from './SideBarAdminMessagesView';
 import { useTheme } from '../../pages/utilities/DarkMode';
@@ -282,11 +281,10 @@ const SideBarAdmin = ({
       ) : (
         <div className="flex min-h-screen w-full flex-col items-center gap-[32px] pt-[24px] pb-[30px]">
           <div className="flex h-[60px] w-[128px] items-center justify-center overflow-hidden">
-            {isDark ? (
-              <AtlasLogoDark className="h-full w-full" aria-label="Atlas" />
-            ) : (
-              <AtlasLogo className="h-full w-full" aria-label="Atlas" />
-            )}
+            <AtlasLogo
+              className={`h-full w-full ${isDark ? 'fill-white' : ''}`}
+              aria-label="Atlas"
+            />
           </div>
 
           <nav className="flex w-full flex-col gap-[12px]">
