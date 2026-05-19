@@ -11,6 +11,8 @@ export type DormCardData = {
   location: string;
   coordinates?: { lat: number; long: number };
   image: string;
+  propertyType: string;                  // ← new
+  isAcceptingApplications: boolean;      // ← new
   room_types: {
     id?: string;
     pax: string;
@@ -88,7 +90,8 @@ function mapToCardData(facility: FacilityItem): DormCardData {
     image,
     rating,
     price,
-    room_types: roomTypes,
+    room_types: roomTypes,propertyType: (facility as { type?: string }).type ?? 'Dormitory',         
+    isAcceptingApplications: (facility as { isAcceptingApplications?: boolean }).isAcceptingApplications ?? true,                                             // ← new
   };
 }
 

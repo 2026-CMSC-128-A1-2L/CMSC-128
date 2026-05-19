@@ -1,4 +1,4 @@
-﻿import { type FunctionComponent, useEffect, useRef, useState } from 'react';
+﻿import { type FunctionComponent, useEffect, useMemo, useRef, useState } from 'react';
 import { Icon } from '@iconify/react';
 import { useSearchParams } from 'react-router-dom';
 import SideBar from '../../../components/user/SideBar';
@@ -274,9 +274,11 @@ const HomePage: FunctionComponent = () => {
     minPrice: 0,
     maxPrice: 30000,
     pax: 'Any' as number | 'Any',
-    propertyType: 'Dormitory',
+    propertyType: 'Any',
     selectedEssentials: [] as string[],
     distance: 1,
+    minRating: 0,                  // ← new
+    acceptingOnly: false,          // ← new
   });
 
   // Real data from the backend
@@ -296,20 +298,48 @@ const HomePage: FunctionComponent = () => {
   // Apply filter criteria to backend data
   // TODO: extend with rating, distance, and tags once available in DormCardData
   const filterApplied = facilities.filter((dorm) => {
+  // Price
   const priceOk =
     dorm.price.min >= filterCriteria.minPrice &&
     dorm.price.max <= filterCriteria.maxPrice;
 
+  // Distance
   const distanceOk = dorm.coordinates
-    ? haversineKm(
-        UPLB.lat, UPLB.lng,
-        dorm.coordinates.lat, dorm.coordinates.long,
-      ) <= filterCriteria.distance
-    : true; // gracefully exclude-less if coords are missing
+    ? haversineKm(UPLB.lat, UPLB.lng, dorm.coordinates.lat, dorm.coordinates.long) <=
+      filterCriteria.distance
+    : true;
 
-  return priceOk && distanceOk;
+  // Pax — check if any room type can accommodate the requested pax
+  const paxOk =
+    filterCriteria.pax === 'Any' ||
+    dorm.room_types.some((r) => {
+      const roomPax = parseInt(r.pax, 10);
+      return !isNaN(roomPax) && roomPax >= (filterCriteria.pax as number);
+    });
+
+  // Property type
+  const TYPE_MAP: Record<string, string> = {
+    Apartment: 'apartment',
+    Dormitory: 'dormitory',
+    Transient: 'transient',
+    'Bed Spacer': 'bed-spacer',
+  };
+  const propertyTypeOk =
+    filterCriteria.propertyType === 'Any' ||
+    dorm.propertyType?.toLowerCase() ===
+      (TYPE_MAP[filterCriteria.propertyType] ?? filterCriteria.propertyType.toLowerCase());
+
+  // Rating
+  const ratingOk =
+    filterCriteria.minRating === 0 ||
+    parseFloat(dorm.rating) >= filterCriteria.minRating;
+
+  // Accepting applications
+  const acceptingOk =
+    !filterCriteria.acceptingOnly || dorm.isAcceptingApplications;
+
+  return priceOk && distanceOk && paxOk && propertyTypeOk && ratingOk && acceptingOk;
 });
-
   // Apply search on top of the filtered results
   const isSearching = searchTerm.trim().length > 0;
   const filteredDorms = isSearching
@@ -323,7 +353,15 @@ const HomePage: FunctionComponent = () => {
   // Category slices — swap for real filtered endpoints later
   const pasaloDorms = filterApplied.slice(0, 10);
   const popularDorms = filterApplied.slice(0, 10);
-  const nearDorms = filterApplied.slice(0, 10);
+  const nearDorms = useMemo(() => {
+  return [...filterApplied]
+    .filter((d) => d.coordinates)
+    .sort((a, b) =>
+      haversineKm(UPLB.lat, UPLB.lng, a.coordinates!.lat, a.coordinates!.long) -
+      haversineKm(UPLB.lat, UPLB.lng, b.coordinates!.lat, b.coordinates!.long),
+    )
+    .slice(0, 10);
+}, [filterApplied]);
   const mayLikeDorms = filterApplied.slice(0, 10);
 
   const CATEGORY_DATA: Record<NonNullable<ViewAllCategory>, DormCardData[]> = {

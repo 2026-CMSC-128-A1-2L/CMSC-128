@@ -11,6 +11,8 @@ interface FilterCriteriaProps {
     propertyType: string;
     selectedEssentials: string[];
     distance: number;
+    minRating: number;         
+    acceptingOnly: boolean;    
   };
   setFilterCriteria: (criteria: FilterCriteriaProps['filterCriteria']) => void;
   onClose: () => void;
@@ -30,7 +32,8 @@ const Filter: FunctionComponent<FilterCriteriaProps> = ({
     filterCriteria.selectedEssentials,
   );
   const [distance, setDistance] = useState(filterCriteria.distance);
-
+  const [minRating, setMinRating] = useState(filterCriteria.minRating);
+  const [acceptingOnly, setAcceptingOnly] = useState(filterCriteria.acceptingOnly);
   useEffect(() => {
     console.log(filterCriteria);
   }, [filterCriteria]);
@@ -44,6 +47,8 @@ const Filter: FunctionComponent<FilterCriteriaProps> = ({
     setPropertyType('Dormitory');
     setSelectedEssentials([]);
     setDistance(1);
+    setMinRating(0);             
+    setAcceptingOnly(false);     
   };
 
   const handleMinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,7 +72,7 @@ const Filter: FunctionComponent<FilterCriteriaProps> = ({
   };
 
   const handleApply = () => {
-    setFilterCriteria({ minPrice, maxPrice, pax, propertyType, selectedEssentials, distance });
+    setFilterCriteria({ minPrice, maxPrice, pax, propertyType, selectedEssentials, distance , minRating, acceptingOnly }); // ← include new criteria
     console.log('Applied Filter Criteria:', { minPrice, maxPrice, pax, propertyType, selectedEssentials, distance });
     onClose();
   };
@@ -222,7 +227,47 @@ const Filter: FunctionComponent<FilterCriteriaProps> = ({
           <b className="text-darkgreen text-num-14 dark:text-[#edf6f4]">Essentials</b>
           <Tags selected={selectedEssentials} onChange={setSelectedEssentials} />
         </div>
+{/* Min Rating */}
+<div className="w-full flex flex-col gap-4">
+  <b className="text-darkgreen text-num-14 dark:text-[#edf6f4]">Minimum Rating</b>
+  <div className="flex items-center gap-2">
+    {[0, 1, 2, 3, 4, 5].map((star) => (
+      <button
+        key={star}
+        onClick={() => setMinRating(star)}
+        className={`flex-1 flex flex-col items-center gap-1 py-2 rounded-num-12 border border-solid transition-all cursor-pointer
+          ${
+            minRating === star
+              ? 'bg-lightcyan/45 border-teal text-teal dark:bg-[#12342e] dark:border-[#72cbb8] dark:text-[#72cbb8]'
+              : 'bg-white border-whitesmoke text-dimgray hover:border-teal/50 dark:bg-[#141515] dark:border-[#303331] dark:text-[#a4acba]'
+          }`}
+      >
+        <Icon icon="solar:star-bold" className="w-4 h-4" />
+        <span className="text-[0.6rem] font-bold">{star === 0 ? 'Any' : `${star}+`}</span>
+      </button>
+    ))}
+  </div>
+</div>
 
+{/* Accepting Applications */}
+<div className="w-full flex items-center justify-between py-2">
+  <div className="flex flex-col gap-0.5">
+    <b className="text-black text-num-14 dark:text-[#edf6f4]">Accepting Applications</b>
+    <span className="text-[0.7rem] text-dimgray dark:text-[#a4acba]">
+      Show only listings currently open
+    </span>
+  </div>
+  <button
+    onClick={() => setAcceptingOnly((prev) => !prev)}
+    className={`relative w-12 h-6 rounded-full transition-colors border-none cursor-pointer
+      ${acceptingOnly ? 'bg-teal dark:bg-[#72cbb8]' : 'bg-whitesmoke dark:bg-[#303331]'}`}
+  >
+    <span
+      className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow transition-all
+        ${acceptingOnly ? 'left-7' : 'left-1'}`}
+    />
+  </button>
+</div>
         {/* Distance */}
         <div className="w-full flex flex-col gap-4 pb-4">
           <b className="text-teal text-[1.1rem] dark:text-[#72cbb8]">Distance from Campus</b>
