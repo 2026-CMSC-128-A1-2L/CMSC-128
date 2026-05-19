@@ -141,7 +141,7 @@ const UserLanding: FunctionComponent = () => {
               </div>
               <div className="self-stretch flex items-center gap-12 text-center text-teal-200">
                 <div className="self-stretch flex items-center justify-center py-0 px-1">
-                  <b className="h-[35px] w-[141.6px] relative tracking-num--0_01 flex items-center justify-center shrink-0">
+                  <b className="h-[35px] w-fit relative tracking-num--0_01 flex items-center justify-center shrink-0">
                     <Link to={listingsDestination}>{listingsLabel}</Link>
                   </b>
                 </div>
