@@ -201,10 +201,12 @@ const UserLanding: FunctionComponent = () => {
                 <b className="relative tracking-num--0_01 text-white">Hassle-Free</b>
               </div>
               <div className="self-stretch flex flex-col items-end py-16 px-0 z-4 shrink-0 text-[160px] font-buhun-retro-two-free">
-                <div className="w-[577px] relative tracking-[0.04em] text-transparent bg-clip-text! [background:linear-gradient(180deg,#5dc2a8_27.88%,#0c8873_84.13%)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] flex items-center justify-center">
+                <div
+                  className="w-[577px] relative tracking-[0.04em] text-transparent bg-clip-text! [background:linear-gradient(180deg,#5dc2a8_27.88%,#0c8873_84.13%)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] flex items-center justify-center"
+                  style={{ fontFamily: 'MyFont, sans-serif' }}
+                >
                   ATLAS
-                </div>
-                <div className="relative text-[40px] font-semibold font-lora text-transparent bg-clip-text! [background:linear-gradient(180deg,#5dc2a8_27.88%,#0c8873_84.13%)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] text-right">
+                </div>                <div className="relative text-[40px] font-semibold font-lora text-transparent bg-clip-text! [background:linear-gradient(180deg,#5dc2a8_27.88%,#0c8873_84.13%)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] text-right">
                   Accommodation Tracking <br />
                   and Lodging Allocation System
                 </div>
