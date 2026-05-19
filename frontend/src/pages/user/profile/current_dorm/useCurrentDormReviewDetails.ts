@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import placeholderImage from '../../../../../assets/one_sapphire_place.png';
+import placeholderImage from '../../../../../assets/one_sapphire_place.webp';
 import { ApplicationService } from '../../../../service/ApplicationService';
 import { FacilityService } from '../../../../service/FacilityService';
 import { UserService } from '../../../../service/UserService';

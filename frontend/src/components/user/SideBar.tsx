@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import AtlasLogoText from '../../../assets/logo_atlas_text.svg?react';
-import AtlasLogoMin from '../../../assets/atlas logo (for white bg).png';
+import AtlasLogoMin from '../../../assets/footer_logo.svg?react';
 import SideBarButton, { type SideBarButtonState } from './SideBarButton';
 import { useAuthStore } from '../../store/useAuthStore';
 import UserMenuPopup from './UserMenuPopup';
@@ -258,7 +258,7 @@ const SideBar = ({
 
         <div className="flex items-center justify-center px-4 w-full">
           {collapsed ? (
-            <img src={AtlasLogoMin} className="w-7 h-7" aria-label="Atlas" />
+            <AtlasLogoMin className="w-7 h-7 fill-[#2d3748] dark:fill-[#d7e0ef]" aria-label="Atlas" />
           ) : (
             <AtlasLogoText className="w-32 h-auto fill-[#2d3748] dark:fill-[#d7e0ef]" />
           )}

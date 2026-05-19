@@ -9,7 +9,7 @@ const Footer: FunctionComponent = () => {
       <div className="flex w-full items-center justify-center px-3 sm:px-6 lg:px-10 py-[12px] lg:py-4">
         <div className="flex items-center flex-nowrap justify-center gap-x-3 sm:gap-x-6 lg:gap-x-20">
           <div className="hidden sm:flex items-center gap-2 shrink-0">
-            <LogoFooter className="h-6 w-6 lg:h-9 lg:w-9 shrink-0 fill-[#173B2F]" />
+            <LogoFooter className="h-6 w-6 lg:h-9 lg:w-9 shrink-0 fill-[#173B2F] dark:fill-[#d7e0ef]" />
             <div className="flex items-center gap-1 sm:gap-3">
               <div className="flex items-center gap-1">
                 <Icon icon="ph:copyright-bold" className="w-4 h-4 lg:w-6 lg:h-6 shrink-0" />

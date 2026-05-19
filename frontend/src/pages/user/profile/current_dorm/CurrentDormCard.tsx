@@ -1,5 +1,5 @@
 import { Icon } from '@iconify/react';
-import placeholder from '../../../../../assets/one_sapphire_place.png';
+import placeholder from '../../../../../assets/one_sapphire_place.webp';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import DefaultAvatar from '../../../../../assets/default_avatar.svg';
