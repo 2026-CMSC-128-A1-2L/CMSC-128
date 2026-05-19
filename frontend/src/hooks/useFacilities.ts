@@ -9,6 +9,7 @@ export type DormCardData = {
   rating: string;
   price: { min: number; max: number };
   location: string;
+  coordinates?: { lat: number; long: number };
   image: string;
   room_types: {
     id?: string;
@@ -83,6 +84,7 @@ function mapToCardData(facility: FacilityItem): DormCardData {
     id: facility.id as string,
     name: facility.name,
     location: facility.location.text,
+    coordinates: facility.location.coordinates ?? undefined, // ← add this
     image,
     rating,
     price,
