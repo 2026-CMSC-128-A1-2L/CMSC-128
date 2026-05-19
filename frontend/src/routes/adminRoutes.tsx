@@ -13,8 +13,8 @@ const adminRoutes = [
   <Route key="announce" path="/admin/announce" element={<Announcement />} />,
   <Route key="applications" path="/admin/applications" element={<Applications />} />,
   <Route key="listings" path="/admin/listings" element={<Listings />} />,
-  <Route key="messages" path="/admin/messages" element={<Messages />} />,
-  <Route key="removalRequests" path="/admin/removal-requests" element={<RemovalRequests />} />,
+  <Route key="messages" path="/direct-messages" element={<Messages />} />,
+  <Route key="messages-user" path="/direct-messages/:userId" element={<Messages />} />,
 ];
 
 export default adminRoutes;

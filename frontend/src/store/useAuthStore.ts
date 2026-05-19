@@ -3,6 +3,7 @@ import { create } from 'zustand';
 import { api } from '../service/axiosInstance';
 
 type User = {
+  _id: string;
   auth: {
     google: string[];
   };

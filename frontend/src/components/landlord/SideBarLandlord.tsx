@@ -8,6 +8,7 @@ import SideBarLandlordButton from './SideBarLandlordButton';
 import { useTheme } from '../../pages/utilities/DarkMode';
 import { useAuthStore } from '../../store/useAuthStore';
 import UserMenuPopup from '../user/UserMenuPopup';
+import { useUnreadCommunicationCount } from '../../hooks/useUnreadCommunicationCount';
 
 export type SideBarLandlordItemKey =
   | 'dashboard'
@@ -51,7 +52,7 @@ const navItems: Array<{
     key: 'messages',
     label: 'Messages',
     icon: 'ic:outline-mail',
-    route: '/landlord/messages',
+    route: '/direct-messages',
   },
   {
     key: 'properties',
@@ -117,6 +118,7 @@ const SideBarLandlord = ({
 
   const authUser = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
+  const unreadCommunicationCount = useUnreadCommunicationCount();
 
   const user = {
     name: authUser ? `${authUser.firstName} ${authUser.lastName}` : 'User',
@@ -347,14 +349,26 @@ const SideBarLandlord = ({
                       ].join(' ')}
                     >
                       <Icon icon={item.icon} className="h-[20px] w-[20px] cursor-pointer" />
+                      {item.key === 'messages' && unreadCommunicationCount > 0 && (
+                        <span className="absolute right-[18px] top-[6px] flex h-5 min-w-5 items-center justify-center rounded-full bg-[#d94141] px-1.5 text-[10px] font-bold leading-none text-white shadow-sm">
+                          {unreadCommunicationCount > 99 ? '99+' : unreadCommunicationCount}
+                        </span>
+                      )}
                     </button>
                   ) : (
-                    <SideBarLandlordButton
-                      icon={item.icon}
-                      label={item.label}
-                      state={state}
-                      onClick={() => handleItemClick(item)}
-                    />
+                    <div className="relative">
+                      <SideBarLandlordButton
+                        icon={item.icon}
+                        label={item.label}
+                        state={state}
+                        onClick={() => handleItemClick(item)}
+                      />
+                      {item.key === 'messages' && unreadCommunicationCount > 0 && (
+                        <span className="absolute right-[18px] top-1/2 flex h-5 min-w-5 -translate-y-1/2 items-center justify-center rounded-full bg-[#d94141] px-1.5 text-[10px] font-bold leading-none text-white shadow-sm">
+                          {unreadCommunicationCount > 99 ? '99+' : unreadCommunicationCount}
+                        </span>
+                      )}
+                    </div>
                   )}
                 </div>
               );

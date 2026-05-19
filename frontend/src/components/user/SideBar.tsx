@@ -9,6 +9,7 @@ import { useAuthStore } from '../../store/useAuthStore';
 import UserMenuPopup from './UserMenuPopup';
 import SignInPopUp from '../general/SignInPopUp';
 import { useTheme } from '../../pages/utilities/DarkMode';
+import { useUnreadCommunicationCount } from '../../hooks/useUnreadCommunicationCount';
 
 export type SideBarItemKey =
   | 'home'
@@ -99,6 +100,7 @@ const SideBar = ({
   const profileMenuRef = useRef<HTMLDivElement>(null);
   const { isDark, toggle } = useTheme();
   const { user, logout } = useAuthStore();
+  const unreadCommunicationCount = useUnreadCommunicationCount();
 
   const username = user ? `${user.firstName} ${user.lastName}` : null;
 
@@ -362,13 +364,25 @@ const SideBar = ({
                       icon={state === 'clicked' ? item.iconFill : item.iconOut}
                       className="w-7 h-7"
                     />
+                    {item.key === 'messages' && unreadCommunicationCount > 0 && (
+                      <span className="absolute right-4 top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#d94141] px-1.5 text-[10px] font-bold leading-none text-white shadow-sm">
+                        {unreadCommunicationCount > 99 ? '99+' : unreadCommunicationCount}
+                      </span>
+                    )}
                   </div>
                 ) : (
-                  <SideBarButton
-                    icon={state === 'clicked' ? item.iconFill : item.iconOut}
-                    label={item.label}
-                    state={state}
-                  />
+                  <div className="relative">
+                    <SideBarButton
+                      icon={state === 'clicked' ? item.iconFill : item.iconOut}
+                      label={item.label}
+                      state={state}
+                    />
+                    {item.key === 'messages' && unreadCommunicationCount > 0 && (
+                      <span className="absolute right-5 top-1/2 flex h-5 min-w-5 -translate-y-1/2 items-center justify-center rounded-full bg-[#d94141] px-1.5 text-[10px] font-bold leading-none text-white shadow-sm">
+                        {unreadCommunicationCount > 99 ? '99+' : unreadCommunicationCount}
+                      </span>
+                    )}
+                  </div>
                 )}
               </Link>
             );

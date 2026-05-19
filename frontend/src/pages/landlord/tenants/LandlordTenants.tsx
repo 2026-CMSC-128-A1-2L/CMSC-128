@@ -85,7 +85,7 @@ const LandlordTenants = () => {
   const handleTenantAction = (tenant: Tenant, action: ManagerAction) => {
     setOpenMenuId(null);
     if (action === 'message') {
-      navigate('/landlord/messages');
+      navigate('/direct-messages');
       return;
     }
     if (action === 'report') {

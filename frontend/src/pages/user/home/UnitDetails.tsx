@@ -448,6 +448,9 @@ const UnitDetails: FunctionComponent = () => {
     facility.landlord?.createdAt != null
       ? new Date(facility.landlord.createdAt).getFullYear().toString()
       : "N/A";
+  const landlordMessagePath = facility.landlord?.id
+    ? `/direct-messages/${facility.landlord.id}`
+    : "/direct-messages";
   const detailTags = [
     facility.allowVisit ? "Visits Allowed" : "Visits Unavailable",
     facility.allowTransfer ? "Transfers Allowed" : "Transfers Unavailable",
@@ -1193,7 +1196,7 @@ const UnitDetails: FunctionComponent = () => {
                 </div>
                 <div className="flex flex-col gap-2 text-white font-poppins text-sm">
                   <Link
-                    to="/direct-messages"
+                    to={landlordMessagePath}
                     onClick={handleAuthenticatedLinkClick}
                     className="rounded-lg bg-darkslategray-200 flex items-center justify-center gap-2 py-2 shadow"
                   >
