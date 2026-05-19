@@ -13,7 +13,7 @@ export const CreateBillingBodySchema = z.object({
   ),
   paymentMethod: z.array(
     z.object({
-      method: z.enum(['gcash', 'bank_transfer']),
+      method: z.enum(['gcash', 'bank_transfer', 'cash']),
       qr: z.array(
         z.object({
           docId: z.string(),
@@ -71,7 +71,7 @@ export const UpdateBillingPaymentRequestBodySchema = z.object({
 
 export const SubmitBillingPaymentArgumentsSchema = z.object({
   file: z.string(),
-  paymentMethod: z.enum(['gcash', 'bank_transfer']),
+  paymentMethod: z.enum(['gcash', 'bank_transfer', 'cash']),
 });
 
 export const VerifyBillingRequestBodySchema = z.object({

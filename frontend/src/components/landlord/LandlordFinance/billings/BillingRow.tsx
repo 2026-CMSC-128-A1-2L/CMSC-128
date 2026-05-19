@@ -1,5 +1,6 @@
 import { type FunctionComponent, useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
+import { Icon } from "@iconify/react";
 import type { Billing } from "../types/billing";
 
 interface BillingRowProps {
@@ -8,6 +9,7 @@ interface BillingRowProps {
   tenantName?: string;
   onStatusChange?: (id: string, status: Billing["paymentStatus"]) => void;
   onEditClick?: (billing: Billing) => void;
+  onReceiptClick?: (billing: Billing, roomNumber: string | number, tenantName: string) => void;
   isOpen?: boolean;
   onToggle?: (id: string) => void;
 }
@@ -51,6 +53,7 @@ const BillingRow: FunctionComponent<BillingRowProps> = ({
   tenantName = "",
   onStatusChange,
   onEditClick,
+  onReceiptClick,
   isOpen = false,
   onToggle,
 }) => {
@@ -72,6 +75,22 @@ const BillingRow: FunctionComponent<BillingRowProps> = ({
     billing.breakdown.find((b) => b.name === "Misc. Fees")?.amount || 0;
   const paidAmount = billing.paidAmount || 0;
 
+  // Count submitted receipt files.
+  // Backend shape: documents[].files[] — each document entry has a files array of key strings.
+  const receiptCount = Array.isArray(billing.documents)
+    ? billing.documents.reduce((total: number, d: any) => {
+        if (!d) return total;
+        if (typeof d === 'string') return d ? total + 1 : total;
+        // Primary shape: { files: string[] }
+        if (Array.isArray(d.files)) return total + d.files.filter(Boolean).length;
+        // Fallback single-file shapes
+        const key = d.file ?? d.key ?? d.fileKey ?? d.fileId ?? d.path ?? d.url ?? '';
+        return key ? total + 1 : total;
+      }, 0)
+    : 0;
+
+  const hasReceipts = receiptCount > 0;
+
   useEffect(() => {
     if (isOpen && buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect();
@@ -87,7 +106,7 @@ const BillingRow: FunctionComponent<BillingRowProps> = ({
     const handleScroll = () => {
       onToggle?.(billing._id);
     };
-    window.addEventListener("scroll", handleScroll, true); // capture phase catches all scroll events
+    window.addEventListener("scroll", handleScroll, true);
     return () => window.removeEventListener("scroll", handleScroll, true);
   }, [isOpen, onToggle, billing._id]);
 
@@ -106,6 +125,11 @@ const BillingRow: FunctionComponent<BillingRowProps> = ({
   const handleToggle = (e: React.MouseEvent) => {
     e.stopPropagation();
     onToggle?.(billing._id);
+  };
+
+  const handleReceiptClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onReceiptClick?.(billing, roomNumber, tenantName);
   };
 
   const displayStatus = selectedStatus
@@ -135,7 +159,34 @@ const BillingRow: FunctionComponent<BillingRowProps> = ({
       <td className={`${tdBase} font-medium`}>{php(billing.totalAmount)}</td>
       <td className={tdBase}>{php(paidAmount)}</td>
 
-      {/* Status — stopPropagation so clicking doesn't open the edit popup */}
+      {/* Receipt column */}
+      <td className={tdBase} onClick={(e) => e.stopPropagation()}>
+        <div className="flex items-center justify-center">
+          <button
+            onClick={handleReceiptClick}
+            title={hasReceipts ? `${receiptCount} receipt${receiptCount > 1 ? 's' : ''} submitted` : 'No receipts yet'}
+            className={`relative w-[36px] h-[36px] rounded-xl flex items-center justify-center transition-all duration-200 cursor-pointer ${
+              hasReceipts
+                ? 'bg-lightcyan dark:bg-[#12342e] hover:bg-teal/10 dark:hover:bg-[#1a4a3e]'
+                : 'bg-whitesmoke-200 dark:bg-[#1f2121] opacity-50 cursor-default'
+            }`}
+          >
+            <Icon
+              icon="solar:receipt-bold"
+              className={`w-4 h-4 ${
+                hasReceipts ? 'text-teal dark:text-[#72cbb8]' : 'text-gray-100 dark:text-[#6b7280]'
+              }`}
+            />
+            {hasReceipts && (
+              <span className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-darkslategray-200 dark:bg-[#0c8873] text-white text-[8px] font-bold font-inter flex items-center justify-center leading-none">
+                {receiptCount}
+              </span>
+            )}
+          </button>
+        </div>
+      </td>
+
+      {/* Status */}
       <td className={tdBase} onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-center">
           <button

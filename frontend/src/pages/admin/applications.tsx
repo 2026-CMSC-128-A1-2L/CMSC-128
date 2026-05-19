@@ -1,66 +1,72 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { Icon } from "@iconify/react";
-import SideBarAdmin from "../../components/admin/SideBarAdmin";
-import AdminPageTransition from "../../components/admin/AdminPageTransition";
-import PageBackground from "../../components/general/PageBackground";
-import AdminPagination from "../../components/admin/AdminPagination";
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Icon } from '@iconify/react';
+import { motion, AnimatePresence } from 'framer-motion';
+import SideBarAdmin from '../../components/admin/SideBarAdmin';
+import AdminPageTransition from '../../components/admin/AdminPageTransition';
+import PageBackground from '../../components/general/PageBackground';
+import AdminPagination from '../../components/admin/AdminPagination';
+import AdminFilterBar from '../../components/admin/AdminFilterBar';
 import ApplicantReviewModal, {
   type VerificationApplicant,
   type VerificationDocument,
   getDisplayName,
   formatRole,
-} from "../../components/admin/ApplicantReviewModal";
-import { DocumentService } from "../../service/DocumentService";
-import { UserService } from "../../service/UserService";
+} from '../../components/admin/ApplicantReviewModal';
+import { DocumentService } from '../../service/DocumentService';
+import { UserService } from '../../service/UserService';
 
-const tableHeaders = [
-  "Name",
-  "Email",
-  "Role",
-  "Submitted Docs",
-  "Status",
-  "Details",
-];
+const tableHeaders = ['Name', 'Email', 'Role', 'Submitted Docs', 'Status', 'Details'];
 
 const getApplicationStatusLabel = (user: VerificationApplicant) => {
-  if (user.verificationStatus === "submitted") return "For Review";
-  if (user.verificationStatus === "rejected") return "Rejected";
-  if (user.verificationStatus === "approved") return "Approved";
-  return "Pending";
+  if (user.verificationStatus === 'submitted') return 'For Review';
+  if (user.verificationStatus === 'rejected') return 'Rejected';
+  if (user.verificationStatus === 'approved') return 'Approved';
+  return 'Pending';
 };
 
 function Applications() {
   const [applicants, setApplicants] = useState<VerificationApplicant[]>([]);
-  const [selectedApplicantId, setSelectedApplicantId] = useState<string | null>(
-    null,
-  );
-  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedApplicantId, setSelectedApplicantId] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [actionMessage, setActionMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [rejectionMessages, setRejectionMessages] = useState<
-    Record<string, string>
-  >({});
-  const [studentNumber, setStudentNumber] = useState("");
-  const [degreeProgram, setDegreeProgram] = useState("");
+  const [rejectionMessages, setRejectionMessages] = useState<Record<string, string>>({});
+  const [studentNumber, setStudentNumber] = useState('');
+  const [degreeProgram, setDegreeProgram] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const itemsPerPage = 10;
 
-  const selectedApplicant =
-    applicants.find((u) => u._id === selectedApplicantId) ?? null;
+  const [roleFilter, setRoleFilter] = useState<string[]>([]);
+  const [verifStatusFilter, setVerifStatusFilter] = useState<string[]>([]);
+
+  const selectedApplicant = applicants.find((u) => u._id === selectedApplicantId) ?? null;
 
   const filteredApplicants = useMemo(() => {
+    let result = applicants;
+
+    if (roleFilter.length > 0) {
+      result = result.filter((u) => roleFilter.includes(u.userType ?? ''));
+    }
+
+    if (verifStatusFilter.length > 0) {
+      result = result.filter((u) => verifStatusFilter.includes(u.verificationStatus));
+    }
+
     const q = searchQuery.trim().toLowerCase();
-    if (!q) return applicants;
-    return applicants.filter((u) =>
-      [getDisplayName(u), u.emails?.[0], u.userType, u.address, u.contact]
-        .filter(Boolean)
-        .join(" ")
-        .toLowerCase()
-        .includes(q),
-    );
-  }, [applicants, searchQuery]);
+    if (q) {
+      result = result.filter((u) =>
+        [getDisplayName(u), u.emails?.[0], u.userType, u.address, u.contact]
+          .filter(Boolean)
+          .join(' ')
+          .toLowerCase()
+          .includes(q),
+      );
+    }
+
+    return result;
+  }, [applicants, searchQuery, roleFilter, verifStatusFilter]);
 
   const totalPages = Math.ceil(filteredApplicants.length / itemsPerPage);
   const paginatedApplicants = useMemo(() => {
@@ -72,9 +78,7 @@ function Applications() {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await UserService.getUsers<VerificationApplicant>({
-        verificationStatus: "submitted",
-      });
+      const response = await UserService.getUsers<VerificationApplicant>({});
       const users = response.data ?? [];
       setApplicants(users);
       setSelectedApplicantId((cur) =>
@@ -83,7 +87,7 @@ function Applications() {
           : (users[0]?._id ?? null),
       );
     } catch {
-      setError("Could not load verification applications.");
+      setError('Could not load verification applications.');
     } finally {
       setIsLoading(false);
     }
@@ -95,8 +99,8 @@ function Applications() {
 
   const openModal = (userId: string) => {
     setSelectedApplicantId(userId);
-    setStudentNumber("");
-    setDegreeProgram("");
+    setStudentNumber('');
+    setDegreeProgram('');
     setActionMessage(null);
     setIsModalOpen(true);
   };
@@ -109,9 +113,7 @@ function Applications() {
   const updateDocs = (documents: VerificationDocument[]) => {
     if (!selectedApplicant) return;
     setApplicants((cur) =>
-      cur.map((u) =>
-        u._id === selectedApplicant._id ? { ...u, documents } : u,
-      ),
+      cur.map((u) => (u._id === selectedApplicant._id ? { ...u, documents } : u)),
     );
   };
 
@@ -120,49 +122,42 @@ function Applications() {
     setActionMessage(null);
     setError(null);
     try {
-      const res = await DocumentService.acceptDocument(
-        "users",
-        selectedApplicant._id,
-        docId,
-      );
+      const res = await DocumentService.acceptDocument('users', selectedApplicant._id, docId);
       updateDocs(res.data ?? []);
-      setActionMessage("Document accepted.");
+      setActionMessage('Document accepted.');
     } catch {
-      setError("Could not accept this document.");
+      setError('Could not accept this document.');
     }
   };
 
   const handleRejectDocument = async (docId: string) => {
     if (!selectedApplicant) return;
-    const message =
-      rejectionMessages[docId]?.trim() || "Please resubmit a clearer document.";
+    const message = rejectionMessages[docId]?.trim() || 'Please resubmit a clearer document.';
     setActionMessage(null);
     setError(null);
     try {
       const res = await DocumentService.rejectDocument(
-        "users",
+        'users',
         selectedApplicant._id,
         docId,
         message,
       );
       updateDocs(res.data ?? []);
-      setActionMessage("Document rejected.");
+      setActionMessage('Document rejected.');
     } catch {
-      setError("Could not reject this document.");
+      setError('Could not reject this document.');
     }
   };
 
   const handleApproveApplicant = async () => {
     if (!selectedApplicant) return;
-    if (!selectedApplicant.documents.every((d) => d.status === "accepted")) {
-      setError("Accept all submitted documents before approving the user.");
+    if (!selectedApplicant.documents.every((d) => d.status === 'accepted')) {
+      setError('Accept all submitted documents before approving the user.');
       return;
     }
-    if (selectedApplicant.userType === "Student") {
+    if (selectedApplicant.userType === 'Student') {
       if (!/^[0-9]{9}$/.test(studentNumber.trim()) || !degreeProgram.trim()) {
-        setError(
-          "Enter the student number and degree program before approving a student.",
-        );
+        setError('Enter the student number and degree program before approving a student.');
         return;
       }
     }
@@ -171,20 +166,18 @@ function Applications() {
     try {
       await UserService.approveUser(
         selectedApplicant._id,
-        selectedApplicant.userType === "Student"
+        selectedApplicant.userType === 'Student'
           ? {
               studentNumber: studentNumber.trim(),
               degreeProgram: degreeProgram.trim(),
             }
           : undefined,
       );
-      setActionMessage(
-        `${getDisplayName(selectedApplicant)} has been verified.`,
-      );
+      setActionMessage(`${getDisplayName(selectedApplicant)} has been verified.`);
       await loadApplicants();
       closeModal();
     } catch {
-      setError("Could not approve this user.");
+      setError('Could not approve this user.');
     }
   };
 
@@ -194,15 +187,11 @@ function Applications() {
     setError(null);
     try {
       await UserService.rejectUser(selectedApplicant._id);
-      setActionMessage(
-        `${getDisplayName(selectedApplicant)} has been rejected.`,
-      );
+      setActionMessage(`${getDisplayName(selectedApplicant)} has been rejected.`);
       await loadApplicants();
       closeModal();
     } catch {
-      setError(
-        "Could not reject this user. Reject at least one document first.",
-      );
+      setError('Could not reject this user. Reject at least one document first.');
     }
   };
 
@@ -213,7 +202,7 @@ function Applications() {
       try {
         await DocumentService.downloadDocument(filePath);
       } catch {
-        setError("Could not download this document.");
+        setError('Could not download this document.');
       }
     }
   };
@@ -230,25 +219,60 @@ function Applications() {
             </h1>
 
             <div className="mt-6 rounded-xl bg-white dark:bg-[#141515] p-6 shadow-sm border border-transparent dark:border-[#303331]">
-              <div className="mb-4 flex items-center justify-between">
+              <div className="mb-4 flex items-center justify-between flex-wrap gap-3">
                 <h2 className="font-['Poppins'] text-[36px] font-bold text-[#001d18] dark:text-[#d7e0ef] drop-shadow-[0px_4px_4px_rgba(0,0,0,0.1)]">
                   Verification Applications
                 </h2>
-                <div className="flex h-9 w-75.75 items-center gap-2 rounded-full border border-[#d0d0d0] dark:border-[#303331] bg-white dark:bg-[#1f2022] px-4">
-                  <Icon
-                    icon="solar:magnifer-outline"
-                    className="h-4 w-4 text-[#7c8db5] dark:text-[#a4acba]"
+                <div className="flex items-center gap-3">
+                  <AdminFilterBar
+                    groups={[
+                      {
+                        id: 'role',
+                        label: 'Role',
+                        options: [
+                          { key: 'Student', label: 'Student' },
+                          { key: 'Landlord', label: 'Landlord' },
+                          { key: 'Manager', label: 'Manager' },
+                        ],
+                        selected: roleFilter,
+                        onChange: (keys) => {
+                          setRoleFilter(keys);
+                          setCurrentPage(1);
+                        },
+                      },
+                      {
+                        id: 'verifStatus',
+                        label: 'Status',
+                        options: [
+                          { key: 'pending', label: 'Pending' },
+                          { key: 'submitted', label: 'For Review' },
+                          { key: 'approved', label: 'Approved' },
+                          { key: 'rejected', label: 'Rejected' },
+                        ],
+                        selected: verifStatusFilter,
+                        onChange: (keys) => {
+                          setVerifStatusFilter(keys);
+                          setCurrentPage(1);
+                        },
+                      },
+                    ]}
                   />
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => {
-                      setSearchQuery(e.target.value);
-                      setCurrentPage(1);
-                    }}
-                    placeholder="Search"
-                    className="flex-1 bg-transparent font-['Poppins'] text-sm text-black dark:text-[#d7e0ef] outline-none placeholder:text-[#7c8db5] dark:placeholder:text-[#a4acba]"
-                  />
+                  <div className="flex h-9 w-60 items-center gap-2 rounded-full border border-[#d0d0d0] dark:border-[#303331] bg-white dark:bg-[#1f2022] px-4 focus-within:border-[#024338] focus-within:ring-2 focus-within:ring-[#024338]/20 transition-all duration-200">
+                    <Icon
+                      icon="solar:magnifer-outline"
+                      className="h-4 w-4 text-[#7c8db5] dark:text-[#a4acba]"
+                    />
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => {
+                        setSearchQuery(e.target.value);
+                        setCurrentPage(1);
+                      }}
+                      placeholder="Search"
+                      className="flex-1 bg-transparent font-['Poppins'] text-sm text-black dark:text-[#d7e0ef] outline-none placeholder:text-[#7c8db5] dark:placeholder:text-[#a4acba]"
+                    />
+                  </div>
                 </div>
               </div>
 
@@ -293,42 +317,52 @@ function Applications() {
                           colSpan={tableHeaders.length}
                           className="px-6 py-8 text-center dark:text-[#a4acba]"
                         >
-                          No submitted verification applications.
+                          No verification applications found.
                         </td>
                       </tr>
                     ) : (
-                      paginatedApplicants.map((row) => (
-                        <tr
-                          key={row._id}
-                          className="border-b border-[#f0f0f0] dark:border-[#303331] bg-white dark:bg-[#141515]"
-                        >
-                          <td className="px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black dark:text-[#d7e0ef]">
-                            {getDisplayName(row)}
-                          </td>
-                          <td className="px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black dark:text-[#d7e0ef]">
-                            {row.emails?.[0] ?? "No email"}
-                          </td>
-                          <td className="px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black dark:text-[#d7e0ef]">
-                            {formatRole(row.userType)}
-                          </td>
-                          <td className="px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black dark:text-[#d7e0ef]">
-                            {row.documents?.filter((d) => d.files.length > 0)
-                              .length ?? 0}
-                          </td>
-                          <td className="px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black dark:text-[#d7e0ef]">
-                            {getApplicationStatusLabel(row)}
-                          </td>
-                          <td className="px-6 py-3">
-                            <button
-                              type="button"
-                              onClick={() => openModal(row._id)}
-                              className="cursor-pointer rounded-lg bg-[#024338] px-5 py-2 font-['Poppins'] text-[16px] font-bold text-white"
-                            >
-                              View
-                            </button>
-                          </td>
-                        </tr>
-                      ))
+                      <AnimatePresence>
+                        {paginatedApplicants.map((row, index) => (
+                          <motion.tr
+                            key={row._id}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{
+                              opacity: 1,
+                              y: 0,
+                              transition: { delay: index * 0.05 },
+                            }}
+                            exit={{ opacity: 0, y: -20 }}
+                            className="border-b border-[#f0f0f0] dark:border-[#303331] bg-white dark:bg-[#141515]"
+                          >
+                            <td className="px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black dark:text-[#d7e0ef]">
+                              {getDisplayName(row)}
+                            </td>
+                            <td className="px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black dark:text-[#d7e0ef]">
+                              {row.emails?.[0] ?? 'No email'}
+                            </td>
+                            <td className="px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black dark:text-[#d7e0ef]">
+                              {formatRole(row.userType)}
+                            </td>
+                            <td className="px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black dark:text-[#d7e0ef]">
+                              {row.documents?.filter((d) => d.files.length > 0).length ?? 0}
+                            </td>
+                            <td className="px-6 py-3 font-['Poppins'] text-[16px] font-medium text-black dark:text-[#d7e0ef]">
+                              {getApplicationStatusLabel(row)}
+                            </td>
+                            <td className="px-6 py-3">
+                              <motion.button
+                                type="button"
+                                onClick={() => openModal(row._id)}
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                className="cursor-pointer rounded-lg bg-[#024338] px-5 py-2 font-['Poppins'] text-[16px] font-bold text-white transition-colors duration-200 hover:bg-[#096c5b]"
+                              >
+                                View
+                              </motion.button>
+                            </td>
+                          </motion.tr>
+                        ))}
+                      </AnimatePresence>
                     )}
                   </tbody>
                 </table>

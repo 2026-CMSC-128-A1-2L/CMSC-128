@@ -7,6 +7,13 @@
 @layer theme, base, components, utilities;
 @config "../tailwind.config.js";
 
+@font-face {
+  font-family: 'MyFont';
+  src: url('../assets/Buhun\ Retro\ Two\ FREE.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 html,
 body,
 #root {

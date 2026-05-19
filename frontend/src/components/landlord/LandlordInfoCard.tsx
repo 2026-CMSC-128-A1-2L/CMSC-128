@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { Icon } from '@iconify/react';
 import { Link } from 'react-router-dom';
 
@@ -12,6 +12,7 @@ export type LandlordInfo = {
   role: string;
   employees: string[];
   verified: boolean;
+  verificationStatus?: 'pending' | 'submitted' | 'rejected' | 'approved';
   photoUrl?: string;
 };
 
@@ -19,18 +20,26 @@ type LandlordInfoCardProps = {
   info: LandlordInfo;
   onEditContact?: () => void;
   onEditHomeAddress?: () => void;
-  verificationHref?: string;
-  activeTab: 'info' | 'verification';
-  setActiveTab: (tab: 'info' | 'verification') => void;
-  setContactNumber: any;
-  setHomeAddress: any;
-  setIsEditing: any;
-  isEditing: boolean;
-  setIsEditingAddress: any;
-  isEditingAddress: boolean;
+  activeTab?: 'info' | 'verification';
+  setActiveTab?: (tab: 'info' | 'verification') => void;
+  setContactNumber?: (contactNumber: string) => void;
+  setHomeAddress?: (homeAddress: string) => void;
+  setIsEditing?: (isEditing: boolean) => void;
+  isEditing?: boolean;
+  setIsEditingAddress?: (isEditingAddress: boolean) => void;
+  isEditingAddress?: boolean;
+  onSaveContact?: (contactNumber: string) => Promise<void> | void;
+  onSaveHomeAddress?: (homeAddress: string) => Promise<void> | void;
 };
 
 const PLACEHOLDER = '- - - - -';
+
+const getVerificationLabel = (info: LandlordInfo) => {
+  if (info.verified || info.verificationStatus === 'approved') return 'Verified';
+  if (info.verificationStatus === 'submitted') return 'For Review';
+  if (info.verificationStatus === 'rejected') return 'Rejected';
+  return 'Unverified';
+};
 
 type FieldProps = {
   label: string;
@@ -83,8 +92,6 @@ const LandlordInfoCard = ({
   info,
   onEditContact,
   onEditHomeAddress,
-  verificationHref = '/landlord/profile/verification',
-  activeTab,
   setActiveTab,
   setContactNumber,
   setHomeAddress,
@@ -92,21 +99,25 @@ const LandlordInfoCard = ({
   isEditing,
   setIsEditingAddress,
   isEditingAddress,
+  onSaveContact,
+  onSaveHomeAddress,
 }: LandlordInfoCardProps) => {
-  const handleSaveAddress = () => {
+  const handleSaveAddress = async () => {
     const cleaned = homeAddressOnEdit.trim().replace(/\s\s+/g, ' ');
-    setHomeAddress(cleaned);
-    setIsEditingAddress(false);
+    setHomeAddress?.(cleaned);
+    await onSaveHomeAddress?.(cleaned);
+    setIsEditingAddress?.(false);
   };
 
   // save changes and exit editing mode
-  const handleSave = () => {
+  const handleSave = async () => {
     if (contactNumberOnEdit.length !== 11) {
       return;
     }
     const newContact = contactNumberOnEdit;
-    setContactNumber(newContact);
-    setIsEditing(false);
+    setContactNumber?.(newContact);
+    await onSaveContact?.(newContact);
+    setIsEditing?.(false);
   };
 
   // redact contact number except for first 2 digits
@@ -118,6 +129,12 @@ const LandlordInfoCard = ({
   //stateful contact number variable to be used for input field
   const [contactNumberOnEdit, setContactNumberOnEdit] = useState(info.contactNumber ?? '');
   const [homeAddressOnEdit, setHomeAddressOnEdit] = useState(info.homeAddress ?? '');
+
+  useEffect(() => {
+    setContactNumberOnEdit(info.contactNumber ?? '');
+    setHomeAddressOnEdit(info.homeAddress ?? '');
+  }, [info.contactNumber, info.homeAddress]);
+
   return (
     <section className="flex flex-col gap-[24px] rounded-[16px] px-[32px] pt-[32px] pb-[24px]">
       <header className="flex flex-col items-start gap-[4px]">
@@ -207,14 +224,14 @@ const LandlordInfoCard = ({
             )}
           </Field>
 
-          {/* removed "to" component here, repaced with a div */}
-          <div
-            className="group flex flex-col items-start gap-[4px] rounded-[6px] transition-colors hover:bg-[#eaf6f2]/60 cursor-pointer"
-            onClick={() => setActiveTab('verification')}
+          <button
+            type="button"
+            className="group flex flex-col items-start gap-[4px] rounded-[6px] text-left transition-colors hover:bg-[#eaf6f2]/60 cursor-pointer"
+            onClick={() => setActiveTab?.('verification')}
           >
             <Field label="Verification Status">
               <span className="inline-flex items-center gap-[4px] text-[#096c5b] group-hover:underline">
-                {info.verified ? 'Verified' : 'Unverified'}
+                {getVerificationLabel(info)}
                 {info.verified && (
                   <Icon
                     icon="material-symbols:verified"
@@ -229,7 +246,7 @@ const LandlordInfoCard = ({
                 />
               </span>
             </Field>
-          </div>
+          </button>
         </div>
       </div>
     </section>
