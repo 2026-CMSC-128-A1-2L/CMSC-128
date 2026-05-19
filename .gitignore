@@ -9,3 +9,5 @@ build
 .agent/
 .agent
 .trae/
+.playwright-mcp/
+fb-profile-data/

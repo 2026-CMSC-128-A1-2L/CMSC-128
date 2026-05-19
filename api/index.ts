@@ -2,13 +2,26 @@ import '../backend/src/config.js';
 import mongoose from 'mongoose';
 import { getApp } from '../backend/src/app.js';
 
-if (!process.env.MONGO_URL) {
-  throw new Error('Missing MONGO_URL in environment variables.');
-}
+let connectPromise: Promise<typeof mongoose> | null = null;
 
-await mongoose.connect(process.env.MONGO_URL);
-console.log('MongoDB connected');
+const connectMongo = () => {
+  if (!process.env.MONGO_URL) {
+    throw new Error('Missing MONGO_URL in environment variables.');
+  }
+
+  if (!connectPromise) {
+    connectPromise = mongoose.connect(process.env.MONGO_URL);
+  }
+
+  return connectPromise;
+};
 
 const app = getApp({});
-app.set('trust proxy', true);
-export default app;
+
+export default async function handler(
+  req: Parameters<typeof app>[0],
+  res: Parameters<typeof app>[1],
+) {
+  await connectMongo();
+  return app(req, res);
+}
