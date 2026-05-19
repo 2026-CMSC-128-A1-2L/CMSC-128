@@ -342,6 +342,34 @@ const HomePage: FunctionComponent = () => {
 
   // Real data from the backend
   const { facilities, isLoading, error, refetch } = useFacilities();
+  const UPLB = { lat: 14.1675, lng: 121.2433 };
+  function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number) {
+    const R = 6371;
+    const dLat = ((lat2 - lat1) * Math.PI) / 180;
+    const dLon = ((lon2 - lon1) * Math.PI) / 180;
+    const a =
+      Math.sin(dLat / 2) ** 2 +
+      Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLon / 2) ** 2;
+    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  }
+  // Apply filter criteria to backend data
+  // TODO: extend with rating, distance, and tags once available in DormCardData
+  const filterApplied = facilities.filter((dorm) => {
+    const priceOk =
+      dorm.price.min >= filterCriteria.minPrice &&
+      dorm.price.max <= filterCriteria.maxPrice;
+
+    const distanceOk = dorm.coordinates
+      ? haversineKm(
+        UPLB.lat, UPLB.lng,
+        dorm.coordinates.lat, dorm.coordinates.long,
+      ) <= filterCriteria.distance
+      : true; // gracefully exclude-less if coords are missing
+
+    return priceOk && distanceOk;
+  });
   const [pasaloDorms, setPasaloDorms] = useState<DormCardData[]>([]);
 
   useEffect(() => {
@@ -360,24 +388,19 @@ const HomePage: FunctionComponent = () => {
 
   // Apply filter criteria to backend data
   // TODO: extend with rating, distance, and tags once available in DormCardData
-  const filterApplied = facilities.filter(
-    (dorm) =>
-      dorm.price.min >= filterCriteria.minPrice &&
-      dorm.price.max <= filterCriteria.maxPrice,
-  );
 
   const trimmedSearchTerm = searchTerm.trim();
   const trimmedDebouncedSearchTerm = debouncedSearchTerm.trim();
   const isSearchDebouncing = trimmedSearchTerm !== trimmedDebouncedSearchTerm;
   const matchingSearchResults = trimmedDebouncedSearchTerm
     ? facilities
-        .filter((dorm) => {
-          const roomTypes = dorm.room_types.map((room) => room.pax).join(" ");
-          return `${dorm.name} ${dorm.location} ${roomTypes}`
-            .toLowerCase()
-            .includes(trimmedDebouncedSearchTerm.toLowerCase());
-        })
-        .slice(0, 6)
+      .filter((dorm) => {
+        const roomTypes = dorm.room_types.map((room) => room.pax).join(" ");
+        return `${dorm.name} ${dorm.location} ${roomTypes}`
+          .toLowerCase()
+          .includes(trimmedDebouncedSearchTerm.toLowerCase());
+      })
+      .slice(0, 6)
     : [];
 
   // Category slices — swap for real filtered endpoints later
@@ -436,6 +459,7 @@ const HomePage: FunctionComponent = () => {
   }, [searchParams]);
 
   if (isLoading) return <LoadingPage />;
+
 
   return (
     <div className="user-home-shell relative w-full flex items-start text-left text-[0.875rem] text-dimgray font-inter gap-8 bg-transparent">
