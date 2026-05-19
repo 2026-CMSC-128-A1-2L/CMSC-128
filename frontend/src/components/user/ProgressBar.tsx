@@ -127,7 +127,7 @@ const ProgressBar = <Key extends string = VerificationStep>({
 
         return (
           <Fragment key={step.key}>
-            <div className="relative flex flex-col items-center gap-[10px]">
+            <div id={`progress-step-${step.key}`} className="relative flex flex-col items-center gap-[10px]">
               {renderCircle(state)}
               {renderLabel(step.label)}
             </div>
