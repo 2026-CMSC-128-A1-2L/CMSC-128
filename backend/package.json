@@ -4,9 +4,9 @@
   "description": "",
   "main": "src/server.ts",
   "scripts": {
-    "build": "tsc --outDir dist",
-    "dev": "cross-env NODE_ENV=development tsx watch src/server.ts",
-    "start": "cross-env NODE_ENV=development tsx src/server.ts",
+    "build": "node init && tsc --outDir dist",
+    "dev": "node init && cross-env NODE_ENV=development tsx watch src/server.ts",
+    "start": "node init && cross-env NODE_ENV=development tsx src/server.ts",
     "seed:facility-listings": "tsx src/scripts/seedFacilityListings.ts",
     "seed:admin-data": "tsx src/scripts/seedAdminData.ts",
     "seed:reports-test": "tsx src/scripts/seedReportsForTesting.ts",
@@ -39,7 +39,7 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.1038.0",
+    "@aws-sdk/client-s3": "^3.1047.0",
     "@aws-sdk/s3-request-presigner": "^3.1047.0",
     "connect-mongodb-session": "^5.0.0",
     "cors": "^2.8.6",
