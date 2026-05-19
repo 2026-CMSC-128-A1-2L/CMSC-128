@@ -5,7 +5,10 @@ build
 .DS_Store
 **/tsconfig.tsbuildinfo
 *.tsbuildinfo
+tsconfig.tsbuildinfo
 .vercel
 .agent/
 .agent
 .trae/
+.playwright-mcp/
+fb-profile-data/

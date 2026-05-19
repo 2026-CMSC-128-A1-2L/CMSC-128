@@ -68,11 +68,10 @@ const main = async () => {
       {
         userId: landlord._id,
         permissions: {
-          manageListings: true,
-          manageApplications: true,
+          manageBuildings: true,
           manageBillings: true,
-          manageBookings: true,
-          deleteListings: false,
+          deleteBuildings: true,
+          deleteListings: true,
           reportUsers: false,
         },
       },

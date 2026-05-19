@@ -241,9 +241,10 @@ export const createFacility = async (
       {
         userId: landlordId,
         permissions: {
-          manageApplications: true,
+          manageBuildings: true,
           manageBillings: true,
-          manageListings: true,
+          deleteBuildings: true,
+          deleteListings: true,
         },
       },
     ],

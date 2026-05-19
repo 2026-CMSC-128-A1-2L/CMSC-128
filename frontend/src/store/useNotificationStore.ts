@@ -17,8 +17,18 @@ type NotificationState = {
 const sortByDate = (a: StoreNotification, b: StoreNotification) =>
   new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
 
+const dedupeNotifications = (items: StoreNotification[]) => {
+  const byId = new Map<string, StoreNotification>();
+
+  for (const item of items) {
+    byId.set(item._id, item);
+  }
+
+  return [...byId.values()];
+};
+
 const mergeAndSort = (notifs: StoreNotification[], announcements: StoreNotification[]) =>
-  [...notifs, ...announcements].sort(sortByDate);
+  dedupeNotifications([...notifs, ...announcements]).sort(sortByDate);
 
 export const useNotificationStore = create<NotificationState>((set, get) => ({
   notifications: [],
@@ -29,10 +39,12 @@ export const useNotificationStore = create<NotificationState>((set, get) => ({
     const myId = useAuthStore.getState().user?._id;
     if (!myId) return;
 
-    const notifResponse = await NotificationService.getNotifications({ status: undefined });
+    const notifResponse = await NotificationService.getNotifications({
+      status: undefined,
+    });
 
     const notifs: StoreNotification[] = notifResponse.data.map((n: any) => ({
-      _id: n._id ?? n.id,
+      _id: n._id ?? n.id ?? '',
       subject: n.subject ?? '',
       content: n.content ?? n.text ?? '',
       status: n.status ?? (n.readAt ? 'read' : 'unread'),
@@ -77,11 +89,11 @@ export const useNotificationStore = create<NotificationState>((set, get) => ({
     const channel = pusherClient.subscribe(`private-user-${myId}`);
     channel.bind('new-notification', (notif: any) => {
       const item: StoreNotification = {
-        _id: notif._id,
-        subject: notif.subject,
-        content: notif.content,
+        _id: notif._id ?? notif.id ?? '',
+        subject: notif.subject ?? '',
+        content: notif.content ?? notif.text ?? '',
         status: notif.status ?? 'unread',
-        createdAt: notif.createdAt,
+        createdAt: notif.createdAt ?? new Date().toISOString(),
       };
       set((s) => ({
         notifications: [item, ...s.notifications].sort(sortByDate),
