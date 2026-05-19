@@ -94,6 +94,18 @@ export const useMessageStore = create<MessageState>((set, get) => ({
         set((s) => {
           if (s.activeUserId !== otherUserId) return s;
           if (s.activeMessages.some((m) => m._id === msg._id)) return s;
+
+          const myId = getMyId();
+          const optimisticIdx = s.activeMessages.findIndex(
+            (m) => m._id.startsWith('temp-') && m.senderId === myId && m.text === msg.text,
+          );
+
+          if (optimisticIdx >= 0) {
+            const updated = [...s.activeMessages];
+            updated[optimisticIdx] = msg;
+            return { activeMessages: updated };
+          }
+
           return { activeMessages: [...s.activeMessages, msg] };
         });
       });
@@ -131,7 +143,40 @@ export const useMessageStore = create<MessageState>((set, get) => ({
   },
 
   sendMessage: async (otherUserId: string, text: string) => {
-    await MessageService.sendMessages(otherUserId, { text });
+    const myId = getMyId();
+    if (!myId) return;
+
+    const tempId = `temp-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+    const optimisticMsg: ChatMessage = {
+      _id: tempId,
+      senderId: myId,
+      receiverId: otherUserId,
+      text,
+      createdAt: new Date().toISOString(),
+    };
+
+    set((s) => ({
+      activeMessages:
+        s.activeUserId === otherUserId ? [...s.activeMessages, optimisticMsg] : s.activeMessages,
+      conversations: s.conversations.map((c) =>
+        c.user.id === otherUserId
+          ? {
+              ...c,
+              message: { userId: myId, text },
+              createdAt: new Date().toISOString(),
+              readAt: new Date().toISOString(),
+            }
+          : c,
+      ),
+    }));
+
+    try {
+      await MessageService.sendMessages(otherUserId, { text });
+    } catch {
+      set((s) => ({
+        activeMessages: s.activeMessages.filter((m) => m._id !== tempId),
+      }));
+    }
   },
 
   emitTyping: (_otherUserId: string, isTyping: boolean) => {
