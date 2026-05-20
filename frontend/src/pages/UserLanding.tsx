@@ -114,15 +114,19 @@ const UserLanding: FunctionComponent = () => {
   }, []);
 
   const scrollToTop = () => topRef.current?.scrollIntoView({ behavior: 'smooth' });
-  const userDisplayName = user ? [user.firstName, user.lastName].filter(Boolean).join(' ') : '';
-  const usesLandlordDashboard = user?.userType === 'Landlord' || user?.userType === 'Manager';
-  const listingsDestination = usesLandlordDashboard ? '/landlord/dashboard' : '/home';
-  const listingsLabel = usesLandlordDashboard ? 'Go to Dashboard' : 'See All Listings';
-  const signedInDestination = usesLandlordDashboard
-    ? '/landlord-homepage'
-    : user?.userType === 'Admin'
-      ? '/admin/applications'
-      : '/profile-switcher';
+  const userDisplayName = user?.firstName?.trim().split(/\s+/)[0] ?? '';
+  const isLandlord = user?.userType === 'Landlord';
+  const usesLandlordExperience = user?.userType === 'Landlord' || user?.userType === 'Manager';
+  const listingsDestination = isLandlord ? '/landlord/dashboard' : '/home';
+  const listingsLabel = isLandlord ? 'Go to Dashboard' : 'See All Listings';
+  const signedInDestination =
+    user?.status === 'setup'
+      ? '/registration'
+      : usesLandlordExperience
+        ? '/landlord-homepage'
+        : user?.userType === 'Admin'
+          ? '/admin/applications'
+          : '/profile-switcher';
 
   return (
     <div

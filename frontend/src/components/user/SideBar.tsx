@@ -85,7 +85,6 @@ const SideBar = ({
   const [collapsed, setCollapsed] = useState(() => isSmallScreen());
   const [isMobile, setIsMobile] = useState(() => isSmallScreen());
   const [internalHover, setInternalHover] = useState<SideBarItemKey>();
-  const [searchQuery, setSearchQuery] = useState('');
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [signInPopupOpen, setSignInPopupOpen] = useState(false);
   const [darkModeIconSpinning, setDarkModeIconSpinning] = useState(false);
@@ -260,12 +259,15 @@ const SideBar = ({
 
         <div className="flex items-center justify-center px-4 w-full">
           <Link
-            to="/about"
+            to="/"
             className="flex items-center justify-center cursor-pointer transition-opacity hover:opacity-80"
-            aria-label="About Atlas"
+            aria-label="Atlas landing page"
           >
             {collapsed ? (
-              <AtlasLogoMin className="w-7 h-7 fill-[#2d3748] dark:fill-[#d7e0ef]" aria-label="Atlas" />
+              <AtlasLogoMin
+                className="w-7 h-7 fill-[#2d3748] dark:fill-[#d7e0ef]"
+                aria-label="Atlas"
+              />
             ) : (
               <AtlasLogoText className="w-32 h-auto fill-[#2d3748] dark:fill-[#d7e0ef]" />
             )}
@@ -399,7 +401,9 @@ const SideBar = ({
               collapsed ? 'justify-center h-11' : 'gap-6 pr-5',
             ].join(' ')}
           >
-            {!collapsed && <span className="h-11 w-2 shrink-0 rounded-sm bg-transparent cursor-pointer" />}
+            {!collapsed && (
+              <span className="h-11 w-2 shrink-0 rounded-sm bg-transparent cursor-pointer" />
+            )}
 
             <span className="flex items-center gap-4 rounded-xl px-1">
               <Icon
@@ -449,7 +453,7 @@ const SideBar = ({
 
               {!collapsed && (
                 <div className="flex flex-col items-start gap-1 overflow-hidden">
-                  <b 
+                  <b
                     title={username ?? undefined}
                     className="text-[14px] text-[#2d3748] dark:text-[#d7e0ef] truncate max-w-[110px] block"
                   >

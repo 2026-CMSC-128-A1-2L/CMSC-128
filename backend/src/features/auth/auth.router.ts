@@ -10,6 +10,13 @@ const getFrontendUrl = (path: string) => {
   return new URL(path, frontendOrigin).toString();
 };
 
+const getSignedInPath = (user: Express.User) => {
+  if (user.status === 'setup') return '/registration';
+  if (user.userType === 'Landlord' || user.userType === 'Manager') return '/landlord/dashboard';
+  if (user.userType === 'Admin') return '/admin/applications';
+  return '/home';
+};
+
 router.get(
   '/google',
   passportGoogle.authenticate('google', { scope: ['profile', 'email'] }) as RequestHandler,
@@ -31,11 +38,7 @@ router.get('/google/callback', (req, res, next) => {
         return next(err);
       }
 
-      if (user.status === 'setup') {
-        return res.redirect(getFrontendUrl('/registration'));
-      } else {
-        return res.redirect(getFrontendUrl('/'));
-      }
+      return res.redirect(getFrontendUrl(getSignedInPath(user)));
     });
   })(req, res, next);
 });

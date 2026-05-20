@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import PageLayout from './pages/utilities/PageLayout';
 import UserLanding from './pages/UserLanding';
@@ -10,28 +10,10 @@ import landlordRoutes from './routes/landlordRoutes';
 import { useAuthStore } from './store/useAuthStore';
 import { useEffect } from 'react';
 
-const getSignedInDestination = (user: ReturnType<typeof useAuthStore.getState>['user']) => {
-  if (!user) return '/';
-  if (user.status === 'setup') return '/registration';
-  if (user.userType === 'Landlord' || user.userType === 'Manager') return '/landlord-homepage';
-  if (user.userType === 'Admin') return '/admin/applications';
-  return '/home';
-};
-
-function LandingRoute() {
-  const user = useAuthStore((state) => state.user);
-
-  if (user) {
-    return <Navigate to={getSignedInDestination(user)} replace />;
-  }
-
-  return <UserLanding />;
-}
-
 function AnimatedRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<LandingRoute />} />
+      <Route path="/" element={<UserLanding />} />
 
       <Route element={<PageLayout />}>
         {userRoutes}

@@ -20,12 +20,6 @@ export type SideBarLandlordItemKey =
   | 'finance'
   | 'settings';
 
-type UserInfo = {
-  name: string;
-  verified?: boolean;
-  avatarUrl?: string;
-};
-
 type SideBarLandlordProps = {
   activeItem?: SideBarLandlordItemKey;
   hoveredItem?: SideBarLandlordItemKey;
@@ -227,8 +221,11 @@ const SideBarLandlord = ({
         />
       )}
 
-      {!isMobile &&(
-      <div className={['shrink-0 transition-[width] duration-200', w].join(' ')} aria-hidden="true" />
+      {!isMobile && (
+        <div
+          className={['shrink-0 transition-[width] duration-200', w].join(' ')}
+          aria-hidden="true"
+        />
       )}
 
       <aside
@@ -260,16 +257,17 @@ const SideBarLandlord = ({
         {/* Logo */}
         <div className="flex h-[40px] items-center justify-center overflow-hidden">
           <Link
-            to="/about"
+            to="/"
             className="flex h-[40px] items-center justify-center overflow-hidden cursor-pointer hover:opacity-80 transition-opacity"
-            aria-label="About Atlas"
+            aria-label="Atlas landing page"
           >
             {collapsed ? (
-              <AtlasLogoMin className="h-[28px] w-[28px] fill-[#2d3748] dark:fill-[#d7e0ef]" aria-label="Atlas Home" />
-            ) : (
-              <AtlasLogo
-                className="h-full w-[128px] fill-[#2d3748] dark:fill-[#d7e0ef]"
+              <AtlasLogoMin
+                className="h-[28px] w-[28px] fill-[#2d3748] dark:fill-[#d7e0ef]"
+                aria-label="Atlas Home"
               />
+            ) : (
+              <AtlasLogo className="h-full w-[128px] fill-[#2d3748] dark:fill-[#d7e0ef]" />
             )}
           </Link>
         </div>
@@ -320,6 +318,7 @@ const SideBarLandlord = ({
                     : 'default';
 
               return (
+                // biome-ignore lint/a11y/noStaticElementInteractions: This wrapper only tracks hover state; the nested buttons handle navigation.
                 <div
                   key={item.key}
                   onMouseEnter={() => setInternalHover(item.key)}
@@ -451,7 +450,7 @@ const SideBarLandlord = ({
               </span>
               {!collapsed && (
                 <span className="flex flex-col items-start justify-center gap-[4px] overflow-hidden">
-                  <span 
+                  <span
                     title={user.name}
                     className="font-['Inter',sans-serif] text-[14px] font-bold leading-normal truncate max-w-[100px] block text-[#096c5b] dark:text-[#72cbb8]"
                   >
