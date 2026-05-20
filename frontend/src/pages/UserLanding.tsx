@@ -130,7 +130,7 @@ const UserLanding: FunctionComponent = () => {
       className="w-full h-screen relative bg-white overflow-y-auto flex flex-col items-start isolate text-left text-[64px] text-teal-200 font-inter"
     >
       <div ref={topRef} className="flex flex-col items-start z-1 shrink-0">
-        <div className="self-stretch h-[1244px] flex flex-col items-start text-num-18 text-darkslategray-200">
+        <div className="self-stretch flex flex-col items-start text-num-18 text-darkslategray-200">
           <div className="bg-gray-900 flex flex-col items-start py-px px-0">
             <div className="w-screen flex items-center py-4 px-8 lg:px-16 box-border">
               <div className="flex-1 flex flex-col items-start justify-center">
@@ -177,8 +177,8 @@ const UserLanding: FunctionComponent = () => {
           </div>
 
           {/* Hero content */}
-          <div className="self-stretch h-[1149px] overflow-hidden shrink-0 flex flex-col items-start justify-center box-border text-center text-[32px] text-gray-800">
-            <div className="self-stretch flex-1 flex items-center justify-end pt-[140px] px-20 pb-20 relative isolate gap-[140px]">
+          <div className="self-stretch h-[820px] overflow-hidden shrink-0 flex flex-col items-start justify-center box-border text-center text-[32px] text-gray-800">
+            <div className="self-stretch h-[820px] flex items-center justify-end pt-[140px] px-20 pb-20 relative isolate gap-[140px]">
               <img
                 className="w-full absolute !!m-[0 important] top-[259px] left-0 z-2"
                 alt=""
