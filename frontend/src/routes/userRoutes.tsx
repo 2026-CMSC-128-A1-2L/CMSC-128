@@ -1,9 +1,9 @@
 import BookmarksNewUsers from '../pages/user/bookmarks/BookmarksNewUsers';
 import UnitDetails from '../pages/user/home/UnitDetails';
-import DmsLanding from '../pages/user/messages/DmsLanding';
 import HomePage from '../pages/user/home/HomePage';
 import Finance from '../pages/user/finance/Finance';
 import ContactUs from '../pages/user/info/ContactUs';
+import AboutPage from '../pages/user/info/AboutPage';
 import CurrentDorm from '../pages/user/profile/current_dorm/CurrentDorm';
 import ContractInformation from '../pages/user/profile/current_dorm/ContractInformation';
 import RateAndReview from '../pages/user/profile/current_dorm/RateAndReview';
@@ -23,6 +23,7 @@ import Settings from '../pages/user/setting/Settings';
 import TestPage from '../pages/utilities/TestPage';
 import InviteAccomodation from '../pages/user/messages/InviteAccomodation';
 import Registration from '../pages/Registration';
+import MessagesPage from '../pages/general/MessagesPage';
 // import { StudentRoute } from './ProtectedRoute';
 /* <Route key="student-route" element={<StudentRoute />}> */
 /*   <Route key="home" path="/home" element={<HomePage />} /> */
@@ -35,12 +36,13 @@ const userRoutes = [
   <Route key="home" path="/home" element={<HomePage />} />,
   <Route key="test" path="/test" element={<TestPage />} />,
   // <Route key="filter" path="/filter" element={<Filter />} />,
+  <Route key="about" path="/about" element={<AboutPage />} />,
   <Route key="contact" path="/contact-us" element={<ContactUs />} />,
   <Route key="bookmark" path="/bookmark" element={<BookmarksNewUsers />} />,
   <Route key="unit" path="/unit" element={<UnitDetails />} />,
   <Route key="facility-details" path="/facilities/:facilityId" element={<UnitDetails />} />,
-  <Route key="dms-landing" path="/direct-messages" element={<DmsLanding />} />,
-  <Route key="dms-user" path="/direct-messages/:userId" element={<DmsLanding />} />,
+  <Route key="dms-landing" path="/direct-messages" element={<MessagesPage />} />,
+  <Route key="dms-user" path="/direct-messages/:userId" element={<MessagesPage />} />,
   <Route
     key="dms-dorm-invitation"
     path="/direct-messages/dorm-invitation"

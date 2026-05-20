@@ -1,6 +1,5 @@
 import LandlordHomepage from '../pages/landlord/dashboard/LandlordHomepage';
 import LandlordDashboard from '../pages/landlord/dashboard/LandlordHomepage';
-import LandlordMessages from '../pages/landlord/messages/LandlordMessages';
 import LandlordProperties from '../pages/landlord/properties/LandlordProperties';
 import LandlordManagers from '../pages/landlord/managers/LandlordManagersList';
 import LandlordTenants from '../pages/landlord/tenants/LandlordTenants';
@@ -35,12 +34,6 @@ const landlordRoutes = [
     element={<LandlordProfileSwitcher />}
   />,
   <Route key="landlord-dashboard" path="/landlord/dashboard" element={<LandlordDashboard />} />,
-  <Route key="landlord-messages" path="/direct-messages" element={<LandlordMessages />} />,
-  <Route
-    key="landlord-messages-user"
-    path="/direct-messages/:userId"
-    element={<LandlordMessages />}
-  />,
   <Route key="landlord-properties" path="/landlord/properties" element={<LandlordProperties />} />,
 
   <Route

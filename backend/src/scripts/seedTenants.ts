@@ -40,11 +40,10 @@ const seedTenants = async () => {
       {
         userId: landlord._id,
         permissions: {
-          manageListings: true,
-          manageApplications: true,
+          manageBuildings: true,
           manageBillings: true,
-          manageBookings: true,
-          deleteListings: false,
+          deleteBuildings: true,
+          deleteListings: true,
           reportUsers: false,
         },
       },
@@ -146,7 +145,6 @@ const seedTenants = async () => {
     const unit = await Unit.create({
       listingId: targetListing._id,
       facilityId: facility._id,
-      name: `Room ${isShared ? 'S' : ''}${i + 1}`,
       roomNumber: `SEED-${Date.now()}-${i}`,
       price: isShared ? 3500 : 5000,
       capacity: isShared ? 4 : 1,
@@ -169,7 +167,7 @@ const seedTenants = async () => {
     await unit.save();
 
     console.log(
-      `  ✓ Tenant: ${t.firstName} ${t.lastName} → ${unit.name} (${isShared ? 'shared' : 'single'})`,
+      `  ✓ Tenant: ${t.firstName} ${t.lastName} → ${unit.roomNumber} (${isShared ? 'shared' : 'single'})`,
     );
   }
 

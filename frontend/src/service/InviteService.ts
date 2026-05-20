@@ -52,6 +52,26 @@ export const InviteService = {
     }
   },
 
+  async acceptStudentInvite(inviteId: string) {
+    try {
+      const response = await api.post(`/api/invites/${inviteId}/accept-student`, {});
+      return response.data;
+    } catch (error) {
+      console.error('Error accepting student invite:', error);
+      throw error;
+    }
+  },
+
+  async declineStudentInvite(inviteId: string) {
+    try {
+      const response = await api.post(`/api/invites/${inviteId}/decline-student`, {});
+      return response.data;
+    } catch (error) {
+      console.error('Error declining student invite:', error);
+      throw error;
+    }
+  },
+
   async getInvite(inviteId: string) {
     try {
       const response = await api.get(`/api/invites/${inviteId}`);
