@@ -231,7 +231,13 @@ const DormCard: FunctionComponent<DormCardProps> = ({
       <div className="w-full flex flex-col py-2 px-3 gap-2">
         <div className="w-full flex flex-col items-start gap-0">
           <div className="w-full h-fit flex items-start gap-1">
-            <b className="min-w-0 flex-1 truncate text-num-16">{name}</b>
+            <b
+              className={`min-w-0 flex-1 text-num-16 ${
+                expanded ? 'break-words leading-tight' : 'truncate'
+              }`}
+            >
+              {name}
+            </b>
             <div className="w-fit h-fit flex shrink-0 items-center gap-1 text-[0.718rem] font-lora text-darkslategray-200 dark:text-white">
               <Icon
                 icon="material-symbols:star-rounded"
@@ -246,9 +252,21 @@ const DormCard: FunctionComponent<DormCardProps> = ({
         </div>
 
         <div className="w-full h-fit flex flex-col gap-1">
-          <div className="w-full min-w-0 relative flex items-center gap-1 text-left text-dimgray font-lora dark:text-[#a4acba]">
-            <Icon icon="material-symbols-light:location-on" className="h-3 w-3 shrink-0" />
-            <div className="min-w-0 flex-1 truncate text-num-10 font-semibold" title={location}>
+          <div
+            className={`w-full min-w-0 relative flex gap-1 text-left text-dimgray font-lora dark:text-[#a4acba] ${
+              expanded ? 'items-start' : 'items-center'
+            }`}
+          >
+            <Icon
+              icon="material-symbols-light:location-on"
+              className={`h-3 w-3 shrink-0 ${expanded ? 'mt-0.5' : ''}`}
+            />
+            <div
+              className={`min-w-0 flex-1 text-num-10 font-semibold ${
+                expanded ? 'whitespace-normal break-words leading-snug' : 'truncate'
+              }`}
+              title={location}
+            >
               {location}
             </div>
           </div>
