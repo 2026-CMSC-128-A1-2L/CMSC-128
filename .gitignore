@@ -12,3 +12,4 @@ tsconfig.tsbuildinfo
 .trae/
 .playwright-mcp/
 fb-profile-data/
+config.bat
